@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/primary_space"
+    android:paddingEnd="@dimen/primary_space">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/rotonda"
+        android:textColor="@color/blackTextLight"
+        tools:text="Артикул"/>
+
+    <TextView
+        android:id="@+id/value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/rotonda"
+        android:textStyle="bold"
+        android:textColor="@color/blackTextPrimary"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"
+        tools:text="0033528"/>
+
+</LinearLayout>

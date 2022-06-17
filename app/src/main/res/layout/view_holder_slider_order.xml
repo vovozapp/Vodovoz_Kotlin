@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="3dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="4dp"
+            android:textSize="16sp"
+            android:layout_marginStart="@dimen/primary_space"
+            android:layout_marginTop="@dimen/primary_space"
+            android:textColor="@color/bluePrimary"
+            app:drawableTint="@color/bluePrimary"
+            app:drawableStartCompat="@drawable/ic_order_accepted"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Заказ отменен" />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/rotonda"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/blackTextPrimary"
+            android:layout_marginEnd="@dimen/primary_space"
+            android:layout_marginTop="@dimen/primary_space"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="15476 Р" />
+
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/primary_margin"
+            android:paddingStart="@dimen/primary_space"
+            android:paddingEnd="@dimen/primary_space"
+            android:fontFamily="@font/rotonda"
+            android:maxLines="2"
+            android:textSize="16sp"
+            android:textColor="@color/blackTextLight"
+            app:layout_constraintTop_toBottomOf="@+id/status"
+            tools:layout_editor_absoluteX="16dp"
+            tools:text="Г Балашиха Проспект Ленина дом 32 д кв 313, нидекс 456342, подъезд 5" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/action"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/bluePrimary"
+            android:layout_marginTop="@dimen/primary_space"
+            android:drawableEnd="@drawable/ic_arrow_right"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/primary_space"
+            android:paddingEnd="@dimen/primary_space"
+            android:fontFamily="@font/rotonda"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            app:drawableTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/address"
+            android:text="Подробнее"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:translationZ="3dp"
+            android:layout_marginBottom="@dimen/primary_margin">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/detailPicturePager"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:padding="10dp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabIndicator"
+                android:layout_width="0dp"
+                android:layout_height="10dp"
+                app:layout_constraintEnd_toEndOf="@+id/detailPicturePager"
+                app:layout_constraintStart_toStartOf="@+id/detailPicturePager"
+                app:layout_constraintTop_toBottomOf="@id/detailPicturePager"
+                app:tabBackground="@drawable/background_indicator_tab"
+                app:tabGravity="center"
+                app:tabIndicatorHeight="0dp"
+                app:tabMode="fixed"
+                app:tabPadding="0dp"
+                app:tabPaddingEnd="3dp"
+                app:tabPaddingStart="3dp" />
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="@dimen/primary_space"
+                android:layout_marginStart="@dimen/primary_space"
+                android:src="@drawable/ic_arrow_left"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/blackTextPrimary"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/share"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_share"
+                android:layout_marginTop="@dimen/primary_space"
+                android:layout_marginEnd="@dimen/primary_margin"
+                app:layout_constraintEnd_toStartOf="@+id/favorite"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/blackTextPrimary"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/favorite"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_favorite_border"
+                android:layout_marginEnd="@dimen/primary_space"
+                android:layout_marginTop="@dimen/primary_space"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/blackTextPrimary"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:id="@+id/allStatusContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginStart="@dimen/primary_space"
+                app:layout_constraintBottom_toTopOf="@+id/tabIndicator"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/discountContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="@color/orange"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="0dp">
+
+                    <TextView
+                        android:id="@+id/discount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/primary_normal"
+                        android:gravity="center"
+                        android:paddingStart="@dimen/primary_margin"
+                        android:paddingEnd="@dimen/primary_margin"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/normal_text_size"
+                        android:visibility="visible" />
+
+                </androidx.cardview.widget.CardView>
+
+                <View
+                    android:id="@+id/spaceBetweenStatuses"
+                    android:layout_width="4dp"
+                    android:layout_height="20dp"
+                    android:visibility="visible" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/statusContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="@color/bluePrimary"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="0dp">
+
+                    <TextView
+                        android:id="@+id/status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:fontFamily="@font/primary_normal"
+                        android:gravity="center"
+                        android:paddingStart="@dimen/primary_margin"
+                        android:paddingEnd="@dimen/primary_margin"
+                        android:text="@string/not_available"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/normal_text_size"
+                        android:visibility="visible" />
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/brand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/rotonda"
+                android:textColor="@color/bluePrimary"
+                android:layout_marginStart="@dimen/primary_space"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tabIndicator"
+                tools:text="Rusoxy" />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/rotonda"
+                android:textColor="@color/blackTextPrimary"
+                android:layout_marginStart="@dimen/primary_space"
+                android:layout_marginEnd="@dimen/primary_space"
+                android:textSize="17sp"
+                app:layout_constraintTop_toBottomOf="@id/brand"
+                tools:text="10 бутылей Аква  Ареал 18.9" />
+
+            <RatingBar
+                android:id="@+id/rating"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:stepSize="1"
+                android:theme="@style/RatingBar"
+                android:layout_marginStart="@dimen/primary_space"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/name" />
+
+            <TextView
+                android:id="@+id/commentAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/rotonda"
+                android:textColor="@color/bluePrimary"
+                android:layout_marginStart="@dimen/primary_margin"
+                app:layout_constraintBottom_toBottomOf="@+id/rating"
+                app:layout_constraintStart_toEndOf="@+id/rating"
+                app:layout_constraintTop_toTopOf="@+id/rating"
+                tools:text="5 | Читать отзывы" />
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/primary_space"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/rotonda"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rating"
+                tools:text="500 Р" />
+
+            <TextView
+                android:id="@+id/oldPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/rotonda"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/price"
+                app:layout_constraintStart_toEndOf="@id/price"
+                tools:text="650 Р" />
+
+            <TextView
+                android:id="@+id/pricePerUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/rotonda"
+                android:textSize="12sp"
+                android:textColor="@color/blackTextLight"
+                app:layout_constraintBottom_toBottomOf="@+id/price"
+                app:layout_constraintStart_toEndOf="@id/oldPrice"
+                tools:text="100 Р/кг" />
+
+            <TextView
+                android:id="@+id/priceCondition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/primary_space"
+                android:fontFamily="@font/rotonda"
+                android:textSize="12sp"
+                android:textColor="@color/blackTextLight"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/price"
+                tools:text="при условии покупки от 10 шт" />
+
+            <ImageView
+                android:id="@+id/add"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="@dimen/primary_space"
+                android:background="@drawable/background_add_to_cart"
+                android:padding="8dp"
+                android:src="@drawable/ic_cart"
+                android:translationZ="3dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/commentAmount"
+                app:tint="@color/white"
+                tools:ignore="ContentDescription" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/priceRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:layout_marginBottom="@dimen/primary_margin"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/priceCondition" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/primary_margin"
+            android:layout_marginBottom="@dimen/primary_margin"
+            android:background="@color/white"
+            android:translationZ="3dp">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/aboutTabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:translationZ="3dp"
+                app:tabTextAppearance="@style/Tab"
+                app:tabSelectedTextColor="@color/blackTextPrimary"
+                app:tabMode="fixed"
+                app:tabTextColor="@color/black">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Описание" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Характеристики" />
+
+            </com.google.android.material.tabs.TabLayout>
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/aboutProductContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:layout_marginStart="@dimen/primary_space"
+                android:layout_marginEnd="@dimen/primary_space"
+                android:layout_marginTop="@dimen/primary_space"
+                android:textColor="@color/blackTextPrimary"
+                android:fontFamily="@font/rotonda"
+                android:text="Потребительская информация" />
+
+            <TextView
+                android:id="@+id/consumerInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/primary_space"
+                android:layout_marginEnd="@dimen/primary_space"
+                android:textSize="12sp"
+                android:textColor="@color/blackTextLight"
+                android:fontFamily="@font/rotonda"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="@dimen/primary_space"
+                tools:text="* woeviwoeivweomvowemvwemvwemvpwemvpwemvpewomvowemvpewmvpwemvowemovpweovmewopmv"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/primary_margin"
+            android:layout_marginBottom="@dimen/primary_margin"
+            android:background="@color/white"
+            android:translationZ="1dp"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/categoryContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/categoryImage"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="@dimen/primary_space"
+                    android:padding="@dimen/primary_space"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.2"
+                    tools:ignore="ContentDescription" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="@dimen/primary_space"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="@+id/categoryImage"
+                    app:layout_constraintEnd_toStartOf="@+id/showCategory"
+                    app:layout_constraintStart_toEndOf="@+id/categoryImage"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/categoryName"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/rotonda"
+                        android:gravity="bottom"
+                        android:textColor="@color/blackTextPrimary"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/categoryImage"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Название категории" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/rotonda"
+                        android:gravity="top"
+                        android:textColor="@color/blackTextLight"
+                        android:text="Категория"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/categoryImage"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/showCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/primary_space"
+                    android:src="@drawable/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="@+id/categoryImage"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/categoryImage"
+                    app:tint="@color/blackTextLight"
+                    tools:ignore="ContentDescription" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/dividerBetweenCategoryAndBrand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/brandContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/brandImage"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="@dimen/primary_space"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.2"
+                    tools:ignore="ContentDescription" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="@dimen/primary_space"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="@+id/brandImage"
+                    app:layout_constraintEnd_toStartOf="@+id/showBrand"
+                    app:layout_constraintStart_toEndOf="@+id/brandImage"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/brandName"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/rotonda"
+                        android:gravity="bottom"
+                        android:textColor="@color/blackTextPrimary"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/brandImage"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Название бренда" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/rotonda"
+                        android:gravity="top"
+                        android:textColor="@color/blackTextLight"
+                        android:text="Бренд"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/brandImage"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/showBrand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/primary_space"
+                    android:src="@drawable/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="@+id/brandImage"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/brandImage"
+                    app:tint="@color/blackTextLight"
+                    tools:ignore="ContentDescription" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/dividerBetweenBrandAndProductList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/brandProductListFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/recommendProductSliderFragment"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_marginTop="@dimen/primary_margin"
+            android:layout_marginBottom="@dimen/primary_margin"
+            android:paddingTop="@dimen/primary_margin"
+            android:paddingBottom="@dimen/primary_margin"
+            android:translationZ="1dp"/>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/promotionSliderFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/primary_margin"
+            android:layout_marginBottom="@dimen/primary_margin"
+            android:paddingTop="@dimen/primary_margin"
+            android:paddingBottom="@dimen/primary_margin"
+            android:translationZ="1dp"/>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/paginatedMaybeLikeProductListFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:id="@+id/searchWordContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:translationZ="1dp"
+            android:paddingTop="@dimen/primary_margin"
+            android:paddingBottom="@dimen/primary_margin"
+            android:layout_marginTop="@dimen/primary_margin"
+            android:layout_marginBottom="@dimen/primary_margin"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/primary_bold"
+                android:textSize="@dimen/title_text_size"
+                android:text="Ищут по запросам"
+                android:paddingTop="@dimen/primary_margin"
+                android:paddingBottom="@dimen/primary_margin"
+                android:paddingStart="@dimen/primary_space"
+                android:paddingEnd="@dimen/primary_space" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/searchWordRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/byWithProductSliderFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/primary_margin"
+            android:layout_marginBottom="@dimen/primary_margin"
+            android:translationZ="1dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_marginTop="@dimen/primary_margin"
+            android:layout_marginBottom="@dimen/primary_margin"
+            android:translationZ="3dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/primary_space"
+                android:paddingEnd="@dimen/primary_space"
+                android:paddingTop="@dimen/primary_space"
+                android:paddingBottom="@dimen/primary_space">
+
+                <TextView
+                    android:id="@+id/commentAmountTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/rotonda_bold"
+                    android:gravity="bottom"
+                    android:textColor="@color/blackTextPrimary"
+                    android:textSize="15sp"
+                    android:text="Отзывы (23)"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/categoryImage"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/showAllComment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/primary_normal"
+                    android:textSize="@dimen/normal_text_size"
+                    android:textColor="@color/bluePrimary"
+                    android:gravity="center"
+                    android:text="@string/show_all"/>
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/commentRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginStart="@dimen/primary_space"
+                android:layout_marginTop="@dimen/primary_space"
+                android:layout_marginBottom="@dimen/primary_space">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_write_comment"
+                    app:tint="@color/bluePrimary"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Написать отзыв"
+                    android:fontFamily="@font/rotonda"
+                    android:textStyle="bold"
+                    android:textColor="@color/bluePrimary"
+                    android:layout_marginStart="4dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

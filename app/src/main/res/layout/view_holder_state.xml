@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/primary_space"
+    android:paddingBottom="@dimen/primary_space">
+
+    <ProgressBar
+        android:id="@+id/progressContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+    <LinearLayout
+        android:id="@+id/errorContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/errorMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:textColor="@color/blackTextPrimary"
+            android:fontFamily="@font/rotonda"
+            android:text="Ошибка загрузки"/>
+
+        <TextView
+            android:id="@+id/update"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:background="@drawable/background_button_primary"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:translationZ="1dp"
+            android:layout_marginTop="@dimen/primary_space"
+            android:text="@string/update_label" />
+
+    </LinearLayout>
+
+</RelativeLayout>

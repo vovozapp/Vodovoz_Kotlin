@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="Мои данные"
+            app:titleTextAppearance="@style/ToolbarTitle" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/primary_space">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:cardElevation="0dp"
+                    app:cardCornerRadius="100dp"
+                    app:layout_constraintDimensionRatio="w,1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.20">
+
+                    <ImageView
+                        android:id="@+id/avatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/default_avatar"
+                        tools:ignore="ContentDescription" />
+
+                </androidx.cardview.widget.CardView>
+
+
+                <TextView
+                    android:id="@+id/loadPhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextPrimary"
+                    android:textSize="16sp"
+                    android:layout_marginStart="@dimen/primary_space"
+                    android:text="Загрузить фото"
+                    app:layout_constraintBottom_toBottomOf="@+id/cardView"
+                    app:layout_constraintStart_toEndOf="@+id/cardView"
+                    app:layout_constraintTop_toTopOf="@+id/cardView" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/primary_margin"
+                android:paddingBottom="@dimen/primary_margin"
+                android:fontFamily="@font/rotonda"
+                android:textColor="@color/blackTextPrimary"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@color/whiteDark"
+                android:paddingStart="@dimen/primary_space"
+                android:paddingEnd="@dimen/primary_space"
+                android:text="Личные данные" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:paddingTop="@dimen/primary_margin"
+                android:paddingBottom="@dimen/primary_margin">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextLight"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:textSize="16sp"
+                    android:text="email" />
+
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextPrimary"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:layout_marginTop="2dp"
+                    android:textSize="16sp"
+                    android:text="sluhdimaa@gmail.com" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:paddingTop="@dimen/primary_margin"
+                android:paddingBottom="@dimen/primary_margin">
+
+                <TextView
+                    android:id="@+id/secondNameTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextLight"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:textSize="16sp"
+                    android:text="Фамилия" />
+
+                <TextView
+                    android:id="@+id/secondName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextPrimary"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:layout_marginTop="2dp"
+                    android:textSize="16sp"
+                    android:text="Слухинский" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:paddingTop="@dimen/primary_margin"
+                android:paddingBottom="@dimen/primary_margin">
+
+                <TextView
+                    android:id="@+id/firstNameTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextLight"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:textSize="16sp"
+                    android:text="Имя" />
+
+                <TextView
+                    android:id="@+id/firstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextPrimary"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:layout_marginTop="2dp"
+                    android:textSize="16sp"
+                    android:text="Дмитрий" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:paddingTop="@dimen/primary_margin"
+                android:paddingBottom="@dimen/primary_margin">
+
+                <TextView
+                    android:id="@+id/sexTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextLight"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:textSize="16sp"
+                    android:text="Пол" />
+
+                <TextView
+                    android:id="@+id/sex"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextPrimary"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:layout_marginTop="2dp"
+                    android:textSize="16sp"
+                    android:text="мужской" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:paddingTop="@dimen/primary_margin"
+                android:paddingBottom="@dimen/primary_margin">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextLight"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:textSize="16sp"
+                    android:text="Дата рождения" />
+
+                <TextView
+                    android:id="@+id/birthday"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextPrimary"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:layout_marginTop="2dp"
+                    android:textSize="16sp"
+                    android:text="31.08.1999" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:paddingTop="@dimen/primary_margin"
+                android:paddingBottom="@dimen/primary_margin">
+
+                <TextView
+                    android:id="@+id/phoneTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextLight"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:textSize="16sp"
+                    android:text="Телефон" />
+
+                <TextView
+                    android:id="@+id/phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextPrimary"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:layout_marginTop="2dp"
+                    android:textSize="16sp"
+                    android:text="+7-952-247-38-26" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/primary_margin"
+                android:paddingBottom="@dimen/primary_margin"
+                android:fontFamily="@font/rotonda"
+                android:textColor="@color/blackTextPrimary"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@color/whiteDark"
+                android:paddingStart="@dimen/primary_space"
+                android:paddingEnd="@dimen/primary_space"
+                android:text="Изменение пароля" />
+
+            <TextView
+                android:id="@+id/newPassword"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:fontFamily="@font/rotonda"
+                android:textColor="@color/blackTextLight"
+                android:paddingStart="@dimen/primary_space"
+                android:paddingEnd="@dimen/primary_space"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:text="Новый пароль" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/save"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="@dimen/primary_space"
+            android:layout_marginTop="@dimen/primary_margin"
+            android:layout_marginEnd="@dimen/primary_space"
+            android:layout_marginBottom="@dimen/primary_margin"
+            android:background="@drawable/background_button_primary"
+            android:fontFamily="@font/rotonda"
+            android:gravity="center"
+            android:text="Сохранить"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:translationZ="3dp" />
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,45 @@
+<resources>
+    <style name="Theme.Vodovoz" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/bluePrimary</item>
+        <item name="colorPrimaryDark">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorAccent">@color/bluePrimary</item>
+    </style>
+
+    <style name="Tab" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:fontFamily">@font/rotonda</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="RatingBar" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorAccent">@color/yellow</item>
+    </style>
+
+    <style name="ToolbarTitle" >
+        <item name="fontFamily">@font/rotonda</item>
+        <item name="android:textColor">@color/blackTextPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="ToolbarSubtitle" >
+        <item name="fontFamily">@font/rotonda</item>
+        <item name="android:textColor">@color/blackTextLight</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:textColorHint">@drawable/text_input_layout_box_stroke_selector</item>
+        <item name="boxStrokeColor">@drawable/text_input_layout_box_stroke_selector</item>
+        <item name="startIconTint">@drawable/text_input_layout_box_stroke_selector</item>
+        <item name="boxCornerRadiusTopStart">5dp</item>
+        <item name="boxCornerRadiusTopEnd">5dp</item>
+    </style>
+
+    <style name="TextField">
+        <item name="fontFamily">@font/rotonda</item>
+        <item name="android:textColor">@color/blackTextPrimary</item>
+    </style>
+
+
+</resources>

@@ -1,0 +1,13 @@
+<resources>
+    <style name="Theme.Vodovoz" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/bluePrimary</item>
+        <item name="colorPrimaryDark">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="Tab" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:fontFamily">@font/primary_normal</item>
+        <item name="android:textSize">@dimen/title_text_size</item>
+    </style>
+
+</resources>

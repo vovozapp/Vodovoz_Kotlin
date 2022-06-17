@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/whiteDark">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="Скидка до 16% на природную"
+            app:titleTextAppearance="@style/ToolbarTitle"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/contentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:translationZ="1dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/image"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginBottom="14dp"
+                        android:layout_marginTop="14dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="w,300:728"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0"
+                        tools:ignore="ContentDescription" />
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/customerCategoryCard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginStart="@dimen/primary_space"
+                        app:cardBackgroundColor="@color/green"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:cardCornerRadius="5dp"
+                        app:cardElevation="3dp">
+
+                        <TextView
+                            android:id="@+id/customerCategory"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/primary_normal"
+                            android:gravity="center"
+                            android:paddingStart="@dimen/primary_margin"
+                            android:paddingEnd="@dimen/primary_margin"
+                            android:textColor="@color/white"
+                            android:visibility="visible"
+                            tools:text="Статус"/>
+
+                    </androidx.cardview.widget.CardView>
+
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/timeLeftContainer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="@dimen/primary_space"
+                        android:layout_marginBottom="4dp"
+                        app:cardBackgroundColor="@color/gray"
+                        app:cardCornerRadius="5dp"
+                        app:cardElevation="3dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <TextView
+                            android:id="@+id/timeLeft"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/primary_normal"
+                            android:gravity="center"
+                            android:paddingStart="@dimen/primary_margin"
+                            android:paddingEnd="@dimen/primary_margin"
+                            android:textColor="@color/white"
+                            android:visibility="visible"
+                            tools:text="100 дней" />
+
+                    </androidx.cardview.widget.CardView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/primary_margin"
+                    android:textSize="16sp"
+                    android:textColor="@color/blackTextLight"
+                    android:fontFamily="@font/rotonda"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space"
+                    tools:text="Текст"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Товары учавствующие в акции"
+                    android:fontFamily="@font/rotonda"
+                    android:textStyle="bold"
+                    android:textColor="@color/blackTextPrimary"
+                    android:textSize="18sp"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:layout_marginTop="@dimen/primary_space"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/productRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/forYouProductSliderFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:translationZ="1dp"
+                android:layout_marginTop="@dimen/primary_space"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

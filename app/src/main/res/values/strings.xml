@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Vodovoz</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    //BottomNavMenu
+    <string name="home">Домой</string>
+    <string name="catalog">Каталог</string>
+    <string name="cart">Корзина</string>
+    <string name="favorite">Избранное</string>
+    <string name="account">Профиль</string>
+    <string name="search_hint">Искать в водовоз</string>
+    <string name="load_label">Загрузка</string>
+    <string name="update_label">Обновить</string>
+
+    //Section
+    <string name="discount">Самое выгодное</string>
+    <string name="history_label">Истории</string>
+    <string name="popular_label">Популярное</string>
+
+    //Additional Info
+    <string name="about_shop">О магазине</string>
+    <string name="about_delivery">О доставке</string>
+    <string name="about_pay">Об оплате</string>
+    <string name="about_contacts">Связаться с нами</string>
+    <string name="about_how_to_order">Как заказать</string>
+    <string name="about_services">Услуги</string>
+    <string name="about_app">О приложении</string>
+    <string name="show_all">СМ.ВСЕ</string>
+    <string name="last_purchases">Прошлые покупки</string>
+    <string name="additional_navigation_favorite">Избранное</string>
+    <string name="additional_navigation_order_history">История заказов</string>
+    <string name="brands">Бренды</string>
+    <string name="novelty">Новинка</string>
+    <string name="novelties">Новинки</string>
+    <string name="not_available">Нет в наличии</string>
+    <string name="resizable_text_read_more"> подробнее</string>
+    <string name="resizable_text_read_less"> свернуть</string>
+
+</resources>

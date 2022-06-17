@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/word"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_rectangle_light_gray"
+    android:paddingTop="@dimen/primary_margin"
+    android:paddingBottom="@dimen/primary_margin"
+    android:paddingStart="@dimen/primary_space"
+    android:paddingEnd="@dimen/primary_space"
+    android:translationZ="1dp"
+    android:fontFamily="@font/rotonda"
+    android:textColor="@color/blackTextPrimary"
+    tools:text="Природная вода"/>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/primary_margin"
+        android:paddingBottom="@dimen/primary_margin"
+        android:paddingStart="@dimen/primary_space"
+        android:paddingEnd="@dimen/primary_space"
+        android:fontFamily="@font/rotonda"
+        android:textSize="18sp"
+        android:textColor="@color/blackTextPrimary"
+        android:textStyle="bold"
+        android:background="@color/light_gray"
+        tools:text="Основные"/>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/propertyRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:focusable="true"
+    android:clickable="true"
+    android:baselineAligned="false">
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/detailPicturePager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="10dp"
+        app:layout_constraintWidth_percent="0.35"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabIndicator"
+        android:layout_width="0dp"
+        android:layout_height="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/detailPicturePager"
+        app:layout_constraintStart_toStartOf="@+id/detailPicturePager"
+        app:layout_constraintTop_toBottomOf="@id/detailPicturePager"
+        app:tabBackground="@drawable/background_indicator_tab"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="0dp"
+        app:tabMode="fixed"
+        app:tabPadding="0dp"
+        app:tabPaddingEnd="3dp"
+        app:tabPaddingStart="3dp" />
+
+    <RatingBar
+        android:id="@+id/rating"
+        style="?android:attr/ratingBarStyleSmall"
+        android:theme="@style/RatingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:stepSize="1"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="@+id/detailPicturePager"
+        app:layout_constraintStart_toStartOf="@+id/detailPicturePager"
+        app:layout_constraintTop_toBottomOf="@id/tabIndicator"/>
+
+    <TextView
+        android:id="@+id/commentAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/blackTextLight"
+        android:fontFamily="@font/rotonda"
+        android:layout_marginTop="4dp"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/detailPicturePager"
+        app:layout_constraintStart_toStartOf="@+id/detailPicturePager"
+        app:layout_constraintTop_toBottomOf="@id/rating"
+        tools:text="3 отзыва"/>
+
+    <LinearLayout
+        android:id="@+id/allStatusContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/favoriteStatus"
+        app:layout_constraintStart_toEndOf="@+id/detailPicturePager"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/discountContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:visibility="visible"
+            app:cardBackgroundColor="@color/orange"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="0dp">
+
+            <TextView
+                android:id="@+id/discount"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:fontFamily="@font/primary_normal"
+                android:gravity="center"
+                android:paddingStart="@dimen/primary_margin"
+                android:paddingEnd="@dimen/primary_margin"
+                android:textColor="@color/white"
+                android:textSize="@dimen/normal_text_size"
+                android:visibility="visible" />
+
+        </androidx.cardview.widget.CardView>
+
+        <View
+            android:id="@+id/spaceBetweenStatuses"
+            android:layout_width="4dp"
+            android:layout_height="20dp"
+            android:visibility="visible" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/statusContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:visibility="visible"
+            app:cardBackgroundColor="@color/bluePrimary"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="0dp">
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:fontFamily="@font/primary_normal"
+                android:gravity="center"
+                android:paddingStart="@dimen/primary_margin"
+                android:paddingEnd="@dimen/primary_margin"
+                android:text="@string/not_available"
+                android:textColor="@color/white"
+                android:textSize="@dimen/normal_text_size"
+                android:visibility="visible" />
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/favoriteStatus"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_favorite_fill"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/blackTextLight"
+        tools:ignore="ContentDescription" />
+
+    <View
+        android:id="@+id/spaceBetweenStatusAndTitle"
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/favoriteStatus"
+        app:layout_constraintStart_toEndOf="@+id/detailPicturePager"
+        app:layout_constraintTop_toBottomOf="@id/allStatusContainer"/>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fontFamily="@font/rotonda"
+        android:textColor="@color/blackTextPrimary"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/add"
+        app:layout_constraintEnd_toStartOf="@id/favoriteStatus"
+        app:layout_constraintStart_toEndOf="@+id/detailPicturePager"
+        app:layout_constraintTop_toBottomOf="@+id/spaceBetweenStatusAndTitle"
+        tools:text="Какое-то интересное не короткое название какой-т вкусное воды, еще что-то и еще" />
+
+    <ImageView
+        android:id="@+id/add"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/background_add_to_cart"
+        android:padding="8dp"
+        android:src="@drawable/ic_cart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/white"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/rotonda_bold"
+        android:textColor="@color/blackTextPrimary"
+        android:textSize="17sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/detailPicturePager"
+        tools:text="280 Р" />
+
+    <TextView
+        android:id="@+id/unitPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/rotonda"
+        android:gravity="center"
+        android:textColor="@color/blackTextLight"
+        android:layout_marginBottom="2dp"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/price"
+        app:layout_constraintStart_toEndOf="@+id/detailPicturePager"
+        tools:text="510/кг" />
+
+    <TextView
+        android:id="@+id/oldPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/rotonda_bold"
+        android:textColor="@color/blackTextLight"
+        android:textSize="15sp"
+        android:layout_marginStart="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/price"
+        tools:text="300 Р" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

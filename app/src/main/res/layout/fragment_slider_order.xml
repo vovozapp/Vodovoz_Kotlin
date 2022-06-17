@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="bottom">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/primary_bold"
+            android:textSize="@dimen/title_text_size"
+            android:text="Мои заказы"
+            android:paddingTop="@dimen/primary_margin"
+            android:paddingBottom="@dimen/primary_margin"
+            android:paddingStart="@dimen/primary_space"
+            android:paddingEnd="@dimen/primary_space"/>
+
+        <TextView
+            android:id="@+id/showAllOrders"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/primary_normal"
+            android:textSize="@dimen/normal_text_size"
+            android:textColor="@color/bluePrimary"
+            android:gravity="center"
+            android:text="@string/show_all"
+            android:paddingTop="@dimen/primary_margin"
+            android:paddingBottom="@dimen/primary_margin"
+            android:paddingStart="@dimen/primary_space"
+            android:paddingEnd="@dimen/primary_space" />
+
+    </LinearLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/orderPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

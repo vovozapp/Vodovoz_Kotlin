@@ -1,0 +1,43 @@
+package com.vodovoz.app.data.parser.response
+
+import com.vodovoz.app.data.model.common.FilterBundleEntity
+import com.vodovoz.app.data.model.common.FilterEntity
+import com.vodovoz.app.data.model.common.FilterPriceEntity
+import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.remote.ResponseStatus
+import okhttp3.ResponseBody
+import org.json.JSONArray
+import org.json.JSONObject
+
+object FilterBundleResponseJsonParser {
+
+    fun ResponseBody.parseFilterBundleResponse(): ResponseEntity<FilterBundleEntity> {
+        val responseJson = JSONObject(this.string())
+        return when(responseJson.getString("status")) {
+            ResponseStatus.SUCCESS -> ResponseEntity.Success(
+                FilterBundleEntity(
+                    filterPriceEntity = responseJson.getJSONObject("CENAFILTER").parseFilterPriceEntity(),
+                    filterEntityList = responseJson.getJSONArray("data").parseFilterEntityList()
+                )
+            )
+            else -> ResponseEntity.Error()
+        }
+    }
+
+    private fun JSONObject.parseFilterPriceEntity() = FilterPriceEntity(
+        minPrice = get("MIN").toString().toInt(),
+        maxPrice = get("MAX").toString().toInt()
+    )
+
+    private fun JSONArray.parseFilterEntityList():List<FilterEntity> = mutableListOf<FilterEntity>().also {
+        for (index in 0 until this.length()) {
+            it.add(this.optJSONObject(index).parseFilterEntity())
+        }
+    }
+
+    private fun JSONObject.parseFilterEntity() = FilterEntity(
+        code = getString("CODE"),
+        name = getString("NAME")
+    )
+
+}

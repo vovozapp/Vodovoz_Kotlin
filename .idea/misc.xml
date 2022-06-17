@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/drawable-v24/background_add_to_cart.xml" value="0.1665" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2045" />
+        <entry key="app/src/main/res/drawable-v24/image_email.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable-v24/image_password.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable-v24/text_input_layout_box_stroke_selector.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/background_amount.xml" value="0.166" />
+        <entry key="app/src/main/res/drawable/background_button_primary.xml" value="0.2045" />
+        <entry key="app/src/main/res/drawable/background_default_indicator.xml" value="0.189" />
+        <entry key="app/src/main/res/drawable/background_indicator_default.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/background_indicator_tab.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/background_product_status_rectangle_orange.xml" value="0.1985" />
+        <entry key="app/src/main/res/drawable/background_product_status_rectangle_red.xml" value="0.1235" />
+        <entry key="app/src/main/res/drawable/background_rectangle_blue.xml" value="0.1235" />
+        <entry key="app/src/main/res/drawable/background_rectangle_green.xml" value="0.1235" />
+        <entry key="app/src/main/res/drawable/background_rectangle_light_gray.xml" value="0.2045" />
+        <entry key="app/src/main/res/drawable/background_rectangle_orange.xml" value="0.1235" />
+        <entry key="app/src/main/res/drawable/background_selected_indicator.xml" value="0.189" />
+        <entry key="app/src/main/res/drawable/background_tab_indicator.xml" value="0.189" />
+        <entry key="app/src/main/res/drawable/divider_vertical.xml" value="0.178" />
+        <entry key="app/src/main/res/drawable/ic_arrow_drop_down.xml" value="0.173" />
+        <entry key="app/src/main/res/drawable/ic_arrow_left.xml" value="0.173" />
+        <entry key="app/src/main/res/drawable/ic_arrow_right.xml" value="0.1235" />
+        <entry key="app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.2045" />
+        <entry key="app/src/main/res/drawable/ic_favorite_border.xml" value="0.201" />
+        <entry key="app/src/main/res/drawable/ic_home.xml" value="0.2045" />
+        <entry key="app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.2045" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.2045" />
+        <entry key="app/src/main/res/drawable/ic_list.xml" value="0.189" />
+        <entry key="app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.2045" />
+        <entry key="app/src/main/res/drawable/ic_search.xml" value="0.2045" />
+        <entry key="app/src/main/res/drawable/ic_share.xml" value="0.189" />
+        <entry key="app/src/main/res/drawable/ic_table.xml" value="0.189" />
+        <entry key="app/src/main/res/drawable/image_minus.xml" value="0.12" />
+        <entry key="app/src/main/res/drawable/image_plus.xml" value="0.12" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/base_fragment.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/bottom_fragment_catalog.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/bottom_fragment_catalog_mini.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/bottom_fragment_promotion_filter.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/bottom_fragment_sort_settings.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/dialog_sort_settings.xml" value="0.29375" />
+        <entry key="app/src/main/res/layout/fragment_abount_product.xml" value="0.28233184814453127" />
+        <entry key="app/src/main/res/layout/fragment_account.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_all_filters.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_all_promotions.xml" value="0.30885416666666665" />
+        <entry key="app/src/main/res/layout/fragment_banner.xml" value="0.29375" />
+        <entry key="app/src/main/res/layout/fragment_banner_section.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_banner_slider.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_base.xml" value="0.30512820512820515" />
+        <entry key="app/src/main/res/layout/fragment_base_hidden.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_brand_product_list.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_cart.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_catalog.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_comment_slider.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_favorite.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_filter_concrete.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_filter_list.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_history_block.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_history_section.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.26474151611328123" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_main_account.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_main_catalog.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_main_home.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_multiple_category_slider_section.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_notifications.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_other_product_list.xml" value="0.4658040665434381" />
+        <entry key="app/src/main/res/layout/fragment_paginated_maybe_like_product_list.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_product_detail.xml" value="0.30560225254513446" />
+        <entry key="app/src/main/res/layout/fragment_product_list.xml" value="0.37312469482421873" />
+        <entry key="app/src/main/res/layout/fragment_product_properties.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_product_slider_section.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_products.xml" value="0.30185185185185187" />
+        <entry key="app/src/main/res/layout/fragment_products_new.xml" value="0.280535888671875" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_promotion_detail.xml" value="0.2509780883789063" />
+        <entry key="app/src/main/res/layout/fragment_register.xml" value="0.32958526611328115" />
+        <entry key="app/src/main/res/layout/fragment_section_additional_info.xml" value="0.20949432404540763" />
+        <entry key="app/src/main/res/layout/fragment_section_additional_navigation.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_section_banners.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_section_brands.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_section_category_slider.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_section_countries.xml" value="0.22731170654296876" />
+        <entry key="app/src/main/res/layout/fragment_section_discount.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_section_histories.xml" value="0.1437908496732026" />
+        <entry key="app/src/main/res/layout/fragment_section_mini_banners.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_section_popular.xml" value="0.26683078342013894" />
+        <entry key="app/src/main/res/layout/fragment_section_products.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.29375" />
+        <entry key="app/src/main/res/layout/fragment_slider_banner.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_slider_brand.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_slider_comment.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_slider_country.xml" value="0.431396484375" />
+        <entry key="app/src/main/res/layout/fragment_slider_order.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_slider_popular.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_slider_product.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_slider_promotion.xml" value="0.20958083832335328" />
+        <entry key="app/src/main/res/layout/fragment_user_data.xml" value="0.29375" />
+        <entry key="app/src/main/res/layout/frgament_mini_catalog.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/rfagment_all_filters.xml" value="0.30377095540364585" />
+        <entry key="app/src/main/res/layout/view_custom_tab.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/view_holder_banner.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/view_holder_banner_slider.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/view_holder_brand.xml" value="0.4214263916015625" />
+        <entry key="app/src/main/res/layout/view_holder_brand_filter.xml" value="0.49014282226562506" />
+        <entry key="app/src/main/res/layout/view_holder_brand_filter_value.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/view_holder_catalog_category.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/view_holder_catalog_category_mini.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/view_holder_category.xml" value="0.29375" />
+        <entry key="app/src/main/res/layout/view_holder_category_slider.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/view_holder_comment_slider.xml" value="0.29375" />
+        <entry key="app/src/main/res/layout/view_holder_comment_with_avatar.xml" value="0.3446365356445313" />
+        <entry key="app/src/main/res/layout/view_holder_country.xml" value="0.14540812174479167" />
+        <entry key="app/src/main/res/layout/view_holder_detail_category.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/view_holder_error.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/view_holder_filter.xml" value="0.29375" />
+        <entry key="app/src/main/res/layout/view_holder_filter_value.xml" value="0.29375" />
+        <entry key="app/src/main/res/layout/view_holder_history.xml" value="0.21945648193359377" />
+        <entry key="app/src/main/res/layout/view_holder_main_banner.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/view_holder_mini_banner.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/view_holder_novelties_product.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/view_holder_popular_section.xml" value="0.604010009765625" />
+        <entry key="app/src/main/res/layout/view_holder_price.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/view_holder_product.xml" value="0.15520656871146896" />
+        <entry key="app/src/main/res/layout/view_holder_product_grid.xml" value="0.2425018310546875" />
+        <entry key="app/src/main/res/layout/view_holder_product_list.xml" value="0.331695556640625" />
+        <entry key="app/src/main/res/layout/view_holder_product_slider.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/view_holder_progress.xml" value="0.12801361083984375" />
+        <entry key="app/src/main/res/layout/view_holder_promotion.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/view_holder_promotion_filter.xml" value="0.30885416666666665" />
+        <entry key="app/src/main/res/layout/view_holder_properties_group.xml" value="0.30885416666666665" />
+        <entry key="app/src/main/res/layout/view_holder_property.xml" value="0.30885416666666665" />
+        <entry key="app/src/main/res/layout/view_holder_slider_banner.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/view_holder_slider_brand.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/view_holder_slider_category.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/view_holder_slider_comment.xml" value="0.26022304832713755" />
+        <entry key="app/src/main/res/layout/view_holder_slider_country.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/view_holder_slider_detail_picture.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/view_holder_slider_history.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/view_holder_slider_order.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/view_holder_slider_picture.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/view_holder_slider_popular_category.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/view_holder_slider_product.xml" value="0.20034230550130205" />
+        <entry key="app/src/main/res/layout/view_holder_slider_product_category.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/view_holder_slider_promotion.xml" value="0.2916666666666667" />
+        <entry key="app/src/main/res/layout/view_holder_slider_promotion_product.xml" value="0.35917498397284536" />
+        <entry key="app/src/main/res/layout/view_holder_slider_search_word.xml" value="0.9623458862304687" />
+        <entry key="app/src/main/res/layout/view_holder_state.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/view_holder_subcategory.xml" value="0.32580413818359377" />
+        <entry key="app/src/main/res/layout/view_holder_subcategory_new.xml" value="0.29375" />
+        <entry key="app/src/main/res/layout/view_load.xml" value="0.29375" />
+        <entry key="app/src/main/res/layout/view_search.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/view_vertical_divider.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/menu/fragment_product_list_menu.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/fragment_products_menu.xml" value="0.12161865234375001" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.1" />
+      </ProjectState>
+    </option>
+  </component>
+</project>
