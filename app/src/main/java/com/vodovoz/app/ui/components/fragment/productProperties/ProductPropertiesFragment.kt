@@ -21,7 +21,6 @@ class ProductPropertiesFragment : Fragment() {
             propertiesGroupUIList: List<PropertiesGroupUI>
         ) = ProductPropertiesFragment().apply {
             this.propertiesGroupUIList = propertiesGroupUIList
-            Log.i(LogSettings.ID_LOG, "PROP SIZE : ${propertiesGroupUIList.size}")
         }
     }
 

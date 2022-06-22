@@ -11,8 +11,9 @@ import com.vodovoz.app.ui.components.fragment.paginatedBrandProductList.Paginate
 import com.vodovoz.app.ui.components.fragment.concreteFilter.ConcreteFilterViewModel
 import com.vodovoz.app.ui.components.fragment.allProductFilters.FiltersViewModel
 import com.vodovoz.app.ui.components.adapter.homeBottomInfo.AdditionalInfoSectionViewModel
+import com.vodovoz.app.ui.components.fragment.allBrands.AllBrandsViewModel
 import com.vodovoz.app.ui.components.fragment.allPromotions.AllPromotionsViewModel
-import com.vodovoz.app.ui.components.fragment.miniCatalog.MiniCatalogViewModel
+import com.vodovoz.app.ui.components.fragment.singleRootCatalog.SIngleRootCatalogViewModel
 import com.vodovoz.app.ui.components.fragment.paginatedMaybeLikeProductList.PaginatedMaybeLikeProductListViewModel
 import com.vodovoz.app.ui.components.fragment.productDetail.ProductDetailViewModel
 import com.vodovoz.app.ui.components.fragment.products.ProductsViewModel
@@ -21,10 +22,12 @@ import com.vodovoz.app.ui.components.fragment.bannerSlider.BannerSliderViewModel
 import com.vodovoz.app.ui.components.fragment.brandSlider.BrandSliderViewModel
 import com.vodovoz.app.ui.components.fragment.commentSlider.CommentSliderViewModel
 import com.vodovoz.app.ui.components.fragment.countrySlider.CountrySliderViewModel
+import com.vodovoz.app.ui.components.fragment.fixProductsAmount.FixAmountProductsViewModel
 import com.vodovoz.app.ui.components.fragment.historySlider.HistorySliderViewModel
 import com.vodovoz.app.ui.components.fragment.orderSlider.OrderSliderViewModel
 import com.vodovoz.app.ui.components.fragment.popularSlider.PopularSliderViewModel
 import com.vodovoz.app.ui.components.fragment.productSlider.ProductSliderViewModel
+import com.vodovoz.app.ui.components.fragment.productsWithoutFilter.ProductsWithoutFiltersViewModel
 import com.vodovoz.app.ui.components.fragment.promotionDetail.PromotionDetailViewModel
 import com.vodovoz.app.ui.components.fragment.promotionSlider.PromotionSliderViewModel
 import com.vodovoz.app.ui.components.fragment.userData.UserDataViewModel
@@ -91,8 +94,8 @@ class ViewModelFactory(
             return ConcreteFilterViewModel(dataRepository) as T
         }
 
-        if (modelClass.isAssignableFrom(MiniCatalogViewModel::class.java)){
-            return MiniCatalogViewModel(dataRepository) as T
+        if (modelClass.isAssignableFrom(SIngleRootCatalogViewModel::class.java)){
+            return SIngleRootCatalogViewModel(dataRepository) as T
         }
 
         if (modelClass.isAssignableFrom(ProductDetailViewModel::class.java)){
@@ -133,6 +136,19 @@ class ViewModelFactory(
 
         if (modelClass.isAssignableFrom(AllPromotionsViewModel::class.java)){
             return AllPromotionsViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(ProductsWithoutFiltersViewModel::class.java)){
+            return ProductsWithoutFiltersViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(AllBrandsViewModel::class.java)){
+            return AllBrandsViewModel(dataRepository) as T
+        }
+
+
+        if (modelClass.isAssignableFrom(FixAmountProductsViewModel::class.java)){
+            return FixAmountProductsViewModel(dataRepository) as T
         }
 
         throw IllegalArgumentException("Unknown View Model Class")

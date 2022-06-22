@@ -3,6 +3,7 @@ package com.vodovoz.app.ui.components.fragment.productSlider.productAdapter
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -12,9 +13,11 @@ import com.vodovoz.app.databinding.ViewHolderSliderProductBinding
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountText
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 class ProductSliderViewHolder(
     private val binding: ViewHolderSliderProductBinding,
+    private val onProductClickSubject: PublishSubject<Long>,
     private val context: Context,
     private val cardWidth: Int
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -27,6 +30,9 @@ class ProductSliderViewHolder(
             (cardWidth * 1.2).toInt()
         )
         binding.oldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        binding.root.setOnClickListener {
+            onProductClickSubject.onNext(productUI.id)
+        }
     }
 
     fun onBind(productUI: ProductUI) {

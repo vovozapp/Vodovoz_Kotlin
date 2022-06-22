@@ -14,7 +14,6 @@ object PromotionDetailResponseJsonParser {
 
     fun ResponseBody.parsePromotionDetailResponse(): ResponseEntity<PromotionDetailEntity> {
         val responseJson = JSONObject(this.string())
-        Log.i(LogSettings.ID_LOG, "PROM $responseJson")
         return when(responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(responseJson.parsePromotionDetailEntity())
             else -> ResponseEntity.Error(responseJson.getString("message"))

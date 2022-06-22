@@ -36,7 +36,10 @@ object ProductJsonParser {
             rating = getDouble("PROPERTY_RATING_VALUE"),
             status = status,
             statusColor = statusColor,
-            commentAmount = getString("COUTCOMMENTS"),
+            commentAmount = when(has("COUTCOMMENTS")) {
+                true -> getString("COUTCOMMENTS")
+                false -> ""
+            },
             detailPictureList = parseDetailPictureList(detailPicture)
         )
     }

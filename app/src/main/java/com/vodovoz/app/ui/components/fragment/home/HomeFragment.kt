@@ -13,9 +13,11 @@ import com.vodovoz.app.ui.components.base.FetchState
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.components.fragment.bannerSlider.BannerSliderConfig
 import com.vodovoz.app.ui.components.fragment.bannerSlider.BannerSliderFragment
+import com.vodovoz.app.ui.components.fragment.bannerSlider.BannerSliderViewModel
 import com.vodovoz.app.ui.components.fragment.historySlider.HistorySliderFragment
 import com.vodovoz.app.ui.components.fragment.orderSlider.OrderSliderFragment
 import com.vodovoz.app.ui.components.fragment.productSlider.ProductSliderFragment
+import com.vodovoz.app.ui.components.fragment.productSlider.ProductSliderViewModel
 import com.vodovoz.app.ui.components.fragment.promotionSlider.PromotionSliderFragment
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -108,31 +110,31 @@ class HomeFragment : Fragment() {
 
         childFragmentManager.beginTransaction()
             .replace(R.id.discountFragment, ProductSliderFragment.newInstance(
-                dataSource = ProductSliderFragment.DataSource.Request(sliderType = DataRepository.DISCOUNT_PRODUCT_TYPE),
+                dataSource = ProductSliderFragment.DataSource.Request(sliderType = ProductSliderViewModel.DISCOUNT_PRODUCTS_SLIDER),
                 config = ProductSliderFragment.Config(false)
             )).commit()
 
         childFragmentManager.beginTransaction()
             .replace(R.id.noveltiesFragment, ProductSliderFragment.newInstance(
-                dataSource = ProductSliderFragment.DataSource.Request(sliderType = DataRepository.NOVELTIES_PRODUCT_TYPE),
+                dataSource = ProductSliderFragment.DataSource.Request(sliderType = ProductSliderViewModel.NOVELTIES_PRODUCTS_SLIDER),
                 config = ProductSliderFragment.Config(false)
             )).commit()
 
         childFragmentManager.beginTransaction()
             .replace(R.id.topProductSlider, ProductSliderFragment.newInstance(
-                dataSource = ProductSliderFragment.DataSource.Request(sliderType = DataRepository.TOP_PRODUCT),
+                dataSource = ProductSliderFragment.DataSource.Request(sliderType = ProductSliderViewModel.TOP_PRODUCTS_SLIDER),
                 config = ProductSliderFragment.Config(false)
             )).commit()
 
         childFragmentManager.beginTransaction()
             .replace(R.id.bottomProductSlider, ProductSliderFragment.newInstance(
-                dataSource = ProductSliderFragment.DataSource.Request(sliderType = DataRepository.BOTTOM_PRODUCT),
+                dataSource = ProductSliderFragment.DataSource.Request(sliderType = ProductSliderViewModel.BOTTOM_PRODUCTS_SLIDER),
                 config = ProductSliderFragment.Config(false)
             )).commit()
 
         childFragmentManager.beginTransaction()
             .replace(R.id.viewedProductSliderFragment, ProductSliderFragment.newInstance(
-                dataSource = ProductSliderFragment.DataSource.Request(sliderType = DataRepository.VIEWED_PRODUCT),
+                dataSource = ProductSliderFragment.DataSource.Request(sliderType = ProductSliderViewModel.VIEWED_PRODUCTS_SLIDER),
                 config = ProductSliderFragment.Config(false)
             )).commit()
 
@@ -148,7 +150,7 @@ class HomeFragment : Fragment() {
         childFragmentManager.beginTransaction()
             .replace(R.id.mainBannersFragment, BannerSliderFragment.newInstance(
                 bannerSliderConfig = BannerSliderConfig(
-                    bannerType = DataRepository.MAIN_BANNER_TYPE,
+                    bannerType = BannerSliderViewModel.ADVERTISING_BANNERS_SLIDER,
                     marginTop = primaryMargin,
                     marginBottom = primaryMargin,
                     marginLeft = primarySpace,
@@ -161,7 +163,7 @@ class HomeFragment : Fragment() {
         childFragmentManager.beginTransaction()
             .replace(R.id.secondaryBannersFragment, BannerSliderFragment.newInstance(
                 BannerSliderConfig(
-                    bannerType = DataRepository.SECONDARY_BANNER_TYPE,
+                    BannerSliderViewModel.CATEGORY_BANNERS_SLIDER,
                     marginTop = primaryMargin,
                     marginBottom = primaryMargin,
                     marginLeft = primarySpace,

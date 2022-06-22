@@ -43,10 +43,10 @@ class PaginatedBrandProductListViewModel(
     }
 
     fun updateData() = dataRepository
-        .fetchPaginatedBrandProductList(
+        .fetchSomeProductsByBrand(
             productId = productId!!,
             brandId = brandId!!,
-            pageIndex = pageIndex
+            page = pageIndex
         )
         .subscribeOn(Schedulers.io())
         .doOnSubscribe { fetchStateMLD.value = FetchState.Loading() }

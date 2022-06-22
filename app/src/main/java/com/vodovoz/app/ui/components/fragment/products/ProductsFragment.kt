@@ -2,7 +2,6 @@ package com.vodovoz.app.ui.components.fragment.products
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
@@ -21,17 +20,16 @@ import com.vodovoz.app.ui.components.base.FetchState
 import com.vodovoz.app.ui.components.base.FetchStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.components.base.loadStateAdapter.LoadStateAdapter
-import com.vodovoz.app.ui.components.adapter.brandFilterValuesAdapter.BrandFilterValuesAdapter
-import com.vodovoz.app.ui.components.adapter.brandFilterValuesAdapter.BrandFilterValuesMarginDecoration
+import com.vodovoz.app.ui.components.adapter.primaryProductsFiltersAdapter.ProductsFiltersAdapter
+import com.vodovoz.app.ui.components.adapter.primaryProductsFiltersAdapter.ProductsFiltersMarginDecoration
 import com.vodovoz.app.ui.components.diffUtils.ProductDiffItemCallback
-import com.vodovoz.app.ui.components.adapter.pagingProductsAdapter.ProductsAdapter
+import com.vodovoz.app.ui.components.adapter.pagingProductsAdapter.PagingProductsAdapter
+import com.vodovoz.app.ui.components.adapter.pagingProductsAdapter.ViewMode
 import com.vodovoz.app.ui.components.adapter.pagingProductsAdapter.grid.GridMarginDecoration
 import com.vodovoz.app.ui.components.adapter.pagingProductsAdapter.list.ListMarginDecoration
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.FilterValueUI
-import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.custom.FilterBundleUI
-import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.flow.collectLatest
@@ -52,14 +50,14 @@ class ProductsFragment : FetchStateBaseFragment() {
     private var viewMode: ViewMode = ViewMode.LIST
     private val updateSubject: PublishSubject<Boolean> = PublishSubject.create()
     private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
-    private var productAdapter: ProductsAdapter = ProductsAdapter(
+    private var productAdapter: PagingProductsAdapter = PagingProductsAdapter(
         onProductClickSubject = onProductClickSubject,
         productDiffItemCallback = ProductDiffItemCallback(),
         viewMode = viewMode
     )
 
     private val onBrandClickSubject: PublishSubject<FilterValueUI> = PublishSubject.create()
-    private val brandFilterValuesAdapter = BrandFilterValuesAdapter(onBrandClickSubject)
+    private val productsFiltersAdapter = ProductsFiltersAdapter(onBrandClickSubject)
 
     private val space: Int by lazy { resources.getDimension(R.dimen.primary_space).toInt() }
 
@@ -129,11 +127,6 @@ class ProductsFragment : FetchStateBaseFragment() {
         binding.productRecycler.layoutManager = null
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.fragment_products_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
     override fun initView() {
         setHasOptionsMenu(true)
         initProductRecycler()
@@ -174,8 +167,8 @@ class ProductsFragment : FetchStateBaseFragment() {
     private fun initBrandRecycler() {
         binding.brandRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.brandRecycler.adapter = brandFilterValuesAdapter
-        binding.brandRecycler.addItemDecoration(BrandFilterValuesMarginDecoration(space))
+        binding.brandRecycler.adapter = productsFiltersAdapter
+        binding.brandRecycler.addItemDecoration(ProductsFiltersMarginDecoration(space))
         onBrandClickSubject.subscribeBy { filterValue ->
             viewModel.addPrimaryFilterValue(filterValue)
         }
@@ -258,12 +251,12 @@ class ProductsFragment : FetchStateBaseFragment() {
             }
         }
 
-        brandFilterValuesAdapter.brandFilterValueList = categoryUI.primaryFilterValueList
-        brandFilterValuesAdapter.notifyDataSetChanged()
+        productsFiltersAdapter.brandFilterValueList = categoryUI.primaryFilterValueList
+        productsFiltersAdapter.notifyDataSetChanged()
     }
 
     private fun updatePager() {
-        productAdapter = ProductsAdapter(
+        productAdapter = PagingProductsAdapter(
             onProductClickSubject = onProductClickSubject,
             productDiffItemCallback = ProductDiffItemCallback(),
             viewMode = viewMode
@@ -349,7 +342,7 @@ class ProductsFragment : FetchStateBaseFragment() {
     )
 
     private fun showMiniCatalog() = findNavController().navigate(
-        ProductsFragmentDirections.actionProductsFragmentToMiniCatalogBottomFragment2(viewModel.categoryId)
+        ProductsFragmentDirections.actionProductsFragmentToSingleRootCatalogBottomFragment2(viewModel.categoryId)
     )
 
 }

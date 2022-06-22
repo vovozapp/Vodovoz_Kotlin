@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -103,6 +104,7 @@ class ProductDetailFragment : FetchStateBaseFragment() {
     }
 
     private fun initDetailPictureRecycler() {
+        binding.back.setOnClickListener { findNavController().popBackStack() }
         binding.detailPicturePager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.detailPicturePager.adapter = detailPictureSliderAdapter
         TabLayoutMediator(binding.tabIndicator, binding.detailPicturePager) { _, _ -> }.attach()

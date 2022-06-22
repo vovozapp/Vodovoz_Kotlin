@@ -15,10 +15,11 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 class PromotionSliderViewHolder(
     private val binding: ViewHolderSliderPromotionBinding,
     private val onPromotionClickSubject: PublishSubject<Long>,
+    private val onProductClickSubject: PublishSubject<Long>,
     private val context: Context
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val promotionProductSliderAdapter = PromotionProductSliderAdapter()
+    private val promotionProductSliderAdapter = PromotionProductSliderAdapter(onProductClickSubject)
 
     init {
         binding.productPager.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)

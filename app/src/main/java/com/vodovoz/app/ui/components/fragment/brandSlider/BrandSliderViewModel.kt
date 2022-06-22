@@ -7,8 +7,10 @@ import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.ui.mapper.BrandMapper.mapToUI
 import com.vodovoz.app.ui.model.BrandUI
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class BrandSliderViewModel(
     private val dataRepository: DataRepository
@@ -23,7 +25,9 @@ class BrandSliderViewModel(
     private val compositeDisposable = CompositeDisposable()
 
     init {
-        dataRepository.brandSubject
+        dataRepository.fetchBrandsSlider()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy { response ->
                 when(response) {
                     is ResponseEntity.Success -> {

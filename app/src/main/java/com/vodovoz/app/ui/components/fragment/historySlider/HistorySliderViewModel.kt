@@ -7,8 +7,10 @@ import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.ui.mapper.HistoryMapper.mapToUI
 import com.vodovoz.app.ui.model.HistoryUI
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class HistorySliderViewModel(
     private val dataRepository: DataRepository
@@ -22,13 +24,18 @@ class HistorySliderViewModel(
 
     private val compositeDisposable = CompositeDisposable()
 
+    lateinit var historyUIList: List<HistoryUI>
+
     init {
-        dataRepository.historySubject
+        dataRepository.fetchHistoriesSlider()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy { response ->
                 when(response) {
                     is ResponseEntity.Success -> {
                         response.data?.let { noNullData ->
-                            historyListMLD.value = noNullData.mapToUI()
+                            historyUIList = noNullData.mapToUI()
+                            historyListMLD.value = historyUIList
                         }
                     }
                     is ResponseEntity.Error -> {

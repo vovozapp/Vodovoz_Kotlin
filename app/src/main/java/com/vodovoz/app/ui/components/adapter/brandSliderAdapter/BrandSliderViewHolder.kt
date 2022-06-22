@@ -5,9 +5,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vodovoz.app.databinding.ViewHolderSliderBrandBinding
 import com.vodovoz.app.ui.model.BrandUI
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 class BrandSliderViewHolder(
     private val binding: ViewHolderSliderBrandBinding,
+    private val onBrandClickSubject: PublishSubject<Long>,
     private val context: Context,
     private val cardWidth: Int
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -17,6 +19,10 @@ class BrandSliderViewHolder(
             cardWidth,
             (cardWidth * 0.55).toInt()
         )
+
+        binding.root.setOnClickListener {
+            onBrandClickSubject.onNext(brandUI.id)
+        }
     }
 
     private lateinit var brandUI: BrandUI

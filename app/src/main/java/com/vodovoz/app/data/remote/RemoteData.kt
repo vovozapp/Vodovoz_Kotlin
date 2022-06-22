@@ -1,56 +1,74 @@
 package com.vodovoz.app.data.remote
 
-import com.vodovoz.app.data.parser.response.*
+import android.util.Log
+import com.vodovoz.app.BuildConfig
+import com.vodovoz.app.data.model.common.*
+import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
+import com.vodovoz.app.data.model.features.CountryBundleEntity
+import com.vodovoz.app.data.parser.response.catalog.CatalogResponseJsonParser.parseCatalogResponse
+import com.vodovoz.app.data.parser.response.comment.CommentsSliderResponseJsonParser.parseCommentsSliderResponse
 import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonParser.parseAllPromotionsResponse
-import com.vodovoz.app.data.parser.response.ConcreteFilterResponseJsonParser.parseConcreteFilterResponse
-import com.vodovoz.app.data.parser.response.country.CountrySliderResponseJsonParser.parseSliderCountryResponse
-import com.vodovoz.app.data.parser.response.FilterBundleResponseJsonParser.parseFilterBundleResponse
-import com.vodovoz.app.data.parser.response.LoginResponseJsonParser.parseLoginResponse
-import com.vodovoz.app.data.parser.response.OrderSliderResponseJsonParser.parseOrderSliderResponse
-import com.vodovoz.app.data.parser.response.PaginatedBrandProductListResponseJsonParser.parsePaginatedBrandProductListResponse
-import com.vodovoz.app.data.parser.response.PaginatedMaybeLikeProductListResponseJsonParser.parsePaginatedMaybeLikeProductListResponse
-import com.vodovoz.app.data.parser.response.ProductDetailResponseJsonParser.parseProductDetailResponse
+import com.vodovoz.app.data.parser.response.category.ConcreteFilterResponseJsonParser.parseConcreteFilterResponse
+import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
+import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
+import com.vodovoz.app.data.parser.response.paginatedProducts.MaybeLikeProductsResponseJsonParser.parseMaybeLikeProductsResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
-import com.vodovoz.app.data.parser.response.RegisterResponseJsonParser.parseRegisterResponse
-import com.vodovoz.app.data.parser.response.UserDataResponseJsonParser.parseUserDataResponse
-import com.vodovoz.app.data.parser.response.ViewedProductSliderResponseJsonParser.parseViewedProductSliderResponse
+import com.vodovoz.app.data.parser.response.user.RegisterResponseJsonParser.parseRegisterResponse
+import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
+import com.vodovoz.app.data.parser.response.banner.AdvertisingBannersSliderResponseJsonParser.parseAdvertisingBannersSliderResponse
+import com.vodovoz.app.data.parser.response.banner.CategoryBannersSliderResponseJsonParser.parseCategoryBannersSliderResponse
+import com.vodovoz.app.data.parser.response.banner.ProductsByBannerResponseJsonParser.parseProductsByBannerResponse
+import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.parseAllBrandsResponse
+import com.vodovoz.app.data.parser.response.brand.BrandHeaderResponseJsonParser.parseBrandHeaderResponse
+import com.vodovoz.app.data.parser.response.brand.BrandsSliderResponseJsonParser.parseBrandsSliderResponse
+import com.vodovoz.app.data.parser.response.category.AllFiltersByCategoryResponseJsonParser.parseAllFiltersByCategoryResponse
+import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
 import com.vodovoz.app.data.parser.response.country.CountryHeaderResponseJsonParser.parseCountryHeaderResponse
-import com.vodovoz.app.data.parser.response.country.ProductsByCountryResponseJsonParser.parseProductsByCountryResponse
-import com.vodovoz.app.data.parser.response.promotion.PromotionSliderResponseJsonParser
+import com.vodovoz.app.data.parser.response.country.CountrySliderResponseJsonParser.parseCountriesSliderResponse
+import com.vodovoz.app.data.parser.response.discount.DiscountHeaderResponseJsonParser.parseDiscountHeaderResponse
+import com.vodovoz.app.data.parser.response.discount.DiscountSliderResponseParser.parseDiscountSliderResponse
+import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseBottomSliderResponse
+import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseTopSliderResponse
+import com.vodovoz.app.data.parser.response.doubleSlider.SliderHeaderResponseJsonParser.parseSliderHeaderResponse
+import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonParser.parseHistoriesSliderResponse
+import com.vodovoz.app.data.parser.response.novelties.NoveltiesHeaderResponseJsonParser.parseNoveltiesHeaderResponse
+import com.vodovoz.app.data.parser.response.novelties.NoveltiesSliderResponseParser.parseNoveltiesSliderResponse
+import com.vodovoz.app.data.parser.response.paginatedProducts.SomeProductsByBrandResponseJsonParser.parseSomeProductsByBrandResponse
+import com.vodovoz.app.data.parser.response.popular.PopularSliderResponseJsonParser.parsePopularSliderResponse
+import com.vodovoz.app.data.parser.response.product.ProductDetailsResponseJsonParser.parseProductDetailsResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionSliderResponseJsonParser.parsePromotionSliderResponse
+import com.vodovoz.app.data.parser.response.promotion.PromotionsByBannerResponseJsonParser.parsePromotionsByBannerResponse
+import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
+import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.rx3.rxSingle
 
 class RemoteData(
-    private val api: Api,
-    private val bannerResponseJsonParser: BannerResponseJsonParser,
-    private val catalogResponseJsonParser: CatalogResponseJsonParser,
-    private val doubleCategoryResponseJsonParser: DoubleCategoryResponseJsonParser,
-    private val discountCategoryResponseParser: DiscountCategoryResponseParser,
-    private val noveltiesCategoryResponseParser: NoveltiesCategoryResponseParser,
-    private val commentResponseJsonParser: CommentResponseJsonParser,
-    private val historyResponseJsonParser: HistoryResponseJsonParser,
-    private val categoryPopularResponseJsonParser: CategoryPopularResponseJsonParser,
-    private val brandResponseJsonParser: BrandResponseJsonParser,
-    private val categoryHeaderResponseJsonParser: CategoryHeaderResponseJsonParser,
+    private val api: Api
 ) : RemoteDataSource {
 
-    //Страны
-    override fun fetchCountrySlider() =
-        api.fetchCountryResponse(action = "glav").flatMap { Single.just(it.parseSliderCountryResponse()) }
+    //Информации о странах для слайдера на главной странице
+    override fun fetchCountriesSlider(): Single<ResponseEntity<CountryBundleEntity>> = rxSingle {
+        api.fetchCountryResponse(action = "glav")
+    }.flatMap { Single.just(it.body()!!.parseCountriesSliderResponse()) }
 
+    //Главная информация о выбранной стране
     override fun fetchCountryHeader(
         countryId: Long
-    ) =  api.fetchCountryResponse(
-        action = "details",
-        countryId = countryId
-    ).flatMap { Single.just(it.parseCountryHeaderResponse()) }
+    ): Single<ResponseEntity<CategoryEntity>> = rxSingle {
+        api.fetchCountryResponse(
+            action = "details",
+            countryId = countryId
+        )
+    }.flatMap { Single.just(it.body()!!.parseCountryHeaderResponse()) }
 
-    override fun fetchProductsByCountry(
+    //Постраничная загрузка продуктов по для выбранной страны
+    override suspend fun fetchProductsByCountry(
         countryId: Long,
         sort: String?,
         orientation: String?,
-        page: Int?,
         categoryId: Long?,
+        page: Int?,
     ) = api.fetchCountryResponse(
         action = "details",
         countryId = countryId,
@@ -58,124 +76,217 @@ class RemoteData(
         orientation = orientation,
         page = page,
         categoryId = categoryId
-    ).flatMap { Single.just(it.parseProductsByCountryResponse()) }
+    )
 
-    override fun fetchPromotionSlider() = api.fetchPromotionResponse(
+    //Информация о слайдере акций на главной странице
+    override fun fetchPromotionsSlider(): Single<ResponseEntity<List<PromotionEntity>>> = api.fetchPromotionResponse(
         action = "akcii",
         limit = 10,
         platform = "android"
     ).flatMap { Single.just(it.parsePromotionSliderResponse()) }
 
-    override fun fetchPromotionDetail(
+    //Подробная информация об акции
+    override fun fetchPromotionDetails(
         promotionId: Long
-    ) = api.fetchPromotionResponse(
+    ): Single<ResponseEntity<PromotionDetailEntity>> = api.fetchPromotionResponse(
         action = "detail",
         promotionId = promotionId
     ).flatMap { Single.just(it.parsePromotionDetailResponse()) }
 
+    //Информация о всех акциях
     override fun fetchAllPromotions(
         filterId: Long
-    ) = api.fetchPromotionResponse(
+    ): Single<ResponseEntity<AllPromotionsBundleEntity>> = api.fetchPromotionResponse(
         action = "akcii",
         filterId = filterId
     ).flatMap { Single.just(it.parseAllPromotionsResponse()) }
 
-    //Акции
+    //Информация о слайдере комментариев на главной странице
+    override fun fetchCommentsSlider(): Single<ResponseEntity<List<CommentEntity>>> = api.fetchCommentResponse(
+        action = "otzivy",
+        limit = 10
+    ).flatMap { Single.just(it.parseCommentsSliderResponse()) }
 
+    //Информация о слайдере историй на главное странице
+    override fun fetchHistoriesSlider(): Single<ResponseEntity<List<HistoryEntity>>> = api.fetchHistoryResponse(
+        blockId = 12,
+        action = "stories",
+        platform = "android"
+    ).flatMap { Single.just(it.parseHistoriesSliderResponse()) }
 
+    //Информация о слайдере популярных разделов на главное странице
+    override fun fetchPopularSlider(): Single<ResponseEntity<List<CategoryEntity>>> = api.fetchPopularResponse(
+        action = "popylrazdel"
+    ).flatMap { Single.just(it.parsePopularSliderResponse()) }
 
-    //HomePage
-    override fun fetchMainBannerResponse() =
-        api.fetchMainBannerResponse().flatMap { Single.just(bannerResponseJsonParser.parseResponse(it)) }
+    //Информация о слайдере новинок на главной странице
+    override fun fetchNoveltiesSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>> = rxSingle {
+        api.fetchNoveltiesResponse(action = "novinki")
+    }.flatMap { Single.just(it.body()!!.parseNoveltiesSliderResponse()) }
 
-    override fun fetchSecondaryBannerResponse() =
-        api.fetchSecondaryBannerResponse().flatMap { Single.just(bannerResponseJsonParser.parseResponse(it)) }
+    override fun fetchNoveltiesHeader(): Single<ResponseEntity<CategoryEntity>> = rxSingle {
+        api.fetchNoveltiesResponse(
+            action = "novinki",
+            page = 1
+        )
+    }.flatMap { Single.just(it.body()!!.parseNoveltiesHeaderResponse()) }
 
-    override fun fetchCommentResponse() =
-        api.fetchCommentList().flatMap { Single.just(commentResponseJsonParser.parseResponse(it)) }
-
-    override fun fetchOrderSlider(userId: Long) =
-        api.fetchOrderSlider(userId).flatMap { Single.just(it.parseOrderSliderResponse()) }
-
-    override fun fetchViewedProductSlider(userId: Long) =
-        api.fetchViewedProductSlider(userId = userId).flatMap { Single.just(it.parseViewedProductSliderResponse()) }
-
-    override fun fetchHistoryResponse() =
-        api.fetchHistoryResponse().flatMap { Single.just(historyResponseJsonParser.parseResponse(it)) }
-
-    override fun fetchPopularResponse() =
-        api.fetchPopularResponse().flatMap { Single.just(categoryPopularResponseJsonParser.parseResponse(it)) }
-
-    override fun fetchDiscountCategoryResponse() =
-        api.fetchDiscountResponse().flatMap { Single.just(discountCategoryResponseParser.parseResponse(it)) }
-
-    override fun fetchBrandResponse() =
-        api.fetchBrandResponse().flatMap { Single.just(brandResponseJsonParser.parseResponse(it)) }
-
-    override fun fetchNoveltiesCategoryResponse() =
-        api.fetchNoveltiesResponse().flatMap { Single.just(noveltiesCategoryResponseParser.parseResponse(it)) }
-
-    override fun fetchDoubleCategoryResponse() =
-        api.fetchDoubleSectionList().flatMap { Single.just(doubleCategoryResponseJsonParser.parseResponse(it)) }
-
-    //CatalogPage
-    override fun fetchCatalogResponse() =
-        api.fetchCatalogResponse().flatMap { Single.just(catalogResponseJsonParser.parseResponse(it)) }
-
-    override fun fetchCategoryHeader(
-        categoryId: Long
-    ) = api.fetchCategory(
-        categoryId = categoryId
-    ).flatMap { Single.just(categoryHeaderResponseJsonParser.parseResponse(it)) }
-
-    override fun fetchFilterBundleResponse(
-        categoryId: Long
-    ) = api.fetchFilterBundleResponse(
-        categoryId = categoryId
-    ).flatMap { Single.just(it.parseFilterBundleResponse()) }
-
-    override fun fetchProductDetailResponse(
-        productId: Long
-    ) = api.fetchProductDetailResponse(
-        productId = productId
-    ).flatMap { Single.just(it.parseProductDetailResponse()) }
-
-    override fun fetchPaginatedMaybeLikeProductListResponse(
-        pageIndex: Int
-    ) = api.fetchPaginatedMaybeLikeProductListResponse(
-        pageIndex = pageIndex
-    ).flatMap { Single.just(it.parsePaginatedMaybeLikeProductListResponse()) }
-
-    override fun fetchConcreteFilterResponse(
-        categoryId: Long,
-        filterCode: String,
-    ) = api.fetchConcreteFilterResponse(
+    //Постраничная загрузка самых выгодных продуктов
+    override suspend fun fetchProductsDiscount(
+        categoryId: Long?,
+        sort: String?,
+        orientation: String?,
+        page: Int?
+    ) = api.fetchNoveltiesResponse(
+        action = "specpredlosh",
         categoryId = categoryId,
-        filterCode = filterCode
-    ).flatMap { Single.just(it.parseConcreteFilterResponse()) }
+        sort = sort,
+        orientation = orientation,
+        page = page
+    )
 
-    override fun fetchPaginatedBrandProductListResponse(
-        productId: Long,
-        brandId: Long,
-        pageIndex: Int
-    ) = api.fetchPaginatedBrandProductListResponse(
-        productId = productId,
-        brandId = brandId,
-        pageIndex = pageIndex
-    ).flatMap { Single.just(it.parsePaginatedBrandProductListResponse()) }
+    //Постраничная загрузка новинок
+    override suspend fun fetchProductsNovelties(
+        categoryId: Long?,
+        sort: String?,
+        orientation: String?,
+        page: Int?
+    ) = api.fetchNoveltiesResponse(
+        action = "novinki",
+        categoryId = categoryId,
+        sort = sort,
+        orientation = orientation,
+        page = page
+    )
 
-    override suspend fun fetchCategoryDetailResponse(
+    //Информация о слайдере самых выгодных продуктов на главной странице
+    override fun fetchDiscountsSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>> = rxSingle {
+        api.fetchNoveltiesResponse(action = "specpredlosh")
+    }.flatMap { Single.just(it.body()!!.parseDiscountSliderResponse()) }
+
+    //Информация о слайдере заказов на главной странице
+    override fun fetchOrdersSlider(
+        userId: Long
+    ): Single<ResponseEntity<List<OrderEntity>>> = api.fetchOrderSlider(
+        userId
+    ).flatMap { Single.just(it.parseOrderSliderResponse()) }
+
+    //Продукты из категории "Может понравиться"
+    override fun fetchMaybeLikeProducts(
+        page: Int
+    ): Single<ResponseEntity<PaginatedProductListEntity>> = rxSingle {
+        api.fetchNoveltiesResponse(
+            action = "details",
+            page = page
+        )
+    }.flatMap { Single.just(it.body()!!.parseMaybeLikeProductsResponse()) }
+
+    //Слайдер ранее просмотренных продуктов
+    override fun fetchViewedProductsSlider(
+        userId: Long?
+    ): Single<ResponseEntity<List<CategoryDetailEntity>>> = api.fetchViewedProductSliderResponse(
+        action = "viewed",
+        userId = userId
+    ).flatMap { Single.just(it.parseViewedProductsSliderResponse()) }
+
+    //Слайдер рекламных баннеров
+    override fun fetchAdvertisingBannersSlider(): Single<ResponseEntity<List<BannerEntity>>> = api.fetchMainSliderResponse(
+        action = "slayder"
+    ).flatMap { Single.just(it.parseAdvertisingBannersSliderResponse()) }
+
+    //Продукты по баннеру
+    override fun fetchProductsByBanner(categoryId: Long): Single<ResponseEntity<List<ProductEntity>>> = api.fetchMainSliderResponse(
+        action = "detailtovar",
+        categoryId = categoryId
+    ).flatMap { Single.just(it.parseProductsByBannerResponse()) }
+
+    //Акции по баннеру
+    override fun fetchPromotionsByBanner(categoryId: Long): Single<ResponseEntity<AllPromotionsBundleEntity>> = api.fetchMainSliderResponse(
+        action = "detailaction",
+        categoryId = categoryId
+    ).flatMap {
+        Log.i(LogSettings.REQ_RES_LOG, "PROM $it")
+        Single.just(it.parsePromotionsByBannerResponse())
+    }
+
+    //Слайдер баннеров категорий
+    override fun fetchCategoryBannersSlider(): Single<ResponseEntity<List<BannerEntity>>> = api.fetchMiniSliderResponse(
+        action = "slayder",
+        androidVersion = BuildConfig.VERSION_NAME
+    ).flatMap { Single.just(it.parseCategoryBannersSliderResponse()) }
+
+    //Слайдер брендов на главнйо странице
+    override fun fetchBrandsSlider(): Single<ResponseEntity<List<BrandEntity>>> = rxSingle {
+        api.fetchBrandResponse(
+            action = "brand",
+            limit = 10
+        )
+    }.flatMap { Single.just(it.body()!!.parseBrandsSliderResponse()) }
+
+    //Гланвная информация о выбранной стране
+    override fun fetchBrandHeader(
+        brandId: Long
+    ): Single<ResponseEntity<CategoryEntity>> = rxSingle {
+        api.fetchBrandResponse(
+            action = "detail",
+            brandId = brandId.toString()
+        )
+    }.flatMap { Single.just(it.body()!!.parseBrandHeaderResponse()) }
+
+    override fun fetchDiscountHeader(): Single<ResponseEntity<CategoryEntity>> = rxSingle {
+        api.fetchNoveltiesResponse(
+            action = "specpredlosh",
+            page = 1
+        )
+    }.flatMap { Single.just(it.body()!!.parseDiscountHeaderResponse()) }
+
+    //Все бренды
+    override fun fetchAllBrands(
+        brandIdList: List<Long>
+    ): Single<ResponseEntity<List<BrandEntity>>> = rxSingle {
+        api.fetchBrandResponse(
+            action = "brand",
+            brandIdList = StringBuilder().apply {
+                brandIdList.forEach { brandId ->
+                    append(brandId)
+                    append(",")
+                }
+            }.toString()
+        )
+    }.flatMap { Single.just(it.body()!!.parseAllBrandsResponse()) }
+
+    //Постраничная загрузка продуктов для выбранного бренда
+    override suspend fun fetchProductsByBrand(
+        brandId: Long?,
+        code: String?,
+        categoryId: Long?,
+        sort: String?,
+        orientation: String?,
+        page: Int?
+    ) = api.fetchBrandResponse(
+        action = "detail",
+        brandId = brandId.toString(),
+        code = code,
+        categoryId = categoryId,
+        orientation = orientation,
+        sort = sort,
+        page = page
+    )
+
+    //Постраничная загрузка продуктов для выбранной категории
+    override suspend fun fetchProductsByCategory(
         categoryId: Long,
-        pageIndex: Int,
         sort: String,
         orientation: String,
         filter: String,
         filterValue: String,
         priceFrom: Int,
-        priceTo: Int
-    ) = api.fetchCategoryDetailResponse(
+        priceTo: Int,
+        page: Int
+    ) = api.fetchCategoryResponse(
+        blockId = 1,
         categoryId = categoryId,
-        pageIndex = pageIndex,
+        page = page,
         sort = sort,
         orientation = orientation,
         filter = filter,
@@ -184,13 +295,107 @@ class RemoteData(
         priceTo = priceTo
     )
 
+    //Постраничная загрузка продуктов по слайдеру
+    override suspend fun fetchProductsBySlider(
+        categoryId: Long?,
+        page: Int?,
+        sort: String?,
+        orientation: String?
+    ) = api.fetchDoubleSliderResponse(
+        action = "details",
+        androidVersion = BuildConfig.VERSION_NAME,
+        categoryId = categoryId,
+        sort = sort,
+        orientation = orientation,
+        page = page,
+    )
+
+    //Главная информация о слайдере
+    override fun fetchSliderHeader(
+        categoryId: Long
+    ): Single<ResponseEntity<CategoryEntity>> = rxSingle {
+        api.fetchDoubleSliderResponse(
+            action = "details",
+            androidVersion = BuildConfig.VERSION_NAME,
+            categoryId = categoryId
+        )
+    }.flatMap { Single.just(it.body()!!.parseSliderHeaderResponse()) }
+
+    //Главная информация о категории
+    override fun fetchCategoryHeader(
+        categoryId: Long
+    ): Single<ResponseEntity<CategoryEntity>> = rxSingle {
+        api.fetchCategoryResponse(
+            blockId = 1,
+            categoryId = categoryId
+        )
+    }.flatMap { Single.just(it.body()!!.parseCategoryHeaderResponse()) }
+
+    //Каталог
+    override fun fetchCatalog(): Single<ResponseEntity<List<CategoryEntity>>> =
+        api.fetchCatalogResponse().flatMap { Single.just(it.parseCatalogResponse()) }
+
+    //Все филтры по продуктам для выбранной категории
+    override fun fetchAllFiltersByCategory(
+        categoryId: Long
+    ): Single<ResponseEntity<FilterBundleEntity>> = api.fetchFilterBundleResponse(
+        categoryId = categoryId
+    ).flatMap { Single.just(it.parseAllFiltersByCategoryResponse()) }
+
+    //Подробная информация о продукте
+    override fun fetchProductDetails(
+        productId: Long
+    ): Single<ResponseEntity<ProductDetailBundleEntity>> = api.fetchProductResponse(
+        blockId = 1,
+        productId = productId
+    ).flatMap { Single.just(it.parseProductDetailsResponse()) }
+
+    //Филтр для продукта по id
+    override fun fetchProductFilterById(
+        categoryId: Long,
+        filterCode: String,
+    ): Single<ResponseEntity<List<FilterValueEntity>>> = api.fetchFilterResponse(
+        action = "getAllValueOfProps",
+        categoryId = categoryId,
+        filterCode = filterCode
+    ).flatMap { Single.just(it.parseConcreteFilterResponse()) }
+
+    //Постраничная загрузка нескольких продуктов для выбранного бренда
+    override fun fetchSomeProductsByBrand(
+        productId: Long,
+        brandId: Long,
+        page: Int
+    ): Single<ResponseEntity<PaginatedProductListEntity>> = api.fetchBrandByProductResponse(
+        blockId = 12,
+        productId = productId,
+        brandId = brandId,
+        page = page
+    ).flatMap { Single.just(it.parseSomeProductsByBrandResponse()) }
+
+    //Верхний слайдер на главной странице
+    override fun fetchTopSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>> = rxSingle {
+        api.fetchDoubleSliderResponse(
+            action = "topglav",
+            arg = "new"
+        )
+    }.flatMap { Single.just(it.body()!!.parseTopSliderResponse()) }
+
+    //Нижний слайдер на главной странице
+    override fun fetchBottomSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>> = rxSingle {
+        api.fetchDoubleSliderResponse(
+            action = "topglav",
+            arg = "new"
+        )
+    }.flatMap { Single.just(it.body()!!.parseBottomSliderResponse()) }
+
+    //Регистрация нового пользователя
     override fun register(
         firstName: String,
         secondName: String,
         email: String,
         password: String,
         phone: String,
-    ) = api.register(
+    ): Single<ResponseEntity<Long>> = api.fetchRegisterResponse(
         firstName = firstName,
         secondName = secondName,
         email = email,
@@ -198,17 +403,20 @@ class RemoteData(
         phone = phone
     ).flatMap { Single.just(it.parseRegisterResponse()) }
 
+    //Авторизация
     override fun login(
         email: String,
         password: String
-    ) = api.login(
+    ): Single<ResponseEntity<Long>> = api.fetchLoginResponse(
         email = email,
         password = password
     ).flatMap { Single.just(it.parseLoginResponse()) }
 
+    //Информация о пользователе
     override fun fetchUserData(
         userId: Long
-    ) = api.fetchUserData(
+    ): Single<ResponseEntity<UserDataEntity>> = api.fetchProfileResponse(
+        action = "details",
         userId = userId
     ).flatMap { Single.just(it.parseUserDataResponse()) }
 

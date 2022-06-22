@@ -17,7 +17,6 @@ class PropertiesGroupsAdapter(
     var propertiesGroupUIList = listOf<PropertiesGroupUI>()
     set(value) {
         field = value
-        Log.i(LogSettings.ID_LOG, "INIT SIZE ${field.size}")
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -45,6 +44,5 @@ class PropertiesGroupsAdapter(
     override fun getItemCount() = when(viewMode) {
         ViewMode.PREVIEW -> 1
         ViewMode.ALL -> propertiesGroupUIList.size
-    }.apply { Log.i(LogSettings.ID_LOG, "SIZE ${propertiesGroupUIList.size}") }
-
+    }
 }

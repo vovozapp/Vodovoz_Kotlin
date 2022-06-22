@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
@@ -15,6 +16,11 @@ import com.vodovoz.app.ui.components.base.HorizontalMarginItemDecoration
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.components.adapter.historySliderAdapter.HistorySliderAdapter
 import com.vodovoz.app.ui.components.diffUtils.HistoryDiffUtilCallback
+import com.vodovoz.app.ui.components.fragment.home.HomeFragmentDirections
+import com.vodovoz.app.ui.model.HistoryUI
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 
@@ -33,6 +39,8 @@ class HistorySliderFragment : Fragment() {
     private lateinit var binding: FragmentSliderHistoryBinding
     private lateinit var viewModel: HistorySliderViewModel
 
+    private val compositeDisposable = CompositeDisposable()
+    private val onHistoryClickSubject: PublishSubject<Long> = PublishSubject.create()
     private lateinit var historySliderAdapter: HistorySliderAdapter
 
     override fun onCreateView(
@@ -70,7 +78,10 @@ class HistorySliderFragment : Fragment() {
                 override fun onGlobalLayout() {
                     if (binding.historiesRecycler.width != 0) {
                         binding.historiesRecycler.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                        historySliderAdapter = HistorySliderAdapter((binding.historiesRecycler.width - (space * 4))/3)
+                        historySliderAdapter = HistorySliderAdapter(
+                            onHistoryClickSubject = onHistoryClickSubject,
+                            cardWidth = (binding.historiesRecycler.width - (space * 4))/3
+                        )
                         binding.historiesRecycler.adapter = historySliderAdapter
                         observeViewModel()
                     }
@@ -100,6 +111,23 @@ class HistorySliderFragment : Fragment() {
                 false -> binding.root.visibility = View.GONE
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        onHistoryClickSubject.subscribeBy { historyId ->
+            parentFragment?.findNavController()?.navigate(
+                HomeFragmentDirections.actionHomeFragmentToFullScreenHistorySliderFragment(
+                    viewModel.historyUIList.toTypedArray(),
+                    historyId
+                )
+            )
+        }.addTo(compositeDisposable)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        compositeDisposable.clear()
     }
 
 }

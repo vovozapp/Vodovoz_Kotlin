@@ -5,9 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderSliderHistoryBinding
 import com.vodovoz.app.ui.model.HistoryUI
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 class HistorySliderAdapter(
-    private val cardWidth: Int
+    private val cardWidth: Int,
+    private val onHistoryClickSubject: PublishSubject<Long>
 ) : RecyclerView.Adapter<HistorySliderViewHolder>() {
 
     var historyUIList = listOf<HistoryUI>()
@@ -18,6 +20,7 @@ class HistorySliderAdapter(
             parent,
             false
         ),
+        onHistoryClickSubject = onHistoryClickSubject,
         context = parent.context,
         cardWidth = cardWidth
     )

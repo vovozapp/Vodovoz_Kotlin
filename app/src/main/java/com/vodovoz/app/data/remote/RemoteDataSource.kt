@@ -1,89 +1,178 @@
 package com.vodovoz.app.data.remote
 
 import com.vodovoz.app.data.model.common.*
-import com.vodovoz.app.data.model.features.AllPromotionBundleEntity
+import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
 import com.vodovoz.app.data.model.features.CountryBundleEntity
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Query
 
 interface RemoteDataSource {
 
-    //Страны
-    //Информации о странах для слайдера на главной странице
-    fun fetchCountrySlider(): Single<ResponseEntity<CountryBundleEntity>>
+    //Слайдер стран на главной странице
+    fun fetchCountriesSlider(): Single<ResponseEntity<CountryBundleEntity>>
 
-    //Главная информация о выбранной стране
+    //Информация о выбранной стране
     fun fetchCountryHeader(
         countryId: Long
     ): Single<ResponseEntity<CategoryEntity>>
 
-    //Постраничная загрузка продуктов по для выбранной страны
-    fun fetchProductsByCountry(
+    //Постраничная загрузка продуктов для выбранной страны
+    suspend fun fetchProductsByCountry(
         countryId: Long,
         sort: String? = null,
         orientation: String? = null,
+        categoryId: Long? = null,
         page: Int? = null,
-        categoryId: Long? = null
-    ): Single<ResponseEntity<List<ProductEntity>>>
+    ): Response<ResponseBody>
 
-    //Акции
-    //Информация о слайдере акций на главной странице
-    fun fetchPromotionSlider(): Single<ResponseEntity<List<PromotionEntity>>>
+    //Слайдер акций на главной странице
+    fun fetchPromotionsSlider(): Single<ResponseEntity<List<PromotionEntity>>>
 
-    //Подробная информация об акции
-    fun fetchPromotionDetail(
+    //Продукты по баннеру
+    fun fetchProductsByBanner(categoryId: Long): Single<ResponseEntity<List<ProductEntity>>>
+
+    //Подробно об акции
+    fun fetchPromotionDetails(
         promotionId: Long
     ): Single<ResponseEntity<PromotionDetailEntity>>
 
-    //Информация о всех акциях
+    //Все акции
     fun fetchAllPromotions(
         filterId: Long
-    ): Single<ResponseEntity<AllPromotionBundleEntity>>
+    ): Single<ResponseEntity<AllPromotionsBundleEntity>>
 
-    //HomePage
-    fun fetchMainBannerResponse(): Single<ResponseEntity<List<BannerEntity>>>
-    fun fetchSecondaryBannerResponse(): Single<ResponseEntity<List<BannerEntity>>>
-    fun fetchHistoryResponse(): Single<ResponseEntity<List<HistoryEntity>>>
-    fun fetchPopularResponse(): Single<ResponseEntity<List<CategoryEntity>>>
-    fun fetchDiscountCategoryResponse(): Single<ResponseEntity<List<CategoryDetailEntity>>>
-    fun fetchBrandResponse(): Single<ResponseEntity<List<BrandEntity>>>
-    fun fetchNoveltiesCategoryResponse(): Single<ResponseEntity<List<CategoryDetailEntity>>>
-    fun fetchDoubleCategoryResponse(): Single<ResponseEntity<List<List<CategoryDetailEntity>>>>
-    fun fetchCommentResponse(): Single<ResponseEntity<List<CommentEntity>>>
-    fun fetchOrderSlider(userId: Long): Single<ResponseEntity<List<OrderEntity>>>
-    fun fetchViewedProductSlider(userId: Long): Single<ResponseEntity<List<CategoryDetailEntity>>>
+    //Слайдер комментариев на главной странице
+    fun fetchCommentsSlider(): Single<ResponseEntity<List<CommentEntity>>>
 
+    //Слайдер историй на главное странице
+    fun fetchHistoriesSlider(): Single<ResponseEntity<List<HistoryEntity>>>
 
-    //CatalogPage
-    fun fetchCatalogResponse(): Single<ResponseEntity<List<CategoryEntity>>>
-    fun fetchCategoryHeader(categoryId: Long): Single<ResponseEntity<CategoryEntity>>
-    fun fetchFilterBundleResponse(categoryId: Long): Single<ResponseEntity<FilterBundleEntity>>
-    fun fetchProductDetailResponse(productId: Long): Single<ResponseEntity<ProductDetailBundleEntity>>
-    fun fetchPaginatedMaybeLikeProductListResponse(pageIndex: Int): Single<ResponseEntity<PaginatedProductListEntity>>
-    fun fetchPaginatedBrandProductListResponse(
-        productId: Long,
-        brandId: Long,
-        pageIndex: Int
-    ): Single<ResponseEntity<PaginatedProductListEntity>>
-    fun fetchConcreteFilterResponse(
+    //Слайдер популярных разделов на главной странице
+    fun fetchPopularSlider(): Single<ResponseEntity<List<CategoryEntity>>>
+
+    //Информация о слайдере заказов на главной странице
+    fun fetchOrdersSlider(userId: Long): Single<ResponseEntity<List<OrderEntity>>>
+
+    //Слайдер самых выгодных продуктов на главной странице
+    fun fetchDiscountsSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>>
+
+    //Слайдер новинок на главной странице
+    fun fetchNoveltiesSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>>
+
+    //Продукты и категории "Может понравиться"
+    fun fetchMaybeLikeProducts(page: Int): Single<ResponseEntity<PaginatedProductListEntity>>
+
+    //Слайдер ранее просмотренных продуктов
+    fun fetchViewedProductsSlider(userId: Long?): Single<ResponseEntity<List<CategoryDetailEntity>>>
+
+    //Слайдер рекламных баннеров на главной странице
+    fun fetchAdvertisingBannersSlider(): Single<ResponseEntity<List<BannerEntity>>>
+
+    //Слайдер баннеров категорий на главной странице
+    fun fetchCategoryBannersSlider(): Single<ResponseEntity<List<BannerEntity>>>
+
+    //Слайдер брендов на главной странице
+    fun fetchBrandsSlider(): Single<ResponseEntity<List<BrandEntity>>>
+
+    //Гланвная информация о выбранной стране
+    fun fetchBrandHeader(brandId: Long): Single<ResponseEntity<CategoryEntity>>
+
+    //Главная информация о самых выгодных продуктах
+    fun fetchDiscountHeader(): Single<ResponseEntity<CategoryEntity>>
+
+    //Главная информация о новинках
+    fun fetchNoveltiesHeader(): Single<ResponseEntity<CategoryEntity>>
+
+    //Постраничная загрузка продуктов для выбранного бренда
+    suspend fun fetchProductsByBrand(
+        brandId: Long?,
+        code: String?,
+        categoryId: Long?,
+        sort: String?,
+        orientation: String?,
+        page: Int?
+    ): Response<ResponseBody>
+
+    //Постраничная загрузка новинок
+    suspend fun fetchProductsNovelties(
+        categoryId: Long?,
+        sort: String?,
+        orientation: String?,
+        page: Int?
+    ): Response<ResponseBody>
+
+    //Постраничная загрузка самых выгодных продуктов
+    suspend fun fetchProductsDiscount(
+        categoryId: Long?,
+        sort: String?,
+        orientation: String?,
+        page: Int?
+    ): Response<ResponseBody>
+
+    //Все бренды
+    fun fetchAllBrands(
+        brandIdList: List<Long>
+    ): Single<ResponseEntity<List<BrandEntity>>>
+
+    //Акции по баннеру
+    fun fetchPromotionsByBanner(categoryId: Long): Single<ResponseEntity<AllPromotionsBundleEntity>>
+
+    suspend fun fetchProductsByCategory(
         categoryId: Long,
-        filterCode: String,
-    ): Single<ResponseEntity<List<FilterValueEntity>>>
-    suspend fun fetchCategoryDetailResponse(
-        categoryId: Long,
-        pageIndex: Int,
         sort: String,
         orientation: String,
         filter: String,
         filterValue: String,
         priceFrom: Int,
-        priceTo: Int
+        priceTo: Int,
+        page: Int
     ): Response<ResponseBody>
 
-    //Profile
+    fun fetchCategoryHeader(categoryId: Long): Single<ResponseEntity<CategoryEntity>>
+
+    //Каталог
+    fun fetchCatalog(): Single<ResponseEntity<List<CategoryEntity>>>
+
+    //Все филтры по продуктам для выбранной категории
+    fun fetchAllFiltersByCategory(categoryId: Long): Single<ResponseEntity<FilterBundleEntity>>
+
+    //Подробная информация о продукте
+    fun fetchProductDetails(productId: Long): Single<ResponseEntity<ProductDetailBundleEntity>>
+
+    //Филтр для продукта по id
+    fun fetchProductFilterById(
+        categoryId: Long,
+        filterCode: String,
+    ): Single<ResponseEntity<List<FilterValueEntity>>>
+
+    //Постраничная загрузка нескольких продуктов для выбранного бренда
+    fun fetchSomeProductsByBrand(
+        productId: Long,
+        brandId: Long,
+        page: Int
+    ): Single<ResponseEntity<PaginatedProductListEntity>>
+
+    //Верхний слайдер на главной странице
+    fun fetchTopSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>>
+
+    //Постраничная загрузка продуктов для выбранного слайдера
+    suspend fun fetchProductsBySlider(
+        categoryId: Long?,
+        page: Int?,
+        sort: String?,
+        orientation: String?
+    ): Response<ResponseBody>
+
+    //Главная информация о слайдере
+    fun fetchSliderHeader(
+        categoryId: Long
+    ): Single<ResponseEntity<CategoryEntity>>
+
+    //Нижний слйдер на главнйо странице
+    fun fetchBottomSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>>
+
+    //Регистрация нового пользователя
     fun register(
         firstName: String,
         secondName: String,
@@ -92,11 +181,13 @@ interface RemoteDataSource {
         phone: String
     ): Single<ResponseEntity<Long>>
 
+    //Авторизация
     fun login(
         email: String,
         password: String
     ): Single<ResponseEntity<Long>>
 
+    //Данные пользователя
     fun fetchUserData(userId: Long): Single<ResponseEntity<UserDataEntity>>
 
 }

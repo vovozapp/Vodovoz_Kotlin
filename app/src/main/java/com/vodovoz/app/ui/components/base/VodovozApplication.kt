@@ -8,6 +8,18 @@ import com.vodovoz.app.data.local.LocalData
 import com.vodovoz.app.data.parser.common.*
 import com.vodovoz.app.data.parser.response.*
 import com.vodovoz.app.data.parser.response.country.CountrySliderResponseJsonParser
+import com.vodovoz.app.data.parser.common.HistoryJsonParser
+import com.vodovoz.app.data.parser.response.banner.AdvertisingBannersSliderResponseJsonParser
+import com.vodovoz.app.data.parser.response.brand.BrandsSliderResponseJsonParser
+import com.vodovoz.app.data.parser.response.catalog.CatalogResponseJsonParser
+import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser
+import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsByCategoryResponseJsonParser
+import com.vodovoz.app.data.parser.response.comment.CommentsSliderResponseJsonParser
+import com.vodovoz.app.data.parser.response.discount.DiscountSliderResponseParser
+import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser
+import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonParser
+import com.vodovoz.app.data.parser.response.novelties.NoveltiesSliderResponseParser
+import com.vodovoz.app.data.parser.response.popular.PopularSliderResponseJsonParser
 import com.vodovoz.app.data.parser.response.promotion.PromotionSliderResponseJsonParser
 import com.vodovoz.app.data.remote.Api
 import com.vodovoz.app.data.remote.RemoteData
@@ -21,46 +33,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class VodovozApplication : Application() {
 
-    //CommonJsonParser
-    private lateinit var categoryDetailJsonParser: CategoryDetailJsonParser
-    private lateinit var commentJsonParser: CommentJsonParser
-    private lateinit var historyJsonParser: HistoryJsonParser
-
-    private fun initCommonJsonParser() {
-        categoryDetailJsonParser = CategoryDetailJsonParser()
-        commentJsonParser = CommentJsonParser()
-        historyJsonParser = HistoryJsonParser()
-    }
-
-    //FeaturesJsonParser
-    private lateinit var bannerResponseJsonParser: BannerResponseJsonParser
-    private lateinit var brandResponseJsonParser: BrandResponseJsonParser
-    private lateinit var catalogResponseJsonParser: CatalogResponseJsonParser
-    private lateinit var categoryDetailResponseJsonParser: CategoryDetailResponseJsonParser
-    private lateinit var categoryPopularResponseJsonParser: CategoryPopularResponseJsonParser
-    private lateinit var commentResponseJsonParser: CommentResponseJsonParser
-    private lateinit var countrySliderResponseJsonParser: CountrySliderResponseJsonParser
-    private lateinit var discountCategoryResponseJsonParser: DiscountCategoryResponseParser
-    private lateinit var doubleCategoryResponseJsonParser: DoubleCategoryResponseJsonParser
-    private lateinit var historyResponseJsonParser: HistoryResponseJsonParser
-    private lateinit var noveltiesCategoryResponseParser: NoveltiesCategoryResponseParser
-    private lateinit var promotionSliderResponseJsonParser: PromotionSliderResponseJsonParser
-    private lateinit var categoryHeaderResponseJsonParser: CategoryHeaderResponseJsonParser
-
-    private fun initFeaturesJsonParser() {
-        bannerResponseJsonParser = BannerResponseJsonParser()
-        categoryPopularResponseJsonParser = CategoryPopularResponseJsonParser()
-        commentResponseJsonParser = CommentResponseJsonParser(commentJsonParser)
-        historyResponseJsonParser = HistoryResponseJsonParser(historyJsonParser)
-        categoryDetailResponseJsonParser = CategoryDetailResponseJsonParser(categoryDetailJsonParser)
-        categoryHeaderResponseJsonParser = CategoryHeaderResponseJsonParser()
-        catalogResponseJsonParser = CatalogResponseJsonParser()
-        doubleCategoryResponseJsonParser = DoubleCategoryResponseJsonParser()
-        discountCategoryResponseJsonParser = DiscountCategoryResponseParser()
-        noveltiesCategoryResponseParser = NoveltiesCategoryResponseParser()
-        brandResponseJsonParser = BrandResponseJsonParser()
-    }
-
     //Repository
     private lateinit var api: Api
     private lateinit var remoteDataSource: RemoteDataSource
@@ -70,34 +42,13 @@ class VodovozApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        initCommonJsonParser()
-        initFeaturesJsonParser()
-
         api = buildRetrofitClient()
-
-        remoteDataSource = RemoteData(
-            api,
-            bannerResponseJsonParser = bannerResponseJsonParser,
-            catalogResponseJsonParser = catalogResponseJsonParser,
-            doubleCategoryResponseJsonParser = doubleCategoryResponseJsonParser,
-            discountCategoryResponseParser = discountCategoryResponseJsonParser,
-            noveltiesCategoryResponseParser = noveltiesCategoryResponseParser,
-            commentResponseJsonParser = commentResponseJsonParser,
-            historyResponseJsonParser = historyResponseJsonParser,
-            categoryPopularResponseJsonParser = categoryPopularResponseJsonParser,
-            brandResponseJsonParser = brandResponseJsonParser,
-            categoryHeaderResponseJsonParser = categoryHeaderResponseJsonParser
-        )
-
+        remoteDataSource = RemoteData(api)
         dataRepository = DataRepository(
             remoteData = remoteDataSource,
-            localData = LocalData(applicationContext),
-            categoryDetailResponseJsonParser = categoryDetailResponseJsonParser
+            localData = LocalData(applicationContext)
         )
-
-        viewModelFactory = ViewModelFactory(
-            dataRepository = dataRepository
-        )
+        viewModelFactory = ViewModelFactory(dataRepository = dataRepository)
     }
 
     private fun buildRetrofitClient() = Retrofit.Builder()

@@ -14,9 +14,12 @@ import com.vodovoz.app.databinding.FragmentSliderPromotionBinding
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.components.adapter.promotionSliderAdapter.PromotionSliderAdapter
 import com.vodovoz.app.ui.components.diffUtils.PromotionDiffUtilCallback
+import com.vodovoz.app.ui.components.fragment.allPromotions.AllPromotionsFragment
 import com.vodovoz.app.ui.components.fragment.home.HomeFragment
 import com.vodovoz.app.ui.components.fragment.home.HomeFragmentDirections
 import com.vodovoz.app.ui.model.PromotionUI
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
@@ -33,8 +36,13 @@ class PromotionSliderFragment : Fragment() {
     private lateinit var binding: FragmentSliderPromotionBinding
     private lateinit var viewModel: PromotionSliderViewModel
 
+    private val compositeDisposable = CompositeDisposable()
     private val onPromotionClickSubject: PublishSubject<Long> = PublishSubject.create()
-    private val promotionSliderAdapter = PromotionSliderAdapter(onPromotionClickSubject)
+    private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
+    private val promotionSliderAdapter = PromotionSliderAdapter(
+        onPromotionClickSubject = onPromotionClickSubject,
+        onProductClickSubject = onProductClickSubject
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,16 +72,17 @@ class PromotionSliderFragment : Fragment() {
 
     private fun initShowAllPromotionsButton() {
         binding.showAll.setOnClickListener {
-            parentFragment?.findNavController()?.navigate(HomeFragmentDirections.actionHomeFragmentToAllPromotionsFragment())
+            parentFragment?.findNavController()?.navigate(
+                HomeFragmentDirections.actionHomeFragmentToAllPromotionsFragment(
+                    AllPromotionsFragment.DataSource.All()
+                )
+            )
         }
     }
 
     private fun initPromotionPager() {
         binding.promotionRager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.promotionRager.adapter = promotionSliderAdapter
-        onPromotionClickSubject.subscribeBy { promotionId ->
-            parentFragment?.findNavController()?.navigate(HomeFragmentDirections.actionHomeFragmentToPromotionDetailFragment(promotionId))
-        }
     }
 
     private fun initTitle() {
@@ -98,6 +107,23 @@ class PromotionSliderFragment : Fragment() {
                 diffResult.dispatchUpdatesTo(promotionSliderAdapter)
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        onPromotionClickSubject.subscribeBy { promotionId ->
+            parentFragment?.findNavController()?.navigate(HomeFragmentDirections.actionHomeFragmentToPromotionDetailFragment(promotionId))
+        }.addTo(compositeDisposable)
+        onProductClickSubject.subscribeBy { productId ->
+            parentFragment?.findNavController()?.navigate(
+                HomeFragmentDirections.actionHomeFragmentToProductDetailFragment(productId)
+            )
+        }.addTo(compositeDisposable)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        compositeDisposable.clear()
     }
 
     sealed class DataSource(val title: String) {

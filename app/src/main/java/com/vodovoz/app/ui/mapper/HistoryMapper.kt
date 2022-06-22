@@ -1,6 +1,7 @@
 package com.vodovoz.app.ui.mapper
 
 import com.vodovoz.app.data.model.common.HistoryEntity
+import com.vodovoz.app.ui.mapper.BannerMapper.mapToUI
 import com.vodovoz.app.ui.model.HistoryUI
 
 object HistoryMapper {
@@ -11,7 +12,8 @@ object HistoryMapper {
 
     fun HistoryEntity.mapToUI() = HistoryUI(
         id = id,
-        detailPicture = detailPicture
+        detailPicture = detailPicture,
+        bannerUIList = bannerEntityList.mapToUI()
     )
 
 }

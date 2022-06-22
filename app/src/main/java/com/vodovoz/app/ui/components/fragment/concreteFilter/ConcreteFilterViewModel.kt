@@ -34,7 +34,7 @@ class ConcreteFilterViewModel(
     }
 
     fun updateData() = dataRepository
-        .fetchConcreteFilterResponse(
+        .fetchProductFilterById(
             categoryId = categoryId!!,
             filterCode = filter!!.code
         )

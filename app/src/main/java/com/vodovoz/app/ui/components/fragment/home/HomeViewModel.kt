@@ -24,36 +24,7 @@ class HomeViewModel(
     init { updateData() }
 
     fun updateData() {
-        val firstRequest  = Single.zip(
-            dataRepository.updateBrandList(),
-            dataRepository.updateCommentList(),
-            dataRepository.updatePromotionsList(),
-            dataRepository.fetchViewedProductSlider(dataRepository.fetchUserId() ?: 0)
-        ) { _, _, _, _ ->
-            Single.just(true)
-        }
-
-        val secondRequest = Single.zip(
-            dataRepository.updateMainBannerList(),
-            dataRepository.updateHistoryList(),
-            dataRepository.updatePopularSectionList(),
-            dataRepository.updateDiscountProductList(),
-            dataRepository.updateSecondaryBannerList(),
-            dataRepository.updateNoveltiesProductList(),
-            dataRepository.updateCountryList(),
-            dataRepository.updateDoubleCategory()
-        ) { _, _, _, _, _, _, _, _  ->
-            Single.just(true)
-        }
-
-        Single.zip(firstRequest, secondRequest) { _, _ ->
-            Single.just(true)
-        }.doOnSubscribe {
-            lastFetchState = FetchState.Loading()
-        }.subscribeBy(
-            onSuccess = { lastFetchState = FetchState.Success() },
-            onError = { lastFetchState = FetchState.Error(it.message!!) }
-        )
+        fetchStateMLD.value = FetchState.Success()
     }
 
 }

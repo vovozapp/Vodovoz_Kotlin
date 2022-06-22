@@ -16,11 +16,11 @@ class AllPromotionMarginDecoration(
     ) {
         with(outRect) {
             if (parent.getChildAdapterPosition(view) == 0) {
-                top = space
+                top = space/2
             }
-            bottom = space
-            left = space
-            right = space
+            bottom = space/2
+            left = space/2
+            right = space/2
         }
     }
 

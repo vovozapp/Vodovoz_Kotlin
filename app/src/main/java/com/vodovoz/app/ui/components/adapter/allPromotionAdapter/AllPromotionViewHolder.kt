@@ -2,6 +2,7 @@ package com.vodovoz.app.ui.components.adapter.allPromotionAdapter
 
 import android.content.Context
 import android.graphics.Color
+import android.view.View
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,8 +31,13 @@ class AllPromotionViewHolder(
 
         binding.title.text = promotionUI.name
         binding.timeLeft.text = promotionUI.timeLeft
-        binding.customerCategory.text = promotionUI.customerCategory
-        binding.customerCategoryCard.setCardBackgroundColor(Color.parseColor(promotionUI.statusColor))
+        when(promotionUI.customerCategory) {
+            null -> binding.customerCategory.visibility = View.GONE
+            else -> binding.customerCategory.text = promotionUI.customerCategory
+        }
+        promotionUI.statusColor?.let { noNullColor ->
+            binding.customerCategoryCard.setCardBackgroundColor(Color.parseColor(noNullColor))
+        }
 
         Glide
             .with(context)

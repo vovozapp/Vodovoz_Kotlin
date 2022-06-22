@@ -28,6 +28,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
+import java.io.Serializable
 
 class AllPromotionsFragment : FetchStateBaseFragment() {
 
@@ -46,6 +47,11 @@ class AllPromotionsFragment : FetchStateBaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
+        getArgs()
+    }
+
+    private fun getArgs() {
+        viewModel.updateArgs(AllPromotionsFragmentArgs.fromBundle(requireArguments()).dataSource)
     }
 
     private fun initViewModel() {
@@ -157,6 +163,11 @@ class AllPromotionsFragment : FetchStateBaseFragment() {
     override fun onStop() {
         super.onStop()
         compositeDisposable.clear()
+    }
+
+    sealed class DataSource : Serializable {
+        class ByBanner(val categoryId: Long) : DataSource()
+        class All() : DataSource()
     }
 
 }

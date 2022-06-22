@@ -5,8 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderSliderProductCategoryBinding
 import com.vodovoz.app.ui.model.CategoryDetailUI
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 class ProductCategorySliderAdapter(
+    private val onProductClickSubject: PublishSubject<Long>,
     private val cardWidth: Int
 ) : RecyclerView.Adapter<ProductCategorySliderViewHolder>() {
 
@@ -21,6 +23,7 @@ class ProductCategorySliderAdapter(
             parent,
             false
         ),
+        onProductClickSubject = onProductClickSubject,
         context = parent.context,
         cardWidth = cardWidth
     )

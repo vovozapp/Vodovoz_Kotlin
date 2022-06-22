@@ -34,7 +34,7 @@ class FiltersViewModel(
     }
 
     fun updateData() = dataRepository
-        .fetchFilterBundle(categoryId!!)
+        .fetchAllFiltersByCategory(categoryId!!)
         .subscribeOn(Schedulers.io())
         .doOnSubscribe { fetchStateMLD.value = FetchState.Loading() }
         .observeOn(AndroidSchedulers.mainThread())

@@ -25,6 +25,7 @@ class StateViewHolder(
                     progressContainer.visibility = View.VISIBLE
                 }
                 is LoadState.Error -> {
+                    errorMessage.text = loadState.error.message
                     errorContainer.visibility = View.VISIBLE
                     progressContainer.visibility = View.INVISIBLE
                 }

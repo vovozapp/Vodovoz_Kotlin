@@ -10,14 +10,19 @@ import com.vodovoz.app.ui.components.fragment.productSlider.productAdapter.Produ
 import com.vodovoz.app.ui.components.fragment.productSlider.productAdapter.ProductSliderDiffUtilCallback
 import com.vodovoz.app.ui.components.fragment.productSlider.productAdapter.ProductSliderMarginDecoration
 import com.vodovoz.app.ui.model.CategoryDetailUI
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 class ProductCategorySliderViewHolder(
     private val binding: ViewHolderSliderProductCategoryBinding,
+    private val onProductClickSubject: PublishSubject<Long>,
     private val context: Context,
     private val cardWidth: Int
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val productSliderAdapter = ProductSliderAdapter(cardWidth)
+    private val productSliderAdapter = ProductSliderAdapter(
+        onProductClickSubject = onProductClickSubject,
+        cardWidth = cardWidth
+    )
 
     init {
         binding.productRecycler.layoutManager = LinearLayoutManager(

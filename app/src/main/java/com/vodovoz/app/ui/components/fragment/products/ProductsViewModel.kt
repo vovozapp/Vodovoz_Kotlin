@@ -105,7 +105,7 @@ class ProductsViewModel(
         ).addTo(compositeDisposable)
 
     fun updateProductList() = dataRepository
-        .fetchCategoryDetailById(
+        .fetchProductsByCategory(
             categoryId = categoryId,
             sort = sortType.value,
             orientation = sortType.orientation,

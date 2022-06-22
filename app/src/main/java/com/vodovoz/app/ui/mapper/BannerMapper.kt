@@ -11,7 +11,8 @@ object BannerMapper {
 
     fun BannerEntity.mapToUI() = BannerUI(
         id = id,
-        detailPicture = detailPicture
+        detailPicture = detailPicture,
+        bannerActionEntity = bannerActionEntity
     )
 
 }

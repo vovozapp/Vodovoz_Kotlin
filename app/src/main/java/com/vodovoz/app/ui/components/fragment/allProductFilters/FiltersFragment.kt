@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -69,6 +70,7 @@ class FiltersFragment : FetchStateBaseFragment() {
         initActionBar()
         initFilterRecycler()
         initFilterPrice()
+        initAppBar()
         initBottomButtons()
         observeViewModel()
         observeResultLiveData()
@@ -76,6 +78,17 @@ class FiltersFragment : FetchStateBaseFragment() {
 
     override fun update() {
         viewModel.updateData()
+    }
+
+    private fun initAppBar() {
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        (requireActivity() as AppCompatActivity).supportActionBar?.let { noNullActionBar ->
+            noNullActionBar.setDisplayHomeAsUpEnabled(true)
+            noNullActionBar.setDisplayShowHomeEnabled(true)
+        }
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun initViewModel() {
@@ -136,13 +149,6 @@ class FiltersFragment : FetchStateBaseFragment() {
     }
 
     private fun sendFilterBundleBack() {
-        for (filter in viewModel.customFilterBundle!!.filterUIList) {
-            Log.i(LogSettings.DEVELOP_LOG, filter.name)
-            for (value in filter.filterValueList) {
-                Log.i(LogSettings.DEVELOP_LOG, "----${value.value}")
-            }
-        }
-
         findNavController().previousBackStackEntry?.savedStateHandle?.set(
             ProductsFragment.FILTER_BUNDLE,
             viewModel.customFilterBundle

@@ -35,7 +35,7 @@ class ProductDetailViewModel(
     }
 
     fun updateProductDetail() = dataRepository
-        .fetchProductDetail(
+        .fetchProductDetails(
             productId = productId!!,
         )
         .subscribeOn(Schedulers.io())

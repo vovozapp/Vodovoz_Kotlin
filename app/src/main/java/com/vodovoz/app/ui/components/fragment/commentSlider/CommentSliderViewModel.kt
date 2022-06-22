@@ -8,8 +8,10 @@ import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.ui.components.base.BaseHiddenFragment
 import com.vodovoz.app.ui.mapper.CommentMapper.mapToUI
 import com.vodovoz.app.ui.model.CommentUI
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class CommentSliderViewModel(
     private val dataRepository: DataRepository
@@ -24,7 +26,9 @@ class CommentSliderViewModel(
     private val compositeDisposable = CompositeDisposable()
 
     init {
-        dataRepository.commentSubject
+        dataRepository.fetchCommentsSlider()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy { response ->
                 when(response) {
                     is ResponseEntity.Success -> {

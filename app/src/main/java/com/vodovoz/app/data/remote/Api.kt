@@ -1,6 +1,5 @@
 package com.vodovoz.app.data.remote
 
-import com.vodovoz.app.BuildConfig
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -9,28 +8,36 @@ import retrofit2.http.Query
 
 interface Api {
 
+    //Отзывы
+    @GET("/newmobile/otzivomagaz.php")
+    fun fetchCommentResponse(
+        @Query("otziv") action: String,
+        @Query("limit") limit: Int
+    ): Single<ResponseBody>
+
     //Страны
     @GET("/newmobile/glavnaya/strany.php")
-    fun fetchCountryResponse(
+    suspend fun fetchCountryResponse(
         @Query("action") action: String,
         @Query("id") countryId: Long? = null,
         @Query("sort") sort: String? = null,
         @Query("ascdesc") orientation: String? = null,
         @Query("nav") page: Int? = null,
         @Query("sect") categoryId: Long? = null
-    ): Single<ResponseBody>
+    ): Response<ResponseBody>
 
     //Рекламный слайдер
     @GET("/newmobile/glavnaya/slayders/index.php")
-    fun fetchMainBannerResponse(
-        @Query("action") action: String = "slayder"
+    fun fetchMainSliderResponse(
+        @Query("action") action: String? = null,
+        @Query("id") categoryId: Long? = null
     ): Single<ResponseBody>
 
     //Слайдер категорий
     @GET("/newmobile/glavnaya/slayders/mini_index.php")
-    fun fetchSecondaryBannerResponse(
-        @Query("action") action: String = "slayder",
-        @Query("android") androidVersion: String = BuildConfig.VERSION_NAME
+    fun fetchMiniSliderResponse(
+        @Query("action") action: String,
+        @Query("android") androidVersion: String
     ): Single<ResponseBody>
 
     //Акции
@@ -43,113 +50,121 @@ interface Api {
         @Query("limit") limit: Int? = null
     ): Single<ResponseBody>
 
-
-    @GET("/newmobile/glavnaya/super_top.php?action=topglav&new=new")
-    fun fetchDoubleSectionList(): Single<ResponseBody>
-
-    @GET("/newmobile/otzivomagaz.php?otziv=otzivy&limit=10")
-    fun fetchCommentList(): Single<ResponseBody>
-
-    @GET("/newmobile/glavnaya/stories/?iblock_id=12&action=stories&platforma=android")
-    fun fetchHistoryResponse(): Single<ResponseBody>
-
-    @GET("/newmobile/glavnaya/razdel.php?action=popylrazdel")
-    fun fetchPopularResponse(): Single<ResponseBody>
-
-    @GET("/newmobile/brand.php?action=brand&limit=10")
-    fun fetchBrandResponse(): Single<ResponseBody>
-
-    @GET("/newmobile/brand.php")
-    fun fetchAllBrands(
-        @Query("action") action: String = "brand"
+    //Истории
+    @GET("/newmobile/glavnaya/stories")
+    fun fetchHistoryResponse(
+        @Query("iblock_id") blockId: Int,
+        @Query("action") action: String,
+        @Query("platforma") platform: String
     ): Single<ResponseBody>
 
-    @GET("newmobile/brand.php?action=detail&id=\"+IDBrand+\"&simvolkod=\"+SymboleCode+\"&nav=\"+currentPage+\"&sect=\"+SectionID")
-    fun fetchProductsByBrand(
-
+    //Популярное
+    @GET("/newmobile/glavnaya/razdel.php")
+    fun fetchPopularResponse(
+        @Query("action") action: String
     ): Single<ResponseBody>
 
+    //Новинки
     @GET("/newmobile/glavnaya/novinki.php")
-    fun fetchNoveltiesResponse(
-        @Query("new") new: String = "novinki",
+    suspend fun fetchNoveltiesResponse(
+        @Query("new") action: String,
         @Query("sort") sort: String? = null,
         @Query("ascdesc") orientation: String? = null,
         @Query("nav") page: Int? = null,
         @Query("sect") categoryId: Long? = null
+    ): Response<ResponseBody>
+
+    //Заказы
+    @GET("/newmobile/glavnaya/orderzakaz.php")
+    fun fetchOrderSlider(
+        @Query("userid") userId: Long
     ): Single<ResponseBody>
 
-    @GET("/newmobile/glavnaya/novinki.php")
-    fun fetchDiscountResponse(
-        @Query("new") new: String = "specpredlosh",
+    //Просмотренные продукты
+    @GET("/newmobile/viewedproduct/index.php")
+    fun fetchViewedProductSliderResponse(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null
+    ): Single<ResponseBody>
+
+    //Бренды
+    @GET("/newmobile/brand.php") //
+    suspend fun fetchBrandResponse(
+        @Query("action") action: String? = null,
+        @Query("limit") limit: Int? = null,
+        @Query("id") brandId: String? = null,
+        @Query("idbrand") brandIdList: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("ascdesc") orientation: String? = null,
+        @Query("simvolkod") code: String? = null,
+        @Query("nav") page: Int? = null,
+        @Query("sect") categoryId: Long? = null
+    ): Response<ResponseBody>
+
+    //Категория
+    @GET("/newmobile/razdel/index.php")
+    suspend fun fetchCategoryResponse(
+        @Query("iblock_id") blockId: Int? = null,
+        @Query("sectionid") categoryId: Long? = null,
         @Query("sort") sort: String? = null,
         @Query("ascdesc") orientation: String? = null,
         @Query("nav") page: Int? = null,
-        @Query("sect") categoryId: Long? = null
-    ): Single<ResponseBody>
+        @Query("filter") filter: String? = null,
+        @Query("filtervalue") filterValue: String? = null,
+        @Query("price_from") priceFrom: Int? = null,
+        @Query("price_to") priceTo: Int? = null
+    ): Response<ResponseBody>
 
-    @GET("/newmobile/glavnaya/strany.php")
-    fun fetchProductsByCountry(
-
-    ): Single<ResponseBody>
-
-    //CatalogPage
+    //Каталог
     @GET("/newmobile/razdel/category.php?iblock_id=12")
     fun fetchCatalogResponse(): Single<ResponseBody>
 
-    @GET("/newmobile/razdel/index.php")
-    suspend fun fetchCategoryDetailResponse(
-        @Query("iblock_id") blockId: Int = 1,
-        @Query("sectionid") categoryId: Long,
-        @Query("sort") sort: String,
-        @Query("ascdesc") orientation: String,
-        @Query("nav") pageIndex: Int,
-        @Query("filter") filter: String,
-        @Query("filtervalue") filterValue: String,
-        @Query("price_from") priceFrom: Int,
-        @Query("price_to") priceTo: Int
-    ): Response<ResponseBody>
-
-    @GET("/newmobile/razdel/index.php")
-    fun fetchCategory(
-        @Query("iblock_id") blockId: Int = 1,
-        @Query("sectionid") categoryId: Long
-    ): Single<ResponseBody>
-
+    //Все филтры продуктов
     @GET("/newmobile/razdel/filtercatalog.php")
     fun fetchFilterBundleResponse(
         @Query("action") action: String = "getAllProps",
         @Query("section") categoryId: Long
     ): Single<ResponseBody>
 
+    //Фильтр продуктов
     @GET("/newmobile/filterCatalog.php")
-    fun fetchConcreteFilterResponse(
-        @Query("action") action: String = "getAllValueOfProps",
+    fun fetchFilterResponse(
+        @Query("action") action: String,
         @Query("propCode") filterCode: String,
         @Query("section") categoryId: Long
     ): Single<ResponseBody>
 
+    //Продукт
     @GET("/newmobile/details/index_new.php")
-    fun fetchProductDetailResponse(
-        @Query("iblock_id") blockId: Int = 1,
+    fun fetchProductResponse(
+        @Query("iblock_id") blockId: Int,
         @Query("detail") productId: Long
     ): Single<ResponseBody>
 
+    //Бренд выбранного продукта
     @GET("/newmobile/details/brandtovar.php")
-    fun fetchPaginatedBrandProductListResponse(
-        @Query("iblock_id") blockId: Int = 12,
+    fun fetchBrandByProductResponse(
+        @Query("iblock_id") blockId: Int,
         @Query("productid") productId: Long,
         @Query("id") brandId: Long,
-        @Query("nav") pageIndex: Int
+        @Query("nav") page: Int
     ): Single<ResponseBody>
 
-    @GET("/newmobile/glavnaya/novinki.php")
-    fun fetchPaginatedMaybeLikeProductListResponse(
-        @Query("new") arg: String = "details",
-        @Query("nav") pageIndex: Int
-    ): Single<ResponseBody>
+    //Двойной слайдер
+    @GET("/newmobile/glavnaya/super_top.php")
+    suspend fun fetchDoubleSliderResponse(
+        @Query("action") action: String? = null,
+        @Query("new") arg: String? = null,
+        @Query("android") androidVersion: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("orientation") orientation: String? = null,
+        @Query("id") categoryId: Long? = null,
+        @Query("nav") page: Int? = null
+    ): Response<ResponseBody>
 
+    //Регистрация
     @GET("/newmobile/reg.php")
-    fun register(
+    fun fetchRegisterResponse(
         @Query("name") firstName: String,
         @Query("lastname") secondName: String,
         @Query("email") email: String,
@@ -157,28 +172,20 @@ interface Api {
         @Query("phone") phone: String
     ): Single<ResponseBody>
 
+    //Авторизация
     @GET("/newmobile/auth.php")
-    fun login(
+    fun fetchLoginResponse(
         @Query("email") email: String,
         @Query("pass") password: String
     ): Single<ResponseBody>
 
+    //Профиль
     @GET("/newmobile/profile/index.php")
-    fun fetchUserData(
-        @Query("action") action: String = "details",
+    fun fetchProfileResponse(
+        @Query("action") action: String,
         @Query("userid") userId: Long
     ): Single<ResponseBody>
 
-    @GET("/newmobile/glavnaya/orderzakaz.php")
-    fun fetchOrderSlider(
-        @Query("userid") userId: Long
-    ): Single<ResponseBody>
-
-    @GET("/newmobile/viewedproduct/index.php")
-    fun fetchViewedProductSlider(
-        @Query("action") action: String = "viewed",
-        @Query("userid") userId: Long
-    ): Single<ResponseBody>
 
 
 

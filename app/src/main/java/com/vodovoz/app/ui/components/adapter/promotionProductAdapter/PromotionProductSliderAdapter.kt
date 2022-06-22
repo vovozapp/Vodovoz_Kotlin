@@ -5,8 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderSliderPromotionProductBinding
 import com.vodovoz.app.ui.model.ProductUI
+import io.reactivex.rxjava3.subjects.PublishSubject
 
-class PromotionProductSliderAdapter() : RecyclerView.Adapter<PromotionProductSliderViewHolder>() {
+class PromotionProductSliderAdapter(
+    private val onProductClickSubject: PublishSubject<Long>
+) : RecyclerView.Adapter<PromotionProductSliderViewHolder>() {
 
     var productUIList = listOf<ProductUI>()
 
@@ -19,6 +22,7 @@ class PromotionProductSliderAdapter() : RecyclerView.Adapter<PromotionProductSli
             parent,
             false
         ),
+        onProductClickSubject = onProductClickSubject,
         context = parent.context
     )
 

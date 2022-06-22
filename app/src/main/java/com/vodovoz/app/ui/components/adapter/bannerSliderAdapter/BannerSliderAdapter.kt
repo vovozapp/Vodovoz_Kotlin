@@ -3,10 +3,14 @@ package com.vodovoz.app.ui.components.adapter.bannerSliderAdapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.vodovoz.app.data.model.common.BannerActionEntity
 import com.vodovoz.app.databinding.ViewHolderSliderBannerBinding
 import com.vodovoz.app.ui.model.BannerUI
+import io.reactivex.rxjava3.subjects.PublishSubject
 
-class BannerSliderAdapter() : RecyclerView.Adapter<BannerSliderViewHolder>() {
+class BannerSliderAdapter(
+    private val onBannerClickSubject: PublishSubject<BannerActionEntity>,
+) : RecyclerView.Adapter<BannerSliderViewHolder>() {
 
     var bannerUIList = listOf<BannerUI>()
 
@@ -16,6 +20,7 @@ class BannerSliderAdapter() : RecyclerView.Adapter<BannerSliderViewHolder>() {
             parent,
             false
         ),
+        onBannerClickSubject = onBannerClickSubject,
         context = parent.context
     )
 

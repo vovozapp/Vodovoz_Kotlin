@@ -8,7 +8,8 @@ import com.vodovoz.app.ui.model.PromotionUI
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class PromotionSliderAdapter(
-    private val onPromotionClickSubject: PublishSubject<Long>
+    private val onPromotionClickSubject: PublishSubject<Long>,
+    private val onProductClickSubject: PublishSubject<Long>
 ) : RecyclerView.Adapter<PromotionSliderViewHolder>() {
 
     var promotionUIList = listOf<PromotionUI>()
@@ -23,6 +24,7 @@ class PromotionSliderAdapter(
             false
         ),
         onPromotionClickSubject = onPromotionClickSubject,
+        onProductClickSubject = onProductClickSubject,
         context = parent.context
     )
 

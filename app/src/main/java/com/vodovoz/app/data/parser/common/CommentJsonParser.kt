@@ -4,27 +4,23 @@ import com.vodovoz.app.data.model.common.CommentEntity
 import org.json.JSONArray
 import org.json.JSONObject
 
-class CommentJsonParser {
+object CommentJsonParser {
 
-    fun parseCommentEntityList(
-        commentJSONArray: JSONArray
-    ): List<CommentEntity> = mutableListOf<CommentEntity>().apply {
-        for (index in 0 until commentJSONArray.length()) {
-            add(parseCommentEntity(commentJSONArray.getJSONObject(index)))
+    fun JSONArray.parseCommentEntityList(): List<CommentEntity> = mutableListOf<CommentEntity>().apply {
+        for (index in 0 until length()) {
+            add(getJSONObject(index).parseCommentEntity())
         }
     }
 
-    fun parseCommentEntity(
-        commentJson: JSONObject
-    ) = CommentEntity(
-        id = commentJson.getLong("ID"),
-        text = commentJson.getString("PREVIEW_TEXT"),
-        date = commentJson.getString("DATE_ACTIVE_FROM"),
-        author = commentJson.getString("PROPERTY_AUTHOR_VALUE"),
-        rating = parseRating(commentJson.getString("PROPERTY_RATING_VALUE_VALUE"))
+    fun JSONObject.parseCommentEntity() = CommentEntity(
+        id = getLong("ID"),
+        text = getString("PREVIEW_TEXT"),
+        date = getString("DATE_ACTIVE_FROM"),
+        author = getString("PROPERTY_AUTHOR_VALUE"),
+        rating = getString("PROPERTY_RATING_VALUE_VALUE").parseRating()
     )
 
-    private fun parseRating(ratingStr: String) = when(ratingStr) {
+    private fun String.parseRating() = when(this) {
         "хороший магазин" -> 4
         "отличный магазин" -> 5
         "обычный магазин" -> 3

@@ -18,8 +18,14 @@ object PromotionJsonParser {
         id = getLong("ID"),
         name = getString("NAME"),
         detailPicture = getString("DETAIL_PICTURE").parseImagePath(),
-        customerCategory = getString("NAMERAZDEL"),
-        statusColor = getString("CVET"),
+        customerCategory = when(has("NAMERAZDEL")){
+            true -> getString("NAMERAZDEL")
+            false -> null
+        },
+        statusColor = when(has("CVET")){
+            true -> getString("CVET")
+            false -> null
+        },
         timeLeft = getString("DATAOUT"),
         productEntityList = when(isNull("TOVAR")) {
             true -> listOf()

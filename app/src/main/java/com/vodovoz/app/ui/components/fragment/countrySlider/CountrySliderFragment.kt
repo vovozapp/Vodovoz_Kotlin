@@ -10,6 +10,7 @@ import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -21,6 +22,8 @@ import com.vodovoz.app.ui.components.base.HorizontalMarginItemDecoration
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.components.adapter.countrySliderAdapter.CountrySliderAdapter
 import com.vodovoz.app.ui.components.adapter.countrySliderAdapter.CountrySliderDiffUtilCallback
+import com.vodovoz.app.ui.components.fragment.home.HomeFragmentDirections
+import com.vodovoz.app.ui.components.fragment.productsWithoutFilter.ProductsWithoutFiltersFragment
 import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -127,7 +130,11 @@ class CountrySliderFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         onCountryClickSubject.subscribeBy { countryId ->
-            Log.i(LogSettings.ID_LOG, "COUNTRY $countryId")
+            parentFragment?.findNavController()?.navigate(
+                HomeFragmentDirections.actionHomeFragmentToProductsWithoutFiltersFragment(
+                    ProductsWithoutFiltersFragment.DataSource.Country(countryId)
+                )
+            )
         }.addTo(compositeDisposable)
     }
 

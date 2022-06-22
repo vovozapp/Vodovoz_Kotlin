@@ -32,7 +32,7 @@ class PromotionDetailViewModel(
     fun updateData() {
         promotionId?.let {
             dataRepository
-                .fetchPromotionDetail(promotionId = promotionId!!)
+                .fetchPromotionDetails(promotionId = promotionId!!)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(

@@ -37,8 +37,8 @@ class PaginatedMaybeLikeProductListViewModel(
     }
 
     fun updateData() = dataRepository
-        .fetchPaginatedMaybeLikeProductList(
-            pageIndex = pageIndex
+        .fetchMaybeLikeProducts(
+            page = pageIndex
         )
         .subscribeOn(Schedulers.io())
         .doOnSubscribe { fetchStateMLD.value = FetchState.Loading() }

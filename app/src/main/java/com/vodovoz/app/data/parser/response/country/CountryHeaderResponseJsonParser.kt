@@ -25,8 +25,11 @@ object CountryHeaderResponseJsonParser {
 
     private fun JSONObject.parseCategoryEntity() = CategoryEntity(
         name = getString("glavtitle"),
-        subCategoryEntityList = getJSONObject("razdel")
-            .getJSONArray("LISTRAZDEL").parseSubCategoryEntityList()
+        productAmount = getString("tovarvsego"),
+        subCategoryEntityList = when(getJSONObject("razdel").isNull("LISTRAZDEL")) {
+            true -> listOf()
+            false -> getJSONObject("razdel").getJSONArray("LISTRAZDEL").parseSubCategoryEntityList()
+        }
     )
 
     private fun JSONArray.parseSubCategoryEntityList(): List<CategoryEntity> = mutableListOf<CategoryEntity>().apply {

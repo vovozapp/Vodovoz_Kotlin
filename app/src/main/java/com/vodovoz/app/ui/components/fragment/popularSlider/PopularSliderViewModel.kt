@@ -7,8 +7,10 @@ import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.ui.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryUI
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class PopularSliderViewModel(
     private val dataRepository: DataRepository
@@ -23,7 +25,9 @@ class PopularSliderViewModel(
     private val compositeDisposable = CompositeDisposable()
 
     init {
-        dataRepository.popularSubject
+        dataRepository.fetchPopularSlider()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy { response ->
                 when(response) {
                     is ResponseEntity.Success -> {

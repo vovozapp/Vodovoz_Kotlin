@@ -77,7 +77,6 @@ class RegisterViewModel(
         if (!validatePassword()) isValid = false
 
         if (isValid) register()
-        Log.i(LogSettings.ID_LOG, "IS VALID $isValid")
     }
 
     private fun register() = dataRepository

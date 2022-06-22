@@ -2,6 +2,7 @@ package com.vodovoz.app.ui.components.fragment.productSlider
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahmadhamwi.tabsync.TabbedListMediator
 import com.google.android.material.tabs.TabLayout
@@ -18,8 +20,15 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentSliderProductBinding
 import com.vodovoz.app.databinding.ViewCustomTabBinding
 import com.vodovoz.app.ui.components.base.VodovozApplication
+import com.vodovoz.app.ui.components.fragment.home.HomeFragmentDirections
 import com.vodovoz.app.ui.components.fragment.productSlider.categoryDetailAdapter.ProductCategorySliderAdapter
+import com.vodovoz.app.ui.components.fragment.productsWithoutFilter.ProductsWithoutFiltersFragment
 import com.vodovoz.app.ui.model.CategoryDetailUI
+import com.vodovoz.app.util.LogSettings
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 class ProductSliderFragment : Fragment() {
 
@@ -39,6 +48,8 @@ class ProductSliderFragment : Fragment() {
     private lateinit var binding: FragmentSliderProductBinding
     private lateinit var viewModel: ProductSliderViewModel
 
+    private val compositeDisposable = CompositeDisposable()
+    private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
     private lateinit var productCategorySliderAdapter: ProductCategorySliderAdapter
     private lateinit var tabbedListMediator: TabbedListMediator
 
@@ -57,6 +68,7 @@ class ProductSliderFragment : Fragment() {
         initTabbedMediator()
         initCategoryRecycler()
         initTabLayout()
+        initShowAllButton()
     }.root
 
     private fun initBackground() {
@@ -90,13 +102,33 @@ class ProductSliderFragment : Fragment() {
                 override fun onGlobalLayout() {
                     if (binding.categoryRecycler.width != 0) {
                         binding.categoryRecycler.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                        productCategorySliderAdapter = ProductCategorySliderAdapter((binding.categoryRecycler.width - (cardSpace * 3))/2)
+                        productCategorySliderAdapter = ProductCategorySliderAdapter(
+                            onProductClickSubject = onProductClickSubject,
+                            cardWidth = (binding.categoryRecycler.width - (cardSpace * 3))/2
+                        )
                         binding.categoryRecycler.adapter = productCategorySliderAdapter
                         observeViewModel()
                     }
                 }
             }
         )
+    }
+
+    private fun initShowAllButton() {
+        binding.showAll.setOnClickListener {
+            if(dataSource is DataSource.Request) {
+                val productsDataSource = when((dataSource as DataSource.Request).sliderType) {
+                    ProductSliderViewModel.DISCOUNT_PRODUCTS_SLIDER -> ProductsWithoutFiltersFragment.DataSource.Discount()
+                    ProductSliderViewModel.NOVELTIES_PRODUCTS_SLIDER -> ProductsWithoutFiltersFragment.DataSource.Novelties()
+                    ProductSliderViewModel.BOTTOM_PRODUCTS_SLIDER,
+                    ProductSliderViewModel.TOP_PRODUCTS_SLIDER -> ProductsWithoutFiltersFragment.DataSource.Slider(viewModel.categoryDetailUIList.first().id!!)
+                    else -> throw Exception()
+                }
+                parentFragment?.findNavController()?.navigate(
+                    HomeFragmentDirections.actionHomeFragmentToProductsWithoutFiltersFragment(productsDataSource)
+                )
+            }
+        }
     }
 
     private fun initTabbedMediator() {
@@ -208,6 +240,20 @@ class ProductSliderFragment : Fragment() {
                 override fun onTabReselected(tab: TabLayout.Tab?) {}
             }
         )
+    }
+
+    override fun onStart() {
+        super.onStart()
+        onProductClickSubject.subscribeBy { productId ->
+            parentFragment?.findNavController()?.navigate(
+                HomeFragmentDirections.actionHomeFragmentToProductDetailFragment(productId)
+            )
+        }.addTo(compositeDisposable)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        compositeDisposable.clear()
     }
 
     sealed class DataSource {

@@ -12,14 +12,19 @@ import com.vodovoz.app.databinding.ViewHolderSliderPromotionProductBinding
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountText
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 class PromotionProductSliderViewHolder(
     private val binding: ViewHolderSliderPromotionProductBinding,
+    private val onProductClickSubject: PublishSubject<Long>,
     private val context: Context
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
         binding.oldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        binding.root.setOnClickListener {
+            onProductClickSubject.onNext(productUI.id)
+        }
     }
 
     private lateinit var productUI: ProductUI

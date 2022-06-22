@@ -1,6 +1,5 @@
 package com.vodovoz.app.data.parser.common
 
-import com.vodovoz.app.data.model.common.PromotionEntity
 import com.vodovoz.app.data.model.common.PromotionFilterEntity
 import org.json.JSONArray
 import org.json.JSONObject

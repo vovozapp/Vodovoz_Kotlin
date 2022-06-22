@@ -30,9 +30,9 @@ class CatalogViewModel(
             fetchStateMLD.value = field
         }
 
-    fun updateData() = dataRepository.updateCatalog()
-        .doOnSuccess { lastFetchState = FetchState.Loading() }
+    fun updateData() = dataRepository.fetchCatalog()
         .subscribeOn(Schedulers.io())
+        .doOnSubscribe { lastFetchState = FetchState.Loading() }
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeBy(
             onSuccess = { response ->

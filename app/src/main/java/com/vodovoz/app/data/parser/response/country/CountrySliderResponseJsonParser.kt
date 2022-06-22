@@ -11,7 +11,7 @@ import org.json.JSONObject
 
 object CountrySliderResponseJsonParser {
 
-    fun ResponseBody.parseSliderCountryResponse(): ResponseEntity<CountryBundleEntity> {
+    fun ResponseBody.parseCountriesSliderResponse(): ResponseEntity<CountryBundleEntity> {
         val responseJson = JSONObject(string())
         return when (responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(

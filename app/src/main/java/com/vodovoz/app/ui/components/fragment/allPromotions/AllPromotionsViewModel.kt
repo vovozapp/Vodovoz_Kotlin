@@ -41,6 +41,12 @@ class AllPromotionsViewModel(
 
     init {
         selectedFilterMLD.value = defaultFilter
+    }
+
+    private lateinit var dataSource: AllPromotionsFragment.DataSource
+
+    fun updateArgs(dataSource: AllPromotionsFragment.DataSource) {
+        this.dataSource = dataSource
         updateData()
     }
 
@@ -52,8 +58,7 @@ class AllPromotionsViewModel(
     }
 
     fun updateData() {
-        dataRepository
-            .fetchAllPromotions(filterId = selectedFilter.id)
+        getPromotionsByDataSource(dataSource)
             .subscribeOn(Schedulers.io())
             .doOnSubscribe { fetchStateMLD.value = FetchState.Loading() }
             .observeOn(AndroidSchedulers.mainThread())
@@ -67,6 +72,11 @@ class AllPromotionsViewModel(
                 },
                 onError = { throwable -> fetchStateMLD.value = FetchState.Error(throwable.message) }
             )
+    }
+
+    private fun getPromotionsByDataSource(dataSource: AllPromotionsFragment.DataSource) = when(dataSource) {
+        is AllPromotionsFragment.DataSource.All -> dataRepository.fetchAllPromotions(filterId = selectedFilter.id)
+        is AllPromotionsFragment.DataSource.ByBanner -> dataRepository.fetchPromotionsByBanner(categoryId = dataSource.categoryId)
     }
 
     override fun onCleared() {

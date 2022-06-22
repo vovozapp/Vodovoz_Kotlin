@@ -7,9 +7,11 @@ import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.ui.mapper.PromotionMapper.mapToUI
 import com.vodovoz.app.ui.model.PromotionUI
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class PromotionSliderViewModel(
     private val dataRepository: DataRepository
@@ -30,16 +32,19 @@ class PromotionSliderViewModel(
         }
     }
 
-    fun updatePromotionList() = dataRepository.promotionSubject.subscribeBy { response ->
-        when(response) {
-            is ResponseEntity.Success -> {
-                response.data?.let { data ->
-                    promotionListMLD.value = data.mapToUI()
+    fun updatePromotionList() = dataRepository.fetchPromotionsSlider()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeBy { response ->
+            when(response) {
+                is ResponseEntity.Success -> {
+                    response.data?.let { data ->
+                        promotionListMLD.value = data.mapToUI()
+                    }
                 }
+                is ResponseEntity.Error -> stateHideMLD.value = true
             }
-            is ResponseEntity.Error -> stateHideMLD.value = true
-        }
-    }.addTo(compositeDisposable)
+        }.addTo(compositeDisposable)
 
     override fun onCleared() {
         super.onCleared()
