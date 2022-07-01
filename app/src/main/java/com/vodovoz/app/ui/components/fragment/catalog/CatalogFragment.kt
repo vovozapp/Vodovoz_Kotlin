@@ -1,6 +1,7 @@
 package com.vodovoz.app.ui.components.fragment.catalog
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
@@ -8,28 +9,41 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.FragmentMainCatalogBinding
-import com.vodovoz.app.ui.components.base.FetchState
-import com.vodovoz.app.ui.components.base.FetchStateBaseFragment
+import com.vodovoz.app.ui.components.adapter.MainCatalogAdapter
+import com.vodovoz.app.ui.components.base.ViewState
+import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
-import com.vodovoz.app.ui.components.adapter.categoryAdapter.CatalogCategoryAdapter
 import com.vodovoz.app.ui.model.CategoryUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-class CatalogFragment : FetchStateBaseFragment() {
+class CatalogFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentMainCatalogBinding
     private lateinit var viewModel: CatalogViewModel
 
     private val categoryClickSubject: PublishSubject<CategoryUI> = PublishSubject.create()
-    private val catalogCategoryAdapter = CatalogCategoryAdapter(
+    private val mainCatalogAdapter = MainCatalogAdapter(
         categoryClickSubject = categoryClickSubject,
         nestingPosition = 0,
     )
 
     private val compositeDisposable = CompositeDisposable()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initViewModel()
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(
+            this,
+            (requireActivity().application as VodovozApplication).viewModelFactory
+        )[CatalogViewModel::class.java]
+        viewModel.updateData()
+    }
 
     override fun setContentView(
         inflater: LayoutInflater,
@@ -38,14 +52,7 @@ class CatalogFragment : FetchStateBaseFragment() {
         inflater,
         container,
         false
-    ).apply {
-        binding = this
-    }.root
-
-    override fun onStart() {
-        super.onStart()
-        if (viewModel.lastFetchState is FetchState.Error) viewModel.updateData()
-    }
+    ).apply { binding = this }.root
 
     override fun initView() {
         initViewModel()
@@ -58,16 +65,9 @@ class CatalogFragment : FetchStateBaseFragment() {
         viewModel.updateData()
     }
 
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[CatalogViewModel::class.java]
-    }
-
     private fun initCategoryRecycler() {
         binding.categoryRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.categoryRecycler.adapter = catalogCategoryAdapter
+        binding.categoryRecycler.adapter = mainCatalogAdapter
         binding.categoryRecycler.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -81,32 +81,29 @@ class CatalogFragment : FetchStateBaseFragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun observeViewModel() {
-        viewModel.fetchStateLD.observe(viewLifecycleOwner) { state ->
+        viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
             when(state) {
-                is FetchState.Error -> onStateError(state.errorMessage)
-                is FetchState.Loading -> onStateLoading()
-                is FetchState.Success -> {
-                    onStateSuccess()
-                    catalogCategoryAdapter.categoryUIList = state.data!!
-                    catalogCategoryAdapter.notifyDataSetChanged()
-                }
+                is ViewState.Error -> onStateError(state.errorMessage)
+                is ViewState.Loading -> onStateLoading()
+                is ViewState.Hide -> onStateHide()
+                is ViewState.Success -> onStateSuccess()
             }
+        }
+
+        viewModel.categoryUIListLD.observe(viewLifecycleOwner) { categoryUIList ->
+            mainCatalogAdapter.categoryUIList = categoryUIList
+            mainCatalogAdapter.notifyDataSetChanged()
         }
     }
 
     private fun observeOnCategoryClick() {
         categoryClickSubject.subscribeBy { category ->
-            findNavController().navigate(CatalogFragmentDirections.actionCatalogFragmentToProductsFragment(category.id!!))
+            findNavController().navigate(CatalogFragmentDirections.actionToPaginatedProductsCatalogFragment(category.id!!))
         }.addTo(compositeDisposable)
     }
 
     override fun onStop() {
         super.onStop()
-        compositeDisposable.clear()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
         compositeDisposable.clear()
     }
 

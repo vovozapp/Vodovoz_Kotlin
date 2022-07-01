@@ -6,19 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:cardCornerRadius="@dimen/primary_corner_radius"
-    app:cardElevation="3dp">
+    app:cardElevation="@dimen/cart_elevation">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="@dimen/primary_margin">
 
         <ImageView
             android:id="@+id/favoriteStatus"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:src="@drawable/ic_favorite_border"
-            android:layout_marginEnd="@dimen/primary_margin"
-            android:layout_marginTop="@dimen/primary_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription" />
@@ -27,7 +26,7 @@
             android:id="@+id/image"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/add"
+            app:layout_constraintBottom_toTopOf="@+id/amountControllerContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,8 +38,6 @@
             android:id="@+id/linearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="6dp"
             android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -55,8 +52,8 @@
                     android:id="@+id/statusCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
-                    app:cardCornerRadius="5dp">
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="0dp">
 
                     <TextView
                         android:id="@+id/status"
@@ -84,9 +81,9 @@
                     android:id="@+id/discountCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
                     app:cardBackgroundColor="@color/orange"
-                    app:cardCornerRadius="5dp">
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="0dp">
 
                     <TextView
                         android:id="@+id/discount"
@@ -105,19 +102,19 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/add"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/background_add_to_cart"
-            android:padding="10dp"
-            android:src="@drawable/ic_cart"
-            android:translationZ="3dp"
-            android:layout_marginBottom="@dimen/primary_margin"
-            android:layout_marginEnd="@dimen/primary_margin"
+        <RelativeLayout
+            android:id="@+id/amountControllerContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:ignore="ContentDescription" />
+            app:layout_constraintStart_toEndOf="@+id/oldPrice">
+
+            <include
+                android:id="@+id/amountController"
+                layout="@layout/view_product_amount_controller" />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/price"
@@ -125,8 +122,6 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/primary_bold"
             android:textSize="@dimen/normal_text_size"
-            android:layout_marginBottom="@dimen/primary_margin"
-            android:layout_marginStart="@dimen/primary_margin"
             android:textColor="@color/blackTextPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

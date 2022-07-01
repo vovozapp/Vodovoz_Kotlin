@@ -6,15 +6,16 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:cardCornerRadius="@dimen/primary_corner_radius"
-    app:cardElevation="1dp">
+    app:cardElevation="@dimen/cart_elevation">
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/primary_normal"
-        android:padding="@dimen/primary_margin"
-        android:textSize="@dimen/title_text_size"
+        android:fontFamily="@font/rotonda"
+        android:padding="@dimen/primary_space"
+        android:textSize="16sp"
+        android:textColor="@color/blackTextPrimary"
         tools:text="Some section" />
 
 </androidx.cardview.widget.CardView>

@@ -1,12 +1,10 @@
 package com.vodovoz.app.data.parser.response.promotion
 
-import android.util.Log
 import com.vodovoz.app.data.model.common.CategoryDetailEntity
 import com.vodovoz.app.data.model.common.PromotionDetailEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
 import com.vodovoz.app.data.remote.ResponseStatus
-import com.vodovoz.app.util.LogSettings
 import okhttp3.ResponseBody
 import org.json.JSONObject
 
@@ -28,10 +26,13 @@ object PromotionDetailResponseJsonParser {
         status = getJSONObject("aktion").getString("NAMERAZDEL"),
         statusColor = getJSONObject("aktion").getString("CVET"),
         timeLeft = getJSONObject("aktion").getString("DATAOUT"),
-        promotionCategoryDetailEntity = CategoryDetailEntity(
-            name = getJSONObject("production").getString("NAMETOVAR"),
-            productEntityList = getJSONObject("production").getJSONArray("TOVARY").parseProductEntityList()
-        ),
+        promotionCategoryDetailEntity = when(isNull("production")) {
+            false -> CategoryDetailEntity(
+                name = getJSONObject("production").getString("NAMETOVAR"),
+                productEntityList = getJSONObject("production").getJSONArray("TOVARY").parseProductEntityList()
+            )
+            true -> null
+        },
         forYouCategoryDetailEntity = CategoryDetailEntity(
             name = getString("title"),
             productEntityList = getJSONArray("tovary").parseProductEntityList()

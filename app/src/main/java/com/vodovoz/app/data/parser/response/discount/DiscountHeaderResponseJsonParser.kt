@@ -1,14 +1,8 @@
 package com.vodovoz.app.data.parser.response.discount
 
-import com.vodovoz.app.data.model.common.CategoryDetailEntity
 import com.vodovoz.app.data.model.common.CategoryEntity
-import com.vodovoz.app.data.model.common.ProductEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.model.features.CountryBundleEntity
-import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
-import com.vodovoz.app.data.parser.response.country.CountrySliderResponseJsonParser.parseCountryEntityList
 import com.vodovoz.app.data.remote.ResponseStatus
-import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
@@ -19,7 +13,7 @@ object DiscountHeaderResponseJsonParser {
         val responseJson = JSONObject(string())
         return when (responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(responseJson.parseCategoryEntity())
-            else -> ResponseEntity.Error()
+            else -> ResponseEntity.Error("Неправильный запрос")
         }
     }
 

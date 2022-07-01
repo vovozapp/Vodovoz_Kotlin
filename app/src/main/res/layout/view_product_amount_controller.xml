@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/add"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="@dimen/primary_margin"
+        android:layout_marginEnd="@dimen/primary_margin"
+        android:background="@drawable/background_add_to_cart"
+        android:padding="8dp"
+        android:src="@drawable/ic_cart"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/circleAmount"
+        app:layout_constraintTop_toTopOf="@+id/circleAmount"
+        app:tint="@color/white"
+        tools:ignore="ContentDescription" />
+
+    <LinearLayout
+        android:id="@+id/amountControllerDeployed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/primary_margin"
+        android:orientation="horizontal"
+        android:src="@drawable/ic_cart"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/circleAmount">
+
+        <ImageView
+            android:id="@+id/reduceAmount"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/background_reduce_amount"
+            android:padding="6dp"
+            android:src="@drawable/image_minus"
+            app:tint="@color/green"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/amount"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/background_add_to_cart_amount"
+            android:fontFamily="@font/rotonda_bold"
+            android:gravity="center"
+            android:textColor="@color/blackTextPrimary"
+            android:textSize="16sp"
+            tools:text="1" />
+
+        <ImageView
+            android:id="@+id/increaseAmount"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/background_add_to_cart_deployed"
+            android:padding="8dp"
+            android:src="@drawable/ic_cart"
+            tools:ignore="ContentDescription" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/circleAmount"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/background_amount"
+        android:fontFamily="@font/rotonda"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:visibility="visible"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

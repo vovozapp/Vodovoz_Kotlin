@@ -2,19 +2,17 @@ package com.vodovoz.app.ui.components.fragment.register
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.databinding.FragmentRegisterBinding
-import com.vodovoz.app.ui.components.base.FetchState
-import com.vodovoz.app.ui.components.base.FetchStateBaseFragment
+import com.vodovoz.app.ui.components.base.ViewState
+import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
-import com.vodovoz.app.ui.components.fragment.login.LoginViewModel
 
-class RegisterFragment : FetchStateBaseFragment() {
+class RegisterFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentRegisterBinding
     private lateinit var viewModel: RegisterViewModel
@@ -38,16 +36,14 @@ class RegisterFragment : FetchStateBaseFragment() {
         inflater,
         container,
         false
-    ).apply {
-        binding = this
-    }.root
+    ).apply { binding = this }.root
 
     override fun initView() {
         onStateSuccess()
-        binding.register.setOnClickListener { viewModel.validate() }
+        initAppBar()
+        initButtons()
         initFieldListeners()
         observeViewModel()
-        initAppBar()
     }
 
     private fun initAppBar() {
@@ -59,6 +55,10 @@ class RegisterFragment : FetchStateBaseFragment() {
         binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
+    }
+
+    private fun initButtons() {
+        binding.register.setOnClickListener { viewModel.validate() }
     }
 
     private fun initFieldListeners() {
@@ -76,15 +76,18 @@ class RegisterFragment : FetchStateBaseFragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.fetchStateLD.observe(viewLifecycleOwner) { state ->
+        viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
             when(state) {
-                is FetchState.Success -> when(state.data) {
-                    null -> onStateSuccess()
-                    else -> findNavController().popBackStack()
-                }
-                is FetchState.Error -> onStateError(state.errorMessage)
-                is FetchState.Loading -> onStateLoading()
-                is FetchState.Hide -> {}
+                is ViewState.Success -> onStateSuccess()
+                is ViewState.Error -> onStateError(state.errorMessage)
+                is ViewState.Loading -> onStateLoading()
+                is ViewState.Hide -> {}
+            }
+        }
+
+        viewModel.isRegisterSuccessLD.observe(viewLifecycleOwner) { isSuccess ->
+            if (isSuccess) {
+                findNavController().popBackStack()
             }
         }
 

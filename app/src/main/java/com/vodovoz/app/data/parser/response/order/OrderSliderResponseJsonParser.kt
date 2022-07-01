@@ -14,7 +14,7 @@ object OrderSliderResponseJsonParser {
         val responseJson = JSONObject(this.string())
         return when(responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(responseJson.getJSONArray("data").parseOrderEntityList())
-            else -> ResponseEntity.Error()
+            else -> ResponseEntity.Error("Неправильный запрос")
         }
     }
 

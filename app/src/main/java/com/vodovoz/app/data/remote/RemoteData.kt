@@ -1,28 +1,25 @@
 package com.vodovoz.app.data.remote
 
-import android.util.Log
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
 import com.vodovoz.app.data.model.features.CountryBundleEntity
-import com.vodovoz.app.data.parser.response.catalog.CatalogResponseJsonParser.parseCatalogResponse
-import com.vodovoz.app.data.parser.response.comment.CommentsSliderResponseJsonParser.parseCommentsSliderResponse
-import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonParser.parseAllPromotionsResponse
-import com.vodovoz.app.data.parser.response.category.ConcreteFilterResponseJsonParser.parseConcreteFilterResponse
-import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
-import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
-import com.vodovoz.app.data.parser.response.paginatedProducts.MaybeLikeProductsResponseJsonParser.parseMaybeLikeProductsResponse
-import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
-import com.vodovoz.app.data.parser.response.user.RegisterResponseJsonParser.parseRegisterResponse
-import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.data.parser.response.banner.AdvertisingBannersSliderResponseJsonParser.parseAdvertisingBannersSliderResponse
 import com.vodovoz.app.data.parser.response.banner.CategoryBannersSliderResponseJsonParser.parseCategoryBannersSliderResponse
 import com.vodovoz.app.data.parser.response.banner.ProductsByBannerResponseJsonParser.parseProductsByBannerResponse
 import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.parseAllBrandsResponse
 import com.vodovoz.app.data.parser.response.brand.BrandHeaderResponseJsonParser.parseBrandHeaderResponse
 import com.vodovoz.app.data.parser.response.brand.BrandsSliderResponseJsonParser.parseBrandsSliderResponse
+import com.vodovoz.app.data.parser.response.cart.AddProductToCartResponseJsonParser.parseAddProductToCartResponse
+import com.vodovoz.app.data.parser.response.cart.CartResponseJsonParser.parseCartResponse
+import com.vodovoz.app.data.parser.response.cart.ChangeProductQuantityInCartResponseJsonParser.parseChangeProductQuantityInCartResponse
+import com.vodovoz.app.data.parser.response.cart.ClearCartResponseJsonParser.parseClearCartResponse
+import com.vodovoz.app.data.parser.response.cart.DeleteProductFromCartResponseJsonParser.parseDeleteProductFromCartResponse
+import com.vodovoz.app.data.parser.response.catalog.CatalogResponseJsonParser.parseCatalogResponse
 import com.vodovoz.app.data.parser.response.category.AllFiltersByCategoryResponseJsonParser.parseAllFiltersByCategoryResponse
 import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
+import com.vodovoz.app.data.parser.response.category.ConcreteFilterResponseJsonParser.parseConcreteFilterResponse
+import com.vodovoz.app.data.parser.response.comment.CommentsSliderResponseJsonParser.parseCommentsSliderResponse
 import com.vodovoz.app.data.parser.response.country.CountryHeaderResponseJsonParser.parseCountryHeaderResponse
 import com.vodovoz.app.data.parser.response.country.CountrySliderResponseJsonParser.parseCountriesSliderResponse
 import com.vodovoz.app.data.parser.response.discount.DiscountHeaderResponseJsonParser.parseDiscountHeaderResponse
@@ -33,19 +30,76 @@ import com.vodovoz.app.data.parser.response.doubleSlider.SliderHeaderResponseJso
 import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonParser.parseHistoriesSliderResponse
 import com.vodovoz.app.data.parser.response.novelties.NoveltiesHeaderResponseJsonParser.parseNoveltiesHeaderResponse
 import com.vodovoz.app.data.parser.response.novelties.NoveltiesSliderResponseParser.parseNoveltiesSliderResponse
+import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
+import com.vodovoz.app.data.parser.response.paginatedProducts.MaybeLikeProductsResponseJsonParser.parseMaybeLikeProductsResponse
 import com.vodovoz.app.data.parser.response.paginatedProducts.SomeProductsByBrandResponseJsonParser.parseSomeProductsByBrandResponse
 import com.vodovoz.app.data.parser.response.popular.PopularSliderResponseJsonParser.parsePopularSliderResponse
 import com.vodovoz.app.data.parser.response.product.ProductDetailsResponseJsonParser.parseProductDetailsResponse
+import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonParser.parseAllPromotionsResponse
+import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionSliderResponseJsonParser.parsePromotionSliderResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionsByBannerResponseJsonParser.parsePromotionsByBannerResponse
+import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
+import com.vodovoz.app.data.parser.response.user.RegisterResponseJsonParser.parseRegisterResponse
+import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
-import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
 
 class RemoteData(
     private val api: Api
 ) : RemoteDataSource {
+
+    //Получить Cookie Session Id
+    override fun fetchCookie(): Single<String> = api.fetchCookie().flatMap {
+        Single.just(it.headers().values("Set-Cookie").first())
+    }
+
+    //Очистить корзину
+    override fun clearCart(): Single<ResponseEntity<Boolean>> = api.fetchClearCartResponse(
+        action = "delkorzina"
+    ).flatMap { Single.just(it.parseClearCartResponse()) }
+
+    //Добавить продукт в корзину
+    override fun addProductToCart(
+        productId: Long,
+        quantity: Int
+    ): Single<ResponseEntity<Boolean>> = api.fetchAddProductResponse(
+        action = "add",
+        productId = productId,
+        quantity = quantity
+    ).flatMap {
+        Single.just(it.parseAddProductToCartResponse())
+    }
+
+    //Удаление продукта из корзины
+    override fun deleteProductFromCart(
+        productId: Long
+    ): Single<ResponseEntity<Boolean>> = api.fetchDeleteProductResponse(
+        action = "deletto",
+        productId = productId,
+    ).flatMap {
+        Single.just(it.parseDeleteProductFromCartResponse())
+    }
+
+    //Изменение колличества товаров в корзине
+    override fun changeProductsQuantityInCart(
+        productId: Long,
+        quantity: Int
+    ): Single<ResponseEntity<Boolean>> = api.fetchChangeProductsQuantityResponse(
+        action = "guaty",
+        productId = productId,
+        quantity = quantity
+    ).flatMap {
+        Single.just(it.parseChangeProductQuantityInCartResponse())
+    }
+
+    //Содержимое корзины
+    override fun fetchCart() = api.fetchCartResponse(
+        action = "getbasket"
+    ).flatMap {
+        Single.just(it.parseCartResponse())
+    }
 
     //Информации о странах для слайдера на главной странице
     override fun fetchCountriesSlider(): Single<ResponseEntity<CountryBundleEntity>> = rxSingle {
@@ -205,7 +259,6 @@ class RemoteData(
         action = "detailaction",
         categoryId = categoryId
     ).flatMap {
-        Log.i(LogSettings.REQ_RES_LOG, "PROM $it")
         Single.just(it.parsePromotionsByBannerResponse())
     }
 

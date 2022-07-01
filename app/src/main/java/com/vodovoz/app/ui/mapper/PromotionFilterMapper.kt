@@ -1,10 +1,7 @@
 package com.vodovoz.app.ui.mapper
 
-import com.vodovoz.app.data.model.common.PromotionEntity
 import com.vodovoz.app.data.model.common.PromotionFilterEntity
-import com.vodovoz.app.ui.mapper.PromotionMapper.mapToUI
 import com.vodovoz.app.ui.model.PromotionFilterUI
-import com.vodovoz.app.ui.model.PromotionUI
 
 object PromotionFilterMapper {
 

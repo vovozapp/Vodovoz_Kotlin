@@ -2,12 +2,39 @@ package com.vodovoz.app.data.remote
 
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
+import com.vodovoz.app.data.model.features.CartBundleEntity
 import com.vodovoz.app.data.model.features.CountryBundleEntity
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import retrofit2.Response
 
 interface RemoteDataSource {
+
+    //Получить Cookie Session Id
+    fun fetchCookie(): Single<String>
+
+    //Очистить корзину
+    fun clearCart(): Single<ResponseEntity<Boolean>>
+
+    //Изменение колличества товаров в корзине
+    fun changeProductsQuantityInCart(
+        productId: Long,
+        quantity: Int
+    ): Single<ResponseEntity<Boolean>>
+
+    //Удаление продукта из корзины
+    fun deleteProductFromCart(
+        productId: Long
+    ): Single<ResponseEntity<Boolean>>
+
+    //Добавление продукта в корзину
+    fun addProductToCart(
+        productId: Long,
+        quantity: Int
+    ): Single<ResponseEntity<Boolean>>
+
+    //Содержимое корзины
+    fun fetchCart(): Single<ResponseEntity<CartBundleEntity>>
 
     //Слайдер стран на главной странице
     fun fetchCountriesSlider(): Single<ResponseEntity<CountryBundleEntity>>

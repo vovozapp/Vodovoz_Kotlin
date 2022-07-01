@@ -13,7 +13,7 @@ object AdvertisingBannersSliderResponseJsonParser {
         val responseJson = JSONObject(string())
         return when (responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(responseJson.getJSONArray("data").parseBannerEntityList())
-            else -> ResponseEntity.Error()
+            else -> ResponseEntity.Error("Неизвестная ошибка")
         }
     }
 

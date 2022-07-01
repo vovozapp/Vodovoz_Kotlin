@@ -1,12 +1,10 @@
 package com.vodovoz.app.data.parser.response.product
 
-import android.util.Log
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.parser.common.BrandJsonParser.parserBrandEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
 import com.vodovoz.app.data.remote.ResponseStatus
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
-import com.vodovoz.app.util.LogSettings
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
@@ -48,7 +46,7 @@ object ProductDetailsResponseJsonParser {
                     }
                 )
             )
-            else -> ResponseEntity.Error()
+            else -> ResponseEntity.Error("Неправильный запрос")
         }
     }
 

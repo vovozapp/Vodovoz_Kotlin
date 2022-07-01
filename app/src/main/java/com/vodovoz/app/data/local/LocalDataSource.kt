@@ -13,4 +13,13 @@ interface LocalDataSource {
 
     fun isAlreadyLogin(): Boolean
 
+    fun changeProductQuantityInCart(productId: Long, quantity: Int)
+    fun fetchCart(): HashMap<Long, Int>
+    fun clearCart()
+
+    fun isAvailableCookieSessionId(): Boolean
+    fun fetchCookieSessionId(): String?
+    fun updateCookieSessionId(cookieSessionId: String)
+    fun removeCookieSessionId()
+
 }

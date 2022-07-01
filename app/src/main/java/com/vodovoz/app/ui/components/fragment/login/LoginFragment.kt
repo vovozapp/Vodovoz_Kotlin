@@ -7,11 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.databinding.FragmentLoginBinding
-import com.vodovoz.app.ui.components.base.FetchState
-import com.vodovoz.app.ui.components.base.FetchStateBaseFragment
+import com.vodovoz.app.ui.components.base.ViewState
+import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
 
-class LoginFragment : FetchStateBaseFragment() {
+class LoginFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentLoginBinding
     private lateinit var viewModel: LoginViewModel
@@ -35,9 +35,7 @@ class LoginFragment : FetchStateBaseFragment() {
         inflater,
         container,
         false
-    ).apply {
-        binding = this
-    }.root
+    ).apply { binding = this }.root
 
     override fun initView() {
         if (viewModel.isAlreadyLogin()) findNavController().popBackStack()
@@ -66,7 +64,7 @@ class LoginFragment : FetchStateBaseFragment() {
         }
         binding.recover.setOnClickListener {  }
         binding.register.setOnClickListener {
-            findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
+            findNavController().navigate(LoginFragmentDirections.actionToRegisterFragment())
         }
     }
 
@@ -75,17 +73,12 @@ class LoginFragment : FetchStateBaseFragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.fetchStateLD.observe(viewLifecycleOwner) { state ->
+        viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
             when(state) {
-                is FetchState.Loading -> onStateLoading()
-                is FetchState.Error -> onStateError(state.errorMessage)
-                is FetchState.Hide -> {}
-                is FetchState.Success -> {
-                    when(state.data!!) {
-                        true -> findNavController().popBackStack()
-                        false -> onStateSuccess()
-                    }
-                }
+                is ViewState.Loading -> onStateLoading()
+                is ViewState.Error -> onStateError(state.errorMessage)
+                is ViewState.Hide -> onStateHide()
+                is ViewState.Success -> onStateSuccess()
             }
         }
 

@@ -3,7 +3,6 @@ package com.vodovoz.app.ui.mapper
 import com.vodovoz.app.data.model.common.ProductDetailBundleEntity
 import com.vodovoz.app.ui.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.ui.mapper.CommentMapper.mapToUI
-import com.vodovoz.app.ui.mapper.ProductDetailBundleMapper.mapToUI
 import com.vodovoz.app.ui.mapper.ProductDetailMapper.mapToUI
 import com.vodovoz.app.ui.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.ui.mapper.PromotionMapper.mapToUI

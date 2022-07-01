@@ -8,6 +8,6 @@ class PromotionDetailEntity(
     val statusColor: String,
     val detailPicture: String,
     val timeLeft: String,
-    val promotionCategoryDetailEntity: CategoryDetailEntity,
+    val promotionCategoryDetailEntity: CategoryDetailEntity? = null,
     val forYouCategoryDetailEntity: CategoryDetailEntity
 )

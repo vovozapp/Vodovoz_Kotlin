@@ -1,0 +1,139 @@
+package com.vodovoz.app.ui.components.fragment.some_products_maybe_like
+
+import android.annotation.SuppressLint
+import android.graphics.Rect
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.vodovoz.app.R
+import com.vodovoz.app.databinding.FragmentPaginatedMaybeLikeProductListBinding
+import com.vodovoz.app.ui.components.adapter.GridProductsAdapter
+import com.vodovoz.app.ui.components.base.ViewState
+import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
+import com.vodovoz.app.ui.components.base.VodovozApplication
+import com.vodovoz.app.ui.model.ProductUI
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.subjects.PublishSubject
+
+class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
+
+    companion object {
+        fun newInstance(
+            onProductClickSubject: PublishSubject<Long>
+        ) = SomeProductsMaybeLikeFragment().apply {
+            this.onProductClickSubject = onProductClickSubject
+        }
+    }
+
+    private val compositeDisposable = CompositeDisposable()
+
+    private val onChangeProductQuantitySubject: PublishSubject<ProductUI> = PublishSubject.create()
+    private lateinit var onProductClickSubject: PublishSubject<Long>
+
+    private lateinit var binding: FragmentPaginatedMaybeLikeProductListBinding
+    private lateinit var viewModel: SomeProductsMaybeLikeViewModel
+
+    private val gridProductsAdapter: GridProductsAdapter by lazy {
+        GridProductsAdapter(
+            onProductClickSubject = onProductClickSubject,
+            onChangeProductQuantitySubject = onChangeProductQuantitySubject,
+        )
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initViewModel()
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(
+            this,
+            (requireActivity().application as VodovozApplication).viewModelFactory
+        )[SomeProductsMaybeLikeViewModel::class.java]
+        viewModel.nextPage()
+    }
+
+    override fun setContentView(
+        inflater: LayoutInflater,
+        container: ViewGroup
+    ) = FragmentPaginatedMaybeLikeProductListBinding.inflate(
+        inflater,
+        container,
+        false
+    ).apply { binding = this }.root
+
+    override fun initView() {
+        initProductRecycler()
+        observeViewModel()
+    }
+
+    override fun update() {
+        viewModel.updateData()
+    }
+
+    private fun initProductRecycler() {
+        val space = resources.getDimension(R.dimen.primary_space).toInt()
+        binding.brandProductRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.brandProductRecycler.adapter = gridProductsAdapter
+        binding.nextPage.setOnClickListener { viewModel.nextPage() }
+        binding.brandProductRecycler.addItemDecoration(
+            object : RecyclerView.ItemDecoration() {
+                override fun getItemOffsets(
+                    outRect: Rect,
+                    view: View,
+                    parent: RecyclerView,
+                    state: RecyclerView.State
+                ) {
+                    with(outRect) {
+                        if (parent.getChildAdapterPosition(view) % 2 == 0) {
+                            left = space
+                            right = space/2
+                        } else {
+                            left = space/2
+                            right = space
+                        }
+                        top = space
+                        bottom = space
+                    }
+                }
+            }
+        )
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun observeViewModel() {
+        viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
+            when(state) {
+                is ViewState.Hide -> onStateHide()
+                is ViewState.Loading -> onStateLoading()
+                is ViewState.Error -> onStateError(state.errorMessage)
+                is ViewState.Success -> onStateSuccess()
+            }
+        }
+
+        viewModel.productUIListLD.observe(viewLifecycleOwner) { productUIList ->
+            gridProductsAdapter.productUiList = productUIList
+            gridProductsAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        onChangeProductQuantitySubject.subscribeBy { productUI ->
+            viewModel.changeCart(productUI)
+        }.addTo(compositeDisposable)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        compositeDisposable.clear()
+    }
+
+}

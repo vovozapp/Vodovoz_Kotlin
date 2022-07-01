@@ -16,7 +16,7 @@ object PromotionDetailMapper {
         status = status,
         timeLeft = timeLeft,
         forYouCategoryDetailUI = forYouCategoryDetailEntity.mapToUI(),
-        promotionCategoryDetailUI = promotionCategoryDetailEntity.mapToUI()
+        promotionCategoryDetailUI = promotionCategoryDetailEntity?.mapToUI()
     )
 
 }

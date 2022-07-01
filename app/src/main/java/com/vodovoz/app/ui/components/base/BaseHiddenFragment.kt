@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.vodovoz.app.databinding.FragmentBaseBinding
 import com.vodovoz.app.databinding.FragmentBaseHiddenBinding
 
-abstract class BaseHiddenFragment<T : ViewModel> : Fragment() {
+abstract class BaseHiddenFragment : Fragment() {
 
     private lateinit var rootBinding: FragmentBaseHiddenBinding
-    private lateinit var viewModel: ViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,45 +24,19 @@ abstract class BaseHiddenFragment<T : ViewModel> : Fragment() {
         false
     ).apply {
         rootBinding = this
-        getViewModelClass()?.let { initViewModel(it) }
-        setContentView()?.let { rootBinding.contentContainer.addView(it) }
+        setContentView(inflater, this.root)?.let { rootBinding.contentContainer.addView(it) }
         initView()
     }.root
 
-    protected open fun setContentView(): View? = null
-    protected open fun getAppBarView(): View? = null
-    protected open fun getViewModelClass(): Class<T>? = null
+    protected open fun setContentView(inflater: LayoutInflater, container: ViewGroup): View? = null
     protected open fun initView() {}
 
-    protected fun setState(state: State) {
-        when (state) {
-            State.HIDE -> onStateHide()
-            State.SHOW -> onStateShow()
-        }
-    }
-
-    protected fun onStateHide() {
+    protected fun hide() {
         rootBinding.root.visibility = View.GONE
     }
 
-
-    protected fun onStateShow() {
+    protected fun show() {
         rootBinding.root.visibility = View.VISIBLE
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    protected fun viewModel() = viewModel as T
-
-    private fun initViewModel(modelClass: Class<T>){
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[modelClass]
-    }
-
-    enum class State {
-        HIDE,
-        SHOW
     }
 
 }

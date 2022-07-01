@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:focusable="true"
+    android:clickable="true"
+    android:baselineAligned="false">
+
+    <ImageView
+        android:id="@+id/detailPicture"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="10dp"
+        app:layout_constraintWidth_percent="0.35"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fontFamily="@font/rotonda"
+        android:textColor="@color/blackTextPrimary"
+        android:textSize="16sp"
+        android:paddingBottom="@dimen/primary_space"
+        app:layout_constraintBottom_toTopOf="@+id/pickUpGift"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/detailPicture"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Какое-то интересное не короткое название какой-т вкусное воды, еще что-то и еще" />
+
+
+    <TextView
+        android:id="@+id/pickUpGift"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_button_green"
+        android:fontFamily="@font/rotonda"
+        android:paddingStart="@dimen/primary_space"
+        android:paddingTop="@dimen/primary_margin"
+        android:paddingEnd="@dimen/primary_space"
+        android:paddingBottom="@dimen/primary_margin"
+        android:text="Забрать подарок"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

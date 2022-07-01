@@ -2,8 +2,6 @@ package com.vodovoz.app.ui.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.vodovoz.app.data.model.common.BannerEntity
-import java.io.Serializable
 
 class HistoryUI(
     val id: Long,

@@ -17,7 +17,7 @@ object AllPromotionsResponseJsonParser {
                 promotionEntityList = responseJson.getJSONArray("data").parsePromotionEntityList(),
                 promotionFilterEntityList = responseJson.getJSONArray("namerazdely").parsePromotionFilterEntityList()
             ))
-            else -> ResponseEntity.Error()
+            else -> ResponseEntity.Error("Неправильный запрос")
         }
     }
 

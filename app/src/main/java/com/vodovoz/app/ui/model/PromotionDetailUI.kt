@@ -8,6 +8,6 @@ class PromotionDetailUI(
     val statusColor: String,
     val detailPicture: String,
     val timeLeft: String,
-    val promotionCategoryDetailUI: CategoryDetailUI,
+    val promotionCategoryDetailUI: CategoryDetailUI?,
     val forYouCategoryDetailUI: CategoryDetailUI
 )

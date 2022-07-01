@@ -10,5 +10,7 @@ class ProductEntity(
     val statusColor: String,
     val rating: Double,
     val commentAmount: String,
+    var cartQuantity: Int = 0,
+    val isCanReturnBottles: Boolean = false,
     val detailPictureList: List<String>
 )

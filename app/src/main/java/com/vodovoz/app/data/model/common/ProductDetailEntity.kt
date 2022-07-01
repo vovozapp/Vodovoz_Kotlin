@@ -13,6 +13,7 @@ class ProductDetailEntity(
     val consumerInfo: String,
     val commentsAmount: Int,
     val pricePerUnit: Int? = null,
+    val cartAmount: Int = 0,
     val brandEntity: BrandEntity? = null,
     val propertiesGroupEntityList: List<PropertiesGroupEntity> = listOf(),
     val priceEntityList: List<PriceEntity> = listOf(),

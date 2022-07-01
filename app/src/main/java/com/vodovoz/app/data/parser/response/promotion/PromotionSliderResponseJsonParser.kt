@@ -15,7 +15,7 @@ object PromotionSliderResponseJsonParser {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 responseJson.getJSONArray("data").parsePromotionEntityList()
             )
-            else -> ResponseEntity.Error()
+            else -> ResponseEntity.Error("Неправильный запрос")
         }
     }
 

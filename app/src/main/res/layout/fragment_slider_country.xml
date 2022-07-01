@@ -28,13 +28,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="@font/primary_bold"
-                android:paddingStart="@dimen/primary_space"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="Вода со всего мира"
+                android:textColor="@color/white"                android:paddingStart="@dimen/primary_space"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingEnd="@dimen/primary_space"
-                android:paddingBottom="@dimen/primary_margin"
-                android:textColor="@color/white"
-                android:textSize="@dimen/title_text_size" />
+                android:paddingBottom="@dimen/primary_margin" />
 
         </LinearLayout>
 

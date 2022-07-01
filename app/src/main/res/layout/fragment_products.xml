@@ -10,17 +10,17 @@
         android:id="@+id/searchToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingStart="@dimen/primary_space"
-        android:paddingEnd="@dimen/primary_space"
-        android:gravity="center_vertical">
+        android:paddingEnd="@dimen/primary_space">
 
         <ImageView
             android:id="@+id/back"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/ic_arrow_left"
             android:layout_marginEnd="@dimen/primary_space"
+            android:src="@drawable/ic_arrow_left"
             app:tint="@color/blackTextPrimary"
             tools:ignore="ContentDescription" />
 

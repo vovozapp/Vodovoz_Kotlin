@@ -1,6 +1,5 @@
 package com.vodovoz.app.ui.model.custom
 
-import com.vodovoz.app.data.model.common.ProductEntity
 import com.vodovoz.app.ui.model.ProductUI
 
 class BrandProductListUI(

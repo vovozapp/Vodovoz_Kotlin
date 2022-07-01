@@ -1,7 +1,6 @@
 package com.vodovoz.app.ui.components.diffUtils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.ProductUI
 
 class ProductDiffUtilCallback(

@@ -1,14 +1,11 @@
 package com.vodovoz.app.data.paging
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.vodovoz.app.data.model.common.ProductEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.paging.source.ProductsSource
-import com.vodovoz.app.util.LogSettings
 import retrofit2.HttpException
-import retrofit2.Response
 
 class ProductsPagingSource(
     private val productsSource: ProductsSource
@@ -26,22 +23,17 @@ class ProductsPagingSource(
             val page = params.key ?: 1
             val response = productsSource.getResponse(page)
 
-            Log.i(LogSettings.DEVELOP_LOG, response.body().toString())
-            Log.i(LogSettings.REQ_RES_LOG, "${response.isSuccessful} $response")
             if (!response.isSuccessful) return LoadResult.Error(HttpException(response))
 
             return when(val parsedResponse = productsSource.parseResponse(response)) {
                 is ResponseEntity.Success -> {
-                    Log.i(LogSettings.DEVELOP_LOG, "SUC ${response.toString()}")
-                    val productEntityList = parsedResponse.data!!
+                    val productEntityList = parsedResponse.data
                     val nextPageNumber = if (productEntityList.isEmpty()) null else page + 1
                     val prevPageNumber = if (page > 1) page - 1 else null
                     LoadResult.Page(productEntityList, prevPageNumber, nextPageNumber)
                 }
-                is ResponseEntity.Error -> {
-                    Log.i(LogSettings.DEVELOP_LOG, "ERROR ${response.errorBody()}")
-                    LoadResult.Error(Exception(parsedResponse.errorMessage))
-                }
+                is ResponseEntity.Hide -> LoadResult.Error(Exception("Hide content"))
+                is ResponseEntity.Error -> LoadResult.Error(Exception(parsedResponse.errorMessage))
             }
         } catch (e: HttpException) {
             return LoadResult.Error(e)

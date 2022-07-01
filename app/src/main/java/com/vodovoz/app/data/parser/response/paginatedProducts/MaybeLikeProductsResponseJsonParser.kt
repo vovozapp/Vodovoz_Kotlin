@@ -18,7 +18,7 @@ object MaybeLikeProductsResponseJsonParser {
                     productEntityList = responseJson.getJSONArray("data").parseProductEntityList()
                 )
             )
-            else -> ResponseEntity.Error()
+            else -> ResponseEntity.Error("Неправильный запрос")
         }
     }
 

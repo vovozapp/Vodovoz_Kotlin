@@ -22,7 +22,7 @@
         android:title="@string/favorite" />
 
     <item
-        android:id="@+id/accountFragment"
+        android:id="@+id/profileFragment"
         android:icon="@drawable/ic_account"
         android:title="@string/account" />
 

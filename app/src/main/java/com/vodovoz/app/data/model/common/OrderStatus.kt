@@ -1,7 +1,6 @@
 package com.vodovoz.app.data.model.common
 
 import com.vodovoz.app.R
-import java.lang.Exception
 
 enum class OrderStatus(
     val id: String,

@@ -10,7 +10,7 @@
     android:paddingBottom="@dimen/primary_margin"
     android:paddingStart="@dimen/primary_space"
     android:paddingEnd="@dimen/primary_space"
-    android:translationZ="1dp"
+    android:translationZ="@dimen/cart_elevation"
     android:fontFamily="@font/rotonda"
     android:textColor="@color/blackTextPrimary"
     tools:text="Природная вода"/>

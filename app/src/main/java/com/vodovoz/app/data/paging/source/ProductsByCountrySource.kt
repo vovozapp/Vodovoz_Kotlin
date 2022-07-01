@@ -1,7 +1,6 @@
 package com.vodovoz.app.data.paging.source
 
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsByBrandResponseJsonParser.parseProductsByBrandResponse
 import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsByCountryResponseJsonParser.parseProductsByCountryResponse
 import com.vodovoz.app.data.remote.RemoteDataSource
 import okhttp3.ResponseBody

@@ -28,20 +28,50 @@ object ProductJsonParser {
         val detailPicture = getString("DETAIL_PICTURE")
 
         return ProductEntity(
-            id = getLong("ID"),
+
+            id = when(has("PRODUCT_ID")) {
+                true -> getLong("PRODUCT_ID")
+                false -> getLong("ID")
+            },
             name = getString("NAME"),
             detailPicture = detailPicture.parseImagePath(),
             newPrice = getJSONArray("EXTENDED_PRICE").getJSONObject(0).getInt("PRICE"),
             oldPrice = getJSONArray("EXTENDED_PRICE").getJSONObject(0).getInt("OLD_PRICE"),
-            rating = getDouble("PROPERTY_RATING_VALUE"),
+            rating = when(has("")) {
+                true -> getDouble("PROPERTY_RATING_VALUE")
+                else -> 0.0
+            },
             status = status,
             statusColor = statusColor,
             commentAmount = when(has("COUTCOMMENTS")) {
                 true -> getString("COUTCOMMENTS")
                 false -> ""
             },
-            detailPictureList = parseDetailPictureList(detailPicture)
+            cartQuantity = when(has("QUANTITY")) {
+                true -> getInt("QUANTITY")
+                false -> 0
+            },
+            detailPictureList = parseDetailPictureList(detailPicture),
+            isCanReturnBottles = when(has("CATALOG")) {
+                true -> getJSONObject("CATALOG").parseIsCanReturnBottles()
+                false -> false
+            }
         )
+    }
+
+
+    private fun JSONObject.parseIsCanReturnBottles(): Boolean {
+        val categoryIdList = mutableListOf<Int>()
+        val categoryIdJsonArray = getJSONArray("SECTION_ID")
+
+        for (index in 0 until categoryIdJsonArray.length()) {
+            categoryIdList.add(categoryIdJsonArray.getInt(index))
+        }
+
+        return when(categoryIdList.find { it == 2991 || it == 2990 || it == 75 }) {
+            null -> false
+            else -> true
+        }
     }
 
     private fun JSONObject.parseDetailPictureList(

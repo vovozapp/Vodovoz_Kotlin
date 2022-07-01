@@ -18,7 +18,9 @@ object ProductMapper {
         status = status,
         statusColor = statusColor,
         rating = rating,
+        cartQuantity = cartQuantity,
         commentAmount = commentAmount,
+        isCanReturnBottles = isCanReturnBottles!!,
         detailPictureList = detailPictureList
     )
 

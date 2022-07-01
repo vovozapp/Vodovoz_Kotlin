@@ -13,7 +13,7 @@ object NoveltiesSliderResponseParser {
         val responseJson = JSONObject(string())
         return when(responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(responseJson.parseCategoryDetailEntityList())
-            else -> ResponseEntity.Error()
+            else -> ResponseEntity.Error("Неправильный запрос")
         }
     }
 

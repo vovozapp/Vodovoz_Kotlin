@@ -1,6 +1,5 @@
 package com.vodovoz.app.data.paging.source
 
-import com.vodovoz.app.data.model.common.ProductEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsByCategoryResponseJsonParser.parseProductsByCategoryResponse
 import com.vodovoz.app.data.remote.RemoteDataSource

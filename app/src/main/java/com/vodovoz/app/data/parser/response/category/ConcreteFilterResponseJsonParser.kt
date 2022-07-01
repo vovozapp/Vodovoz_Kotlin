@@ -14,7 +14,7 @@ object ConcreteFilterResponseJsonParser {
         return when(responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 responseJson.getJSONArray("data").parseFilterValueEntityList())
-            else -> ResponseEntity.Error()
+            else -> ResponseEntity.Error("Неправильный запрос")
         }
     }
 

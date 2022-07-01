@@ -14,6 +14,7 @@ class ProductDetailUI(
     val pricePerUnit: Int? = null,
     val commentsAmount: Int,
     val brandUI: BrandUI? = null,
+    val cartAmount: Int,
     val propertiesGroupUIList: List<PropertiesGroupUI> = listOf(),
     val priceUIList: List<PriceUI> = listOf(),
     val detailPictureList: List<String> = listOf()

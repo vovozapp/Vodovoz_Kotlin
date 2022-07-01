@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
-import com.vodovoz.app.ui.components.base.FetchState
+import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryUI
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -17,31 +18,33 @@ class CatalogViewModel(
     private val dataRepository: DataRepository
 ) : ViewModel() {
 
-    private val fetchStateMLD = MutableLiveData<FetchState<List<CategoryUI>>>()
-    val fetchStateLD: LiveData<FetchState<List<CategoryUI>>> = fetchStateMLD
+    private val viewStateMLD = MutableLiveData<ViewState>()
+    private val categoryUIListMLD = MutableLiveData<List<CategoryUI>>()
+
+    val viewStateLD: LiveData<ViewState> = viewStateMLD
+    val categoryUIListLD: LiveData<List<CategoryUI>> = categoryUIListMLD
 
     private val compositeDisposable = CompositeDisposable()
 
-    init { updateData() }
-
-    var lastFetchState: FetchState<List<CategoryUI>>? = null
-        set(value) {
-            field = value
-            fetchStateMLD.value = field
-        }
-
-    fun updateData() = dataRepository.fetchCatalog()
-        .subscribeOn(Schedulers.io())
-        .doOnSubscribe { lastFetchState = FetchState.Loading() }
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeBy(
-            onSuccess = { response ->
-                response.data?.let {
-                    lastFetchState = FetchState.Success(it.mapToUI())
-                }
-            },
-            onError = { throwable -> lastFetchState = FetchState.Error(throwable.message!!)}
-        ).addTo(compositeDisposable)
+    fun updateData() {
+        dataRepository.fetchCatalog()
+            .subscribeOn(Schedulers.io())
+            .doOnSubscribe { viewStateMLD.value = ViewState.Loading() }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onSuccess = { response ->
+                    when(response) {
+                        is ResponseEntity.Hide -> viewStateMLD.value = ViewState.Hide()
+                        is ResponseEntity.Error -> viewStateMLD.value = ViewState.Error(response.errorMessage)
+                        is ResponseEntity.Success -> {
+                            categoryUIListMLD.value = response.data.mapToUI()
+                            viewStateMLD.value = ViewState.Success()
+                        }
+                    }
+                },
+                onError = { throwable -> viewStateMLD.value = ViewState.Error(throwable.message!!)}
+            ).addTo(compositeDisposable)
+    }
 
     override fun onCleared() {
         super.onCleared()

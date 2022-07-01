@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardElevation="1dp"
+    app:cardElevation="@dimen/cart_elevation"
     app:cardCornerRadius="@dimen/primary_corner_radius">
 
     <ImageView

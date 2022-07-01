@@ -39,7 +39,7 @@ object CategoryHeaderResponseJsonParser {
                     )
                 )
             }
-            else -> ResponseEntity.Error()
+            else -> ResponseEntity.Error("Неправильный запрос")
         }
     }
 

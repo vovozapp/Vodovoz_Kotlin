@@ -15,7 +15,7 @@ object PopularSliderResponseJsonParser {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 responseJson.getJSONObject("data").getJSONArray("LISTRAZDEL").parseCategoryEntityList()
             )
-            else -> ResponseEntity.Error()
+            else -> ResponseEntity.Error("Неправильный запрос")
         }
     }
 

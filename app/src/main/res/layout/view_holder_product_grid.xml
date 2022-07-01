@@ -169,21 +169,10 @@
         android:fontFamily="@font/rotonda_bold"
         android:textColor="@color/blackTextPrimary"
         android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/unitPrice"
         tools:text="280 Р" />
-
-    <ImageView
-        android:id="@+id/add"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/background_add_to_cart"
-        android:padding="8dp"
-        android:src="@drawable/ic_cart"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/white"
-        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/oldPrice"
@@ -193,8 +182,21 @@
         android:textColor="@color/blackTextLight"
         android:textSize="14sp"
         android:layout_marginStart="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/price"
         app:layout_constraintStart_toEndOf="@+id/price"
         tools:text="300 Р" />
+
+    <RelativeLayout
+        android:id="@+id/amountControllerContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <include
+            android:id="@+id/amountController"
+            layout="@layout/view_product_amount_controller" />
+
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

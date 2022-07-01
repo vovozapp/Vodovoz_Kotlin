@@ -4,22 +4,24 @@
     <color name="blueLight">#85d4ff</color>
     <color name="blueDark">#0075c4</color>
 
-    <color name="blackTextDark">#D9000000</color>
-    <color name="blackTextPrimary">#444444</color>
-    <color name="blackTextLight">#828282</color>
+    <color name="blackTextDark">#262626</color>
+    <color name="blackTextPrimary">#828282</color>
+    <color name="blackTextLight">#CACACA</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="gray">#e0e0e0</color>
+    <color name="gray">#E1E1E1</color>
 
     <color name="whiteDark">#EFF1F3</color>
-    <color name="light_gray">#F7F7F7</color>
+    <color name="light_gray">#F2F2F2</color>
     <color name="transparent_white">#80FFFFFF</color>
+    <color name="transparent_light_gray">#80EFF1F3</color>
 
     <color name="orange">#FF8D00</color>
     <color name="green">#7CBA00</color>
     <color name="red">#ED4842</color>
     <color name="yellow">#ffd600</color>
+
 
     //Status
     <color name="color_status_in_processing">#F47B07</color>

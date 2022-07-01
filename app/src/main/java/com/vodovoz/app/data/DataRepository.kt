@@ -2,17 +2,44 @@ package com.vodovoz.app.data
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.map
 import com.vodovoz.app.data.local.LocalDataSource
-import com.vodovoz.app.data.model.common.*
+import com.vodovoz.app.data.model.common.LastLoginDataEntity
+import com.vodovoz.app.data.model.common.OrderEntity
+import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.model.features.CartBundleEntity
 import com.vodovoz.app.data.paging.ProductsPagingSource
 import com.vodovoz.app.data.paging.source.*
 import com.vodovoz.app.data.remote.RemoteDataSource
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.kotlin.subscribeBy
+import kotlinx.coroutines.flow.map
 
 class DataRepository(
     private val remoteData: RemoteDataSource,
     private val localData: LocalDataSource,
 ) {
+
+    fun fetchCart(): Single<ResponseEntity<CartBundleEntity>> = remoteData
+        .fetchCart()
+        .doOnSuccess { response ->
+            if (response is ResponseEntity.Success) {
+                response.data?.let { cartBundleEntity ->
+                    localData.clearCart()
+                    cartBundleEntity.availableProductEntityList.forEach { productUI ->
+                        localData.changeProductQuantityInCart(
+                            productId = productUI.id,
+                            quantity = productUI.cartQuantity
+                        )
+                    }
+                }
+            }
+        }
+
+    fun clearCart(): Single<ResponseEntity<Boolean>> = remoteData
+        .clearCart()
+        .doFinally { localData.clearCart() }
 
     fun fetchBrandHeader(brandId: Long) = remoteData.fetchBrandHeader(brandId = brandId)
 
@@ -42,7 +69,17 @@ class DataRepository(
 
     fun fetchPromotionsSlider() = remoteData.fetchPromotionsSlider()
 
-    fun fetchOrderSlider(userId: Long) = remoteData.fetchOrdersSlider(userId = userId)
+    fun fetchOrderSlider(): Single<ResponseEntity<List<OrderEntity>>> = Single.create { emitter ->
+        when(val userId = fetchUserId()) {
+            null -> emitter.onSuccess(ResponseEntity.Hide())
+            else -> {
+                remoteData.fetchOrdersSlider(userId = userId).subscribeBy(
+                    onSuccess = { response ->  emitter.onSuccess(response) },
+                    onError = { throwable -> emitter.onError(throwable) }
+                )
+            }
+        }
+    }
 
     fun fetchViewedProductSlider(userId: Long?) = remoteData.fetchViewedProductsSlider(userId = userId)
 
@@ -81,7 +118,76 @@ class DataRepository(
                 remoteData = remoteData
             ))
         }
-    ).flow
+    ).flow.map { pagingData ->
+        val cart = fetchLocalCart()
+        pagingData.map { product ->
+            product.apply { cartQuantity = cart[product.id] ?: 0 }
+        }
+    }
+
+    fun changeCart(
+        productId: Long,
+        quantity: Int
+    ): Completable = Completable.create { emitter ->
+        val cart = localData.fetchCart()
+        val oldQuantity = cart[productId]
+        if (oldQuantity == quantity) emitter.onComplete()
+
+        when(oldQuantity) {
+            null -> remoteData.addProductToCart(
+                productId = productId,
+                quantity = quantity
+            )
+            else -> remoteData.changeProductsQuantityInCart(
+                productId = productId,
+                quantity = quantity
+            )
+        }.subscribeBy(
+            onSuccess = { response ->
+                when(response) {
+                    is ResponseEntity.Success -> {
+                        localData.changeProductQuantityInCart(
+                            productId = productId,
+                            quantity = quantity
+                        )
+                        emitter.onComplete()
+                    }
+                    is ResponseEntity.Error -> {
+                        emitter.onError(NullPointerException(response.errorMessage))
+                    }
+                }
+            },
+            onError = { throwable -> emitter.onError(throwable) }
+        )
+    }
+
+    fun changeProductQuantityInCart(
+        productId: Long,
+        quantity: Int
+    ): Single<ResponseEntity<Boolean>> = remoteData.changeProductsQuantityInCart(
+        productId = productId,
+        quantity = quantity
+    ).doFinally {
+        localData.changeProductQuantityInCart(
+            productId = productId,
+            quantity = quantity
+        )
+    }
+
+    fun addProductToCart(
+        productId: Long,
+        quantity: Int
+    ): Single<ResponseEntity<Boolean>> = remoteData.addProductToCart(
+        productId = productId,
+        quantity = quantity
+    ).doFinally {
+        localData.changeProductQuantityInCart(
+            productId = productId,
+            quantity = quantity
+        )
+    }
+
+    fun fetchLocalCart() = localData.fetchCart()
 
     fun fetchCategoryHeader(categoryId: Long) = remoteData.fetchCategoryHeader(categoryId = categoryId)
 
@@ -115,7 +221,6 @@ class DataRepository(
             ))
         }
     ).flow
-
 
     fun fetchProductsByBrand(
         brandId: Long?,
@@ -245,17 +350,23 @@ class DataRepository(
                 email = email,
                 password = password
             ))
-            updateUserId(response.data!!)
+            localData.updateUserId(response.data!!)
         }
     }.flatMap { response ->
         val newResponse = when(response) {
             is ResponseEntity.Success -> ResponseEntity.Success(true)
             is ResponseEntity.Error -> ResponseEntity.Error(response.errorMessage)
+            is ResponseEntity.Hide -> ResponseEntity.Error("Hide content")
         }
         Single.just(newResponse)
     }
 
-    fun logout() = localData.removeUserId()
+    fun logout(): Single<String> = remoteData
+        .fetchCookie()
+        .doOnSubscribe {
+            localData.removeUserId()
+            localData.removeCookieSessionId()
+        }
 
     fun fetchUserData(
         userId: Long

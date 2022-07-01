@@ -10,7 +10,7 @@
     android:layout_marginTop="@dimen/primary_margin"
     android:layout_marginBottom="@dimen/primary_margin"
     app:cardCornerRadius="@dimen/primary_corner_radius"
-    app:cardElevation="1dp">
+    app:cardElevation="@dimen/cart_elevation">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

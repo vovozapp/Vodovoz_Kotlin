@@ -3,7 +3,6 @@ package com.vodovoz.app.ui.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.vodovoz.app.data.model.common.BannerActionEntity
-import java.io.Serializable
 
 class BannerUI(
     val id: Long,

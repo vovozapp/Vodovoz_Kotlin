@@ -98,15 +98,6 @@
 
     </LinearLayout>
 
-<!--    <View-->
-<!--        android:id="@+id/spaceBetweenTitleAndStatus"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="3dp"-->
-<!--        android:visibility="visible"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/allStatusContainer"-->
-<!--        app:layout_constraintStart_toEndOf="@id/image"-->
-<!--        app:layout_constraintEnd_toStartOf="@id/favoriteStatus"/>-->
-<!--    -->
     <TextView
         android:id="@+id/name"
         android:layout_width="0dp"

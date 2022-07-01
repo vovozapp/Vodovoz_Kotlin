@@ -2,7 +2,6 @@ package com.vodovoz.app.data.parser.common
 
 import com.vodovoz.app.data.model.common.BannerActionEntity
 import com.vodovoz.app.data.model.common.BannerEntity
-import com.vodovoz.app.data.parser.common.BannerJsonParser.parsePromotionsBannerActionEntity
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import org.json.JSONArray
 import org.json.JSONObject

@@ -1,9 +1,7 @@
 package com.vodovoz.app.ui.mapper
 
-import android.util.Log
 import com.vodovoz.app.data.model.common.CommentEntity
 import com.vodovoz.app.ui.model.CommentUI
-import com.vodovoz.app.util.LogSettings
 
 object CommentMapper {
 

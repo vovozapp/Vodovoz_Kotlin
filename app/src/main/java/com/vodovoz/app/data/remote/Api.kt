@@ -8,6 +8,10 @@ import retrofit2.http.Query
 
 interface Api {
 
+    //Получить Cookie Session Id
+    @GET("/newmobile/korzina/function/guaty/index.php")
+    fun fetchCookie(): Single<Response<ResponseBody>>
+
     //Отзывы
     @GET("/newmobile/otzivomagaz.php")
     fun fetchCommentResponse(
@@ -186,7 +190,52 @@ interface Api {
         @Query("userid") userId: Long
     ): Single<ResponseBody>
 
+    //Корзина
+    @GET("/newmobile/korzina/index.php")
+    fun fetchCartResponse(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("quantity") amount: Int? = null
+    ): Single<ResponseBody>
 
+    //Добавление в корзину
+    @GET("/newmobile/korzina/function/add/index.php")
+    fun fetchAddProductResponse(
+        @Query("action") action: String? = null,
+        @Query("id") productId: Long? = null,
+        @Query("quantity") quantity: Int? = null
+    ): Single<ResponseBody>
+
+    //удаление из корзины
+    @GET("/newmobile/korzina/function/deletto/index.php")
+    fun fetchDeleteProductResponse(
+        @Query("action") action: String? = null,
+        @Query("id") productId: Long? = null
+    ): Single<ResponseBody>
+
+    //Изменение колличества товаров в корзине
+    @GET("/newmobile/korzina/function/guaty/index.php")
+    fun fetchChangeProductsQuantityResponse(
+        @Query("action") action: String? = null,
+        @Query("id") productId: Long? = null,
+        @Query("quantity") quantity: Int? = null
+    ): Single<ResponseBody>
+
+    //Очистить корзину
+    @GET("newmobile/korzina/function/delkorzina/index.php")
+    fun fetchClearCartResponse(
+        @Query("action") action: String? = null
+    ): Single<ResponseBody>
+
+    ///newmobile/korzina/function/delkorzina/index.php?action=delkorzina
+    ///newmobile/korzina/index.php?action=getbasket&userid="+user_id
+    ///newmobile/korzina/function/delkorzina/index.php?action=delkorzina
+    ///newmobile/korzina/index.php?action=getbasket&userid="+User.getInstance().getuser_id()+"&coupon=
+    ///newmobile/osnova/izbrannoe/adddel.php?action=del&id="+id+"&iblock=12&userid="+User.getInstance().getuser_id()
+    ///newmobile/osnova/izbrannoe/adddel.php?action=add&id="+id+"&iblock=12&userid="+User.getInstance().getuser_id())
+    //newmobile/korzina/index.php?action=getbasket&userid="+user_id+"&coupon="+txtCopon.
+    //newmobile/korzina.php?action=getbasketuser&coupon="+txtCopon
+    //newmobile/korzina/function/add/index.php?action=add&id=" + idProducts + "&quantity=" + diffren
 
 
     ///newmobile/viewedproduct/index.php?action=viewed&userid=

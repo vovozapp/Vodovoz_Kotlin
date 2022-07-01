@@ -13,7 +13,7 @@ object CatalogResponseJsonParser {
         val responseJson = JSONObject(string())
         return when(responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(responseJson.getJSONArray("data").parseCategoryEntityList())
-            else -> ResponseEntity.Error()
+            else -> ResponseEntity.Error("Неправильный запрос")
         }
     }
 

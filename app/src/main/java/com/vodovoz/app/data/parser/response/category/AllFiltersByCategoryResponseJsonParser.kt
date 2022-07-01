@@ -20,7 +20,7 @@ object AllFiltersByCategoryResponseJsonParser {
                     filterEntityList = responseJson.getJSONArray("data").parseFilterEntityList()
                 )
             )
-            else -> ResponseEntity.Error()
+            else -> ResponseEntity.Error("Неправильный запрос")
         }
     }
 

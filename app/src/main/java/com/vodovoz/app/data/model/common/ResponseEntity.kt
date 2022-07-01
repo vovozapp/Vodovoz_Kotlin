@@ -1,8 +1,7 @@
 package com.vodovoz.app.data.model.common
 
-sealed class ResponseEntity<T>(
-    val data: T? = null
-) {
-    class Success<T>(data: T) : ResponseEntity<T>(data)
-    class Error<T>(val errorMessage: String? = null) : ResponseEntity<T>(null)
+sealed class ResponseEntity<T> {
+    class Success<T>(val data: T) : ResponseEntity<T>()
+    class Error<T>(val errorMessage: String) : ResponseEntity<T>()
+    class Hide<T> : ResponseEntity<T>()
 }

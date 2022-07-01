@@ -155,23 +155,26 @@
         android:textColor="@color/blackTextPrimary"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/add"
+        app:layout_constraintBottom_toTopOf="@+id/amountControllerContainer"
         app:layout_constraintEnd_toStartOf="@id/favoriteStatus"
         app:layout_constraintStart_toEndOf="@+id/detailPicturePager"
         app:layout_constraintTop_toBottomOf="@+id/spaceBetweenStatusAndTitle"
         tools:text="Какое-то интересное не короткое название какой-т вкусное воды, еще что-то и еще" />
 
-    <ImageView
-        android:id="@+id/add"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/background_add_to_cart"
-        android:padding="8dp"
-        android:src="@drawable/ic_cart"
+
+    <RelativeLayout
+        android:id="@+id/amountControllerContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/white"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintStart_toEndOf="@+id/oldPrice">
+
+        <include
+            android:id="@+id/amountController"
+            layout="@layout/view_product_amount_controller" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/price"

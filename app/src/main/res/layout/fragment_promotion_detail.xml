@@ -125,9 +125,11 @@
                     android:fontFamily="@font/rotonda"
                     android:paddingStart="@dimen/primary_space"
                     android:paddingEnd="@dimen/primary_space"
+                    android:layout_marginBottom="@dimen/primary_space"
                     tools:text="Текст"/>
 
                 <TextView
+                    android:id="@+id/promotionProductsTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Товары учавствующие в акции"
@@ -136,8 +138,7 @@
                     android:textColor="@color/blackTextPrimary"
                     android:textSize="18sp"
                     android:paddingStart="@dimen/primary_space"
-                    android:paddingEnd="@dimen/primary_space"
-                    android:layout_marginTop="@dimen/primary_space"/>
+                    android:paddingEnd="@dimen/primary_space"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/productRecycler"
