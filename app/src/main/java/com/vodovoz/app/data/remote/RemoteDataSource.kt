@@ -3,12 +3,15 @@ package com.vodovoz.app.data.remote
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
 import com.vodovoz.app.data.model.features.CartBundleEntity
-import com.vodovoz.app.data.model.features.CountryBundleEntity
+import com.vodovoz.app.data.model.features.CountriesSliderBundleEntity
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import retrofit2.Response
 
 interface RemoteDataSource {
+
+    //Всплывающая новость
+    fun fetchPopupNews(userId: Long?): Single<ResponseEntity<PopupNewsEntity>>
 
     //Получить Cookie Session Id
     fun fetchCookie(): Single<String>
@@ -37,7 +40,7 @@ interface RemoteDataSource {
     fun fetchCart(): Single<ResponseEntity<CartBundleEntity>>
 
     //Слайдер стран на главной странице
-    fun fetchCountriesSlider(): Single<ResponseEntity<CountryBundleEntity>>
+    fun fetchCountriesSlider(): Single<ResponseEntity<CountriesSliderBundleEntity>>
 
     //Информация о выбранной стране
     fun fetchCountryHeader(

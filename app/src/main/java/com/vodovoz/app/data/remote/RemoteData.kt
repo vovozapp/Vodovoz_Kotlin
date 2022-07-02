@@ -3,7 +3,7 @@ package com.vodovoz.app.data.remote
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
-import com.vodovoz.app.data.model.features.CountryBundleEntity
+import com.vodovoz.app.data.model.features.CountriesSliderBundleEntity
 import com.vodovoz.app.data.parser.response.banner.AdvertisingBannersSliderResponseJsonParser.parseAdvertisingBannersSliderResponse
 import com.vodovoz.app.data.parser.response.banner.CategoryBannersSliderResponseJsonParser.parseCategoryBannersSliderResponse
 import com.vodovoz.app.data.parser.response.banner.ProductsByBannerResponseJsonParser.parseProductsByBannerResponse
@@ -34,6 +34,7 @@ import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.
 import com.vodovoz.app.data.parser.response.paginatedProducts.MaybeLikeProductsResponseJsonParser.parseMaybeLikeProductsResponse
 import com.vodovoz.app.data.parser.response.paginatedProducts.SomeProductsByBrandResponseJsonParser.parseSomeProductsByBrandResponse
 import com.vodovoz.app.data.parser.response.popular.PopularSliderResponseJsonParser.parsePopularSliderResponse
+import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
 import com.vodovoz.app.data.parser.response.product.ProductDetailsResponseJsonParser.parseProductDetailsResponse
 import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonParser.parseAllPromotionsResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
@@ -49,6 +50,13 @@ import kotlinx.coroutines.rx3.rxSingle
 class RemoteData(
     private val api: Api
 ) : RemoteDataSource {
+
+    //Всплывающая новость
+    override fun fetchPopupNews(userId: Long?): Single<ResponseEntity<PopupNewsEntity>> = api.fetchNewsResponse(
+        action = "okno",
+        userId = userId,
+        platform = "android"
+    ).flatMap { Single.just(it.parsePopupNewsResponse()) }
 
     //Получить Cookie Session Id
     override fun fetchCookie(): Single<String> = api.fetchCookie().flatMap {
@@ -102,7 +110,7 @@ class RemoteData(
     }
 
     //Информации о странах для слайдера на главной странице
-    override fun fetchCountriesSlider(): Single<ResponseEntity<CountryBundleEntity>> = rxSingle {
+    override fun fetchCountriesSlider(): Single<ResponseEntity<CountriesSliderBundleEntity>> = rxSingle {
         api.fetchCountryResponse(action = "glav")
     }.flatMap { Single.just(it.body()!!.parseCountriesSliderResponse()) }
 

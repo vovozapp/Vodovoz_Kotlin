@@ -6,15 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.vodovoz.app.databinding.FragmentHistoryDetailBinding
-import com.vodovoz.app.ui.components.base.ViewState
-import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.components.base.VodovozApplication
-import com.vodovoz.app.ui.components.fragment.home.HomeViewModel
-import com.vodovoz.app.ui.components.fragment.slider.history_slider.HistorySliderViewModel
 import com.vodovoz.app.ui.config.UIConfig
 import com.vodovoz.app.ui.extensions.BannerActionExtensions.invoke
 import com.vodovoz.app.ui.model.BannerUI
@@ -85,7 +79,7 @@ class HistoryDetailFragment : Fragment() {
             }
 
             primaryButtonContainer.setOnClickListener {
-                historyUI.bannerUIList[currentBannerIndex].bannerActionEntity?.invoke(requireParentFragment().findNavController(), requireActivity())
+                historyUI.bannerUIList[currentBannerIndex].actionEntity?.invoke(requireParentFragment().findNavController(), requireActivity())
             }
         }
     }
@@ -112,11 +106,11 @@ class HistoryDetailFragment : Fragment() {
     }
 
     private fun updateBanner(bannerUI: BannerUI) {
-        when(bannerUI.bannerActionEntity?.action) {
+        when(bannerUI.actionEntity?.action) {
             null -> binding.primaryButtonContainer.visibility = View.GONE
             else -> {
-                binding.primaryButton.text = bannerUI.bannerActionEntity.action
-                binding.primaryButtonContainer.setCardBackgroundColor(Color.parseColor(bannerUI.bannerActionEntity.actionColor))
+                binding.primaryButton.text = bannerUI.actionEntity.action
+                binding.primaryButtonContainer.setCardBackgroundColor(Color.parseColor(bannerUI.actionEntity.actionColor))
             }
         }
 

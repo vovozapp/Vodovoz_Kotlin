@@ -2,18 +2,18 @@ package com.vodovoz.app.ui.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.vodovoz.app.data.model.common.BannerActionEntity
+import com.vodovoz.app.data.model.common.ActionEntity
 
 class BannerUI(
     val id: Long,
     val detailPicture: String,
-    val bannerActionEntity: BannerActionEntity? = null
+    val actionEntity: ActionEntity? = null
 ): Parcelable {
 
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
         parcel.readString()!!,
-        parcel.readSerializable() as BannerActionEntity) {
+        parcel.readSerializable() as ActionEntity) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

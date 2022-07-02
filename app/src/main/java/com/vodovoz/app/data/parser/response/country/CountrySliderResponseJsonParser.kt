@@ -2,7 +2,7 @@ package com.vodovoz.app.data.parser.response.country
 
 import com.vodovoz.app.data.model.common.CountryEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.model.features.CountryBundleEntity
+import com.vodovoz.app.data.model.features.CountriesSliderBundleEntity
 import com.vodovoz.app.data.remote.ResponseStatus
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import okhttp3.ResponseBody
@@ -11,11 +11,11 @@ import org.json.JSONObject
 
 object CountrySliderResponseJsonParser {
 
-    fun ResponseBody.parseCountriesSliderResponse(): ResponseEntity<CountryBundleEntity> {
+    fun ResponseBody.parseCountriesSliderResponse(): ResponseEntity<CountriesSliderBundleEntity> {
         val responseJson = JSONObject(string())
         return when (responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
-                CountryBundleEntity(
+                CountriesSliderBundleEntity(
                     title = responseJson.getJSONObject("data").getString("TITLE"),
                     backgroundPicture = responseJson.getJSONObject("data")
                         .getString("BACGROUND").parseImagePath(),

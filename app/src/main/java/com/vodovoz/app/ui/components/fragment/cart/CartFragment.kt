@@ -3,6 +3,7 @@ package com.vodovoz.app.ui.components.fragment.cart
 import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -21,10 +22,10 @@ import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.components.diffUtils.ProductDiffUtilCallback
-import com.vodovoz.app.ui.components.fragment.slider.product_slider.ProductSliderFragment
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -69,7 +70,6 @@ class CartFragment : ViewStateBaseFragment() {
             this,
             (requireActivity().application as VodovozApplication).viewModelFactory
         )[CartViewModel::class.java]
-        viewModel.updateData()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -205,13 +205,14 @@ class CartFragment : ViewStateBaseFragment() {
         }
 
         viewModel.availableProductListLD.observe(viewLifecycleOwner) { productUIList ->
+            Log.i(LogSettings.LOCAL_DATA, "SIZE CART ${productUIList.size}")
             when (productUIList.isEmpty()) {
                 true -> {
                     binding.emptyCartContainer.visibility = View.VISIBLE
-                    binding.cartContainer.visibility = View.GONE
+                    binding.cartContainer.visibility = View.INVISIBLE
                 }
                 false -> {
-                    binding.emptyCartContainer.visibility = View.GONE
+                    binding.emptyCartContainer.visibility = View.INVISIBLE
                     binding.cartContainer.visibility = View.VISIBLE
                     fillAvailableProductRecycler(productUIList)
                 }
@@ -286,13 +287,13 @@ class CartFragment : ViewStateBaseFragment() {
     }
 
     private fun fillBestForYouProductSlider(categoryDetailUI: CategoryDetailUI) {
-        childFragmentManager.beginTransaction()
-            .replace(R.id.bestForYouProductSliderFragment, ProductSliderFragment.newInstance(
-                dataSource = ProductSliderFragment.DataSource.Args(listOf(categoryDetailUI)),
-                config = ProductSliderFragment.Config(true),
-                onProductClickSubject = onProductClickSubject,
-                onChangeCartSubject = onChangeCartSubject
-            )).commit()
+//        childFragmentManager.beginTransaction()
+//            .replace(R.id.bestForYouProductSliderFragment, ProductsSliderFragment.newInstance(
+//                dataSource = ProductsSliderFragment.DataSource.Args(listOf(categoryDetailUI)),
+//                config = ProductsSliderFragment.Config(true),
+//                onProductClickSubject = onProductClickSubject,
+//                onChangeCartSubject = onChangeCartSubject
+//            )).commit()
     }
 
     override fun onStart() {

@@ -21,7 +21,6 @@ import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.components.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.components.diffUtils.ProductDiffUtilCallback
-import com.vodovoz.app.ui.components.fragment.slider.product_slider.ProductSliderFragment
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.ProductUI
@@ -139,12 +138,12 @@ class PromotionDetailFragment : ViewStateBaseFragment() {
     }
 
     private fun fillForYouProductSlider(categoryDetailUI: CategoryDetailUI) {
-        childFragmentManager.beginTransaction()
-            .replace(R.id.forYouProductSliderFragment, ProductSliderFragment.newInstance(
-                dataSource = ProductSliderFragment.DataSource.Args(listOf(categoryDetailUI)),
-                config = ProductSliderFragment.Config(true),
-                onProductClickSubject = onProductClickSubject
-            )).commit()
+//        childFragmentManager.beginTransaction()
+//            .replace(R.id.forYouProductSliderFragment, ProductsSliderFragment.newInstance(
+//                dataSource = ProductsSliderFragment.DataSource.Args(listOf(categoryDetailUI)),
+//                config = ProductsSliderFragment.Config(true),
+//                onProductClickSubject = onProductClickSubject
+//            )).commit()
     }
 
     private fun fillPromotionProductRecycler(categoryDetailUI: CategoryDetailUI?) {

@@ -88,80 +88,80 @@
                 android:orientation="vertical">
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/mainBannersFragment"
+                    android:id="@+id/advertisingBannersSliderFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/historiesFragment"
+                    android:id="@+id/historiesSliderFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/popularFragment"
+                    android:id="@+id/popularCategoriesSliderFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/discountFragment"
+                    android:id="@+id/discountProductsSliderFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/secondaryBannersFragment"
+                    android:id="@+id/categoryBannersSliderFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/topProductSlider"
+                    android:id="@+id/topProductsSliderFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/orderSliderFragment"
+                    android:id="@+id/ordersSliderFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <include layout="@layout/fragment_section_additional_navigation" />
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/noveltiesFragment"
+                    android:id="@+id/noveltiesProductsSliderFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/promotionSliderFragment"
+                    android:id="@+id/promotionsSliderFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/bottomProductSlider"
+                    android:id="@+id/bottomProductsSliderFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/brandsFragment"
+                    android:id="@+id/brandsSliderFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/countriesFragment"
+                    android:id="@+id/countriesSliderFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/primary_margin" />
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/viewedProductSliderFragment"
+                    android:id="@+id/viewedProductsSliderFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/commentsSlider"
+                    android:id="@+id/commentsSliderFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/additionalInfoFragment"
+                    android:id="@+id/bottomInfoFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 

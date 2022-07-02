@@ -10,7 +10,7 @@ import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class CategoriesAdapter(
-    private val onChangeProductQuantitySubject: PublishSubject<ProductUI>,
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
     private val onProductClickSubject: PublishSubject<Long>,
     private val cardWidth: Int
 ) : RecyclerView.Adapter<CategorySliderViewHolder>() {

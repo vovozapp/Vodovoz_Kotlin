@@ -50,6 +50,7 @@
         <entry key="app/src/main/res/layout/bottom_fragment_catalog_mini.xml" value="0.2947916666666667" />
         <entry key="app/src/main/res/layout/bottom_fragment_catalog_single_root.xml" value="0.3683085123697917" />
         <entry key="app/src/main/res/layout/bottom_fragment_gifts.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/bottom_fragment_popup_news.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/bottom_fragment_promotion_filter.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/bottom_fragment_sort_settings.xml" value="0.2947916666666667" />
         <entry key="app/src/main/res/layout/dialog_sort_settings.xml" value="0.29375" />
@@ -115,7 +116,7 @@
         <entry key="app/src/main/res/layout/fragment_slider_brand.xml" value="0.2947916666666667" />
         <entry key="app/src/main/res/layout/fragment_slider_comment.xml" value="0.2947916666666667" />
         <entry key="app/src/main/res/layout/fragment_slider_country.xml" value="0.28892822265624996" />
-        <entry key="app/src/main/res/layout/fragment_slider_history.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_slider_history.xml" value="0.24675324675324675" />
         <entry key="app/src/main/res/layout/fragment_slider_order.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_slider_popular.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_slider_product.xml" value="0.3098958333333333" />

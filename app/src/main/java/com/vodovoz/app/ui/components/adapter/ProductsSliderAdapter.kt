@@ -10,7 +10,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 
 class ProductsSliderAdapter(
     private val onProductClickSubject: PublishSubject<Long>,
-    private val onChangeProductQuantitySubject: PublishSubject<ProductUI>,
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
     private val cardWidth: Int
 ) : RecyclerView.Adapter<ProductSliderViewHolder>() {
 

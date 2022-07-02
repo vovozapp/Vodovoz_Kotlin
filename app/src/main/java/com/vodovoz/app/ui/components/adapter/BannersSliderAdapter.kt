@@ -3,14 +3,14 @@ package com.vodovoz.app.ui.components.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.vodovoz.app.data.model.common.BannerActionEntity
+import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.ViewHolderSliderBannerBinding
 import com.vodovoz.app.ui.components.view_holder.BannerSliderViewHolder
 import com.vodovoz.app.ui.model.BannerUI
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class BannersSliderAdapter(
-    private val onBannerClickSubject: PublishSubject<BannerActionEntity>,
+    private val onBannerClickSubject: PublishSubject<ActionEntity>,
 ) : RecyclerView.Adapter<BannerSliderViewHolder>() {
 
     var bannerUIList = listOf<BannerUI>()

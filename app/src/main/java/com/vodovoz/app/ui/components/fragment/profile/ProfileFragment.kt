@@ -1,6 +1,7 @@
 package com.vodovoz.app.ui.components.fragment.profile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.model.UserDataUI
+import com.vodovoz.app.util.LogSettings
 
 class ProfileFragment : ViewStateBaseFragment() {
 
@@ -73,15 +75,18 @@ class ProfileFragment : ViewStateBaseFragment() {
                 false -> {
                     binding.profileContainer.visibility = View.GONE
                     binding.noLoginContainer.visibility = View.VISIBLE
+                    onStateSuccess()
                 }
             }
         }
 
         viewModel.userDataUILD.observe(viewLifecycleOwner) { userDataUI ->
             fillUserData(userDataUI)
+            Log.i(LogSettings.LOCAL_DATA, "GET USER DATA")
         }
 
         viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
+            Log.i(LogSettings.LOCAL_DATA, "${state::class.simpleName}")
             when(state) {
                 is ViewState.Loading -> onStateLoading()
                 is ViewState.Error -> onStateError(state.errorMessage)

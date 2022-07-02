@@ -32,8 +32,7 @@ import com.vodovoz.app.ui.components.decoration.PriceMarginDecoration
 import com.vodovoz.app.ui.components.decoration.SearchMarginDecoration
 import com.vodovoz.app.ui.components.fragment.product_info.ProductInfoFragment
 import com.vodovoz.app.ui.components.fragment.product_properties.ProductPropertiesFragment
-import com.vodovoz.app.ui.components.fragment.slider.product_slider.ProductSliderFragment
-import com.vodovoz.app.ui.components.fragment.slider.promotion_slider.PromotionSliderFragment
+import com.vodovoz.app.ui.components.fragment.slider.promotion_slider.PromotionsSliderFragment
 import com.vodovoz.app.ui.components.fragment.some_products_by_brand.SomeProductsByBrandFragment
 import com.vodovoz.app.ui.components.fragment.some_products_maybe_like.SomeProductsMaybeLikeFragment
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountText
@@ -299,19 +298,19 @@ class ProductDetailFragment : ViewStateBaseFragment() {
             false -> binding.promotionSliderFragment.visibility = View.VISIBLE
         }
 
-        childFragmentManager.beginTransaction()
-            .replace(
-                R.id.promotionSliderFragment,
-                PromotionSliderFragment.newInstance(
-                    PromotionSliderFragment.DataSource.Args(
-                        title = "Товар учавствующий в акции",
-                        promotionUIList = promotionUIList,
-                    ),
-                    onProductClickSubject = onProductClickSubject,
-                    onPromotionClickSubject = onPromotionClickSubject
-                )
-            )
-            .commit()
+//        childFragmentManager.beginTransaction()
+//            .replace(
+//                R.id.promotionSliderFragment,
+//                PromotionsSliderFragment.newInstance(
+//                    PromotionsSliderFragment.DataSource.Args(
+//                        title = "Товар учавствующий в акции",
+//                        promotionUIList = promotionUIList,
+//                    ),
+//                    onProductClickSubject = onProductClickSubject,
+//                    onPromotionClickSubject = onPromotionClickSubject
+//                )
+//            )
+//            .commit()
     }
 
     private fun fillByWithProductSlider(categoryDetailUI: CategoryDetailUI) {
@@ -320,12 +319,12 @@ class ProductDetailFragment : ViewStateBaseFragment() {
             false -> binding.byWithProductSliderFragment.visibility = View.VISIBLE
         }
 
-        childFragmentManager.beginTransaction()
-            .replace(R.id.byWithProductSliderFragment, ProductSliderFragment.newInstance(
-                dataSource = ProductSliderFragment.DataSource.Args(listOf(categoryDetailUI)),
-                config = ProductSliderFragment.Config(true),
-                onProductClickSubject = onProductClickSubject
-            )).commit()
+//        childFragmentManager.beginTransaction()
+//            .replace(R.id.byWithProductSliderFragment, ProductsSliderFragment.newInstance(
+//                dataSource = ProductsSliderFragment.DataSource.Args(listOf(categoryDetailUI)),
+//                config = ProductsSliderFragment.Config(true),
+//                onProductClickSubject = onProductClickSubject
+//            )).commit()
     }
 
     private fun fillRecommendProductSliderFragment(categoryDetailUI: CategoryDetailUI) {
@@ -334,12 +333,12 @@ class ProductDetailFragment : ViewStateBaseFragment() {
             false -> binding.recommendProductSliderFragment.visibility = View.VISIBLE
         }
 
-        childFragmentManager.beginTransaction()
-            .replace(R.id.recommendProductSliderFragment, ProductSliderFragment.newInstance(
-                dataSource = ProductSliderFragment.DataSource.Args(listOf(categoryDetailUI)),
-                config = ProductSliderFragment.Config(true),
-                onProductClickSubject = onProductClickSubject
-            )).commit()
+//        childFragmentManager.beginTransaction()
+//            .replace(R.id.recommendProductSliderFragment, ProductsSliderFragment.newInstance(
+//                dataSource = ProductsSliderFragment.DataSource.Args(listOf(categoryDetailUI)),
+//                config = ProductsSliderFragment.Config(true),
+//                onProductClickSubject = onProductClickSubject
+//            )).commit()
     }
 
     private fun fillPrice(productDetailUI: ProductDetailUI) {

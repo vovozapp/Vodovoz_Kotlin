@@ -1,6 +1,6 @@
 package com.vodovoz.app.data.parser.common
 
-import com.vodovoz.app.data.model.common.BannerActionEntity
+import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.data.model.common.BannerEntity
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import org.json.JSONArray
@@ -18,7 +18,7 @@ object BannerJsonParser {
         id = getLong("ID"),
         name = getString("NAME"),
         detailPicture = parseDetailImage(),
-        bannerActionEntity = getJSONObject("HARAKTERISTIK").parseBannerActionEntity()
+        actionEntity = getJSONObject("HARAKTERISTIK").parseBannerActionEntity()
     )
 
     private fun JSONObject.parseDetailImage() =
@@ -49,7 +49,7 @@ object BannerJsonParser {
         false -> null
     }
 
-    private fun JSONObject.parseBrandsActionEntity() = BannerActionEntity.Brands(
+    private fun JSONObject.parseBrandsActionEntity() = ActionEntity.Brands(
         brandIdList = mutableListOf<Long>().apply {
             val idJsonArray = getJSONObject("DANNYE").getJSONArray("BRANDY")
             for (index in 0 until idJsonArray.length()) {
@@ -61,58 +61,58 @@ object BannerJsonParser {
     )
 
     private fun JSONObject.parseCustomBannerActionEntity() = when(getJSONObject("DANNYE").getString("DANNYEVSE")) {
-        "vseskidki" -> BannerActionEntity.Discount(
+        "vseskidki" -> ActionEntity.Discount(
             action = parseAction(),
             actionColor = parseActionColor()
         )
-        "vsenovinki" -> BannerActionEntity.Novelties(
+        "vsenovinki" -> ActionEntity.Novelties(
             action = parseAction(),
             actionColor = parseActionColor()
         )
-        "vseakcii" -> BannerActionEntity.AllPromotions(
+        "vseakcii" -> ActionEntity.AllPromotions(
             action = parseAction(),
             actionColor = parseActionColor()
         )
         else -> null
     }
 
-    private fun JSONObject.parseProductsBannerActionEntity() = BannerActionEntity.Products(
+    private fun JSONObject.parseProductsBannerActionEntity() = ActionEntity.Products(
         categoryId = getJSONObject("DANNYE").getLong("TOVARY"),
         action = parseAction(),
         actionColor = parseActionColor()
     )
 
-    private fun JSONObject.parseProductBannerActionEntity() = BannerActionEntity.Product(
+    private fun JSONObject.parseProductBannerActionEntity() = ActionEntity.Product(
         productId = getJSONObject("DANNYE").getLong("TOVAR"),
         action = parseAction(),
         actionColor = parseActionColor()
     )
 
-    private fun JSONObject.parsePromotionsBannerActionEntity() = BannerActionEntity.Promotions(
+    private fun JSONObject.parsePromotionsBannerActionEntity() = ActionEntity.Promotions(
         categoryId = getJSONObject("DANNYE").getLong("ACTIONS"),
         action = parseAction(),
         actionColor = parseActionColor()
     )
 
-    private fun JSONObject.parsePromotionBannerActionEntity() = BannerActionEntity.Promotion(
+    private fun JSONObject.parsePromotionBannerActionEntity() = ActionEntity.Promotion(
         promotionId = getJSONObject("DANNYE").getLong("ACTION"),
         action = parseAction(),
         actionColor = parseActionColor()
     )
 
-    private fun JSONObject.parseBrandActionEntity() = BannerActionEntity.Brand(
+    private fun JSONObject.parseBrandActionEntity() = ActionEntity.Brand(
         brandId = getJSONObject("DANNYE").getJSONObject("BRAND").getLong("ID"),
         action = parseAction(),
         actionColor = parseActionColor()
     )
 
-    private fun JSONObject.parseLinkBannerActionEntity() = BannerActionEntity.Link(
+    private fun JSONObject.parseLinkBannerActionEntity() = ActionEntity.Link(
         url = getJSONObject("DANNYE").getString("SSILKA"),
         action = parseAction(),
         actionColor = parseActionColor()
     )
 
-    private fun JSONObject.parseCategoryBannerActionEntity() = BannerActionEntity.Category(
+    private fun JSONObject.parseCategoryBannerActionEntity() = ActionEntity.Category(
         categoryId = getJSONObject("DANNYE").getJSONObject("RAZDEL").getLong("ID"),
         action = parseAction(),
         actionColor = parseActionColor()

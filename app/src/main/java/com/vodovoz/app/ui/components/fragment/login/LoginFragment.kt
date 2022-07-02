@@ -78,7 +78,13 @@ class LoginFragment : ViewStateBaseFragment() {
                 is ViewState.Loading -> onStateLoading()
                 is ViewState.Error -> onStateError(state.errorMessage)
                 is ViewState.Hide -> onStateHide()
-                is ViewState.Success -> onStateSuccess()
+                is ViewState.Success -> {
+                    if (viewModel.isAlreadyLogin()) {
+                        findNavController().popBackStack()
+                    } else {
+                        onStateSuccess()
+                    }
+                }
             }
         }
 

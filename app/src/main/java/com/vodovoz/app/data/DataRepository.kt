@@ -21,11 +21,13 @@ class DataRepository(
     private val localData: LocalDataSource,
 ) {
 
+    fun fetchPopupNews() = remoteData.fetchPopupNews(userId = localData.fetchUserId())
+
     fun fetchCart(): Single<ResponseEntity<CartBundleEntity>> = remoteData
         .fetchCart()
         .doOnSuccess { response ->
             if (response is ResponseEntity.Success) {
-                response.data?.let { cartBundleEntity ->
+                response.data.let { cartBundleEntity ->
                     localData.clearCart()
                     cartBundleEntity.availableProductEntityList.forEach { productUI ->
                         localData.changeProductQuantityInCart(
@@ -55,21 +57,21 @@ class DataRepository(
 
     fun fetchCountriesSlider() = remoteData.fetchCountriesSlider()
 
-    fun fetchDiscountsSlider() = remoteData.fetchDiscountsSlider()
+    fun fetchDiscountProductsSlider() = remoteData.fetchDiscountsSlider()
 
-    fun fetchNoveltiesSlider() = remoteData.fetchNoveltiesSlider()
+    fun fetchNoveltiesProductsSlider() = remoteData.fetchNoveltiesSlider()
 
-    fun fetchPopularSlider() = remoteData.fetchPopularSlider()
+    fun fetchPopularCategoriesSlider() = remoteData.fetchPopularSlider()
 
-    fun fetchTopSlider() = remoteData.fetchTopSlider()
+    fun fetchTopProductsSlider() = remoteData.fetchTopSlider()
 
-    fun fetchBottomSlider() = remoteData.fetchBottomSlider()
+    fun fetchBottomProductsSlider() = remoteData.fetchBottomSlider()
 
     fun fetchCommentsSlider() = remoteData.fetchCommentsSlider()
 
     fun fetchPromotionsSlider() = remoteData.fetchPromotionsSlider()
 
-    fun fetchOrderSlider(): Single<ResponseEntity<List<OrderEntity>>> = Single.create { emitter ->
+    fun fetchOrdersSlider(): Single<ResponseEntity<List<OrderEntity>>> = Single.create { emitter ->
         when(val userId = fetchUserId()) {
             null -> emitter.onSuccess(ResponseEntity.Hide())
             else -> {
@@ -81,7 +83,7 @@ class DataRepository(
         }
     }
 
-    fun fetchViewedProductSlider(userId: Long?) = remoteData.fetchViewedProductsSlider(userId = userId)
+    fun fetchViewedProductsSlider() = remoteData.fetchViewedProductsSlider(userId = fetchUserId())
 
     fun fetchPromotionDetails(promotionId: Long) = remoteData.fetchPromotionDetails(promotionId = promotionId)
 

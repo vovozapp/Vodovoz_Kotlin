@@ -6,5 +6,5 @@ data class BannerEntity(
     val id: Long,
     val name: String,
     val detailPicture: String,
-    val bannerActionEntity: BannerActionEntity? = null
+    val actionEntity: ActionEntity? = null
 ): Serializable

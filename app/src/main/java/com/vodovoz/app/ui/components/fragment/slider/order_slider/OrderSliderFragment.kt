@@ -18,6 +18,8 @@ import com.vodovoz.app.ui.components.base.BaseHiddenFragment
 import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.components.diffUtils.OrderDiffUtilCallback
+import com.vodovoz.app.ui.components.interfaces.IOnOrderClick
+import com.vodovoz.app.ui.components.interfaces.IOnShowAllOrdersClick
 import com.vodovoz.app.ui.model.OrderUI
 import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -27,46 +29,15 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 
 class OrderSliderFragment : BaseHiddenFragment() {
 
-    companion object {
-        fun newInstance(
-            onOrderClickSubject: PublishSubject<Long>,
-            onShowAllOrdersClickSubject: PublishSubject<Boolean>,
-            viewStateSubject: PublishSubject<ViewState>? = null,
-            onUpdateSubject: PublishSubject<Boolean>? = null
-        ) = OrderSliderFragment().apply {
-            this.viewStateSubject = viewStateSubject
-            this.onUpdateSubject = onUpdateSubject
-            this.onOrderClickSubject = onOrderClickSubject
-            this.onShowAllOrdersClickSubject = onShowAllOrdersClickSubject
-        }
-    }
-
-    private val compositeDisposable = CompositeDisposable()
-
-    private lateinit var onShowAllOrdersClickSubject: PublishSubject<Boolean>
-    private lateinit var onOrderClickSubject: PublishSubject<Long>
-    private var viewStateSubject: PublishSubject<ViewState>? = null
-    private var onUpdateSubject: PublishSubject<Boolean>? = null
+    private lateinit var orderUIList: List<OrderUI>
+    private lateinit var iOnOrderClick: IOnOrderClick
+    private lateinit var iOnShowAllOrdersClick: IOnShowAllOrdersClick
 
     private lateinit var binding: FragmentSliderOrderBinding
-    private lateinit var viewModel: OrderSliderViewModel
 
-    private val orderSliderAdapter: OrderSliderAdapter by lazy { OrderSliderAdapter(onOrderClickSubject) }
-
-    private var isInitRecyclerSize = false
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initViewModel()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[OrderSliderViewModel::class.java]
-        viewModel.updateData()
-    }
+    private val compositeDisposable = CompositeDisposable()
+    private val onOrderClickSubject: PublishSubject<Long> = PublishSubject.create()
+    private val orderSliderAdapter = OrderSliderAdapter(onOrderClickSubject)
 
     override fun setContentView(
         inflater: LayoutInflater,
@@ -79,7 +50,7 @@ class OrderSliderFragment : BaseHiddenFragment() {
 
     override fun initView() {
         initOrderPager()
-        observeViewModel()
+        subscribeSubjects()
     }
 
     private fun initOrderPager() {
@@ -105,25 +76,23 @@ class OrderSliderFragment : BaseHiddenFragment() {
         )
     }
 
-    private fun observeViewModel() {
-        viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
-            Log.i(LogSettings.ID_LOG, "${state::class.simpleName}" )
-            when(state) {
-                is ViewState.Success -> if (isInitRecyclerSize) viewStateSubject?.onNext(state)
-                is ViewState.Hide -> {
-                    viewStateSubject?.onNext(state)
-                    hide()
-                }
-                else -> viewStateSubject?.onNext(state)
-            }
-        }
-
-        viewModel.orderUIListLD.observe(viewLifecycleOwner) { orderUIList ->
-            fillOrderPager(orderUIList)
-        }
+    private fun subscribeSubjects() {
+        onOrderClickSubject.subscribeBy { orderId ->
+            iOnOrderClick.onOrderClick(orderId)
+        }.addTo(compositeDisposable)
     }
 
-    private fun fillOrderPager(orderUIList: List<OrderUI>) {
+    fun initCallbacks(
+        iOnOrderClick: IOnOrderClick,
+        iOnShowAllOrdersClick: IOnShowAllOrdersClick
+    ) {
+        this.iOnOrderClick = iOnOrderClick
+        this.iOnShowAllOrdersClick = iOnShowAllOrdersClick
+    }
+
+    fun updateData(orderUIList: List<OrderUI>) {
+        this.orderUIList = orderUIList
+
         val diffUtil = OrderDiffUtilCallback(
             oldList = orderSliderAdapter.orderUIList,
             newList = orderUIList
@@ -133,28 +102,10 @@ class OrderSliderFragment : BaseHiddenFragment() {
             orderSliderAdapter.orderUIList = orderUIList
             diffResult.dispatchUpdatesTo(orderSliderAdapter)
         }
-
-        binding.orderPager.viewTreeObserver.addOnGlobalLayoutListener(
-            object : ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    binding.orderPager.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    isInitRecyclerSize = true
-                    viewStateSubject?.onNext(ViewState.Success())
-                }
-            }
-        )
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        onUpdateSubject?.subscribeBy {
-            viewModel.updateData()
-        }?.addTo(compositeDisposable)
-    }
-
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         compositeDisposable.clear()
     }
 

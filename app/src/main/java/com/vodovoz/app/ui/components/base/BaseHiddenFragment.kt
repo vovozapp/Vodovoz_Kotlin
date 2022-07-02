@@ -31,11 +31,11 @@ abstract class BaseHiddenFragment : Fragment() {
     protected open fun setContentView(inflater: LayoutInflater, container: ViewGroup): View? = null
     protected open fun initView() {}
 
-    protected fun hide() {
+    fun hide() {
         rootBinding.root.visibility = View.GONE
     }
 
-    protected fun show() {
+    fun show() {
         rootBinding.root.visibility = View.VISIBLE
     }
 

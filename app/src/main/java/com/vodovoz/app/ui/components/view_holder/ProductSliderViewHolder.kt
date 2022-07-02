@@ -18,7 +18,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 class ProductSliderViewHolder(
     private val binding: ViewHolderSliderProductBinding,
     private val onProductClickSubject: PublishSubject<Long>,
-    private val onChangeProductQuantitySubject: PublishSubject<ProductUI>,
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
     private val context: Context,
     private val cardWidth: Int
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -45,7 +45,7 @@ class ProductSliderViewHolder(
         binding.amountController.add.setOnClickListener {
             if (productUI.cartQuantity == 0) {
                 productUI.cartQuantity++
-                onChangeProductQuantitySubject.onNext(productUI)
+                onChangeProductQuantitySubject.onNext(Pair(productUI.id, productUI.cartQuantity))
                 updateCartQuantity()
             }
             showAmountController()
@@ -56,7 +56,7 @@ class ProductSliderViewHolder(
             if (productUI.cartQuantity < 0) productUI.cartQuantity = 0
             amountControllerTimer.cancel()
             amountControllerTimer.start()
-            onChangeProductQuantitySubject.onNext(productUI)
+            onChangeProductQuantitySubject.onNext(Pair(productUI.id, productUI.cartQuantity))
             updateCartQuantity()
         }
 
@@ -64,7 +64,7 @@ class ProductSliderViewHolder(
             productUI.cartQuantity++
             amountControllerTimer.cancel()
             amountControllerTimer.start()
-            onChangeProductQuantitySubject.onNext(productUI)
+            onChangeProductQuantitySubject.onNext(Pair(productUI.id, productUI.cartQuantity))
             updateCartQuantity()
         }
     }

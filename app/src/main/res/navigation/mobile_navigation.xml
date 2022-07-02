@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/homeNewFragment">
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.vodovoz.app.ui.components.fragment.home.HomeFragment"
@@ -34,6 +34,9 @@
         <action
             android:id="@+id/action_to_paginatedProductsCatalogFragment"
             app:destination="@id/paginatedProductsCatalogFragment" />
+        <action
+            android:id="@+id/action_to_popupNewsBottomFragment"
+            app:destination="@id/popupNewsBottomFragment" />
     </fragment>
     <fragment
         android:id="@+id/catalogFragment"
@@ -288,4 +291,16 @@
             android:id="@+id/action_to_userDataFragment"
             app:destination="@id/userDataFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/popupNewsBottomFragment"
+        android:name="com.vodovoz.app.ui.components.fragment.popup_news.PopupNewsBottomFragment"
+        android:label="PopupNewsBottomFragment" >
+        <argument
+            android:name="popupNews"
+            app:argType="com.vodovoz.app.ui.model.PopupNewsUI" />
+    </dialog>
+    <fragment
+        android:id="@+id/homeNewFragment"
+        android:name="com.vodovoz.app.ui.components.fragment.newHome.HomeNewFragment"
+        android:label="HomeNewFragment" />
 </navigation>

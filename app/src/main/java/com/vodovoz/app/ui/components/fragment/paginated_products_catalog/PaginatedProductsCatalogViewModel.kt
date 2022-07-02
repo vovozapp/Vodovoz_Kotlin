@@ -131,7 +131,15 @@ class PaginatedProductsCatalogViewModel(
         }.cachedIn(viewModelScope)
 
     fun changeCart(productUI: ProductUI) {
+        dataRepository.changeCart(
+            productId = productUI.id,
+            quantity = productUI.cartQuantity
+        ).subscribeBy(
+            onComplete = {},
+            onError = {
 
+            }
+        )
     }
 
     override fun onCleared() {
