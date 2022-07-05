@@ -26,7 +26,9 @@ class ProductListViewHolder(
     private val context: Context
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val detailPictureSliderAdapter = DetailPictureSliderAdapter()
+    private val detailPictureSliderAdapter = DetailPictureSliderAdapter(
+        iOnProductDetailPictureClick = { onProductClickSubject.onNext(productUI.id) }
+    )
 
     private val amountControllerTimer = object: CountDownTimer(3000, 3000) {
         override fun onTick(millisUntilFinished: Long) {}
@@ -81,8 +83,6 @@ class ProductListViewHolder(
         binding.amountController.circleAmount.visibility = View.INVISIBLE
         binding.amountController.add.visibility = View.INVISIBLE
         binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
-        binding.price.visibility = View.INVISIBLE
-        binding.oldPrice.visibility = View.INVISIBLE
         amountControllerTimer.start()
     }
 
@@ -92,8 +92,6 @@ class ProductListViewHolder(
         }
         binding.amountController.add.visibility = View.VISIBLE
         binding.amountController.amountControllerDeployed.visibility = View.INVISIBLE
-        binding.price.visibility = View.VISIBLE
-        binding.oldPrice.visibility = View.VISIBLE
     }
 
     private lateinit var productUI: ProductUI

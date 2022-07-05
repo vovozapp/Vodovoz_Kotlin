@@ -12,12 +12,13 @@ import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentAccountBinding
 import com.vodovoz.app.ui.components.base.ViewState
+import com.vodovoz.app.ui.components.base.ViewStateBaseDialogFragment
 import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.model.UserDataUI
 import com.vodovoz.app.util.LogSettings
 
-class ProfileFragment : ViewStateBaseFragment() {
+class ProfileFragment : ViewStateBaseDialogFragment() {
 
     private lateinit var binding: FragmentAccountBinding
     private lateinit var viewModel: ProfileViewModel
@@ -61,6 +62,9 @@ class ProfileFragment : ViewStateBaseFragment() {
             }
             loginOrRegister.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionToLoginFragment())
+            }
+            addresses.setOnClickListener {
+                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToMapDialogFragment4())
             }
         }
     }

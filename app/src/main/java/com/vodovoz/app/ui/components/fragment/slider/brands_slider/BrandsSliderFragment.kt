@@ -37,6 +37,7 @@ class BrandsSliderFragment : BaseHiddenFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        subscribeSubjects()
     }
 
     override fun setContentView(
@@ -50,7 +51,6 @@ class BrandsSliderFragment : BaseHiddenFragment() {
 
     override fun initView() {
         initBrandsRecyclerView()
-        subscribeSubjects()
     }
 
     private fun initBrandsRecyclerView() {

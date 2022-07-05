@@ -3,14 +3,19 @@ package com.vodovoz.app.ui.components.base
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.vodovoz.app.data.DataRepository
+import com.vodovoz.app.ui.components.fragment.about_app.AboutAppDialogViewModel
+import com.vodovoz.app.ui.components.fragment.about_services.AboutServicesViewModel
 import com.vodovoz.app.ui.components.fragment.all_brands.AllBrandsViewModel
+import com.vodovoz.app.ui.components.fragment.all_comments_by_product.AllCommentsByProductViewModel
 import com.vodovoz.app.ui.components.fragment.all_promotions.AllPromotionsViewModel
 import com.vodovoz.app.ui.components.fragment.cart.CartViewModel
 import com.vodovoz.app.ui.components.fragment.catalog.CatalogViewModel
 import com.vodovoz.app.ui.components.fragment.concrete_filter.ConcreteFilterViewModel
+import com.vodovoz.app.ui.components.fragment.favorite.FavoriteViewModel
+import com.vodovoz.app.ui.components.fragment.full_screen_history_slider.FullScreenHistoriesSliderViewModel
 import com.vodovoz.app.ui.components.fragment.home.HomeViewModel
 import com.vodovoz.app.ui.components.fragment.login.LoginViewModel
-import com.vodovoz.app.ui.components.fragment.newHome.HomeNewViewModel
+import com.vodovoz.app.ui.components.fragment.map.MapViewModel
 import com.vodovoz.app.ui.components.fragment.paginated_products_catalog.PaginatedProductsCatalogViewModel
 import com.vodovoz.app.ui.components.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersViewModel
 import com.vodovoz.app.ui.components.fragment.product_detail.ProductDetailViewModel
@@ -19,6 +24,7 @@ import com.vodovoz.app.ui.components.fragment.products_catalog.ProductsCatalogVi
 import com.vodovoz.app.ui.components.fragment.profile.ProfileViewModel
 import com.vodovoz.app.ui.components.fragment.promotion_detail.PromotionDetailViewModel
 import com.vodovoz.app.ui.components.fragment.register.RegisterViewModel
+import com.vodovoz.app.ui.components.fragment.send_comment_about_product.SendCommentAboutProductViewModel
 import com.vodovoz.app.ui.components.fragment.single_root_catalog.SingleRootCatalogViewModel
 import com.vodovoz.app.ui.components.fragment.some_products_by_brand.SomeProductsByBrandViewModel
 import com.vodovoz.app.ui.components.fragment.some_products_maybe_like.SomeProductsMaybeLikeViewModel
@@ -107,8 +113,32 @@ class ViewModelFactory(
             return CartViewModel(dataRepository) as T
         }
 
-        if (modelClass.isAssignableFrom(HomeNewViewModel::class.java)){
-            return HomeNewViewModel(dataRepository) as T
+        if (modelClass.isAssignableFrom(FullScreenHistoriesSliderViewModel::class.java)){
+            return FullScreenHistoriesSliderViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(AllCommentsByProductViewModel::class.java)){
+            return AllCommentsByProductViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(SendCommentAboutProductViewModel::class.java)){
+            return SendCommentAboutProductViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(AboutServicesViewModel::class.java)){
+            return AboutServicesViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(AboutAppDialogViewModel::class.java)){
+            return AboutAppDialogViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(FavoriteViewModel::class.java)){
+            return FavoriteViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(MapViewModel::class.java)){
+            return MapViewModel(dataRepository) as T
         }
 
         throw IllegalArgumentException("Unknown View Model Class")

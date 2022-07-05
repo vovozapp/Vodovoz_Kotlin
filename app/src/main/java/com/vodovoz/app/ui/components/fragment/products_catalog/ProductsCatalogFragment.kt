@@ -1,12 +1,16 @@
 package com.vodovoz.app.ui.components.fragment.products_catalog
 
 import android.annotation.SuppressLint
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentFixAmountProductsBinding
 import com.vodovoz.app.ui.components.adapter.LinearProductsAdapter
@@ -41,6 +45,7 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
         super.onCreate(savedInstanceState)
         initViewModel()
         getArgs()
+        subscribeSubjects()
     }
 
     private fun initViewModel() {
@@ -52,6 +57,18 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
 
     private fun getArgs() {
         viewModel.updateArgs(ProductsCatalogFragmentArgs.fromBundle(requireArguments()).dataSource)
+    }
+
+    private fun subscribeSubjects() {
+        onChangeProductQuantitySubject.subscribeBy { productUI ->
+            viewModel.changeCart(productUI)
+        }.addTo(compositeDisposable)
+
+        onProductClickSubject.subscribeBy { productId ->
+            findNavController().navigate(
+                ProductsCatalogFragmentDirections.actionToProductDetailFragment(productId)
+            )
+        }.addTo(compositeDisposable)
     }
 
     override fun setContentView(
@@ -79,7 +96,24 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
         binding.productRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.productRecycler.adapter = linearProductsAdapter
         binding.productRecycler.setScrollElevation(binding.appBar)
-        binding.productRecycler.addItemDecoration(ListMarginDecoration(resources.getDimension(R.dimen.primary_space).toInt()))
+        binding.productRecycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        val space = resources.getDimension(R.dimen.primary_space).toInt()
+        binding.productRecycler.addItemDecoration(
+            object : RecyclerView.ItemDecoration() {
+                override fun getItemOffsets(
+                    outRect: Rect,
+                    view: View,
+                    parent: RecyclerView,
+                    state: RecyclerView.State
+                ) {
+                    with(outRect) {
+                        top = space
+                        bottom = space
+                        right = space
+                    }
+                }
+            }
+        )
     }
 
     override fun update() {
@@ -103,22 +137,13 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        onProductClickSubject.subscribeBy { productId ->
-            findNavController().navigate(
-                ProductsCatalogFragmentDirections.actionToProductDetailFragment(productId)
-            )
-        }.addTo(compositeDisposable)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        compositeDisposable.clear()
-    }
-
     sealed class DataSource : Serializable {
         class BannerProducts(val categoryId: Long) : DataSource()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
     }
 
 }

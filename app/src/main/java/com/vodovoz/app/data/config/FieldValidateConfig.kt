@@ -2,6 +2,8 @@ package com.vodovoz.app.data.config
 
 object FieldValidateConfig {
 
+    val MIN_COMMENT_LENGTH = 30
+
     val FIRST_NAME_LENGTH = 1..20
     val SECOND_NAME_LENGTH = 1..30
     val PASSWORD_LENGTH = 6..30

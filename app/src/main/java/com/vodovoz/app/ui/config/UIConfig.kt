@@ -4,4 +4,5 @@ object UIConfig {
 
     const val STORY_DURATION = 3000L
 
+
 }

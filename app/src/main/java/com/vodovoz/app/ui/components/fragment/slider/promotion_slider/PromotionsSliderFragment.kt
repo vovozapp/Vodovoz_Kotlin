@@ -1,5 +1,6 @@
 package com.vodovoz.app.ui.components.fragment.slider.promotion_slider
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,11 @@ class PromotionsSliderFragment : BaseHiddenFragment() {
         onProductClickSubject = onPromotionProductClickSubject
     )
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        subscribeSubjects()
+    }
+
     override fun setContentView(
         inflater: LayoutInflater,
         container: ViewGroup
@@ -46,7 +52,6 @@ class PromotionsSliderFragment : BaseHiddenFragment() {
     override fun initView() {
         initPromotionPager()
         initHeader()
-        subscribeSubjects()
     }
 
     private fun initHeader() {
@@ -66,7 +71,7 @@ class PromotionsSliderFragment : BaseHiddenFragment() {
         }.addTo(compositeDisposable)
 
         onPromotionProductClickSubject.subscribeBy { productId ->
-            iOnPromotionClick.onPromotionClick(productId)
+            iOnProductClick.onProductClick(productId)
         }.addTo(compositeDisposable)
     }
 

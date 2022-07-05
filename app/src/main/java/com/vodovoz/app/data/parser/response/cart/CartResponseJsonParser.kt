@@ -63,6 +63,7 @@ object CartResponseJsonParser {
         statusColor = "",
         rating = 0.0,
         commentAmount = "",
+        isFavorite = false,
         detailPictureList = listOf(getString("DETAIL_PICTURE"))
     )
 

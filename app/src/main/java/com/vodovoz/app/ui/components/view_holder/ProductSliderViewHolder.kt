@@ -19,6 +19,7 @@ class ProductSliderViewHolder(
     private val binding: ViewHolderSliderProductBinding,
     private val onProductClickSubject: PublishSubject<Long>,
     private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
     private val context: Context,
     private val cardWidth: Int
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -67,6 +68,20 @@ class ProductSliderViewHolder(
             onChangeProductQuantitySubject.onNext(Pair(productUI.id, productUI.cartQuantity))
             updateCartQuantity()
         }
+
+        binding.favoriteStatus.setOnClickListener {
+            when(productUI.isFavorite) {
+                true -> {
+                    productUI.isFavorite = false
+                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite))
+                }
+                false -> {
+                    productUI.isFavorite = true
+                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_red))
+                }
+            }
+            onFavoriteClickSubject.onNext(Pair(productUI.id, productUI.isFavorite))
+        }
     }
 
     private fun updateCartQuantity() {
@@ -81,8 +96,6 @@ class ProductSliderViewHolder(
         binding.amountController.circleAmount.visibility = View.GONE
         binding.amountController.add.visibility = View.GONE
         binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
-        binding.price.visibility = View.GONE
-        binding.oldPrice.visibility = View.GONE
         amountControllerTimer.start()
     }
 
@@ -92,8 +105,6 @@ class ProductSliderViewHolder(
         }
         binding.amountController.add.visibility = View.VISIBLE
         binding.amountController.amountControllerDeployed.visibility = View.GONE
-        binding.price.visibility = View.VISIBLE
-        binding.oldPrice.visibility = View.VISIBLE
     }
 
     fun onBind(productUI: ProductUI) {
@@ -105,6 +116,12 @@ class ProductSliderViewHolder(
         when (productUI.cartQuantity > 0) {
             true -> binding.amountController.circleAmount.visibility = View.VISIBLE
             false -> binding.amountController.circleAmount.visibility = View.GONE
+        }
+
+        when(productUI.isFavorite) {
+            false -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite))
+            true -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_red))
+
         }
 
         when(productUI.status) {

@@ -1,12 +1,15 @@
 package com.vodovoz.app.ui.components.fragment.paginated_products_catalog
 
 import android.annotation.SuppressLint
+import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -29,10 +32,12 @@ import com.vodovoz.app.ui.components.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.components.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.components.decoration.ProductsFiltersMarginDecoration
 import com.vodovoz.app.ui.components.diffUtils.ProductDiffItemCallback
+import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.FilterValueUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
+import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -69,45 +74,69 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
     private val onBrandClickSubject: PublishSubject<FilterValueUI> = PublishSubject.create()
     private val primaryProductFiltersAdapter = PrimaryProductFiltersAdapter(onBrandClickSubject)
 
-    private val space: Int by lazy { resources.getDimension(R.dimen.primary_space).toInt() }
-
-    //Linear
-    private val linearLayoutManager: LinearLayoutManager by lazy {
-        LinearLayoutManager(requireContext())
-    }
-    private val linearMarginDecoration: ListMarginDecoration by lazy {
-        ListMarginDecoration(space)
-    }
-    private val linearDividerItemDecoration: DividerItemDecoration by lazy {
-        DividerItemDecoration(requireContext(), linearLayoutManager.orientation)
-    }
-
     //Grid
-    private val gridLayoutManager: GridLayoutManager by lazy {
-        GridLayoutManager(requireContext(), 2).apply {
-            spanSizeLookup =  object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    return if (position == productAdapter.itemCount && productAdapter.itemCount > 0) 2
-                    else 1
+    private lateinit var gridLayoutManager: GridLayoutManager
+    private lateinit var linearLayoutManager: LinearLayoutManager
+
+    private val space: Int by lazy { resources.getDimension(R.dimen.primary_space).toInt() }
+    private val linearMarginDecoration: RecyclerView.ItemDecoration by lazy {
+        object  : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                with(outRect) {
+                    top = space
+                    bottom = space
+                    right = space
                 }
             }
         }
     }
-    private val gridMarginDecoration: GridMarginDecoration by lazy {
-        GridMarginDecoration(space)
+    private val linearDividerItemDecoration: DividerItemDecoration by lazy {
+        DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
     }
-//    private val gridVerticalDividerItemDecoration: DividerItemDecoration by lazy {
-//        DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
-//    }
-//    private val gridHorizontalDividerItemDecoration: DividerItemDecoration by lazy {
-//        DividerItemDecoration(requireContext(), DividerItemDecoration.HORIZONTAL)
-//    }
+    private val gridMarginDecoration: RecyclerView.ItemDecoration by lazy {
+        object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                with(outRect) {
+                    if (parent.getChildAdapterPosition(view) % 2 == 0) {
+                        left = space
+                        right = space/2
+                    } else {
+                        left = space/2
+                        right = space
+                    }
+                    top = space
+                    bottom = space
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         initViewModel()
         getArgs()
+        subscribeSubjects()
+    }
+
+    private fun subscribeSubjects() {
+        onProductClickSubject.subscribeBy { productId ->
+            findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToProductDetailFragment(productId))
+        }.addTo(compositeDisposable)
+
+        onChangeProductQuantitySubject.subscribeBy { product ->
+            viewModel.changeCart(product)
+        }.addTo(compositeDisposable)
     }
 
     private fun initViewModel() {
@@ -130,16 +159,29 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
         false
     ).apply { binding = this }.root
 
+    override fun update() { viewModel.updateCategoryHeader() }
+
     override fun initView() {
-        initProductRecycler()
+        initLayoutManagers()
+        initProductsRecycler()
         initBackButton()
         observeResultLiveData()
         initHeader()
-        initBrandRecycler()
+        initPrimaryFiltersRecycler()
         observeViewModel()
     }
 
-    override fun update() { viewModel.updateCategoryHeader() }
+    private fun initLayoutManagers() {
+        linearLayoutManager = LinearLayoutManager(requireContext())
+        gridLayoutManager = GridLayoutManager(requireContext(), 2).apply {
+            spanSizeLookup =  object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if (position == productAdapter.itemCount && productAdapter.itemCount > 0) 2
+                    else 1
+                }
+            }
+        }
+    }
 
     private fun initBackButton() {
         requireActivity().onBackPressedDispatcher.addCallback(
@@ -160,7 +202,7 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
         binding.back.setOnClickListener { findNavController().popBackStack() }
     }
 
-    private fun initBrandRecycler() {
+    private fun initPrimaryFiltersRecycler() {
         binding.brandRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.brandRecycler.adapter = primaryProductFiltersAdapter
@@ -170,18 +212,54 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
         }
     }
 
-    private fun initProductRecycler() {
-        changeViewMode()
-        updateSubject.subscribeBy { productAdapter.retry() }
-        binding.productRecycler.addOnScrollListener(
-            object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    binding.appBar.elevation =
-                        if (binding.productRecycler.canScrollVertically(-1)) 16f
-                        else 0f
-                }
+    private fun changeViewMode() {
+        var firstVisiblePosition = -1
+        var lastVisiblePosition = -1
+
+        when (viewMode) {
+            ViewMode.GRID -> {
+                viewMode = ViewMode.LIST
+                firstVisiblePosition = gridLayoutManager.findFirstVisibleItemPosition()
+                lastVisiblePosition = gridLayoutManager.findLastVisibleItemPosition()
             }
-        )
+            ViewMode.LIST -> {
+                viewMode = ViewMode.GRID
+                firstVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition()
+                lastVisiblePosition = linearLayoutManager.findLastVisibleItemPosition()
+            }
+        }
+
+        productAdapter.viewMode = viewMode
+        initProductsRecycler()
+
+        for (position in firstVisiblePosition..lastVisiblePosition) {
+            productAdapter.notifyItemChanged(position)
+        }
+
+        linearLayoutManager.scrollToPositionWithOffset(firstVisiblePosition, 0)
+        gridLayoutManager.scrollToPositionWithOffset(firstVisiblePosition, 0)
+    }
+
+    private fun initProductsRecycler() {
+        binding.productRecycler.setScrollElevation(binding.appBar)
+        when (viewMode) {
+            ViewMode.LIST -> {
+                viewMode = ViewMode.LIST
+                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_list))
+                binding.productRecycler.layoutManager = linearLayoutManager
+                binding.productRecycler.removeItemDecoration(gridMarginDecoration)
+                binding.productRecycler.addItemDecoration(linearMarginDecoration)
+                binding.productRecycler.addItemDecoration(linearDividerItemDecoration)
+            }
+            ViewMode.GRID -> {
+                viewMode = ViewMode.GRID
+                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_table))
+                binding.productRecycler.layoutManager = gridLayoutManager
+                binding.productRecycler.removeItemDecoration(linearMarginDecoration)
+                binding.productRecycler.removeItemDecoration(linearDividerItemDecoration)
+                binding.productRecycler.addItemDecoration(gridMarginDecoration)
+            }
+        }
     }
 
     private fun observeResultLiveData() {
@@ -280,62 +358,14 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
         }
     }
 
-    private fun updateProductRecyclerDecorationByViewMode() {
-        with(binding.productRecycler) {
-            when (viewMode) {
-                ViewMode.GRID -> {
-                    removeItemDecoration(linearMarginDecoration)
-                    removeItemDecoration(linearDividerItemDecoration)
-                    addItemDecoration(gridMarginDecoration)
-                }
-                ViewMode.LIST -> {
-                    removeItemDecoration(gridMarginDecoration)
-                    addItemDecoration(linearMarginDecoration)
-                    addItemDecoration(linearDividerItemDecoration)
-                }
-            }
-        }
-    }
-
-    private fun changeViewMode() {
-        var firstVisiblePosition = -1
-        var lastVisiblePosition = -1
-
-        when (viewMode) {
-            ViewMode.GRID -> {
-                viewMode = ViewMode.LIST
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_list))
-                firstVisiblePosition = gridLayoutManager.findFirstVisibleItemPosition()
-                lastVisiblePosition = gridLayoutManager.findLastVisibleItemPosition()
-                binding.productRecycler.layoutManager = linearLayoutManager
-            }
-            ViewMode.LIST -> {
-                viewMode = ViewMode.GRID
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_table))
-                firstVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition()
-                lastVisiblePosition = linearLayoutManager.findLastVisibleItemPosition()
-                binding.productRecycler.layoutManager = gridLayoutManager
-            }
-        }
-        productAdapter.viewMode = viewMode
-        updateProductRecyclerDecorationByViewMode()
-
-        for (position in firstVisiblePosition..lastVisiblePosition) {
-            productAdapter.notifyItemChanged(position)
-        }
-
-        linearLayoutManager.scrollToPositionWithOffset(firstVisiblePosition, 0)
-        gridLayoutManager.scrollToPositionWithOffset(firstVisiblePosition, 0)
-    }
-
     private fun showBottomSortSettings() = findNavController().navigate(
         PaginatedProductsCatalogFragmentDirections.actionToSortProductsSettingsBottomFragment(viewModel.sortType.name)
     )
 
     private fun showAllFiltersFragment() = findNavController().navigate(
         PaginatedProductsCatalogFragmentDirections.actionToProductFiltersFragment(
-            viewModel.categoryId,
-            viewModel.filterBundle
+            viewModel.filterBundle,
+            viewModel.categoryId
         )
     )
 
@@ -343,21 +373,8 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
         PaginatedProductsCatalogFragmentDirections.actionToSingleRootCatalogBottomFragment(viewModel.categoryId)
     )
 
-    override fun onStart() {
-        super.onStart()
-        onProductClickSubject.subscribeBy { productId ->
-            findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToProductDetailFragment(productId))
-        }.addTo(compositeDisposable)
-
-        onChangeProductQuantitySubject.subscribeBy { product ->
-            viewModel.changeCart(product)
-        }.addTo(compositeDisposable)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        binding.productRecycler.layoutManager = null
+    override fun onDestroy() {
+        super.onDestroy()
         compositeDisposable.clear()
     }
-
 }

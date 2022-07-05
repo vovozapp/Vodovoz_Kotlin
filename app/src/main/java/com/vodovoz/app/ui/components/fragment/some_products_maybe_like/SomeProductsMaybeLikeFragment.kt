@@ -49,6 +49,7 @@ class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
+        subscribeSubjects()
     }
 
     private fun initViewModel() {
@@ -57,6 +58,12 @@ class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
             (requireActivity().application as VodovozApplication).viewModelFactory
         )[SomeProductsMaybeLikeViewModel::class.java]
         viewModel.nextPage()
+    }
+
+    private fun subscribeSubjects() {
+        onChangeProductQuantitySubject.subscribeBy { productUI ->
+            viewModel.changeCart(productUI)
+        }.addTo(compositeDisposable)
     }
 
     override fun setContentView(
@@ -120,19 +127,16 @@ class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
         viewModel.productUIListLD.observe(viewLifecycleOwner) { productUIList ->
             gridProductsAdapter.productUiList = productUIList
             gridProductsAdapter.notifyDataSetChanged()
+
+            if (viewModel.pageAmount == 1) {
+                binding.nextPage.visibility = View.GONE
+                binding.divider.visibility = View.GONE
+            }
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        onChangeProductQuantitySubject.subscribeBy { productUI ->
-            viewModel.changeCart(productUI)
-        }.addTo(compositeDisposable)
-    }
-
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         compositeDisposable.clear()
     }
 

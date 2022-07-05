@@ -1,5 +1,6 @@
 package com.vodovoz.app.ui.components.fragment.slider.comments_slider
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -27,6 +28,11 @@ class CommentsSliderFragment : BaseHiddenFragment() {
     private val onCommentClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val commentsSliderAdapter = CommentsSliderAdapter()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        subscribeSubjects()
+    }
+
     override fun setContentView(
         inflater: LayoutInflater,
         container: ViewGroup
@@ -34,10 +40,8 @@ class CommentsSliderFragment : BaseHiddenFragment() {
         inflater, container, false
     ).apply { binding = this }.root
 
-
     override fun initView() {
         initCommentsPager()
-        subscribeSubjects()
     }
 
     private fun initCommentsPager() {

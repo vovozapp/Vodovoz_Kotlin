@@ -1,7 +1,9 @@
 package com.vodovoz.app.data.local
 
 import android.content.Context
+import android.util.Log
 import com.vodovoz.app.data.model.common.LastLoginDataEntity
+import com.vodovoz.app.util.LogSettings
 
 class LocalData(
     private val context: Context
@@ -16,16 +18,20 @@ class LocalData(
 
         //Cart Settings
         private const val CART_SETTINGS = "cart_settings"
-        private const val DEFAULT_USER_ID: Long = 0
 
         //Cookie Settings
         private const val COOKIE_SETTINGS = "COOKIE_SETTINGS"
         private const val COOKIE_SESSION_ID = "cookie_SESSION_id"
+
+        //Favorite Settings
+        private const val FAVORITE_SETTINGS = "favorite_settings"
+        private const val DEFAULT_USER_FAVORITE_LIST = "DEFAULT_USER_FAVORITE_LIST"
     }
 
     private val accountSettings = context.getSharedPreferences(ACCOUNT_SETTINGS, Context.MODE_PRIVATE)
     private val cartSettings = context.getSharedPreferences(CART_SETTINGS, Context.MODE_PRIVATE)
-    private val cookieSettings = context.getSharedPreferences(COOKIE_SETTINGS, Context.MODE_PRIVATE);
+    private val cookieSettings = context.getSharedPreferences(COOKIE_SETTINGS, Context.MODE_PRIVATE)
+    private val favoriteSettings = context.getSharedPreferences(FAVORITE_SETTINGS, Context.MODE_PRIVATE);
 
     override fun isAvailableCookieSessionId(): Boolean {
         return cookieSettings.contains(COOKIE_SESSION_ID)
@@ -41,6 +47,49 @@ class LocalData(
 
     override fun removeCookieSessionId() {
         cookieSettings.edit().remove(COOKIE_SESSION_ID).apply()
+    }
+
+    override fun changeFavoriteStatus(pairList: List<Pair<Long, Boolean>>) {
+        val favoriteList = fetchAllFavoriteProducts().toMutableList()
+
+        pairList.forEach { pair ->
+            when(pair.second) {
+                true -> favoriteList.add(pair.first)
+                else -> favoriteList.remove(pair.first)
+            }
+        }
+
+        when(isAlreadyLogin()) {
+            true -> favoriteSettings.edit().putString(fetchUserId().toString(), buildFavoriteStr(favoriteList)).apply()
+            false -> favoriteSettings.edit().putString(DEFAULT_USER_FAVORITE_LIST, buildFavoriteStr(favoriteList)).apply()
+        }
+
+    }
+
+    override fun fetchAllFavoriteProducts() = when(isAlreadyLogin()) {
+        false -> parseFavoriteStr(favoriteSettings.getString(DEFAULT_USER_FAVORITE_LIST, "")!!)
+        true -> parseFavoriteStr(favoriteSettings.getString(fetchUserId().toString(), "")!!)
+    }
+
+    override fun fetchAllFavoriteProductsOfDefaultUser() = parseFavoriteStr(favoriteSettings.getString(DEFAULT_USER_FAVORITE_LIST, "")!!)
+
+    private fun parseFavoriteStr(favoriteStr: String): List<Long> {
+        Log.i(LogSettings.ID_LOG, favoriteStr)
+        val favoriteList = mutableListOf<Long>()
+        favoriteStr.split(",").forEach { id ->
+            if (id.isNotEmpty()) {
+                favoriteList.add(id.toLong())
+            }
+        }
+        return favoriteList.toList()
+    }
+
+    private fun buildFavoriteStr(favoriteList: List<Long>): String {
+        val favoriteStr = StringBuilder()
+        favoriteList.forEach { productId ->
+            favoriteStr.append(productId).append(",")
+        }
+        return favoriteStr.toString()
     }
 
     override fun fetchLastLoginData(): LastLoginDataEntity {
@@ -69,7 +118,7 @@ class LocalData(
         }
     }
 
-    override fun fetchUserId()  = when(accountSettings.contains(USER_ID)) {
+    override fun fetchUserId() = when(accountSettings.contains(USER_ID)) {
         true -> accountSettings.getLong(USER_ID, 0)
         false -> null
     }

@@ -20,7 +20,7 @@ object ProductDetailMapper  {
         statusColor = statusColor,
         consumerInfo = consumerInfo,
         pricePerUnit = pricePerUnit,
-        cartAmount = cartAmount,
+        cartQuantity = cartQuantity,
         commentsAmount = commentsAmount,
         brandUI = brandEntity?.mapToUI(),
         priceUIList = priceEntityList.mapToUI(),

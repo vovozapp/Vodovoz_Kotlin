@@ -22,4 +22,8 @@ interface LocalDataSource {
     fun updateCookieSessionId(cookieSessionId: String)
     fun removeCookieSessionId()
 
+    fun changeFavoriteStatus(pairList: List<Pair<Long, Boolean>>)
+    fun fetchAllFavoriteProducts(): List<Long>
+    fun fetchAllFavoriteProductsOfDefaultUser(): List<Long>
+
 }

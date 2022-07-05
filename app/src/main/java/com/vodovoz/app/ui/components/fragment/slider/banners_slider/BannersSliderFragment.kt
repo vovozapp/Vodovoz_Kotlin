@@ -16,10 +16,11 @@ import com.vodovoz.app.databinding.FragmentSliderBannerBinding
 import com.vodovoz.app.ui.components.adapter.BannersSliderAdapter
 import com.vodovoz.app.ui.components.base.BaseHiddenFragment
 import com.vodovoz.app.ui.components.diffUtils.BannerDiffUtilCallback
-import com.vodovoz.app.ui.components.interfaces.IOnBannerClick
+import com.vodovoz.app.ui.components.interfaces.IOnInvokeAction
 import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
 import com.vodovoz.app.ui.model.BannerUI
-import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
@@ -37,23 +38,28 @@ class BannersSliderFragment : BaseHiddenFragment() {
 
     private lateinit var bannerUIList: List<BannerUI>
     private var bannerRatio: Double = 0.0
-    private lateinit var iOnBannerClick: IOnBannerClick
+    private lateinit var iOnInvokeAction: IOnInvokeAction
 
     private lateinit var binding: FragmentSliderBannerBinding
 
+    private val compositeDisposable = CompositeDisposable()
     private val onBannerClickSubject: PublishSubject<ActionEntity> = PublishSubject.create()
     private var bannersSliderAdapter = BannersSliderAdapter(onBannerClickSubject)
-    private var disposable: Disposable = onBannerClickSubject.subscribeBy{ action ->
-        iOnBannerClick.onBannerClick(action)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getArgs()
+        subscribeSubjects()
     }
 
     private fun getArgs() {
         bannerRatio = requireArguments().getDouble(BANNER_RATIO)
+    }
+
+    private fun subscribeSubjects() {
+        onBannerClickSubject.subscribeBy{ action ->
+            iOnInvokeAction.onInvokeAction(action)
+        }.addTo(compositeDisposable)
     }
 
     override fun setContentView(
@@ -100,8 +106,8 @@ class BannersSliderFragment : BaseHiddenFragment() {
         )
     }
 
-    fun initCallbacks(iOnBannerClick: IOnBannerClick) {
-        this.iOnBannerClick = iOnBannerClick
+    fun initCallbacks(iOnInvokeAction: IOnInvokeAction) {
+        this.iOnInvokeAction = iOnInvokeAction
     }
 
     fun updateData(bannerUIList: List<BannerUI>) {
@@ -120,7 +126,7 @@ class BannersSliderFragment : BaseHiddenFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.dispose()
+        compositeDisposable.dispose()
     }
 
 }

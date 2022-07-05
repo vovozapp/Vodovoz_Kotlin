@@ -10,12 +10,12 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentUserDataBinding
-import com.vodovoz.app.ui.components.base.FetchStateBaseBottomFragment
+import com.vodovoz.app.ui.components.base.ViewStateBaseBottomFragment
 import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.model.UserDataUI
 
-class UserDataFragment : FetchStateBaseBottomFragment() {
+class UserDataFragment : ViewStateBaseBottomFragment() {
 
     private lateinit var binding: FragmentUserDataBinding
     private lateinit var viewModel: UserDataViewModel

@@ -13,7 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.BottomFragmentCatalogMiniBinding
 import com.vodovoz.app.ui.components.adapter.SingleRootCatalogAdapter
-import com.vodovoz.app.ui.components.base.FetchStateBaseBottomFragment
+import com.vodovoz.app.ui.components.base.ViewStateBaseBottomFragment
 import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.components.decoration.SingleRootCatalogMarginDecoration
@@ -24,7 +24,7 @@ import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-class SingleRootCatalogBottomFragment : FetchStateBaseBottomFragment() {
+class SingleRootCatalogBottomFragment : ViewStateBaseBottomFragment() {
 
     private lateinit var binding: BottomFragmentCatalogMiniBinding
     private lateinit var viewModel: SingleRootCatalogViewModel

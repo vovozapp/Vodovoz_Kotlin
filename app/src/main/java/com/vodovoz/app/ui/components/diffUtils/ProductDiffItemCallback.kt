@@ -6,7 +6,7 @@ import com.vodovoz.app.ui.model.ProductUI
 class ProductDiffItemCallback: DiffUtil.ItemCallback<ProductUI>() {
 
     override fun areItemsTheSame(oldItem: ProductUI, newItem: ProductUI): Boolean {
-        return oldItem == newItem
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: ProductUI, newItem: ProductUI): Boolean {

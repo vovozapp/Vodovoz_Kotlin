@@ -4,20 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentFilterConcreteBinding
 import com.vodovoz.app.ui.components.adapter.ProductFilterValuesAdapter
 import com.vodovoz.app.ui.components.base.ViewState
+import com.vodovoz.app.ui.components.base.ViewStateBaseDialogFragment
 import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.components.diffUtils.FilterValueDiffUtilCallback
 import com.vodovoz.app.ui.components.fragment.product_filters.ProductFiltersFragment
 import com.vodovoz.app.ui.model.FilterValueUI
 
-class ConcreteFilterFragment : ViewStateBaseFragment() {
+class ConcreteFilterFragment : ViewStateBaseDialogFragment() {
 
     private lateinit var binding: FragmentFilterConcreteBinding
     private lateinit var viewModel: ConcreteFilterViewModel
@@ -26,6 +29,7 @@ class ConcreteFilterFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
         initViewModel()
         getArgs()
     }

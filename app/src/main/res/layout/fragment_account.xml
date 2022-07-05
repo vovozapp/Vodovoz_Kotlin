@@ -10,7 +10,7 @@
         android:id="@+id/profileContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -93,6 +93,7 @@
                 android:background="@color/whiteDark"/>
 
             <TextView
+                android:id="@+id/addresses"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/primary_margin"

@@ -1,29 +1,32 @@
 package com.vodovoz.app.data
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import androidx.paging.map
 import com.vodovoz.app.data.local.LocalDataSource
-import com.vodovoz.app.data.model.common.LastLoginDataEntity
-import com.vodovoz.app.data.model.common.OrderEntity
-import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.model.features.CartBundleEntity
-import com.vodovoz.app.data.paging.ProductsPagingSource
-import com.vodovoz.app.data.paging.source.*
+import com.vodovoz.app.data.paging.comments.CommentsPagingSource
+import com.vodovoz.app.data.paging.products.ProductsPagingSource
+import com.vodovoz.app.data.paging.products.source.*
 import com.vodovoz.app.data.remote.RemoteDataSource
+import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.flow.map
+import java.lang.Exception
 
 class DataRepository(
-    private val remoteData: RemoteDataSource,
+    private val remoteDataSource: RemoteDataSource,
     private val localData: LocalDataSource,
 ) {
 
-    fun fetchPopupNews() = remoteData.fetchPopupNews(userId = localData.fetchUserId())
+    fun fetchPopupNews() = remoteDataSource.fetchPopupNews(userId = localData.fetchUserId())
 
-    fun fetchCart(): Single<ResponseEntity<CartBundleEntity>> = remoteData
+    fun fetchCart(): Single<ResponseEntity<CartBundleEntity>> = remoteDataSource
         .fetchCart()
         .doOnSuccess { response ->
             if (response is ResponseEntity.Success) {
@@ -39,43 +42,83 @@ class DataRepository(
             }
         }
 
-    fun clearCart(): Single<ResponseEntity<Boolean>> = remoteData
+    fun clearCart(): Single<ResponseEntity<Boolean>> = remoteDataSource
         .clearCart()
         .doFinally { localData.clearCart() }
 
-    fun fetchBrandHeader(brandId: Long) = remoteData.fetchBrandHeader(brandId = brandId)
+    fun fetchBrandHeader(brandId: Long) = remoteDataSource.fetchBrandHeader(brandId = brandId)
 
-    fun fetchCountryHeader(countryId: Long) = remoteData.fetchCountryHeader(countryId = countryId)
+    fun fetchCountryHeader(countryId: Long) = remoteDataSource.fetchCountryHeader(countryId = countryId)
 
-    fun fetchAdvertisingBannersSlider() = remoteData.fetchAdvertisingBannersSlider()
+    fun fetchAdvertisingBannersSlider() = remoteDataSource.fetchAdvertisingBannersSlider()
 
-    fun fetchCategoryBannersSlider() = remoteData.fetchCategoryBannersSlider()
+    fun fetchCategoryBannersSlider() = remoteDataSource.fetchCategoryBannersSlider()
 
-    fun fetchHistoriesSlider() = remoteData.fetchHistoriesSlider()
+    fun fetchHistoriesSlider() = remoteDataSource.fetchHistoriesSlider()
 
-    fun fetchBrandsSlider() = remoteData.fetchBrandsSlider()
+    fun fetchBrandsSlider() = remoteDataSource.fetchBrandsSlider()
 
-    fun fetchCountriesSlider() = remoteData.fetchCountriesSlider()
+    fun fetchCountriesSlider() = remoteDataSource.fetchCountriesSlider()
 
-    fun fetchDiscountProductsSlider() = remoteData.fetchDiscountsSlider()
+    fun fetchDiscountProductsSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>> = remoteDataSource
+        .fetchDiscountsSlider()
+        .doOnSuccess { response ->
+            if (response is ResponseEntity.Success) {
+                response.data.forEach { categoryDetailEntity ->
+                    syncFavoriteProducts(categoryDetailEntity.productEntityList)
+                }
+            }
+        }
 
-    fun fetchNoveltiesProductsSlider() = remoteData.fetchNoveltiesSlider()
+    fun fetchNoveltiesProductsSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>> = remoteDataSource
+        .fetchNoveltiesSlider()
+        .doOnSuccess { response ->
+            if (response is ResponseEntity.Success) {
+                response.data.forEach { categoryDetailEntity ->
+                    syncFavoriteProducts(categoryDetailEntity.productEntityList)
+                }
+            }
+        }
 
-    fun fetchPopularCategoriesSlider() = remoteData.fetchPopularSlider()
+    fun fetchPopularCategoriesSlider() = remoteDataSource.fetchPopularSlider()
 
-    fun fetchTopProductsSlider() = remoteData.fetchTopSlider()
+    fun fetchTopProductsSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>> = remoteDataSource
+        .fetchTopSlider()
+        .doOnSuccess { response ->
+            if (response is ResponseEntity.Success) {
+                response.data.forEach { categoryDetailEntity ->
+                    syncFavoriteProducts(categoryDetailEntity.productEntityList)
+                }
+            }
+        }
 
-    fun fetchBottomProductsSlider() = remoteData.fetchBottomSlider()
+    fun fetchBottomProductsSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>> = remoteDataSource
+        .fetchBottomSlider()
+        .doOnSuccess { response ->
+            if (response is ResponseEntity.Success) {
+                response.data.forEach { categoryDetailEntity ->
+                    syncFavoriteProducts(categoryDetailEntity.productEntityList)
+                }
+            }
+        }
 
-    fun fetchCommentsSlider() = remoteData.fetchCommentsSlider()
+    fun fetchCommentsSlider() = remoteDataSource.fetchCommentsSlider()
 
-    fun fetchPromotionsSlider() = remoteData.fetchPromotionsSlider()
+    fun fetchPromotionsSlider(): Single<ResponseEntity<List<PromotionEntity>>> = remoteDataSource
+        .fetchPromotionsSlider()
+        .doOnSuccess { response ->
+            if (response is ResponseEntity.Success) {
+                response.data.forEach { promotionEntity ->
+                    syncFavoriteProducts(promotionEntity.productEntityList)
+                }
+            }
+        }
 
     fun fetchOrdersSlider(): Single<ResponseEntity<List<OrderEntity>>> = Single.create { emitter ->
         when(val userId = fetchUserId()) {
             null -> emitter.onSuccess(ResponseEntity.Hide())
             else -> {
-                remoteData.fetchOrdersSlider(userId = userId).subscribeBy(
+                remoteDataSource.fetchOrdersSlider(userId = userId).subscribeBy(
                     onSuccess = { response ->  emitter.onSuccess(response) },
                     onError = { throwable -> emitter.onError(throwable) }
                 )
@@ -83,17 +126,38 @@ class DataRepository(
         }
     }
 
-    fun fetchViewedProductsSlider() = remoteData.fetchViewedProductsSlider(userId = fetchUserId())
+    fun fetchViewedProductsSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>> = remoteDataSource
+        .fetchViewedProductsSlider(userId = fetchUserId())
+        .doOnSuccess { response ->
+            if (response is ResponseEntity.Success) {
+                response.data.forEach { categoryDetailEntity ->
+                    syncFavoriteProducts(categoryDetailEntity.productEntityList)
+                }
+            }
+        }
 
-    fun fetchPromotionDetails(promotionId: Long) = remoteData.fetchPromotionDetails(promotionId = promotionId)
+    fun fetchPromotionDetails(promotionId: Long): Single<ResponseEntity<PromotionDetailEntity>> = remoteDataSource
+        .fetchPromotionDetails(promotionId = promotionId)
+        .doOnSuccess { response ->
+            if (response is ResponseEntity.Success) {
+                syncFavoriteProducts(response.data.promotionCategoryDetailEntity?.productEntityList)
+                syncFavoriteProducts(response.data.forYouCategoryDetailEntity.productEntityList)
+            }
+        }
 
-    fun fetchAllPromotions(filterId: Long) = remoteData.fetchAllPromotions(filterId = filterId)
+    fun fetchAllPromotions(filterId: Long) = remoteDataSource.fetchAllPromotions(filterId = filterId)
 
-    fun fetchAllBrands(brandIdList: List<Long> = listOf()) = remoteData.fetchAllBrands(brandIdList = brandIdList)
+    fun fetchAllBrands(brandIdList: List<Long> = listOf()) = remoteDataSource.fetchAllBrands(brandIdList = brandIdList)
 
-    fun fetchPromotionsByBanner(categoryId: Long) = remoteData.fetchPromotionsByBanner(categoryId = categoryId)
+    fun fetchPromotionsByBanner(categoryId: Long) = remoteDataSource.fetchPromotionsByBanner(categoryId = categoryId)
 
-    fun fetchProductsByBanner(categoryId: Long) = remoteData.fetchProductsByBanner(categoryId = categoryId)
+    fun fetchProductsByBanner(categoryId: Long) = remoteDataSource
+        .fetchProductsByBanner(categoryId = categoryId)
+        .doOnSuccess { response ->
+            if (response is ResponseEntity.Success) {
+                syncFavoriteProducts(response.data)
+            }
+        }
 
     fun fetchProductsByCategory(
         categoryId: Long,
@@ -117,15 +181,44 @@ class DataRepository(
                 filterValue = filterValue,
                 priceFrom = priceFrom,
                 priceTo = priceTo,
-                remoteData = remoteData
+                remoteDataSource = remoteDataSource
             ))
         }
     ).flow.map { pagingData ->
         val cart = fetchLocalCart()
+        syncFavoriteProducts(pagingData)
         pagingData.map { product ->
             product.apply { cartQuantity = cart[product.id] ?: 0 }
         }
     }
+
+    //Отправить отзыв о продукте
+    fun sendCommentAboutProduct(
+        productId: Long,
+        rating: Int,
+        comment: String
+    ) = remoteDataSource.sendCommentAboutProduct(
+        productId = productId,
+        rating = rating,
+        comment = comment,
+        userId = fetchUserId()!!
+    )
+
+    //Все отзывы о продукте
+    fun fetchAllCommentsByProduct(
+        productId: Long
+    ) = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = {
+            CommentsPagingSource(
+                productId = productId,
+                remoteDataSource = remoteDataSource
+            )
+        }
+    ).flow
 
     fun changeCart(
         productId: Long,
@@ -136,11 +229,11 @@ class DataRepository(
         if (oldQuantity == quantity) emitter.onComplete()
 
         when(oldQuantity) {
-            null -> remoteData.addProductToCart(
+            null -> remoteDataSource.addProductToCart(
                 productId = productId,
                 quantity = quantity
             )
-            else -> remoteData.changeProductsQuantityInCart(
+            else -> remoteDataSource.changeProductsQuantityInCart(
                 productId = productId,
                 quantity = quantity
             )
@@ -157,53 +250,38 @@ class DataRepository(
                     is ResponseEntity.Error -> {
                         emitter.onError(NullPointerException(response.errorMessage))
                     }
+                    is ResponseEntity.Hide -> {
+                        emitter.onError(Exception("Hide"))
+                    }
                 }
             },
             onError = { throwable -> emitter.onError(throwable) }
         )
     }
 
-    fun changeProductQuantityInCart(
-        productId: Long,
-        quantity: Int
-    ): Single<ResponseEntity<Boolean>> = remoteData.changeProductsQuantityInCart(
-        productId = productId,
-        quantity = quantity
-    ).doFinally {
-        localData.changeProductQuantityInCart(
-            productId = productId,
-            quantity = quantity
-        )
-    }
-
-    fun addProductToCart(
-        productId: Long,
-        quantity: Int
-    ): Single<ResponseEntity<Boolean>> = remoteData.addProductToCart(
-        productId = productId,
-        quantity = quantity
-    ).doFinally {
-        localData.changeProductQuantityInCart(
-            productId = productId,
-            quantity = quantity
-        )
-    }
+    fun fetchAboutServices() = remoteDataSource.fetchAboutServices()
 
     fun fetchLocalCart() = localData.fetchCart()
 
-    fun fetchCategoryHeader(categoryId: Long) = remoteData.fetchCategoryHeader(categoryId = categoryId)
+    fun fetchCategoryHeader(categoryId: Long) = remoteDataSource.fetchCategoryHeader(categoryId = categoryId)
 
-    fun fetchAllFiltersByCategory(categoryId: Long) = remoteData.fetchAllFiltersByCategory(categoryId = categoryId)
+    fun fetchAllFiltersByCategory(categoryId: Long) = remoteDataSource.fetchAllFiltersByCategory(categoryId = categoryId)
 
-    fun fetchProductDetails(productId: Long) = remoteData.fetchProductDetails(productId = productId)
+    fun fetchProductDetails(productId: Long): Single<ResponseEntity<ProductDetailBundleEntity>> = remoteDataSource
+        .fetchProductDetails(productId = productId)
+        .doOnSuccess { response ->
+            if(response is ResponseEntity.Success) {
+                syncFavoriteStatus(response.data.productDetailEntity)
+            }
+        }
 
-    fun fetchMaybeLikeProducts(page: Int) = remoteData.fetchMaybeLikeProducts(page = page)
+    fun fetchMaybeLikeProducts(page: Int) = remoteDataSource.fetchMaybeLikeProducts(page = page)
 
-    fun fetchDiscountHeader() = remoteData.fetchDiscountHeader()
+    fun fetchDiscountHeader() = remoteDataSource.fetchDiscountHeader()
 
-    fun fetchNoveltiesHeader() = remoteData.fetchNoveltiesHeader()
+    fun fetchNoveltiesHeader() = remoteDataSource.fetchNoveltiesHeader()
 
-    fun fetchSliderHeader(categoryId: Long) = remoteData.fetchSliderHeader(categoryId = categoryId)
+    fun fetchSliderHeader(categoryId: Long) = remoteDataSource.fetchSliderHeader(categoryId = categoryId)
 
     fun fetchProductsBySlider(
         categoryId: Long?,
@@ -219,10 +297,13 @@ class DataRepository(
                 categoryId = categoryId,
                 sort = sort,
                 orientation = orientation,
-                remoteData = remoteData,
+                remoteDataSource = remoteDataSource,
             ))
         }
-    ).flow
+    ).flow.map { pagingData ->
+        syncFavoriteProducts(pagingData)
+        pagingData
+    }
 
     fun fetchProductsByBrand(
         brandId: Long?,
@@ -240,12 +321,16 @@ class DataRepository(
                 brandId = brandId,
                 code = code,
                 categoryId = categoryId,
-                remoteData = remoteData,
+                remoteDataSource = remoteDataSource,
                 orientation = orientation,
                 sort = sort
             ))
         }
-    ).flow
+    ).flow.map { pagingData ->
+        syncFavoriteProducts(pagingData)
+        pagingData
+    }
+
 
     fun fetchProductsByCountry(
         countryId: Long,
@@ -263,10 +348,13 @@ class DataRepository(
                 sort = sort,
                 orientation = orientation,
                 categoryId = categoryId,
-                remoteData = remoteData
-            ))
+                remoteDataSource            ))
         }
-    ).flow
+    ).flow.map { pagingData ->
+        syncFavoriteProducts(pagingData)
+        pagingData
+    }
+
 
     fun fetchProductsDiscount(
         sort: String?,
@@ -282,10 +370,14 @@ class DataRepository(
                 sort = sort,
                 orientation = orientation,
                 categoryId = categoryId,
-                remoteData = remoteData
+                remoteDataSource = remoteDataSource
             ))
         }
-    ).flow
+    ).flow.map { pagingData ->
+        syncFavoriteProducts(pagingData)
+        pagingData
+    }
+
 
     fun fetchProductsNovelties(
         sort: String?,
@@ -301,27 +393,35 @@ class DataRepository(
                 sort = sort,
                 orientation = orientation,
                 categoryId = categoryId,
-                remoteData = remoteData
+                remoteDataSource = remoteDataSource
             ))
         }
-    ).flow
+    ).flow.map { pagingData ->
+        syncFavoriteProducts(pagingData)
+        pagingData
+    }
+
 
     fun fetchSomeProductsByBrand(
         productId: Long,
         brandId: Long,
         page: Int
-    ) = remoteData.fetchSomeProductsByBrand(
+    ): Single<ResponseEntity<PaginatedProductListEntity>> = remoteDataSource.fetchSomeProductsByBrand(
         productId = productId,
         brandId = brandId,
         page = page
-    )
+    ).doOnSuccess { response ->
+        if (response is ResponseEntity.Success) {
+            syncFavoriteProducts(response.data.productEntityList)
+        }
+    }
 
     fun fetchProductFilterById(
         categoryId: Long,
         filterCode: String
-    ) = remoteData.fetchProductFilterById(categoryId = categoryId, filterCode = filterCode)
+    ) = remoteDataSource.fetchProductFilterById(categoryId = categoryId, filterCode = filterCode)
 
-    fun fetchCatalog() = remoteData.fetchCatalog()
+    fun fetchCatalog() = remoteDataSource.fetchCatalog()
 
     //Profile
     fun register(
@@ -330,7 +430,7 @@ class DataRepository(
         email: String,
         password: String,
         phone: String,
-    ): Single<ResponseEntity<Long>> = remoteData.register(
+    ): Single<ResponseEntity<Long>> = remoteDataSource.register(
         firstName = firstName,
         secondName = secondName,
         email = email,
@@ -343,7 +443,7 @@ class DataRepository(
     fun login(
         email: String,
         password: String
-    ): Single<ResponseEntity<Boolean>> = remoteData.login(
+    ): Single<ResponseEntity<Boolean>> = remoteDataSource.login(
         email = email,
         password = password
     ).doOnSuccess { response ->
@@ -352,8 +452,10 @@ class DataRepository(
                 email = email,
                 password = password
             ))
-            localData.updateUserId(response.data!!)
+            localData.updateUserId(response.data)
         }
+
+        addToFavorite(localData.fetchAllFavoriteProductsOfDefaultUser()).subscribe()
     }.flatMap { response ->
         val newResponse = when(response) {
             is ResponseEntity.Success -> ResponseEntity.Success(true)
@@ -363,7 +465,7 @@ class DataRepository(
         Single.just(newResponse)
     }
 
-    fun logout(): Single<String> = remoteData
+    fun logout(): Single<String> = remoteDataSource
         .fetchCookie()
         .doOnSubscribe {
             localData.removeUserId()
@@ -372,7 +474,7 @@ class DataRepository(
 
     fun fetchUserData(
         userId: Long
-    ) = remoteData.fetchUserData(
+    ) = remoteDataSource.fetchUserData(
         userId = userId
     )
 
@@ -387,5 +489,142 @@ class DataRepository(
     fun fetchUserId() = localData.fetchUserId()
 
     fun isAlreadyLogin() = localData.isAlreadyLogin()
+
+    fun addToFavorite(
+        productIdList: List<Long>
+    ): Single<String> = Single.create { emitter ->
+        when(isAlreadyLogin()) {
+            false -> {
+                localData.changeFavoriteStatus(
+                    pairList = mutableListOf<Pair<Long, Boolean>>().apply {
+                        productIdList.forEach { add(Pair(it, true)) }
+                    }.toList()
+                )
+                emitter.onSuccess("Продукт доавблен в избранное")
+            }
+            true -> {
+                remoteDataSource.addToFavorite(
+                    productIdList = productIdList,
+                    userId = fetchUserId()!!
+                ).subscribeBy(
+                    onSuccess = { response ->
+                        when (response) {
+                            is ResponseEntity.Success -> {
+                                localData.changeFavoriteStatus(
+                                    pairList = mutableListOf<Pair<Long, Boolean>>().apply {
+                                        productIdList.forEach { add(Pair(it, true)) }
+                                    }.toList()
+                                )
+                                emitter.onSuccess(response.data)
+                            }
+                            is ResponseEntity.Error -> emitter.onError(Exception(response.errorMessage))
+                            is ResponseEntity.Hide -> emitter.onError(Exception("Ошибка!"))
+                        }
+                    },
+                    onError = { throwable -> emitter.onError(throwable) }
+                )
+            }
+        }
+    }
+
+    fun removeFromFavorite(
+        productId: Long
+    ): Single<String> = Single.create { emitter ->
+        when(isAlreadyLogin()) {
+            false -> {
+                localData.changeFavoriteStatus(listOf(Pair(productId, false)))
+                emitter.onSuccess("Продукт удален из избранного")
+            }
+            true -> {
+                remoteDataSource.removeFromFavorite(
+                    productId = productId,
+                    userId = fetchUserId()!!
+                ).subscribeBy(
+                    onSuccess = { response ->
+                        when (response) {
+                            is ResponseEntity.Success -> {
+                                localData.changeFavoriteStatus(listOf(Pair(productId, false)))
+                                emitter.onSuccess(response.data)
+                            }
+                            is ResponseEntity.Error -> emitter.onError(Exception(response.errorMessage))
+                            is ResponseEntity.Hide -> emitter.onError(Exception("Ошибка!"))
+                        }
+                    },
+                    onError = { throwable -> emitter.onError(throwable) }
+                )
+            }
+        }
+    }
+
+    fun fetchFavoriteProductsHeaderBundle() = remoteDataSource.fetchFavoriteProductsHeaderBundleResponse(
+        userId = fetchUserId(),
+        productIdListStr = when(isAlreadyLogin()) {
+            true -> null
+            false -> StringBuilder().apply {
+                localData.fetchAllFavoriteProducts().forEach {
+                    append(it).append(",")
+                }
+            }.toString()
+        }
+    )
+
+    fun fetchFavoriteProducts(
+        categoryId: Long?,
+        sort: String?,
+        orientation: String?,
+        isAvailable: Boolean?
+    ) = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = {
+            ProductsPagingSource(ProductsFavoriteSource(
+                userId = fetchUserId(),
+                productIdListStr = StringBuilder().apply {
+                    localData.fetchAllFavoriteProducts().forEach {
+                        append(it).append(",")
+                    }
+                }.toString(),
+                categoryId = categoryId,
+                sort = sort,
+                orientation = orientation,
+                isAvailable = isAvailable,
+                remoteDataSource = remoteDataSource
+            ))
+        }
+    ).flow.map { pagingData ->
+        syncFavoriteProducts(pagingData)
+        pagingData
+    }
+
+    fun fetchDeliveryZonesBundle() = remoteDataSource.fetchDeliveryZonesResponse()
+
+    private fun syncFavoriteProducts(productEntityList: List<ProductEntity>?) {
+        val favoriteList = localData.fetchAllFavoriteProducts()
+        productEntityList?.map { productEntity ->
+            favoriteList.find { it == productEntity.id }?.let {
+                productEntity.isFavorite = true
+            }
+        }
+    }
+
+    private fun syncFavoriteProducts(pagingData: PagingData<ProductEntity>?) {
+        val favoriteList = localData.fetchAllFavoriteProducts()
+        pagingData?.map { productEntity ->
+            favoriteList.find { it == productEntity.id }?.let {
+                productEntity.isFavorite = true
+            }
+            productEntity
+        }
+    }
+
+    private fun syncFavoriteStatus(productDetailEntity: ProductDetailEntity) {
+        val favoriteList = localData.fetchAllFavoriteProducts()
+
+        favoriteList.find { it == productDetailEntity.id }?.let {
+            productDetailEntity.isFavorite = true
+        }
+    }
 
 }

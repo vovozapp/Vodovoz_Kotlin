@@ -27,6 +27,7 @@ class CheckableCategoryWithChildrenViewHolder(
 
     init {
         binding.root.setOnClickListener { categoryClickSubject.onNext(categoryUI) }
+        binding.detailController.setOnClickListener { categoryClickSubject.onNext(categoryUI) }
         binding.subcategoryRecycler.layoutManager = LinearLayoutManager(context)
         binding.subcategoryRecycler.adapter = singleRootCatalogAdapter
     }

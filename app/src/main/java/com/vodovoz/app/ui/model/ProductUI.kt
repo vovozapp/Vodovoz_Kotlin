@@ -7,6 +7,7 @@ data class ProductUI(
     val id: Long,
     val name: String,
     var detailPicture: String,
+    var isFavorite: Boolean,
     val oldPrice: Int,
     val newPrice: Int,
     val status: String,
@@ -16,12 +17,13 @@ data class ProductUI(
     val isCanReturnBottles: Boolean,
     val commentAmount: String,
     val detailPictureList: List<String>
-): Parcelable {
+) : Parcelable {
 
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
         parcel.readString()!!,
         parcel.readString()!!,
+        parcel.readByte() != 0.toByte(),
         parcel.readInt(),
         parcel.readInt(),
         parcel.readString()!!,
@@ -37,6 +39,7 @@ data class ProductUI(
         parcel.writeLong(id)
         parcel.writeString(name)
         parcel.writeString(detailPicture)
+        parcel.writeByte(if (isFavorite) 1 else 0)
         parcel.writeInt(oldPrice)
         parcel.writeInt(newPrice)
         parcel.writeString(status)

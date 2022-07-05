@@ -2,6 +2,7 @@ package com.vodovoz.app.ui.components.fragment.promotion_detail
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.PromotionDetailUI
+import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -75,6 +77,8 @@ class PromotionDetailFragment : ViewStateBaseFragment() {
         initActionBar()
         initPromotionProductRecycler()
         observeViewModel()
+
+        Log.i(LogSettings.ID_LOG, findNavController().previousBackStackEntry?.destination?.label.toString())
     }
 
     private fun initActionBar() {

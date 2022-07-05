@@ -29,6 +29,9 @@ import com.vodovoz.app.ui.components.decoration.CategoryTabsMarginDecoration
 import com.vodovoz.app.ui.components.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.components.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.components.diffUtils.ProductDiffItemCallback
+import com.vodovoz.app.ui.components.fragment.home.HomeFragmentDirections
+import com.vodovoz.app.ui.components.fragment.slider.products_slider.ProductsSliderConfig
+import com.vodovoz.app.ui.components.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable

@@ -1,6 +1,8 @@
 package com.vodovoz.app.ui.components.fragment.slider.histories_slider
 
 import android.graphics.Rect
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +17,7 @@ import com.vodovoz.app.ui.components.diffUtils.HistoryDiffUtilCallback
 import com.vodovoz.app.ui.components.interfaces.IOnHistoryClick
 import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
 import com.vodovoz.app.ui.model.HistoryUI
+import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -32,6 +35,11 @@ class HistorySliderFragment : BaseHiddenFragment() {
     private val onHistoryClickSubject: PublishSubject<Long> = PublishSubject.create()
     private lateinit var historiesSliderAdapter: HistoriesSliderAdapter
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        subscribeSubjects()
+    }
+
     override fun setContentView(
         inflater: LayoutInflater,
         container: ViewGroup
@@ -39,11 +47,11 @@ class HistorySliderFragment : BaseHiddenFragment() {
         inflater,
         container,
         false
-    ).apply { binding = this }.root
+    ).apply {
+        binding = this }.root
 
     override fun initView() {
         initHistoriesRecyclerView()
-        subscribeSubjects()
     }
 
     private fun initHistoriesRecyclerView() {
@@ -105,6 +113,7 @@ class HistorySliderFragment : BaseHiddenFragment() {
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
+        Log.i(LogSettings.REQ_RES_LOG, "onStop")
     }
 
 }

@@ -17,6 +17,7 @@ object ViewedProductSliderResponseJsonParser {
         return when(responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 listOf(CategoryDetailEntity(
+                    id = 0,
                     name = responseJson.getJSONObject("data").getString("NAME"),
                     productEntityList = responseJson.getJSONObject("data")
                         .getJSONArray("VIEWTOVAR").parseProductEntityList()

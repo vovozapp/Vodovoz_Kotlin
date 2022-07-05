@@ -1,5 +1,6 @@
 package com.vodovoz.app.ui.components.fragment.paginated_products_catalog
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,6 +21,7 @@ import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
 import com.vodovoz.app.util.FilterBuilderExtensions.buildFilterQuery
 import com.vodovoz.app.util.FilterBuilderExtensions.buildFilterValueQuery
+import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -37,11 +39,13 @@ class PaginatedProductsCatalogViewModel(
     private val categoryUIMLD = MutableLiveData<CategoryUI>()
     private val filtersAmountMLD = MutableLiveData<Int>()
     private val sortTypeMLD = MutableLiveData<SortType>()
+    private val errorMLD = MutableLiveData<String>()
 
     val viewStateLD: LiveData<ViewState> = viewStateMLD
     val categoryUILD: LiveData<CategoryUI> = categoryUIMLD
     val sortTypeLD: LiveData<SortType> = sortTypeMLD
     val filtersAmountLD: LiveData<Int> = filtersAmountMLD
+    val errorLD: LiveData<String> = errorMLD
 
     lateinit var categoryHeader: CategoryUI
 
@@ -95,6 +99,7 @@ class PaginatedProductsCatalogViewModel(
     }
 
     fun updateCategoryHeader() {
+        Log.i(LogSettings.ID_LOG, "UPDATE CATEGORY")
         dataRepository.fetchCategoryHeader(categoryId)
             .subscribeOn(Schedulers.io())
             .doOnSubscribe { viewStateMLD.value = ViewState.Loading() }
@@ -136,8 +141,8 @@ class PaginatedProductsCatalogViewModel(
             quantity = productUI.cartQuantity
         ).subscribeBy(
             onComplete = {},
-            onError = {
-
+            onError = { throwable ->
+                errorMLD.value = throwable.message ?: "Неизвестная ошибка"
             }
         )
     }

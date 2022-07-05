@@ -1,14 +1,29 @@
 package com.vodovoz.app.data.remote
 
 import com.vodovoz.app.data.model.common.*
-import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
-import com.vodovoz.app.data.model.features.CartBundleEntity
-import com.vodovoz.app.data.model.features.CountriesSliderBundleEntity
+import com.vodovoz.app.data.model.features.*
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import retrofit2.Response
 
 interface RemoteDataSource {
+
+    //Общая информация о предоставляемых услугах
+    fun fetchAboutServices(): Single<ResponseEntity<AboutServicesBundleEntity>>
+
+    //Отправить отзыв о продукте
+    fun sendCommentAboutProduct(
+        productId: Long,
+        rating: Int,
+        comment: String,
+        userId: Long
+    ): Single<ResponseEntity<String>>
+
+    //Все отзывы о продукте
+    suspend fun fetchAllCommentsByProduct(
+        productId: Long,
+        page: Int
+    ): Response<ResponseBody>
 
     //Всплывающая новость
     fun fetchPopupNews(userId: Long?): Single<ResponseEntity<PopupNewsEntity>>
@@ -219,5 +234,37 @@ interface RemoteDataSource {
 
     //Данные пользователя
     fun fetchUserData(userId: Long): Single<ResponseEntity<UserDataEntity>>
+
+    //Добавить в избранное для авторизованного пользователя
+    fun addToFavorite(
+        productIdList: List<Long>,
+        userId: Long
+    ): Single<ResponseEntity<String>>
+
+    //Удалить из избранного для авторизованного пользователя
+    fun removeFromFavorite(
+        productId: Long,
+        userId: Long
+    ): Single<ResponseEntity<String>>
+
+    //Основная информация об избранных продуктах
+    fun fetchFavoriteProductsHeaderBundleResponse(
+        userId: Long?,
+        productIdListStr: String?
+    ): Single<ResponseEntity<FavoriteProductsHeaderBundleEntity>>
+
+    //Постраничная загрузка избранных продуктов
+    suspend fun fetchFavoriteProductsResponse(
+        userId: Long?,
+        productIdListStr: String,
+        categoryId: Long?,
+        sort: String?,
+        orientation: String?,
+        page: Int?,
+        isAvailable: Boolean?,
+    ): Response<ResponseBody>
+
+    //Информация о зонах доставки
+    fun fetchDeliveryZonesResponse(): Single<ResponseEntity<DeliveryZonesBundleEntity>>
 
 }

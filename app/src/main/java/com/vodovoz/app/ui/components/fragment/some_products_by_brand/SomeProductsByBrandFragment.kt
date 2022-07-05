@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
@@ -15,6 +17,8 @@ import com.vodovoz.app.ui.components.adapter.LinearProductsAdapter
 import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
+import com.vodovoz.app.ui.components.fragment.product_detail.ProductDetailFragment
+import com.vodovoz.app.ui.components.fragment.product_detail.ProductDetailFragmentDirections
 import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -59,6 +63,7 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
         super.onCreate(savedInstanceState)
         initViewModel()
         getArgs()
+        subscribeSubjects()
     }
 
     private fun getArgs() {
@@ -75,6 +80,12 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
             this,
             (requireActivity().application as VodovozApplication).viewModelFactory
         )[SomeProductsByBrandViewModel::class.java]
+    }
+
+    private fun subscribeSubjects() {
+        onChangeProductQuantitySubject.subscribeBy { product ->
+            viewModel.changeCart(product)
+        }.addTo(compositeDisposable)
     }
 
     override fun setContentView(
@@ -132,20 +143,18 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
         viewModel.productUIListLD.observe(viewLifecycleOwner) { productUIList ->
             linearProductAdapter.productUIList = productUIList
             linearProductAdapter.notifyDataSetChanged()
+
+            if (viewModel.pageAmount == 1) {
+                binding.nextPage.visibility = View.GONE
+                binding.divider.visibility = View.GONE
+            }
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        onChangeProductQuantitySubject.subscribeBy { product ->
-            viewModel.changeCart(product)
-        }.addTo(compositeDisposable)
-    }
-
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         compositeDisposable.clear()
     }
+
 
 }

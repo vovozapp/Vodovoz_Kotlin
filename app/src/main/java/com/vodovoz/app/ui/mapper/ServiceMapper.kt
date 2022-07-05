@@ -12,6 +12,7 @@ object ServiceMapper {
     fun ServiceEntity.mapToUI() = ServiceUI(
         name = name,
         price = price,
+        detail = detail,
         detailPicture = detailPicture,
         type = type
     )

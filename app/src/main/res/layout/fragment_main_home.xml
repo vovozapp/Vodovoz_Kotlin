@@ -35,7 +35,8 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:src="@drawable/ic_search"
-                    app:tint="@color/blackTextPrimary" />
+                    app:tint="@color/blackTextPrimary"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -59,7 +60,8 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:src="@drawable/ic_qr"
-                    app:tint="@color/blackTextPrimary" />
+                    app:tint="@color/blackTextPrimary"
+                    tools:ignore="ContentDescription" />
 
             </LinearLayout>
 

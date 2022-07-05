@@ -1,5 +1,6 @@
 package com.vodovoz.app.ui.components.fragment.product_filters
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,9 +9,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentFilterListBinding
 import com.vodovoz.app.ui.components.adapter.ProductFiltersAdapter
 import com.vodovoz.app.ui.components.base.ViewState
+import com.vodovoz.app.ui.components.base.ViewStateBaseDialogFragment
 import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.components.diffUtils.FilterDiffUtilCallback
@@ -23,7 +26,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 
-class ProductFiltersFragment : ViewStateBaseFragment() {
+class ProductFiltersFragment : ViewStateBaseDialogFragment() {
 
     companion object {
         const val CONCRETE_FILTER = "CONCRETE_FILTER"
@@ -44,6 +47,7 @@ class ProductFiltersFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
         initViewModel()
         getArgs()
     }
@@ -152,16 +156,10 @@ class ProductFiltersFragment : ViewStateBaseFragment() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun fillFilterList(filterList: List<FilterUI>) {
-        val diffUtil = FilterDiffUtilCallback(
-            oldList = productFiltersAdapter.filterList,
-            newList = filterList
-        )
-
-        DiffUtil.calculateDiff(diffUtil).let { diffResult ->
-            productFiltersAdapter.filterList = filterList.toMutableList()
-            diffResult.dispatchUpdatesTo(productFiltersAdapter)
-        }
+        productFiltersAdapter.filterList = filterList.toMutableList()
+        productFiltersAdapter.notifyDataSetChanged()
     }
 
     private fun changeConcreteFilter(filterUI: FilterUI) {

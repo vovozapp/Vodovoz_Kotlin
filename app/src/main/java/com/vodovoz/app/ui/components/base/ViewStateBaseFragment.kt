@@ -10,6 +10,7 @@ import com.vodovoz.app.databinding.FragmentBaseBinding
 abstract class ViewStateBaseFragment : Fragment() {
 
     private lateinit var rootBinding: FragmentBaseBinding
+    private var isLoading = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,18 +32,21 @@ abstract class ViewStateBaseFragment : Fragment() {
     protected abstract fun update()
 
     protected fun onStateLoading() {
+        isLoading = true
         rootBinding.errorContainer.visibility = View.INVISIBLE
         rootBinding.contentContainer.visibility = View.INVISIBLE
         rootBinding.loadingContainer.visibility = View.VISIBLE
     }
 
     protected fun onStateSuccess() {
+        isLoading = false
         rootBinding.errorContainer.visibility = View.INVISIBLE
         rootBinding.loadingContainer.visibility = View.INVISIBLE
         rootBinding.contentContainer.visibility = View.VISIBLE
     }
 
     protected fun onStateError(errorMessage: String?) {
+        isLoading = false
         errorMessage?.let { rootBinding.errorMessage.text = errorMessage }
         rootBinding.contentContainer.visibility = View.INVISIBLE
         rootBinding.loadingContainer.visibility = View.INVISIBLE
@@ -50,13 +54,16 @@ abstract class ViewStateBaseFragment : Fragment() {
     }
 
     protected fun onStateHide() {
+        isLoading = false
         rootBinding.contentContainer.visibility = View.GONE
         rootBinding.loadingContainer.visibility = View.GONE
         rootBinding.errorContainer.visibility = View.GONE
     }
 
     protected fun initUpdateButton() {
-        rootBinding.update.setOnClickListener { update() }
+        rootBinding.update.setOnClickListener {
+            if (!isLoading) update()
+        }
     }
 
 }

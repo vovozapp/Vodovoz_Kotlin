@@ -11,6 +11,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 class ProductsSliderAdapter(
     private val onProductClickSubject: PublishSubject<Long>,
     private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
     private val cardWidth: Int
 ) : RecyclerView.Adapter<ProductSliderViewHolder>() {
 
@@ -26,6 +27,7 @@ class ProductsSliderAdapter(
             false
         ),
         onProductClickSubject = onProductClickSubject,
+        onFavoriteClickSubject = onFavoriteClickSubject,
         onChangeProductQuantitySubject = onChangeProductQuantitySubject,
         context = parent.context,
         cardWidth = cardWidth

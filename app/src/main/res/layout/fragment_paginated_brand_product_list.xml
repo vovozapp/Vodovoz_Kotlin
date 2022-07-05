@@ -11,6 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <TextView
         android:id="@+id/nextPage"
         android:layout_width="wrap_content"
@@ -18,9 +23,8 @@
         android:text="Показать еще"
         android:fontFamily="@font/rotonda"
         android:textStyle="bold"
+        android:textSize="16sp"
         android:textColor="@color/bluePrimary"
-        android:paddingTop="@dimen/primary_margin"
-        android:paddingBottom="@dimen/primary_space"
-        android:layout_marginStart="4dp"/>
+        android:padding="@dimen/primary_space"/>
 
 </LinearLayout>

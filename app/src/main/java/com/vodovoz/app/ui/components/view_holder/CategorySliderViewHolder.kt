@@ -16,6 +16,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 class CategorySliderViewHolder(
     private val binding: ViewHolderSliderProductCategoryBinding,
     private val onProductClickSubject: PublishSubject<Long>,
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
     private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
     private val context: Context,
     private val cardWidth: Int
@@ -24,6 +25,7 @@ class CategorySliderViewHolder(
     private val productsSliderAdapter = ProductsSliderAdapter(
         onProductClickSubject = onProductClickSubject,
         onChangeProductQuantitySubject = onChangeProductQuantitySubject,
+        onFavoriteClickSubject = onFavoriteClickSubject,
         cardWidth = cardWidth
     )
 

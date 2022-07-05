@@ -4,8 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderSliderDetailPictureBinding
+import com.vodovoz.app.ui.components.interfaces.IOnProductClick
+import com.vodovoz.app.ui.components.interfaces.IOnProductDetailPictureClick
 
-class DetailPictureSliderAdapter : RecyclerView.Adapter<DetailPictureSliderViewHolder>() {
+class DetailPictureSliderAdapter(
+    private val iOnProductDetailPictureClick: IOnProductDetailPictureClick
+) : RecyclerView.Adapter<DetailPictureSliderViewHolder>() {
 
     var detailPictureUrlList =  listOf<String>()
 
@@ -18,6 +22,7 @@ class DetailPictureSliderAdapter : RecyclerView.Adapter<DetailPictureSliderViewH
             parent,
             false
         ),
+        iOnProductDetailPictureClick = iOnProductDetailPictureClick,
         context = parent.context
     )
 

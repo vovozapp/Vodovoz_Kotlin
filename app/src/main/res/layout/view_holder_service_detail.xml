@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/primary_corner_radius"
+    app:cardElevation="@dimen/card_elevation">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/primary_margin">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blackTextDark"
+            android:fontFamily="@font/rotonda"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_margin="@dimen/primary_margin"
+            tools:text="Название"/>
+
+        <TextView
+            android:id="@+id/detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blackTextPrimary"
+            android:fontFamily="@font/rotonda"
+            android:textSize="14sp"
+            android:layout_margin="@dimen/primary_margin"
+            tools:text="Детальная информация"/>
+
+        <TextView
+            android:id="@+id/moreDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:fontFamily="@font/rotonda"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:background="@drawable/background_button_primary"
+            android:paddingStart="@dimen/primary_space"
+            android:paddingEnd="@dimen/primary_space"
+            android:paddingTop="@dimen/primary_margin"
+            android:paddingBottom="@dimen/primary_margin"
+            android:gravity="center"
+            android:layout_gravity="end"
+            android:layout_margin="@dimen/primary_margin"
+            android:text="Подробнее" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

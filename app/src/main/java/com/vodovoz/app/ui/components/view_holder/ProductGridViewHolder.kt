@@ -26,7 +26,9 @@ class ProductGridViewHolder(
     private val context: Context
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val detailPictureSliderAdapter = DetailPictureSliderAdapter()
+    private val detailPictureSliderAdapter = DetailPictureSliderAdapter(
+        iOnProductDetailPictureClick = { onProductClickSubject.onNext(productUI.id) }
+    )
 
     private val amountControllerTimer = object: CountDownTimer(3000, 3000) {
         override fun onTick(millisUntilFinished: Long) {}
@@ -38,7 +40,6 @@ class ProductGridViewHolder(
 
     init {
         binding.root.setOnClickListener { onProductClickSubject.onNext(productUI.id) }
-        binding.detailPicturePager.setOnClickListener { onProductClickSubject.onNext(productUI.id) }
         binding.oldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.detailPicturePager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.detailPicturePager.adapter = detailPictureSliderAdapter
@@ -80,8 +81,6 @@ class ProductGridViewHolder(
         binding.amountController.circleAmount.visibility = View.GONE
         binding.amountController.add.visibility = View.GONE
         binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
-        binding.price.visibility = View.GONE
-        binding.oldPrice.visibility = View.GONE
         amountControllerTimer.start()
     }
 
@@ -91,8 +90,6 @@ class ProductGridViewHolder(
         }
         binding.amountController.add.visibility = View.VISIBLE
         binding.amountController.amountControllerDeployed.visibility = View.GONE
-        binding.price.visibility = View.VISIBLE
-        binding.oldPrice.visibility = View.VISIBLE
     }
 
     private lateinit var productUI: ProductUI

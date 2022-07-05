@@ -25,7 +25,9 @@ class CartItemNotAvailableViewHolder(
     private val context: Context
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val detailPictureSliderAdapter = DetailPictureSliderAdapter()
+    private val detailPictureSliderAdapter = DetailPictureSliderAdapter(
+        iOnProductDetailPictureClick = { onProductClickSubject.onNext(productUI.id) }
+    )
 
     init {
         binding.root.setOnClickListener { onProductClickSubject.onNext(productUI.id) }

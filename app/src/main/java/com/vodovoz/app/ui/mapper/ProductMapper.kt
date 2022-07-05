@@ -13,6 +13,7 @@ object ProductMapper {
         id = id,
         name = name,
         detailPicture = detailPicture,
+        isFavorite = isFavorite,
         oldPrice = oldPrice,
         newPrice = newPrice,
         status = status,
@@ -20,7 +21,7 @@ object ProductMapper {
         rating = rating,
         cartQuantity = cartQuantity,
         commentAmount = commentAmount,
-        isCanReturnBottles = isCanReturnBottles!!,
+        isCanReturnBottles = isCanReturnBottles,
         detailPictureList = detailPictureList
     )
 

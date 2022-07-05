@@ -1,5 +1,6 @@
 package com.vodovoz.app.ui.components.fragment.slider.popular_slider
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -27,6 +28,11 @@ class PopularCategoriesSliderFragment : BaseHiddenFragment() {
     private val onPopularCategoryClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val popularCategoriesSliderAdapter = PopularCategoriesSliderAdapter(onPopularCategoryClickSubject)
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        subscribeSubjects()
+    }
+
     override fun setContentView(
         inflater: LayoutInflater,
         container: ViewGroup
@@ -38,7 +44,6 @@ class PopularCategoriesSliderFragment : BaseHiddenFragment() {
 
     override fun initView() {
         initPopularRecyclerView()
-        subscribeSubjects()
     }
 
     private fun initPopularRecyclerView() {

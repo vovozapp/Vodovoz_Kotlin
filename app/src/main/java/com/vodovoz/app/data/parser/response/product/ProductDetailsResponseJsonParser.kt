@@ -71,9 +71,9 @@ object ProductDetailsResponseJsonParser {
             detailPictureList.addAll(getJSONObject("MORE_PHOTO").getJSONArray("VALUE").parseDetailPictureList())
         }
 
-        val youtubeVideoCode: String? = null
+        var youtubeVideoCode: String? = null
         if (has("YOUTUBE_VIDEO")) {
-            getJSONArray("YOUTUBE_VIDEO").getJSONObject(0).getString("VIDEO")
+            youtubeVideoCode = getJSONArray("YOUTUBE_VIDEO").getJSONObject(0).getString("VIDEO")
         }
 
         var brandEntity: BrandEntity? = null

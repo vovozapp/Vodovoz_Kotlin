@@ -1,5 +1,6 @@
 package com.vodovoz.app.ui.components.fragment.product_filters
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.mapper.FilterBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.FilterUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
+import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -30,13 +32,6 @@ class ProductFiltersViewModel(
     var customFilterBundle: FiltersBundleUI? = null
     var categoryId: Long? = null
     var defaultFilterBundle: FiltersBundleUI? = null
-        set(value) {
-            field = value
-            field?.let {
-                validateData()
-                filtersBundleUIMLD.value = field
-            }
-        }
 
     fun setArgs(filterBundle: FiltersBundleUI, categoryId: Long) {
         this.categoryId = categoryId
@@ -57,6 +52,8 @@ class ProductFiltersViewModel(
                         is ResponseEntity.Error -> viewStateMLD.value = ViewState.Error(response.errorMessage)
                         is ResponseEntity.Success -> {
                             defaultFilterBundle = response.data.mapToUI()
+                            mergeFiltersBundles()
+                            filtersBundleUIMLD.value = defaultFilterBundle
                             viewStateMLD.value = ViewState.Success()
                         }
                     }
@@ -65,7 +62,7 @@ class ProductFiltersViewModel(
             ).addTo(compositeDisposable)
     }
 
-    private fun validateData() {
+    private fun mergeFiltersBundles() {
         customFilterBundle?.let { noNullCustomFilterBundle ->
             defaultFilterBundle?.let { noNullDefaultFilterBundle ->
                 noNullCustomFilterBundle.filterUIList.forEach { customFilter ->
@@ -82,14 +79,24 @@ class ProductFiltersViewModel(
     }
 
     fun changeConcreteFilter(concreteFilter: FilterUI) {
+        Log.i(LogSettings.ID_LOG, "SIZE PRE ${customFilterBundle?.filterUIList?.size}")
+        Log.i(LogSettings.ID_LOG, "CHANGE")
         if (concreteFilter.filterValueList.isNotEmpty()) {
+            Log.i(LogSettings.ID_LOG, "NOT EMPTY")
             customFilterBundle?.let { noNullCustomFilterBundle ->
                 when(val index = noNullCustomFilterBundle.filterUIList.indexOfFirst { it.code == concreteFilter.code }) {
-                    -1 -> noNullCustomFilterBundle.filterUIList.add(concreteFilter)
-                    else -> noNullCustomFilterBundle.filterUIList[index] = concreteFilter
+                    -1 -> {
+                        noNullCustomFilterBundle.filterUIList.add(concreteFilter)
+                        Log.i(LogSettings.ID_LOG, "-1")
+                    }
+                    else -> {
+                        noNullCustomFilterBundle.filterUIList[index] = concreteFilter
+                        Log.i(LogSettings.ID_LOG, "ELSE")
+                    }
                 }
-                filtersBundleUIMLD.value = customFilterBundle
             }
+            mergeFiltersBundles()
+            filtersBundleUIMLD.value = defaultFilterBundle
         }
     }
 

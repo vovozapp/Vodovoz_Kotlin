@@ -39,6 +39,11 @@ class OrderSliderFragment : BaseHiddenFragment() {
     private val onOrderClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val orderSliderAdapter = OrderSliderAdapter(onOrderClickSubject)
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        subscribeSubjects()
+    }
+
     override fun setContentView(
         inflater: LayoutInflater,
         container: ViewGroup
@@ -50,7 +55,6 @@ class OrderSliderFragment : BaseHiddenFragment() {
 
     override fun initView() {
         initOrderPager()
-        subscribeSubjects()
     }
 
     private fun initOrderPager() {

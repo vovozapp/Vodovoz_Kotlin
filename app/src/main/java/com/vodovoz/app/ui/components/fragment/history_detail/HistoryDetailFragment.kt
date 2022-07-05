@@ -2,37 +2,47 @@ package com.vodovoz.app.ui.components.fragment.history_detail
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.vodovoz.app.databinding.FragmentHistoryDetailBinding
+import com.vodovoz.app.ui.components.interfaces.IOnInvokeAction
+import com.vodovoz.app.ui.components.interfaces.IOnChangeHistory
 import com.vodovoz.app.ui.config.UIConfig
-import com.vodovoz.app.ui.extensions.BannerActionExtensions.invoke
 import com.vodovoz.app.ui.model.BannerUI
 import com.vodovoz.app.ui.model.HistoryUI
+import com.vodovoz.app.util.LogSettings
 import jp.shts.android.storiesprogressview.StoriesProgressView
 
 class HistoryDetailFragment : Fragment() {
 
     companion object {
+        private const val HISTORY = "HISTORY"
         fun newInstance(
-            historyUI: HistoryUI,
-            iChangeHistory: IChangeHistory
+            historyUI: HistoryUI
         ) = HistoryDetailFragment().apply {
-            this.historyUI = historyUI
-            this.iChangeHistory = iChangeHistory
+            arguments = bundleOf(Pair(HISTORY, historyUI))
         }
     }
 
     private lateinit var historyUI: HistoryUI
-    private lateinit var iChangeHistory: IChangeHistory
+    private lateinit var iOnChangeHistory: IOnChangeHistory
+    private lateinit var iOnInvokeAction: IOnInvokeAction
 
     private lateinit var binding: FragmentHistoryDetailBinding
-
     private var currentBannerIndex = 0
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        getArgs()
+    }
+
+    private fun getArgs() {
+        historyUI = requireArguments().getParcelable(HISTORY)!!
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,6 +54,7 @@ class HistoryDetailFragment : Fragment() {
         false
     ).apply {
         binding = this
+        initCallbacks()
         initView()
     }.root
 
@@ -64,35 +75,38 @@ class HistoryDetailFragment : Fragment() {
                     }
 
                     override fun onComplete() {
-                        currentBannerIndex = 0
-                        iChangeHistory.nextHistory()
+                        iOnChangeHistory.nextHistory()
                     }
                 }
             )
 
-            image.setOnClickListener {
-                binding.storiesProgress.skip()
-            }
-
             close.setOnClickListener {
-                parentFragment?.findNavController()?.popBackStack()
+                iOnChangeHistory.close()
             }
 
             primaryButtonContainer.setOnClickListener {
-                historyUI.bannerUIList[currentBannerIndex].actionEntity?.invoke(requireParentFragment().findNavController(), requireActivity())
+                historyUI.bannerUIList[currentBannerIndex].actionEntity?.let { actionEntity ->
+                    iOnInvokeAction.onInvokeAction(actionEntity)
+                }
+            }
+
+            binding.previousHistory.setOnClickListener {
+                binding.storiesProgress.reverse()
+            }
+
+            binding.nextHistory.setOnClickListener {
+                if (currentBannerIndex == historyUI.bannerUIList.indices.last) {
+                    iOnChangeHistory.nextHistory()
+                } else {
+                    binding.storiesProgress.skip()
+                }
             }
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        restartStories()
-    }
-
-    private fun restartStories() {
-        binding.storiesProgress.startStories()
-        updateBanner(historyUI.bannerUIList[currentBannerIndex])
-        binding.storiesProgress.startStories(currentBannerIndex)
+    private fun initCallbacks() {
+        iOnChangeHistory = requireParentFragment() as IOnChangeHistory
+        iOnInvokeAction = requireParentFragment() as IOnInvokeAction
     }
 
     private fun reduceBannerIndex() {
@@ -106,21 +120,35 @@ class HistoryDetailFragment : Fragment() {
     }
 
     private fun updateBanner(bannerUI: BannerUI) {
-        when(bannerUI.actionEntity?.action) {
-            null -> binding.primaryButtonContainer.visibility = View.GONE
-            else -> {
-                binding.primaryButton.text = bannerUI.actionEntity.action
-                binding.primaryButtonContainer.setCardBackgroundColor(Color.parseColor(bannerUI.actionEntity.actionColor))
-            }
+        bannerUI.actionEntity?.action?.let { action ->
+            binding.primaryButton.text = action
         }
-
+        bannerUI.actionEntity?.actionColor?.let { color ->
+            binding.primaryButtonContainer.setCardBackgroundColor(Color.parseColor(color))
+        }
         Glide.with(requireContext())
             .load(bannerUI.detailPicture)
             .into(binding.image)
     }
 
-    interface IChangeHistory {
-        fun nextHistory()
+    private fun startStories() {
+        currentBannerIndex = 0
+        updateBanner(historyUI.bannerUIList[currentBannerIndex])
+        binding.storiesProgress.startStories()
     }
 
+    override fun onResume() {
+        super.onResume()
+        startStories()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.image.setImageDrawable(null)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.storiesProgress.destroy()
+    }
 }

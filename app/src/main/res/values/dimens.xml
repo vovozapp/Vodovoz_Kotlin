@@ -16,5 +16,5 @@
 
     <dimen name="margin_bottom_button">82dp</dimen>
     <dimen name="root_elevation">1dp</dimen>
-    <dimen name="cart_elevation">3dp</dimen>
+    <dimen name="card_elevation">3dp</dimen>
 </resources>

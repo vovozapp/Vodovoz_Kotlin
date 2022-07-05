@@ -1,6 +1,7 @@
 package com.vodovoz.app.ui.components.fragment.slider.countries_slider
 
 import android.graphics.drawable.Drawable
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -15,11 +16,13 @@ import com.vodovoz.app.ui.components.base.*
 import com.vodovoz.app.ui.components.diffUtils.CountrySliderDiffUtilCallback
 import com.vodovoz.app.ui.components.interfaces.IOnCountryClick
 import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
+import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.CountryUI
 import com.vodovoz.app.ui.model.custom.CountriesSliderBundleUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 
@@ -27,12 +30,19 @@ class CountriesSliderFragment : BaseHiddenFragment() {
 
     private lateinit var countryUIList: List<CountryUI>
     private lateinit var iOnCountryClick: IOnCountryClick
+    private lateinit var countriesSliderBundleUI: CountriesSliderBundleUI
 
     private lateinit var binding: FragmentSliderCountryBinding
 
     private val compositeDisposable = CompositeDisposable()
+    private val onAdapterReadySubject: BehaviorSubject<CountriesSliderBundleUI> = BehaviorSubject.create()
     private val onCountryClickSubject: PublishSubject<Long> = PublishSubject.create()
     private lateinit var countriesSliderAdapter: CountriesSliderAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        subscribeSubjects()
+    }
 
     override fun setContentView(
         inflater: LayoutInflater,
@@ -45,7 +55,6 @@ class CountriesSliderFragment : BaseHiddenFragment() {
 
     override fun initView() {
         initCountriesRecyclerView()
-        subscribeSubjects()
     }
 
     private fun initCountriesRecyclerView() {
@@ -60,6 +69,10 @@ class CountriesSliderFragment : BaseHiddenFragment() {
                 cardWidth = (width - (space * 4))/3
             )
             binding.countriesRecycler.adapter = countriesSliderAdapter
+            onAdapterReadySubject.subscribeBy { countriesSliderBundleUI ->
+                this.countriesSliderBundleUI = countriesSliderBundleUI
+                updateView(countriesSliderBundleUI)
+            }.addTo(compositeDisposable)
         }
     }
 
@@ -74,6 +87,10 @@ class CountriesSliderFragment : BaseHiddenFragment() {
     }
 
     fun updateData(countrySliderBundleUI: CountriesSliderBundleUI) {
+        onAdapterReadySubject.onNext(countrySliderBundleUI)
+    }
+
+    private fun updateView(countrySliderBundleUI: CountriesSliderBundleUI) {
         updateCountriesRecycler(countrySliderBundleUI.countryUIList)
 
         Glide.with(requireContext())

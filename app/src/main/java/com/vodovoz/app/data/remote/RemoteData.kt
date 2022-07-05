@@ -1,9 +1,12 @@
 package com.vodovoz.app.data.remote
 
+import android.util.Log
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
 import com.vodovoz.app.data.model.features.CountriesSliderBundleEntity
+import com.vodovoz.app.data.model.features.DeliveryZonesBundleEntity
+import com.vodovoz.app.data.model.features.FavoriteProductsHeaderBundleEntity
 import com.vodovoz.app.data.parser.response.banner.AdvertisingBannersSliderResponseJsonParser.parseAdvertisingBannersSliderResponse
 import com.vodovoz.app.data.parser.response.banner.CategoryBannersSliderResponseJsonParser.parseCategoryBannersSliderResponse
 import com.vodovoz.app.data.parser.response.banner.ProductsByBannerResponseJsonParser.parseProductsByBannerResponse
@@ -20,6 +23,7 @@ import com.vodovoz.app.data.parser.response.category.AllFiltersByCategoryRespons
 import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
 import com.vodovoz.app.data.parser.response.category.ConcreteFilterResponseJsonParser.parseConcreteFilterResponse
 import com.vodovoz.app.data.parser.response.comment.CommentsSliderResponseJsonParser.parseCommentsSliderResponse
+import com.vodovoz.app.data.parser.response.comment.SendCommentAboutProductResponseJsonParser.parseSendCommentAboutProductResponse
 import com.vodovoz.app.data.parser.response.country.CountryHeaderResponseJsonParser.parseCountryHeaderResponse
 import com.vodovoz.app.data.parser.response.country.CountrySliderResponseJsonParser.parseCountriesSliderResponse
 import com.vodovoz.app.data.parser.response.discount.DiscountHeaderResponseJsonParser.parseDiscountHeaderResponse
@@ -27,7 +31,11 @@ import com.vodovoz.app.data.parser.response.discount.DiscountSliderResponseParse
 import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseBottomSliderResponse
 import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseTopSliderResponse
 import com.vodovoz.app.data.parser.response.doubleSlider.SliderHeaderResponseJsonParser.parseSliderHeaderResponse
+import com.vodovoz.app.data.parser.response.favorite.AddToFavoriteResponseJsonParser.parseAddToFavoriteResponse
+import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
+import com.vodovoz.app.data.parser.response.favorite.RemoveFromFavoriteResponseJsonParser.parseRemoveFromFavoriteResponse
 import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonParser.parseHistoriesSliderResponse
+import com.vodovoz.app.data.parser.response.map.DeliveryZonesBundleResponseJsonParser.parseDeliveryZonesBundleResponse
 import com.vodovoz.app.data.parser.response.novelties.NoveltiesHeaderResponseJsonParser.parseNoveltiesHeaderResponse
 import com.vodovoz.app.data.parser.response.novelties.NoveltiesSliderResponseParser.parseNoveltiesSliderResponse
 import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
@@ -40,16 +48,50 @@ import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonP
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionSliderResponseJsonParser.parsePromotionSliderResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionsByBannerResponseJsonParser.parsePromotionsByBannerResponse
+import com.vodovoz.app.data.parser.response.service.AboutServicesResponseJsonParser.parseAboutServicesResponse
 import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
 import com.vodovoz.app.data.parser.response.user.RegisterResponseJsonParser.parseRegisterResponse
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
+import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
 
 class RemoteData(
     private val api: Api
 ) : RemoteDataSource {
+
+    //Общая информация о предоставляемых услугах
+    override fun fetchAboutServices(): Single<ResponseEntity<AboutServicesBundleEntity>> = api.fetchServicesResponse(
+        action = "glav"
+    ).flatMap { Single.just(it.parseAboutServicesResponse()) }
+
+    //Отправить отзыв о продукте
+    override fun sendCommentAboutProduct(
+        productId: Long,
+        rating: Int,
+        comment: String,
+        userId: Long
+    ): Single<ResponseEntity<String>> = rxSingle {
+        api.fetchCommentsResponse(
+            blockId = 12,
+            action = "add",
+            productId = productId,
+            rating = rating,
+            comment = comment,
+            userId = userId
+        )
+    }.flatMap { Single.just(it.body()!!.parseSendCommentAboutProductResponse()) }
+
+    //Все отзывы о продукте
+    override suspend fun fetchAllCommentsByProduct(
+        productId: Long,
+        page: Int
+    )= api.fetchCommentsResponse(
+        action = "detail",
+        productId = productId,
+        page = page
+    )
 
     //Всплывающая новость
     override fun fetchPopupNews(userId: Long?): Single<ResponseEntity<PopupNewsEntity>> = api.fetchNewsResponse(
@@ -480,5 +522,73 @@ class RemoteData(
         action = "details",
         userId = userId
     ).flatMap { Single.just(it.parseUserDataResponse()) }
+
+    //Добавить в избранное для авторизованного пользователя
+    override fun addToFavorite(
+        productIdList: List<Long>,
+        userId: Long
+    ): Single<ResponseEntity<String>> = api.fetchChangeFavoriteResponse(
+        blockId = 12,
+        action = "add",
+        productIdList = StringBuilder().apply {
+            productIdList.forEach { productId ->
+                append(productId).append(",")
+            }
+        }.toString(),
+        userId = userId
+    ).flatMap { Single.just(it.parseAddToFavoriteResponse()) }
+
+    //Удалить из избранного для авторизованного пользователя
+    override fun removeFromFavorite(
+        productId: Long,
+        userId: Long
+    ): Single<ResponseEntity<String>> = api.fetchChangeFavoriteResponse(
+        blockId = 12,
+        action = "del",
+        productIdList = productId.toString(),
+        userId = userId
+    ).flatMap { Single.just(it.parseRemoveFromFavoriteResponse()) }
+
+    //Основная информация об избранных продуктах
+    override fun fetchFavoriteProductsHeaderBundleResponse(
+        userId: Long?,
+        productIdListStr: String?
+    ): Single<ResponseEntity<FavoriteProductsHeaderBundleEntity>> = rxSingle {
+        api.fetchFavoriteResponse(
+            userId = userId,
+            productIdList = productIdListStr,
+            action = "nalichie"
+        )
+    }.flatMap {
+        Log.i(LogSettings.ID_LOG, "RES ${it.toString()}")
+        Single.just(it.body()!!.parseFavoriteProductsHeaderBundleResponse())
+    }
+
+    override suspend fun fetchFavoriteProductsResponse(
+        userId: Long?,
+        productIdListStr: String,
+        categoryId: Long?,
+        sort: String?,
+        orientation: String?,
+        page: Int?,
+        isAvailable: Boolean?,
+    ) = api.fetchFavoriteResponse(
+        userId = userId,
+        productIdList = productIdListStr,
+        categoryId = categoryId,
+        sort = sort,
+        orientation = orientation,
+        action = when(isAvailable) {
+            true -> "nalichie"
+            false -> "netnalichi"
+            else -> null
+        },
+        page = page
+    )
+
+    //Информация о зонах доставки
+    override fun fetchDeliveryZonesResponse(): Single<ResponseEntity<DeliveryZonesBundleEntity>> = api.fetchMapResponse(
+        action = "tochkakarta"
+    ).flatMap { Single.just(it.parseDeliveryZonesBundleResponse()) }
 
 }

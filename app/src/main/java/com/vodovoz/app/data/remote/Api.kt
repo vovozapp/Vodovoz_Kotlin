@@ -13,7 +13,6 @@ interface Api {
     @GET("/newmobile/korzina/function/guaty/index.php")
     fun fetchCookie(): Single<Response<ResponseBody>>
 
-
     //Отзывы
     @GET("/newmobile/otzivomagaz.php")
     fun fetchCommentResponse(
@@ -21,7 +20,6 @@ interface Api {
         @Query("limit") limit: Int? = null,
         @Query("userid") userId: Long? = null,
         @Query("text") comment: String? = null,
-//        @Query("rating")
     ): Single<ResponseBody>
 
     //"newmobile/otzivomagaz.php?otziv=add&userid=" + User.getInstance().getuser_id().toString() + "&text=".toString() + editTextComments.getText().toString().toString() + "&rating=" + ratingBar.getRating()
@@ -240,7 +238,55 @@ interface Api {
         @Query("platform") platform: String? = null,
     ): Single<ResponseBody>
 
+    @GET("/newmobile/comments.php")
+    suspend fun fetchCommentsResponse(
+        @Query("iblock_id") blockId: Long? = null,
+        @Query("action") action: String? = null,
+        @Query("id") productId: Long? = null,
+        @Query("nav") page: Int? = null,
+        @Query("rating_value") rating: Int? = null,
+        @Query("message") comment: String? = null,
+        @Query("userid") userId: Long? = null
+    ): Response<ResponseBody>
 
+    @GET("/newmobile/glavnaya/uslygi/uslygi.php")
+    fun fetchServicesResponse(
+        @Query("action") action: String? = null
+    ): Single<ResponseBody>
+
+    //&sort=popylyar&ascdesc=desc&nav
+    @GET("/newmobile/izbrannoe.php?")
+    suspend fun fetchFavoriteResponse(
+        @Query("id") productIdList: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("sort") sort: String? = null,
+        @Query("ascdesc") orientation: String? = null,
+        @Query("nav") page: Int? = null,
+        @Query("sect") categoryId: Long? = null,
+        @Query("action") action: String? = null
+    ): Response<ResponseBody>
+
+    @GET("/newmobile/osnova/izbrannoe/adddel.php")
+    fun fetchChangeFavoriteResponse(
+        @Query("iblock") blockId: Long? = null,
+        @Query("action") action: String? = null,
+        @Query("id") productIdList: String? = null,
+        @Query("userid") userId: Long? = null
+    ): Single<ResponseBody>
+
+    @GET("/newmobile/profile/karta/index.php")
+    fun fetchMapResponse(
+        @Query("action") action: String? = null
+    ): Single<ResponseBody>
+
+    ///newmobile/osnova/izbrannoe/adddel.php?action=del&id="+id+"&iblock=12&userid="+User.getInstance().getuser_id()
+    //m.vodovoz.ru/newmobile/izbrannoe.php?id=&userid=515
+
+
+    //m.vodovoz.ru/newmobile/glavnaya/uslygi/uslygi.php?action=glav
+    //newmobile/glavnaya/uslygi/uslygi.php?action=glav
+    //newmobile/comments.php?iblock_id=12&action=add&id="+listRazdel.get(position).getID()+"&rating_value="+ratingBarComment.getRating()+"&message="+editTextComments.getText().toString()+"&userid="+User.getInstance().getuser_id())
+    //newmobile/comments.php?action=detail&id="+IdProducts+"&nav="+currentPage
     ///newmobile/korzina/function/delkorzina/index.php?action=delkorzina
     ///newmobile/korzina/index.php?action=getbasket&userid="+user_id
     ///newmobile/korzina/function/delkorzina/index.php?action=delkorzina

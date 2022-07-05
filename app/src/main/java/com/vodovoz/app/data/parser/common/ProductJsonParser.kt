@@ -51,6 +51,7 @@ object ProductJsonParser {
                 true -> getInt("QUANTITY")
                 false -> 0
             },
+            isFavorite = getBoolean("FAVORITE"),
             detailPictureList = parseDetailPictureList(detailPicture),
             isCanReturnBottles = when(has("CATALOG")) {
                 true -> getJSONObject("CATALOG").parseIsCanReturnBottles()

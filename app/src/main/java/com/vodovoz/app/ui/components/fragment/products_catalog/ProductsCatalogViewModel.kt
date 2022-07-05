@@ -19,9 +19,11 @@ class ProductsCatalogViewModel(
 ) : ViewModel() {
 
     private val viewStateMLD = MutableLiveData<ViewState>()
+    private val errorMLD = MutableLiveData<String>()
     private val productUIListMLD = MutableLiveData<List<ProductUI>>()
 
     val viewStateLD: LiveData<ViewState> = viewStateMLD
+    val errorLD: LiveData<String> = errorMLD
     val productUIListLD: LiveData<List<ProductUI>> = productUIListMLD
 
     private val compositeDisposable = CompositeDisposable()
@@ -56,6 +58,18 @@ class ProductsCatalogViewModel(
     private fun getProductsByDataSource(dataSource: ProductsCatalogFragment.DataSource) = when(dataSource) {
         is ProductsCatalogFragment.DataSource.BannerProducts ->
             dataRepository.fetchProductsByBanner(dataSource.categoryId)
+    }
+
+    fun changeCart(productUI: ProductUI) {
+        dataRepository.changeCart(
+            productId = productUI.id,
+            quantity = productUI.cartQuantity
+        ).subscribeBy(
+            onComplete = {},
+            onError = { throwable ->
+                errorMLD.value = throwable.message ?: "Неизвестная ошибка"
+            }
+        ).addTo(compositeDisposable)
     }
 
     override fun onCleared() {

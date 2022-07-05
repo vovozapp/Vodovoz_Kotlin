@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,13 +19,16 @@ import com.vodovoz.app.databinding.ViewCustomTabBinding
 import com.vodovoz.app.ui.components.adapter.CategoriesAdapter
 import com.vodovoz.app.ui.components.base.BaseHiddenFragment
 import com.vodovoz.app.ui.components.interfaces.IOnChangeProductQuantity
+import com.vodovoz.app.ui.components.interfaces.IOnFavoriteClick
 import com.vodovoz.app.ui.components.interfaces.IOnProductClick
 import com.vodovoz.app.ui.components.interfaces.IOnShowAllProductsClick
 import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class ProductsSliderFragment : BaseHiddenFragment() {
@@ -43,11 +47,14 @@ class ProductsSliderFragment : BaseHiddenFragment() {
     private lateinit var iOnProductClick: IOnProductClick
     private lateinit var iOnChangeProductQuantity: IOnChangeProductQuantity
     private lateinit var iOnShowAllProductsClick: IOnShowAllProductsClick
+    private lateinit var iOnFavoriteClick: IOnFavoriteClick
 
     private lateinit var binding: FragmentSliderProductBinding
     private val space: Int by lazy { resources.getDimension(R.dimen.primary_space).toInt() }
 
     private val compositeDisposable = CompositeDisposable()
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
+    private val onAdapterReadySubject: BehaviorSubject<List<CategoryDetailUI>> = BehaviorSubject.create()
     private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
 
@@ -57,10 +64,25 @@ class ProductsSliderFragment : BaseHiddenFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getArgs()
+        subscribeSubjects()
     }
 
     private fun getArgs() {
         config = requireArguments().getParcelable(CONFIG)!!
+    }
+
+    private fun subscribeSubjects() {
+        onProductClickSubject.subscribeBy { productId ->
+            iOnProductClick.onProductClick(productId)
+        }.addTo(compositeDisposable)
+
+        onChangeProductQuantitySubject.subscribeBy { pair ->
+            iOnChangeProductQuantity.onChangeProductQuantity(pair.first, pair.second)
+        }.addTo(compositeDisposable)
+
+        onFavoriteClickSubject.subscribeBy { pair ->
+            iOnFavoriteClick.onFavoriteClick(pair)
+        }.addTo(compositeDisposable)
     }
 
     override fun setContentView(
@@ -76,7 +98,7 @@ class ProductsSliderFragment : BaseHiddenFragment() {
         initCategoryRecycler()
         initTabbedMediator()
         initTabLayout()
-        subscribeSubjects()
+        initShowAllProductsButtons()
     }
 
     private fun initCategoryRecycler() {
@@ -86,9 +108,22 @@ class ProductsSliderFragment : BaseHiddenFragment() {
             categoriesAdapter = CategoriesAdapter(
                 onChangeProductQuantitySubject = onChangeProductQuantitySubject,
                 onProductClickSubject = onProductClickSubject,
+                onFavoriteClickSubject = onFavoriteClickSubject,
                 cardWidth = (width - (space * 3))/2
             )
             binding.categoryRecycler.adapter = categoriesAdapter
+            onAdapterReadySubject.subscribeBy { categoryDetailUIList ->
+                this.categoryDetailUIList = categoryDetailUIList
+                updateView(categoryDetailUIList)
+            }.addTo(compositeDisposable)
+        }
+    }
+
+    private fun initShowAllProductsButtons() {
+        binding.showAll.setOnClickListener {
+            categoryDetailUIList.first().id?.let { categoryId ->
+                iOnShowAllProductsClick.onShowAllProductsClick(categoryId)
+            }
         }
     }
 
@@ -120,18 +155,12 @@ class ProductsSliderFragment : BaseHiddenFragment() {
         )
     }
 
-    private fun subscribeSubjects() {
-        onProductClickSubject.subscribeBy { productId ->
-            iOnProductClick.onProductClick(productId)
-        }.addTo(compositeDisposable)
-
-        onChangeProductQuantitySubject.subscribeBy { pair ->
-            iOnChangeProductQuantity.onChangeProductQuantity(pair.first, pair.second)
-        }.addTo(compositeDisposable)
-    }
 
     fun updateData(categoryDetailUIList: List<CategoryDetailUI>) {
-        this.categoryDetailUIList = categoryDetailUIList
+        onAdapterReadySubject.onNext(categoryDetailUIList)
+    }
+
+    private fun updateView(categoryDetailUIList: List<CategoryDetailUI>) {
         updateCategoryTabs(categoryDetailUIList)
         updateCategoryRecycler(categoryDetailUIList)
     }
@@ -206,11 +235,13 @@ class ProductsSliderFragment : BaseHiddenFragment() {
     fun initCallbacks(
         iOnProductClick: IOnProductClick,
         iOnChangeProductQuantity: IOnChangeProductQuantity,
-        iOnShowAllProductsClick: IOnShowAllProductsClick
+        iOnShowAllProductsClick: IOnShowAllProductsClick,
+        iOnFavoriteClick: IOnFavoriteClick
     ) {
         this.iOnProductClick = iOnProductClick
         this.iOnChangeProductQuantity = iOnChangeProductQuantity
         this.iOnShowAllProductsClick = iOnShowAllProductsClick
+        this.iOnFavoriteClick = iOnFavoriteClick
     }
 
     override fun onDestroy() {

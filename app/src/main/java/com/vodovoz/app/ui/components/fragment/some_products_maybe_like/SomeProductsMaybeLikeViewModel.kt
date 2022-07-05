@@ -19,9 +19,11 @@ class SomeProductsMaybeLikeViewModel(
 ) : ViewModel() {
 
     private val viewStateMLD = MutableLiveData<ViewState>()
+    private val errorMLD = MutableLiveData<String>()
     private val productUIListMLD = MutableLiveData<List<ProductUI>>()
 
     val viewStateLD: LiveData<ViewState> = viewStateMLD
+    val errorLD: LiveData<String> = errorMLD
     val productUIListLD: LiveData<List<ProductUI>> = productUIListMLD
 
     private val compositeDisposable = CompositeDisposable()
@@ -37,21 +39,38 @@ class SomeProductsMaybeLikeViewModel(
         updateData()
     }
 
+    var isUpdatedData = false
+
     fun updateData() {
         dataRepository
-            .fetchMaybeLikeProducts(
-                page = pageIndex
-            )
+            .fetchMaybeLikeProducts(page = pageIndex)
             .subscribeOn(Schedulers.io())
-            .doOnSubscribe { viewStateMLD.value = ViewState.Loading() }
+            .doOnSubscribe {
+                if (!isUpdatedData) {
+                    viewStateMLD.value = ViewState.Loading()
+                }
+            }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onSuccess = { response ->
                     when(response) {
-                        is ResponseEntity.Error -> viewStateMLD.value = ViewState.Hide()
-                        is ResponseEntity.Hide -> viewStateMLD.value = ViewState.Hide()
+                        is ResponseEntity.Error -> {
+                            pageIndex--
+                            if (isUpdatedData) {
+                                errorMLD.value = response.errorMessage
+                            } else {
+                                viewStateMLD.value = ViewState.Hide()
+                            }
+                        }
+                        is ResponseEntity.Hide -> {
+                            pageIndex--
+                            if (!isUpdatedData) {
+                                viewStateMLD.value = ViewState.Hide()
+                            }
+                        }
                         is ResponseEntity.Success -> {
                             response.data.mapToUI().let { data ->
+                                isUpdatedData = true
                                 pageAmount = data.pageAmount
                                 productUIListMLD.value = data.productUIList
                                 viewStateMLD.value = ViewState.Success()
@@ -59,12 +78,27 @@ class SomeProductsMaybeLikeViewModel(
                         }
                     }
                 },
-                onError = { viewStateMLD.value = ViewState.Error(it.message!!) }
+                onError = {
+                    pageIndex--
+                    if (isUpdatedData) {
+                        errorMLD.value = it.message ?: "Неизвестная ошибка"
+                    } else {
+                        viewStateMLD.value = ViewState.Error(it.message!!)
+                    }
+                }
             ).addTo(compositeDisposable)
     }
 
-    fun changeCart(productUI: ProductUI?) {
-
+    fun changeCart(productUI: ProductUI) {
+        dataRepository.changeCart(
+            productId = productUI.id,
+            quantity = productUI.cartQuantity
+        ).subscribeBy(
+            onComplete = {},
+            onError = { throwable ->
+                errorMLD.value = throwable.message ?: "Неизвестная ошибка"
+            }
+        ).addTo(compositeDisposable)
     }
 
     override fun onCleared() {

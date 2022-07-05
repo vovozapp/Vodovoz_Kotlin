@@ -22,6 +22,7 @@ object NoveltiesSliderResponseParser {
     }
 
     private fun JSONObject.parseCategoryDetailEntity() = CategoryDetailEntity(
+        id = 0,
         name = getString("glavtitle"),
         productEntityList = getJSONArray("data").parseProductEntityList(),
     )
