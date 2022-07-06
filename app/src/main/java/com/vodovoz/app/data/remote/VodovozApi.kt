@@ -4,10 +4,11 @@ import android.widget.RatingBar
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import retrofit2.Response
+import retrofit2.http.Field
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface Api {
+interface VodovozApi {
 
     //Получить Cookie Session Id
     @GET("/newmobile/korzina/function/guaty/index.php")
@@ -279,6 +280,30 @@ interface Api {
         @Query("action") action: String? = null
     ): Single<ResponseBody>
 
+    @GET("/newmobile/address.php")
+    fun fetchAddressResponse(
+        @Query("city") city: String? = null,
+        @Query("description") description: String? = null,
+        @Query("entrance") entrance: String? = null,
+        @Query("flat") flat: String? = null,
+        @Query("floor") floor: String? = null,
+        @Query("house") house: String? = null,
+        @Query("street") street: String? = null,
+        @Query("userid") userid: String? = null,
+        @Query("iblock_id") blockId: Int? = null,
+        @Query("action") action: String? = null,
+        @Query("tip") type: Int? = null
+    ): Single<ResponseBody>
+
+//    (@Field("city") String city, @Field("description") String description, @Field("entrance") String entrance ,
+//    @Field("flat") String flat , @Field("floor") String floor, @Field("house") String house,
+//    @Field("street") String street, @Field("userid") String userid , @Field("iblock_id") String iblock_id, @Field("addressid") String adressid , @Field("action") String action, @Field("tip") int tip );
+
+//    (@Field("city") String city, @Field("description") String description, @Field("entrance") String entrance ,
+//    @Field("flat") String flat , @Field("floor") String floor, @Field("house") String house,
+//    @Field("street") String street, @Field("userid") String userid , @Field("iblock_id") String iblock_id, @Field("addressid") String adressid , @Field("action") String action, @Field("tip") int tip );
+
+    //http://m.vodovoz.ru/newmobile/address.php?iblock_id=102&userid=515&action=get
     ///newmobile/osnova/izbrannoe/adddel.php?action=del&id="+id+"&iblock=12&userid="+User.getInstance().getuser_id()
     //m.vodovoz.ru/newmobile/izbrannoe.php?id=&userid=515
 

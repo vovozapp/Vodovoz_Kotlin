@@ -455,7 +455,7 @@ class DataRepository(
             localData.updateUserId(response.data)
         }
 
-        addToFavorite(localData.fetchAllFavoriteProductsOfDefaultUser()).subscribe()
+        //addToFavorite(localData.fetchAllFavoriteProductsOfDefaultUser()).subscribe()
     }.flatMap { response ->
         val newResponse = when(response) {
             is ResponseEntity.Success -> ResponseEntity.Success(true)
@@ -599,6 +599,16 @@ class DataRepository(
     }
 
     fun fetchDeliveryZonesBundle() = remoteDataSource.fetchDeliveryZonesResponse()
+
+    fun fetchAddressByGeocode(
+        latitude: Double,
+        longitude: Double,
+        apiKey: String
+    ) = remoteDataSource.fetchAddressByGeocodeResponse(
+        latitude = latitude,
+        longitude = longitude,
+        apiKey = apiKey
+    )
 
     private fun syncFavoriteProducts(productEntityList: List<ProductEntity>?) {
         val favoriteList = localData.fetchAllFavoriteProducts()

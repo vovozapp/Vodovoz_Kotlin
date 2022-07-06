@@ -64,7 +64,7 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
                 findNavController().navigate(ProfileFragmentDirections.actionToLoginFragment())
             }
             addresses.setOnClickListener {
-                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToMapDialogFragment4())
+                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToMapDialogFragment())
             }
         }
     }

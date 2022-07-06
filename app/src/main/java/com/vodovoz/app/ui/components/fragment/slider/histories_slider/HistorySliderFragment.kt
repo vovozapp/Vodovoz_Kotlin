@@ -16,11 +16,13 @@ import com.vodovoz.app.ui.components.base.BaseHiddenFragment
 import com.vodovoz.app.ui.components.diffUtils.HistoryDiffUtilCallback
 import com.vodovoz.app.ui.components.interfaces.IOnHistoryClick
 import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
+import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.HistoryUI
 import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 
@@ -32,6 +34,7 @@ class HistorySliderFragment : BaseHiddenFragment() {
     private lateinit var binding: FragmentSliderHistoryBinding
 
     private val compositeDisposable = CompositeDisposable()
+    private val onAdapterReadySubject: BehaviorSubject<List<HistoryUI>> = BehaviorSubject.create()
     private val onHistoryClickSubject: PublishSubject<Long> = PublishSubject.create()
     private lateinit var historiesSliderAdapter: HistoriesSliderAdapter
 
@@ -65,6 +68,10 @@ class HistorySliderFragment : BaseHiddenFragment() {
                 cardWidth = (width - (space * 4))/3
             )
             binding.historiesRecycler.adapter = historiesSliderAdapter
+            onAdapterReadySubject.subscribeBy { historyUIList ->
+                this.historyUIList = historyUIList
+                updateView(historyUIList)
+            }.addTo(compositeDisposable)
         }
 
         binding.historiesRecycler.addItemDecoration(
@@ -97,8 +104,10 @@ class HistorySliderFragment : BaseHiddenFragment() {
     }
 
     fun updateData(historyUIList: List<HistoryUI>) {
-        this.historyUIList = historyUIList
+        onAdapterReadySubject.onNext(historyUIList)
+    }
 
+    private fun updateView(historyUIList: List<HistoryUI>) {
         val diffUtil = HistoryDiffUtilCallback(
             oldList = historiesSliderAdapter.historyUIList,
             newList = historyUIList

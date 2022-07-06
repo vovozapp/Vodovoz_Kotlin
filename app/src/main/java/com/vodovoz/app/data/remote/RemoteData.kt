@@ -3,10 +3,7 @@ package com.vodovoz.app.data.remote
 import android.util.Log
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.data.model.common.*
-import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
-import com.vodovoz.app.data.model.features.CountriesSliderBundleEntity
-import com.vodovoz.app.data.model.features.DeliveryZonesBundleEntity
-import com.vodovoz.app.data.model.features.FavoriteProductsHeaderBundleEntity
+import com.vodovoz.app.data.model.features.*
 import com.vodovoz.app.data.parser.response.banner.AdvertisingBannersSliderResponseJsonParser.parseAdvertisingBannersSliderResponse
 import com.vodovoz.app.data.parser.response.banner.CategoryBannersSliderResponseJsonParser.parseCategoryBannersSliderResponse
 import com.vodovoz.app.data.parser.response.banner.ProductsByBannerResponseJsonParser.parseProductsByBannerResponse
@@ -35,6 +32,7 @@ import com.vodovoz.app.data.parser.response.favorite.AddToFavoriteResponseJsonPa
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
 import com.vodovoz.app.data.parser.response.favorite.RemoveFromFavoriteResponseJsonParser.parseRemoveFromFavoriteResponse
 import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonParser.parseHistoriesSliderResponse
+import com.vodovoz.app.data.parser.response.map.AddressByGeocodeResponseJsonParser.parseAddressByGeocodeResponse
 import com.vodovoz.app.data.parser.response.map.DeliveryZonesBundleResponseJsonParser.parseDeliveryZonesBundleResponse
 import com.vodovoz.app.data.parser.response.novelties.NoveltiesHeaderResponseJsonParser.parseNoveltiesHeaderResponse
 import com.vodovoz.app.data.parser.response.novelties.NoveltiesSliderResponseParser.parseNoveltiesSliderResponse
@@ -56,13 +54,15 @@ import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJs
 import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
+import okhttp3.ResponseBody
 
 class RemoteData(
-    private val api: Api
+    private val vodovozApi: VodovozApi,
+    private val mapKitApi: MapKitApi
 ) : RemoteDataSource {
 
     //Общая информация о предоставляемых услугах
-    override fun fetchAboutServices(): Single<ResponseEntity<AboutServicesBundleEntity>> = api.fetchServicesResponse(
+    override fun fetchAboutServices(): Single<ResponseEntity<AboutServicesBundleEntity>> = vodovozApi.fetchServicesResponse(
         action = "glav"
     ).flatMap { Single.just(it.parseAboutServicesResponse()) }
 
@@ -73,7 +73,7 @@ class RemoteData(
         comment: String,
         userId: Long
     ): Single<ResponseEntity<String>> = rxSingle {
-        api.fetchCommentsResponse(
+        vodovozApi.fetchCommentsResponse(
             blockId = 12,
             action = "add",
             productId = productId,
@@ -87,26 +87,26 @@ class RemoteData(
     override suspend fun fetchAllCommentsByProduct(
         productId: Long,
         page: Int
-    )= api.fetchCommentsResponse(
+    )= vodovozApi.fetchCommentsResponse(
         action = "detail",
         productId = productId,
         page = page
     )
 
     //Всплывающая новость
-    override fun fetchPopupNews(userId: Long?): Single<ResponseEntity<PopupNewsEntity>> = api.fetchNewsResponse(
+    override fun fetchPopupNews(userId: Long?): Single<ResponseEntity<PopupNewsEntity>> = vodovozApi.fetchNewsResponse(
         action = "okno",
         userId = userId,
         platform = "android"
     ).flatMap { Single.just(it.parsePopupNewsResponse()) }
 
     //Получить Cookie Session Id
-    override fun fetchCookie(): Single<String> = api.fetchCookie().flatMap {
+    override fun fetchCookie(): Single<String> = vodovozApi.fetchCookie().flatMap {
         Single.just(it.headers().values("Set-Cookie").first())
     }
 
     //Очистить корзину
-    override fun clearCart(): Single<ResponseEntity<Boolean>> = api.fetchClearCartResponse(
+    override fun clearCart(): Single<ResponseEntity<Boolean>> = vodovozApi.fetchClearCartResponse(
         action = "delkorzina"
     ).flatMap { Single.just(it.parseClearCartResponse()) }
 
@@ -114,7 +114,7 @@ class RemoteData(
     override fun addProductToCart(
         productId: Long,
         quantity: Int
-    ): Single<ResponseEntity<Boolean>> = api.fetchAddProductResponse(
+    ): Single<ResponseEntity<Boolean>> = vodovozApi.fetchAddProductResponse(
         action = "add",
         productId = productId,
         quantity = quantity
@@ -125,7 +125,7 @@ class RemoteData(
     //Удаление продукта из корзины
     override fun deleteProductFromCart(
         productId: Long
-    ): Single<ResponseEntity<Boolean>> = api.fetchDeleteProductResponse(
+    ): Single<ResponseEntity<Boolean>> = vodovozApi.fetchDeleteProductResponse(
         action = "deletto",
         productId = productId,
     ).flatMap {
@@ -136,7 +136,7 @@ class RemoteData(
     override fun changeProductsQuantityInCart(
         productId: Long,
         quantity: Int
-    ): Single<ResponseEntity<Boolean>> = api.fetchChangeProductsQuantityResponse(
+    ): Single<ResponseEntity<Boolean>> = vodovozApi.fetchChangeProductsQuantityResponse(
         action = "guaty",
         productId = productId,
         quantity = quantity
@@ -145,7 +145,7 @@ class RemoteData(
     }
 
     //Содержимое корзины
-    override fun fetchCart() = api.fetchCartResponse(
+    override fun fetchCart(): Single<ResponseEntity<CartBundleEntity>> = vodovozApi.fetchCartResponse(
         action = "getbasket"
     ).flatMap {
         Single.just(it.parseCartResponse())
@@ -153,14 +153,14 @@ class RemoteData(
 
     //Информации о странах для слайдера на главной странице
     override fun fetchCountriesSlider(): Single<ResponseEntity<CountriesSliderBundleEntity>> = rxSingle {
-        api.fetchCountryResponse(action = "glav")
+        vodovozApi.fetchCountryResponse(action = "glav")
     }.flatMap { Single.just(it.body()!!.parseCountriesSliderResponse()) }
 
     //Главная информация о выбранной стране
     override fun fetchCountryHeader(
         countryId: Long
     ): Single<ResponseEntity<CategoryEntity>> = rxSingle {
-        api.fetchCountryResponse(
+        vodovozApi.fetchCountryResponse(
             action = "details",
             countryId = countryId
         )
@@ -173,7 +173,7 @@ class RemoteData(
         orientation: String?,
         categoryId: Long?,
         page: Int?,
-    ) = api.fetchCountryResponse(
+    ) = vodovozApi.fetchCountryResponse(
         action = "details",
         countryId = countryId,
         sort = sort,
@@ -183,7 +183,7 @@ class RemoteData(
     )
 
     //Информация о слайдере акций на главной странице
-    override fun fetchPromotionsSlider(): Single<ResponseEntity<List<PromotionEntity>>> = api.fetchPromotionResponse(
+    override fun fetchPromotionsSlider(): Single<ResponseEntity<List<PromotionEntity>>> = vodovozApi.fetchPromotionResponse(
         action = "akcii",
         limit = 10,
         platform = "android"
@@ -192,7 +192,7 @@ class RemoteData(
     //Подробная информация об акции
     override fun fetchPromotionDetails(
         promotionId: Long
-    ): Single<ResponseEntity<PromotionDetailEntity>> = api.fetchPromotionResponse(
+    ): Single<ResponseEntity<PromotionDetailEntity>> = vodovozApi.fetchPromotionResponse(
         action = "detail",
         promotionId = promotionId
     ).flatMap { Single.just(it.parsePromotionDetailResponse()) }
@@ -200,36 +200,36 @@ class RemoteData(
     //Информация о всех акциях
     override fun fetchAllPromotions(
         filterId: Long
-    ): Single<ResponseEntity<AllPromotionsBundleEntity>> = api.fetchPromotionResponse(
+    ): Single<ResponseEntity<AllPromotionsBundleEntity>> = vodovozApi.fetchPromotionResponse(
         action = "akcii",
         filterId = filterId
     ).flatMap { Single.just(it.parseAllPromotionsResponse()) }
 
     //Информация о слайдере комментариев на главной странице
-    override fun fetchCommentsSlider(): Single<ResponseEntity<List<CommentEntity>>> = api.fetchCommentResponse(
+    override fun fetchCommentsSlider(): Single<ResponseEntity<List<CommentEntity>>> = vodovozApi.fetchCommentResponse(
         action = "otzivy",
         limit = 10
     ).flatMap { Single.just(it.parseCommentsSliderResponse()) }
 
     //Информация о слайдере историй на главное странице
-    override fun fetchHistoriesSlider(): Single<ResponseEntity<List<HistoryEntity>>> = api.fetchHistoryResponse(
+    override fun fetchHistoriesSlider(): Single<ResponseEntity<List<HistoryEntity>>> = vodovozApi.fetchHistoryResponse(
         blockId = 12,
         action = "stories",
         platform = "android"
     ).flatMap { Single.just(it.parseHistoriesSliderResponse()) }
 
     //Информация о слайдере популярных разделов на главное странице
-    override fun fetchPopularSlider(): Single<ResponseEntity<List<CategoryEntity>>> = api.fetchPopularResponse(
+    override fun fetchPopularSlider(): Single<ResponseEntity<List<CategoryEntity>>> = vodovozApi.fetchPopularResponse(
         action = "popylrazdel"
     ).flatMap { Single.just(it.parsePopularSliderResponse()) }
 
     //Информация о слайдере новинок на главной странице
     override fun fetchNoveltiesSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>> = rxSingle {
-        api.fetchNoveltiesResponse(action = "novinki")
+        vodovozApi.fetchNoveltiesResponse(action = "novinki")
     }.flatMap { Single.just(it.body()!!.parseNoveltiesSliderResponse()) }
 
     override fun fetchNoveltiesHeader(): Single<ResponseEntity<CategoryEntity>> = rxSingle {
-        api.fetchNoveltiesResponse(
+        vodovozApi.fetchNoveltiesResponse(
             action = "novinki",
             page = 1
         )
@@ -241,7 +241,7 @@ class RemoteData(
         sort: String?,
         orientation: String?,
         page: Int?
-    ) = api.fetchNoveltiesResponse(
+    ) = vodovozApi.fetchNoveltiesResponse(
         action = "specpredlosh",
         categoryId = categoryId,
         sort = sort,
@@ -255,7 +255,7 @@ class RemoteData(
         sort: String?,
         orientation: String?,
         page: Int?
-    ) = api.fetchNoveltiesResponse(
+    ) = vodovozApi.fetchNoveltiesResponse(
         action = "novinki",
         categoryId = categoryId,
         sort = sort,
@@ -265,13 +265,13 @@ class RemoteData(
 
     //Информация о слайдере самых выгодных продуктов на главной странице
     override fun fetchDiscountsSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>> = rxSingle {
-        api.fetchNoveltiesResponse(action = "specpredlosh")
+        vodovozApi.fetchNoveltiesResponse(action = "specpredlosh")
     }.flatMap { Single.just(it.body()!!.parseDiscountSliderResponse()) }
 
     //Информация о слайдере заказов на главной странице
     override fun fetchOrdersSlider(
         userId: Long
-    ): Single<ResponseEntity<List<OrderEntity>>> = api.fetchOrderSlider(
+    ): Single<ResponseEntity<List<OrderEntity>>> = vodovozApi.fetchOrderSlider(
         userId
     ).flatMap { Single.just(it.parseOrderSliderResponse()) }
 
@@ -279,7 +279,7 @@ class RemoteData(
     override fun fetchMaybeLikeProducts(
         page: Int
     ): Single<ResponseEntity<PaginatedProductListEntity>> = rxSingle {
-        api.fetchNoveltiesResponse(
+        vodovozApi.fetchNoveltiesResponse(
             action = "details",
             page = page
         )
@@ -288,24 +288,24 @@ class RemoteData(
     //Слайдер ранее просмотренных продуктов
     override fun fetchViewedProductsSlider(
         userId: Long?
-    ): Single<ResponseEntity<List<CategoryDetailEntity>>> = api.fetchViewedProductSliderResponse(
+    ): Single<ResponseEntity<List<CategoryDetailEntity>>> = vodovozApi.fetchViewedProductSliderResponse(
         action = "viewed",
         userId = userId
     ).flatMap { Single.just(it.parseViewedProductsSliderResponse()) }
 
     //Слайдер рекламных баннеров
-    override fun fetchAdvertisingBannersSlider(): Single<ResponseEntity<List<BannerEntity>>> = api.fetchMainSliderResponse(
+    override fun fetchAdvertisingBannersSlider(): Single<ResponseEntity<List<BannerEntity>>> = vodovozApi.fetchMainSliderResponse(
         action = "slayder"
     ).flatMap { Single.just(it.parseAdvertisingBannersSliderResponse()) }
 
     //Продукты по баннеру
-    override fun fetchProductsByBanner(categoryId: Long): Single<ResponseEntity<List<ProductEntity>>> = api.fetchMainSliderResponse(
+    override fun fetchProductsByBanner(categoryId: Long): Single<ResponseEntity<List<ProductEntity>>> = vodovozApi.fetchMainSliderResponse(
         action = "detailtovar",
         categoryId = categoryId
     ).flatMap { Single.just(it.parseProductsByBannerResponse()) }
 
     //Акции по баннеру
-    override fun fetchPromotionsByBanner(categoryId: Long): Single<ResponseEntity<AllPromotionsBundleEntity>> = api.fetchMainSliderResponse(
+    override fun fetchPromotionsByBanner(categoryId: Long): Single<ResponseEntity<AllPromotionsBundleEntity>> = vodovozApi.fetchMainSliderResponse(
         action = "detailaction",
         categoryId = categoryId
     ).flatMap {
@@ -313,14 +313,14 @@ class RemoteData(
     }
 
     //Слайдер баннеров категорий
-    override fun fetchCategoryBannersSlider(): Single<ResponseEntity<List<BannerEntity>>> = api.fetchMiniSliderResponse(
+    override fun fetchCategoryBannersSlider(): Single<ResponseEntity<List<BannerEntity>>> = vodovozApi.fetchMiniSliderResponse(
         action = "slayder",
         androidVersion = BuildConfig.VERSION_NAME
     ).flatMap { Single.just(it.parseCategoryBannersSliderResponse()) }
 
     //Слайдер брендов на главнйо странице
     override fun fetchBrandsSlider(): Single<ResponseEntity<List<BrandEntity>>> = rxSingle {
-        api.fetchBrandResponse(
+        vodovozApi.fetchBrandResponse(
             action = "brand",
             limit = 10
         )
@@ -330,14 +330,14 @@ class RemoteData(
     override fun fetchBrandHeader(
         brandId: Long
     ): Single<ResponseEntity<CategoryEntity>> = rxSingle {
-        api.fetchBrandResponse(
+        vodovozApi.fetchBrandResponse(
             action = "detail",
             brandId = brandId.toString()
         )
     }.flatMap { Single.just(it.body()!!.parseBrandHeaderResponse()) }
 
     override fun fetchDiscountHeader(): Single<ResponseEntity<CategoryEntity>> = rxSingle {
-        api.fetchNoveltiesResponse(
+        vodovozApi.fetchNoveltiesResponse(
             action = "specpredlosh",
             page = 1
         )
@@ -347,7 +347,7 @@ class RemoteData(
     override fun fetchAllBrands(
         brandIdList: List<Long>
     ): Single<ResponseEntity<List<BrandEntity>>> = rxSingle {
-        api.fetchBrandResponse(
+        vodovozApi.fetchBrandResponse(
             action = "brand",
             brandIdList = StringBuilder().apply {
                 brandIdList.forEach { brandId ->
@@ -366,7 +366,7 @@ class RemoteData(
         sort: String?,
         orientation: String?,
         page: Int?
-    ) = api.fetchBrandResponse(
+    ) = vodovozApi.fetchBrandResponse(
         action = "detail",
         brandId = brandId.toString(),
         code = code,
@@ -386,7 +386,7 @@ class RemoteData(
         priceFrom: Int,
         priceTo: Int,
         page: Int
-    ) = api.fetchCategoryResponse(
+    ) = vodovozApi.fetchCategoryResponse(
         blockId = 1,
         categoryId = categoryId,
         page = page,
@@ -404,7 +404,7 @@ class RemoteData(
         page: Int?,
         sort: String?,
         orientation: String?
-    ) = api.fetchDoubleSliderResponse(
+    ) = vodovozApi.fetchDoubleSliderResponse(
         action = "details",
         androidVersion = BuildConfig.VERSION_NAME,
         categoryId = categoryId,
@@ -417,7 +417,7 @@ class RemoteData(
     override fun fetchSliderHeader(
         categoryId: Long
     ): Single<ResponseEntity<CategoryEntity>> = rxSingle {
-        api.fetchDoubleSliderResponse(
+        vodovozApi.fetchDoubleSliderResponse(
             action = "details",
             androidVersion = BuildConfig.VERSION_NAME,
             categoryId = categoryId
@@ -428,7 +428,7 @@ class RemoteData(
     override fun fetchCategoryHeader(
         categoryId: Long
     ): Single<ResponseEntity<CategoryEntity>> = rxSingle {
-        api.fetchCategoryResponse(
+        vodovozApi.fetchCategoryResponse(
             blockId = 1,
             categoryId = categoryId
         )
@@ -436,19 +436,19 @@ class RemoteData(
 
     //Каталог
     override fun fetchCatalog(): Single<ResponseEntity<List<CategoryEntity>>> =
-        api.fetchCatalogResponse().flatMap { Single.just(it.parseCatalogResponse()) }
+        vodovozApi.fetchCatalogResponse().flatMap { Single.just(it.parseCatalogResponse()) }
 
     //Все филтры по продуктам для выбранной категории
     override fun fetchAllFiltersByCategory(
         categoryId: Long
-    ): Single<ResponseEntity<FilterBundleEntity>> = api.fetchFilterBundleResponse(
+    ): Single<ResponseEntity<FilterBundleEntity>> = vodovozApi.fetchFilterBundleResponse(
         categoryId = categoryId
     ).flatMap { Single.just(it.parseAllFiltersByCategoryResponse()) }
 
     //Подробная информация о продукте
     override fun fetchProductDetails(
         productId: Long
-    ): Single<ResponseEntity<ProductDetailBundleEntity>> = api.fetchProductResponse(
+    ): Single<ResponseEntity<ProductDetailBundleEntity>> = vodovozApi.fetchProductResponse(
         blockId = 1,
         productId = productId
     ).flatMap { Single.just(it.parseProductDetailsResponse()) }
@@ -457,7 +457,7 @@ class RemoteData(
     override fun fetchProductFilterById(
         categoryId: Long,
         filterCode: String,
-    ): Single<ResponseEntity<List<FilterValueEntity>>> = api.fetchFilterResponse(
+    ): Single<ResponseEntity<List<FilterValueEntity>>> = vodovozApi.fetchFilterResponse(
         action = "getAllValueOfProps",
         categoryId = categoryId,
         filterCode = filterCode
@@ -468,7 +468,7 @@ class RemoteData(
         productId: Long,
         brandId: Long,
         page: Int
-    ): Single<ResponseEntity<PaginatedProductListEntity>> = api.fetchBrandByProductResponse(
+    ): Single<ResponseEntity<PaginatedProductListEntity>> = vodovozApi.fetchBrandByProductResponse(
         blockId = 12,
         productId = productId,
         brandId = brandId,
@@ -477,7 +477,7 @@ class RemoteData(
 
     //Верхний слайдер на главной странице
     override fun fetchTopSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>> = rxSingle {
-        api.fetchDoubleSliderResponse(
+        vodovozApi.fetchDoubleSliderResponse(
             action = "topglav",
             arg = "new"
         )
@@ -485,7 +485,7 @@ class RemoteData(
 
     //Нижний слайдер на главной странице
     override fun fetchBottomSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>> = rxSingle {
-        api.fetchDoubleSliderResponse(
+        vodovozApi.fetchDoubleSliderResponse(
             action = "topglav",
             arg = "new"
         )
@@ -498,7 +498,7 @@ class RemoteData(
         email: String,
         password: String,
         phone: String,
-    ): Single<ResponseEntity<Long>> = api.fetchRegisterResponse(
+    ): Single<ResponseEntity<Long>> = vodovozApi.fetchRegisterResponse(
         firstName = firstName,
         secondName = secondName,
         email = email,
@@ -510,7 +510,7 @@ class RemoteData(
     override fun login(
         email: String,
         password: String
-    ): Single<ResponseEntity<Long>> = api.fetchLoginResponse(
+    ): Single<ResponseEntity<Long>> = vodovozApi.fetchLoginResponse(
         email = email,
         password = password
     ).flatMap { Single.just(it.parseLoginResponse()) }
@@ -518,7 +518,7 @@ class RemoteData(
     //Информация о пользователе
     override fun fetchUserData(
         userId: Long
-    ): Single<ResponseEntity<UserDataEntity>> = api.fetchProfileResponse(
+    ): Single<ResponseEntity<UserDataEntity>> = vodovozApi.fetchProfileResponse(
         action = "details",
         userId = userId
     ).flatMap { Single.just(it.parseUserDataResponse()) }
@@ -527,7 +527,7 @@ class RemoteData(
     override fun addToFavorite(
         productIdList: List<Long>,
         userId: Long
-    ): Single<ResponseEntity<String>> = api.fetchChangeFavoriteResponse(
+    ): Single<ResponseEntity<String>> = vodovozApi.fetchChangeFavoriteResponse(
         blockId = 12,
         action = "add",
         productIdList = StringBuilder().apply {
@@ -542,7 +542,7 @@ class RemoteData(
     override fun removeFromFavorite(
         productId: Long,
         userId: Long
-    ): Single<ResponseEntity<String>> = api.fetchChangeFavoriteResponse(
+    ): Single<ResponseEntity<String>> = vodovozApi.fetchChangeFavoriteResponse(
         blockId = 12,
         action = "del",
         productIdList = productId.toString(),
@@ -554,15 +554,12 @@ class RemoteData(
         userId: Long?,
         productIdListStr: String?
     ): Single<ResponseEntity<FavoriteProductsHeaderBundleEntity>> = rxSingle {
-        api.fetchFavoriteResponse(
+        vodovozApi.fetchFavoriteResponse(
             userId = userId,
             productIdList = productIdListStr,
             action = "nalichie"
         )
-    }.flatMap {
-        Log.i(LogSettings.ID_LOG, "RES ${it.toString()}")
-        Single.just(it.body()!!.parseFavoriteProductsHeaderBundleResponse())
-    }
+    }.flatMap { Single.just(it.body()!!.parseFavoriteProductsHeaderBundleResponse()) }
 
     override suspend fun fetchFavoriteProductsResponse(
         userId: Long?,
@@ -572,7 +569,7 @@ class RemoteData(
         orientation: String?,
         page: Int?,
         isAvailable: Boolean?,
-    ) = api.fetchFavoriteResponse(
+    ) = vodovozApi.fetchFavoriteResponse(
         userId = userId,
         productIdList = productIdListStr,
         categoryId = categoryId,
@@ -587,8 +584,31 @@ class RemoteData(
     )
 
     //Информация о зонах доставки
-    override fun fetchDeliveryZonesResponse(): Single<ResponseEntity<DeliveryZonesBundleEntity>> = api.fetchMapResponse(
+    override fun fetchDeliveryZonesResponse(): Single<ResponseEntity<DeliveryZonesBundleEntity>> = vodovozApi.fetchMapResponse(
         action = "tochkakarta"
     ).flatMap { Single.just(it.parseDeliveryZonesBundleResponse()) }
+
+    //Адрес по координатам
+    override fun fetchAddressByGeocodeResponse(
+        latitude: Double,
+        longitude: Double,
+        apiKey: String
+    ): Single<ResponseEntity<AddressEntity>> = mapKitApi.fetchAddressByGeocodeResponse(
+        apiKey = "346ef353-b4b2-44b3-b597-210d62eeb66b",
+        geocode = "$longitude,$latitude",
+        format = "json"
+    ).flatMap {
+        Log.i(LogSettings.ID_LOG, it.toString())
+        Single.just(it.body()!!.parseAddressByGeocodeResponse())
+    }
+
+    //Получить сохраненные адреса
+    override fun fetchSavedAddress(
+        userId: String?
+    ): Single<List<AddressEntity>> = vodovozApi.fetchAddressResponse(
+        blockId = 102,
+        action = "get",
+        userid = userId
+    ).flatMap { Single.just() }
 
 }

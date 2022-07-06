@@ -270,8 +270,8 @@
             android:id="@+id/action_to_userDataFragment"
             app:destination="@id/userDataFragment" />
         <action
-            android:id="@+id/action_profileFragment_to_mapDialogFragment4"
-            app:destination="@id/mapDialogFragment4" />
+            android:id="@+id/action_profileFragment_to_mapDialogFragment"
+            app:destination="@id/mapDialogFragment" />
     </fragment>
     <dialog
         android:id="@+id/popupNewsBottomFragment"
@@ -381,8 +381,20 @@
         android:id="@+id/aboutAppDialogFragment"
         android:name="com.vodovoz.app.ui.components.fragment.about_app.AboutAppDialogFragment"
         android:label="AboutAppDialogFragment" />
-    <dialog
-        android:id="@+id/mapDialogFragment4"
+    <fragment
+        android:id="@+id/mapDialogFragment"
         android:name="com.vodovoz.app.ui.components.fragment.map.MapDialogFragment"
-        android:label="MapDialogFragment" />
+        android:label="MapDialogFragment" >
+        <action
+            android:id="@+id/action_to_addAddressBottomFragment"
+            app:destination="@id/addAddressBottomFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/addAddressBottomFragment"
+        android:name="com.vodovoz.app.ui.components.fragment.bottom_dialog_add_address.AddAddressBottomFragment"
+        android:label="AddAddressBottomFragment" >
+        <argument
+            android:name="address"
+            app:argType="com.vodovoz.app.ui.model.AddressUI" />
+    </dialog>
 </navigation>

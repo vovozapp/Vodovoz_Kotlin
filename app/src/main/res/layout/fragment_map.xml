@@ -1,13 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:focusableInTouchMode="true">
 
     <com.yandex.mapkit.mapview.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <TextView
+        android:id="@+id/addAddress"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="@dimen/primary_space"
+        android:translationZ="@dimen/card_elevation"
+        android:background="@drawable/background_button_primary"
+        android:fontFamily="@font/rotonda"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="Добавить адрес"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/searchContainer"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginStart="@dimen/primary_space"
+            android:layout_marginTop="@dimen/primary_margin"
+            android:layout_marginEnd="@dimen/primary_space"
+            android:layout_marginBottom="@dimen/primary_margin"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingEnd="@dimen/primary_margin"
+            android:gravity="center_vertical"
+            android:background="@drawable/background_search_stroke_address">
+
+            <ImageView
+                android:id="@+id/searchImage"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/map_marker"
+                tools:ignore="ContentDescription" />
+
+            <EditText
+                android:id="@+id/searchEdit"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/rotonda"
+                android:hint="Введите адрес"
+                android:textColor="@color/blackTextDark"
+                android:textColorHint="@color/blackTextPrimary"
+                android:paddingStart="@dimen/primary_space"
+                android:paddingEnd="@dimen/primary_space"
+                android:maxLines="1"
+                android:background="@android:color/transparent"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/addressesRecycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,7 +13,9 @@ import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.databinding.FragmentMapBinding
 import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.components.base.ViewStateBaseDialogFragment
+import com.vodovoz.app.ui.mapper.AddressMapper.mapToUI
 import com.vodovoz.app.ui.mapper.DeliveryZonesBundleMapper.mapToUI
+import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.ui.model.DeliveryZoneUI
 import com.vodovoz.app.ui.model.custom.DeliveryZonesBundleUI
 import com.vodovoz.app.util.Keys
@@ -37,13 +39,18 @@ class MapViewModel(
 
     private val viewStateMLD = MutableLiveData<ViewState>()
     private val deliveryZoneUIListMLD = MutableLiveData<List<DeliveryZoneUI>>()
+    private val addressUIMLD = MutableLiveData<AddressUI>()
+    private val errorMLD = MutableLiveData<String>()
 
     val viewStateLD: LiveData<ViewState> = viewStateMLD
     val deliveryZoneUIListLD: LiveData<List<DeliveryZoneUI>> = deliveryZoneUIListMLD
+    val addressUILD: LiveData<AddressUI> = addressUIMLD
+    val errorLD: LiveData<String> = errorMLD
 
     private val compositeDisposable = CompositeDisposable()
 
-    lateinit var deliveryZonesBundleUI: DeliveryZonesBundleUI
+    private lateinit var deliveryZonesBundleUI: DeliveryZonesBundleUI
+    lateinit var addressUI: AddressUI
 
     fun updateData() {
         dataRepository
@@ -66,6 +73,27 @@ class MapViewModel(
                 onError = { throwable -> viewStateMLD.value = ViewState.Error(throwable.message ?: "Неизвестная ошибка") }
             ).addTo(compositeDisposable)
 
+    }
+
+    fun fetchAddressByGeocode(
+        latitude: Double,
+        longitude: Double
+    ) {
+        dataRepository
+            .fetchAddressByGeocode(
+                latitude = latitude,
+                longitude = longitude,
+                apiKey = Keys.MAPKIT_API_KEY
+            )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onSuccess = { response ->
+                    addressUI = (response as ResponseEntity.Success).data.mapToUI()
+                    addressUIMLD.value = addressUI
+                },
+                onError = { throwable -> errorMLD.value = throwable.message ?: "Неизвестная ошибка"}
+            ).addTo(compositeDisposable)
     }
 
     override fun onCleared() {

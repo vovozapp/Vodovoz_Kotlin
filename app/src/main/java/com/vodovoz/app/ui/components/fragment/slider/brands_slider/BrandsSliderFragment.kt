@@ -17,9 +17,11 @@ import com.vodovoz.app.ui.components.interfaces.IOnBrandClick
 import com.vodovoz.app.ui.components.interfaces.IOnShowAllBrandsClick
 import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
 import com.vodovoz.app.ui.model.BrandUI
+import com.vodovoz.app.ui.model.custom.CountriesSliderBundleUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 
@@ -32,6 +34,7 @@ class BrandsSliderFragment : BaseHiddenFragment() {
     private lateinit var binding: FragmentSliderBrandBinding
 
     private val compositeDisposable = CompositeDisposable()
+    private val onAdapterReadySubject: BehaviorSubject<List<BrandUI>> = BehaviorSubject.create()
     private val onBrandClickSubject: PublishSubject<Long> = PublishSubject.create()
     private lateinit var brandsSliderAdapter: BrandsSliderAdapter
 
@@ -64,6 +67,10 @@ class BrandsSliderFragment : BaseHiddenFragment() {
                 cardWidth = (width - (space * 4))/3
             )
             binding.brandsRecycler.adapter = brandsSliderAdapter
+            onAdapterReadySubject.subscribeBy { brandUIList ->
+                this.brandUIList = brandUIList
+                updateView(brandUIList)
+            }.addTo(compositeDisposable)
         }
 
         binding.brandsRecycler.addItemDecoration(
@@ -104,8 +111,10 @@ class BrandsSliderFragment : BaseHiddenFragment() {
     }
 
     fun updateData(brandUIList: List<BrandUI>) {
-        this.brandUIList = brandUIList
+        onAdapterReadySubject.onNext(brandUIList)
+    }
 
+    private fun updateView(brandUIList: List<BrandUI>) {
         val diffUtil = BrandSliderDiffUtilCallback(
             oldList = brandsSliderAdapter.brandUIList,
             newList = brandUIList

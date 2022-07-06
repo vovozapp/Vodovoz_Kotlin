@@ -8,6 +8,7 @@ import com.vodovoz.app.ui.components.fragment.about_services.AboutServicesViewMo
 import com.vodovoz.app.ui.components.fragment.all_brands.AllBrandsViewModel
 import com.vodovoz.app.ui.components.fragment.all_comments_by_product.AllCommentsByProductViewModel
 import com.vodovoz.app.ui.components.fragment.all_promotions.AllPromotionsViewModel
+import com.vodovoz.app.ui.components.fragment.bottom_dialog_add_address.AddAddressViewModel
 import com.vodovoz.app.ui.components.fragment.cart.CartViewModel
 import com.vodovoz.app.ui.components.fragment.catalog.CatalogViewModel
 import com.vodovoz.app.ui.components.fragment.concrete_filter.ConcreteFilterViewModel
@@ -139,6 +140,10 @@ class ViewModelFactory(
 
         if (modelClass.isAssignableFrom(MapViewModel::class.java)){
             return MapViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(AddAddressViewModel::class.java)){
+            return AddAddressViewModel(dataRepository) as T
         }
 
         throw IllegalArgumentException("Unknown View Model Class")

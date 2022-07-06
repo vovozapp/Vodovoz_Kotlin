@@ -5,7 +5,8 @@ import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.config.ApiConfig
 import com.vodovoz.app.data.local.LocalData
 import com.vodovoz.app.data.local.LocalDataSource
-import com.vodovoz.app.data.remote.Api
+import com.vodovoz.app.data.remote.MapKitApi
+import com.vodovoz.app.data.remote.VodovozApi
 import com.vodovoz.app.data.remote.RemoteData
 import com.vodovoz.app.data.remote.RemoteDataSource
 import okhttp3.OkHttpClient
@@ -17,7 +18,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 class VodovozApplication : Application() {
 
     //Repository
-    private lateinit var api: Api
+    private lateinit var vodovozApi: VodovozApi
+    private lateinit var mapKitApi: MapKitApi
     private lateinit var remoteDataSource: RemoteDataSource
     private lateinit var localDataSource: LocalDataSource
     private lateinit var dataRepository: DataRepository
@@ -26,8 +28,10 @@ class VodovozApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        api = buildRetrofitClient()
-        remoteDataSource = RemoteData(api)
+        vodovozApi = buildVodovozClient()
+        mapKitApi = buildMapkitClient()
+
+        remoteDataSource = RemoteData(vodovozApi, mapKitApi)
         localDataSource = LocalData(applicationContext)
         dataRepository = DataRepository(
             remoteDataSource = remoteDataSource,
@@ -36,7 +40,7 @@ class VodovozApplication : Application() {
         viewModelFactory = ViewModelFactory(dataRepository = dataRepository)
     }
 
-    private fun buildRetrofitClient(): Api {
+    private fun buildVodovozClient(): VodovozApi {
         val clientBuilder = OkHttpClient.Builder()
         clientBuilder.addInterceptor { chain ->
             val builder = chain.request().newBuilder()
@@ -55,13 +59,19 @@ class VodovozApplication : Application() {
         }
 
         return Retrofit.Builder()
-            .baseUrl(ApiConfig.URL)
+            .baseUrl(ApiConfig.VODOVOZ_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .client(clientBuilder.build())
             .build()
-            .create(Api::class.java)
+            .create(VodovozApi::class.java)
     }
 
+    private fun buildMapkitClient() = Retrofit.Builder()
+        .baseUrl(ApiConfig.MAPKIT_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+        .build()
+        .create(MapKitApi::class.java)
 
 }

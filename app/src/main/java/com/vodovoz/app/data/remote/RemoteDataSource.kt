@@ -5,6 +5,7 @@ import com.vodovoz.app.data.model.features.*
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import retrofit2.Response
+import retrofit2.http.Query
 
 interface RemoteDataSource {
 
@@ -266,5 +267,17 @@ interface RemoteDataSource {
 
     //Информация о зонах доставки
     fun fetchDeliveryZonesResponse(): Single<ResponseEntity<DeliveryZonesBundleEntity>>
+
+    //Получить сохраненные адреса
+    fun fetchSavedAddress(
+        userId: String?
+    ): Single<List<AddressEntity>>
+
+    //Адрес по координатам
+    fun fetchAddressByGeocodeResponse(
+        latitude: Double,
+        longitude: Double,
+        apiKey: String
+    ): Single<ResponseEntity<AddressEntity>>
 
 }
