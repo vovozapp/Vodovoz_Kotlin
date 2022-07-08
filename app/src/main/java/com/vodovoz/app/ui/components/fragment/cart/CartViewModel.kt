@@ -135,6 +135,28 @@ class CartViewModel(
         ).addTo(compositeDisposable)
     }
 
+
+    fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
+        when(isFavorite) {
+            true -> dataRepository
+                .addToFavorite(listOf(productId))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                    onSuccess = {},
+                    onError = { throwable -> errorMLD.value = throwable.message ?: "Неизвестная ошибка" }
+                ).addTo(compositeDisposable)
+            false -> dataRepository
+                .removeFromFavorite(productId = productId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                    onSuccess = {},
+                    onError = { throwable -> errorMLD.value = throwable.message ?: "Неизвестная ошибка" }
+                ).addTo(compositeDisposable)
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()

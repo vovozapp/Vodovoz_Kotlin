@@ -63,7 +63,7 @@
             <EditText
                 android:id="@+id/searchEdit"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:fontFamily="@font/rotonda"
                 android:hint="Введите адрес"
                 android:textColor="@color/blackTextDark"

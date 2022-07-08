@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,8 @@ import com.vodovoz.app.ui.components.base.BaseHiddenFragment
 import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.components.diffUtils.OrderDiffUtilCallback
+import com.vodovoz.app.ui.components.fragment.slider.products_slider.ProductsSliderConfig
+import com.vodovoz.app.ui.components.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.components.interfaces.IOnOrderClick
 import com.vodovoz.app.ui.components.interfaces.IOnShowAllOrdersClick
 import com.vodovoz.app.ui.model.OrderUI
@@ -27,8 +30,18 @@ import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-class OrderSliderFragment : BaseHiddenFragment() {
+class OrdersSliderFragment : BaseHiddenFragment() {
 
+    companion object {
+        private const val CONFIG = "CONFIG"
+        fun newInstance(
+            ordersSliderConfig: OrdersSliderConfig
+        ) = OrdersSliderFragment().apply {
+            arguments = bundleOf(Pair(CONFIG, ordersSliderConfig))
+        }
+    }
+
+    private lateinit var config: OrdersSliderConfig
     private lateinit var orderUIList: List<OrderUI>
     private lateinit var iOnOrderClick: IOnOrderClick
     private lateinit var iOnShowAllOrdersClick: IOnShowAllOrdersClick
@@ -42,6 +55,11 @@ class OrderSliderFragment : BaseHiddenFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         subscribeSubjects()
+        getArgs()
+    }
+
+    private fun getArgs() {
+        config = requireArguments().getParcelable(CONFIG)!!
     }
 
     override fun setContentView(
@@ -78,6 +96,11 @@ class OrderSliderFragment : BaseHiddenFragment() {
                 }
             }
         )
+
+        when(config.containTitleContainer) {
+            true -> binding.titleContainer.visibility = View.VISIBLE
+            false -> binding.titleContainer.visibility = View.GONE
+        }
     }
 
     private fun subscribeSubjects() {

@@ -9,6 +9,7 @@ import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.model.features.CartBundleEntity
 import com.vodovoz.app.data.paging.comments.CommentsPagingSource
+import com.vodovoz.app.data.paging.orders.OrdersPagingSource
 import com.vodovoz.app.data.paging.products.ProductsPagingSource
 import com.vodovoz.app.data.paging.products.source.*
 import com.vodovoz.app.data.remote.RemoteDataSource
@@ -34,7 +35,7 @@ class DataRepository(
                     localData.clearCart()
                     cartBundleEntity.availableProductEntityList.forEach { productUI ->
                         localData.changeProductQuantityInCart(
-                            productId = productUI.id,
+                            productId = productUI.id!!,
                             quantity = productUI.cartQuantity
                         )
                     }
@@ -610,6 +611,64 @@ class DataRepository(
         apiKey = apiKey
     )
 
+    fun fetchAddressesSaved(
+        type: Int?
+    ) = remoteDataSource.fetchAddressesSaved(
+        userId = fetchUserId()!!,
+        type = type
+    )
+
+    fun addAddress(
+        locality: String?,
+        street: String?,
+        house: String?,
+        entrance: String?,
+        floor: String?,
+        office: String?,
+        comment: String?,
+        type: Int?
+    ) = remoteDataSource.addAddress(
+        locality = locality,
+        street = street,
+        house = house,
+        entrance = entrance,
+        floor = floor,
+        office = office,
+        comment = comment,
+        type = type,
+        userId = fetchUserId()
+    )
+
+    fun updateAddress(
+        addressId: Long?,
+        locality: String?,
+        street: String?,
+        house: String?,
+        entrance: String?,
+        floor: String?,
+        office: String?,
+        comment: String?,
+        type: Int?
+    ) = remoteDataSource.updateAddress(
+        addressId = addressId,
+        locality = locality,
+        street = street,
+        house = house,
+        entrance = entrance,
+        floor = floor,
+        office = office,
+        comment = comment,
+        type = type,
+        userId = fetchUserId()
+    )
+
+    fun deleteAddress(
+        addressId: Long?
+    ) = remoteDataSource.deleteAddress(
+        addressId = addressId,
+        userId = fetchUserId()!!
+    )
+
     private fun syncFavoriteProducts(productEntityList: List<ProductEntity>?) {
         val favoriteList = localData.fetchAllFavoriteProducts()
         productEntityList?.map { productEntity ->
@@ -636,5 +695,34 @@ class DataRepository(
             productDetailEntity.isFavorite = true
         }
     }
+
+    fun fetchAllOrders(
+        appVersion: String?,
+        orderId: Long?,
+        status: String?
+    ) = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = {
+            OrdersPagingSource(
+                userId = fetchUserId(),
+                appVersion = appVersion,
+                orderId = orderId,
+                status = status,
+                remoteDataSource = remoteDataSource
+            )
+        }
+    ).apply { Log.i(LogSettings.ID_LOG, "REFETCH") }.flow
+
+    fun fetchOrderDetails(
+        orderId: Long?,
+        appVersion: String?
+    ) = remoteDataSource.fetchOrderDetailsResponse(
+        userId = fetchUserId()!!,
+        orderId = orderId,
+        appVersion = appVersion
+    )
 
 }

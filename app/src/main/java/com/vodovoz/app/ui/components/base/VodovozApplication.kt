@@ -1,6 +1,7 @@
 package com.vodovoz.app.ui.components.base
 
 import android.app.Application
+import android.util.Log
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.config.ApiConfig
 import com.vodovoz.app.data.local.LocalData
@@ -9,6 +10,7 @@ import com.vodovoz.app.data.remote.MapKitApi
 import com.vodovoz.app.data.remote.VodovozApi
 import com.vodovoz.app.data.remote.RemoteData
 import com.vodovoz.app.data.remote.RemoteDataSource
+import com.vodovoz.app.util.LogSettings
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
@@ -43,6 +45,7 @@ class VodovozApplication : Application() {
     private fun buildVodovozClient(): VodovozApi {
         val clientBuilder = OkHttpClient.Builder()
         clientBuilder.addInterceptor { chain ->
+            Log.i(LogSettings.REQ_RES_LOG, chain.request().toString())
             val builder = chain.request().newBuilder()
 
             localDataSource.fetchCookieSessionId()?.let { cookieSessionId ->
@@ -55,6 +58,7 @@ class VodovozApplication : Application() {
                 localDataSource.updateCookieSessionId(originalResponse.headers().values("Set-Cookie").first())
             }
 
+            Log.i(LogSettings.REQ_RES_LOG, originalResponse.toString())
             originalResponse
         }
 

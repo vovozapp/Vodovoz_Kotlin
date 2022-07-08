@@ -1,6 +1,7 @@
 package com.vodovoz.app.ui.components.fragment.map
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -13,12 +14,14 @@ import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.databinding.FragmentMapBinding
 import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.components.base.ViewStateBaseDialogFragment
+import com.vodovoz.app.ui.components.fragment.login.LoginFragment
 import com.vodovoz.app.ui.mapper.AddressMapper.mapToUI
 import com.vodovoz.app.ui.mapper.DeliveryZonesBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.ui.model.DeliveryZoneUI
 import com.vodovoz.app.ui.model.custom.DeliveryZonesBundleUI
 import com.vodovoz.app.util.Keys
+import com.vodovoz.app.util.LogSettings
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
@@ -50,7 +53,12 @@ class MapViewModel(
     private val compositeDisposable = CompositeDisposable()
 
     private lateinit var deliveryZonesBundleUI: DeliveryZonesBundleUI
-    lateinit var addressUI: AddressUI
+    var addressUI: AddressUI? = null
+
+    fun updateArgs(addressUI: AddressUI?) {
+        this.addressUI = addressUI
+        addressUI?.let { addressUIMLD.value = it }
+    }
 
     fun updateData() {
         dataRepository
@@ -70,7 +78,7 @@ class MapViewModel(
                         }
                     }
                 },
-                onError = { throwable -> viewStateMLD.value = ViewState.Error(throwable.message ?: "Неизвестная ошибка") }
+                onError = { throwable -> viewStateMLD.value = ViewState.Error(throwable.message ?: "Неизвестная") }
             ).addTo(compositeDisposable)
 
     }
@@ -89,7 +97,9 @@ class MapViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onSuccess = { response ->
+                    val addressId = addressUI?.id
                     addressUI = (response as ResponseEntity.Success).data.mapToUI()
+                    addressUI?.id = addressId
                     addressUIMLD.value = addressUI
                 },
                 onError = { throwable -> errorMLD.value = throwable.message ?: "Неизвестная ошибка"}

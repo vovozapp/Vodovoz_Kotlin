@@ -269,9 +269,10 @@ interface RemoteDataSource {
     fun fetchDeliveryZonesResponse(): Single<ResponseEntity<DeliveryZonesBundleEntity>>
 
     //Получить сохраненные адреса
-    fun fetchSavedAddress(
-        userId: String?
-    ): Single<List<AddressEntity>>
+    fun fetchAddressesSaved(
+        userId: Long?,
+        type: Int?
+    ): Single<ResponseEntity<List<AddressEntity>>>
 
     //Адрес по координатам
     fun fetchAddressByGeocodeResponse(
@@ -279,5 +280,54 @@ interface RemoteDataSource {
         longitude: Double,
         apiKey: String
     ): Single<ResponseEntity<AddressEntity>>
+
+    //Обновить адрес
+    fun updateAddress(
+        locality: String?,
+        street: String?,
+        house: String?,
+        entrance: String?,
+        floor: String?,
+        office: String?,
+        comment: String?,
+        type: Int?,
+        addressId: Long?,
+        userId: Long?
+    ): Single<ResponseEntity<String>>
+
+    //Добавить адрес в сохраненные
+    fun addAddress(
+        locality: String?,
+        street: String?,
+        house: String?,
+        entrance: String?,
+        floor: String?,
+        office: String?,
+        comment: String?,
+        type: Int?,
+        userId: Long?
+    ): Single<ResponseEntity<String>>
+
+    //Удалить адресс
+    fun deleteAddress(
+        addressId: Long?,
+        userId: Long?
+    ): Single<ResponseEntity<String>>
+
+    //Постраничная загрузка всех заказов
+    suspend fun fetchAllOrders(
+        userId: Long?,
+        appVersion: String?,
+        orderId: Long?,
+        status: String?,
+        page: Int?
+    ): Response<ResponseBody>
+
+    //Детальная информация о заказе
+    fun fetchOrderDetailsResponse(
+        userId: Long?,
+        appVersion: String?,
+        orderId: Long?
+    ): Single<ResponseEntity<OrderDetailsEntity>>
 
 }

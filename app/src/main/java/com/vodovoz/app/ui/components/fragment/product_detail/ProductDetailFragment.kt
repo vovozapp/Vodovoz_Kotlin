@@ -9,7 +9,6 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AbsListView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.NestedScrollView
@@ -29,8 +28,8 @@ import com.vodovoz.app.ui.components.adapter.ServicesAdapter
 import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
-import com.vodovoz.app.ui.components.base.picturePagerAdapter.DetailPictureDiffUtilCallback
-import com.vodovoz.app.ui.components.base.picturePagerAdapter.DetailPictureSliderAdapter
+import com.vodovoz.app.ui.components.diffUtils.DetailPictureDiffUtilCallback
+import com.vodovoz.app.ui.components.adapter.DetailPicturePagerAdapter
 import com.vodovoz.app.ui.components.decoration.CommentMarginDecoration
 import com.vodovoz.app.ui.components.decoration.PriceMarginDecoration
 import com.vodovoz.app.ui.components.decoration.SearchMarginDecoration
@@ -67,7 +66,7 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
     private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val onPromotionClickSubject: PublishSubject<Long> = PublishSubject.create()
 
-    private val detailPictureSliderAdapter = DetailPictureSliderAdapter(
+    private val detailPicturePagerAdapter = DetailPicturePagerAdapter(
         iOnProductDetailPictureClick = {
             findNavController().navigate(ProductDetailFragmentDirections.actionToFullScreenDetailPicturesSliderFragment(
                 binding.detailPicturePager.currentItem,
@@ -165,7 +164,7 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
     private fun initDetailPictureRecycler() {
         binding.back.setOnClickListener { findNavController().popBackStack() }
         binding.detailPicturePager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.detailPicturePager.adapter = detailPictureSliderAdapter
+        binding.detailPicturePager.adapter = detailPicturePagerAdapter
         TabLayoutMediator(binding.tabIndicator, binding.detailPicturePager) { _, _ -> }.attach()
     }
 
@@ -644,13 +643,13 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
 
     private fun fillDetailPictureRecycler(detailPictureList: List<String>) {
         val diffUtil = DetailPictureDiffUtilCallback(
-            oldList = detailPictureSliderAdapter.detailPictureUrlList,
+            oldList = detailPicturePagerAdapter.detailPictureUrlList,
             newList = detailPictureList
         )
 
         DiffUtil.calculateDiff(diffUtil).let { diffResult ->
-            detailPictureSliderAdapter.detailPictureUrlList = detailPictureList
-            diffResult.dispatchUpdatesTo(detailPictureSliderAdapter)
+            detailPicturePagerAdapter.detailPictureUrlList = detailPictureList
+            diffResult.dispatchUpdatesTo(detailPicturePagerAdapter)
         }
     }
 

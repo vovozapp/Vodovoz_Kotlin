@@ -1,17 +1,18 @@
 package com.vodovoz.app.data.model.common
 
 class ProductEntity(
-    val id: Long,
-    val name: String,
-    var detailPicture: String,
-    var isFavorite: Boolean,
-    val oldPrice: Int,
-    val newPrice: Int,
-    val status: String,
-    val statusColor: String,
-    val rating: Double,
-    val commentAmount: String,
+    val id: Long = 0,
+    val name: String = "",
+    var detailPicture: String = "",
+    var isFavorite: Boolean = false,
+    val oldPrice: Int = 0,
+    val newPrice: Int = 0,
+    val status: String = "",
+    val statusColor: String = "",
+    val rating: Double = 0.0,
+    val commentAmount: String = "",
     var cartQuantity: Int = 0,
+    var orderQuantity: Int = 0,
     val isCanReturnBottles: Boolean = false,
-    val detailPictureList: List<String>
+    val detailPictureList: List<String> = listOf()
 )

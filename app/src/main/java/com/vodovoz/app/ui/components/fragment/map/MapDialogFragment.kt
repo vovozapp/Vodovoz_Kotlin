@@ -2,11 +2,9 @@ package com.vodovoz.app.ui.components.fragment.map
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,19 +16,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentMapBinding
 import com.vodovoz.app.ui.components.adapter.AddressesResultAdapter
 import com.vodovoz.app.ui.components.base.ViewState
-import com.vodovoz.app.ui.components.base.ViewStateBaseDialogFragment
 import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
-import com.vodovoz.app.ui.components.diffUtils.AddressDiffUtilCallback
+import com.vodovoz.app.ui.components.diffUtils.SimpleAddressDiffUtilCallback
 import com.vodovoz.app.ui.extensions.ColorExtensions.getColorWithAlpha
 import com.vodovoz.app.ui.model.DeliveryZoneUI
 import com.vodovoz.app.util.Keys
-import com.vodovoz.app.util.LogSettings
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
@@ -90,14 +86,14 @@ class MapDialogFragment : ViewStateBaseFragment(),
     private val onAddressClickSubject: PublishSubject<Pair<String, Point>> = PublishSubject.create()
     private val addressesAdapter = AddressesResultAdapter(onAddressClickSubject = onAddressClickSubject)
 
+    private var isEditOldAddressMode = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MapKitFactory.setApiKey(Keys.MAPKIT_API_KEY)
-        MapKitFactory.initialize(requireContext())
         //setStyle(STYLE_NORMAL, R.style.MapDialog)
-        mapKit = MapKitFactory.getInstance()
 
         initViewModel()
+        getArgs()
         subscribeSubjects()
     }
 
@@ -109,11 +105,18 @@ class MapDialogFragment : ViewStateBaseFragment(),
         viewModel.updateData()
     }
 
+    private fun getArgs() {
+        MapDialogFragmentArgs.fromBundle(requireArguments()).address?.let { addressUI ->
+            viewModel.updateArgs(addressUI)
+            isEditOldAddressMode = true
+        }
+    }
+
     private fun subscribeSubjects() {
         onAddressClickSubject.subscribeBy { pair ->
             binding.searchEdit.setText(pair.first)
             viewModel.fetchAddressByGeocode(
-                pair.second.longitude,
+                pair.second.latitude,
                 pair.second.longitude
             )
             moveCamera(pair.second)
@@ -159,6 +162,7 @@ class MapDialogFragment : ViewStateBaseFragment(),
     }
 
     private fun initMap() {
+        mapKit = MapKitFactory.getInstance()
         binding.mapView.map.addInputListener(this)
         userLocationLayer = mapKit.createUserLocationLayer(binding.mapView.mapWindow)
         userLocationLayer.isVisible = true
@@ -181,11 +185,7 @@ class MapDialogFragment : ViewStateBaseFragment(),
         searchManager = SearchFactory.getInstance().createSearchManager(SearchManagerType.COMBINED)
         suggestSession = searchManager.createSuggestSession()
 
-        binding.addAddress.setOnClickListener {
-            findNavController().navigate(MapDialogFragmentDirections.actionToAddAddressBottomFragment(
-                viewModel.addressUI
-            ))
-        }
+        binding.addAddress.setOnClickListener { showAddAddressBottomDialog() }
 
         binding.searchEdit.addTextChangedListener(
             object : TextWatcher {
@@ -213,7 +213,15 @@ class MapDialogFragment : ViewStateBaseFragment(),
             }
         }
     }
-    
+
+    private fun showAddAddressBottomDialog() {
+        findNavController().navigate(
+            MapDialogFragmentDirections.actionToAddAddressBottomFragment().apply {
+                this.address = viewModel.addressUI
+            }
+        )
+    }
+
     private fun showSearchResultRecyclerView() {
         isShowSearchResult = true
         binding.appBarLayout.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
@@ -263,10 +271,18 @@ class MapDialogFragment : ViewStateBaseFragment(),
 
         viewModel.deliveryZoneUIListLD.observe(viewLifecycleOwner) { deliveryZoneUIList ->
             drawDeliveryZones(deliveryZoneUIList)
+            if (isEditOldAddressMode) {
+                isEditOldAddressMode = false
+                showAddAddressBottomDialog()
+            }
         }
 
         viewModel.addressUILD.observe(viewLifecycleOwner) { address ->
-            binding.searchEdit.setText("${address.locality}, ${address.street}, ${address.house}")
+            binding.searchEdit.setText("${address.fullAddress}")
+        }
+
+        viewModel.errorLD.observe(viewLifecycleOwner) { errorMessage ->
+            Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -298,15 +314,14 @@ class MapDialogFragment : ViewStateBaseFragment(),
     }
 
     override fun onMapTap(map: Map, point: Point) {
-        moveCamera(point)
-        placeMark(point, R.drawable.map_marker)
-        viewModel.fetchAddressByGeocode(
-            point.latitude,
-            point.longitude
-        )
+        onMapCLick(point)
     }
 
     override fun onMapLongTap(map: Map, point: Point) {
+        onMapCLick(point)
+    }
+
+    private fun onMapCLick(point: Point) {
         moveCamera(point)
         placeMark(point, R.drawable.map_marker)
         viewModel.fetchAddressByGeocode(
@@ -316,12 +331,14 @@ class MapDialogFragment : ViewStateBaseFragment(),
     }
 
     override fun onObjectAdded(userLocationView: UserLocationView) {
-        binding.mapView.map.move(CameraPosition(Point(
-            userLocationView.arrow.geometry.latitude,
-            userLocationView.arrow.geometry.longitude
-        ), 16f, 0f, 0f),
+        binding.mapView.map.move(
+            CameraPosition(Point(
+                userLocationView.arrow.geometry.latitude,
+                userLocationView.arrow.geometry.longitude
+            ), 16f, 0f, 0f),
             Animation(Animation.Type.SMOOTH, 1f),
-            null)
+            null
+        )
     }
 
     override fun onObjectRemoved(p0: UserLocationView) {
@@ -332,10 +349,7 @@ class MapDialogFragment : ViewStateBaseFragment(),
 
     }
 
-    private val suggestResult: MutableList<String> = mutableListOf()
-
     override fun onResponse(itemList: MutableList<SuggestItem>) {
-        suggestResult.clear()
         val addressList = mutableListOf<Pair<String, Point>>()
         for (item in itemList) {
             if (item.uri?.contains("geo") == true) {
@@ -353,7 +367,7 @@ class MapDialogFragment : ViewStateBaseFragment(),
     }
 
     private fun updateAddressesRecycler(addressList: List<Pair<String, Point>>) {
-        val diffUtil = AddressDiffUtilCallback(
+        val diffUtil = SimpleAddressDiffUtilCallback(
             oldList = addressesAdapter.addressList,
             newList = addressList
         )

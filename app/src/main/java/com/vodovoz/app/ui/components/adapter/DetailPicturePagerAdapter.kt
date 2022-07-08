@@ -1,23 +1,24 @@
-package com.vodovoz.app.ui.components.base.picturePagerAdapter
+package com.vodovoz.app.ui.components.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.vodovoz.app.databinding.ViewHolderPagerDetailPictureBinding
 import com.vodovoz.app.databinding.ViewHolderSliderDetailPictureBinding
-import com.vodovoz.app.ui.components.interfaces.IOnProductClick
+import com.vodovoz.app.ui.components.view_holder.DetailPicturePagerViewHolder
 import com.vodovoz.app.ui.components.interfaces.IOnProductDetailPictureClick
 
-class DetailPictureSliderAdapter(
+class DetailPicturePagerAdapter(
     private val iOnProductDetailPictureClick: IOnProductDetailPictureClick
-) : RecyclerView.Adapter<DetailPictureSliderViewHolder>() {
+) : RecyclerView.Adapter<DetailPicturePagerViewHolder>() {
 
     var detailPictureUrlList =  listOf<String>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ) = DetailPictureSliderViewHolder(
-        binding = ViewHolderSliderDetailPictureBinding.inflate(
+    ) = DetailPicturePagerViewHolder(
+        binding = ViewHolderPagerDetailPictureBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -27,7 +28,7 @@ class DetailPictureSliderAdapter(
     )
 
     override fun onBindViewHolder(
-        holder: DetailPictureSliderViewHolder,
+        holder: DetailPicturePagerViewHolder,
         position: Int
     ) = holder.onBind(detailPictureUrlList[position])
 

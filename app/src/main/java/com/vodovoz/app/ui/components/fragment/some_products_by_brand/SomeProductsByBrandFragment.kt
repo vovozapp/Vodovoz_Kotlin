@@ -48,6 +48,7 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
 
     private lateinit var onProductClickSubject: PublishSubject<Long>
     private val onChangeProductQuantitySubject: PublishSubject<ProductUI> = PublishSubject.create()
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
 
     private lateinit var binding: FragmentPaginatedBrandProductListBinding
     private lateinit var viewModel: SomeProductsByBrandViewModel
@@ -55,7 +56,8 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
     private val linearProductAdapter: LinearProductsAdapter by lazy {
         LinearProductsAdapter(
             onProductClickSubject = onProductClickSubject,
-            onChangeProductQuantitySubject = onChangeProductQuantitySubject
+            onChangeProductQuantitySubject = onChangeProductQuantitySubject,
+            onFavoriteClickSubject = onFavoriteClickSubject
         )
     }
 

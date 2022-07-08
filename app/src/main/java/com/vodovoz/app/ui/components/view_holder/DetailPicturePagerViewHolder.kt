@@ -1,0 +1,28 @@
+package com.vodovoz.app.ui.components.view_holder
+
+import android.content.Context
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.vodovoz.app.databinding.ViewHolderPagerDetailPictureBinding
+import com.vodovoz.app.databinding.ViewHolderSliderDetailPictureBinding
+import com.vodovoz.app.ui.components.interfaces.IOnProductClick
+import com.vodovoz.app.ui.components.interfaces.IOnProductDetailPictureClick
+
+class DetailPicturePagerViewHolder(
+    private val binding: ViewHolderPagerDetailPictureBinding,
+    private val iOnProductDetailPictureClick: IOnProductDetailPictureClick,
+    private val context: Context
+) : RecyclerView.ViewHolder(binding.root) {
+
+    init {
+        binding.detailPicture.setOnClickListener { iOnProductDetailPictureClick.onProductDetailPictureClick() }
+    }
+
+    fun onBind(detailPictureUrl: String) {
+        Glide
+            .with(context)
+            .load(detailPictureUrl)
+            .into(binding.detailPicture)
+    }
+
+}

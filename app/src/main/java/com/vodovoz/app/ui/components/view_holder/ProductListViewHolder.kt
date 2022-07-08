@@ -12,8 +12,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderProductListBinding
-import com.vodovoz.app.ui.components.base.picturePagerAdapter.DetailPictureDiffUtilCallback
-import com.vodovoz.app.ui.components.base.picturePagerAdapter.DetailPictureSliderAdapter
+import com.vodovoz.app.ui.components.diffUtils.DetailPictureDiffUtilCallback
+import com.vodovoz.app.ui.components.adapter.DetailPicturePagerAdapter
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountText
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
@@ -23,10 +23,11 @@ class ProductListViewHolder(
     private val binding: ViewHolderProductListBinding,
     private val onProductClickSubject: PublishSubject<Long>,
     private val onChangeProductQuantitySubject: PublishSubject<ProductUI>,
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
     private val context: Context
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val detailPictureSliderAdapter = DetailPictureSliderAdapter(
+    private val detailPicturePagerAdapter = DetailPicturePagerAdapter(
         iOnProductDetailPictureClick = { onProductClickSubject.onNext(productUI.id) }
     )
 
@@ -43,7 +44,7 @@ class ProductListViewHolder(
         binding.detailPicturePager.setOnClickListener { onProductClickSubject.onNext(productUI.id) }
         binding.oldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.detailPicturePager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.detailPicturePager.adapter = detailPictureSliderAdapter
+        binding.detailPicturePager.adapter = detailPicturePagerAdapter
 
         TabLayoutMediator(binding.tabIndicator, binding.detailPicturePager) { _, _ -> }.attach()
 
@@ -127,6 +128,13 @@ class ProductListViewHolder(
             }
         }
 
+        if (productUI.orderQuantity != 0) {
+            binding.unitPrice.text = StringBuilder()
+                .append("x")
+                .append(productUI.orderQuantity)
+                .toString()
+        }
+
         when (productUI.oldPrice) {
             0 -> binding.discountContainer.visibility = View.GONE
             else -> {
@@ -154,13 +162,13 @@ class ProductListViewHolder(
         else binding.spaceBetweenStatusAndTitle.visibility = View.GONE
 
         val diffUtil = DetailPictureDiffUtilCallback(
-            oldList = detailPictureSliderAdapter.detailPictureUrlList,
+            oldList = detailPicturePagerAdapter.detailPictureUrlList,
             newList = productUI.detailPictureList
         )
 
         DiffUtil.calculateDiff(diffUtil).let { diffResult ->
-            detailPictureSliderAdapter.detailPictureUrlList = productUI.detailPictureList
-            diffResult.dispatchUpdatesTo(detailPictureSliderAdapter)
+            detailPicturePagerAdapter.detailPictureUrlList = productUI.detailPictureList
+            diffResult.dispatchUpdatesTo(detailPicturePagerAdapter)
         }
     }
 

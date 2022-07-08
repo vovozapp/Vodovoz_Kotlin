@@ -35,6 +35,7 @@ class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
 
     private val onChangeProductQuantitySubject: PublishSubject<ProductUI> = PublishSubject.create()
     private lateinit var onProductClickSubject: PublishSubject<Long>
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
 
     private lateinit var binding: FragmentPaginatedMaybeLikeProductListBinding
     private lateinit var viewModel: SomeProductsMaybeLikeViewModel
@@ -43,6 +44,7 @@ class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
         GridProductsAdapter(
             onProductClickSubject = onProductClickSubject,
             onChangeProductQuantitySubject = onChangeProductQuantitySubject,
+            onFavoriteClickSubject = onFavoriteClickSubject
         )
     }
 

@@ -282,19 +282,40 @@ interface VodovozApi {
 
     @GET("/newmobile/address.php")
     fun fetchAddressResponse(
-        @Query("city") city: String? = null,
-        @Query("description") description: String? = null,
+        @Query("city") locality: String? = null,
+        @Query("description") comment: String? = null,
         @Query("entrance") entrance: String? = null,
-        @Query("flat") flat: String? = null,
+        @Query("flat") office: String? = null,
         @Query("floor") floor: String? = null,
         @Query("house") house: String? = null,
         @Query("street") street: String? = null,
-        @Query("userid") userid: String? = null,
+        @Query("userid") userid: Long? = null,
         @Query("iblock_id") blockId: Int? = null,
         @Query("action") action: String? = null,
-        @Query("tip") type: Int? = null
+        @Query("tip") type: Int? = null,
+        @Query("addressid") addressId: Long? = null
+    ): Single<Response<ResponseBody>>
+
+    @GET("/newmobile/profile/historyorder/spisokzakazov.php")
+    suspend fun fetchOrdersHistoryResponse(
+        @Query("userid") userId: Long? = null,
+        @Query("action") action: String? = null,
+        @Query("nav") page: Int? = null,
+        @Query("android") appVersion: String? = null,
+        @Query("status") status: String? = null,
+        @Query("id") orderId: Long? = null
+    ): Response<ResponseBody>
+
+    @GET("/newmobile/profile/historyorder/detailzakaz.php")
+    fun fetchOrdersResponse(
+        @Query("userid") userId: Long? = null,
+        @Query("action") action: String? = null,
+        @Query("android") appVersion: String? = null,
+        @Query("id") orderId: Long? = null
     ): Single<ResponseBody>
 
+    ///newmobile/profile/historyorder/detailzakaz.php?action=detail&userid="+User.getInstance().getuser_id()+"&id="+OrderNumber+"&android="+ BuildConfig.VERSION_NAME
+    //http://m.vodovoz.ru/newmobile/profile/historyorder/spisokzakazov.php?userid=515&action=spisok&nav=1&android=1.4.87&status=&id=
 //    (@Field("city") String city, @Field("description") String description, @Field("entrance") String entrance ,
 //    @Field("flat") String flat , @Field("floor") String floor, @Field("house") String house,
 //    @Field("street") String street, @Field("userid") String userid , @Field("iblock_id") String iblock_id, @Field("addressid") String adressid , @Field("action") String action, @Field("tip") int tip );

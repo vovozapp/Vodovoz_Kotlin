@@ -22,6 +22,10 @@ import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.components.diffUtils.ProductDiffUtilCallback
+import com.vodovoz.app.ui.components.fragment.home.HomeFragmentDirections
+import com.vodovoz.app.ui.components.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
+import com.vodovoz.app.ui.components.fragment.slider.products_slider.ProductsSliderConfig
+import com.vodovoz.app.ui.components.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.ProductUI
@@ -46,10 +50,17 @@ class CartFragment : ViewStateBaseFragment() {
     private val onChangeCartSubject: PublishSubject<Boolean> = PublishSubject.create()
     private val onChangeProductQuantitySubject: PublishSubject<ProductUI> = PublishSubject.create()
     private val onSwapClickSubject: PublishSubject<Long> = PublishSubject.create()
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
+
+    private val bestForYouProductsSliderFragment: ProductsSliderFragment by lazy {
+        ProductsSliderFragment.newInstance(ProductsSliderConfig(
+            containShowAllButton = false
+        )) }
 
     private val availableCartItemsAdapter = LinearProductsAdapter(
         onProductClickSubject = onProductClickSubject,
         onChangeProductQuantitySubject = onChangeProductQuantitySubject,
+        onFavoriteClickSubject = onFavoriteClickSubject,
     )
 
     private val notAvailableCartItemsAdapter = NotAvailableCartItemsAdapter(
@@ -63,6 +74,7 @@ class CartFragment : ViewStateBaseFragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         initViewModel()
+        subscribeSubjects()
     }
 
     private fun initViewModel() {
@@ -70,6 +82,18 @@ class CartFragment : ViewStateBaseFragment() {
             this,
             (requireActivity().application as VodovozApplication).viewModelFactory
         )[CartViewModel::class.java]
+    }
+
+    private fun subscribeSubjects() {
+        onFavoriteClickSubject.subscribeBy { pair ->
+            viewModel.changeFavoriteStatus(pair.first, pair.second)
+        }.addTo(compositeDisposable)
+        onProductClickSubject.subscribeBy { productId ->
+            findNavController().navigate(CartFragmentDirections.actionToProductDetailFragment(productId))
+        }.addTo(compositeDisposable)
+        onChangeProductQuantitySubject.subscribeBy { product ->
+            viewModel.changeCart(product)
+        }.addTo(compositeDisposable)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -108,6 +132,7 @@ class CartFragment : ViewStateBaseFragment() {
         observeResultLiveData()
         initAvailableProductRecycler()
         initNotAvailableProductRecycler()
+        initBestForYouProductsSlider()
         initButtons()
     }
 
@@ -128,6 +153,20 @@ class CartFragment : ViewStateBaseFragment() {
         binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
+    }
+
+    private fun initBestForYouProductsSlider() {
+        childFragmentManager.beginTransaction().replace(
+            R.id.bestForYouProductSliderFragment,
+            bestForYouProductsSliderFragment
+        ).commit()
+
+        bestForYouProductsSliderFragment.initCallbacks(
+            iOnProductClick = { productId -> onProductClickSubject.onNext(productId)},
+            iOnChangeProductQuantity = { _, _ -> },
+            iOnFavoriteClick = { pair -> onFavoriteClickSubject.onNext(pair) },
+            iOnShowAllProductsClick = {}
+        )
     }
 
     private fun initButtons() {
@@ -238,7 +277,7 @@ class CartFragment : ViewStateBaseFragment() {
         }
 
         viewModel.bestForYouCategoryDetailLD.observe(viewLifecycleOwner) { bestForYouCategoryDetailUI ->
-            fillBestForYouProductSlider(bestForYouCategoryDetailUI)
+            bestForYouProductsSliderFragment.updateData(listOf(bestForYouCategoryDetailUI))
         }
 
         viewModel.giftProductListLD.observe(viewLifecycleOwner) { giftList ->
@@ -286,33 +325,15 @@ class CartFragment : ViewStateBaseFragment() {
         }
     }
 
-    private fun fillBestForYouProductSlider(categoryDetailUI: CategoryDetailUI) {
-//        childFragmentManager.beginTransaction()
-//            .replace(R.id.bestForYouProductSliderFragment, ProductsSliderFragment.newInstance(
-//                dataSource = ProductsSliderFragment.DataSource.Args(listOf(categoryDetailUI)),
-//                config = ProductsSliderFragment.Config(true),
-//                onProductClickSubject = onProductClickSubject,
-//                onChangeCartSubject = onChangeCartSubject
-//            )).commit()
-    }
 
     override fun onStart() {
         super.onStart()
-
         viewModel.isFirstUpdate = true
         viewModel.updateData()
-
-        onProductClickSubject.subscribeBy { productId ->
-            findNavController().navigate(CartFragmentDirections.actionToProductDetailFragment(productId))
-        }.addTo(compositeDisposable)
-
-        onChangeProductQuantitySubject.subscribeBy { product ->
-            viewModel.changeCart(product)
-        }.addTo(compositeDisposable)
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         compositeDisposable.clear()
     }
 

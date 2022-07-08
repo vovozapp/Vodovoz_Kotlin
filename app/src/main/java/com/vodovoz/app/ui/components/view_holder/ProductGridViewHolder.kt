@@ -12,8 +12,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderProductGridBinding
-import com.vodovoz.app.ui.components.base.picturePagerAdapter.DetailPictureDiffUtilCallback
-import com.vodovoz.app.ui.components.base.picturePagerAdapter.DetailPictureSliderAdapter
+import com.vodovoz.app.ui.components.diffUtils.DetailPictureDiffUtilCallback
+import com.vodovoz.app.ui.components.adapter.DetailPicturePagerAdapter
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountText
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
@@ -22,11 +22,12 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 class ProductGridViewHolder(
     private val onProductClickSubject: PublishSubject<Long>,
     private val onChangeProductQuantitySubject: PublishSubject<ProductUI>,
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
     private val binding: ViewHolderProductGridBinding,
     private val context: Context
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val detailPictureSliderAdapter = DetailPictureSliderAdapter(
+    private val detailPicturePagerAdapter = DetailPicturePagerAdapter(
         iOnProductDetailPictureClick = { onProductClickSubject.onNext(productUI.id) }
     )
 
@@ -42,7 +43,7 @@ class ProductGridViewHolder(
         binding.root.setOnClickListener { onProductClickSubject.onNext(productUI.id) }
         binding.oldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.detailPicturePager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.detailPicturePager.adapter = detailPictureSliderAdapter
+        binding.detailPicturePager.adapter = detailPicturePagerAdapter
 
         binding.amountController.add.setOnClickListener {
             if (productUI.cartQuantity == 0) {
@@ -149,13 +150,13 @@ class ProductGridViewHolder(
         else binding.spaceBetweenStatuses.visibility = View.GONE
 
         val diffUtil = DetailPictureDiffUtilCallback(
-            oldList = detailPictureSliderAdapter.detailPictureUrlList,
+            oldList = detailPicturePagerAdapter.detailPictureUrlList,
             newList = productUI.detailPictureList
         )
 
         DiffUtil.calculateDiff(diffUtil).let { diffResult ->
-            detailPictureSliderAdapter.detailPictureUrlList = productUI.detailPictureList
-            diffResult.dispatchUpdatesTo(detailPictureSliderAdapter)
+            detailPicturePagerAdapter.detailPictureUrlList = productUI.detailPictureList
+            diffResult.dispatchUpdatesTo(detailPicturePagerAdapter)
         }
     }
 

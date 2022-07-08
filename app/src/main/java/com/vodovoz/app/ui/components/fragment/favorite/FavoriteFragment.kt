@@ -59,11 +59,13 @@ class FavoriteFragment : ViewStateBaseFragment() {
     private val onChangeProductQuantitySubject: PublishSubject<ProductUI> = PublishSubject.create()
     private val updateSubject: PublishSubject<Boolean> = PublishSubject.create()
     private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
 
     private var productAdapter: PagingProductsAdapter = PagingProductsAdapter(
         onProductClickSubject = onProductClickSubject,
         productDiffItemCallback = ProductDiffItemCallback(),
         onChangeProductQuantitySubject = onChangeProductQuantitySubject,
+        onFavoriteClickSubject = onFavoriteClickSubject,
         viewMode = viewMode
     )
 
@@ -292,6 +294,7 @@ class FavoriteFragment : ViewStateBaseFragment() {
             onProductClickSubject = onProductClickSubject,
             productDiffItemCallback = ProductDiffItemCallback(),
             onChangeProductQuantitySubject = onChangeProductQuantitySubject,
+            onFavoriteClickSubject = onFavoriteClickSubject,
             viewMode = viewMode
         )
 

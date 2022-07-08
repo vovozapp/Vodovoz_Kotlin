@@ -18,7 +18,7 @@ class OrderDiffUtilCallback(
         val oldItem = oldList[oldItemPosition]
         val newItem = newList[newItemPosition]
 
-        if (oldItem.status != newItem.status) return false
+        if (oldItem.orderStatusUI != newItem.orderStatusUI) return false
         if (oldItem.address != newItem.address) return false
         if (oldItem.price != newItem.price) return false
 

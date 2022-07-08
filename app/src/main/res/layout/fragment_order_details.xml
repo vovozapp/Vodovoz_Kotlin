@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleTextAppearance="@style/ToolbarTitle"
+        app:title="Заказ от 31.03.2022"
+        app:subtitleTextAppearance="@style/ToolbarSubtitle"
+        app:subtitle="#124124214">
+
+        <TextView
+            android:id="@+id/cancelOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:fontFamily="@font/rotonda"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/blackTextDark"
+            android:layout_marginEnd="@dimen/primary_space"
+            android:text="Отменить" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/statusContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/primary_space"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_scrollFlags="enterAlways|scroll">
+
+                <ImageView
+                    android:id="@+id/statusImage"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_order_in_processing"
+                    android:background="@drawable/background_order_status_image"
+                    android:padding="5dp"
+                    app:tint="@color/white"/>
+
+                <TextView
+                    android:id="@+id/price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:layout_marginTop="@dimen/primary_margin"
+                    android:text="2123 Р"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/actionsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:id="@+id/repeatOrder"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="45dp"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/repeatImage"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_repeat"
+                        app:tint="@color/white"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/repeatLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:fontFamily="@font/rotonda"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:text="Повторить"
+                        android:layout_marginStart="4dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/payOrder"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="45dp"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/payImage"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/rub"
+                        app:tint="@color/white"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/payLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:fontFamily="@font/rotonda"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:text="Оплатить"
+                        android:layout_marginStart="@dimen/primary_margin"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/infoLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/primary_space"
+                    android:layout_marginTop="@dimen/primary_space"
+                    android:fontFamily="@font/rotonda"
+                    android:text="Информация о заказе"
+                    android:textColor="@color/blackTextLight"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/deliveryDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textStyle="bold"
+                    android:textColor="@color/blackTextDark"
+                    android:textSize="16sp"
+                    android:layout_marginStart="@dimen/primary_space"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/infoLabel"
+                    tools:text="20.07.2022" />
+
+                <TextView
+                    android:id="@+id/deliveryInterval"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextDark"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="@dimen/primary_space"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/deliveryDate"
+                    tools:text="C 14 до 20" />
+
+                <TextView
+                    android:id="@+id/payStatusLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/primary_space"
+                    android:fontFamily="@font/rotonda"
+                    android:text="Не оплачен"
+                    android:textColor="@color/blackTextLight"
+                    android:textSize="14sp"
+                    android:layout_marginEnd="@dimen/primary_space"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/yellow"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="@dimen/primary_space"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/payStatusLabel"
+                    tools:text="Принят" />
+
+                <TextView
+                    android:id="@+id/payMethod"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextDark"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="@dimen/primary_space"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/status"
+                    tools:text="Наличные курьеру" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/dividerAfterMainInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/primary_space"
+                    app:layout_constraintTop_toBottomOf="@+id/payMethod"/>
+
+                <TextView
+                    android:id="@+id/addressLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/primary_space"
+                    android:fontFamily="@font/rotonda"
+                    android:text="Информация о заказе"
+                    android:layout_marginTop="@dimen/primary_space"
+                    android:textColor="@color/blackTextLight"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/dividerAfterMainInfo" />
+
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextDark"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="@dimen/primary_space"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/addressLabel"
+                    tools:text="Адрес" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/dividerAfterAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/primary_space"
+                    app:layout_constraintTop_toBottomOf="@+id/address"/>
+
+                <TextView
+                    android:id="@+id/receiverLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/primary_space"
+                    android:fontFamily="@font/rotonda"
+                    android:text="Информация о заказе"
+                    android:layout_marginTop="@dimen/primary_space"
+                    android:textColor="@color/blackTextLight"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/dividerAfterAddress" />
+
+                <TextView
+                    android:id="@+id/receiverName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextDark"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="@dimen/primary_space"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/receiverLabel"
+                    tools:text="Инван Иванович" />
+
+                <TextView
+                    android:id="@+id/receiverPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextDark"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="@dimen/primary_space"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/receiverName"
+                    tools:text="+7 951 234 23 12" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/dividerAfterReceiver"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/primary_space"
+                    app:layout_constraintTop_toBottomOf="@+id/receiverPhone"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/productsRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:translationZ="@dimen/card_elevation"
+                    app:layout_constraintTop_toBottomOf="@+id/dividerAfterReceiver" />
+
+                <TextView
+                    android:id="@+id/priceLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/light_gray"
+                    android:fontFamily="@font/rotonda"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingTop="@dimen/primary_margin"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:paddingBottom="@dimen/primary_margin"
+                    android:text="Стоимость"
+                    android:textColor="@color/blackTextDark"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@+id/productsRecycler" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/dividerAfterPriceLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    app:layout_constraintTop_toBottomOf="@+id/priceLabel"/>
+
+                <LinearLayout
+                    android:id="@+id/productsPriceContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingTop="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:paddingBottom="@dimen/primary_margin"
+                    app:layout_constraintTop_toBottomOf="@+id/dividerAfterPriceLabel">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/rotonda"
+                        android:text="Стоимость товаров"
+                        android:textColor="@color/blackTextPrimary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/productsPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:fontFamily="@font/rotonda"
+                        android:text="1135 Р"
+                        android:textColor="@color/blackTextPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/depositContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingTop="@dimen/primary_margin"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:paddingBottom="@dimen/primary_margin"
+                    app:layout_constraintTop_toBottomOf="@+id/productsPriceContainer">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:fontFamily="@font/rotonda"
+                        android:text="Залог"
+                        android:textColor="@color/blackTextPrimary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/depositPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:fontFamily="@font/rotonda"
+                        android:text="1135 Р"
+                        android:textColor="@color/blackTextPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/discountContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingTop="@dimen/primary_margin"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:paddingBottom="@dimen/primary_margin"
+                    app:layout_constraintTop_toBottomOf="@+id/depositContainer">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:fontFamily="@font/rotonda"
+                        android:text="Стоимость доставки"
+                        android:textColor="@color/blackTextPrimary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/deliveryPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:fontFamily="@font/rotonda"
+                        android:text="1135 Р"
+                        android:textColor="@color/blackTextPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/totalPriceContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingTop="@dimen/primary_margin"
+                    android:paddingEnd="@dimen/primary_space"
+                    android:paddingBottom="@dimen/primary_space"
+                    app:layout_constraintTop_toBottomOf="@+id/discountContainer">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:fontFamily="@font/rotonda"
+                        android:text="Итого"
+                        android:textColor="@color/blackTextDark"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/total"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:fontFamily="@font/rotonda"
+                        android:text="1135 Р"
+                        android:textColor="@color/blackTextDark"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</LinearLayout>

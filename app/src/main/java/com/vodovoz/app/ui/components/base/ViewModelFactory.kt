@@ -7,6 +7,7 @@ import com.vodovoz.app.ui.components.fragment.about_app.AboutAppDialogViewModel
 import com.vodovoz.app.ui.components.fragment.about_services.AboutServicesViewModel
 import com.vodovoz.app.ui.components.fragment.all_brands.AllBrandsViewModel
 import com.vodovoz.app.ui.components.fragment.all_comments_by_product.AllCommentsByProductViewModel
+import com.vodovoz.app.ui.components.fragment.orders_history.OrdersHistoryViewModel
 import com.vodovoz.app.ui.components.fragment.all_promotions.AllPromotionsViewModel
 import com.vodovoz.app.ui.components.fragment.bottom_dialog_add_address.AddAddressViewModel
 import com.vodovoz.app.ui.components.fragment.cart.CartViewModel
@@ -17,6 +18,7 @@ import com.vodovoz.app.ui.components.fragment.full_screen_history_slider.FullScr
 import com.vodovoz.app.ui.components.fragment.home.HomeViewModel
 import com.vodovoz.app.ui.components.fragment.login.LoginViewModel
 import com.vodovoz.app.ui.components.fragment.map.MapViewModel
+import com.vodovoz.app.ui.components.fragment.order_details.OrderDetailsViewModel
 import com.vodovoz.app.ui.components.fragment.paginated_products_catalog.PaginatedProductsCatalogViewModel
 import com.vodovoz.app.ui.components.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersViewModel
 import com.vodovoz.app.ui.components.fragment.product_detail.ProductDetailViewModel
@@ -25,6 +27,7 @@ import com.vodovoz.app.ui.components.fragment.products_catalog.ProductsCatalogVi
 import com.vodovoz.app.ui.components.fragment.profile.ProfileViewModel
 import com.vodovoz.app.ui.components.fragment.promotion_detail.PromotionDetailViewModel
 import com.vodovoz.app.ui.components.fragment.register.RegisterViewModel
+import com.vodovoz.app.ui.components.fragment.saved_addresses.SavedAddressesViewModel
 import com.vodovoz.app.ui.components.fragment.send_comment_about_product.SendCommentAboutProductViewModel
 import com.vodovoz.app.ui.components.fragment.single_root_catalog.SingleRootCatalogViewModel
 import com.vodovoz.app.ui.components.fragment.some_products_by_brand.SomeProductsByBrandViewModel
@@ -145,6 +148,19 @@ class ViewModelFactory(
         if (modelClass.isAssignableFrom(AddAddressViewModel::class.java)){
             return AddAddressViewModel(dataRepository) as T
         }
+
+        if (modelClass.isAssignableFrom(SavedAddressesViewModel::class.java)){
+            return SavedAddressesViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(OrdersHistoryViewModel::class.java)){
+            return OrdersHistoryViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(OrderDetailsViewModel::class.java)){
+            return OrderDetailsViewModel(dataRepository) as T
+        }
+
 
         throw IllegalArgumentException("Unknown View Model Class")
     }

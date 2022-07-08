@@ -13,6 +13,8 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ActivityMainBinding
+import com.vodovoz.app.util.Keys
+import com.yandex.mapkit.MapKitFactory
 
 
 class MainActivity : AppCompatActivity() {
@@ -22,6 +24,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MapKitFactory.setApiKey(Keys.MAPKIT_API_KEY)
+        MapKitFactory.initialize(this)
 
         binding = ActivityMainBinding.inflate(layoutInflater).apply { setContentView(root) }
         

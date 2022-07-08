@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="Адреса"
+            app:titleTextAppearance="@style/ToolbarTitle"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="82dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/personaAddressesTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextDark"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:padding="@dimen/primary_space"
+                    android:text="Частное лицо"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/personalAddressesRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/officeAddressesTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textColor="@color/blackTextDark"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:padding="@dimen/primary_space"
+                    android:text="Компания"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/officeAddressesRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <TextView
+            android:id="@+id/addAddress"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/background_button_primary"
+            android:layout_alignParentBottom="true"
+            android:textSize="16sp"
+            android:fontFamily="@font/rotonda"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:text="Добавить адрес"
+            android:layout_margin="@dimen/primary_space"
+            android:translationZ="@dimen/card_elevation"/>
+
+    </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

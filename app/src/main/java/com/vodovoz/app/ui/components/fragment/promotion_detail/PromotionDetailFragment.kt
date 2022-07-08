@@ -41,10 +41,12 @@ class PromotionDetailFragment : ViewStateBaseFragment() {
 
     private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val onChangeProductQuantitySubject: PublishSubject<ProductUI> = PublishSubject.create()
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
 
     private val linearProductAdapter = LinearProductsAdapter(
         onProductClickSubject = onProductClickSubject,
-        onChangeProductQuantitySubject = onChangeProductQuantitySubject
+        onChangeProductQuantitySubject = onChangeProductQuantitySubject,
+        onFavoriteClickSubject = onFavoriteClickSubject
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

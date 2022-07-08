@@ -76,9 +76,9 @@ object AddressByGeocodeResponseJsonParser {
                                     Log.i(LogSettings.ID_LOG, "8")
                                     return AddressEntity(
                                         fullAddress = fullAddress,
-                                        locality = addressComponentList.find { it.first == "locality" }?.second,
-                                        street = addressComponentList.find { it.first == "street" }?.second,
-                                        house = addressComponentList.find { it.first == "house" }?.second
+                                        locality = addressComponentList.find { it.first == "locality" }?.second ?: "1",
+                                        street = addressComponentList.find { it.first == "street" }?.second ?: "2",
+                                        house = addressComponentList.find { it.first == "house" }?.second ?: "3"
                                     )
                                 }
                             }

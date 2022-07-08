@@ -1,7 +1,7 @@
 package com.vodovoz.app.data.parser.response.order
 
 import com.vodovoz.app.data.model.common.OrderEntity
-import com.vodovoz.app.data.model.common.OrderStatus
+import com.vodovoz.app.data.model.common.OrderStatusEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
@@ -27,7 +27,7 @@ object OrderSliderResponseJsonParser {
     private fun JSONObject.parseOrderEntity() = OrderEntity(
         id = getLong("ID"),
         price = getInt("PRICE"),
-        status = OrderStatus.fromId(getString("STATUS_NAME_ID")),
+        status = OrderStatusEntity.fromId(getString("STATUS_NAME_ID")),
         address = getString("ADRESSDOSTAVKI")
     )
 

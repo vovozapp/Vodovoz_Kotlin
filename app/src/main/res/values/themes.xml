@@ -25,6 +25,7 @@
 
     <style name="ToolbarSubtitle" >
         <item name="fontFamily">@font/rotonda</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/blackTextLight</item>
         <item name="android:textSize">14sp</item>
     </style>
@@ -43,7 +44,10 @@
     </style>
 
     <style name="FullScreenDialog" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorPrimary">@color/bluePrimary</item>
         <item name="colorPrimaryDark">@color/gray</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorAccent">@color/bluePrimary</item>
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowNoTitle">true</item>
@@ -52,7 +56,10 @@
 
 
     <style name="FullScreenDialogWithoutStatusBar" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorPrimary">@color/bluePrimary</item>
         <item name="colorPrimaryDark">@color/gray</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorAccent">@color/bluePrimary</item>
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowNoTitle">true</item>

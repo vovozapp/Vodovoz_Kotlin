@@ -13,8 +13,9 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentAccountBinding
 import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.components.base.ViewStateBaseDialogFragment
-import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
+import com.vodovoz.app.ui.components.fragment.slider.order_slider.OrdersSliderConfig
+import com.vodovoz.app.ui.components.fragment.slider.order_slider.OrdersSliderFragment
 import com.vodovoz.app.ui.model.UserDataUI
 import com.vodovoz.app.util.LogSettings
 
@@ -22,6 +23,12 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
 
     private lateinit var binding: FragmentAccountBinding
     private lateinit var viewModel: ProfileViewModel
+
+    private val ordersSliderFragment: OrdersSliderFragment by lazy {
+        OrdersSliderFragment.newInstance(OrdersSliderConfig(
+            containTitleContainer = false
+        ))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,11 +54,26 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
 
     override fun initView() {
         initButtons()
+        initOrdersSliderFragment()
         observeViewModel()
     }
 
     override fun update() {
         viewModel.updateData()
+    }
+
+    private fun initOrdersSliderFragment() {
+        ordersSliderFragment.initCallbacks(
+            iOnOrderClick = { orderId ->
+
+            },
+            iOnShowAllOrdersClick = {}
+        )
+
+        childFragmentManager.beginTransaction().replace(
+            R.id.ordersSliderFragment,
+            ordersSliderFragment
+        ).commit()
     }
 
     private fun initButtons() {
@@ -64,7 +86,10 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
                 findNavController().navigate(ProfileFragmentDirections.actionToLoginFragment())
             }
             addresses.setOnClickListener {
-                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToMapDialogFragment())
+                findNavController().navigate(ProfileFragmentDirections.actionToSavedAddressesDialogFragment())
+            }
+            ordersHistory.setOnClickListener {
+                findNavController().navigate(ProfileFragmentDirections.actionToAllOrdersFragment())
             }
         }
     }
@@ -86,7 +111,10 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
 
         viewModel.userDataUILD.observe(viewLifecycleOwner) { userDataUI ->
             fillUserData(userDataUI)
-            Log.i(LogSettings.LOCAL_DATA, "GET USER DATA")
+        }
+
+        viewModel.orderUIListLD.observe(viewLifecycleOwner) { orderUIList ->
+            ordersSliderFragment.updateData(orderUIList)
         }
 
         viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->

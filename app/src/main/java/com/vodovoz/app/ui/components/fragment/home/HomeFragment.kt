@@ -27,14 +27,14 @@ import com.vodovoz.app.ui.components.fragment.slider.brands_slider.BrandsSliderF
 import com.vodovoz.app.ui.components.fragment.slider.comments_slider.CommentsSliderFragment
 import com.vodovoz.app.ui.components.fragment.slider.countries_slider.CountriesSliderFragment
 import com.vodovoz.app.ui.components.fragment.slider.histories_slider.HistorySliderFragment
-import com.vodovoz.app.ui.components.fragment.slider.order_slider.OrderSliderFragment
+import com.vodovoz.app.ui.components.fragment.slider.order_slider.OrdersSliderConfig
+import com.vodovoz.app.ui.components.fragment.slider.order_slider.OrdersSliderFragment
 import com.vodovoz.app.ui.components.fragment.slider.popular_slider.PopularCategoriesSliderFragment
 import com.vodovoz.app.ui.components.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.components.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.components.fragment.slider.promotion_slider.PromotionsSliderFragment
 import com.vodovoz.app.ui.components.interfaces.*
 import com.vodovoz.app.util.LogSettings
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 class HomeFragment : ViewStateBaseFragment(),
     IOnInvokeAction,
@@ -65,7 +65,11 @@ class HomeFragment : ViewStateBaseFragment(),
         ProductsSliderFragment.newInstance(ProductsSliderConfig(
             containShowAllButton = true
         )) }
-    private val ordersSliderFragment: OrderSliderFragment by lazy { OrderSliderFragment() }
+    private val ordersSliderFragment: OrdersSliderFragment by lazy {
+        OrdersSliderFragment.newInstance(OrdersSliderConfig(
+            containTitleContainer = true
+        ))
+    }
     private val noveltiesProductsSliderFragment: ProductsSliderFragment by lazy {
         ProductsSliderFragment.newInstance(ProductsSliderConfig(
             containShowAllButton = true

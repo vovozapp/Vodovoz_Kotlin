@@ -21,6 +21,7 @@ object ProductMapper {
         rating = rating,
         cartQuantity = cartQuantity,
         commentAmount = commentAmount,
+        orderQuantity = orderQuantity,
         isCanReturnBottles = isCanReturnBottles,
         detailPictureList = detailPictureList
     )

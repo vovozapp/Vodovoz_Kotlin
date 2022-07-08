@@ -10,7 +10,8 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 
 class GridProductsAdapter(
     private val onProductClickSubject: PublishSubject<Long>,
-    private val onChangeProductQuantitySubject: PublishSubject<ProductUI>
+    private val onChangeProductQuantitySubject: PublishSubject<ProductUI>,
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>
 ) : RecyclerView.Adapter<ProductGridViewHolder>() {
 
     var productUiList = listOf<ProductUI>()
@@ -24,6 +25,7 @@ class GridProductsAdapter(
         ),
         onProductClickSubject = onProductClickSubject,
         onChangeProductQuantitySubject = onChangeProductQuantitySubject,
+        onFavoriteClickSubject = onFavoriteClickSubject,
         context = parent.context
     )
 

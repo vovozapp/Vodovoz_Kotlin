@@ -1,6 +1,8 @@
 package com.vodovoz.app.ui.mapper
 
 import com.vodovoz.app.data.model.common.OrderEntity
+import com.vodovoz.app.ui.mapper.OrderStatusMapper.mapToUI
+import com.vodovoz.app.ui.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.ui.model.OrderUI
 
 object OrderMapper {
@@ -12,8 +14,9 @@ object OrderMapper {
     fun OrderEntity.mapToUI() = OrderUI(
         id = id,
         price = price,
-        status = status,
-        address = address
+        orderStatusUI = status?.mapToUI(),
+        address = address,
+        productUIList = productEntityList.mapToUI()
     )
 
 }

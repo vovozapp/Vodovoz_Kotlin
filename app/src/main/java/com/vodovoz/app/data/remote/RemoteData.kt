@@ -32,10 +32,15 @@ import com.vodovoz.app.data.parser.response.favorite.AddToFavoriteResponseJsonPa
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
 import com.vodovoz.app.data.parser.response.favorite.RemoveFromFavoriteResponseJsonParser.parseRemoveFromFavoriteResponse
 import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonParser.parseHistoriesSliderResponse
+import com.vodovoz.app.data.parser.response.map.AddAddressResponseJsonParser.parseAddAddressResponse
 import com.vodovoz.app.data.parser.response.map.AddressByGeocodeResponseJsonParser.parseAddressByGeocodeResponse
+import com.vodovoz.app.data.parser.response.map.DeleteAddressResponseJsonParser.parseDeleteAddressResponse
 import com.vodovoz.app.data.parser.response.map.DeliveryZonesBundleResponseJsonParser.parseDeliveryZonesBundleResponse
+import com.vodovoz.app.data.parser.response.map.FetchAddressesSavedResponseJsonParser.parseFetchAddressesSavedResponse
+import com.vodovoz.app.data.parser.response.map.UpdateAddressResponseJsonParser.parseUpdateAddressResponse
 import com.vodovoz.app.data.parser.response.novelties.NoveltiesHeaderResponseJsonParser.parseNoveltiesHeaderResponse
 import com.vodovoz.app.data.parser.response.novelties.NoveltiesSliderResponseParser.parseNoveltiesSliderResponse
+import com.vodovoz.app.data.parser.response.order.OrderDetailsResponseJsonParser.parseOrderDetailsResponse
 import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
 import com.vodovoz.app.data.parser.response.paginatedProducts.MaybeLikeProductsResponseJsonParser.parseMaybeLikeProductsResponse
 import com.vodovoz.app.data.parser.response.paginatedProducts.SomeProductsByBrandResponseJsonParser.parseSomeProductsByBrandResponse
@@ -55,6 +60,8 @@ import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
 import okhttp3.ResponseBody
+import retrofit2.Response
+import retrofit2.http.Query
 
 class RemoteData(
     private val vodovozApi: VodovozApi,
@@ -603,12 +610,115 @@ class RemoteData(
     }
 
     //Получить сохраненные адреса
-    override fun fetchSavedAddress(
-        userId: String?
-    ): Single<List<AddressEntity>> = vodovozApi.fetchAddressResponse(
+    override fun fetchAddressesSaved(
+        userId: Long?,
+        type: Int?
+    ): Single<ResponseEntity<List<AddressEntity>>> = vodovozApi.fetchAddressResponse(
         blockId = 102,
         action = "get",
-        userid = userId
-    ).flatMap { Single.just() }
+        userid = userId,
+        type = type
+    ).flatMap {
+        Single.just(it.body()!!.parseFetchAddressesSavedResponse())
+    }
+
+    //Добавить адрес в сохраненные
+    override fun addAddress(
+        locality: String?,
+        street: String?,
+        house: String?,
+        entrance: String?,
+        floor: String?,
+        office: String?,
+        comment: String?,
+        type: Int?,
+        userId: Long?
+    ): Single<ResponseEntity<String>> = vodovozApi.fetchAddressResponse(
+        locality = locality,
+        street = street,
+        house = house,
+        entrance = entrance,
+        floor = floor,
+        office = office,
+        comment = comment,
+        type = type,
+        userid = userId,
+        blockId = 102,
+        action = "add"
+    ).flatMap {
+        Log.i(LogSettings.ID_LOG, it.toString())
+        Single.just(it.body()!!.parseAddAddressResponse())
+    }
+
+    //Обновить адрес
+    override fun updateAddress(
+        locality: String?,
+        street: String?,
+        house: String?,
+        entrance: String?,
+        floor: String?,
+        office: String?,
+        comment: String?,
+        type: Int?,
+        addressId: Long?,
+        userId: Long?
+    ): Single<ResponseEntity<String>> = vodovozApi.fetchAddressResponse(
+        locality = locality,
+        street = street,
+        house = house,
+        entrance = entrance,
+        floor = floor,
+        office = office,
+        comment = comment,
+        type = type,
+        addressId = addressId,
+        userid = userId,
+        blockId = 102,
+        action = "update"
+    ).flatMap {
+        Log.i(LogSettings.ID_LOG, it.toString())
+        Single.just(it.body()!!.parseUpdateAddressResponse())
+    }
+
+    //Удалить адресс
+    override fun deleteAddress(
+        addressId: Long?,
+        userId: Long?
+    ): Single<ResponseEntity<String>> = vodovozApi.fetchAddressResponse(
+        addressId = addressId,
+        userid = userId,
+        action = "del",
+        blockId = 102
+    ).flatMap {
+        Log.i(LogSettings.ID_LOG, it.toString())
+        Single.just(it.body()!!.parseDeleteAddressResponse()) }
+
+    //Постраничная загрузка всех заказов
+    override suspend fun fetchAllOrders(
+        userId: Long?,
+        appVersion: String?,
+        orderId: Long?,
+        status: String?,
+        page: Int?
+    ) = vodovozApi.fetchOrdersHistoryResponse(
+        userId = userId,
+        appVersion = appVersion,
+        action = "spisok",
+        orderId = orderId,
+        status = status,
+        page = page
+    )
+
+    //Детальная информация о заказе
+    override fun fetchOrderDetailsResponse(
+        userId: Long?,
+        appVersion: String?,
+        orderId: Long?
+    ): Single<ResponseEntity<OrderDetailsEntity>> = vodovozApi.fetchOrdersResponse(
+        action = "detail",
+        userId = userId,
+        appVersion = appVersion,
+        orderId = orderId
+    ).flatMap { Single.just(it.parseOrderDetailsResponse()) }
 
 }

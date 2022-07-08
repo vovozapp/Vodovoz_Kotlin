@@ -1,12 +1,13 @@
-package com.vodovoz.app.data.model.common
+package com.vodovoz.app.ui.model
 
 import com.vodovoz.app.R
 
-enum class OrderStatus(
+enum class OrderStatusUI(
     val id: String,
     val color: Int,
     val statusName: String,
-    val image: Int
+    val image: Int,
+    var isChecked: Boolean = false
 ) {
     IN_PROCESSING(
         id = "D",

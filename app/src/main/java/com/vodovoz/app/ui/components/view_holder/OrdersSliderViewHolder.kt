@@ -16,19 +16,21 @@ class OrdersSliderViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.root.setOnClickListener { onOrderClickSubject.onNext(orderUI.id) }
+        binding.root.setOnClickListener { onOrderClickSubject.onNext(orderUI.id!!) }
     }
 
     private lateinit var orderUI: OrderUI
 
     fun onBind(orderUI: OrderUI) {
-        binding.status.text = orderUI.status.statusName
+        this.orderUI = orderUI
+
+        binding.status.text = orderUI.orderStatusUI?.statusName
         binding.address.text = orderUI.address
-        binding.price.setPriceText(orderUI.price)
-        binding.status.setDrawableColor(orderUI.status.color)
-        binding.action.setBackgroundColor(ContextCompat.getColor(context, orderUI.status.color))
+        binding.price.setPriceText(orderUI.price!!)
+        binding.status.setDrawableColor(orderUI.orderStatusUI!!.color)
+        binding.action.setBackgroundColor(ContextCompat.getColor(context, orderUI.orderStatusUI.color))
         binding.status.setCompoundDrawablesWithIntrinsicBounds(
-            ContextCompat.getDrawable(context, orderUI.status.image), null, null, null
+            ContextCompat.getDrawable(context, orderUI.orderStatusUI.image), null, null, null
         )
     }
 

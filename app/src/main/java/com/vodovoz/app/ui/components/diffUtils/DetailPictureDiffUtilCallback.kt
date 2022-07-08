@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.components.base.picturePagerAdapter
+package com.vodovoz.app.ui.components.diffUtils
 
 import androidx.recyclerview.widget.DiffUtil
 

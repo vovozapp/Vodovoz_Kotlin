@@ -270,8 +270,11 @@
             android:id="@+id/action_to_userDataFragment"
             app:destination="@id/userDataFragment" />
         <action
-            android:id="@+id/action_profileFragment_to_mapDialogFragment"
-            app:destination="@id/mapDialogFragment" />
+            android:id="@+id/action_to_savedAddressesDialogFragment"
+            app:destination="@id/savedAddressesDialogFragment" />
+        <action
+            android:id="@+id/action_to_allOrdersFragment"
+            app:destination="@id/allOrdersFragment" />
     </fragment>
     <dialog
         android:id="@+id/popupNewsBottomFragment"
@@ -388,6 +391,11 @@
         <action
             android:id="@+id/action_to_addAddressBottomFragment"
             app:destination="@id/addAddressBottomFragment" />
+        <argument
+            android:name="address"
+            app:argType="com.vodovoz.app.ui.model.AddressUI"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <dialog
         android:id="@+id/addAddressBottomFragment"
@@ -395,6 +403,55 @@
         android:label="AddAddressBottomFragment" >
         <argument
             android:name="address"
-            app:argType="com.vodovoz.app.ui.model.AddressUI" />
+            app:argType="com.vodovoz.app.ui.model.AddressUI"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </dialog>
+    <fragment
+        android:id="@+id/savedAddressesDialogFragment"
+        android:name="com.vodovoz.app.ui.components.fragment.saved_addresses.SavedAddressesDialogFragment"
+        android:label="SavedAddressesDialogFragment" >
+        <action
+            android:id="@+id/action_to_mapDialogFragment"
+            app:destination="@id/mapDialogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/allOrdersFragment"
+        android:name="com.vodovoz.app.ui.components.fragment.orders_history.OrdersHistoryFragment"
+        android:label="AllOrdersFragment" >
+        <action
+            android:id="@+id/action_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_to_ordersFiltersDialog"
+            app:destination="@id/ordersFiltersDialog" />
+        <action
+            android:id="@+id/action_to_orderDetailsFragment"
+            app:destination="@id/orderDetailsFragment" />
+        <action
+            android:id="@+id/action_to_cartFragment"
+            app:destination="@id/cartFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/ordersFiltersDialog"
+        android:name="com.vodovoz.app.ui.components.fragment.orders_filters.OrdersFiltersDialog"
+        android:label="OrdersFiltersDialog" >
+        <argument
+            android:name="ordersFiltersBundleUI"
+            app:argType="com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI" />
+    </dialog>
+    <fragment
+        android:id="@+id/orderDetailsFragment"
+        android:name="com.vodovoz.app.ui.components.fragment.order_details.OrderDetailsFragment"
+        android:label="OrderDetailsFragment" >
+        <argument
+            android:name="orderId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_to_cartFragment"
+            app:destination="@id/cartFragment" />
+        <action
+            android:id="@+id/action_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+    </fragment>
 </navigation>

@@ -15,6 +15,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 class PagingProductsAdapter(
     private val onProductClickSubject: PublishSubject<Long>,
     private val onChangeProductQuantitySubject: PublishSubject<ProductUI>,
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
     private val productDiffItemCallback: ProductDiffItemCallback,
     var viewMode: ViewMode
 ) : PagingDataAdapter<ProductUI, RecyclerView.ViewHolder>(productDiffItemCallback) {
@@ -33,7 +34,8 @@ class PagingProductsAdapter(
             ),
             context = parent.context,
             onProductClickSubject = onProductClickSubject,
-            onChangeProductQuantitySubject = onChangeProductQuantitySubject
+            onChangeProductQuantitySubject = onChangeProductQuantitySubject,
+            onFavoriteClickSubject = onFavoriteClickSubject
         )
         ViewMode.GRID.code -> ProductGridViewHolder(
             binding = ViewHolderProductGridBinding.inflate(
@@ -43,7 +45,8 @@ class PagingProductsAdapter(
             ),
             context = parent.context,
             onProductClickSubject = onProductClickSubject,
-            onChangeProductQuantitySubject = onChangeProductQuantitySubject
+            onChangeProductQuantitySubject = onChangeProductQuantitySubject,
+            onFavoriteClickSubject = onFavoriteClickSubject
         )
         else -> throw Exception()
     }

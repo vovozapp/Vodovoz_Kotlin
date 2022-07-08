@@ -92,6 +92,13 @@
                 android:layout_height="wrap_content"
                 android:background="@color/whiteDark"/>
 
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/ordersSliderFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/primary_margin"
+                android:background="@color/white"/>
+
             <TextView
                 android:id="@+id/addresses"
                 android:layout_width="match_parent"
@@ -141,6 +148,7 @@
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <TextView
+                android:id="@+id/ordersHistory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/primary_margin"
@@ -418,32 +426,32 @@
         <ImageView
             android:layout_width="250dp"
             android:layout_height="300dp"
-            android:src="@drawable/large_avatar"
-            android:layout_centerHorizontal="true"
             android:layout_above="@id/title"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/large_avatar"
             tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/rotonda"
-            android:textStyle="bold"
             android:layout_centerInParent="true"
-            android:textSize="16sp"
+            android:fontFamily="@font/rotonda"
+            android:text="Вы не авторизованы"
             android:textColor="@color/blackTextPrimary"
-            android:text="Вы не авторизованы"/>
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/rotonda"
-            android:layout_centerInParent="true"
-            android:textColor="@color/blackTextLight"
-            android:gravity="center"
             android:layout_below="@id/title"
+            android:layout_centerInParent="true"
             android:layout_marginTop="@dimen/primary_margin"
-            android:text="Войти под своим аккаунтом или\n зарегистрируйтесь"/>
+            android:fontFamily="@font/rotonda"
+            android:gravity="center"
+            android:text="Войти под своим аккаунтом или\n зарегистрируйтесь"
+            android:textColor="@color/blackTextLight" />
 
         <TextView
             android:id="@+id/loginOrRegister"
@@ -457,10 +465,10 @@
             android:background="@drawable/background_button_primary"
             android:fontFamily="@font/rotonda"
             android:gravity="center"
-            android:textStyle="bold"
             android:text="Войти или зарегистрироваться"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 

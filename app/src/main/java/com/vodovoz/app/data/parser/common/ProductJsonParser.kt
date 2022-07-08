@@ -51,7 +51,10 @@ object ProductJsonParser {
                 true -> getInt("QUANTITY")
                 false -> 0
             },
-            isFavorite = getBoolean("FAVORITE"),
+            isFavorite = when(has("FAVORITE")) {
+                true -> getBoolean("FAVORITE")
+                false -> false
+            },
             detailPictureList = parseDetailPictureList(detailPicture),
             isCanReturnBottles = when(has("CATALOG")) {
                 true -> getJSONObject("CATALOG").parseIsCanReturnBottles()
@@ -59,7 +62,6 @@ object ProductJsonParser {
             }
         )
     }
-
 
     private fun JSONObject.parseIsCanReturnBottles(): Boolean {
         val categoryIdList = mutableListOf<Int>()

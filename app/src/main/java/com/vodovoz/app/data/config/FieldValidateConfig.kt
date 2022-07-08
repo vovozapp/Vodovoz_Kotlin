@@ -11,4 +11,11 @@ object FieldValidateConfig {
     val EMAIL_REGEX =
         Regex("^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
 
+    val LOCALITY_LENGTH = 1..20
+    val STREET_LENGTH = 1..20
+    val HOUSE_LENGTH = 1..20
+    val ENTRANCE_LENGTH = 1..20
+    val FLOOR_LENGTH = 1..20
+    val OFFICE_LENGTH = 1..20
+
 }
