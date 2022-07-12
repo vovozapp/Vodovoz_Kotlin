@@ -25,10 +25,12 @@ import com.vodovoz.app.ui.components.fragment.product_detail.ProductDetailViewMo
 import com.vodovoz.app.ui.components.fragment.product_filters.ProductFiltersViewModel
 import com.vodovoz.app.ui.components.fragment.products_catalog.ProductsCatalogViewModel
 import com.vodovoz.app.ui.components.fragment.profile.ProfileViewModel
-import com.vodovoz.app.ui.components.fragment.promotion_detail.PromotionDetailViewModel
+import com.vodovoz.app.ui.components.fragment.promotion_details.PromotionDetailsViewModel
 import com.vodovoz.app.ui.components.fragment.register.RegisterViewModel
 import com.vodovoz.app.ui.components.fragment.saved_addresses.SavedAddressesViewModel
+import com.vodovoz.app.ui.components.fragment.search.SearchViewModel
 import com.vodovoz.app.ui.components.fragment.send_comment_about_product.SendCommentAboutProductViewModel
+import com.vodovoz.app.ui.components.fragment.send_comment_about_shop.SendCommentAboutShopViewModel
 import com.vodovoz.app.ui.components.fragment.single_root_catalog.SingleRootCatalogViewModel
 import com.vodovoz.app.ui.components.fragment.some_products_by_brand.SomeProductsByBrandViewModel
 import com.vodovoz.app.ui.components.fragment.some_products_maybe_like.SomeProductsMaybeLikeViewModel
@@ -92,8 +94,8 @@ class ViewModelFactory(
             return UserDataViewModel(dataRepository) as T
         }
 
-        if (modelClass.isAssignableFrom(PromotionDetailViewModel::class.java)){
-            return PromotionDetailViewModel(dataRepository) as T
+        if (modelClass.isAssignableFrom(PromotionDetailsViewModel::class.java)){
+            return PromotionDetailsViewModel(dataRepository) as T
         }
 
         if (modelClass.isAssignableFrom(AllPromotionsViewModel::class.java)){
@@ -161,6 +163,13 @@ class ViewModelFactory(
             return OrderDetailsViewModel(dataRepository) as T
         }
 
+        if (modelClass.isAssignableFrom(SendCommentAboutShopViewModel::class.java)){
+            return SendCommentAboutShopViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(SearchViewModel::class.java)){
+            return SearchViewModel(dataRepository) as T
+        }
 
         throw IllegalArgumentException("Unknown View Model Class")
     }

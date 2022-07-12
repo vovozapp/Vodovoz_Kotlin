@@ -48,7 +48,7 @@ class CartFragment : ViewStateBaseFragment() {
 
     private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val onChangeCartSubject: PublishSubject<Boolean> = PublishSubject.create()
-    private val onChangeProductQuantitySubject: PublishSubject<ProductUI> = PublishSubject.create()
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
     private val onSwapClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
 
@@ -91,8 +91,8 @@ class CartFragment : ViewStateBaseFragment() {
         onProductClickSubject.subscribeBy { productId ->
             findNavController().navigate(CartFragmentDirections.actionToProductDetailFragment(productId))
         }.addTo(compositeDisposable)
-        onChangeProductQuantitySubject.subscribeBy { product ->
-            viewModel.changeCart(product)
+        onChangeProductQuantitySubject.subscribeBy { pair ->
+            viewModel.changeCart(pair)
         }.addTo(compositeDisposable)
     }
 
@@ -103,7 +103,9 @@ class CartFragment : ViewStateBaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.clearCart -> clearCart()
-            R.id.orderHistory -> {}
+            R.id.orderHistory -> {
+                findNavController().navigate(CartFragmentDirections.actionToAllOrdersFragment())
+            }
         }
         return false
     }
@@ -140,7 +142,7 @@ class CartFragment : ViewStateBaseFragment() {
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<ProductUI>(GIFT_ID)?.observe(viewLifecycleOwner) { gift ->
                 gift.cartQuantity++
-                viewModel.changeCart(gift)
+                viewModel.changeCart(Pair(gift.id, gift.cartQuantity))
             }
     }
 
@@ -163,7 +165,7 @@ class CartFragment : ViewStateBaseFragment() {
 
         bestForYouProductsSliderFragment.initCallbacks(
             iOnProductClick = { productId -> onProductClickSubject.onNext(productId)},
-            iOnChangeProductQuantity = { _, _ -> },
+            iOnChangeProductQuantity = {},
             iOnFavoriteClick = { pair -> onFavoriteClickSubject.onNext(pair) },
             iOnShowAllProductsClick = {}
         )

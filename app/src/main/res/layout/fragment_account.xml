@@ -116,6 +116,7 @@
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <TextView
+                android:id="@+id/deliveryPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/primary_margin"
@@ -322,6 +323,7 @@
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <TextView
+                android:id="@+id/aboutDelivery"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/primary_margin"
@@ -337,6 +339,7 @@
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <TextView
+                android:id="@+id/aboutPay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/primary_margin"
@@ -380,10 +383,11 @@
                 android:background="@color/whiteDark"
                 android:paddingStart="@dimen/primary_space"
                 android:paddingEnd="@dimen/primary_space"
-                android:text="О приложении"
+                android:text="Приложения"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <TextView
+                android:id="@+id/aboutApp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/primary_margin"

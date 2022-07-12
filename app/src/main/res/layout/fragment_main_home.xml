@@ -25,6 +25,7 @@
             app:layout_scrollFlags="enterAlways|scroll">
 
             <LinearLayout
+                android:id="@+id/searchContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -124,7 +125,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <include layout="@layout/fragment_section_additional_navigation" />
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/tripleNavigationHomeFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/noveltiesProductsSliderFragment"

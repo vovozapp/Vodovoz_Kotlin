@@ -26,4 +26,8 @@ interface LocalDataSource {
     fun fetchAllFavoriteProducts(): List<Long>
     fun fetchAllFavoriteProductsOfDefaultUser(): List<Long>
 
+    fun clearSearchHistory()
+    fun addQueryToHistory(query: String)
+    fun fetchSearchHistory(): List<String>
+
 }

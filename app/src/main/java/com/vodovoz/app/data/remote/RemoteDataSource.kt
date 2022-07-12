@@ -5,7 +5,6 @@ import com.vodovoz.app.data.model.features.*
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.Query
 
 interface RemoteDataSource {
 
@@ -18,6 +17,13 @@ interface RemoteDataSource {
         rating: Int,
         comment: String,
         userId: Long
+    ): Single<ResponseEntity<String>>
+
+    //Добавить отзыв о магазине
+    fun fetchSendCommentAboutShopResponse(
+        userId: Long?,
+        comment: String?,
+        rating: Int?
     ): Single<ResponseEntity<String>>
 
     //Все отзывы о продукте
@@ -40,6 +46,23 @@ interface RemoteDataSource {
         productId: Long,
         quantity: Int
     ): Single<ResponseEntity<Boolean>>
+
+    //Продукты по результатам поиска
+    suspend fun fetchProductsByQuery(
+        query: String?,
+        categoryId: Long?,
+        sort: String?,
+        orientation: String?,
+        page: Int?
+    ): Response<ResponseBody>
+
+    //Хедер продуктов по запросу
+    fun fetchProductsByQueryHeader(
+        query: String?
+    ): Single<ResponseEntity<CategoryEntity>>
+
+    //Превью для поиска
+    fun fetchSearchDefaultData(): Single<ResponseEntity<DefaultSearchDataBundleEntity>>
 
     //Удаление продукта из корзины
     fun deleteProductFromCart(

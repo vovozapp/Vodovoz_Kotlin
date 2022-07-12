@@ -21,9 +21,11 @@ interface VodovozApi {
         @Query("limit") limit: Int? = null,
         @Query("userid") userId: Long? = null,
         @Query("text") comment: String? = null,
+        @Query("rating") rating: Int? = null
     ): Single<ResponseBody>
 
     //"newmobile/otzivomagaz.php?otziv=add&userid=" + User.getInstance().getuser_id().toString() + "&text=".toString() + editTextComments.getText().toString().toString() + "&rating=" + ratingBar.getRating()
+
     //Страны
     @GET("/newmobile/glavnaya/strany.php")
     suspend fun fetchCountryResponse(
@@ -314,6 +316,18 @@ interface VodovozApi {
         @Query("id") orderId: Long? = null
     ): Single<ResponseBody>
 
+    @GET("/newmobile/searching/index.php")
+    suspend fun fetchSearchResponse(
+        @Query("action") action: String? = null,
+        @Query("search") query: String? = null,
+        @Query("limit") limit: Int? = null,
+        @Query("sort") sort: String? = null,
+        @Query("ascdesc") orientation: String? = null,
+        @Query("nav") page: Int? = null,
+        @Query("sect") categoryId: Long? = null,
+    ): Response<ResponseBody>
+
+    //newmobile/searching/index.php?action=search&search="+SearchToTrim.toString()+"&limit=10&sort=name&ascdesc=asc&nav="+currentPage+"&sect="+SectionID
     ///newmobile/profile/historyorder/detailzakaz.php?action=detail&userid="+User.getInstance().getuser_id()+"&id="+OrderNumber+"&android="+ BuildConfig.VERSION_NAME
     //http://m.vodovoz.ru/newmobile/profile/historyorder/spisokzakazov.php?userid=515&action=spisok&nav=1&android=1.4.87&status=&id=
 //    (@Field("city") String city, @Field("description") String description, @Field("entrance") String entrance ,

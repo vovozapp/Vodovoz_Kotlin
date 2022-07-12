@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +14,7 @@ import com.vodovoz.app.ui.components.adapter.MainCatalogAdapter
 import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
+import com.vodovoz.app.ui.components.fragment.favorite.FavoriteFragmentDirections
 import com.vodovoz.app.ui.model.CategoryUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -59,6 +61,7 @@ class CatalogFragment : ViewStateBaseFragment() {
         initCategoryRecycler()
         observeViewModel()
         observeOnCategoryClick()
+        initSearch()
     }
 
     override fun update() {
@@ -77,6 +80,17 @@ class CatalogFragment : ViewStateBaseFragment() {
                 }
             }
         )
+    }
+
+    private fun initSearch() {
+        binding.searchContainer.searchRoot.setOnClickListener {
+            findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment())
+        }
+        binding.searchContainer.search.setOnFocusChangeListener { _, isFocusable ->
+            if (isFocusable) {
+                findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment())
+            }
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

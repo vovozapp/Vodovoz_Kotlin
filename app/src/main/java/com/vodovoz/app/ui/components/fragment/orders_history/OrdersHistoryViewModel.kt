@@ -10,8 +10,8 @@ import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.ui.components.base.ViewState
-import com.vodovoz.app.ui.mapper.OrderDetailsMapper.mapToUI
-import com.vodovoz.app.ui.mapper.OrderMapper.mapToUI
+import com.vodovoz.app.mapper.OrderDetailsMapper.mapToUI
+import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.ui.model.OrderDetailsUI
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers

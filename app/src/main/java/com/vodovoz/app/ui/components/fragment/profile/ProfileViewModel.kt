@@ -1,6 +1,5 @@
 package com.vodovoz.app.ui.components.fragment.profile
 
-import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,8 +8,8 @@ import com.vodovoz.app.data.model.common.OrderEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.UserDataEntity
 import com.vodovoz.app.ui.components.base.ViewState
-import com.vodovoz.app.ui.mapper.OrderMapper.mapToUI
-import com.vodovoz.app.ui.mapper.UserDataMapper.mapToUI
+import com.vodovoz.app.mapper.OrderMapper.mapToUI
+import com.vodovoz.app.mapper.UserDataMapper.mapToUI
 import com.vodovoz.app.ui.model.OrderUI
 import com.vodovoz.app.ui.model.UserDataUI
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -62,30 +61,11 @@ class ProfileViewModel(
                         userDataUIMLD.value = (pair.first as ResponseEntity.Success<UserDataEntity>).data.mapToUI()
                         orderUIListMLD.value = (pair.second as ResponseEntity.Success<List<OrderEntity>>).data.mapToUI()
                         viewStateMLD.value = ViewState.Success()
+                    } else if (pair.first is ResponseEntity.Success && pair.second is ResponseEntity.Hide) {
+                        userDataUIMLD.value = (pair.first as ResponseEntity.Success<UserDataEntity>).data.mapToUI()
+                        viewStateMLD.value = ViewState.Success()
                     } else {
                         viewStateMLD.value = ViewState.Error("Ошибка!")
-                    }
-                },
-                onError = { throwable -> viewStateMLD.value = ViewState.Error(throwable.message!!) }
-            ).addTo(compositeDisposable)
-
-
-
-
-        dataRepository
-            .fetchUserData(userId = dataRepository.fetchUserId()!!)
-            .subscribeOn(Schedulers.io())
-            .doOnSubscribe { viewStateMLD.value = ViewState.Loading() }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-                onSuccess = { response ->
-                    when(response) {
-                        is ResponseEntity.Error -> viewStateMLD.value = ViewState.Error(response.errorMessage)
-                        is ResponseEntity.Hide -> viewStateMLD.value = ViewState.Hide()
-                        is ResponseEntity.Success -> {
-                            userDataUIMLD.value = response.data.mapToUI()
-                            viewStateMLD.value = ViewState.Success()
-                        }
                     }
                 },
                 onError = { throwable -> viewStateMLD.value = ViewState.Error(throwable.message!!) }

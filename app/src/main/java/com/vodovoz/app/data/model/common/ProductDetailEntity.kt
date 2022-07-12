@@ -5,6 +5,7 @@ class ProductDetailEntity(
     val name: String,
     val previewText: String,
     val detailText: String,
+    val shareUrl: String = "",
     var isFavorite: Boolean,
     val youtubeVideoCode: String? = null,
     val rating: Double,

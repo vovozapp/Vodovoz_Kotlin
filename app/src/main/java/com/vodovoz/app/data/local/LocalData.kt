@@ -26,12 +26,17 @@ class LocalData(
         //Favorite Settings
         private const val FAVORITE_SETTINGS = "favorite_settings"
         private const val DEFAULT_USER_FAVORITE_LIST = "DEFAULT_USER_FAVORITE_LIST"
+
+        //Search Settings
+        private const val SEARCH_SETTINGS = "search_settings"
+        private const val SEARCH_HISTORY = "SEARCH_HISTORY"
     }
 
     private val accountSettings = context.getSharedPreferences(ACCOUNT_SETTINGS, Context.MODE_PRIVATE)
     private val cartSettings = context.getSharedPreferences(CART_SETTINGS, Context.MODE_PRIVATE)
     private val cookieSettings = context.getSharedPreferences(COOKIE_SETTINGS, Context.MODE_PRIVATE)
-    private val favoriteSettings = context.getSharedPreferences(FAVORITE_SETTINGS, Context.MODE_PRIVATE);
+    private val favoriteSettings = context.getSharedPreferences(FAVORITE_SETTINGS, Context.MODE_PRIVATE)
+    private val searchSettings = context.getSharedPreferences(SEARCH_SETTINGS, Context.MODE_PRIVATE)
 
     override fun isAvailableCookieSessionId(): Boolean {
         return cookieSettings.contains(COOKIE_SESSION_ID)
@@ -72,6 +77,31 @@ class LocalData(
     }
 
     override fun fetchAllFavoriteProductsOfDefaultUser() = parseFavoriteStr(favoriteSettings.getString(DEFAULT_USER_FAVORITE_LIST, "")!!)
+
+    override fun clearSearchHistory() {
+        searchSettings.edit().remove(SEARCH_HISTORY).apply()
+    }
+
+    override fun addQueryToHistory(query: String) {
+        if (query.isNotEmpty()) {
+            val queryList = fetchSearchHistory().toMutableList()
+            queryList.add(query)
+            searchSettings.edit().putString(SEARCH_HISTORY, buildSearchHistoryStr(queryList)).apply()
+        }
+    }
+
+    override fun fetchSearchHistory() = parseSearchHistoryStr(searchSettings.getString(SEARCH_HISTORY, "") ?: "")
+
+    private fun parseSearchHistoryStr(searchHistoryStr: String): List<String> {
+        val queryList = searchHistoryStr.split(",").toMutableList()
+        return queryList.filter { it.isNotEmpty() }
+    }
+
+    private fun buildSearchHistoryStr(queryList: List<String>) = StringBuilder().apply {
+        queryList.forEach { query ->
+            append(query).append(",")
+        }
+    }.toString()
 
     private fun parseFavoriteStr(favoriteStr: String): List<Long> {
         Log.i(LogSettings.ID_LOG, favoriteStr)

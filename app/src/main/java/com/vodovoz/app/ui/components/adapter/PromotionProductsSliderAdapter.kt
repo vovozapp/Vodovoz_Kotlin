@@ -9,7 +9,9 @@ import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class PromotionProductsSliderAdapter(
-    private val onProductClickSubject: PublishSubject<Long>
+    private val onProductClickSubject: PublishSubject<Long>,
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>
 ) : RecyclerView.Adapter<PromotionProductSliderViewHolder>() {
 
     var productUIList = listOf<ProductUI>()
@@ -24,6 +26,8 @@ class PromotionProductsSliderAdapter(
             false
         ),
         onProductClickSubject = onProductClickSubject,
+        onChangeProductQuantitySubject = onChangeProductQuantitySubject,
+        onFavoriteClickSubject = onFavoriteClickSubject,
         context = parent.context
     )
 

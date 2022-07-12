@@ -10,6 +10,7 @@ import com.vodovoz.app.ui.components.adapter.CommentsSliderAdapter
 import com.vodovoz.app.ui.components.base.BaseHiddenFragment
 import com.vodovoz.app.ui.components.diffUtils.CommentSliderDiffUtilCallback
 import com.vodovoz.app.ui.components.interfaces.IOnCommentClick
+import com.vodovoz.app.ui.components.interfaces.IOnSendCommentAboutShop
 import com.vodovoz.app.ui.model.CommentUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -21,6 +22,7 @@ class CommentsSliderFragment : BaseHiddenFragment() {
 
     private lateinit var commentUIList: List<CommentUI>
     private lateinit var iOnCommentClick: IOnCommentClick
+    private lateinit var iOnSendCommentAboutShop: IOnSendCommentAboutShop
 
     private lateinit var binding: FragmentSliderCommentBinding
 
@@ -42,6 +44,11 @@ class CommentsSliderFragment : BaseHiddenFragment() {
 
     override fun initView() {
         initCommentsPager()
+        initButtons()
+    }
+
+    private fun initButtons() {
+        binding.sendComment.setOnClickListener { iOnSendCommentAboutShop.sendCommentAboutShop() }
     }
 
     private fun initCommentsPager() {
@@ -55,8 +62,12 @@ class CommentsSliderFragment : BaseHiddenFragment() {
         }.addTo(compositeDisposable)
     }
 
-    fun initCallbacks(iOnCommentClick: IOnCommentClick) {
+    fun initCallbacks(
+        iOnCommentClick: IOnCommentClick,
+        iOnSendCommentAboutShop: IOnSendCommentAboutShop
+    ) {
         this.iOnCommentClick = iOnCommentClick
+        this.iOnSendCommentAboutShop = iOnSendCommentAboutShop
     }
 
     fun updateData(commentUIList: List<CommentUI>) {

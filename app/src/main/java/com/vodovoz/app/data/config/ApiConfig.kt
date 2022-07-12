@@ -10,4 +10,9 @@ object ApiConfig {
     private const val MAPKIT_IP = "geocode-maps.yandex.ru"
 
     const val MAPKIT_URL = "$MAPKIT_PROTOCOL$MAPKIT_IP"
+
+    const val ABOUT_SHOP_URL = "http://m.vodovoz.ru/newmobile/informatsiya/omagazine.php"
+    const val ABOUT_PAY_URL = "http://m.vodovoz.ru/newmobile/informatsiya/oplata.php"
+    const val ABOUT_DELIVERY_URL = "http://m.vodovoz.ru/newmobile/informatsiya/dosytavka.php"
+
 }

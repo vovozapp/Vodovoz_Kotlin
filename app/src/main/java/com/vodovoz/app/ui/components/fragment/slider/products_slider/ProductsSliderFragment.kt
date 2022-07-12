@@ -77,7 +77,7 @@ class ProductsSliderFragment : BaseHiddenFragment() {
         }.addTo(compositeDisposable)
 
         onChangeProductQuantitySubject.subscribeBy { pair ->
-            iOnChangeProductQuantity.onChangeProductQuantity(pair.first, pair.second)
+            iOnChangeProductQuantity.onChangeProductQuantity(pair)
         }.addTo(compositeDisposable)
 
         onFavoriteClickSubject.subscribeBy { pair ->

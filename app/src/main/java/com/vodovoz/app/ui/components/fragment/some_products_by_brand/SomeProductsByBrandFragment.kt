@@ -47,7 +47,7 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
     private val compositeDisposable = CompositeDisposable()
 
     private lateinit var onProductClickSubject: PublishSubject<Long>
-    private val onChangeProductQuantitySubject: PublishSubject<ProductUI> = PublishSubject.create()
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
 
     private lateinit var binding: FragmentPaginatedBrandProductListBinding
@@ -85,8 +85,8 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
     }
 
     private fun subscribeSubjects() {
-        onChangeProductQuantitySubject.subscribeBy { product ->
-            viewModel.changeCart(product)
+        onChangeProductQuantitySubject.subscribeBy { pair ->
+            viewModel.changeCart(pair)
         }.addTo(compositeDisposable)
     }
 

@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
+import com.vodovoz.app.data.config.ApiConfig
 import com.vodovoz.app.databinding.FragmentAccountBinding
 import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.components.base.ViewStateBaseDialogFragment
@@ -65,7 +66,7 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
     private fun initOrdersSliderFragment() {
         ordersSliderFragment.initCallbacks(
             iOnOrderClick = { orderId ->
-
+                findNavController().navigate(ProfileFragmentDirections.actionToOrderDetailsFragment(orderId))
             },
             iOnShowAllOrdersClick = {}
         )
@@ -90,6 +91,27 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
             }
             ordersHistory.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionToAllOrdersFragment())
+            }
+            binding.deliveryPrice.setOnClickListener {
+                findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
+                    "Стоимость доставки",
+                    ApiConfig.ABOUT_DELIVERY_URL
+                ))
+            }
+            binding.aboutDelivery.setOnClickListener {
+                findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
+                    "Стоимость доставки",
+                    ApiConfig.ABOUT_DELIVERY_URL
+                ))
+            }
+            binding.aboutPay.setOnClickListener {
+                findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
+                    "Об оплате",
+                    ApiConfig.ABOUT_PAY_URL
+                ))
+            }
+            binding.aboutApp.setOnClickListener {
+                findNavController().navigate(ProfileFragmentDirections.actionToAboutAppDialogFragment())
             }
         }
     }

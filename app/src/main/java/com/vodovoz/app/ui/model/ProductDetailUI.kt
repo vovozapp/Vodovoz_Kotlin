@@ -4,6 +4,7 @@ class ProductDetailUI(
     val id: Long,
     val name: String,
     val previewText: String,
+    val shareUrl: String,
     val detailText: String,
     val isFavorite: Boolean,
     val youtubeVideoCode: String? = null,

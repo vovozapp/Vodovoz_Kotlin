@@ -16,10 +16,16 @@ class PromotionSliderViewHolder(
     private val binding: ViewHolderSliderPromotionBinding,
     private val onPromotionClickSubject: PublishSubject<Long>,
     private val onProductClickSubject: PublishSubject<Long>,
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
     private val context: Context
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val promotionProductsSliderAdapter = PromotionProductsSliderAdapter(onProductClickSubject)
+    private val promotionProductsSliderAdapter = PromotionProductsSliderAdapter(
+        onProductClickSubject = onProductClickSubject,
+        onChangeProductQuantitySubject = onChangeProductQuantitySubject,
+        onFavoriteClickSubject = onFavoriteClickSubject
+    )
 
     init {
         binding.productPager.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)

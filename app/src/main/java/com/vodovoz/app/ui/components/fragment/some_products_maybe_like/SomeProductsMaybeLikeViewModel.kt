@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.ui.components.base.ViewState
-import com.vodovoz.app.ui.mapper.PaginatedProductListMapper.mapToUI
+import com.vodovoz.app.mapper.PaginatedProductListMapper.mapToUI
 import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -89,10 +89,10 @@ class SomeProductsMaybeLikeViewModel(
             ).addTo(compositeDisposable)
     }
 
-    fun changeCart(productUI: ProductUI) {
+    fun changeCart(pair: Pair<Long, Int>) {
         dataRepository.changeCart(
-            productId = productUI.id,
-            quantity = productUI.cartQuantity
+            productId = pair.first,
+            quantity = pair.second
         ).subscribeBy(
             onComplete = {},
             onError = { throwable ->

@@ -17,6 +17,8 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 class PromotionProductSliderViewHolder(
     private val binding: ViewHolderSliderPromotionProductBinding,
     private val onProductClickSubject: PublishSubject<Long>,
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
     private val context: Context
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -24,6 +26,20 @@ class PromotionProductSliderViewHolder(
         binding.oldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.root.setOnClickListener {
             onProductClickSubject.onNext(productUI.id)
+        }
+
+        binding.favoriteStatus.setOnClickListener {
+            when(productUI.isFavorite) {
+                true -> {
+                    productUI.isFavorite = false
+                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite))
+                }
+                false -> {
+                    productUI.isFavorite = true
+                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_red))
+                }
+            }
+            onFavoriteClickSubject.onNext(Pair(productUI.id, productUI.isFavorite))
         }
     }
 

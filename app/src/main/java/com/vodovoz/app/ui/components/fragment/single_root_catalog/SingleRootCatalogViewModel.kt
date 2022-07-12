@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.ui.components.base.ViewState
-import com.vodovoz.app.ui.mapper.CategoryMapper.mapToUI
+import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.custom.SingleRootCatalogBundleUI
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers

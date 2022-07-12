@@ -166,6 +166,7 @@
         android:id="@+id/amountControllerContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/amountControllerAnchor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -174,6 +175,19 @@
             layout="@layout/view_product_amount_controller" />
 
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/amountControllerAnchor"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:text="88888 Р 88888 Р"
+        android:fontFamily="@font/rotonda"
+        android:textStyle="bold"
+        android:textColor="@color/blackTextDark"
+        android:textSize="17sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/detailPicturePager" />
 
     <TextView
         android:id="@+id/price"
@@ -185,7 +199,7 @@
         android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/detailPicturePager"
-        tools:text="280 Р" />
+        tools:text="88888 Р" />
 
     <TextView
         android:id="@+id/unitPrice"
@@ -210,6 +224,6 @@
         android:layout_marginStart="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/price"
-        tools:text="300 Р" />
+        tools:text="88888 Р" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

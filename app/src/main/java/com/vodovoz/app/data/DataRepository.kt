@@ -18,6 +18,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.flow.map
+import retrofit2.http.Query
 import java.lang.Exception
 
 class DataRepository(
@@ -70,6 +71,15 @@ class DataRepository(
                 }
             }
         }
+
+    fun sendCommentAboutShop(
+        comment: String?,
+        rating: Int?
+    ) = remoteDataSource.fetchSendCommentAboutShopResponse(
+        userId = fetchUserId()!!,
+        comment = comment,
+        rating = rating
+    )
 
     fun fetchNoveltiesProductsSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>> = remoteDataSource
         .fetchNoveltiesSlider()
@@ -182,6 +192,37 @@ class DataRepository(
                 filterValue = filterValue,
                 priceFrom = priceFrom,
                 priceTo = priceTo,
+                remoteDataSource = remoteDataSource
+            ))
+        }
+    ).flow.map { pagingData ->
+        val cart = fetchLocalCart()
+        syncFavoriteProducts(pagingData)
+        pagingData.map { product ->
+            product.apply { cartQuantity = cart[product.id] ?: 0 }
+        }
+    }
+
+    fun fetchProductsByQueryHeader(query: String?) = remoteDataSource.fetchProductsByQueryHeader(query)
+
+    fun fetchSearchDefaultData() = remoteDataSource.fetchSearchDefaultData()
+
+    fun fetchProductsByQuery(
+        query: String?,
+        categoryId: Long?,
+        sort: String?,
+        orientation: String?,
+    ) = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = {
+            ProductsPagingSource(ProductsByQuerySource(
+                query = query,
+                categoryId = categoryId,
+                sort = sort,
+                orientation = orientation,
                 remoteDataSource = remoteDataSource
             ))
         }
@@ -492,6 +533,10 @@ class DataRepository(
     fun isAlreadyLogin() = localData.isAlreadyLogin()
 
     fun addToFavorite(
+        productId: Long
+    ) = addToFavorite(listOf(productId))
+
+    fun addToFavorite(
         productIdList: List<Long>
     ): Single<String> = Single.create { emitter ->
         when(isAlreadyLogin()) {
@@ -724,5 +769,10 @@ class DataRepository(
         orderId = orderId,
         appVersion = appVersion
     )
+
+
+    fun clearSearchHistory() = localData.clearSearchHistory()
+    fun addQueryToHistory(query: String) = localData.addQueryToHistory(query)
+    fun fetchSearchHistory() = localData.fetchSearchHistory()
 
 }

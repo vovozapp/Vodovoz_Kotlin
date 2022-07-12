@@ -21,6 +21,7 @@ import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonP
 import com.vodovoz.app.data.parser.response.category.ConcreteFilterResponseJsonParser.parseConcreteFilterResponse
 import com.vodovoz.app.data.parser.response.comment.CommentsSliderResponseJsonParser.parseCommentsSliderResponse
 import com.vodovoz.app.data.parser.response.comment.SendCommentAboutProductResponseJsonParser.parseSendCommentAboutProductResponse
+import com.vodovoz.app.data.parser.response.comment.SendCommentAboutShopResponseJsonParser.parseSendCommentAboutShopResponse
 import com.vodovoz.app.data.parser.response.country.CountryHeaderResponseJsonParser.parseCountryHeaderResponse
 import com.vodovoz.app.data.parser.response.country.CountrySliderResponseJsonParser.parseCountriesSliderResponse
 import com.vodovoz.app.data.parser.response.discount.DiscountHeaderResponseJsonParser.parseDiscountHeaderResponse
@@ -51,6 +52,8 @@ import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonP
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionSliderResponseJsonParser.parsePromotionSliderResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionsByBannerResponseJsonParser.parsePromotionsByBannerResponse
+import com.vodovoz.app.data.parser.response.search.DefaultSearchDataResponseJsonParser.parseDefaultSearchDataResponse
+import com.vodovoz.app.data.parser.response.search.ProductsByQueryHeaderResponseJsonParser.parseProductsByQueryHeaderResponse
 import com.vodovoz.app.data.parser.response.service.AboutServicesResponseJsonParser.parseAboutServicesResponse
 import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
 import com.vodovoz.app.data.parser.response.user.RegisterResponseJsonParser.parseRegisterResponse
@@ -59,9 +62,6 @@ import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJs
 import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
-import okhttp3.ResponseBody
-import retrofit2.Response
-import retrofit2.http.Query
 
 class RemoteData(
     private val vodovozApi: VodovozApi,
@@ -217,6 +217,52 @@ class RemoteData(
         action = "otzivy",
         limit = 10
     ).flatMap { Single.just(it.parseCommentsSliderResponse()) }
+
+    //Добавить отзыв о магазине
+    override fun fetchSendCommentAboutShopResponse(
+        userId: Long?,
+        comment: String?,
+        rating: Int?
+    ): Single<ResponseEntity<String>> = vodovozApi.fetchCommentResponse(
+        action = "add",
+        userId = userId,
+        comment = comment,
+        rating = rating
+    ).flatMap { Single.just(it.parseSendCommentAboutShopResponse()) }
+
+    //Продукты по результатам поиска
+    override suspend fun fetchProductsByQuery(
+        query: String?,
+        categoryId: Long?,
+        sort: String?,
+        orientation: String?,
+        page: Int?
+    ) = vodovozApi.fetchSearchResponse(
+        action = "search",
+        limit = 10,
+        query = query,
+        categoryId = categoryId,
+        sort = sort,
+        orientation = orientation,
+        page = page
+    )
+
+    override fun fetchProductsByQueryHeader(
+        query: String?
+    ): Single<ResponseEntity<CategoryEntity>> = rxSingle {
+        vodovozApi.fetchSearchResponse(
+            action = "search",
+            query = query,
+            limit = 10,
+            page = 1
+        )
+    }.flatMap { Single.just(it.body()!!.parseProductsByQueryHeaderResponse()) }
+
+    override fun fetchSearchDefaultData(): Single<ResponseEntity<DefaultSearchDataBundleEntity>> = rxSingle {
+        vodovozApi.fetchSearchResponse(
+            action = "glav"
+        )
+    }.flatMap { Single.just(it.body()!!.parseDefaultSearchDataResponse()) }
 
     //Информация о слайдере историй на главное странице
     override fun fetchHistoriesSlider(): Single<ResponseEntity<List<HistoryEntity>>> = vodovozApi.fetchHistoryResponse(

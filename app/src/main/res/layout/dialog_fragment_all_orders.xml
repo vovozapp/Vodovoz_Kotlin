@@ -56,7 +56,6 @@
             android:paddingTop="4dp"
             android:text="Попробуйте изменить параметры фильтров" />
 
-
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

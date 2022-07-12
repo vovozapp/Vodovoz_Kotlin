@@ -7,16 +7,16 @@ import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.ui.components.base.ViewState
-import com.vodovoz.app.ui.mapper.BannerMapper.mapToUI
-import com.vodovoz.app.ui.mapper.BrandMapper.mapToUI
-import com.vodovoz.app.ui.mapper.CategoryDetailMapper.mapToUI
-import com.vodovoz.app.ui.mapper.CategoryMapper.mapToUI
-import com.vodovoz.app.ui.mapper.CommentMapper.mapToUI
-import com.vodovoz.app.ui.mapper.CountriesSliderBundleMapper.mapToUI
-import com.vodovoz.app.ui.mapper.HistoryMapper.mapToUI
-import com.vodovoz.app.ui.mapper.OrderMapper.mapToUI
-import com.vodovoz.app.ui.mapper.PopupNewsMapper.mapToUI
-import com.vodovoz.app.ui.mapper.PromotionMapper.mapToUI
+import com.vodovoz.app.mapper.BannerMapper.mapToUI
+import com.vodovoz.app.mapper.BrandMapper.mapToUI
+import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
+import com.vodovoz.app.mapper.CategoryMapper.mapToUI
+import com.vodovoz.app.mapper.CommentMapper.mapToUI
+import com.vodovoz.app.mapper.CountriesSliderBundleMapper.mapToUI
+import com.vodovoz.app.mapper.HistoryMapper.mapToUI
+import com.vodovoz.app.mapper.OrderMapper.mapToUI
+import com.vodovoz.app.mapper.PopupNewsMapper.mapToUI
+import com.vodovoz.app.mapper.PromotionMapper.mapToUI
 import com.vodovoz.app.ui.model.*
 import com.vodovoz.app.ui.model.custom.CountriesSliderBundleUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
@@ -64,6 +64,7 @@ class HomeViewModel(
     private val viewedProductsSliderHideMLD = MutableLiveData<Boolean>()
     private val commentsSliderDataMLD = MutableLiveData<List<CommentUI>>()
     private val commentsSliderHideMLD = MutableLiveData<Boolean>()
+    private var popupNewsUIMLD = MutableLiveData<PopupNewsUI>()
 
 
     val viewStateLD: LiveData<ViewState> = viewStateMLD
@@ -96,6 +97,7 @@ class HomeViewModel(
     val viewedProductsSliderHideLD: LiveData<Boolean> = viewedProductsSliderHideMLD
     val commentsSliderDataLD: LiveData<List<CommentUI>> = commentsSliderDataMLD
     val commentsSliderHideLD: LiveData<Boolean> = commentsSliderHideMLD
+    val popupNewsUILD: LiveData<PopupNewsUI> = popupNewsUIMLD
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -120,6 +122,17 @@ class HomeViewModel(
     private val viewedProductsSliderUpdateSubject: PublishSubject<ViewState> =
         PublishSubject.create()
     private val commentsSliderUpdateSubject: PublishSubject<ViewState> = PublishSubject.create()
+
+    init {
+        Log.i(LogSettings.ID_LOG, "INIT VM")
+    }
+
+    var isShowPopupNews = true
+    private var isUpdateSuccess = false
+
+    fun updateArgs(isShowPopupNews: Boolean) {
+        this.isShowPopupNews = isShowPopupNews
+    }
 
     init {
         Observable.zip(listOf(
@@ -156,6 +169,9 @@ class HomeViewModel(
                     is ViewState.Success -> {
                         isUpdateSuccess = true
                         viewStateMLD.value = viewState
+                        if (isShowPopupNews) {
+                            updatePopupNews()
+                        }
                     }
                     else -> viewStateMLD.value = viewState
                 }
@@ -167,8 +183,6 @@ class HomeViewModel(
             }
         ).addTo(compositeDisposable)
     }
-
-    private var isUpdateSuccess = false
 
     fun updateData() {
         if (!isUpdateSuccess) viewStateMLD.value = ViewState.Loading()
@@ -387,6 +401,7 @@ class HomeViewModel(
                             ordersSliderUpdateSubject.onNext(ViewState.Success())
                         }
                         is ResponseEntity.Error -> {
+                            Log.i(LogSettings.ID_LOG, "ORDERS ${response.errorMessage}")
                             ordersSliderHideMLD.value = true
                             ordersSliderUpdateSubject.onNext(ViewState.Error(response.errorMessage))
                         }
@@ -577,6 +592,7 @@ class HomeViewModel(
                             viewedProductsSliderUpdateSubject.onNext(ViewState.Success())
                         }
                         is ResponseEntity.Error -> {
+                            Log.i(LogSettings.ID_LOG, "VIEWED ${response.errorMessage}")
                             viewedProductsSliderHideMLD.value = true
                             viewedProductsSliderUpdateSubject.onNext(ViewState.Error(response.errorMessage))
                         }
@@ -627,26 +643,48 @@ class HomeViewModel(
             ).addTo(compositeDisposable)
     }
 
+    private fun updatePopupNews() {
+        dataRepository
+            .fetchPopupNews()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onSuccess = { response ->
+                    when (response) {
+                        is ResponseEntity.Success -> popupNewsUIMLD.value = response.data.mapToUI()
+                        else -> {}
+                    }
+                },
+                onError = {}
+            ).addTo(compositeDisposable)
+    }
+
     fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
         when(isFavorite) {
-            true -> dataRepository
-                .addToFavorite(listOf(productId))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                    onSuccess = {},
-                    onError = { throwable -> errorMLD.value = throwable.message ?: "Неизвестная ошибка" }
-                ).addTo(compositeDisposable)
-            false -> dataRepository
-                .removeFromFavorite(productId = productId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                    onSuccess = {},
-                    onError = { throwable -> errorMLD.value = throwable.message ?: "Неизвестная ошибка" }
-                ).addTo(compositeDisposable)
-        }
+            true -> dataRepository.addToFavorite(productId)
+            false -> dataRepository.removeFromFavorite(productId = productId)
+
+        }.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onSuccess = {},
+                onError = { throwable -> errorMLD.value = throwable.message ?: "Неизвестная ошибка" }
+            ).addTo(compositeDisposable)
     }
+
+    fun changeCart(pair: Pair<Long, Int>) {
+        dataRepository.changeCart(
+            productId = pair.first,
+            quantity = pair.second
+        ).subscribeBy(
+            onComplete = {},
+            onError = { throwable ->
+                errorMLD.value = throwable.message ?: "Неизвестная ошибка"
+            }
+        )
+    }
+
+    fun isLoginAlready() = dataRepository.isAlreadyLogin()
 
     override fun onCleared() {
         super.onCleared()

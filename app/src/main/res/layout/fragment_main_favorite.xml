@@ -106,7 +106,9 @@
             android:paddingEnd="@dimen/primary_space"
             android:gravity="center_vertical">
 
-            <include layout="@layout/view_search" />
+            <include
+                android:id="@+id/searchContainer"
+                layout="@layout/view_search" />
 
         </LinearLayout>
 

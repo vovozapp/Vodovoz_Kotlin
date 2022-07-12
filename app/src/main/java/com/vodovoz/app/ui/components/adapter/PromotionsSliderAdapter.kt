@@ -10,7 +10,9 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 
 class PromotionsSliderAdapter(
     private val onPromotionClickSubject: PublishSubject<Long>,
-    private val onProductClickSubject: PublishSubject<Long>
+    private val onProductClickSubject: PublishSubject<Long>,
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
 ) : RecyclerView.Adapter<PromotionSliderViewHolder>() {
 
     var promotionUIList = listOf<PromotionUI>()
@@ -20,12 +22,12 @@ class PromotionsSliderAdapter(
         viewType: Int
     ) = PromotionSliderViewHolder(
         binding = ViewHolderSliderPromotionBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+            LayoutInflater.from(parent.context), parent, false
         ),
         onPromotionClickSubject = onPromotionClickSubject,
         onProductClickSubject = onProductClickSubject,
+        onChangeProductQuantitySubject = onChangeProductQuantitySubject,
+        onFavoriteClickSubject = onFavoriteClickSubject,
         context = parent.context
     )
 

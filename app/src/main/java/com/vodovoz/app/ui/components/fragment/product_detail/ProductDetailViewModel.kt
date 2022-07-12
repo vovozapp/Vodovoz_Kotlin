@@ -7,9 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.ui.components.base.ViewState
-import com.vodovoz.app.ui.mapper.ProductDetailBundleMapper.mapToUI
-import com.vodovoz.app.ui.model.ProductDetailUI
-import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.mapper.ProductDetailBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.custom.ProductDetailBundleUI
 import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -44,6 +42,7 @@ class ProductDetailViewModel(
     }
 
     fun updateProductDetail() {
+
         dataRepository
             .fetchProductDetails(
                 productId = productId!!,

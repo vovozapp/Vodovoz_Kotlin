@@ -33,7 +33,7 @@ class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val onChangeProductQuantitySubject: PublishSubject<ProductUI> = PublishSubject.create()
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
     private lateinit var onProductClickSubject: PublishSubject<Long>
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
 
@@ -63,8 +63,8 @@ class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
     }
 
     private fun subscribeSubjects() {
-        onChangeProductQuantitySubject.subscribeBy { productUI ->
-            viewModel.changeCart(productUI)
+        onChangeProductQuantitySubject.subscribeBy { pair ->
+            viewModel.changeCart(pair)
         }.addTo(compositeDisposable)
     }
 

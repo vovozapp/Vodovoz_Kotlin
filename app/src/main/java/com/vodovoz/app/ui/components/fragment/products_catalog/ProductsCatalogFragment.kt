@@ -18,6 +18,8 @@ import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.components.decoration.ListMarginDecoration
+import com.vodovoz.app.ui.components.fragment.catalog.CatalogFragmentDirections
+import com.vodovoz.app.ui.components.fragment.favorite.FavoriteFragmentDirections
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -34,7 +36,7 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
     private val compositeDisposable = CompositeDisposable()
 
     private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
-    private val onChangeProductQuantitySubject: PublishSubject<ProductUI> = PublishSubject.create()
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
 
     private val linearProductsAdapter =  LinearProductsAdapter(
@@ -62,8 +64,8 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
     }
 
     private fun subscribeSubjects() {
-        onChangeProductQuantitySubject.subscribeBy { productUI ->
-            viewModel.changeCart(productUI)
+        onChangeProductQuantitySubject.subscribeBy { pair ->
+            viewModel.changeCart(pair)
         }.addTo(compositeDisposable)
 
         onProductClickSubject.subscribeBy { productId ->
@@ -85,6 +87,7 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
     override fun initView() {
         initProductRecycler()
         initAppBar()
+        initSearch()
         observeViewModel()
     }
 
@@ -116,6 +119,17 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
                 }
             }
         )
+    }
+
+    private fun initSearch() {
+        binding.searchContainer.searchRoot.setOnClickListener {
+            findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment())
+        }
+        binding.searchContainer.search.setOnFocusChangeListener { _, isFocusable ->
+            if (isFocusable) {
+                findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment())
+            }
+        }
     }
 
     override fun update() {

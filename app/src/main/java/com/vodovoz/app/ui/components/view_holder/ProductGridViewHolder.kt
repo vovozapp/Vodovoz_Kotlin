@@ -21,7 +21,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 
 class ProductGridViewHolder(
     private val onProductClickSubject: PublishSubject<Long>,
-    private val onChangeProductQuantitySubject: PublishSubject<ProductUI>,
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
     private val binding: ViewHolderProductGridBinding,
     private val context: Context
@@ -34,7 +34,7 @@ class ProductGridViewHolder(
     private val amountControllerTimer = object: CountDownTimer(3000, 3000) {
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
-            onChangeProductQuantitySubject.onNext(productUI)
+            onChangeProductQuantitySubject.onNext(Pair(productUI.id, productUI.cartQuantity))
             hideAmountController()
         }
     }
@@ -67,7 +67,22 @@ class ProductGridViewHolder(
             amountControllerTimer.start()
             updateCartQuantity()
         }
+
         TabLayoutMediator(binding.tabIndicator, binding.detailPicturePager) { _, _ -> }.attach()
+
+        binding.favoriteStatus.setOnClickListener {
+            when(productUI.isFavorite) {
+                true -> {
+                    productUI.isFavorite = false
+                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite))
+                }
+                false -> {
+                    productUI.isFavorite = true
+                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_red))
+                }
+            }
+            onFavoriteClickSubject.onNext(Pair(productUI.id, productUI.isFavorite))
+        }
     }
 
     private fun updateCartQuantity() {

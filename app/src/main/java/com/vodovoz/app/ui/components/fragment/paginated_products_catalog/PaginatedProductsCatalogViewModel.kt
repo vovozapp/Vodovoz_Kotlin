@@ -12,12 +12,11 @@ import com.vodovoz.app.data.config.FiltersConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.ui.components.base.ViewState
-import com.vodovoz.app.ui.mapper.CategoryMapper.mapToUI
-import com.vodovoz.app.ui.mapper.ProductMapper.mapToUI
+import com.vodovoz.app.mapper.CategoryMapper.mapToUI
+import com.vodovoz.app.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.FilterUI
 import com.vodovoz.app.ui.model.FilterValueUI
-import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
 import com.vodovoz.app.util.FilterBuilderExtensions.buildFilterQuery
 import com.vodovoz.app.util.FilterBuilderExtensions.buildFilterValueQuery
@@ -135,10 +134,10 @@ class PaginatedProductsCatalogViewModel(
             pagingData.map { product -> product.mapToUI() }
         }.cachedIn(viewModelScope)
 
-    fun changeCart(productUI: ProductUI) {
+    fun changeCart(pair: Pair<Long, Int>) {
         dataRepository.changeCart(
-            productId = productUI.id,
-            quantity = productUI.cartQuantity
+            productId = pair.first,
+            quantity = pair.second
         ).subscribeBy(
             onComplete = {},
             onError = { throwable ->

@@ -30,9 +30,14 @@ class PromotionsSliderFragment : BaseHiddenFragment() {
     private val compositeDisposable = CompositeDisposable()
     private val onPromotionClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val onPromotionProductClickSubject: PublishSubject<Long> = PublishSubject.create()
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
+
     private val promotionsSliderAdapter = PromotionsSliderAdapter(
         onPromotionClickSubject = onPromotionClickSubject,
-        onProductClickSubject = onPromotionProductClickSubject
+        onProductClickSubject = onPromotionProductClickSubject,
+        onChangeProductQuantitySubject = onChangeProductQuantitySubject,
+        onFavoriteClickSubject = onFavoriteClickSubject
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

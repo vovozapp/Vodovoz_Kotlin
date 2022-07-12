@@ -17,7 +17,8 @@ object ProductDetailsResponseJsonParser {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 ProductDetailBundleEntity(
                     productDetailEntity = responseJson.getJSONObject("data").parseProductDetailEntity(
-                        when(responseJson.isNull("comments")) {
+                        shareUrl = responseJson.getString("detail_page_url"),
+                        commentsAmount = when(responseJson.isNull("comments")) {
                             true -> 0
                             else -> responseJson.getJSONObject("comments").getString("COMMENT_COUNT").toInt()
                         }
@@ -58,7 +59,10 @@ object ProductDetailsResponseJsonParser {
     )
 
     //ProductDetail
-    private fun JSONObject.parseProductDetailEntity(commentsAmount: Int): ProductDetailEntity {
+    private fun JSONObject.parseProductDetailEntity(
+        commentsAmount: Int,
+        shareUrl: String
+    ): ProductDetailEntity {
         var status: String? = null
         var statusColor: String? = null
         if (!isNull("NALICHIE")) {
@@ -84,6 +88,7 @@ object ProductDetailsResponseJsonParser {
         return ProductDetailEntity(
             id = getString("ID").toLong(),
             name = getString("NAME"),
+            shareUrl = shareUrl,
             previewText = getString("PREVIEW_TEXT"),
             detailText = getString("DETAIL_TEXT"),
             isFavorite = getBoolean("FAVORITE"),

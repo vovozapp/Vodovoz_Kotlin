@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.vodovoz.app.data.DataRepository
-import com.vodovoz.app.ui.mapper.CommentMapper.mapToUI
+import com.vodovoz.app.mapper.CommentMapper.mapToUI
 import kotlinx.coroutines.flow.map
 
 class AllCommentsByProductViewModel(

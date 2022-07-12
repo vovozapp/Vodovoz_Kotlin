@@ -11,8 +11,8 @@ import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.components.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment.DataSource
-import com.vodovoz.app.ui.mapper.CategoryMapper.mapToUI
-import com.vodovoz.app.ui.mapper.ProductMapper.mapToUI
+import com.vodovoz.app.mapper.CategoryMapper.mapToUI
+import com.vodovoz.app.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryUI
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable

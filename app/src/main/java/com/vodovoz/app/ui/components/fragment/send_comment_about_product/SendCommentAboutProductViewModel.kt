@@ -12,7 +12,6 @@ import com.vodovoz.app.R
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.config.FieldValidateConfig.MIN_COMMENT_LENGTH
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.databinding.BottomFragmentSendCommentAboutProductBinding
 import com.vodovoz.app.ui.components.base.ViewState
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.kotlin.subscribeBy

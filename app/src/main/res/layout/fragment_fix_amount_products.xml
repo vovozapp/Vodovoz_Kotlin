@@ -31,7 +31,9 @@
                 app:tint="@color/blackTextPrimary"
                 tools:ignore="ContentDescription" />
 
-            <include layout="@layout/view_search" />
+            <include
+                android:id="@+id/searchContainer"
+                layout="@layout/view_search" />
 
         </LinearLayout>
 

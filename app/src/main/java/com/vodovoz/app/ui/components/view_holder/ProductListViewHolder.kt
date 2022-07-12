@@ -22,7 +22,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 class ProductListViewHolder(
     private val binding: ViewHolderProductListBinding,
     private val onProductClickSubject: PublishSubject<Long>,
-    private val onChangeProductQuantitySubject: PublishSubject<ProductUI>,
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
     private val context: Context
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -34,7 +34,7 @@ class ProductListViewHolder(
     private val amountControllerTimer = object: CountDownTimer(3000, 3000) {
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
-            onChangeProductQuantitySubject.onNext(productUI)
+            onChangeProductQuantitySubject.onNext(Pair(productUI.id, productUI.cartQuantity))
             hideAmountController()
         }
     }
@@ -124,7 +124,7 @@ class ProductListViewHolder(
             else -> {
                 binding.statusContainer.visibility = View.VISIBLE
                 binding.status.text = productUI.status
-                binding.statusContainer.setCardBackgroundColor(Color.parseColor(productUI.statusColor))
+                binding.statusContainer.setCardBackgroundColor(Color.parseColor(productUI.statusColor.toString()))
             }
         }
 

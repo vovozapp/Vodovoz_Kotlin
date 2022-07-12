@@ -7,6 +7,7 @@ import android.os.Parcelable
 class CategoryUI(
     val id: Long? = null,
     val name: String,
+    val shareUrl: String = "",
     val productAmount: String? = null,
     val detailPicture: String? = null,
     var isOpen: Boolean = false,
@@ -17,6 +18,7 @@ class CategoryUI(
 
     constructor(parcel: Parcel) : this(
         parcel.readValue(Long::class.java.classLoader) as? Long,
+        parcel.readString()!!,
         parcel.readString()!!,
         parcel.readString(),
         parcel.readString(),
@@ -29,6 +31,7 @@ class CategoryUI(
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeValue(id)
         parcel.writeString(name)
+        parcel.writeString(shareUrl)
         parcel.writeString(productAmount)
         parcel.writeString(detailPicture)
         parcel.writeByte(if (isOpen) 1 else 0)
@@ -50,4 +53,5 @@ class CategoryUI(
             return arrayOfNulls(size)
         }
     }
+
 }

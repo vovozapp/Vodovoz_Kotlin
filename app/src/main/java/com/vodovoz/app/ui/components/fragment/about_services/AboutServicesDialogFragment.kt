@@ -51,7 +51,7 @@ class AboutServicesDialogFragment : ViewStateBaseDialogFragment() {
 
     private fun subscribeSubjects() {
         onServiceClickSubject.subscribeBy { type ->
-            Toast.makeText(requireContext(), type, Toast.LENGTH_SHORT).show()
+
         }.addTo(compositeDisposable)
     }
 

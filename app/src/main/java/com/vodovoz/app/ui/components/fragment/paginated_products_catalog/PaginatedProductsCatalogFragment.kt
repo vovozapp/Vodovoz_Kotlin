@@ -32,6 +32,7 @@ import com.vodovoz.app.ui.components.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.components.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.components.decoration.ProductsFiltersMarginDecoration
 import com.vodovoz.app.ui.components.diffUtils.ProductDiffItemCallback
+import com.vodovoz.app.ui.components.fragment.favorite.FavoriteFragmentDirections
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.FilterValueUI
@@ -60,20 +61,20 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
     private val compositeDisposable = CompositeDisposable()
 
     private var viewMode: ViewMode = ViewMode.LIST
-    private val updateSubject: PublishSubject<Boolean> = PublishSubject.create()
-    private val onChangeProductQuantitySubject: PublishSubject<ProductUI> = PublishSubject.create()
+    private val onUpdateSubject: PublishSubject<Boolean> = PublishSubject.create()
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
     private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
+    private val onBrandClickSubject: PublishSubject<FilterValueUI> = PublishSubject.create()
 
     private var productAdapter: PagingProductsAdapter = PagingProductsAdapter(
         onProductClickSubject = onProductClickSubject,
-        productDiffItemCallback = ProductDiffItemCallback(),
         onChangeProductQuantitySubject = onChangeProductQuantitySubject,
         onFavoriteClickSubject = onFavoriteClickSubject,
+        productDiffItemCallback = ProductDiffItemCallback(),
         viewMode = viewMode
     )
 
-    private val onBrandClickSubject: PublishSubject<FilterValueUI> = PublishSubject.create()
     private val primaryProductFiltersAdapter = PrimaryProductFiltersAdapter(onBrandClickSubject)
 
     //Grid
@@ -136,8 +137,8 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
             findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToProductDetailFragment(productId))
         }.addTo(compositeDisposable)
 
-        onChangeProductQuantitySubject.subscribeBy { product ->
-            viewModel.changeCart(product)
+        onChangeProductQuantitySubject.subscribeBy { pair ->
+            viewModel.changeCart(pair)
         }.addTo(compositeDisposable)
     }
 
@@ -169,6 +170,7 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
         initBackButton()
         observeResultLiveData()
         initHeader()
+        initSearch()
         initPrimaryFiltersRecycler()
         observeViewModel()
     }
@@ -202,6 +204,17 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
         binding.filter.setOnClickListener { showAllFiltersFragment() }
         binding.categoryContainer.setOnClickListener { showSingleRootCatalogCatalog() }
         binding.back.setOnClickListener { findNavController().popBackStack() }
+    }
+
+    private fun initSearch() {
+        binding.searchContainer.searchRoot.setOnClickListener {
+            findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
+        }
+        binding.searchContainer.search.setOnFocusChangeListener { _, isFocusable ->
+            if (isFocusable) {
+                findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
+            }
+        }
     }
 
     private fun initPrimaryFiltersRecycler() {
@@ -350,8 +363,8 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
         }
 
         binding.productRecycler.adapter = productAdapter.withLoadStateHeaderAndFooter(
-            header = LoadStateAdapter(updateSubject),
-            footer = LoadStateAdapter(updateSubject)
+            header = LoadStateAdapter(onUpdateSubject),
+            footer = LoadStateAdapter(onUpdateSubject)
         )
 
         viewLifecycleOwner.lifecycleScope.launch {

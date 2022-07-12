@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.ui.components.base.ViewState
-import com.vodovoz.app.ui.mapper.CartBundleMapper.mapUoUI
+import com.vodovoz.app.mapper.CartBundleMapper.mapUoUI
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.custom.CartBundleUI
@@ -117,10 +117,10 @@ class CartViewModel(
             ).addTo(compositeDisposable)
     }
 
-    fun changeCart(productUI: ProductUI) {
+    fun changeCart(pair: Pair<Long, Int>) {
         dataRepository.changeCart(
-            productId = productUI.id,
-            quantity = productUI.cartQuantity
+            productId = pair.first,
+            quantity = pair.second
         ).subscribeOn(
             Schedulers.io()
         ).observeOn(

@@ -25,7 +25,7 @@
         android:id="@+id/favoriteStatus"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@drawable/ic_favorite_fill"
+        android:src="@drawable/ic_favorite"
         android:layout_marginEnd="@dimen/primary_margin"
         android:layout_marginTop="@dimen/primary_margin"
         app:layout_constraintEnd_toEndOf="parent"

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.ui.components.base.ViewState
-import com.vodovoz.app.ui.mapper.FilterValueMapper.mapToUI
+import com.vodovoz.app.mapper.FilterValueMapper.mapToUI
 import com.vodovoz.app.ui.model.FilterUI
 import com.vodovoz.app.ui.model.FilterValueUI
 import com.vodovoz.app.ui.model.custom.ConcreteFilterBundleUI

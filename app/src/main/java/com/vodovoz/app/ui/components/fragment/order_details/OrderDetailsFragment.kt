@@ -42,7 +42,7 @@ class OrderDetailsFragment : ViewStateBaseFragment() {
 
     private val compositeDisposable = CompositeDisposable()
     private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
-    private val onChangeProductQuantitySubject: PublishSubject<ProductUI> = PublishSubject.create()
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
 
     private val linearProductsAdapter = LinearProductsAdapter(

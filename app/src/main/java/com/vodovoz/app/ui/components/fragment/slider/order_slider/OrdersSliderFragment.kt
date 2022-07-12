@@ -101,6 +101,8 @@ class OrdersSliderFragment : BaseHiddenFragment() {
             true -> binding.titleContainer.visibility = View.VISIBLE
             false -> binding.titleContainer.visibility = View.GONE
         }
+
+        binding.showAllOrders.setOnClickListener { iOnShowAllOrdersClick.onShowAllOrdersClick() }
     }
 
     private fun subscribeSubjects() {

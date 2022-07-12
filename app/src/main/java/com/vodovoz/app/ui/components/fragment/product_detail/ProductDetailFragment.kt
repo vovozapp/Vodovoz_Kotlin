@@ -1,6 +1,7 @@
 package com.vodovoz.app.ui.components.fragment.product_detail
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
@@ -21,18 +22,14 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentProductDetailBinding
-import com.vodovoz.app.ui.components.adapter.CommentsWithAvatarAdapter
-import com.vodovoz.app.ui.components.adapter.PricesAdapter
-import com.vodovoz.app.ui.components.adapter.SearchWordsAdapter
-import com.vodovoz.app.ui.components.adapter.ServicesAdapter
+import com.vodovoz.app.ui.components.adapter.*
 import com.vodovoz.app.ui.components.base.ViewState
 import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
-import com.vodovoz.app.ui.components.diffUtils.DetailPictureDiffUtilCallback
-import com.vodovoz.app.ui.components.adapter.DetailPicturePagerAdapter
 import com.vodovoz.app.ui.components.decoration.CommentMarginDecoration
 import com.vodovoz.app.ui.components.decoration.PriceMarginDecoration
 import com.vodovoz.app.ui.components.decoration.SearchMarginDecoration
+import com.vodovoz.app.ui.components.diffUtils.DetailPictureDiffUtilCallback
 import com.vodovoz.app.ui.components.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.components.fragment.product_info.ProductInfoFragment
 import com.vodovoz.app.ui.components.fragment.product_properties.ProductPropertiesFragment
@@ -65,6 +62,7 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
     private val onServiceClickSubject: PublishSubject<String> = PublishSubject.create()
     private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val onPromotionClickSubject: PublishSubject<Long> = PublishSubject.create()
+    private val onQueryClickSubject: PublishSubject<String> = PublishSubject.create()
 
     private val detailPicturePagerAdapter = DetailPicturePagerAdapter(
         iOnProductDetailPictureClick = {
@@ -77,7 +75,7 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
 
     private val pricesAdapter = PricesAdapter()
     private val commentWithAvatarAdapter = CommentsWithAvatarAdapter()
-    private val searchWordAvatarAdapter = SearchWordsAdapter()
+    private val searchWordAdapter = SearchWordsAdapter(onQueryClickSubject = onQueryClickSubject)
 
     private var aboutProductFragment: ProductInfoFragment? = null
     private var propertiesFragment: ProductPropertiesFragment? = null
@@ -100,6 +98,7 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
         initCallbacks()
         initViewModel()
         getArgs()
+        subscribeSubjects()
     }
 
     private fun getArgs() {
@@ -113,17 +112,31 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
         )[ProductDetailViewModel::class.java]
     }
 
+    private fun subscribeSubjects() {
+        onProductClickSubject.subscribeBy { productId ->
+            onProductClick(productId)
+        }.addTo(compositeDisposable)
+
+        onPromotionClickSubject.subscribeBy { promotionId ->
+            findNavController().navigate(ProductDetailFragmentDirections.actionToPromotionDetailFragment(promotionId))
+        }.addTo(compositeDisposable)
+
+        onQueryClickSubject.subscribeBy { query ->
+            findNavController().navigate(ProductDetailFragmentDirections.actionToSearchFragment().apply { this.query = query })
+        }.addTo(compositeDisposable)
+    }
+
     private fun initCallbacks() {
         byWithProductsSliderFragment.initCallbacks(
             iOnProductClick = this,
             iOnFavoriteClick = this,
-            iOnChangeProductQuantity = { _, _ -> },
+            iOnChangeProductQuantity = {},
             iOnShowAllProductsClick = {}
         )
         recommendProductsSliderFragment.initCallbacks(
             iOnProductClick = this,
             iOnFavoriteClick = this,
-            iOnChangeProductQuantity = { _, _ -> },
+            iOnChangeProductQuantity = {},
             iOnShowAllProductsClick = {}
         )
         promotionsSliderFragment.initCallbacks(
@@ -137,7 +150,7 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
 
     override fun setContentView(
         inflater: LayoutInflater,
-        container: ViewGroup
+        container: ViewGroup,
     ) = FragmentProductDetailBinding.inflate(
         inflater,
         container,
@@ -202,7 +215,7 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
     private fun initSearchWordRecycler() {
         binding.searchWordRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.searchWordRecycler.adapter = searchWordAvatarAdapter
+        binding.searchWordRecycler.adapter = searchWordAdapter
         binding.searchWordRecycler.addItemDecoration(SearchMarginDecoration(space))
     }
 
@@ -318,6 +331,15 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
     private fun initHeader() {
         binding.oldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.floatingOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        binding.share.setOnClickListener {
+            Intent.createChooser(
+                Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, viewModel.productDetailBundleUI.productDetailUI.shareUrl)
+                },
+                "Shearing Option"
+            ).let { startActivity(it) }
+        }
     }
 
     private fun initButtons() {
@@ -414,7 +436,7 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
 
     private fun fillBrandProductList(
         productId: Long,
-        brandId: Long?
+        brandId: Long?,
     ) {
         brandId?.let {
             childFragmentManager.beginTransaction()
@@ -439,7 +461,7 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
                     outRect: Rect,
                     view: View,
                     parent: RecyclerView,
-                    state: RecyclerView.State
+                    state: RecyclerView.State,
                 ) {
                     with(outRect) {
                         if (parent.getChildAdapterPosition(view) % 2 == 0) {
@@ -463,8 +485,8 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
     }
 
     private fun fillSearchWordRecycler(searchWordList: List<String>) {
-        searchWordAvatarAdapter.searchWordList = searchWordList
-        searchWordAvatarAdapter.notifyDataSetChanged()
+        searchWordAdapter.searchWordList = searchWordList
+        searchWordAdapter.notifyDataSetChanged()
 
         when(searchWordList.isEmpty()) {
             true -> binding.searchWordContainer.visibility = View.GONE
@@ -653,21 +675,8 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        onProductClickSubject.subscribeBy { productId ->
-            onProductClick(productId)
-        }.addTo(compositeDisposable)
-
-        onPromotionClickSubject.subscribeBy { promotionId ->
-            findNavController().navigate(ProductDetailFragmentDirections.actionToPromotionDetailFragment(promotionId))
-        }.addTo(compositeDisposable)
-    }
-
     override fun onStop() {
         super.onStop()
-        compositeDisposable.clear()
         amountControllerTimer.cancel()
     }
 
@@ -677,6 +686,11 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
 
     override fun onFavoriteClick(pair: Pair<Long, Boolean>) {
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
     }
 
 }

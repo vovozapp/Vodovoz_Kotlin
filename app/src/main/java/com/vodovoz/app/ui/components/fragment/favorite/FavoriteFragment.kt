@@ -35,6 +35,7 @@ import com.vodovoz.app.ui.components.fragment.paginated_products_catalog_without
 import com.vodovoz.app.ui.components.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragmentArgs
 import com.vodovoz.app.ui.components.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragmentDirections
 import com.vodovoz.app.ui.components.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersViewModel
+import com.vodovoz.app.ui.components.fragment.products_catalog.ProductsCatalogFragmentDirections
 import com.vodovoz.app.ui.components.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.components.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.model.CategoryDetailUI
@@ -56,7 +57,7 @@ class FavoriteFragment : ViewStateBaseFragment() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val onChangeProductQuantitySubject: PublishSubject<ProductUI> = PublishSubject.create()
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
     private val updateSubject: PublishSubject<Boolean> = PublishSubject.create()
     private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
@@ -144,6 +145,7 @@ class FavoriteFragment : ViewStateBaseFragment() {
         initProductRecycler()
         observeResultLiveData()
         initHeader()
+        initSearch()
         initCategoryRecycler()
         initBestForYouProductsSlider()
         observeViewModel()
@@ -171,6 +173,17 @@ class FavoriteFragment : ViewStateBaseFragment() {
         }
     }
 
+    private fun initSearch() {
+        binding.searchContainer.searchRoot.setOnClickListener {
+            findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment())
+        }
+        binding.searchContainer.search.setOnFocusChangeListener { _, isFocusable ->
+            if (isFocusable) {
+                findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment())
+            }
+        }
+    }
+
     private fun initBestForYouProductsSlider() {
         childFragmentManager.beginTransaction().replace(
             R.id.bestForYouProductSliderFragment,
@@ -179,7 +192,7 @@ class FavoriteFragment : ViewStateBaseFragment() {
 
         bestForYouProductsSliderFragment.initCallbacks(
             iOnProductClick = { productId -> onProductClickSubject.onNext(productId) },
-            iOnChangeProductQuantity = { _, _ -> },
+            iOnChangeProductQuantity = {},
             iOnShowAllProductsClick = {},
             iOnFavoriteClick = { pair -> viewModel.changeFavoriteStatus(pair.first, pair.second) }
         )

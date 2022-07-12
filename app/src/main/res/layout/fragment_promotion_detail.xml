@@ -148,7 +148,7 @@
             </LinearLayout>
 
             <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/forYouProductSliderFragment"
+                android:id="@+id/bestForYouProductsSliderFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:translationZ="1dp"

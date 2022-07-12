@@ -20,7 +20,9 @@ import com.vodovoz.app.ui.components.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.components.base.VodovozApplication
 import com.vodovoz.app.ui.components.fragment.all_promotions.AllPromotionsFragment
 import com.vodovoz.app.ui.components.fragment.home_bottom_info.BottomInfoFragment
+import com.vodovoz.app.ui.components.fragment.home_triple_navigation.TripleNavigationHomeFragment
 import com.vodovoz.app.ui.components.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
+import com.vodovoz.app.ui.components.fragment.popup_news.PopupNewsBottomFragment
 import com.vodovoz.app.ui.components.fragment.products_catalog.ProductsCatalogFragment
 import com.vodovoz.app.ui.components.fragment.slider.banners_slider.BannersSliderFragment
 import com.vodovoz.app.ui.components.fragment.slider.brands_slider.BrandsSliderFragment
@@ -46,7 +48,13 @@ class HomeFragment : ViewStateBaseFragment(),
     IOnHistoryClick,
     IOnPopularCategoryClick,
     IOnPromotionClick,
-    IOnOrderClick, IOnFavoriteClick {
+    IOnOrderClick,
+    IOnFavoriteClick
+{
+
+    companion object {
+        const val IS_SHOW_POPUP_NEWS = "isShowPopupNews"
+    }
 
     private lateinit var binding: FragmentMainHomeBinding
     private lateinit var viewModel: HomeViewModel
@@ -70,6 +78,7 @@ class HomeFragment : ViewStateBaseFragment(),
             containTitleContainer = true
         ))
     }
+    private val tripleNavigationHomeFragment: TripleNavigationHomeFragment by lazy { TripleNavigationHomeFragment() }
     private val noveltiesProductsSliderFragment: ProductsSliderFragment by lazy {
         ProductsSliderFragment.newInstance(ProductsSliderConfig(
             containShowAllButton = true
@@ -91,6 +100,7 @@ class HomeFragment : ViewStateBaseFragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
+        getArgs()
         initCallbacks()
     }
 
@@ -99,7 +109,110 @@ class HomeFragment : ViewStateBaseFragment(),
             this,
             (requireActivity().application as VodovozApplication).viewModelFactory
         )[HomeViewModel::class.java]
+    }
+
+    private fun getArgs() {
+        viewModel.updateArgs(HomeFragmentArgs.fromBundle(requireArguments()).isShowPopupNews)
         viewModel.updateData()
+    }
+
+    private fun initCallbacks() {
+        advertisingBannersSliderFragment.initCallbacks(iOnInvokeAction = this)
+        historiesSliderFragment.initCallbacks(iOnHistoryClick = this)
+        popularCategoriesSliderFragment.initCallbacks(iOnPopularCategoryClick = this)
+        discountProductsSliderFragment.initCallbacks(
+            iOnProductClick = this,
+            iOnChangeProductQuantity = this,
+            iOnFavoriteClick = this,
+            iOnShowAllProductsClick = {
+                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
+                ))
+            }
+        )
+        categoryBannersSliderFragment.initCallbacks( iOnInvokeAction = this)
+        topProductsSliderFragment.initCallbacks(
+            iOnProductClick = this,
+            iOnChangeProductQuantity = this,
+            iOnFavoriteClick = this,
+            iOnShowAllProductsClick = { categoryId ->
+                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(categoryId)
+                ))
+            }
+        )
+        ordersSliderFragment.initCallbacks(
+            iOnOrderClick = { orderId ->
+                findNavController().navigate(HomeFragmentDirections.actionToOrderDetailsFragment(orderId))
+            },
+            iOnShowAllOrdersClick = {
+                findNavController().navigate(HomeFragmentDirections.actionToAllOrdersFragment())
+            }
+        )
+        tripleNavigationHomeFragment.initCallbacks(
+            iOnLastPurchasesClick = {
+
+            },
+            iOnOrdersHistoryClick = {
+                findNavController().navigate(HomeFragmentDirections.actionToAllOrdersFragment())
+            },
+            iOnShowAllFavoriteClick = {
+                findNavController().navigate(R.id.favoriteFragment)
+            }
+        )
+        noveltiesProductsSliderFragment.initCallbacks(
+            iOnProductClick = this,
+            iOnChangeProductQuantity = this,
+            iOnFavoriteClick = this,
+            iOnShowAllProductsClick = {
+                Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
+                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
+                ))
+            }
+        )
+        promotionsSliderFragment.initCallbacks(
+            iOnPromotionClick = this,
+            iOnProductClick = this,
+            iOnShowAllPromotionsClick = {
+                findNavController().navigate(HomeFragmentDirections.actionToAllPromotionsFragment(
+                    AllPromotionsFragment.DataSource.All()
+                ))
+            }
+        )
+        bottomProductsSliderFragment.initCallbacks(
+            iOnProductClick = this,
+            iOnChangeProductQuantity = this,
+            iOnFavoriteClick = this,
+            iOnShowAllProductsClick = { categoryId ->
+                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(categoryId)
+                ))
+            }
+        )
+        brandsSliderFragment.initCallbacks(
+            iOnBrandClick = this,
+            iOnShowAllBrandsClick = {
+                findNavController().navigate(HomeFragmentDirections.actionToAllBrandsFragment())
+            }
+        )
+        countriesSliderFragment.initCallbacks(iOnCountryClick = this)
+        viewedProductsSliderFragment.initCallbacks(
+            iOnProductClick = this,
+            iOnChangeProductQuantity = this,
+            iOnFavoriteClick = this,
+            iOnShowAllProductsClick = {}
+        )
+        commentsSliderFragment.initCallbacks(
+            iOnCommentClick = this,
+            iOnSendCommentAboutShop = {
+                if (viewModel.isLoginAlready()) {
+                    findNavController().navigate(HomeFragmentDirections.actionToSendCommentAboutShopBottomDialog())
+                } else {
+                    findNavController().navigate(R.id.profileFragment)
+                }
+            }
+        )
     }
 
     override fun update() { viewModel.updateData() }
@@ -156,6 +269,11 @@ class HomeFragment : ViewStateBaseFragment(),
         ).commit()
 
         childFragmentManager.beginTransaction().replace(
+            R.id.tripleNavigationHomeFragment,
+            tripleNavigationHomeFragment
+        ).commit()
+
+        childFragmentManager.beginTransaction().replace(
             R.id.noveltiesProductsSliderFragment,
             noveltiesProductsSliderFragment
         ).commit()
@@ -201,90 +319,17 @@ class HomeFragment : ViewStateBaseFragment(),
         ).commit()
     }
 
-    private fun initCallbacks() {
-        advertisingBannersSliderFragment.initCallbacks(iOnInvokeAction = this)
-        historiesSliderFragment.initCallbacks(iOnHistoryClick = this)
-        popularCategoriesSliderFragment.initCallbacks(iOnPopularCategoryClick = this)
-        discountProductsSliderFragment.initCallbacks(
-            iOnProductClick = this,
-            iOnChangeProductQuantity = this,
-            iOnFavoriteClick = this,
-            iOnShowAllProductsClick = {
-                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
-                ))
-            }
-        )
-        categoryBannersSliderFragment.initCallbacks( iOnInvokeAction = this)
-        topProductsSliderFragment.initCallbacks(
-            iOnProductClick = this,
-            iOnChangeProductQuantity = this,
-            iOnFavoriteClick = this,
-            iOnShowAllProductsClick = { categoryId ->
-                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(categoryId)
-                ))
-            }
-        )
-        ordersSliderFragment.initCallbacks(
-            iOnOrderClick = this,
-            iOnShowAllOrdersClick = {}
-        )
-        noveltiesProductsSliderFragment.initCallbacks(
-            iOnProductClick = this,
-            iOnChangeProductQuantity = this,
-            iOnFavoriteClick = this,
-            iOnShowAllProductsClick = {
-                Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
-                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
-                ))
-            }
-        )
-        promotionsSliderFragment.initCallbacks(
-            iOnPromotionClick = this,
-            iOnProductClick = this,
-            iOnShowAllPromotionsClick = {
-                findNavController().navigate(HomeFragmentDirections.actionToAllPromotionsFragment(
-                    AllPromotionsFragment.DataSource.All()
-                ))
-            }
-        )
-        bottomProductsSliderFragment.initCallbacks(
-            iOnProductClick = this,
-            iOnChangeProductQuantity = this,
-            iOnFavoriteClick = this,
-            iOnShowAllProductsClick = { categoryId ->
-                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(categoryId)
-                ))
-            }
-        )
-        brandsSliderFragment.initCallbacks(
-            iOnBrandClick = this,
-            iOnShowAllBrandsClick = {
-                findNavController().navigate(HomeFragmentDirections.actionToAllBrandsFragment())
-            }
-        )
-        countriesSliderFragment.initCallbacks(iOnCountryClick = this)
-        viewedProductsSliderFragment.initCallbacks(
-            iOnProductClick = this,
-            iOnChangeProductQuantity = this,
-            iOnFavoriteClick = this,
-            iOnShowAllProductsClick = {}
-        )
-        commentsSliderFragment.initCallbacks(iOnCommentClick = this)
-    }
-
     private fun initOther() {
         binding.refreshContainer.setOnRefreshListener {
             update()
+        }
+        binding.searchContainer.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionToSearchFragment())
         }
     }
 
     private fun observeViewModel() {
         viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
-            Log.i(LogSettings.ID_LOG, "${state::class.simpleName}")
             when(state) {
                 is ViewState.Hide -> onStateHide()
                 is ViewState.Loading -> onStateLoading()
@@ -293,6 +338,19 @@ class HomeFragment : ViewStateBaseFragment(),
                     onStateSuccess()
                     binding.refreshContainer.isRefreshing = false
                 }
+            }
+        }
+
+        viewModel.popupNewsUILD.observe(viewLifecycleOwner) { popupNewsUI ->
+            if (viewModel.isShowPopupNews) {
+                Log.i(LogSettings.ID_LOG, "IS SHOW ${viewModel.isShowPopupNews}")
+                viewModel.isShowPopupNews = false
+                val dialog = PopupNewsBottomFragment.newInstance(
+                    popupNewsUI,
+                    iOnInvokeAction = { action -> action.invoke()}
+                )
+
+                dialog.show(childFragmentManager, dialog::class.simpleName)
             }
         }
 
@@ -463,8 +521,8 @@ class HomeFragment : ViewStateBaseFragment(),
         findNavController().navigate(HomeFragmentDirections.actionToProductDetailFragment(productId))
     }
 
-    override fun onChangeProductQuantity(productId: Long, quantity: Int) {
-
+    override fun onChangeProductQuantity(pair: Pair<Long, Int>) {
+        viewModel.changeCart(pair)
     }
 
     override fun onBrandClick(brandId: Long) {
@@ -499,7 +557,7 @@ class HomeFragment : ViewStateBaseFragment(),
 
     }
 
-    private fun ActionEntity.invoke(navController: NavController, activity: FragmentActivity)  {
+    private fun ActionEntity.invoke(navController: NavController = findNavController(), activity: FragmentActivity = requireActivity())  {
         Log.i(LogSettings.LIFECYCLE_LOG, "${this::class.simpleName}")
         val navDirect = when(this) {
             is ActionEntity.Brand ->
@@ -544,6 +602,16 @@ class HomeFragment : ViewStateBaseFragment(),
 
     override fun onFavoriteClick(pair: Pair<Long, Boolean>) {
         viewModel.changeFavoriteStatus(pair.first, pair.second)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.i(LogSettings.ID_LOG, "STOP HOME")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i(LogSettings.ID_LOG, "DESTROY HOME")
     }
 
 }

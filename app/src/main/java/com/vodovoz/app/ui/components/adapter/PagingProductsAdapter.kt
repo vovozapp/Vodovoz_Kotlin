@@ -14,7 +14,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 
 class PagingProductsAdapter(
     private val onProductClickSubject: PublishSubject<Long>,
-    private val onChangeProductQuantitySubject: PublishSubject<ProductUI>,
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
     private val productDiffItemCallback: ProductDiffItemCallback,
     var viewMode: ViewMode

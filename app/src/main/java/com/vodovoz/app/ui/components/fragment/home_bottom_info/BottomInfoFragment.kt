@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.vodovoz.app.data.config.ApiConfig
 import com.vodovoz.app.databinding.FragmentSectionAdditionalInfoBinding
 import com.vodovoz.app.ui.components.fragment.home.HomeFragmentDirections
 
@@ -29,16 +30,31 @@ class BottomInfoFragment : Fragment() {
         binding.aboutApp.setOnClickListener {
             requireParentFragment().findNavController().navigate(HomeFragmentDirections.actionToAboutAppDialogFragment())
         }
-        binding.aboutDelivery.setOnClickListener {}
-        binding.aboutPay.setOnClickListener {}
-        binding.aboutShop.setOnClickListener {}
+        binding.aboutDelivery.setOnClickListener {
+            requireParentFragment().findNavController().navigate(HomeFragmentDirections.actionToWebViewFragment(
+                ApiConfig.ABOUT_DELIVERY_URL,
+                "О доставке"
+            ))
+        }
+        binding.aboutPay.setOnClickListener {
+            requireParentFragment().findNavController().navigate(HomeFragmentDirections.actionToWebViewFragment(
+                ApiConfig.ABOUT_PAY_URL,
+                "Об оплате"
+            ))
+        }
+        binding.aboutShop.setOnClickListener {
+            requireParentFragment().findNavController().navigate(HomeFragmentDirections.actionToWebViewFragment(
+                ApiConfig.ABOUT_SHOP_URL,
+                "О магазине"
+            ))
+        }
         binding.services.setOnClickListener {
             requireParentFragment().findNavController().navigate(HomeFragmentDirections.actionToAboutServicesDialogFragment())
         }
         binding.contacts.setOnClickListener {}
-        binding.howToOrder.setOnClickListener {}
+        binding.howToOrder.setOnClickListener {
+            requireParentFragment().findNavController().navigate(HomeFragmentDirections.actionToHowToOrderFragment())
+        }
     }
-
-    private fun observeViewModel() {}
 
 }

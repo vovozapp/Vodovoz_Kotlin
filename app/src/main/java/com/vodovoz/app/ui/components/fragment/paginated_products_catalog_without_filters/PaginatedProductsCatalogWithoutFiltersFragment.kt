@@ -30,6 +30,7 @@ import com.vodovoz.app.ui.components.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.components.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.components.diffUtils.ProductDiffItemCallback
 import com.vodovoz.app.ui.components.fragment.home.HomeFragmentDirections
+import com.vodovoz.app.ui.components.fragment.paginated_products_catalog.PaginatedProductsCatalogFragmentDirections
 import com.vodovoz.app.ui.components.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.components.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.model.CategoryUI
@@ -57,7 +58,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val onChangeProductQuantitySubject: PublishSubject<ProductUI> = PublishSubject.create()
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
     private val updateSubject: PublishSubject<Boolean> = PublishSubject.create()
     private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
@@ -137,6 +138,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
         initBackButton()
         observeResultLiveData()
         initHeader()
+        initSearch()
         initBrandRecycler()
         observeViewModel()
     }
@@ -152,6 +154,17 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
                 }
             }
         )
+    }
+
+    private fun initSearch() {
+        binding.searchContainer.searchRoot.setOnClickListener {
+            findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
+        }
+        binding.searchContainer.search.setOnFocusChangeListener { _, isFocusable ->
+            if (isFocusable) {
+                findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
+            }
+        }
     }
 
     private fun initHeader() {
