@@ -5,9 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.vodovoz.app.databinding.FragmentBaseBinding
 import com.vodovoz.app.databinding.FragmentBaseHiddenBinding
 
 abstract class BaseHiddenFragment : Fragment() {

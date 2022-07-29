@@ -9,6 +9,7 @@ object UserDataMapper {
         id = id,
         firstName = firstName,
         secondName = secondName,
+        sex = sex,
         email = email,
         registerDate = registerDate,
         avatar = avatar,

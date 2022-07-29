@@ -2,6 +2,7 @@ package com.vodovoz.app.ui.fragment.slider.countries_slider
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -16,9 +17,9 @@ import com.vodovoz.app.ui.base.*
 import com.vodovoz.app.ui.diffUtils.CountrySliderDiffUtilCallback
 import com.vodovoz.app.ui.interfaces.IOnCountryClick
 import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
-import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.CountryUI
 import com.vodovoz.app.ui.model.custom.CountriesSliderBundleUI
+import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -79,6 +80,7 @@ class CountriesSliderFragment : BaseHiddenFragment() {
     private fun subscribeSubjects() {
         onCountryClickSubject.subscribeBy { countryId ->
             iOnCountryClick.onCountryClick(countryId)
+            Log.i(LogSettings.ID_LOG, "CID $countryId")
         }.addTo(compositeDisposable)
     }
 

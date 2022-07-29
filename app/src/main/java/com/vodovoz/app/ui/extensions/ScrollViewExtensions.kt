@@ -1,14 +1,15 @@
 package com.vodovoz.app.ui.extensions
 
+import android.view.View
 import android.widget.ScrollView
 import androidx.core.widget.NestedScrollView
 import com.google.android.material.appbar.AppBarLayout
 
 object ScrollViewExtensions {
 
-    fun NestedScrollView.setScrollElevation(appBarLayout: AppBarLayout) {
+    fun NestedScrollView.setScrollElevation(view: View) {
         viewTreeObserver.addOnScrollChangedListener {
-            appBarLayout.translationZ =
+            view.translationZ =
                 if (canScrollVertically(-1)) 16f
                 else 0f
         }

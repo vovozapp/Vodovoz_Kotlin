@@ -2,10 +2,13 @@ package com.vodovoz.app.ui.view_holder
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Rect
+import android.view.View
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderSliderPromotionBinding
 import com.vodovoz.app.ui.adapter.PromotionProductsSliderAdapter
 import com.vodovoz.app.ui.diffUtils.PromotionProductDiffUtilCallback
@@ -30,6 +33,24 @@ class PromotionSliderViewHolder(
     init {
         binding.productPager.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.productPager.setHasFixedSize(true)
+        val space = context.resources.getDimension(R.dimen.primary_space).toInt()
+        binding.productPager.addItemDecoration(
+            object : RecyclerView.ItemDecoration() {
+                override fun getItemOffsets(
+                    outRect: Rect,
+                    view: View,
+                    parent: RecyclerView,
+                    state: RecyclerView.State
+                ) {
+                    with(outRect) {
+                        left = space / 2
+                        top = space / 2
+                        right = space / 2
+                        bottom = space / 2
+                    }
+                }
+            }
+        )
         binding.productPager.adapter = promotionProductsSliderAdapter
 
         binding.root.setOnClickListener { onPromotionClickSubject.onNext(promotionUI.id) }

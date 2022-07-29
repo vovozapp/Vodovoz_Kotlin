@@ -20,6 +20,7 @@ object DiscountHeaderResponseJsonParser {
     private fun JSONObject.parseCategoryEntity() = CategoryEntity(
         id = 0,
         name = getString("glavtitle"),
+        shareUrl = getString("detail_page_url"),
         productAmount = getString("tovarvsego"),
         subCategoryEntityList = when(getJSONObject("razdel").isNull("LISTRAZDEL")) {
             true -> listOf()

@@ -51,7 +51,7 @@ class BottomInfoFragment : Fragment() {
         binding.services.setOnClickListener {
             requireParentFragment().findNavController().navigate(HomeFragmentDirections.actionToAboutServicesDialogFragment())
         }
-        binding.contacts.setOnClickListener {}
+        binding.contacts.setOnClickListener { findNavController().navigate(HomeFragmentDirections.actionToContactsFragment()) }
         binding.howToOrder.setOnClickListener {
             requireParentFragment().findNavController().navigate(HomeFragmentDirections.actionToHowToOrderFragment())
         }

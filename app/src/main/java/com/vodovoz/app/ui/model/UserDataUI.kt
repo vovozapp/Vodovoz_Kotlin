@@ -5,6 +5,7 @@ class UserDataUI(
     var firstName: String,
     var secondName: String,
     var email: String,
+    var sex: String,
     val registerDate: String,
     var avatar: String,
     var phone: String,

@@ -168,12 +168,14 @@ class LocalData(
         val cart = fetchCart()
         cart[productId] = quantity
         cartSettings.edit().putString(cookieSessionId, buildCartStr(cart)).apply()
+        Log.i(LogSettings.DEVELOP_LOG, "Chance local cart $productId : $quantity")
     }
 
     override fun fetchCart(): HashMap<Long, Int> {
         val userId = fetchCookieSessionId()
         if (!cartSettings.contains(userId.toString())) return HashMap()
         val cartStr = cartSettings.getString(userId.toString(), null)!!
+        Log.i(LogSettings.DEVELOP_LOG, "Fetch cart $cartStr")
         return parseCartStr(cartStr)
     }
 

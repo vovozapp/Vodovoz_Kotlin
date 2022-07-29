@@ -22,6 +22,8 @@ class LoginViewModel(
     private val passwordMLD = MutableLiveData<String>()
     private val emailInvalidErrorMLD = MutableLiveData<String>()
     private val passwordInvalidErrorMLD = MutableLiveData<String>()
+    private val dialogMessageMLD = MutableLiveData<String>()
+    private val errorMLD = MutableLiveData<String>()
 
     val viewStateLD: LiveData<ViewState> = viewStateMLD
     val loginErrorLD: LiveData<String> = loginErrorMLD
@@ -29,6 +31,8 @@ class LoginViewModel(
     val passwordLD: LiveData<String> = passwordMLD
     val emailInvalidErrorLD: LiveData<String> = emailInvalidErrorMLD
     val passwordInvalidErrorLD: LiveData<String> = passwordInvalidErrorMLD
+    val dialogMessageLD: LiveData<String> = dialogMessageMLD
+    val errorLD: LiveData<String> = errorMLD
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -75,6 +79,22 @@ class LoginViewModel(
     }
 
     fun isAlreadyLogin() = dataRepository.isAlreadyLogin()
+
+    fun recoverPassword(email: String) {
+        if (email.length < 4) {
+            passwordInvalidErrorMLD.value = "Неправильно указан email"
+            return
+        }
+
+        dataRepository
+            .recoverPassword(email)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onSuccess = { dialogMessageMLD.value = "Пароль упешно изменен и выслан вам на почту: $email"},
+                onError = { throwable ->  errorMLD.value = throwable.message ?: "Неизвестная ошибка"}
+            ).addTo(compositeDisposable)
+    }
 
     override fun onCleared() {
         super.onCleared()

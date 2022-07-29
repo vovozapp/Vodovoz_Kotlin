@@ -37,7 +37,7 @@ class VodovozApplication : Application() {
         localDataSource = LocalData(applicationContext)
         dataRepository = DataRepository(
             remoteDataSource = remoteDataSource,
-            localData = localDataSource
+            localDataSource = localDataSource
         )
         viewModelFactory = ViewModelFactory(dataRepository = dataRepository)
     }

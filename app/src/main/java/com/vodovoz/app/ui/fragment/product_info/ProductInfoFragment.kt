@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
-import com.vodovoz.app.databinding.FragmentAbountProductBinding
+import com.vodovoz.app.databinding.FragmentAboutProductBinding
 
 class ProductInfoFragment : Fragment() {
 
@@ -19,14 +19,14 @@ class ProductInfoFragment : Fragment() {
         }
     }
 
-    private lateinit var binding: FragmentAbountProductBinding
+    private lateinit var binding: FragmentAboutProductBinding
     private var isExpanded = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = FragmentAbountProductBinding.inflate(
+    ) = FragmentAboutProductBinding.inflate(
         inflater,
         container,
         false

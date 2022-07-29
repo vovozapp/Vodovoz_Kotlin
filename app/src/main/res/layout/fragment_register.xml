@@ -168,12 +168,12 @@
             android:layout_marginEnd="@dimen/primary_space"
             android:layout_marginBottom="@dimen/primary_space"
             android:background="@drawable/background_button_primary"
-            android:gravity="center"
             android:fontFamily="@font/rotonda"
-            android:textStyle="bold"
+            android:gravity="center"
             android:text="Зарегистрироваться"
             android:textColor="@color/white"
             android:textSize="17sp"
+            android:textStyle="bold"
             android:translationZ="1dp" />
 
     </RelativeLayout>

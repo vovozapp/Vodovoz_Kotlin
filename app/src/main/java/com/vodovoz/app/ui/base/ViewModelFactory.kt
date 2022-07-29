@@ -13,6 +13,8 @@ import com.vodovoz.app.ui.fragment.bottom_dialog_add_address.AddAddressViewModel
 import com.vodovoz.app.ui.fragment.cart.CartViewModel
 import com.vodovoz.app.ui.fragment.catalog.CatalogViewModel
 import com.vodovoz.app.ui.fragment.concrete_filter.ConcreteFilterViewModel
+import com.vodovoz.app.ui.fragment.contacts.ContactsViewModel
+import com.vodovoz.app.ui.fragment.discount_card.DiscountCardViewModel
 import com.vodovoz.app.ui.fragment.favorite.FavoriteViewModel
 import com.vodovoz.app.ui.fragment.full_screen_history_slider.FullScreenHistoriesSliderViewModel
 import com.vodovoz.app.ui.fragment.home.HomeViewModel
@@ -21,16 +23,20 @@ import com.vodovoz.app.ui.fragment.map.MapViewModel
 import com.vodovoz.app.ui.fragment.order_details.OrderDetailsViewModel
 import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogViewModel
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersViewModel
+import com.vodovoz.app.ui.fragment.past_purchases.PastPurchasesViewModel
 import com.vodovoz.app.ui.fragment.product_detail.ProductDetailViewModel
 import com.vodovoz.app.ui.fragment.product_filters.ProductFiltersViewModel
 import com.vodovoz.app.ui.fragment.products_catalog.ProductsCatalogViewModel
 import com.vodovoz.app.ui.fragment.profile.ProfileViewModel
 import com.vodovoz.app.ui.fragment.promotion_details.PromotionDetailsViewModel
+import com.vodovoz.app.ui.fragment.questionnaires.QuestionnairesViewModel
 import com.vodovoz.app.ui.fragment.register.RegisterViewModel
 import com.vodovoz.app.ui.fragment.saved_addresses.SavedAddressesViewModel
 import com.vodovoz.app.ui.fragment.search.SearchViewModel
 import com.vodovoz.app.ui.fragment.send_comment_about_product.SendCommentAboutProductViewModel
 import com.vodovoz.app.ui.fragment.send_comment_about_shop.SendCommentAboutShopViewModel
+import com.vodovoz.app.ui.fragment.service_detail.ServiceDetailViewModel
+import com.vodovoz.app.ui.fragment.service_order.ServiceOrderViewModel
 import com.vodovoz.app.ui.fragment.single_root_catalog.SingleRootCatalogViewModel
 import com.vodovoz.app.ui.fragment.some_products_by_brand.SomeProductsByBrandViewModel
 import com.vodovoz.app.ui.fragment.some_products_maybe_like.SomeProductsMaybeLikeViewModel
@@ -169,6 +175,30 @@ class ViewModelFactory(
 
         if (modelClass.isAssignableFrom(SearchViewModel::class.java)){
             return SearchViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(PastPurchasesViewModel::class.java)){
+            return PastPurchasesViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(DiscountCardViewModel::class.java)){
+            return DiscountCardViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(QuestionnairesViewModel::class.java)){
+            return QuestionnairesViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(ContactsViewModel::class.java)){
+            return ContactsViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(ServiceDetailViewModel::class.java)){
+            return ServiceDetailViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(ServiceOrderViewModel::class.java)){
+            return ServiceOrderViewModel(dataRepository) as T
         }
 
         throw IllegalArgumentException("Unknown View Model Class")

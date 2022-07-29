@@ -15,7 +15,6 @@ import com.vodovoz.app.ui.adapter.GridProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
-import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -64,7 +63,10 @@ class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
 
     private fun subscribeSubjects() {
         onChangeProductQuantitySubject.subscribeBy { pair ->
-            viewModel.changeCart(pair)
+            viewModel.changeCart(pair.first, pair.second)
+        }.addTo(compositeDisposable)
+        onFavoriteClickSubject.subscribeBy { pair ->
+            viewModel.changeFavoriteStatus(pair.first, pair.second)
         }.addTo(compositeDisposable)
     }
 

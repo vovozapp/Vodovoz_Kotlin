@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
@@ -17,9 +15,6 @@ import com.vodovoz.app.ui.adapter.LinearProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
-import com.vodovoz.app.ui.fragment.product_detail.ProductDetailFragment
-import com.vodovoz.app.ui.fragment.product_detail.ProductDetailFragmentDirections
-import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -86,7 +81,10 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
 
     private fun subscribeSubjects() {
         onChangeProductQuantitySubject.subscribeBy { pair ->
-            viewModel.changeCart(pair)
+            viewModel.changeCart(pair.first, pair.second)
+        }.addTo(compositeDisposable)
+        onFavoriteClickSubject.subscribeBy { pair ->
+            viewModel.changeFavoriteStatus(pair.first, pair.second)
         }.addTo(compositeDisposable)
     }
 

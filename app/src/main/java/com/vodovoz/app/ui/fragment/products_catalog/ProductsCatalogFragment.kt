@@ -17,11 +17,7 @@ import com.vodovoz.app.ui.adapter.LinearProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
-import com.vodovoz.app.ui.decoration.ListMarginDecoration
-import com.vodovoz.app.ui.fragment.catalog.CatalogFragmentDirections
-import com.vodovoz.app.ui.fragment.favorite.FavoriteFragmentDirections
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
-import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -65,9 +61,11 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
 
     private fun subscribeSubjects() {
         onChangeProductQuantitySubject.subscribeBy { pair ->
-            viewModel.changeCart(pair)
+            viewModel.changeCart(pair.first, pair.second)
         }.addTo(compositeDisposable)
-
+        onFavoriteClickSubject.subscribeBy { pair ->
+            viewModel.changeFavoriteStatus(pair.first, pair.second)
+        }.addTo(compositeDisposable)
         onProductClickSubject.subscribeBy { productId ->
             findNavController().navigate(
                 ProductsCatalogFragmentDirections.actionToProductDetailFragment(productId)

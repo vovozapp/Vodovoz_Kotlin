@@ -5,15 +5,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.components.fragment.cart.CartFragment">
+    tools:context=".ui.fragment.cart.CartFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/emptyFavoriteContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/gray"
-        android:visibility="visible"
-        tools:context=".ui.components.fragment.cart.CartFragment">
+        android:visibility="invisible"
+        tools:context=".ui.fragment.cart.CartFragment">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarSimple"
@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:titleTextAppearance="@style/ToolbarTitle"
-                app:title="Избранное"/>
+                app:title="Прошлые покупки"/>
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -94,7 +94,7 @@
         android:id="@+id/favoriteContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
+        android:visibility="visible"
         android:orientation="vertical">
 
         <LinearLayout

@@ -10,7 +10,6 @@ import com.vodovoz.app.ui.adapter.ProductsSliderAdapter
 import com.vodovoz.app.ui.decoration.ProductSliderMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductSliderDiffUtilCallback
 import com.vodovoz.app.ui.model.CategoryDetailUI
-import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class CategorySliderViewHolder(

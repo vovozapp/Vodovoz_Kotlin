@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderSliderProductCategoryBinding
 import com.vodovoz.app.ui.view_holder.CategorySliderViewHolder
 import com.vodovoz.app.ui.model.CategoryDetailUI
-import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class CategoriesAdapter(

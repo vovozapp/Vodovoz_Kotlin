@@ -26,6 +26,8 @@ class AboutServicesViewModel(
 
     private val compositeDisposable = CompositeDisposable()
 
+    lateinit var serviceTypeList: List<String>
+
     fun updateData() {
         dataRepository
             .fetchAboutServices()
@@ -38,7 +40,9 @@ class AboutServicesViewModel(
                          is ResponseEntity.Hide -> viewStateMLD.value = ViewState.Hide()
                          is ResponseEntity.Error -> viewStateMLD.value = ViewState.Error(response.errorMessage)
                          is ResponseEntity.Success -> {
-                             aboutServicesBundleMLD.value = response.data.mapToUI()
+                             val data = response.data.mapToUI()
+                             aboutServicesBundleMLD.value = data
+                             serviceTypeList = data.serviceUIList.map { it.type }
                              viewStateMLD.value = ViewState.Success()
                          }
                      }

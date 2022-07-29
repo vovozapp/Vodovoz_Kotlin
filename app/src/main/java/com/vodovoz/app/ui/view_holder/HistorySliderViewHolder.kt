@@ -1,12 +1,10 @@
 package com.vodovoz.app.ui.view_holder
 
 import android.content.Context
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vodovoz.app.databinding.ViewHolderSliderHistoryBinding
 import com.vodovoz.app.ui.model.HistoryUI
-import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class HistorySliderViewHolder(

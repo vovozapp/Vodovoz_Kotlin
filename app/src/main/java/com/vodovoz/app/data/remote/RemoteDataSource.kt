@@ -56,6 +56,9 @@ interface RemoteDataSource {
         page: Int?
     ): Response<ResponseBody>
 
+    //Список подходящих запросов
+    fun fetchMatchesQueries(query: String?): Single<ResponseEntity<List<String>>>
+
     //Хедер продуктов по запросу
     fun fetchProductsByQueryHeader(
         query: String?
@@ -352,5 +355,76 @@ interface RemoteDataSource {
         appVersion: String?,
         orderId: Long?
     ): Single<ResponseEntity<OrderDetailsEntity>>
+
+    //Постраничная загрузка продуктов из прошлых покупок
+    suspend fun fetchPastPurchasesProducts(
+        userId: Long?,
+        sort: String?,
+        orientation: String?,
+        categoryId: Long?,
+        isAvailable: Boolean?,
+        page: Int?,
+    ): Response<ResponseBody>
+
+    //Хедер для прошлых покупок
+    fun fetchPastPurchasesHeader(userId: Long?): Single<ResponseEntity<PastPurchasesHeaderBundleEntity>>
+
+    //Востановить пароль
+    fun recoverPassword(email: String? = null): Single<ResponseEntity<Boolean>>
+
+    //Персонализированная подборка продуктов
+    fun fetchPersonalProducts(
+        userId: Long?,
+        page: Int?
+    ): Single<ResponseEntity<CategoryDetailEntity>>
+
+    fun updateUserData(
+        userId: Long,
+        firstName: String?,
+        secondName: String?,
+        password: String?,
+        phone: String?,
+        sex: String?,
+        birthday: String?,
+        email: String?,
+    ): Single<ResponseEntity<Boolean>>
+
+    fun fetchActivateDiscountCardInfo(userId: Long?): Single<ResponseEntity<ActivateDiscountCardBundleEntity>>
+
+    fun activateDiscountCard(
+        userId: Long?,
+        value: String?
+    ): Single<ResponseEntity<String>>
+
+    fun fetchQuestionnairesTypes(): Single<ResponseEntity<List<QuestionnaireTypeEntity>>>
+
+    fun fetchQuestionnaire(
+        userId: Long?,
+        questionnaireType: String?
+    ): Single<ResponseEntity<List<QuestionEntity>>>
+
+    fun fetchContacts(appVersion: String?): Single<ResponseEntity<ContactsBundleEntity>>
+
+    fun sendMail(
+        name: String?,
+        phone: String?,
+        email: String?,
+        comment: String?
+    ): Single<ResponseEntity<String>>
+
+    fun fetchServiceById(
+        type: String?
+    ): Single<ResponseEntity<ServiceEntity>>
+
+    fun fetchFormForOrderService(
+        type: String?,
+        userId: Long?
+    ): Single<ResponseEntity<List<ServiceOrderFormFieldEntity>>>
+
+    fun orderService(
+        type: String?,
+        userId: Long?,
+        value: String?
+    ): Single<ResponseEntity<String>>
 
 }

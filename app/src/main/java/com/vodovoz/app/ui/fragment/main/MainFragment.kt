@@ -3,7 +3,6 @@ package com.vodovoz.app.ui.fragment.main
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,12 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.ActivityMainBinding
 import com.vodovoz.app.databinding.FragmentMainBinding
 import com.vodovoz.app.ui.fragment.home.HomeFragment
-import com.vodovoz.app.util.Keys
-import com.vodovoz.app.util.LogSettings
-import com.yandex.mapkit.MapKitFactory
 
 class MainFragment : Fragment() {
 

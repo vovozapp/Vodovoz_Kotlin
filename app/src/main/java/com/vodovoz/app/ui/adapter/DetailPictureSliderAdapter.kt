@@ -4,8 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderSliderDetailPictureBinding
-import com.vodovoz.app.ui.view_holder.DetailPicturePagerViewHolder
-import com.vodovoz.app.ui.interfaces.IOnProductDetailPictureClick
 import com.vodovoz.app.ui.view_holder.DetailPictureSliderViewHolder
 import io.reactivex.rxjava3.subjects.PublishSubject
 

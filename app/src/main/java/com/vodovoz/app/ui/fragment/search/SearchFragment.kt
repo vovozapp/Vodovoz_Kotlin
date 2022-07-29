@@ -37,19 +37,23 @@ import com.vodovoz.app.ui.decoration.CategoryTabsMarginDecoration
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
-import com.vodovoz.app.ui.fragment.home.HomeFragmentDirections
-import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
+import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.util.LogSettings
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.Observables
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class SearchFragment : ViewStateBaseFragment() {
@@ -111,6 +115,12 @@ class SearchFragment : ViewStateBaseFragment() {
         }.addTo(compositeDisposable)
         onProductClickSubject.subscribeBy { productId ->
             findNavController().navigate(SearchFragmentDirections.actionToProductDetailFragment(productId))
+        }.addTo(compositeDisposable)
+        onFavoriteClickSubject.subscribeBy { pair ->
+            viewModel.changeFavoriteStatus(pair.first, pair.second)
+        }.addTo(compositeDisposable)
+        onChangeProductQuantitySubject.subscribeBy { pair ->
+            viewModel.changeCart(pair.first, pair.second)
         }.addTo(compositeDisposable)
         onUpdateSubject.subscribeBy {
             productAdapter.retry()
@@ -176,7 +186,7 @@ class SearchFragment : ViewStateBaseFragment() {
     private fun initPopularProductsSliderFragment() {
         popularProductsSliderFragment.initCallbacks(
             iOnProductClick = { productId -> onProductClickSubject.onNext(productId) },
-            iOnChangeProductQuantity = {},
+            iOnChangeProductQuantity = { pair -> onChangeProductQuantitySubject.onNext(pair)},
             iOnFavoriteClick = { pair -> onFavoriteClickSubject.onNext(pair) },
             iOnShowAllProductsClick = {}
         )
@@ -231,6 +241,7 @@ class SearchFragment : ViewStateBaseFragment() {
     }
 
     private fun initSearch() {
+        binding.searchDataContainer.setScrollElevation(binding.searchToolbar)
         binding.clearSearchHistory.setOnClickListener {
             viewModel.clearSearchHistory()
         }
@@ -242,12 +253,17 @@ class SearchFragment : ViewStateBaseFragment() {
             }
         }
 
-        binding.search.doAfterTextChanged { query ->
-            when(query?.trim().toString().isNotEmpty()) {
-                true -> binding.clear.visibility = View.VISIBLE
-                false -> binding.clear.visibility = View.INVISIBLE
+        Observable.create<String> { emitter ->
+            binding.search.doAfterTextChanged { query ->
+                when(query?.trim().toString().isNotEmpty()) {
+                    true ->  binding.clear.visibility = View.VISIBLE
+                    false -> binding.clear.visibility = View.INVISIBLE
+                }
+                emitter.onNext(query.toString())
             }
-        }
+        }.debounce(300, TimeUnit.MILLISECONDS).subscribeBy { query ->
+            viewModel.updateMatchesQueries(query)
+        }.addTo(compositeDisposable)
 
         binding.clear.setOnClickListener {
             binding.search.setText("")
@@ -256,11 +272,8 @@ class SearchFragment : ViewStateBaseFragment() {
 
         binding.search.setOnEditorActionListener{ _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                Log.i(LogSettings.ID_LOG, "SEARCH ID")
                 val query = binding.search.text.trim().toString()
-                Log.i(LogSettings.ID_LOG, "QUERY: $query")
                 if (query.isNotEmpty()) {
-                    Log.i(LogSettings.ID_LOG, "NOT EMPTY")
                     updateProductsByQuery(query)
                 }
             }
@@ -329,6 +342,20 @@ class SearchFragment : ViewStateBaseFragment() {
             SearchFragmentArgs.fromBundle(requireArguments()).query.let { query ->
                 if (query.isNotEmpty()) {
                     updateProductsByQuery(query)
+                }
+            }
+        }
+
+
+        viewModel.matchesQueryListLD.observe(viewLifecycleOwner) { queryList ->
+            when (queryList.isEmpty()) {
+                true -> binding.matchesQueriesContainer.visibility = View.GONE
+                false -> {
+                    binding.matchesQueriesContainer.visibility = View.VISIBLE
+                    binding.matchesQueriesChipGroup.removeAllViews()
+                    queryList.forEach { query ->
+                        binding.matchesQueriesChipGroup.addView(buildQueryChip(query))
+                    }
                 }
             }
         }

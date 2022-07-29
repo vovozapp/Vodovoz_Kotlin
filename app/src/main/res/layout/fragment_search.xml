@@ -122,6 +122,7 @@
                 android:orientation="vertical"
                 app:layout_scrollFlags="enterAlways|scroll">
 
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -232,90 +233,125 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/searchDataContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/searchToolbar"
-        android:visibility="visible"
         android:background="@color/white"
-        android:orientation="vertical">
+        android:visibility="visible">
 
         <LinearLayout
-            android:id="@+id/historyQueryContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/matchesQueriesContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/rotonda"
                     android:textStyle="bold"
                     android:textSize="20sp"
-                    android:text="История"
+                    android:text="Подходящие запросы"
                     android:textColor="@color/blackTextDark"
                     android:paddingTop="@dimen/primary_margin"
                     android:paddingBottom="@dimen/primary_margin"
                     android:paddingStart="@dimen/primary_space"
                     android:paddingEnd="@dimen/primary_space" />
 
-                <TextView
-                    android:id="@+id/clearSearchHistory"
-                    android:layout_width="wrap_content"
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/matchesQueriesChipGroup"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/primary_margin"
-                    android:paddingBottom="@dimen/primary_margin"
                     android:paddingStart="@dimen/primary_space"
-                    android:paddingEnd="@dimen/primary_space"
-                    android:fontFamily="@font/rotonda"
-                    android:textColor="@color/blackTextDark"
-                    android:textSize="14sp"
-                    android:text="Очистить" />
+                    android:paddingEnd="@dimen/primary_space"/>
 
             </LinearLayout>
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/historyQueryChipGroup"
+            <LinearLayout
+                android:id="@+id/historyQueryContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="@dimen/primary_space"
-                android:paddingEnd="@dimen/primary_space"/>
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
-        <LinearLayout
-            android:id="@+id/popularQueryContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/rotonda"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:text="История"
+                        android:textColor="@color/blackTextDark"
+                        android:paddingTop="@dimen/primary_margin"
+                        android:paddingBottom="@dimen/primary_margin"
+                        android:paddingStart="@dimen/primary_space"
+                        android:paddingEnd="@dimen/primary_space" />
 
-            <TextView
+                    <TextView
+                        android:id="@+id/clearSearchHistory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/primary_margin"
+                        android:paddingBottom="@dimen/primary_margin"
+                        android:paddingStart="@dimen/primary_space"
+                        android:paddingEnd="@dimen/primary_space"
+                        android:fontFamily="@font/rotonda"
+                        android:textColor="@color/blackTextDark"
+                        android:textSize="14sp"
+                        android:text="Очистить" />
+
+                </LinearLayout>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/historyQueryChipGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/popularQueryContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/rotonda"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:text="Популярное"
-                android:textColor="@color/blackTextDark"
-                android:paddingTop="@dimen/primary_margin"
-                android:paddingBottom="@dimen/primary_margin"
-                android:paddingStart="@dimen/primary_space"
-                android:paddingEnd="@dimen/primary_space" />
+                android:orientation="vertical">
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/popularQueryChipGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="@dimen/primary_space"
-                android:paddingEnd="@dimen/primary_space"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:text="Популярное"
+                    android:textColor="@color/blackTextDark"
+                    android:paddingTop="@dimen/primary_margin"
+                    android:paddingBottom="@dimen/primary_margin"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/popularQueryChipGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space"/>
+
+            </LinearLayout>
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/popularProductsSliderFragment"
@@ -324,6 +360,6 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>

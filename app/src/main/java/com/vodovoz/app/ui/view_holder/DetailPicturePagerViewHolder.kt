@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vodovoz.app.databinding.ViewHolderPagerDetailPictureBinding
-import com.vodovoz.app.databinding.ViewHolderSliderDetailPictureBinding
-import com.vodovoz.app.ui.interfaces.IOnProductClick
 import com.vodovoz.app.ui.interfaces.IOnProductDetailPictureClick
 
 class DetailPicturePagerViewHolder(

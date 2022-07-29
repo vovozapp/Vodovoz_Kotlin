@@ -99,12 +99,11 @@
                     android:id="@+id/favorite"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/ic_favorite_border"
+                    android:src="@drawable/ic_favorite"
                     android:layout_marginEnd="@dimen/primary_space"
                     android:layout_marginTop="@dimen/primary_space"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/blackTextPrimary"
                     tools:ignore="ContentDescription" />
 
                 <LinearLayout

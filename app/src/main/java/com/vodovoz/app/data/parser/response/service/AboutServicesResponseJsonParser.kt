@@ -3,9 +3,6 @@ package com.vodovoz.app.data.parser.response.service
 import com.vodovoz.app.data.model.common.AboutServicesBundleEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.ServiceEntity
-import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
-import com.vodovoz.app.data.parser.common.PromotionJsonParser.parsePromotionEntityList
-import com.vodovoz.app.data.parser.common.PromotionParser.parsePromotionFilterEntityList
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
 import org.json.JSONArray
@@ -28,9 +25,7 @@ object AboutServicesResponseJsonParser {
     )
 
     private fun JSONArray.parseServiceEntityList(): List<ServiceEntity> = mutableListOf<ServiceEntity>().also { list ->
-        for (index in 0 until length()) {
-            list.add(getJSONObject(index).parseServiceEntity())
-        }
+        for (index in 0 until length()) list.add(getJSONObject(index).parseServiceEntity())
     }
     private fun JSONObject.parseServiceEntity() = ServiceEntity(
         name = getString("TITLE"),

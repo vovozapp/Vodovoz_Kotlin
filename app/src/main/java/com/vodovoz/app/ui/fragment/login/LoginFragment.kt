@@ -6,10 +6,14 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.databinding.FragmentLoginBinding
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
+import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
+import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 
 class LoginFragment : ViewStateBaseFragment() {
 
@@ -62,7 +66,7 @@ class LoginFragment : ViewStateBaseFragment() {
         binding.login.setOnClickListener {
             viewModel.validate(binding.email.text.toString(), binding.password.text.toString())
         }
-        binding.recover.setOnClickListener {  }
+        binding.recoverPassword.setOnClickListener { viewModel.recoverPassword(binding.email.text.toString()) }
         binding.register.setOnClickListener {
             findNavController().navigate(LoginFragmentDirections.actionToRegisterFragment())
         }
@@ -90,6 +94,19 @@ class LoginFragment : ViewStateBaseFragment() {
 
         viewModel.loginErrorLD.observe(viewLifecycleOwner) { loginErrorMessage ->
             binding.passwordContainer.error = loginErrorMessage
+        }
+
+        viewModel.errorLD.observe(viewLifecycleOwner) { errorMessage ->
+            Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_LONG).show()
+        }
+
+        viewModel.dialogMessageLD.observe(viewLifecycleOwner) { dialogMessage ->
+            MaterialAlertDialogBuilder(requireContext())
+                .setMessage(dialogMessage)
+                .setPositiveButton("Ок") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
         }
     }
 

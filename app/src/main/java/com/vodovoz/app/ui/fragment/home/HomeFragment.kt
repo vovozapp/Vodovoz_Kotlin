@@ -18,7 +18,9 @@ import com.vodovoz.app.databinding.FragmentMainHomeBinding
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
+import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragment
+import com.vodovoz.app.ui.fragment.catalog.CatalogFragmentDirections
 import com.vodovoz.app.ui.fragment.home_bottom_info.BottomInfoFragment
 import com.vodovoz.app.ui.fragment.home_triple_navigation.TripleNavigationHomeFragment
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
@@ -185,6 +187,7 @@ class HomeFragment : ViewStateBaseFragment(),
             iOnChangeProductQuantity = this,
             iOnFavoriteClick = this,
             iOnShowAllProductsClick = { categoryId ->
+                Log.i(LogSettings.ID_LOG, "SID $categoryId")
                 findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(categoryId)
                 ))
@@ -323,9 +326,16 @@ class HomeFragment : ViewStateBaseFragment(),
         binding.refreshContainer.setOnRefreshListener {
             update()
         }
-        binding.searchContainer.setOnClickListener {
-            findNavController().navigate(HomeFragmentDirections.actionToSearchFragment())
+        binding.searchContainer.searchRoot.setOnClickListener {
+            findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment())
         }
+        binding.searchContainer.search.setOnFocusChangeListener { _, isFocusable ->
+            if (isFocusable) {
+                findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment())
+            }
+        }
+
+        binding.contentContainer.setScrollElevation(binding.appBar)
     }
 
     private fun observeViewModel() {
@@ -522,7 +532,7 @@ class HomeFragment : ViewStateBaseFragment(),
     }
 
     override fun onChangeProductQuantity(pair: Pair<Long, Int>) {
-        viewModel.changeCart(pair)
+        viewModel.changeCart(pair.first, pair.second)
     }
 
     override fun onBrandClick(brandId: Long) {

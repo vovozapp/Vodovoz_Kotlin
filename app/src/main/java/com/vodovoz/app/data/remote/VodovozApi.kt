@@ -1,12 +1,11 @@
 package com.vodovoz.app.data.remote
 
-import android.widget.RatingBar
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.Field
-import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface VodovozApi {
 
@@ -21,7 +20,7 @@ interface VodovozApi {
         @Query("limit") limit: Int? = null,
         @Query("userid") userId: Long? = null,
         @Query("text") comment: String? = null,
-        @Query("rating") rating: Int? = null
+        @Query("rating") rating: Int? = null,
     ): Single<ResponseBody>
 
     //"newmobile/otzivomagaz.php?otziv=add&userid=" + User.getInstance().getuser_id().toString() + "&text=".toString() + editTextComments.getText().toString().toString() + "&rating=" + ratingBar.getRating()
@@ -190,13 +189,6 @@ interface VodovozApi {
         @Query("pass") password: String,
     ): Single<ResponseBody>
 
-    //Профиль
-    @GET("/newmobile/profile/index.php")
-    fun fetchProfileResponse(
-        @Query("action") action: String,
-        @Query("userid") userId: Long,
-    ): Single<ResponseBody>
-
     //Корзина
     @GET("/newmobile/korzina/index.php")
     fun fetchCartResponse(
@@ -249,12 +241,12 @@ interface VodovozApi {
         @Query("nav") page: Int? = null,
         @Query("rating_value") rating: Int? = null,
         @Query("message") comment: String? = null,
-        @Query("userid") userId: Long? = null
+        @Query("userid") userId: Long? = null,
     ): Response<ResponseBody>
 
     @GET("/newmobile/glavnaya/uslygi/uslygi.php")
     fun fetchServicesResponse(
-        @Query("action") action: String? = null
+        @Query("action") action: String? = null,
     ): Single<ResponseBody>
 
     //&sort=popylyar&ascdesc=desc&nav
@@ -266,7 +258,7 @@ interface VodovozApi {
         @Query("ascdesc") orientation: String? = null,
         @Query("nav") page: Int? = null,
         @Query("sect") categoryId: Long? = null,
-        @Query("action") action: String? = null
+        @Query("action") action: String? = null,
     ): Response<ResponseBody>
 
     @GET("/newmobile/osnova/izbrannoe/adddel.php")
@@ -274,12 +266,12 @@ interface VodovozApi {
         @Query("iblock") blockId: Long? = null,
         @Query("action") action: String? = null,
         @Query("id") productIdList: String? = null,
-        @Query("userid") userId: Long? = null
+        @Query("userid") userId: Long? = null,
     ): Single<ResponseBody>
 
     @GET("/newmobile/profile/karta/index.php")
     fun fetchMapResponse(
-        @Query("action") action: String? = null
+        @Query("action") action: String? = null,
     ): Single<ResponseBody>
 
     @GET("/newmobile/address.php")
@@ -295,7 +287,7 @@ interface VodovozApi {
         @Query("iblock_id") blockId: Int? = null,
         @Query("action") action: String? = null,
         @Query("tip") type: Int? = null,
-        @Query("addressid") addressId: Long? = null
+        @Query("addressid") addressId: Long? = null,
     ): Single<Response<ResponseBody>>
 
     @GET("/newmobile/profile/historyorder/spisokzakazov.php")
@@ -305,7 +297,7 @@ interface VodovozApi {
         @Query("nav") page: Int? = null,
         @Query("android") appVersion: String? = null,
         @Query("status") status: String? = null,
-        @Query("id") orderId: Long? = null
+        @Query("id") orderId: Long? = null,
     ): Response<ResponseBody>
 
     @GET("/newmobile/profile/historyorder/detailzakaz.php")
@@ -313,7 +305,13 @@ interface VodovozApi {
         @Query("userid") userId: Long? = null,
         @Query("action") action: String? = null,
         @Query("android") appVersion: String? = null,
-        @Query("id") orderId: Long? = null
+        @Query("id") orderId: Long? = null,
+    ): Single<ResponseBody>
+
+    @GET("/newmobile/searching/minipoisk.php")
+    fun fetchMatchesQueries(
+        @Query("action") action: String? = null,
+        @Query("search") query: String? = null,
     ): Single<ResponseBody>
 
     @GET("/newmobile/searching/index.php")
@@ -327,6 +325,96 @@ interface VodovozApi {
         @Query("sect") categoryId: Long? = null,
     ): Response<ResponseBody>
 
+    @GET("/newmobile/profile/historyorder/proshlpokipki.php")
+    suspend fun fetchPastPurchasesResponse(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("sort") sort: String? = null,
+        @Query("ascdesc") orientation: String? = null,
+        @Query("nav") page: Int? = null,
+        @Query("sect") categoryId: Long? = null,
+        @Query("act") isAvailable: String? = null,
+    ): Response<ResponseBody>
+
+    @GET("newmobile/recoverPass.php")
+    fun recoverPassword(
+        @Query("email") email: String? = null,
+        @Query("forgot_password") forgotPassword: String? = null,
+    ): Single<ResponseBody>
+
+    @GET("newmobile/profile/tovary.php")
+    fun fetchPersonalProducts(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("nav") page: Int? = null,
+    ): Single<ResponseBody>
+
+    //Профиль
+    @GET("/newmobile/profile/index.php")
+    fun fetchProfileResponse(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("name") firstName: String? = null,
+        @Query("lastname") secondName: String? = null,
+        @Query("password") password: String? = null,
+        @Query("phone") phone: String? = null,
+        @Query("gender") sex: String? = null,
+        @Query("birthday") birthday: String? = null,
+        @Query("email") email: String? = null,
+    ): Single<ResponseBody>
+
+    @GET("/newmobile/profile/aktivacija_karty/index.php")
+    fun fetchDiscountCardBaseRequest(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("filtervalue") value: String? = null,
+    ): Single<ResponseBody>
+
+    @GET("/newmobile/profile/anketa/index.php")
+    fun fetchQuestionnairesResponse(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+    ): Single<ResponseBody>
+
+    @FormUrlEncoded
+    @POST("/newmobile/profile/index.php?action=uploadPhoto")
+    fun updateUserPhoto(
+        @Field("userid") userId: Long? = null,
+        @Field("userpic") photo: Any?,
+    ): Single<ResponseBody>
+
+    @GET("/newmobile/glavnaya/svyssnam.php")
+    fun fetchContactsResponse(
+        @Query("action") action: String? = null,
+        @Query("versiyaan") appVersion: String? = null,
+    ): Single<ResponseBody>
+
+    @GET("/newmobile/mail.php")
+    fun sendMail(
+        @Query("name") name: String? = null,
+        @Query("phone") phone: String? = null,
+        @Query("email") email: String? = null,
+        @Query("comment") comment: String? = null
+    ): Single<ResponseBody>
+
+    @GET("/newmobile/glavnaya/uslygi/form.php")
+    fun fetchOrderServiceResponse(
+        @Query("action") action: String? = null,
+        @Query("tip") type: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("filtervalue") value: String? = null
+    ): Single<ResponseBody>
+
+    //newmobile/glavnaya/uslygi/form.php?action=add&filtervalue="+stringBuilder.toString()+"&tip="+ID+"&userid="+User.getInstance().getuse
+    ///newmobile/glavnaya/uslygi/form.php?action=glav&tip="+ID+"&userid="
+    //"newmobile/mail.php?name=" + NameEmail.getText().toString() + "&phone=" + PhoneEmail.getText().toString() + "&email=" + EmailEmail.getText().toString() + "&comment=" + CommentEmail.getText().toString()
+    //http://m.vodovoz.ru//newmobile/profile/anketa/index.php
+
+
+    //http://m.vodovoz.ru/newmobile/profile/index.php?action=glav&userid=515
+    ///newmobile/profile/aktivacija_karty/index.php?action=edit&userid="+User.getInstance().getuser_id()+"&filtervalue=
+    //newmobile/profile/aktivacija_karty/index.php?action=glav&userid
+    ///newmobile/osnova/orderzakazmenu.php?action=zakaz&userid=
     //newmobile/searching/index.php?action=search&search="+SearchToTrim.toString()+"&limit=10&sort=name&ascdesc=asc&nav="+currentPage+"&sect="+SectionID
     ///newmobile/profile/historyorder/detailzakaz.php?action=detail&userid="+User.getInstance().getuser_id()+"&id="+OrderNumber+"&android="+ BuildConfig.VERSION_NAME
     //http://m.vodovoz.ru/newmobile/profile/historyorder/spisokzakazov.php?userid=515&action=spisok&nav=1&android=1.4.87&status=&id=

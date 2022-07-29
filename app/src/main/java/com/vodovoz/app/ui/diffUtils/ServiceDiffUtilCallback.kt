@@ -1,7 +1,6 @@
 package com.vodovoz.app.ui.diffUtils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.vodovoz.app.ui.model.BannerUI
 import com.vodovoz.app.ui.model.ServiceUI
 
 class ServiceDiffUtilCallback(

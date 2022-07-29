@@ -42,7 +42,6 @@ class ProductDetailViewModel(
     }
 
     fun updateProductDetail() {
-
         dataRepository
             .fetchProductDetails(
                 productId = productId!!,
@@ -69,18 +68,30 @@ class ProductDetailViewModel(
             ).addTo(compositeDisposable)
     }
 
-    fun changeCart() {
+    fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
+        when(isFavorite) {
+            true -> dataRepository.addToFavorite(productId)
+            false -> dataRepository.removeFromFavorite(productId = productId)
+
+        }.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onSuccess = {},
+                onError = { throwable -> errorMLD.value = throwable.message ?: "Неизвестная ошибка" }
+            ).addTo(compositeDisposable)
+    }
+
+    fun changeCart(productId: Long, quantity: Int) {
         dataRepository.changeCart(
-            productId = productDetailBundleUI.productDetailUI.id,
-            quantity = productDetailBundleUI.productDetailUI.cartQuantity
+            productId = productId,
+            quantity = quantity
         ).subscribeBy(
             onComplete = {},
             onError = { throwable ->
                 errorMLD.value = throwable.message ?: "Неизвестная ошибка"
             }
-        ).addTo(compositeDisposable)
+        )
     }
-
     fun isLogin() = dataRepository.isAlreadyLogin()
 
     override fun onCleared() {

@@ -672,10 +672,10 @@ class HomeViewModel(
             ).addTo(compositeDisposable)
     }
 
-    fun changeCart(pair: Pair<Long, Int>) {
+    fun changeCart(productId: Long, quantity: Int) {
         dataRepository.changeCart(
-            productId = pair.first,
-            quantity = pair.second
+            productId = productId,
+            quantity = quantity
         ).subscribeBy(
             onComplete = {},
             onError = { throwable ->

@@ -2,7 +2,6 @@ package com.vodovoz.app.ui.fragment.history_detail
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
@@ -14,7 +13,6 @@ import com.vodovoz.app.ui.interfaces.IOnChangeHistory
 import com.vodovoz.app.ui.config.UIConfig
 import com.vodovoz.app.ui.model.BannerUI
 import com.vodovoz.app.ui.model.HistoryUI
-import com.vodovoz.app.util.LogSettings
 import jp.shts.android.storiesprogressview.StoriesProgressView
 
 class HistoryDetailFragment : Fragment() {

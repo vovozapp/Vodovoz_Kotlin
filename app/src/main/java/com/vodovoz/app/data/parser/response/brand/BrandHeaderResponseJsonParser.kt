@@ -19,6 +19,7 @@ object BrandHeaderResponseJsonParser {
 
     private fun JSONObject.parseCategoryEntity() = CategoryEntity(
         id = getJSONArray("data").getJSONObject(0).getString("ID").toLong(),
+        shareUrl = getString("detail_page_url"),
         name = getJSONArray("data").getJSONObject(0).getString("NAME"),
         productAmount = getString("tovarvsego"),
         subCategoryEntityList = when(getJSONObject("razdel").isNull("LISTRAZDEL")) {

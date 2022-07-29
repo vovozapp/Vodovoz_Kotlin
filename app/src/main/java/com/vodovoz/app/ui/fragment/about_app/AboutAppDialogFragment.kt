@@ -1,6 +1,5 @@
 package com.vodovoz.app.ui.fragment.about_app
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -16,7 +15,6 @@ import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.DialogFragmentAboutAppBinding
 import com.vodovoz.app.ui.base.VodovozApplication
-import com.vodovoz.app.ui.fragment.about_services.AboutServicesViewModel
 import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
 
 

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.ViewModelProvider
@@ -20,6 +19,7 @@ import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.ServiceDiffUtilCallback
+import com.vodovoz.app.ui.fragment.home.HomeFragmentDirections
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -51,7 +51,10 @@ class AboutServicesDialogFragment : ViewStateBaseDialogFragment() {
 
     private fun subscribeSubjects() {
         onServiceClickSubject.subscribeBy { type ->
-
+            requireParentFragment().findNavController().navigate(AboutServicesDialogFragmentDirections.actionToServiceDetailFragment(
+                viewModel.serviceTypeList.toTypedArray(),
+                type
+            ))
         }.addTo(compositeDisposable)
     }
 

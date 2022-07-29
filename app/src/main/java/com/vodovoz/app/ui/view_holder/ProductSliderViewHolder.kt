@@ -121,7 +121,6 @@ class ProductSliderViewHolder(
         when(productUI.isFavorite) {
             false -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite))
             true -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_red))
-
         }
 
         when(productUI.status) {

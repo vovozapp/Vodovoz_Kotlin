@@ -13,10 +13,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Vodovoz"
-        android:name="com.vodovoz.app.ui.components.base.VodovozApplication"
+        android:name="com.vodovoz.app.ui.base.VodovozApplication"
         android:usesCleartextTraffic="true">
         <activity
-            android:name="com.vodovoz.app.ui.components.base.MainActivity"
+            android:name="com.vodovoz.app.ui.base.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

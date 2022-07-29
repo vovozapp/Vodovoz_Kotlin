@@ -1,7 +1,9 @@
 package com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,12 +31,9 @@ import com.vodovoz.app.ui.decoration.CategoryTabsMarginDecoration
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
-import com.vodovoz.app.ui.fragment.home.HomeFragmentDirections
 import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogFragmentDirections
-import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
-import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -108,6 +107,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
         super.onCreate(savedInstanceState)
         initViewModel()
         getArgs()
+        subscribeSubjects()
     }
 
     private fun initViewModel() {
@@ -121,6 +121,18 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
         viewModel.updateArgs(PaginatedProductsCatalogWithoutFiltersFragmentArgs.fromBundle(requireArguments()).dataSource)
     }
 
+    private fun subscribeSubjects() {
+        onProductClickSubject.subscribeBy { productId ->
+            findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToProductDetailFragment(productId))
+        }.addTo(compositeDisposable)
+        onFavoriteClickSubject.subscribeBy { pair ->
+            viewModel.changeFavoriteStatus(pair.first, pair.second)
+        }.addTo(compositeDisposable)
+        onChangeProductQuantitySubject.subscribeBy { pair ->
+            viewModel.changeCart(pair.first, pair.second)
+        }.addTo(compositeDisposable)
+    }
+
     override fun setContentView(
         inflater: LayoutInflater,
         container: ViewGroup
@@ -128,9 +140,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
         inflater,
         container,
         false
-    ).apply {
-        binding = this
-    }.root
+    ).apply { binding = this }.root
 
     override fun initView() {
         setHasOptionsMenu(true)
@@ -139,6 +149,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
         observeResultLiveData()
         initHeader()
         initSearch()
+        initShare()
         initBrandRecycler()
         observeViewModel()
     }
@@ -154,6 +165,19 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
                 }
             }
         )
+    }
+
+    private fun initShare() {
+        binding.share.setOnClickListener {
+            Log.i(LogSettings.ID_LOG, viewModel.categoryHeader!!.shareUrl)
+            Intent.createChooser(
+                Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, viewModel.categoryHeader!!.shareUrl)
+                },
+                "Shearing Option"
+            ).let { startActivity(it) }
+        }
     }
 
     private fun initSearch() {
@@ -234,6 +258,11 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
     private fun updateHeader(categoryUI: CategoryUI) {
         binding.categoryName.text = categoryUI.name
         binding.productAmount.text = categoryUI.productAmount.toString()
+
+        when(categoryUI.shareUrl.isEmpty()) {
+            true -> binding.share.visibility = View.INVISIBLE
+            false -> binding.share.visibility = View.VISIBLE
+        }
 
         when(categoryUI.categoryUIList.isNotEmpty()) {
             true -> {
@@ -342,18 +371,14 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
         )
     )
 
-    override fun onStart() {
-        super.onStart()
-
-        onProductClickSubject.subscribeBy { productId ->
-            findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToProductDetailFragment(productId))
-        }.addTo(compositeDisposable)
-    }
-
     override fun onStop() {
         super.onStop()
-        compositeDisposable.clear()
         binding.productRecycler.layoutManager = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
     }
 
     sealed class DataSource : Serializable {

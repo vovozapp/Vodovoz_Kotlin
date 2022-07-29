@@ -102,7 +102,7 @@
             <TextView
                 android:id="@+id/addresses"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -118,7 +118,7 @@
             <TextView
                 android:id="@+id/deliveryPrice"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -133,7 +133,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -151,7 +151,7 @@
             <TextView
                 android:id="@+id/ordersHistory"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -165,8 +165,9 @@
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <TextView
+                android:id="@+id/pastPurchases"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -181,7 +182,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -198,7 +199,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -213,7 +214,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -228,7 +229,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -244,8 +245,9 @@
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <TextView
+                android:id="@+id/questionnaires"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -259,8 +261,9 @@
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <TextView
+                android:id="@+id/discountCard"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -275,7 +278,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -292,7 +295,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -307,7 +310,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -325,7 +328,7 @@
             <TextView
                 android:id="@+id/aboutDelivery"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -341,7 +344,7 @@
             <TextView
                 android:id="@+id/aboutPay"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -356,7 +359,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -371,7 +374,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:paddingTop="@dimen/primary_margin"
                 android:paddingBottom="@dimen/primary_margin"
                 android:fontFamily="@font/rotonda"
@@ -389,9 +392,7 @@
             <TextView
                 android:id="@+id/aboutApp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/primary_margin"
-                android:paddingBottom="@dimen/primary_margin"
+                android:layout_height="40dp"
                 android:fontFamily="@font/rotonda"
                 android:textColor="@color/blackTextPrimary"
                 android:drawableEnd="@drawable/ic_arrow_right"
@@ -405,9 +406,7 @@
             <TextView
                 android:id="@+id/logout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/primary_margin"
-                android:paddingBottom="@dimen/primary_margin"
+                android:layout_height="40dp"
                 android:fontFamily="@font/rotonda"
                 android:textColor="@color/red"
                 android:gravity="center"
@@ -418,6 +417,37 @@
                 android:paddingEnd="@dimen/primary_space"
                 android:text="Выйти из аккаунта"/>
 
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/viewedProductsSliderFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:id="@+id/bestForYouProductsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/titleBestForYou"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:textColor="@color/blackTextDark"
+                    android:paddingTop="@dimen/primary_margin"
+                    android:paddingBottom="@dimen/primary_margin"
+                    android:paddingStart="@dimen/primary_space"
+                    android:paddingEnd="@dimen/primary_space" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/bestForYouProductsRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </ScrollView>
@@ -425,7 +455,8 @@
     <RelativeLayout
         android:id="@+id/noLoginContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="invisible">
 
         <ImageView
             android:layout_width="250dp"

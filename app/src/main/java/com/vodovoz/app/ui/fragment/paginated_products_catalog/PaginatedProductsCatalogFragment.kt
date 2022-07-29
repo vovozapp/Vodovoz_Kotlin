@@ -3,13 +3,11 @@ package com.vodovoz.app.ui.fragment.paginated_products_catalog
 import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -28,17 +26,12 @@ import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.base.loadStateAdapter.LoadStateAdapter
-import com.vodovoz.app.ui.decoration.GridMarginDecoration
-import com.vodovoz.app.ui.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.decoration.ProductsFiltersMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
-import com.vodovoz.app.ui.fragment.favorite.FavoriteFragmentDirections
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.FilterValueUI
-import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
-import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -136,9 +129,11 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
         onProductClickSubject.subscribeBy { productId ->
             findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToProductDetailFragment(productId))
         }.addTo(compositeDisposable)
-
+        onFavoriteClickSubject.subscribeBy { pair ->
+            viewModel.changeFavoriteStatus(pair.first, pair.second)
+        }.addTo(compositeDisposable)
         onChangeProductQuantitySubject.subscribeBy { pair ->
-            viewModel.changeCart(pair)
+            viewModel.changeCart(pair.first, pair.second)
         }.addTo(compositeDisposable)
     }
 

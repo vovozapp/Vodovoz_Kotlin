@@ -6,9 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -20,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentMainFavoriteBinding
-import com.vodovoz.app.databinding.FragmentProductsWithoutFiltersBinding
 import com.vodovoz.app.ui.adapter.CategoryTabsAdapter
 import com.vodovoz.app.ui.adapter.PagingProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
@@ -32,15 +29,9 @@ import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
-import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragmentArgs
-import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragmentDirections
-import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersViewModel
-import com.vodovoz.app.ui.fragment.products_catalog.ProductsCatalogFragmentDirections
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
-import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -125,6 +116,12 @@ class FavoriteFragment : ViewStateBaseFragment() {
     private fun subscribeSubjects() {
         onProductClickSubject.subscribeBy { productId ->
             findNavController().navigate(FavoriteFragmentDirections.actionToProductDetailFragment(productId))
+        }.addTo(compositeDisposable)
+        onFavoriteClickSubject.subscribeBy { pair ->
+            viewModel.changeFavoriteStatus(pair.first, pair.second)
+        }.addTo(compositeDisposable)
+        onChangeProductQuantitySubject.subscribeBy { pair ->
+            viewModel.changeCart(pair.first, pair.second)
         }.addTo(compositeDisposable)
     }
 

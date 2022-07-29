@@ -20,9 +20,13 @@ class UserDataViewModel(
 
     private val viewStateMLD = MutableLiveData<ViewState>()
     private val userDataUIMLD = MutableLiveData<UserDataUI>()
+    private val messageMLD = MutableLiveData<String>()
 
     val viewStateLD: LiveData<ViewState> = viewStateMLD
     val userDataUILD: LiveData<UserDataUI> = userDataUIMLD
+    val messageLD: LiveData<String> = messageMLD
+
+    lateinit var userDataUI: UserDataUI
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -38,7 +42,8 @@ class UserDataViewModel(
                         is ResponseEntity.Hide -> viewStateMLD.value = ViewState.Hide()
                         is ResponseEntity.Error -> viewStateMLD.value = ViewState.Error(response.errorMessage)
                         is ResponseEntity.Success -> {
-                            userDataUIMLD.value = response.data.mapToUI()
+                            userDataUI = response.data.mapToUI()
+                            userDataUIMLD.value = userDataUI
                             viewStateMLD.value = ViewState.Success()
                         }
                     }
@@ -50,6 +55,34 @@ class UserDataViewModel(
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()
+    }
+
+    fun updateUserData(password: String) {
+        dataRepository
+            .updateUserData(
+                firstName = userDataUI.firstName,
+                secondName = userDataUI.secondName,
+                sex = userDataUI.sex,
+                birthday = userDataUI.birthday,
+                phone = userDataUI.phone,
+                email = userDataUI.email,
+                password = password
+            )
+            .subscribeOn(Schedulers.io())
+            .doOnSubscribe { viewStateMLD.value = ViewState.Success() }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onSuccess = { response ->
+                    when(response) {
+                        is ResponseEntity.Success -> messageMLD.value = "Данные успешно изменены"
+                        is ResponseEntity.Hide -> messageMLD.value = "Неизвестная ошибка"
+                        is ResponseEntity.Error -> messageMLD.value = response.errorMessage
+                    }
+                },
+                onError = { throwable ->
+                    messageMLD.value = throwable.message ?: "Неизвестная ошибка"
+                }
+            ).addTo(compositeDisposable)
     }
 
 }

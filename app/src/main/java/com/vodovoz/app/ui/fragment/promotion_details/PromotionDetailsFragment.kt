@@ -2,7 +2,6 @@ package com.vodovoz.app.ui.fragment.promotion_details
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +28,6 @@ import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.PromotionDetailUI
-import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -61,6 +59,19 @@ class PromotionDetailsFragment : ViewStateBaseFragment() {
         super.onCreate(savedInstanceState)
         initViewModel()
         getArgs()
+        subscribeSubjects()
+    }
+
+    private fun subscribeSubjects() {
+        onProductClickSubject.subscribeBy { productId ->
+            findNavController().navigate(PromotionDetailsFragmentDirections.actionToProductDetailFragment(productId))
+        }.addTo(compositeDisposable)
+        onChangeProductQuantitySubject.subscribeBy { pair ->
+            viewModel.changeCart(pair.first, pair.second)
+        }.addTo(compositeDisposable)
+        onFavoriteClickSubject.subscribeBy { pair ->
+            viewModel.changeFavoriteStatus(pair.first, pair.second)
+        }.addTo(compositeDisposable)
     }
 
     private fun initViewModel() {
@@ -193,17 +204,9 @@ class PromotionDetailsFragment : ViewStateBaseFragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        onProductClickSubject.subscribeBy { productId ->
-            findNavController().navigate(PromotionDetailsFragmentDirections
-                .actionToProductDetailFragment(productId))
-        }.addTo(compositeDisposable)
-
-        onChangeProductQuantitySubject.subscribeBy { pair ->
-            viewModel.changeCart(pair)
-        }.addTo(compositeDisposable)
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
     }
 
 }

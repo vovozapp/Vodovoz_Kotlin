@@ -19,6 +19,7 @@ object CountryHeaderResponseJsonParser {
 
     private fun JSONObject.parseCategoryEntity() = CategoryEntity(
         name = getString("glavtitle"),
+        shareUrl = getString("detail_page_url_ios"),
         productAmount = getString("tovarvsego"),
         subCategoryEntityList = when(getJSONObject("razdel").isNull("LISTRAZDEL")) {
             true -> listOf()

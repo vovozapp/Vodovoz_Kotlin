@@ -2,13 +2,10 @@ package com.vodovoz.app.ui.fragment.slider.order_slider
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import androidx.core.os.bundleOf
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -16,15 +13,10 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentSliderOrderBinding
 import com.vodovoz.app.ui.adapter.OrderSliderAdapter
 import com.vodovoz.app.ui.base.BaseHiddenFragment
-import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.OrderDiffUtilCallback
-import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
-import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.interfaces.IOnOrderClick
 import com.vodovoz.app.ui.interfaces.IOnShowAllOrdersClick
 import com.vodovoz.app.ui.model.OrderUI
-import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy

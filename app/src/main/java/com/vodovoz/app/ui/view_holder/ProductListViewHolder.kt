@@ -70,6 +70,47 @@ class ProductListViewHolder(
             amountControllerTimer.start()
             updateCartQuantity()
         }
+
+
+        binding.amountController.add.setOnClickListener {
+            if (productUI.cartQuantity == 0) {
+                productUI.cartQuantity++
+                onChangeProductQuantitySubject.onNext(Pair(productUI.id, productUI.cartQuantity))
+                updateCartQuantity()
+            }
+            showAmountController()
+        }
+
+        binding.amountController.reduceAmount.setOnClickListener {
+            productUI.cartQuantity--
+            if (productUI.cartQuantity < 0) productUI.cartQuantity = 0
+            amountControllerTimer.cancel()
+            amountControllerTimer.start()
+            onChangeProductQuantitySubject.onNext(Pair(productUI.id, productUI.cartQuantity))
+            updateCartQuantity()
+        }
+
+        binding.amountController.increaseAmount.setOnClickListener {
+            productUI.cartQuantity++
+            amountControllerTimer.cancel()
+            amountControllerTimer.start()
+            onChangeProductQuantitySubject.onNext(Pair(productUI.id, productUI.cartQuantity))
+            updateCartQuantity()
+        }
+
+        binding.favoriteStatus.setOnClickListener {
+            when(productUI.isFavorite) {
+                true -> {
+                    productUI.isFavorite = false
+                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite))
+                }
+                false -> {
+                    productUI.isFavorite = true
+                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_red))
+                }
+            }
+            onFavoriteClickSubject.onNext(Pair(productUI.id, productUI.isFavorite))
+        }
     }
 
     private fun updateCartQuantity() {
@@ -133,6 +174,11 @@ class ProductListViewHolder(
                 .append("x")
                 .append(productUI.orderQuantity)
                 .toString()
+        }
+
+        when(productUI.isFavorite) {
+            false -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite))
+            true -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_red))
         }
 
         when (productUI.oldPrice) {

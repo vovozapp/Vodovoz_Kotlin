@@ -3,18 +3,10 @@ package com.vodovoz.app.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderCommentWithAvatarBinding
-import com.vodovoz.app.databinding.ViewHolderProductGridBinding
-import com.vodovoz.app.databinding.ViewHolderProductListBinding
 import com.vodovoz.app.ui.diffUtils.CommentDiffItemCallback
-import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
 import com.vodovoz.app.ui.view_holder.CommentWithAvatarViewHolder
-import com.vodovoz.app.ui.view_holder.ProductGridViewHolder
-import com.vodovoz.app.ui.view_holder.ProductListViewHolder
 import com.vodovoz.app.ui.model.CommentUI
-import com.vodovoz.app.ui.model.ProductUI
-import io.reactivex.rxjava3.subjects.PublishSubject
 
 class PagingCommentsAdapter(
     private val commentDiffItemCallback: CommentDiffItemCallback

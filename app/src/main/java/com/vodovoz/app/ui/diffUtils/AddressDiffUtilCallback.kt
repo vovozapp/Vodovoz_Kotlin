@@ -2,8 +2,6 @@ package com.vodovoz.app.ui.diffUtils
 
 import androidx.recyclerview.widget.DiffUtil
 import com.vodovoz.app.ui.model.AddressUI
-import com.vodovoz.app.ui.model.BannerUI
-import com.yandex.mapkit.geometry.Point
 
 class AddressDiffUtilCallback(
     private val oldList: List<AddressUI>,

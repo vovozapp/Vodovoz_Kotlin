@@ -22,10 +22,14 @@ import com.vodovoz.app.data.parser.response.category.ConcreteFilterResponseJsonP
 import com.vodovoz.app.data.parser.response.comment.CommentsSliderResponseJsonParser.parseCommentsSliderResponse
 import com.vodovoz.app.data.parser.response.comment.SendCommentAboutProductResponseJsonParser.parseSendCommentAboutProductResponse
 import com.vodovoz.app.data.parser.response.comment.SendCommentAboutShopResponseJsonParser.parseSendCommentAboutShopResponse
+import com.vodovoz.app.data.parser.response.contacts.ContactsBundleResponseJsonParser.parseContactsBundleResponse
+import com.vodovoz.app.data.parser.response.contacts.SendMailResponseJsonParser.parseSendMailResponse
 import com.vodovoz.app.data.parser.response.country.CountryHeaderResponseJsonParser.parseCountryHeaderResponse
 import com.vodovoz.app.data.parser.response.country.CountrySliderResponseJsonParser.parseCountriesSliderResponse
 import com.vodovoz.app.data.parser.response.discount.DiscountHeaderResponseJsonParser.parseDiscountHeaderResponse
 import com.vodovoz.app.data.parser.response.discount.DiscountSliderResponseParser.parseDiscountSliderResponse
+import com.vodovoz.app.data.parser.response.discount_card.ActivateDiscountCardInfoJsonParser.parseActivateDiscountCardInfoResponse
+import com.vodovoz.app.data.parser.response.discount_card.ActivateDiscountCardJsonParser.parseActivateDiscountCardResponse
 import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseBottomSliderResponse
 import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseTopSliderResponse
 import com.vodovoz.app.data.parser.response.doubleSlider.SliderHeaderResponseJsonParser.parseSliderHeaderResponse
@@ -45,6 +49,7 @@ import com.vodovoz.app.data.parser.response.order.OrderDetailsResponseJsonParser
 import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
 import com.vodovoz.app.data.parser.response.paginatedProducts.MaybeLikeProductsResponseJsonParser.parseMaybeLikeProductsResponse
 import com.vodovoz.app.data.parser.response.paginatedProducts.SomeProductsByBrandResponseJsonParser.parseSomeProductsByBrandResponse
+import com.vodovoz.app.data.parser.response.past_purchases.PastPurchasesHeaderResponseJsonParser.parsePastPurchasesHeaderResponse
 import com.vodovoz.app.data.parser.response.popular.PopularSliderResponseJsonParser.parsePopularSliderResponse
 import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
 import com.vodovoz.app.data.parser.response.product.ProductDetailsResponseJsonParser.parseProductDetailsResponse
@@ -52,16 +57,27 @@ import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonP
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionSliderResponseJsonParser.parsePromotionSliderResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionsByBannerResponseJsonParser.parsePromotionsByBannerResponse
+import com.vodovoz.app.data.parser.response.questionnaires.QuestionnaireResponseJsonParser.parseQuestionnaireResponse
+import com.vodovoz.app.data.parser.response.questionnaires.QuestionnaireTypesResponseJsonParser.parseQuestionnaireTypesResponse
 import com.vodovoz.app.data.parser.response.search.DefaultSearchDataResponseJsonParser.parseDefaultSearchDataResponse
+import com.vodovoz.app.data.parser.response.search.MatchesQueriesResponseJsonParser.parseMatchesQueriesResponse
 import com.vodovoz.app.data.parser.response.search.ProductsByQueryHeaderResponseJsonParser.parseProductsByQueryHeaderResponse
 import com.vodovoz.app.data.parser.response.service.AboutServicesResponseJsonParser.parseAboutServicesResponse
+import com.vodovoz.app.data.parser.response.service.OrderServiceResponseJsonParser.parseOrderServiceResponse
+import com.vodovoz.app.data.parser.response.service.ServiceByIdResponseJsonParser.parseServiceByIdResponse
+import com.vodovoz.app.data.parser.response.service.ServiceOrderFormResponseJsonParser.parseServiceOrderFormResponse
 import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
+import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
+import com.vodovoz.app.data.parser.response.user.RecoverPasswordJsonParser.parseRecoverPasswordResponse
 import com.vodovoz.app.data.parser.response.user.RegisterResponseJsonParser.parseRegisterResponse
+import com.vodovoz.app.data.parser.response.user.UpdateUserDataResponseJsonParser.parseUpdateUserDataResponse
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
 import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
+import okhttp3.ResponseBody
+import retrofit2.Response
 
 class RemoteData(
     private val vodovozApi: VodovozApi,
@@ -72,6 +88,12 @@ class RemoteData(
     override fun fetchAboutServices(): Single<ResponseEntity<AboutServicesBundleEntity>> = vodovozApi.fetchServicesResponse(
         action = "glav"
     ).flatMap { Single.just(it.parseAboutServicesResponse()) }
+
+    override fun fetchServiceById(
+        type: String?
+    ): Single<ResponseEntity<ServiceEntity>> = vodovozApi.fetchServicesResponse(
+        action = type
+    ).flatMap { Single.just(it.parseServiceByIdResponse(type)) }
 
     //Отправить отзыв о продукте
     override fun sendCommentAboutProduct(
@@ -246,6 +268,14 @@ class RemoteData(
         orientation = orientation,
         page = page
     )
+
+    //Список подходящих запросов
+    override fun fetchMatchesQueries(
+        query: String?
+    ): Single<ResponseEntity<List<String>>> = vodovozApi.fetchMatchesQueries(
+        action = "glav",
+        query = query
+    ).flatMap { Single.just(it.parseMatchesQueriesResponse()) }
 
     override fun fetchProductsByQueryHeader(
         query: String?
@@ -576,6 +606,27 @@ class RemoteData(
         userId = userId
     ).flatMap { Single.just(it.parseUserDataResponse()) }
 
+    override fun updateUserData(
+        userId: Long,
+        firstName: String?,
+        secondName: String?,
+        password: String?,
+        phone: String?,
+        sex: String?,
+        birthday: String?,
+        email: String?,
+    ): Single<ResponseEntity<Boolean>> = vodovozApi.fetchProfileResponse(
+        action = "edit",
+        userId = userId,
+        firstName = firstName,
+        secondName = secondName,
+        password = password,
+        phone = phone,
+        sex = sex,
+        birthday = birthday,
+        email = email
+    ).flatMap { Single.just(it.parseUpdateUserDataResponse()) }
+
     //Добавить в избранное для авторизованного пользователя
     override fun addToFavorite(
         productIdList: List<Long>,
@@ -766,5 +817,128 @@ class RemoteData(
         appVersion = appVersion,
         orderId = orderId
     ).flatMap { Single.just(it.parseOrderDetailsResponse()) }
+
+
+    override suspend fun fetchPastPurchasesProducts(
+        userId: Long?,
+        sort: String?,
+        orientation: String?,
+        categoryId: Long?,
+        isAvailable: Boolean?,
+        page: Int?,
+    ): Response<ResponseBody> = vodovozApi.fetchPastPurchasesResponse(
+        action = "getLastFifty",
+        userId = userId,
+        sort = sort,
+        orientation = orientation,
+        categoryId = categoryId,
+        page = page,
+        isAvailable = when(isAvailable) {
+            true -> "nalichie"
+            false -> "netnalichi"
+            else -> null
+        }
+    )
+
+    override fun fetchPastPurchasesHeader(
+        userId: Long?
+    ): Single<ResponseEntity<PastPurchasesHeaderBundleEntity>> = rxSingle {
+        vodovozApi.fetchPastPurchasesResponse(
+            action = "getLastFifty",
+            userId = userId,
+            page = 1
+        )
+    }.flatMap { Single.just(it.body()!!.parsePastPurchasesHeaderResponse()) }
+
+    override fun recoverPassword(
+        email: String?
+    ): Single<ResponseEntity<Boolean>> = vodovozApi.recoverPassword(
+        forgotPassword = "yes",
+        email = email
+    ).flatMap { Single.just(it.parseRecoverPasswordResponse()) }
+
+    override fun fetchPersonalProducts(
+        userId: Long?,
+        page: Int?
+    ): Single<ResponseEntity<CategoryDetailEntity>> = vodovozApi.fetchPersonalProducts(
+        action = "tovarchik",
+        userId = userId,
+        page = page
+    ).flatMap { Single.just(it.parsePersonalProductsResponse()) }
+
+    override fun fetchActivateDiscountCardInfo(
+        userId: Long?
+    ): Single<ResponseEntity<ActivateDiscountCardBundleEntity>> = vodovozApi.fetchDiscountCardBaseRequest(
+        action = "glav",
+        userId = userId
+    ).flatMap { Single.just(it.parseActivateDiscountCardInfoResponse()) }
+
+    override fun activateDiscountCard(
+        userId: Long?,
+        value: String?,
+    ): Single<ResponseEntity<String>> = vodovozApi.fetchDiscountCardBaseRequest(
+        action = "edit",
+        userId = userId,
+        value = value
+    ).flatMap { Single.just(it.parseActivateDiscountCardResponse()) }
+
+    override fun fetchQuestionnairesTypes(): Single<ResponseEntity<List<QuestionnaireTypeEntity>>> =
+        vodovozApi.fetchQuestionnairesResponse().flatMap { Single.just(it.parseQuestionnaireTypesResponse()) }
+
+    override fun fetchQuestionnaire(
+        userId: Long?,
+        questionnaireType: String?
+    ): Single<ResponseEntity<List<QuestionEntity>>> = vodovozApi.fetchQuestionnairesResponse(
+        action = questionnaireType,
+        userId = userId
+    ).flatMap { Single.just(it.parseQuestionnaireResponse()) }
+
+    override fun fetchContacts(
+        appVersion: String?
+    ): Single<ResponseEntity<ContactsBundleEntity>> = vodovozApi.fetchContactsResponse(
+        action = "dannyesvyazi",
+        appVersion = appVersion
+    ).flatMap { Single.just(it.parseContactsBundleResponse()) }
+
+    override fun sendMail(
+        name: String?,
+        phone: String?,
+        email: String?,
+        comment: String?
+    ): Single<ResponseEntity<String>> = vodovozApi.sendMail(
+        name = name,
+        phone = phone,
+        email = email,
+        comment = comment
+    ).flatMap { Single.just(it.parseSendMailResponse()) }
+
+    override fun fetchFormForOrderService(
+        type: String?,
+        userId: Long?
+    ): Single<ResponseEntity<List<ServiceOrderFormFieldEntity>>> = vodovozApi.fetchOrderServiceResponse(
+        action = "glav",
+        type = type,
+        userId = userId
+    ).flatMap { Single.just(it.parseServiceOrderFormResponse()) }
+
+    override fun orderService(
+        type: String?,
+        userId: Long?,
+        value: String?
+    ): Single<ResponseEntity<String>> = vodovozApi.fetchOrderServiceResponse(
+        action = "add",
+        type = type,
+        userId = userId,
+        value = value
+    ).flatMap { Single.just(it.parseOrderServiceResponse()) }
+
+//
+//    override fun updateUserPhoto(
+//        userId: Long?,
+//        photo: Any?
+//    ) = vodovozApi.updateUserPhoto(
+//        userId = userId,
+//        photo = photo
+//    ).flatMap { Single.just() }
 
 }

@@ -5,6 +5,7 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -22,12 +23,9 @@ import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.ProductDiffUtilCallback
-import com.vodovoz.app.ui.fragment.home.HomeFragmentDirections
-import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
-import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -47,7 +45,6 @@ class CartFragment : ViewStateBaseFragment() {
     private val compositeDisposable = CompositeDisposable()
 
     private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
-    private val onChangeCartSubject: PublishSubject<Boolean> = PublishSubject.create()
     private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
     private val onSwapClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
@@ -86,13 +83,14 @@ class CartFragment : ViewStateBaseFragment() {
 
     private fun subscribeSubjects() {
         onFavoriteClickSubject.subscribeBy { pair ->
+            Toast.makeText(requireContext(), "${pair.first} : ${pair.second}", Toast.LENGTH_LONG).show()
             viewModel.changeFavoriteStatus(pair.first, pair.second)
         }.addTo(compositeDisposable)
         onProductClickSubject.subscribeBy { productId ->
             findNavController().navigate(CartFragmentDirections.actionToProductDetailFragment(productId))
         }.addTo(compositeDisposable)
         onChangeProductQuantitySubject.subscribeBy { pair ->
-            viewModel.changeCart(pair)
+            viewModel.changeCart(pair.first, pair.second)
         }.addTo(compositeDisposable)
     }
 
@@ -142,7 +140,7 @@ class CartFragment : ViewStateBaseFragment() {
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<ProductUI>(GIFT_ID)?.observe(viewLifecycleOwner) { gift ->
                 gift.cartQuantity++
-                viewModel.changeCart(Pair(gift.id, gift.cartQuantity))
+                viewModel.changeCart(gift.id, gift.cartQuantity)
             }
     }
 
@@ -165,7 +163,7 @@ class CartFragment : ViewStateBaseFragment() {
 
         bestForYouProductsSliderFragment.initCallbacks(
             iOnProductClick = { productId -> onProductClickSubject.onNext(productId)},
-            iOnChangeProductQuantity = {},
+            iOnChangeProductQuantity = { pair -> onChangeProductQuantitySubject.onNext(pair) },
             iOnFavoriteClick = { pair -> onFavoriteClickSubject.onNext(pair) },
             iOnShowAllProductsClick = {}
         )

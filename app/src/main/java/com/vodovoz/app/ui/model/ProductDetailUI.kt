@@ -6,7 +6,7 @@ class ProductDetailUI(
     val previewText: String,
     val shareUrl: String,
     val detailText: String,
-    val isFavorite: Boolean,
+    var isFavorite: Boolean,
     val youtubeVideoCode: String? = null,
     val rating: Double,
     val status: String? = null,

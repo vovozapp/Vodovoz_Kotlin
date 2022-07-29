@@ -81,7 +81,7 @@
                 android:textColor="@color/blackTextPrimary"/>
 
             <TextView
-                android:id="@+id/recover"
+                android:id="@+id/recoverPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/bluePrimary"

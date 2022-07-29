@@ -1,10 +1,11 @@
 package com.vodovoz.app.data
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.PagingData
 import androidx.paging.map
+import com.vodovoz.app.data.LocalSyncExtensions.syncCartQuantity
+import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
+import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteStatus
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.model.features.CartBundleEntity
@@ -13,42 +14,44 @@ import com.vodovoz.app.data.paging.orders.OrdersPagingSource
 import com.vodovoz.app.data.paging.products.ProductsPagingSource
 import com.vodovoz.app.data.paging.products.source.*
 import com.vodovoz.app.data.remote.RemoteDataSource
-import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.flow.map
-import retrofit2.http.Query
 import java.lang.Exception
 
 class DataRepository(
     private val remoteDataSource: RemoteDataSource,
-    private val localData: LocalDataSource,
+    private val localDataSource: LocalDataSource,
 ) {
 
-    fun fetchPopupNews() = remoteDataSource.fetchPopupNews(userId = localData.fetchUserId())
+    fun fetchPopupNews() = remoteDataSource.fetchPopupNews(userId = localDataSource.fetchUserId())
 
     fun fetchCart(): Single<ResponseEntity<CartBundleEntity>> = remoteDataSource
         .fetchCart()
         .doOnSuccess { response ->
             if (response is ResponseEntity.Success) {
                 response.data.let { cartBundleEntity ->
-                    localData.clearCart()
+                    localDataSource.clearCart()
                     cartBundleEntity.availableProductEntityList.forEach { productUI ->
-                        localData.changeProductQuantityInCart(
-                            productId = productUI.id!!,
+                        localDataSource.changeProductQuantityInCart(
+                            productId = productUI.id,
                             quantity = productUI.cartQuantity
                         )
                     }
+                    cartBundleEntity.availableProductEntityList.syncFavoriteProducts(localDataSource)
+                    cartBundleEntity.notAvailableProductEntityList.syncFavoriteProducts(localDataSource)
                 }
             }
         }
 
     fun clearCart(): Single<ResponseEntity<Boolean>> = remoteDataSource
         .clearCart()
-        .doFinally { localData.clearCart() }
+        .doFinally { localDataSource.clearCart() }
 
     fun fetchBrandHeader(brandId: Long) = remoteDataSource.fetchBrandHeader(brandId = brandId)
+
+    fun fetchMatchesQueries(query: String?) = remoteDataSource.fetchMatchesQueries(query = query)
 
     fun fetchCountryHeader(countryId: Long) = remoteDataSource.fetchCountryHeader(countryId = countryId)
 
@@ -67,7 +70,8 @@ class DataRepository(
         .doOnSuccess { response ->
             if (response is ResponseEntity.Success) {
                 response.data.forEach { categoryDetailEntity ->
-                    syncFavoriteProducts(categoryDetailEntity.productEntityList)
+                    categoryDetailEntity.productEntityList.syncFavoriteProducts(localDataSource)
+                    categoryDetailEntity.productEntityList.syncCartQuantity(localDataSource)
                 }
             }
         }
@@ -86,7 +90,8 @@ class DataRepository(
         .doOnSuccess { response ->
             if (response is ResponseEntity.Success) {
                 response.data.forEach { categoryDetailEntity ->
-                    syncFavoriteProducts(categoryDetailEntity.productEntityList)
+                    categoryDetailEntity.productEntityList.syncFavoriteProducts(localDataSource)
+                    categoryDetailEntity.productEntityList.syncCartQuantity(localDataSource)
                 }
             }
         }
@@ -98,7 +103,8 @@ class DataRepository(
         .doOnSuccess { response ->
             if (response is ResponseEntity.Success) {
                 response.data.forEach { categoryDetailEntity ->
-                    syncFavoriteProducts(categoryDetailEntity.productEntityList)
+                    categoryDetailEntity.productEntityList.syncFavoriteProducts(localDataSource)
+                    categoryDetailEntity.productEntityList.syncCartQuantity(localDataSource)
                 }
             }
         }
@@ -108,7 +114,8 @@ class DataRepository(
         .doOnSuccess { response ->
             if (response is ResponseEntity.Success) {
                 response.data.forEach { categoryDetailEntity ->
-                    syncFavoriteProducts(categoryDetailEntity.productEntityList)
+                    categoryDetailEntity.productEntityList.syncFavoriteProducts(localDataSource)
+                    categoryDetailEntity.productEntityList.syncCartQuantity(localDataSource)
                 }
             }
         }
@@ -120,7 +127,8 @@ class DataRepository(
         .doOnSuccess { response ->
             if (response is ResponseEntity.Success) {
                 response.data.forEach { promotionEntity ->
-                    syncFavoriteProducts(promotionEntity.productEntityList)
+                    promotionEntity.productEntityList.syncFavoriteProducts(localDataSource)
+                    promotionEntity.productEntityList.syncCartQuantity(localDataSource)
                 }
             }
         }
@@ -142,7 +150,8 @@ class DataRepository(
         .doOnSuccess { response ->
             if (response is ResponseEntity.Success) {
                 response.data.forEach { categoryDetailEntity ->
-                    syncFavoriteProducts(categoryDetailEntity.productEntityList)
+                    categoryDetailEntity.productEntityList.syncFavoriteProducts(localDataSource)
+                    categoryDetailEntity.productEntityList.syncCartQuantity(localDataSource)
                 }
             }
         }
@@ -151,8 +160,10 @@ class DataRepository(
         .fetchPromotionDetails(promotionId = promotionId)
         .doOnSuccess { response ->
             if (response is ResponseEntity.Success) {
-                syncFavoriteProducts(response.data.promotionCategoryDetailEntity?.productEntityList)
-                syncFavoriteProducts(response.data.forYouCategoryDetailEntity.productEntityList)
+                response.data.promotionCategoryDetailEntity?.productEntityList.syncFavoriteProducts(localDataSource)
+                response.data.promotionCategoryDetailEntity?.productEntityList.syncCartQuantity(localDataSource)
+                response.data.forYouCategoryDetailEntity.productEntityList.syncFavoriteProducts(localDataSource)
+                response.data.forYouCategoryDetailEntity.productEntityList.syncCartQuantity(localDataSource)
             }
         }
 
@@ -162,11 +173,12 @@ class DataRepository(
 
     fun fetchPromotionsByBanner(categoryId: Long) = remoteDataSource.fetchPromotionsByBanner(categoryId = categoryId)
 
-    fun fetchProductsByBanner(categoryId: Long) = remoteDataSource
+    fun fetchProductsByBanner(categoryId: Long): Single<ResponseEntity<List<ProductEntity>>> = remoteDataSource
         .fetchProductsByBanner(categoryId = categoryId)
         .doOnSuccess { response ->
             if (response is ResponseEntity.Success) {
-                syncFavoriteProducts(response.data)
+                response.data.syncFavoriteProducts(localDataSource)
+                response.data.syncCartQuantity(localDataSource)
             }
         }
 
@@ -192,16 +204,11 @@ class DataRepository(
                 filterValue = filterValue,
                 priceFrom = priceFrom,
                 priceTo = priceTo,
-                remoteDataSource = remoteDataSource
+                remoteDataSource = remoteDataSource,
+                localDataSource = localDataSource
             ))
         }
-    ).flow.map { pagingData ->
-        val cart = fetchLocalCart()
-        syncFavoriteProducts(pagingData)
-        pagingData.map { product ->
-            product.apply { cartQuantity = cart[product.id] ?: 0 }
-        }
-    }
+    ).flow
 
     fun fetchProductsByQueryHeader(query: String?) = remoteDataSource.fetchProductsByQueryHeader(query)
 
@@ -223,16 +230,11 @@ class DataRepository(
                 categoryId = categoryId,
                 sort = sort,
                 orientation = orientation,
-                remoteDataSource = remoteDataSource
+                remoteDataSource = remoteDataSource,
+                localDataSource = localDataSource
             ))
         }
-    ).flow.map { pagingData ->
-        val cart = fetchLocalCart()
-        syncFavoriteProducts(pagingData)
-        pagingData.map { product ->
-            product.apply { cartQuantity = cart[product.id] ?: 0 }
-        }
-    }
+    ).flow
 
     //Отправить отзыв о продукте
     fun sendCommentAboutProduct(
@@ -266,7 +268,7 @@ class DataRepository(
         productId: Long,
         quantity: Int
     ): Completable = Completable.create { emitter ->
-        val cart = localData.fetchCart()
+        val cart = localDataSource.fetchCart()
         val oldQuantity = cart[productId]
         if (oldQuantity == quantity) emitter.onComplete()
 
@@ -283,7 +285,7 @@ class DataRepository(
             onSuccess = { response ->
                 when(response) {
                     is ResponseEntity.Success -> {
-                        localData.changeProductQuantityInCart(
+                        localDataSource.changeProductQuantityInCart(
                             productId = productId,
                             quantity = quantity
                         )
@@ -303,8 +305,6 @@ class DataRepository(
 
     fun fetchAboutServices() = remoteDataSource.fetchAboutServices()
 
-    fun fetchLocalCart() = localData.fetchCart()
-
     fun fetchCategoryHeader(categoryId: Long) = remoteDataSource.fetchCategoryHeader(categoryId = categoryId)
 
     fun fetchAllFiltersByCategory(categoryId: Long) = remoteDataSource.fetchAllFiltersByCategory(categoryId = categoryId)
@@ -313,11 +313,25 @@ class DataRepository(
         .fetchProductDetails(productId = productId)
         .doOnSuccess { response ->
             if(response is ResponseEntity.Success) {
-                syncFavoriteStatus(response.data.productDetailEntity)
+                response.data.productDetailEntity.syncCartQuantity(localDataSource)
+                response.data.productDetailEntity.syncFavoriteStatus(localDataSource)
+                response.data.buyWithProductEntityList.syncCartQuantity(localDataSource)
+                response.data.buyWithProductEntityList.syncFavoriteProducts(localDataSource)
+                response.data.maybeLikeProductEntityList.syncCartQuantity(localDataSource)
+                response.data.maybeLikeProductEntityList.syncFavoriteProducts(localDataSource)
+                response.data.recommendProductEntityList.syncCartQuantity(localDataSource)
+                response.data.recommendProductEntityList.syncFavoriteProducts(localDataSource)
             }
         }
 
-    fun fetchMaybeLikeProducts(page: Int) = remoteDataSource.fetchMaybeLikeProducts(page = page)
+    fun fetchMaybeLikeProducts(page: Int) = remoteDataSource
+        .fetchMaybeLikeProducts(page = page)
+        .doOnSuccess { response ->
+            if (response is ResponseEntity.Success) {
+                response.data.productEntityList.syncCartQuantity(localDataSource)
+                response.data.productEntityList.syncFavoriteProducts(localDataSource)
+            }
+        }
 
     fun fetchDiscountHeader() = remoteDataSource.fetchDiscountHeader()
 
@@ -340,12 +354,10 @@ class DataRepository(
                 sort = sort,
                 orientation = orientation,
                 remoteDataSource = remoteDataSource,
+                localDataSource = localDataSource
             ))
         }
-    ).flow.map { pagingData ->
-        syncFavoriteProducts(pagingData)
-        pagingData
-    }
+    ).flow
 
     fun fetchProductsByBrand(
         brandId: Long?,
@@ -363,15 +375,13 @@ class DataRepository(
                 brandId = brandId,
                 code = code,
                 categoryId = categoryId,
-                remoteDataSource = remoteDataSource,
                 orientation = orientation,
-                sort = sort
+                sort = sort,
+                remoteDataSource = remoteDataSource,
+                localDataSource = localDataSource
             ))
         }
-    ).flow.map { pagingData ->
-        syncFavoriteProducts(pagingData)
-        pagingData
-    }
+    ).flow
 
 
     fun fetchProductsByCountry(
@@ -390,13 +400,11 @@ class DataRepository(
                 sort = sort,
                 orientation = orientation,
                 categoryId = categoryId,
-                remoteDataSource            ))
+                remoteDataSource = remoteDataSource,
+                localDataSource = localDataSource
+            ))
         }
-    ).flow.map { pagingData ->
-        syncFavoriteProducts(pagingData)
-        pagingData
-    }
-
+    ).flow
 
     fun fetchProductsDiscount(
         sort: String?,
@@ -412,14 +420,11 @@ class DataRepository(
                 sort = sort,
                 orientation = orientation,
                 categoryId = categoryId,
-                remoteDataSource = remoteDataSource
+                remoteDataSource = remoteDataSource,
+                localDataSource = localDataSource
             ))
         }
-    ).flow.map { pagingData ->
-        syncFavoriteProducts(pagingData)
-        pagingData
-    }
-
+    ).flow
 
     fun fetchProductsNovelties(
         sort: String?,
@@ -435,14 +440,11 @@ class DataRepository(
                 sort = sort,
                 orientation = orientation,
                 categoryId = categoryId,
-                remoteDataSource = remoteDataSource
+                remoteDataSource = remoteDataSource,
+                localDataSource = localDataSource
             ))
         }
-    ).flow.map { pagingData ->
-        syncFavoriteProducts(pagingData)
-        pagingData
-    }
-
+    ).flow
 
     fun fetchSomeProductsByBrand(
         productId: Long,
@@ -454,7 +456,8 @@ class DataRepository(
         page = page
     ).doOnSuccess { response ->
         if (response is ResponseEntity.Success) {
-            syncFavoriteProducts(response.data.productEntityList)
+            response.data.productEntityList.syncFavoriteProducts(localDataSource)
+            response.data.productEntityList.syncCartQuantity(localDataSource)
         }
     }
 
@@ -494,7 +497,7 @@ class DataRepository(
                 email = email,
                 password = password
             ))
-            localData.updateUserId(response.data)
+            localDataSource.updateUserId(response.data)
         }
 
         //addToFavorite(localData.fetchAllFavoriteProductsOfDefaultUser()).subscribe()
@@ -510,8 +513,8 @@ class DataRepository(
     fun logout(): Single<String> = remoteDataSource
         .fetchCookie()
         .doOnSubscribe {
-            localData.removeUserId()
-            localData.removeCookieSessionId()
+            localDataSource.removeUserId()
+            localDataSource.removeCookieSessionId()
         }
 
     fun fetchUserData(
@@ -520,17 +523,17 @@ class DataRepository(
         userId = userId
     )
 
-    fun fetchLastLoginData() = localData.fetchLastLoginData()
+    fun fetchLastLoginData() = localDataSource.fetchLastLoginData()
 
     fun updateLastLoginData(
         lastLoginDataEntity: LastLoginDataEntity
-    ) = localData.updateLastLoginData(lastLoginDataEntity)
+    ) = localDataSource.updateLastLoginData(lastLoginDataEntity)
 
-    fun updateUserId(userId: Long) = localData.updateUserId(userId)
+    fun updateUserId(userId: Long) = localDataSource.updateUserId(userId)
 
-    fun fetchUserId() = localData.fetchUserId()
+    fun fetchUserId() = localDataSource.fetchUserId()
 
-    fun isAlreadyLogin() = localData.isAlreadyLogin()
+    fun isAlreadyLogin() = localDataSource.isAlreadyLogin()
 
     fun addToFavorite(
         productId: Long
@@ -541,7 +544,7 @@ class DataRepository(
     ): Single<String> = Single.create { emitter ->
         when(isAlreadyLogin()) {
             false -> {
-                localData.changeFavoriteStatus(
+                localDataSource.changeFavoriteStatus(
                     pairList = mutableListOf<Pair<Long, Boolean>>().apply {
                         productIdList.forEach { add(Pair(it, true)) }
                     }.toList()
@@ -556,7 +559,7 @@ class DataRepository(
                     onSuccess = { response ->
                         when (response) {
                             is ResponseEntity.Success -> {
-                                localData.changeFavoriteStatus(
+                                localDataSource.changeFavoriteStatus(
                                     pairList = mutableListOf<Pair<Long, Boolean>>().apply {
                                         productIdList.forEach { add(Pair(it, true)) }
                                     }.toList()
@@ -578,7 +581,7 @@ class DataRepository(
     ): Single<String> = Single.create { emitter ->
         when(isAlreadyLogin()) {
             false -> {
-                localData.changeFavoriteStatus(listOf(Pair(productId, false)))
+                localDataSource.changeFavoriteStatus(listOf(Pair(productId, false)))
                 emitter.onSuccess("Продукт удален из избранного")
             }
             true -> {
@@ -589,7 +592,7 @@ class DataRepository(
                     onSuccess = { response ->
                         when (response) {
                             is ResponseEntity.Success -> {
-                                localData.changeFavoriteStatus(listOf(Pair(productId, false)))
+                                localDataSource.changeFavoriteStatus(listOf(Pair(productId, false)))
                                 emitter.onSuccess(response.data)
                             }
                             is ResponseEntity.Error -> emitter.onError(Exception(response.errorMessage))
@@ -607,7 +610,7 @@ class DataRepository(
         productIdListStr = when(isAlreadyLogin()) {
             true -> null
             false -> StringBuilder().apply {
-                localData.fetchAllFavoriteProducts().forEach {
+                localDataSource.fetchAllFavoriteProducts().forEach {
                     append(it).append(",")
                 }
             }.toString()
@@ -628,7 +631,7 @@ class DataRepository(
             ProductsPagingSource(ProductsFavoriteSource(
                 userId = fetchUserId(),
                 productIdListStr = StringBuilder().apply {
-                    localData.fetchAllFavoriteProducts().forEach {
+                    localDataSource.fetchAllFavoriteProducts().forEach {
                         append(it).append(",")
                     }
                 }.toString(),
@@ -636,13 +639,36 @@ class DataRepository(
                 sort = sort,
                 orientation = orientation,
                 isAvailable = isAvailable,
-                remoteDataSource = remoteDataSource
+                remoteDataSource = remoteDataSource,
+                localDataSource = localDataSource
             ))
         }
-    ).flow.map { pagingData ->
-        syncFavoriteProducts(pagingData)
-        pagingData
-    }
+    ).flow
+
+    fun fetchPastPurchasesProducts(
+        categoryId: Long?,
+        sort: String?,
+        orientation: String?,
+        isAvailable: Boolean?
+    ) = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = {
+            ProductsPagingSource(PastPurchasesProductsSource(
+                userId = fetchUserId(),
+                categoryId = categoryId,
+                sort = sort,
+                orientation = orientation,
+                isAvailable = isAvailable,
+                remoteDataSource = remoteDataSource,
+                localDataSource = localDataSource
+            ))
+        }
+    ).flow
+
+    fun fetchPastPurchasesHeader() = remoteDataSource.fetchPastPurchasesHeader(fetchUserId()!!)
 
     fun fetchDeliveryZonesBundle() = remoteDataSource.fetchDeliveryZonesResponse()
 
@@ -714,33 +740,6 @@ class DataRepository(
         userId = fetchUserId()!!
     )
 
-    private fun syncFavoriteProducts(productEntityList: List<ProductEntity>?) {
-        val favoriteList = localData.fetchAllFavoriteProducts()
-        productEntityList?.map { productEntity ->
-            favoriteList.find { it == productEntity.id }?.let {
-                productEntity.isFavorite = true
-            }
-        }
-    }
-
-    private fun syncFavoriteProducts(pagingData: PagingData<ProductEntity>?) {
-        val favoriteList = localData.fetchAllFavoriteProducts()
-        pagingData?.map { productEntity ->
-            favoriteList.find { it == productEntity.id }?.let {
-                productEntity.isFavorite = true
-            }
-            productEntity
-        }
-    }
-
-    private fun syncFavoriteStatus(productDetailEntity: ProductDetailEntity) {
-        val favoriteList = localData.fetchAllFavoriteProducts()
-
-        favoriteList.find { it == productDetailEntity.id }?.let {
-            productDetailEntity.isFavorite = true
-        }
-    }
-
     fun fetchAllOrders(
         appVersion: String?,
         orderId: Long?,
@@ -759,7 +758,13 @@ class DataRepository(
                 remoteDataSource = remoteDataSource
             )
         }
-    ).apply { Log.i(LogSettings.ID_LOG, "REFETCH") }.flow
+    ).flow.map { pagingData ->
+        pagingData.map { orderEntity ->
+            orderEntity.productEntityList.syncCartQuantity(localDataSource)
+            orderEntity.productEntityList.syncFavoriteProducts(localDataSource)
+        }
+        pagingData
+    }
 
     fun fetchOrderDetails(
         orderId: Long?,
@@ -768,11 +773,94 @@ class DataRepository(
         userId = fetchUserId()!!,
         orderId = orderId,
         appVersion = appVersion
+    ).doOnSuccess { response ->
+        if (response is ResponseEntity.Success) {
+            response.data.productEntityList.syncCartQuantity(localDataSource)
+            response.data.productEntityList.syncFavoriteProducts(localDataSource)
+        }
+    }
+
+    fun fetchPersonalProducts(page: Int = 1) = remoteDataSource.fetchPersonalProducts(
+        userId = fetchUserId()!!,
+        page = page
+    ).doOnSuccess { response ->
+        if (response is ResponseEntity.Success) {
+            response.data.productEntityList.syncCartQuantity(localDataSource)
+            response.data.productEntityList.syncFavoriteProducts(localDataSource)
+        }
+    }
+
+    fun updateUserData(
+        firstName: String?,
+        secondName: String?,
+        password: String?,
+        phone: String?,
+        sex: String?,
+        birthday: String?,
+        email: String?,
+    ) = remoteDataSource.updateUserData(
+        userId = fetchUserId()!!,
+        secondName = secondName,
+        firstName = firstName,
+        password = password,
+        phone = phone,
+        sex = sex,
+        birthday = birthday,
+        email = email
     )
 
+    fun fetchActivateDiscountCardInfo() = remoteDataSource.fetchActivateDiscountCardInfo(userId = fetchUserId()!!)
+    fun activateDiscountCard(
+        value: String?
+    ) = remoteDataSource.activateDiscountCard(
+        userId = fetchUserId(),
+        value = value
+    )
 
-    fun clearSearchHistory() = localData.clearSearchHistory()
-    fun addQueryToHistory(query: String) = localData.addQueryToHistory(query)
-    fun fetchSearchHistory() = localData.fetchSearchHistory()
+    fun recoverPassword(email: String?) = remoteDataSource.recoverPassword(email)
+
+    fun clearSearchHistory() = localDataSource.clearSearchHistory()
+    fun addQueryToHistory(query: String) = localDataSource.addQueryToHistory(query)
+    fun fetchSearchHistory() = localDataSource.fetchSearchHistory()
+
+    fun fetchQuestionnairesTypes() = remoteDataSource.fetchQuestionnairesTypes()
+    fun fetchQuestionnaire(
+        questionnaireType: String?
+    ) = remoteDataSource.fetchQuestionnaire(
+        questionnaireType = questionnaireType,
+        userId = fetchUserId()
+    )
+
+    fun fetchContacts(appVersion: String?) = remoteDataSource.fetchContacts(appVersion)
+
+    fun sendMail(
+        name: String?,
+        phone: String?,
+        email: String?,
+        comment: String?
+    ) = remoteDataSource.sendMail(
+        name = name,
+        phone = phone,
+        email = email,
+        comment = comment
+    )
+
+    fun fetchServiceById(type: String?) = remoteDataSource.fetchServiceById(type)
+
+    fun fetchFormForOrderService(
+        type: String?
+    ) = remoteDataSource.fetchFormForOrderService(
+        type = type,
+        userId = fetchUserId()!!
+    )
+
+    fun orderService(
+        type: String?,
+        value: String?
+    ) = remoteDataSource.orderService(
+        type = type,
+        userId = fetchUserId()!!,
+        value = value
+    )
 
 }

@@ -131,12 +131,11 @@
 
     <ImageView
         android:id="@+id/favoriteStatus"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:src="@drawable/ic_favorite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/blackTextPrimary"
         tools:ignore="ContentDescription" />
 
     <View
@@ -164,9 +163,8 @@
 
     <RelativeLayout
         android:id="@+id/amountControllerContainer"
-        android:layout_width="0dp"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/amountControllerAnchor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -178,9 +176,8 @@
 
     <TextView
         android:id="@+id/amountControllerAnchor"
-        android:layout_width="130dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:text="88888 Р 88888 Р"
         android:fontFamily="@font/rotonda"
         android:textStyle="bold"
         android:textColor="@color/blackTextDark"

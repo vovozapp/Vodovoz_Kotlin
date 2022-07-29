@@ -1,14 +1,8 @@
 package com.vodovoz.app.ui.fragment.send_comment_about_product
 
-import android.os.Bundle
-import android.view.*
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.vodovoz.app.R
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.config.FieldValidateConfig.MIN_COMMENT_LENGTH
 import com.vodovoz.app.data.model.common.ResponseEntity

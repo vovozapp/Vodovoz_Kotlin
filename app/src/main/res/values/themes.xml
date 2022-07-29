@@ -18,7 +18,7 @@
 
     <style name="ToolbarTitle" >
         <item name="fontFamily">@font/rotonda</item>
-        <item name="android:textColor">@color/blackTextPrimary</item>
+        <item name="android:textColor">@color/blackTextDark</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">17sp</item>
     </style>

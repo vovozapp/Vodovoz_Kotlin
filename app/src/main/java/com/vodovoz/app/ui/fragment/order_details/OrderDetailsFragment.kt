@@ -23,8 +23,6 @@ import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.ProductDiffUtilCallback
-import com.vodovoz.app.ui.fragment.orders_history.OrdersHistoryFragmentDirections
-import com.vodovoz.app.ui.fragment.orders_history.OrdersHistoryViewModel
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.OrderDetailsUI
@@ -72,6 +70,12 @@ class OrderDetailsFragment : ViewStateBaseFragment() {
     private fun subscribeSubjects() {
         onProductClickSubject.subscribeBy { productId ->
             findNavController().navigate(OrderDetailsFragmentDirections.actionToProductDetailFragment(productId))
+        }.addTo(compositeDisposable)
+        onChangeProductQuantitySubject.subscribeBy { pair ->
+            viewModel.changeCart(pair.first, pair.second)
+        }.addTo(compositeDisposable)
+        onFavoriteClickSubject.subscribeBy { pair ->
+            viewModel.changeFavoriteStatus(pair.first, pair.second)
         }.addTo(compositeDisposable)
     }
 

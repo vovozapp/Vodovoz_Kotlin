@@ -1,5 +1,8 @@
 package com.vodovoz.app.data.paging.products.source
 
+import com.vodovoz.app.data.LocalSyncExtensions.syncCartQuantity
+import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
+import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsBySliderResponseJsonParser.parseProductsBySliderResponse
 import com.vodovoz.app.data.remote.RemoteDataSource
@@ -10,7 +13,8 @@ class ProductsBySliderSource(
     private val categoryId: Long?,
     private val sort: String?,
     private val orientation: String?,
-    private val remoteDataSource: RemoteDataSource
+    private val remoteDataSource: RemoteDataSource,
+    private val localDataSource: LocalDataSource
 ) : ProductsSource {
 
     override suspend fun getResponse(page: Int) = remoteDataSource.fetchProductsBySlider(
@@ -22,7 +26,12 @@ class ProductsBySliderSource(
 
     override fun parseResponse(response: Response<ResponseBody>) = when(val body = response.body()) {
         null -> ResponseEntity.Error("Empty body")
-        else -> body.parseProductsBySliderResponse()
+        else -> body.parseProductsBySliderResponse().apply {
+            if (this is ResponseEntity.Success) {
+                this.data.syncFavoriteProducts(localDataSource)
+                this.data.syncCartQuantity(localDataSource)
+            }
+        }
     }
 
 }

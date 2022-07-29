@@ -16,7 +16,6 @@ import com.vodovoz.app.ui.base.BaseHiddenFragment
 import com.vodovoz.app.ui.diffUtils.HistoryDiffUtilCallback
 import com.vodovoz.app.ui.interfaces.IOnHistoryClick
 import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
-import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.HistoryUI
 import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable

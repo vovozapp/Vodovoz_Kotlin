@@ -124,6 +124,11 @@ class ProductGridViewHolder(
             false -> binding.amountController.circleAmount.visibility = View.GONE
         }
 
+        when(productUI.isFavorite) {
+            false -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite))
+            true -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_red))
+        }
+
         when (productUI.commentAmount) {
             "" -> binding.commentAmount.visibility = View.GONE
             else -> {

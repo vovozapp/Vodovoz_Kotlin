@@ -5,13 +5,10 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderOrderDetailsBinding
 import com.vodovoz.app.ui.adapter.DetailPictureSliderAdapter
 import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
-import com.vodovoz.app.ui.interfaces.IOnProductDetailPictureClick
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
-import com.vodovoz.app.ui.extensions.TextViewExtensions.setDrawableColor
 import com.vodovoz.app.ui.model.OrderUI
 import io.reactivex.rxjava3.subjects.PublishSubject
 

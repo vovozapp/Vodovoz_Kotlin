@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderOrderDetailsBinding
-import com.vodovoz.app.ui.interfaces.IOnProductDetailPictureClick
 import com.vodovoz.app.ui.view_holder.OrderDetailViewHolder
 import com.vodovoz.app.ui.model.OrderUI
 import io.reactivex.rxjava3.subjects.PublishSubject

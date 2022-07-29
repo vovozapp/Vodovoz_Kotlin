@@ -52,7 +52,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 @SuppressLint("NotifyDataSetChanged")
-class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavoriteClick {
+class ProductDetailFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentProductDetailBinding
     private lateinit var viewModel: ProductDetailViewModel
@@ -63,6 +63,8 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
     private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val onPromotionClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val onQueryClickSubject: PublishSubject<String> = PublishSubject.create()
+    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
+    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
 
     private val detailPicturePagerAdapter = DetailPicturePagerAdapter(
         iOnProductDetailPictureClick = {
@@ -114,13 +116,17 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
 
     private fun subscribeSubjects() {
         onProductClickSubject.subscribeBy { productId ->
-            onProductClick(productId)
+            findNavController().navigate(ProductDetailFragmentDirections.actionToSelf(productId))
         }.addTo(compositeDisposable)
-
+        onFavoriteClickSubject.subscribeBy { pair ->
+            viewModel.changeFavoriteStatus(pair.first, pair.second)
+        }.addTo(compositeDisposable)
+        onChangeProductQuantitySubject.subscribeBy { pair ->
+            viewModel.changeCart(pair.first, pair.second)
+        }.addTo(compositeDisposable)
         onPromotionClickSubject.subscribeBy { promotionId ->
             findNavController().navigate(ProductDetailFragmentDirections.actionToPromotionDetailFragment(promotionId))
         }.addTo(compositeDisposable)
-
         onQueryClickSubject.subscribeBy { query ->
             findNavController().navigate(ProductDetailFragmentDirections.actionToSearchFragment().apply { this.query = query })
         }.addTo(compositeDisposable)
@@ -128,15 +134,15 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
 
     private fun initCallbacks() {
         byWithProductsSliderFragment.initCallbacks(
-            iOnProductClick = this,
-            iOnFavoriteClick = this,
-            iOnChangeProductQuantity = {},
+            iOnProductClick = { productId -> onProductClickSubject.onNext(productId) },
+            iOnFavoriteClick = { pair -> onFavoriteClickSubject.onNext(pair) },
+            iOnChangeProductQuantity = { pair -> onChangeProductQuantitySubject.onNext(pair) },
             iOnShowAllProductsClick = {}
         )
         recommendProductsSliderFragment.initCallbacks(
-            iOnProductClick = this,
-            iOnFavoriteClick = this,
-            iOnChangeProductQuantity = {},
+            iOnProductClick = { productId -> onProductClickSubject.onNext(productId) },
+            iOnFavoriteClick = { pair -> onFavoriteClickSubject.onNext(pair) },
+            iOnChangeProductQuantity = { pair -> onChangeProductQuantitySubject.onNext(pair) },
             iOnShowAllProductsClick = {}
         )
         promotionsSliderFragment.initCallbacks(
@@ -222,7 +228,10 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
     private val amountControllerTimer = object: CountDownTimer(3000, 3000) {
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
-            viewModel.changeCart()
+            viewModel.changeCart(
+                viewModel.productDetailBundleUI.productDetailUI.id,
+                viewModel.productDetailBundleUI.productDetailUI.cartQuantity
+            )
             hideAmountController()
         }
     }
@@ -339,6 +348,23 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
                 },
                 "Shearing Option"
             ).let { startActivity(it) }
+        }
+
+        binding.favorite.setOnClickListener {
+            when(viewModel.productDetailBundleUI.productDetailUI.isFavorite) {
+                true -> {
+                    viewModel.productDetailBundleUI.productDetailUI.isFavorite = false
+                    binding.favorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite))
+                }
+                false -> {
+                    viewModel.productDetailBundleUI.productDetailUI.isFavorite = true
+                    binding.favorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_red))
+                }
+            }
+            onFavoriteClickSubject.onNext(Pair(
+                viewModel.productDetailBundleUI.productDetailUI.id,
+                viewModel.productDetailBundleUI.productDetailUI.isFavorite
+            ))
         }
     }
 
@@ -532,6 +558,11 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
                 .toString()
         }
 
+        when(productDetailBundle.productDetailUI.isFavorite) {
+            false -> binding.favorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite))
+            true -> binding.favorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_red))
+        }
+
         if (productDetailBundle.productDetailUI.commentsAmount != 0) {
             binding.commentAmount.text = StringBuilder()
                 .append(productDetailBundle.productDetailUI.commentsAmount)
@@ -548,6 +579,8 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
             binding.statusContainer.visibility = View.GONE
         }
 
+        binding.amountController.circleAmount.text = productDetailBundle.productDetailUI.cartQuantity.toString()
+        binding.amountController.amount.text = productDetailBundle.productDetailUI.cartQuantity.toString()
         when (productDetailBundle.productDetailUI.cartQuantity > 0) {
             true -> {
                 binding.amountController.circleAmount.visibility = View.VISIBLE
@@ -678,14 +711,6 @@ class ProductDetailFragment : ViewStateBaseFragment(), IOnProductClick, IOnFavor
     override fun onStop() {
         super.onStop()
         amountControllerTimer.cancel()
-    }
-
-    override fun onProductClick(productId: Long) {
-        findNavController().navigate(ProductDetailFragmentDirections.actionToSelf(productId))
-    }
-
-    override fun onFavoriteClick(pair: Pair<Long, Boolean>) {
-
     }
 
     override fun onDestroy() {

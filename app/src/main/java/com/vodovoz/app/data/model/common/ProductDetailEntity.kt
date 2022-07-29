@@ -14,7 +14,7 @@ class ProductDetailEntity(
     val consumerInfo: String,
     val commentsAmount: Int,
     val pricePerUnit: Int? = null,
-    val cartQuantity: Int = 0,
+    var cartQuantity: Int = 0,
     val brandEntity: BrandEntity? = null,
     val propertiesGroupEntityList: List<PropertiesGroupEntity> = listOf(),
     val priceEntityList: List<PriceEntity> = listOf(),

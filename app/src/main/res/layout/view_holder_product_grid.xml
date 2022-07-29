@@ -51,12 +51,11 @@
 
     <ImageView
         android:id="@+id/favoriteStatus"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:src="@drawable/ic_favorite_fill"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/ic_favorite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/blackTextLight"
         tools:ignore="ContentDescription" />
 
     <LinearLayout

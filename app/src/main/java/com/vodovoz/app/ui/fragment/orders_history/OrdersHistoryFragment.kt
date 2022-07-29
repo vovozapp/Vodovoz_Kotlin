@@ -2,9 +2,7 @@ package com.vodovoz.app.ui.fragment.orders_history
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -14,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
-import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.DialogFragmentAllOrdersBinding
 import com.vodovoz.app.ui.adapter.PagingOrdersAdapter
 import com.vodovoz.app.ui.base.ViewState
@@ -22,11 +19,8 @@ import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.base.loadStateAdapter.LoadStateAdapter
 import com.vodovoz.app.ui.diffUtils.OrderDiffItemCallback
-import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogFragment
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
-import com.vodovoz.app.ui.model.custom.FiltersBundleUI
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
-import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy

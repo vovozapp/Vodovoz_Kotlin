@@ -23,9 +23,13 @@ abstract class ViewStateBaseFragment : Fragment() {
     ).apply {
         rootBinding = this
         setContentView(inflater, this.root)?.let { rootBinding.contentContainer.addView(it) }
+    }.root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initView()
         initUpdateButton()
-    }.root
+    }
 
     protected open fun setContentView(inflater: LayoutInflater, container: ViewGroup): View? = null
     protected open fun initView() {}

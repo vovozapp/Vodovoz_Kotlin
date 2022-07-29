@@ -2,7 +2,6 @@ package com.vodovoz.app.ui.fragment.full_screen_history_slider
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.adapter.FragmentViewHolder
 import com.vodovoz.app.ui.fragment.history_detail.HistoryDetailFragment
 import com.vodovoz.app.ui.model.HistoryUI
 

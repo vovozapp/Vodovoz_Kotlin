@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/light_gray">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/primary_space"
+        android:fontFamily="@font/rotonda"
+        android:textStyle="bold"
+        android:textColor="@color/blackTextDark"
+        android:textSize="16sp"
+        android:text="Написать нам"/>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:paddingHorizontal="@dimen/primary_space"
+        android:gravity="center_vertical"
+        android:fontFamily="@font/rotonda"
+        android:textSize="16sp"
+        android:textColor="@color/blackTextPrimary"
+        android:singleLine="true"
+        android:hint="Имя*"/>
+
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:paddingHorizontal="@dimen/primary_space"
+        android:gravity="center_vertical"
+        android:fontFamily="@font/rotonda"
+        android:textSize="16sp"
+        android:textColor="@color/blackTextPrimary"
+        android:singleLine="true"
+        android:hint="Телефон*"/>
+
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:paddingHorizontal="@dimen/primary_space"
+        android:gravity="center_vertical"
+        android:fontFamily="@font/rotonda"
+        android:textSize="16sp"
+        android:textColor="@color/blackTextPrimary"
+        android:singleLine="true"
+        android:hint="Email*"/>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:paddingHorizontal="@dimen/primary_space"
+        android:gravity="center_vertical"
+        android:fontFamily="@font/rotonda"
+        android:textSize="16sp"
+        android:textColor="@color/blackTextPrimary"
+        android:hint="Что вас интересует?*"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/personalData"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/primary_space"
+            android:fontFamily="@font/rotonda"
+            android:textSize="16sp"
+            android:textColor="@color/blackTextDark"
+            android:text="Я подтверждаю согласие на на обработку  персональных данных"/>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/personalDataSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/background_button_primary"
+        android:layout_marginBottom="@dimen/primary_space"
+        android:layout_marginHorizontal="@dimen/primary_space"
+        android:text="Отправить"/>
+
+</LinearLayout>

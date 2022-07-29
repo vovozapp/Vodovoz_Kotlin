@@ -143,23 +143,27 @@ class FavoriteViewModel(
 
     fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
         when(isFavorite) {
-            true -> dataRepository
-                .addToFavorite(listOf(productId))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                    onSuccess = {},
-                    onError = { throwable -> errorMLD.value = throwable.message ?: "Неизвестная ошибка" }
-                ).addTo(compositeDisposable)
-            false -> dataRepository
-                .removeFromFavorite(productId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                    onSuccess = {},
-                    onError = { throwable -> errorMLD.value = throwable.message ?: "Неизвестная ошибка" }
-                ).addTo(compositeDisposable)
-        }
+            true -> dataRepository.addToFavorite(productId)
+            false -> dataRepository.removeFromFavorite(productId = productId)
+
+        }.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onSuccess = {},
+                onError = { throwable -> errorMLD.value = throwable.message ?: "Неизвестная ошибка" }
+            ).addTo(compositeDisposable)
+    }
+
+    fun changeCart(productId: Long, quantity: Int) {
+        dataRepository.changeCart(
+            productId = productId,
+            quantity = quantity
+        ).subscribeBy(
+            onComplete = {},
+            onError = { throwable ->
+                errorMLD.value = throwable.message ?: "Неизвестная ошибка"
+            }
+        )
     }
 
     override fun onCleared() {

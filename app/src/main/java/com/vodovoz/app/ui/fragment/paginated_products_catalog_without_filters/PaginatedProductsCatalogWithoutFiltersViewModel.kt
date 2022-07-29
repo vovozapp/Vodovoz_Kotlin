@@ -30,13 +30,15 @@ class PaginatedProductsCatalogWithoutFiltersViewModel(
     private val viewStateMLD = MutableLiveData<ViewState>()
     private val categoryUIMLD = MutableLiveData<CategoryUI>()
     private val sortTypeMLD = MutableLiveData<SortType>()
+    private val errorMLD = MutableLiveData<String>()
 
     val viewStateLD: LiveData<ViewState> = viewStateMLD
     val categoryUILD: LiveData<CategoryUI> = categoryUIMLD
     val sortTypeLD: LiveData<SortType> = sortTypeMLD
+    val errorLD: LiveData<String> = errorMLD
 
     lateinit var dataSource: DataSource
-    private var categoryHeader: CategoryUI? = null
+    var categoryHeader: CategoryUI? = null
         set(value) {
             field = value
             value?.let { categoryUIMLD.value = it }
@@ -152,6 +154,31 @@ class PaginatedProductsCatalogWithoutFiltersViewModel(
             categoryId = dataSource.categoryId,
             orientation = sortType.orientation,
             sort = sortType.value,
+        )
+    }
+
+    fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
+        when(isFavorite) {
+            true -> dataRepository.addToFavorite(productId)
+            false -> dataRepository.removeFromFavorite(productId = productId)
+
+        }.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onSuccess = {},
+                onError = { throwable -> errorMLD.value = throwable.message ?: "Неизвестная ошибка" }
+            ).addTo(compositeDisposable)
+    }
+
+    fun changeCart(productId: Long, quantity: Int) {
+        dataRepository.changeCart(
+            productId = productId,
+            quantity = quantity
+        ).subscribeBy(
+            onComplete = {},
+            onError = { throwable ->
+                errorMLD.value = throwable.message ?: "Неизвестная ошибка"
+            }
         )
     }
 
