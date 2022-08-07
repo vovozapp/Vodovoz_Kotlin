@@ -110,7 +110,7 @@ class OrderDetailsFragment : ViewStateBaseFragment() {
     }
 
     private fun initProductsRecycler() {
-        val space = resources.getDimension(R.dimen.primary_space).toInt()
+        val space = resources.getDimension(R.dimen.space_16).toInt()
         binding.productsRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.productsRecycler.adapter = linearProductsAdapter
         binding.productsRecycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))

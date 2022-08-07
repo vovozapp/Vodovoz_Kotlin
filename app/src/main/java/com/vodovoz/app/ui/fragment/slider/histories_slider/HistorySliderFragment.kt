@@ -60,7 +60,7 @@ class HistorySliderFragment : BaseHiddenFragment() {
         binding.historiesRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
-        val space = resources.getDimension(R.dimen.primary_space).toInt()
+        val space = resources.getDimension(R.dimen.space_16).toInt()
         binding.historiesRecycler.onRenderFinished { width, _ ->
             historiesSliderAdapter = HistoriesSliderAdapter(
                 onHistoryClickSubject = onHistoryClickSubject,

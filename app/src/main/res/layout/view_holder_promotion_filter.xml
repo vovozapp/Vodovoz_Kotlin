@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/primary_space"
+    android:padding="@dimen/space_16"
     android:textSize="16sp"
-    android:fontFamily="@font/rotonda"
+    android:fontFamily="@font/rotonda_normal"
     android:textColor="@color/blackTextPrimary"
     android:gravity="center"
     tools:text="Для новых клиентов"/>

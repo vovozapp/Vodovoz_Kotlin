@@ -42,7 +42,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/primary_space">
+                    android:padding="@dimen/space_16">
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/cardView"
@@ -60,7 +60,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/default_avatar"
+                            android:src="@drawable/png_default_avatar"
                             tools:ignore="ContentDescription" />
 
                     </androidx.cardview.widget.CardView>
@@ -70,10 +70,10 @@
                         android:id="@+id/loadPhoto"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda"
+                        android:fontFamily="@font/rotonda_normal"
                         android:textColor="@color/blackTextPrimary"
                         android:textSize="16sp"
-                        android:layout_marginStart="@dimen/primary_space"
+                        android:layout_marginStart="@dimen/space_16"
                         android:text="Загрузить фото"
                         app:layout_constraintBottom_toBottomOf="@+id/cardView"
                         app:layout_constraintStart_toEndOf="@+id/cardView"
@@ -84,16 +84,16 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:paddingTop="@dimen/primary_margin"
-                    android:paddingBottom="@dimen/primary_margin"
-                    android:fontFamily="@font/rotonda"
+                    android:paddingTop="@dimen/space_8"
+                    android:paddingBottom="@dimen/space_8"
+                    android:fontFamily="@font/rotonda_normal"
                     android:textColor="@color/blackTextPrimary"
                     android:gravity="center_vertical"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:background="@color/whiteDark"
-                    android:paddingStart="@dimen/primary_space"
-                    android:paddingEnd="@dimen/primary_space"
+                    android:paddingStart="@dimen/space_16"
+                    android:paddingEnd="@dimen/space_16"
                     android:text="Личные данные" />
 
                 <LinearLayout
@@ -101,16 +101,16 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center_vertical"
-                    android:paddingTop="@dimen/primary_margin"
-                    android:paddingBottom="@dimen/primary_margin">
+                    android:paddingTop="@dimen/space_8"
+                    android:paddingBottom="@dimen/space_8">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda"
+                        android:fontFamily="@font/rotonda_normal"
                         android:textColor="@color/blackTextLight"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
                         android:textSize="16sp"
                         android:text="email" />
 
@@ -118,10 +118,10 @@
                         android:id="@+id/email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda"
+                        android:fontFamily="@font/rotonda_normal"
                         android:textColor="@color/blackTextPrimary"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
                         android:layout_marginTop="2dp"
                         android:textSize="16sp"
                         android:text="sluhdimaa@gmail.com" />
@@ -133,17 +133,17 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center_vertical"
-                    android:paddingTop="@dimen/primary_margin"
-                    android:paddingBottom="@dimen/primary_margin">
+                    android:paddingTop="@dimen/space_8"
+                    android:paddingBottom="@dimen/space_8">
 
                     <TextView
                         android:id="@+id/secondNameTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda"
+                        android:fontFamily="@font/rotonda_normal"
                         android:textColor="@color/blackTextLight"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
                         android:textSize="16sp"
                         android:text="Фамилия" />
 
@@ -151,10 +151,10 @@
                         android:id="@+id/secondName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda"
+                        android:fontFamily="@font/rotonda_normal"
                         android:textColor="@color/blackTextPrimary"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
                         android:layout_marginTop="2dp"
                         android:textSize="16sp"
                         android:text="Слухинский"
@@ -167,17 +167,17 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center_vertical"
-                    android:paddingTop="@dimen/primary_margin"
-                    android:paddingBottom="@dimen/primary_margin">
+                    android:paddingTop="@dimen/space_8"
+                    android:paddingBottom="@dimen/space_8">
 
                     <TextView
                         android:id="@+id/firstNameTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda"
+                        android:fontFamily="@font/rotonda_normal"
                         android:textColor="@color/blackTextLight"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
                         android:textSize="16sp"
                         android:text="Имя" />
 
@@ -185,10 +185,10 @@
                         android:id="@+id/firstName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda"
+                        android:fontFamily="@font/rotonda_normal"
                         android:textColor="@color/blackTextPrimary"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
                         android:layout_marginTop="2dp"
                         android:textSize="16sp"
                         android:background="@android:color/transparent"
@@ -201,17 +201,17 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center_vertical"
-                    android:paddingTop="@dimen/primary_margin"
-                    android:paddingBottom="@dimen/primary_margin">
+                    android:paddingTop="@dimen/space_8"
+                    android:paddingBottom="@dimen/space_8">
 
                     <TextView
                         android:id="@+id/sexTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda"
+                        android:fontFamily="@font/rotonda_normal"
                         android:textColor="@color/blackTextLight"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
                         android:textSize="16sp"
                         android:text="Пол" />
 
@@ -219,10 +219,10 @@
                         android:id="@+id/sex"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda"
+                        android:fontFamily="@font/rotonda_normal"
                         android:textColor="@color/blackTextPrimary"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
                         android:layout_marginTop="2dp"
                         android:textSize="16sp"
                         android:text="мужской" />
@@ -234,16 +234,16 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center_vertical"
-                    android:paddingTop="@dimen/primary_margin"
-                    android:paddingBottom="@dimen/primary_margin">
+                    android:paddingTop="@dimen/space_8"
+                    android:paddingBottom="@dimen/space_8">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda"
+                        android:fontFamily="@font/rotonda_normal"
                         android:textColor="@color/blackTextLight"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
                         android:textSize="16sp"
                         android:text="Дата рождения" />
 
@@ -251,10 +251,10 @@
                         android:id="@+id/birthday"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda"
+                        android:fontFamily="@font/rotonda_normal"
                         android:textColor="@color/blackTextPrimary"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
                         android:layout_marginTop="2dp"
                         android:textSize="16sp"
                         android:text="31.08.1999" />
@@ -266,17 +266,17 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center_vertical"
-                    android:paddingTop="@dimen/primary_margin"
-                    android:paddingBottom="@dimen/primary_margin">
+                    android:paddingTop="@dimen/space_8"
+                    android:paddingBottom="@dimen/space_8">
 
                     <TextView
                         android:id="@+id/phoneTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda"
+                        android:fontFamily="@font/rotonda_normal"
                         android:textColor="@color/blackTextLight"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
                         android:textSize="16sp"
                         android:text="Телефон" />
 
@@ -284,10 +284,10 @@
                         android:id="@+id/phone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda"
+                        android:fontFamily="@font/rotonda_normal"
                         android:textColor="@color/blackTextPrimary"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
                         android:layout_marginTop="2dp"
                         android:textSize="16sp"
                         android:text="+7-952-247-38-26"
@@ -298,26 +298,26 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:paddingTop="@dimen/primary_margin"
-                    android:paddingBottom="@dimen/primary_margin"
-                    android:fontFamily="@font/rotonda"
+                    android:paddingTop="@dimen/space_8"
+                    android:paddingBottom="@dimen/space_8"
+                    android:fontFamily="@font/rotonda_normal"
                     android:textColor="@color/blackTextPrimary"
                     android:gravity="center_vertical"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:background="@color/whiteDark"
-                    android:paddingStart="@dimen/primary_space"
-                    android:paddingEnd="@dimen/primary_space"
+                    android:paddingStart="@dimen/space_16"
+                    android:paddingEnd="@dimen/space_16"
                     android:text="Изменение пароля" />
 
                 <EditText
                     android:id="@+id/newPassword"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:fontFamily="@font/rotonda"
+                    android:fontFamily="@font/rotonda_normal"
                     android:textColor="@color/blackTextLight"
-                    android:paddingStart="@dimen/primary_space"
-                    android:paddingEnd="@dimen/primary_space"
+                    android:paddingStart="@dimen/space_16"
+                    android:paddingEnd="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:textSize="16sp"
                     android:hint="Новый пароль"
@@ -332,12 +332,12 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="@dimen/primary_space"
-            android:layout_marginTop="@dimen/primary_margin"
-            android:layout_marginEnd="@dimen/primary_space"
-            android:layout_marginBottom="@dimen/primary_margin"
-            android:background="@drawable/background_button_primary"
-            android:fontFamily="@font/rotonda"
+            android:layout_marginStart="@dimen/space_16"
+            android:layout_marginTop="@dimen/space_8"
+            android:layout_marginEnd="@dimen/space_16"
+            android:layout_marginBottom="@dimen/space_8"
+            android:background="@drawable/bkg_button_blue_rect_disabled"
+            android:fontFamily="@font/rotonda_normal"
             android:gravity="center"
             android:text="Сохранить"
             android:textColor="@color/white"
@@ -356,6 +356,6 @@
 
     <include
         android:id="@+id/bsChooseSex"
-        layout="@layout/bs_choose_sex" />
+        layout="@layout/bs_selection_gender" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

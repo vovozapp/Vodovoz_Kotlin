@@ -11,10 +11,10 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:padding="@dimen/primary_space"
+        android:padding="@dimen/space_16"
         android:textColor="@color/blackTextPrimary"
         android:textSize="16sp"
-        android:fontFamily="@font/rotonda"
+        android:fontFamily="@font/rotonda_normal"
         tools:text="Ответ"/>
 
     <RadioButton

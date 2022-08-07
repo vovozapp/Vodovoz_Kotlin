@@ -405,6 +405,10 @@ interface VodovozApi {
         @Query("filtervalue") value: String? = null
     ): Single<ResponseBody>
 
+    //newmobile/details/index_new.php?iblock_id=12&detail="+ID_products+"&userid="+User.getInstance().getuser_id()+"&android="+ BuildConfig.VERSION_NAME
+    //newmobile/voteRating.php?element_id="+ID_products+"&rating_value="+rating
+
+
     //newmobile/glavnaya/uslygi/form.php?action=add&filtervalue="+stringBuilder.toString()+"&tip="+ID+"&userid="+User.getInstance().getuse
     ///newmobile/glavnaya/uslygi/form.php?action=glav&tip="+ID+"&userid="
     //"newmobile/mail.php?name=" + NameEmail.getText().toString() + "&phone=" + PhoneEmail.getText().toString() + "&email=" + EmailEmail.getText().toString() + "&comment=" + CommentEmail.getText().toString()

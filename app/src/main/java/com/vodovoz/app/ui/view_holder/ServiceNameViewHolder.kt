@@ -22,8 +22,8 @@ class ServiceNameViewHolder(
         this.serviceData = serviceData
         binding.name.text = serviceData.first
         when(serviceData.third) {
-            true -> binding.name.setTextColor(ContextCompat.getColor(context, R.color.blackTextDark))
-            false -> binding.name.setTextColor(ContextCompat.getColor(context, R.color.blackTextPrimary))
+            true -> binding.name.setTextColor(ContextCompat.getColor(context, R.color.bluePrimary))
+            false -> binding.name.setTextColor(ContextCompat.getColor(context, R.color.text_gray))
         }
     }
 

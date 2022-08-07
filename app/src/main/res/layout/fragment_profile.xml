@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--deferred-->
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ScrollView
+        android:id="@+id/profileContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bluePrimary"
+                android:padding="@dimen/space_16">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:cardCornerRadius="100dp"
+                    app:layout_constraintDimensionRatio="w,1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.20">
+
+                    <ImageView
+                        android:id="@+id/avatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        tools:ignore="ContentDescription" />
+
+                </androidx.cardview.widget.CardView>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="@dimen/space_16"
+                    android:paddingEnd="@dimen/space_16"
+                    app:layout_constraintBottom_toBottomOf="@+id/cardView"
+                    app:layout_constraintStart_toEndOf="@+id/cardView"
+                    app:layout_constraintTop_toTopOf="@+id/cardView">
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/rotonda_normal"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        tools:text="Вадим Радько" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/rotonda_normal"
+                        android:text="Мои данные"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_pointer_right"
+                    app:layout_constraintBottom_toBottomOf="@+id/cardView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/cardView"
+                    app:tint="@color/white"
+                    tools:ignore="ContentDescription" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/orderRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/whiteDark"/>
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/ordersSliderFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/space_8"
+                android:background="@color/white"/>
+
+            <TextView
+                android:id="@+id/addresses"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="Адреса"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:id="@+id/deliveryPrice"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="Стоимость доставки"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@color/whiteDark"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="Покупки"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:id="@+id/ordersHistory"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="История заказов"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:id="@+id/pastPurchases"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="Прошлые покупки"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@color/whiteDark"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="Услуги"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="Ремонт кулеров"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="Озонация клеров"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@color/whiteDark"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="Личная информация"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:id="@+id/questionnaires"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="Анкета"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:id="@+id/discountCard"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="Активация скидочной карты"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@color/whiteDark"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="Акции и подписки"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="Настройки уведомлений"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@color/whiteDark"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="Популярные вопросы"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:id="@+id/aboutDelivery"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="О доставке"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:id="@+id/aboutPay"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="Оп оплате"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="Онлайн чат"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@color/whiteDark"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="Приложения"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:id="@+id/aboutApp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/blackTextPrimary"
+                android:drawableEnd="@drawable/ic_pointer_right"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="О приложении"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:id="@+id/logout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:fontFamily="@font/rotonda_normal"
+                android:textColor="@color/red"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@color/whiteDark"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:text="Выйти из аккаунта"/>
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/viewedProductsSliderFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:id="@+id/bestForYouProductsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/titleBestForYou"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda_normal"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:textColor="@color/blackTextDark"
+                    android:paddingTop="@dimen/space_8"
+                    android:paddingBottom="@dimen/space_8"
+                    android:paddingStart="@dimen/space_16"
+                    android:paddingEnd="@dimen/space_16" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/bestForYouProductsRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/noLoginContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="300dp"
+            android:layout_above="@id/title"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/png_large_avatar"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/rotonda_normal"
+            android:text="Вы не авторизованы"
+            android:textColor="@color/blackTextPrimary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/space_8"
+            android:fontFamily="@font/rotonda_normal"
+            android:gravity="center"
+            android:text="Войти под своим аккаунтом или\n зарегистрируйтесь"
+            android:textColor="@color/blackTextLight" />
+
+        <TextView
+            android:id="@+id/loginOrRegister"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/space_16"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="@dimen/space_16"
+            android:layout_marginBottom="@dimen/space_16"
+            android:background="@drawable/bkg_button_blue_rect_disabled"
+            android:fontFamily="@font/rotonda_normal"
+            android:gravity="center"
+            android:text="Войти или зарегистрироваться"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
+

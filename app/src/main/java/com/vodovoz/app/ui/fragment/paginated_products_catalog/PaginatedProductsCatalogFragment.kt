@@ -74,7 +74,7 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
     private lateinit var gridLayoutManager: GridLayoutManager
     private lateinit var linearLayoutManager: LinearLayoutManager
 
-    private val space: Int by lazy { resources.getDimension(R.dimen.primary_space).toInt() }
+    private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
     private val linearMarginDecoration: RecyclerView.ItemDecoration by lazy {
         object  : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(
@@ -255,7 +255,7 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
         when (viewMode) {
             ViewMode.LIST -> {
                 viewMode = ViewMode.LIST
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_list))
+                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_list))
                 binding.productRecycler.layoutManager = linearLayoutManager
                 binding.productRecycler.removeItemDecoration(gridMarginDecoration)
                 binding.productRecycler.addItemDecoration(linearMarginDecoration)
@@ -263,7 +263,7 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
             }
             ViewMode.GRID -> {
                 viewMode = ViewMode.GRID
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_table))
+                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_table))
                 binding.productRecycler.layoutManager = gridLayoutManager
                 binding.productRecycler.removeItemDecoration(linearMarginDecoration)
                 binding.productRecycler.removeItemDecoration(linearDividerItemDecoration)

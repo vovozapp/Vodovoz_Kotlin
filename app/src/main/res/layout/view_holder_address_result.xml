@@ -5,8 +5,8 @@
     android:id="@+id/address"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/primary_space"
-    android:fontFamily="@font/rotonda"
+    android:padding="@dimen/space_16"
+    android:fontFamily="@font/rotonda_normal"
     android:textColor="@color/blackTextDark"
     android:textSize="16sp"
     tools:text="Тестовы адрес"/>

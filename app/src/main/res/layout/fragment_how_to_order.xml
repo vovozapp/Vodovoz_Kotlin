@@ -1,25 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--new-->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:elevation="0dp">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:title="Как заказать?"
-            app:titleTextAppearance="@style/ToolbarTitle"/>
-
-    </com.google.android.material.appbar.AppBarLayout>
+    <include
+        android:id="@+id/incAppBar"
+        layout="@layout/view_app_bar_default" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,17 +17,17 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/howToOrderStepsPager"
+            android:id="@+id/vpHowOrder"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"/>
 
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabIndicator"
+            android:id="@+id/tlIndicators"
             android:layout_width="match_parent"
             android:layout_height="10dp"
-            android:layout_marginBottom="@dimen/primary_space"
-            app:tabBackground="@drawable/background_indicator_tab"
+            android:layout_marginBottom="@dimen/space_16"
+            app:tabBackground="@drawable/selector_pager_indicator"
             app:tabGravity="center"
             app:tabIndicatorHeight="0dp"
             app:tabMode="fixed"

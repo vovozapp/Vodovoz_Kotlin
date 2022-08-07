@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    //About App
+    <string name="about_app_title">О приложении</string>
+    <string name="app_version_text">Версия %s</string>
+    <string name="write_to_developers">Написать разработчикам</string>
+    <string name="rate_app_text">Оценить приложение</string>
+    <string name="share_app_text">Поделиться приложением</string>
+
+    //Services
+    <string name="services_title">Услуги</string>
+    <string name="more_details_about_service_btn_text">Подробнее</string>
+
+    //How to Order
+    <string name="how_order_title">Как заказать</string>
+
+</resources>

@@ -44,15 +44,12 @@ import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.Observables
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -87,7 +84,7 @@ class SearchFragment : ViewStateBaseFragment() {
     private lateinit var productsGridLayoutManager: GridLayoutManager
     private lateinit var productLinearLayoutManager: LinearLayoutManager
 
-    private val space: Int by lazy { resources.getDimension(R.dimen.primary_space).toInt() }
+    private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
     private val linearMarginDecoration: ListMarginDecoration by lazy { ListMarginDecoration(space) }
     private val linearDividerItemDecoration: DividerItemDecoration by lazy { DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL) }
     private val gridMarginDecoration: GridMarginDecoration by lazy { GridMarginDecoration(space) }
@@ -474,13 +471,13 @@ class SearchFragment : ViewStateBaseFragment() {
         when (productAdapter.viewMode) {
             ViewMode.GRID -> {
                 productAdapter.viewMode = ViewMode.LIST
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_list))
+                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_list))
                 firstVisiblePosition = productsGridLayoutManager.findFirstVisibleItemPosition()
                 lastVisiblePosition = productsGridLayoutManager.findLastVisibleItemPosition()
             }
             ViewMode.LIST -> {
                 productAdapter.viewMode = ViewMode.GRID
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_table))
+                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_table))
                 firstVisiblePosition = productLinearLayoutManager.findFirstVisibleItemPosition()
                 lastVisiblePosition = productLinearLayoutManager.findLastVisibleItemPosition()
             }

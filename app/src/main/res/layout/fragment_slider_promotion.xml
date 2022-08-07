@@ -20,24 +20,24 @@
             android:textSize="20sp"
             android:textColor="@color/blackTextDark"
             android:text="Акции"
-            android:paddingTop="@dimen/primary_margin"
-            android:paddingBottom="@dimen/primary_margin"
-            android:paddingStart="@dimen/primary_space"
-            android:paddingEnd="@dimen/primary_space"/>
+            android:paddingTop="@dimen/space_8"
+            android:paddingBottom="@dimen/space_8"
+            android:paddingStart="@dimen/space_16"
+            android:paddingEnd="@dimen/space_16"/>
 
         <TextView
             android:id="@+id/showAll"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:fontFamily="@font/primary_normal"
+            android:fontFamily="@font/rotonda_normal"
             android:textSize="@dimen/normal_text_size"
             android:textColor="@color/bluePrimary"
             android:gravity="center"
             android:text="@string/show_all"
-            android:paddingTop="@dimen/primary_margin"
-            android:paddingBottom="@dimen/primary_margin"
-            android:paddingStart="@dimen/primary_space"
-            android:paddingEnd="@dimen/primary_space" />
+            android:paddingTop="@dimen/space_8"
+            android:paddingBottom="@dimen/space_8"
+            android:paddingStart="@dimen/space_16"
+            android:paddingEnd="@dimen/space_16" />
 
     </LinearLayout>
 

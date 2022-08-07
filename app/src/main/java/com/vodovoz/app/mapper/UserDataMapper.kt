@@ -1,6 +1,7 @@
 package com.vodovoz.app.mapper
 
 import com.vodovoz.app.data.model.common.UserDataEntity
+import com.vodovoz.app.ui.fragment.user_data.Gender
 import com.vodovoz.app.ui.model.UserDataUI
 
 object UserDataMapper {
@@ -9,7 +10,11 @@ object UserDataMapper {
         id = id,
         firstName = firstName,
         secondName = secondName,
-        sex = sex,
+        gender = when(sex) {
+            "Мужской" -> Gender.MALE
+            "Женский" -> Gender.FEMALE
+            else -> Gender.MALE
+        },
         email = email,
         registerDate = registerDate,
         avatar = avatar,

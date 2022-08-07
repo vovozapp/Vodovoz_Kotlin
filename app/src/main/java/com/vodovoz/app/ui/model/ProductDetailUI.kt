@@ -9,6 +9,7 @@ class ProductDetailUI(
     var isFavorite: Boolean,
     val youtubeVideoCode: String? = null,
     val rating: Double,
+    val isAvailable: Boolean,
     val status: String? = null,
     val statusColor: String? = null,
     val consumerInfo: String,

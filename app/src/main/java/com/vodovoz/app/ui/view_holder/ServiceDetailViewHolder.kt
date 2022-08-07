@@ -11,7 +11,7 @@ class ServiceDetailViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.moreDetails.setOnClickListener {
+        binding.btnMoreInfo.setOnClickListener {
             onServiceClickSubject.onNext(serviceUI.type)
         }
     }
@@ -21,8 +21,8 @@ class ServiceDetailViewHolder(
     fun onBind(serviceUI: ServiceUI) {
         this.serviceUI = serviceUI
 
-        binding.name.text = serviceUI.name
-        binding.detail.text = serviceUI.detail
+        binding.tvName.text = serviceUI.name
+        binding.tvDetails.text = serviceUI.detail
     }
 
 }

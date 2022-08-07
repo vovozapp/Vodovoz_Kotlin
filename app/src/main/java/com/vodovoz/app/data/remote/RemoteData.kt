@@ -531,7 +531,7 @@ class RemoteData(
     //Подробная информация о продукте
     override fun fetchProductDetails(
         productId: Long
-    ): Single<ResponseEntity<ProductDetailBundleEntity>> = vodovozApi.fetchProductResponse(
+    ): Single<ResponseEntity<ProductDetailsBundleEntity>> = vodovozApi.fetchProductResponse(
         blockId = 1,
         productId = productId
     ).flatMap { Single.just(it.parseProductDetailsResponse()) }

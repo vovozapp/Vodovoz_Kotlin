@@ -7,14 +7,15 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
-import com.vodovoz.app.databinding.BottomFragmentSendCommentBinding
+import com.vodovoz.app.R
+import com.vodovoz.app.databinding.BsSendCommentBinding
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 
 class SendCommentAboutProductBottomDialog : ViewStateBaseBottomFragment() {
 
-    private lateinit var binding: BottomFragmentSendCommentBinding
+    private lateinit var binding: BsSendCommentBinding
     private lateinit var viewModel: SendCommentAboutProductViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +39,7 @@ class SendCommentAboutProductBottomDialog : ViewStateBaseBottomFragment() {
     override fun setContentView(
         inflater: LayoutInflater,
         container: ViewGroup
-    ) = BottomFragmentSendCommentBinding.inflate(
+    ) = BsSendCommentBinding.inflate(
         inflater,
         container,
         false
@@ -46,7 +47,7 @@ class SendCommentAboutProductBottomDialog : ViewStateBaseBottomFragment() {
 
     override fun initView() {
         onStateSuccess()
-        initActionBar()
+        initHeader()
         initDialog()
         initSendButton()
         observeViewModel()
@@ -54,11 +55,9 @@ class SendCommentAboutProductBottomDialog : ViewStateBaseBottomFragment() {
 
     override fun update() {}
 
-    private fun initActionBar() {
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
-        binding.close.setOnClickListener { dialog?.dismiss() }
+    private fun initHeader() {
+        binding.incHeader.imgClose.setOnClickListener { dialog?.dismiss() }
+        binding.incHeader.tvTitle.text = getString(R.string.new_comment_title)
     }
 
     private fun initDialog() {
@@ -69,10 +68,10 @@ class SendCommentAboutProductBottomDialog : ViewStateBaseBottomFragment() {
     }
 
     private fun initSendButton() {
-        binding.send.setOnClickListener {
+        binding.btnSend.setOnClickListener {
             viewModel.validate(
-                comment = binding.comment.text.toString(),
-                rating = binding.rating.rating.toInt()
+                comment = binding.etComment.text.toString(),
+                rating = binding.rbRating.rating.toInt()
             )
         }
     }

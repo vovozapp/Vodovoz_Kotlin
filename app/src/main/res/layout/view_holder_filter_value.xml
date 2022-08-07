@@ -11,10 +11,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:fontFamily="@font/rotonda"
+        android:fontFamily="@font/rotonda_normal"
         android:textSize="16sp"
-        android:paddingStart="@dimen/primary_space"
-        android:paddingEnd="@dimen/primary_space"
+        android:paddingStart="@dimen/space_16"
+        android:paddingEnd="@dimen/space_16"
         tools:text="Особенности" />
 
     <CheckBox

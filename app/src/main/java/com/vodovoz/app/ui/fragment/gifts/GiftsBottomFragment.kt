@@ -14,10 +14,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.BottomFragmentGiftsBinding
+import com.vodovoz.app.databinding.BsSelectionGiftsBinding
 import com.vodovoz.app.ui.adapter.GiftsAdapter
 import com.vodovoz.app.ui.fragment.cart.CartFragment
-import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -25,7 +24,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 
 class GiftsBottomFragment : BottomSheetDialogFragment() {
 
-    private lateinit var binding: BottomFragmentGiftsBinding
+    private lateinit var binding: BsSelectionGiftsBinding
 
     private var disposable: Disposable? = null
     private val onPickUpGiftSubject: PublishSubject<ProductUI> = PublishSubject.create()
@@ -35,7 +34,7 @@ class GiftsBottomFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = BottomFragmentGiftsBinding.inflate(
+    ) = BsSelectionGiftsBinding.inflate(
         inflater,
         container,
         false
@@ -54,12 +53,11 @@ class GiftsBottomFragment : BottomSheetDialogFragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initView() {
-        val space = resources.getDimension(R.dimen.primary_space).toInt()
-        binding.giftRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.giftRecycler.adapter = giftsAdapter
-        binding.giftRecycler.setScrollElevation(binding.appBar)
-        binding.giftRecycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
-        binding.giftRecycler.addItemDecoration(
+        val space = resources.getDimension(R.dimen.space_16).toInt()
+        binding.rvGifts.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvGifts.adapter = giftsAdapter
+        binding.rvGifts.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        binding.rvGifts.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
                     outRect: Rect,
@@ -78,11 +76,12 @@ class GiftsBottomFragment : BottomSheetDialogFragment() {
         )
 
         giftsAdapter.productUIList  = GiftsBottomFragmentArgs.fromBundle(requireArguments()).giftList.toList()
-        binding.giftRecycler.adapter = giftsAdapter
+        binding.rvGifts.adapter = giftsAdapter
 
-        binding.close.setOnClickListener {
+        binding.incHeader.imgClose.setOnClickListener {
             requireDialog().cancel()
         }
+        binding.incHeader.tvTitle.text = getString(R.string.gift_selection_title)
     }
 
     override fun onStart() {

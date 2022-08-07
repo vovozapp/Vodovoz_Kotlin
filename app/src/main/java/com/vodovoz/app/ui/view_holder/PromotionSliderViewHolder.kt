@@ -33,7 +33,7 @@ class PromotionSliderViewHolder(
     init {
         binding.productPager.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.productPager.setHasFixedSize(true)
-        val space = context.resources.getDimension(R.dimen.primary_space).toInt()
+        val space = context.resources.getDimension(R.dimen.space_16).toInt()
         binding.productPager.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(

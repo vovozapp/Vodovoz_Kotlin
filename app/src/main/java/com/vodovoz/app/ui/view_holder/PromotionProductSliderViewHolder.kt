@@ -66,11 +66,11 @@ class PromotionProductSliderViewHolder(
             when(productUI.isFavorite) {
                 true -> {
                     productUI.isFavorite = false
-                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite))
+                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite))
                 }
                 false -> {
                     productUI.isFavorite = true
-                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_red))
+                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite_red))
                 }
             }
             onFavoriteClickSubject.onNext(Pair(productUI.id, productUI.isFavorite))
@@ -124,8 +124,8 @@ class PromotionProductSliderViewHolder(
         }
 
         when(productUI.isFavorite) {
-            false -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite))
-            true -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_red))
+            false -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite))
+            true -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite_red))
         }
 
         when(productUI.oldPrice) {
@@ -146,7 +146,7 @@ class PromotionProductSliderViewHolder(
 
         if (productUI.oldPrice != 0 && productUI.status != "") binding.space.visibility = View.VISIBLE
         if (productUI.oldPrice != 0 || productUI.status != "") {
-            val padding = context.resources.getDimension(R.dimen.primary_margin) / 2
+            val padding = context.resources.getDimension(R.dimen.space_8) / 2
             binding.name.setPadding(0, padding.toInt(), 0, 0)
         }
 

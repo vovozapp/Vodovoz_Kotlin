@@ -107,7 +107,7 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
     }
 
     private fun initProductRecycler() {
-        val space = resources.getDimension(R.dimen.primary_space).toInt()
+        val space = resources.getDimension(R.dimen.space_16).toInt()
         binding.nextPage.setOnClickListener { viewModel.nextPage() }
         binding.brandProductRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.brandProductRecycler.adapter = linearProductAdapter

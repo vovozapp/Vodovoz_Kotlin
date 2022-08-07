@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.data.config.ApiConfig
-import com.vodovoz.app.databinding.FragmentAccountBinding
+import com.vodovoz.app.databinding.FragmentProfileBinding
 import com.vodovoz.app.ui.adapter.GridProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
@@ -33,7 +33,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 
 class ProfileFragment : ViewStateBaseDialogFragment() {
 
-    private lateinit var binding: FragmentAccountBinding
+    private lateinit var binding: FragmentProfileBinding
     private lateinit var viewModel: ProfileViewModel
 
     private val compositeDisposable = CompositeDisposable()
@@ -88,7 +88,7 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
     override fun setContentView(
         inflater: LayoutInflater,
         container: ViewGroup
-    ) = FragmentAccountBinding.inflate(
+    ) = FragmentProfileBinding.inflate(
         inflater,
         container,
         false
@@ -121,7 +121,7 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
     }
 
     private fun initBestForYouProductsRecycler() {
-        val space = resources.getDimension(R.dimen.primary_space).toInt()
+        val space = resources.getDimension(R.dimen.space_16).toInt()
         binding.bestForYouProductsRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.bestForYouProductsRecycler.adapter = gridProductsAdapter
         binding.bestForYouProductsRecycler.addItemDecoration(
@@ -256,7 +256,7 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
     private fun fillUserData(userDataUI: UserDataUI) {
         Glide.with(requireContext())
             .load(userDataUI.avatar)
-            .placeholder(ContextCompat.getDrawable(requireContext(), R.drawable.default_avatar))
+            .placeholder(ContextCompat.getDrawable(requireContext(), R.drawable.png_default_avatar))
             .into(binding.avatar)
 
         binding.name.text = StringBuilder()

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentLoginBinding
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
@@ -51,29 +52,22 @@ class LoginFragment : ViewStateBaseFragment() {
 
 
     private fun initAppBar() {
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        (requireActivity() as AppCompatActivity).supportActionBar?.let { noNullActionBar ->
-            noNullActionBar.setDisplayHomeAsUpEnabled(true)
-            noNullActionBar.setDisplayShowHomeEnabled(true)
-        }
-
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
+        binding.incAppBar.tvTitle.text = resources.getString(R.string.auth_title)
+        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun initButtons() {
-        binding.login.setOnClickListener {
-            viewModel.validate(binding.email.text.toString(), binding.password.text.toString())
+        binding.btnSignIn.setOnClickListener {
+            viewModel.validate(binding.etEmail.text.toString(), binding.etPassword.text.toString())
         }
-        binding.recoverPassword.setOnClickListener { viewModel.recoverPassword(binding.email.text.toString()) }
-        binding.register.setOnClickListener {
+        binding.tvRecoverPassword.setOnClickListener { viewModel.recoverPassword(binding.etEmail.text.toString()) }
+        binding.tvRegister.setOnClickListener {
             findNavController().navigate(LoginFragmentDirections.actionToRegisterFragment())
         }
     }
 
     override fun update() {
-        viewModel.validate(binding.email.text.toString(), binding.password.text.toString())
+        viewModel.validate(binding.etEmail.text.toString(), binding.etPassword.text.toString())
     }
 
     private fun observeViewModel() {
@@ -93,7 +87,7 @@ class LoginFragment : ViewStateBaseFragment() {
         }
 
         viewModel.loginErrorLD.observe(viewLifecycleOwner) { loginErrorMessage ->
-            binding.passwordContainer.error = loginErrorMessage
+            binding.tilPassword.error = loginErrorMessage
         }
 
         viewModel.errorLD.observe(viewLifecycleOwner) { errorMessage ->

@@ -12,14 +12,14 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.DialogFragmentAllProductCommentsBinding
+import com.vodovoz.app.databinding.FragmentProductCommentsBinding
 import com.vodovoz.app.ui.adapter.PagingCommentsAdapter
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.base.loadStateAdapter.LoadStateAdapter
 import com.vodovoz.app.ui.diffUtils.CommentDiffItemCallback
-import com.vodovoz.app.ui.fragment.product_detail.ProductDetailFragmentDirections
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
+import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 
 class AllCommentsByProductDialogFragment : ViewStateBaseDialogFragment() {
 
-    private lateinit var binding: DialogFragmentAllProductCommentsBinding
+    private lateinit var binding: FragmentProductCommentsBinding
     private lateinit var viewModel: AllCommentsByProductViewModel
 
     private val compositeDisposable = CompositeDisposable()
@@ -64,7 +64,7 @@ class AllCommentsByProductDialogFragment : ViewStateBaseDialogFragment() {
         when(item.itemId) {
             R.id.sendComment -> {
                 if (viewModel.isLogin()) {
-                    findNavController().navigate(ProductDetailFragmentDirections.actionToSendCommentAboutProductFragment(
+                    findNavController().navigate(ProductDetailsFragmentDirections.actionToSendCommentAboutProductFragment(
                         viewModel.productId!!
                     ))
                 } else {
@@ -84,7 +84,7 @@ class AllCommentsByProductDialogFragment : ViewStateBaseDialogFragment() {
     override fun setContentView(
         inflater: LayoutInflater,
         container: ViewGroup
-    ) = DialogFragmentAllProductCommentsBinding.inflate(
+    ) = FragmentProductCommentsBinding.inflate(
         inflater,
         container,
         false
@@ -98,23 +98,23 @@ class AllCommentsByProductDialogFragment : ViewStateBaseDialogFragment() {
 
     private fun initActionBar() {
         (requireActivity() as AppCompatActivity).let { appCompatActivity ->
-            appCompatActivity.setSupportActionBar(binding.toolbar)
+            appCompatActivity.setSupportActionBar(binding.tbToolbar)
             appCompatActivity.supportActionBar?.setDisplayShowHomeEnabled(true)
             appCompatActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
-        binding.toolbar.setNavigationOnClickListener {
+        binding.tbToolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
     }
 
 
     private fun initCommentsRecycler() {
-        val space = resources.getDimension(R.dimen.primary_space).toInt()
-        binding.commentsRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.commentsRecycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
-        binding.commentsRecycler.adapter = pagingCommentsAdapter
-        binding.commentsRecycler.setScrollElevation(binding.appBar)
-        binding.commentsRecycler.addItemDecoration(
+        val space = resources.getDimension(R.dimen.space_16).toInt()
+        binding.rvComments.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvComments.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        binding.rvComments.adapter = pagingCommentsAdapter
+        binding.rvComments.setScrollElevation(binding.apAppBar)
+        binding.rvComments.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
                     outRect: Rect,
@@ -140,7 +140,7 @@ class AllCommentsByProductDialogFragment : ViewStateBaseDialogFragment() {
             }
         }
 
-        binding.commentsRecycler.adapter = pagingCommentsAdapter.withLoadStateHeaderAndFooter(
+        binding.rvComments.adapter = pagingCommentsAdapter.withLoadStateHeaderAndFooter(
             header = LoadStateAdapter(onUpdateSubject),
             footer = LoadStateAdapter(onUpdateSubject)
         )

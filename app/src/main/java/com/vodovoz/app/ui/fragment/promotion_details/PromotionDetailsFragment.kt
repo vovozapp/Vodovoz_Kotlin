@@ -117,7 +117,7 @@ class PromotionDetailsFragment : ViewStateBaseFragment() {
         binding.productRecycler.adapter = linearProductAdapter
         binding.contentContainer.setScrollElevation(binding.appBar)
         binding.productRecycler.addItemDecoration(ListMarginDecoration(
-            resources.getDimension(R.dimen.primary_space).toInt()
+            resources.getDimension(R.dimen.space_16).toInt()
         ))
     }
 

@@ -5,15 +5,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/primary_corner_radius"
+    app:cardCornerRadius="@dimen/corner_5"
     app:cardElevation="@dimen/card_elevation">
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/rotonda"
-        android:padding="@dimen/primary_space"
+        android:fontFamily="@font/rotonda_normal"
+        android:padding="@dimen/space_16"
         android:textSize="16sp"
         android:textColor="@color/blackTextPrimary"
         tools:text="Some section" />

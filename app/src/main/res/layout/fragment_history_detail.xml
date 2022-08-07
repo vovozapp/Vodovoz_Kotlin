@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--new-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -6,76 +7,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/image"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imgHistory"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        tools:ignore="ContentDescription" />
+        android:scaleType="centerCrop"/>
 
     <jp.shts.android.storiesprogressview.StoriesProgressView
-        android:id="@+id/storiesProgress"
+        android:id="@+id/spProgress"
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:layout_margin="@dimen/primary_space"
+        android:layout_margin="@dimen/space_16"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
-        android:id="@+id/previousHistory"
+        android:id="@+id/vPreviousHistory"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/primary_space"
+        android:layout_marginBottom="@dimen/space_16"
         app:layout_constraintWidth_percent="0.5"
-        app:layout_constraintBottom_toTopOf="@+id/primaryButtonContainer"
+        app:layout_constraintBottom_toTopOf="@+id/btnAction"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
-        android:id="@+id/nextHistory"
+        android:id="@+id/vNextHistory"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/primary_space"
+        android:layout_marginBottom="@dimen/space_16"
         app:layout_constraintWidth_percent="0.5"
-        app:layout_constraintBottom_toTopOf="@+id/primaryButtonContainer"
+        app:layout_constraintBottom_toTopOf="@+id/btnAction"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_close"
-        android:layout_marginTop="@dimen/primary_margin"
-        android:layout_marginEnd="@dimen/primary_space"
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/imgClose"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:layout_gravity="end"
+        android:background="@drawable/bkg_close_popup"
+        android:src="@drawable/ic_close_popup"
+        android:layout_marginTop="@dimen/space_8"
+        android:layout_marginEnd="@dimen/space_16"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/storiesProgress"
-        app:tint="@color/white"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/spProgress"/>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/primaryButtonContainer"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnAction"
+        style="@style/GreenButton"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_margin="@dimen/primary_space"
-        app:layout_constraintBottom_toBottomOf="@+id/image"
+        android:layout_height="@dimen/button_normal_height"
+        android:layout_margin="@dimen/space_16"
+        app:layout_constraintBottom_toBottomOf="@+id/imgHistory"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:cardBackgroundColor="@color/green"
-        app:cardCornerRadius="5dp"
-        app:cardElevation="3dp">
-
-        <TextView
-            android:id="@+id/primaryButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/rotonda_bold"
-            android:textSize="16sp"
-            android:textColor="@color/white"
-            android:gravity="center"
-            tools:text="Купить"/>
-
-    </androidx.cardview.widget.CardView>
+        tools:text="@string/plug"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

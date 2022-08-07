@@ -69,7 +69,7 @@ class FavoriteFragment : ViewStateBaseFragment() {
     private val onCategoryClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val categoryTabsAdapter = CategoryTabsAdapter(onCategoryClickSubject)
 
-    private val space: Int by lazy { resources.getDimension(R.dimen.primary_space).toInt() }
+    private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
 
     private lateinit var categoriesLinearLayoutManager: LinearLayoutManager
 
@@ -353,14 +353,14 @@ class FavoriteFragment : ViewStateBaseFragment() {
         when (viewMode) {
             PagingProductsAdapter.ViewMode.GRID -> {
                 viewMode = PagingProductsAdapter.ViewMode.LIST
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_list))
+                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_list))
                 firstVisiblePosition = gridLayoutManager.findFirstVisibleItemPosition()
                 lastVisiblePosition = gridLayoutManager.findLastVisibleItemPosition()
                 binding.productRecycler.layoutManager = linearLayoutManager
             }
             PagingProductsAdapter.ViewMode.LIST -> {
                 viewMode = PagingProductsAdapter.ViewMode.GRID
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_table))
+                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_table))
                 firstVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition()
                 lastVisiblePosition = linearLayoutManager.findLastVisibleItemPosition()
                 binding.productRecycler.layoutManager = gridLayoutManager

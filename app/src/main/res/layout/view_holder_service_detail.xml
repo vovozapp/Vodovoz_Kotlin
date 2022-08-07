@@ -1,57 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--new-->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/primary_corner_radius"
+    app:cardCornerRadius="@dimen/corner_5"
     app:cardElevation="@dimen/card_elevation">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/primary_margin">
+        android:padding="@dimen/space_8">
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/tvName"
+            style="@style/TextViewNormalBlackBold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/blackTextDark"
-            android:fontFamily="@font/rotonda"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_margin="@dimen/primary_margin"
-            tools:text="Название"/>
+            android:layout_margin="@dimen/space_8"
+            tools:text="@string/plug"/>
 
-        <TextView
-            android:id="@+id/detail"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvDetails"
+            style="@style/TextViewNormalGray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/blackTextPrimary"
-            android:fontFamily="@font/rotonda"
-            android:textSize="14sp"
-            android:layout_margin="@dimen/primary_margin"
-            tools:text="Детальная информация"/>
+            android:layout_margin="@dimen/space_8"
+            tools:text="@string/plug"/>
 
-        <TextView
-            android:id="@+id/moreDetails"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnMoreInfo"
+            style="@style/BlueButton"
             android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:fontFamily="@font/rotonda"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:background="@drawable/background_button_primary"
-            android:paddingStart="@dimen/primary_space"
-            android:paddingEnd="@dimen/primary_space"
-            android:paddingTop="@dimen/primary_margin"
-            android:paddingBottom="@dimen/primary_margin"
-            android:gravity="center"
+            android:layout_height="@dimen/button_small_height"
+            android:paddingStart="@dimen/space_16"
+            android:paddingEnd="@dimen/space_16"
             android:layout_gravity="end"
-            android:layout_margin="@dimen/primary_margin"
-            android:text="Подробнее" />
+            android:layout_margin="@dimen/space_8"
+            android:text="@string/more_details_about_service_btn_text" />
 
     </LinearLayout>
 

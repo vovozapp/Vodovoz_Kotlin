@@ -89,7 +89,7 @@ class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
     }
 
     private fun initProductRecycler() {
-        val space = resources.getDimension(R.dimen.primary_space).toInt()
+        val space = resources.getDimension(R.dimen.space_16).toInt()
         binding.brandProductRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.brandProductRecycler.adapter = gridProductsAdapter
         binding.nextPage.setOnClickListener { viewModel.nextPage() }

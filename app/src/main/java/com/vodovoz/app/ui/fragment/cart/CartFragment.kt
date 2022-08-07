@@ -65,7 +65,7 @@ class CartFragment : ViewStateBaseFragment() {
         onSwapClickSubject = onSwapClickSubject
     )
 
-    val space: Int by lazy { resources.getDimension(R.dimen.primary_space).toInt() }
+    val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -177,6 +177,9 @@ class CartFragment : ViewStateBaseFragment() {
             findNavController().navigate(CartFragmentDirections.actionToGiftsBottomFragment(
                 viewModel.getGiftList().toTypedArray()
             ))
+        }
+        binding.regOrder.setOnClickListener {
+            findNavController().navigate(CartFragmentDirections.actionToOrderingFragment())
         }
     }
 

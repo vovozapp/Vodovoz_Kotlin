@@ -11,8 +11,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.SnackbarLayout
 import com.google.android.youtube.player.internal.v
 import com.vodovoz.app.R
-
 import com.vodovoz.app.databinding.ActivityMainBinding
+
 import com.vodovoz.app.ui.fragment.main.MainFragment
 import com.vodovoz.app.ui.view.CustomSnackbar
 import com.vodovoz.app.util.Keys
@@ -28,14 +28,13 @@ class MainActivity : AppCompatActivity() {
         MapKitFactory.setApiKey(Keys.MAPKIT_API_KEY)
         MapKitFactory.initialize(this)
         binding = ActivityMainBinding.inflate(layoutInflater).apply { setContentView(root) }
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         showMainFragment()
     }
 
     private fun showMainFragment() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.mainActivityContainer, MainFragment())
+            .replace(R.id.fcvMainContainer, MainFragment())
             .commit()
     }
 

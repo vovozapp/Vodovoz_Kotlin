@@ -68,7 +68,7 @@ class OrdersSliderFragment : BaseHiddenFragment() {
     }
 
     private fun initOrderPager() {
-        val space = resources.getDimension(R.dimen.primary_space).toInt()
+        val space = resources.getDimension(R.dimen.space_16).toInt()
         binding.orderPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.orderPager.adapter = orderSliderAdapter
         binding.orderPager.addItemDecoration(

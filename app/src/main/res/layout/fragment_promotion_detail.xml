@@ -65,7 +65,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="20dp"
                         android:layout_marginTop="4dp"
-                        android:layout_marginStart="@dimen/primary_space"
+                        android:layout_marginStart="@dimen/space_16"
                         app:cardBackgroundColor="@color/green"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -76,10 +76,10 @@
                             android:id="@+id/customerCategory"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:fontFamily="@font/primary_normal"
+                            android:fontFamily="@font/rotonda_normal"
                             android:gravity="center"
-                            android:paddingStart="@dimen/primary_margin"
-                            android:paddingEnd="@dimen/primary_margin"
+                            android:paddingStart="@dimen/space_8"
+                            android:paddingEnd="@dimen/space_8"
                             android:textColor="@color/white"
                             android:visibility="visible"
                             tools:text="Статус"/>
@@ -91,7 +91,7 @@
                         android:id="@+id/timeLeftContainer"
                         android:layout_width="wrap_content"
                         android:layout_height="20dp"
-                        android:layout_marginStart="@dimen/primary_space"
+                        android:layout_marginStart="@dimen/space_16"
                         android:layout_marginBottom="4dp"
                         app:cardBackgroundColor="@color/gray"
                         app:cardCornerRadius="5dp"
@@ -103,10 +103,10 @@
                             android:id="@+id/timeLeft"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:fontFamily="@font/primary_normal"
+                            android:fontFamily="@font/rotonda_normal"
                             android:gravity="center"
-                            android:paddingStart="@dimen/primary_margin"
-                            android:paddingEnd="@dimen/primary_margin"
+                            android:paddingStart="@dimen/space_8"
+                            android:paddingEnd="@dimen/space_8"
                             android:textColor="@color/white"
                             android:visibility="visible"
                             tools:text="100 дней" />
@@ -119,13 +119,13 @@
                     android:id="@+id/detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/primary_margin"
+                    android:layout_marginTop="@dimen/space_8"
                     android:textSize="16sp"
                     android:textColor="@color/blackTextLight"
-                    android:fontFamily="@font/rotonda"
-                    android:paddingStart="@dimen/primary_space"
-                    android:paddingEnd="@dimen/primary_space"
-                    android:layout_marginBottom="@dimen/primary_space"
+                    android:fontFamily="@font/rotonda_normal"
+                    android:paddingStart="@dimen/space_16"
+                    android:paddingEnd="@dimen/space_16"
+                    android:layout_marginBottom="@dimen/space_16"
                     tools:text="Текст"/>
 
                 <TextView
@@ -133,12 +133,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Товары учавствующие в акции"
-                    android:fontFamily="@font/rotonda"
+                    android:fontFamily="@font/rotonda_normal"
                     android:textStyle="bold"
                     android:textColor="@color/blackTextPrimary"
                     android:textSize="18sp"
-                    android:paddingStart="@dimen/primary_space"
-                    android:paddingEnd="@dimen/primary_space"/>
+                    android:paddingStart="@dimen/space_16"
+                    android:paddingEnd="@dimen/space_16"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/productRecycler"
@@ -152,7 +152,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:translationZ="1dp"
-                android:layout_marginTop="@dimen/primary_space"/>
+                android:layout_marginTop="@dimen/space_16"/>
 
         </LinearLayout>
 

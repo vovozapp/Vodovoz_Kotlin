@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -35,7 +36,6 @@ class AllBrandsFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         initViewModel()
         getArgs()
     }
@@ -66,36 +66,38 @@ class AllBrandsFragment : ViewStateBaseFragment() {
         observeViewModel()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.all_brands_menu, menu)
-
-        val searchItem = menu.findItem(R.id.actionSearch)
-        val searchView: SearchView = searchItem.actionView as SearchView
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?) = false
-            override fun onQueryTextChange(newText: String?): Boolean {
-                newText?.let { allBrandsAdapter.filter(newText) }
-                return false
-            }
-        })
-    }
-
     private fun initAppBar() {
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        (requireActivity() as AppCompatActivity).supportActionBar?.let { noNullActionBar ->
-            noNullActionBar.setDisplayHomeAsUpEnabled(true)
-            noNullActionBar.setDisplayShowHomeEnabled(true)
+        binding.incAppBar.tvTitle.text = resources.getString(R.string.all_brands_title)
+        binding.incAppBar.imgBack.setOnClickListener {
+            when(binding.incAppBar.llSearchContainer.visibility == View.VISIBLE) {
+                true -> {
+                    binding.incAppBar.llTitleContainer.visibility = View.VISIBLE
+                    binding.incAppBar.llSearchContainer.visibility = View.GONE
+                    binding.incAppBar.etSearch.setText("")
+                }
+                false -> findNavController().popBackStack()
+            }
         }
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
+        binding.incAppBar.imgSearch.setOnClickListener {
+            binding.incAppBar.llTitleContainer.visibility = View.GONE
+            binding.incAppBar.llSearchContainer.visibility = View.VISIBLE
+        }
+        binding.incAppBar.imgClear.setOnClickListener { binding.incAppBar.etSearch.setText("") }
+        binding.incAppBar.etSearch.doAfterTextChanged { query ->
+            when(query.toString().isEmpty()) {
+                true -> binding.incAppBar.imgClear.visibility = View.GONE
+                false -> binding.incAppBar.imgClear.visibility = View.VISIBLE
+            }
+
+            allBrandsAdapter.filter(query.toString())
         }
     }
 
     private fun initBrandRecycler() {
-        binding.brandRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.brandRecycler.adapter = allBrandsAdapter
-        binding.brandRecycler.setScrollElevation(binding.appBar)
-        binding.brandRecycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        binding.rvBrands.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvBrands.adapter = allBrandsAdapter
+        binding.rvBrands.setScrollElevation(binding.incAppBar.root)
+        binding.rvBrands.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
     }
 
     override fun update() { viewModel.updateData() }

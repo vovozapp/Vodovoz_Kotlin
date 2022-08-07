@@ -6,8 +6,8 @@
     </style>
 
     <style name="Tab" parent="@android:style/TextAppearance.Widget.TabWidget">
-        <item name="android:fontFamily">@font/primary_normal</item>
-        <item name="android:textSize">@dimen/title_text_size</item>
+        <item name="android:fontFamily">@font/rotonda_normal</item>
+        <item name="android:textSize">@dimen/medium_text_size</item>
     </style>
 
 </resources>

@@ -21,22 +21,22 @@ class HowToOrderFragment : Fragment() {
         HowToOrderStepUI(
             stepTitle = "Зарегистрируйтесь",
             stepDetails = "Пройдите регистрацию, воспользуйтесь своим логином и паролем или авторизуйтесь при помощи соцсетей",
-            stepImageResId = R.drawable.circle_profile
+            stepImageResId = R.drawable.png_circle_profile
         ),
         HowToOrderStepUI(
             stepTitle = "Найдите товары и добавьте в корзину",
             stepDetails = "Выбирайте, что нужно и складывайте товары в корзину",
-            stepImageResId = R.drawable.ic_cart
+            stepImageResId = R.drawable.png_cart
         ),
         HowToOrderStepUI(
             stepTitle = "Выберите адрес и время доставки",
             stepDetails = "Укажите адрес доставки и выберите удобное для вас время",
-            stepImageResId = R.drawable.delivery
+            stepImageResId = R.drawable.png_
         ),
         HowToOrderStepUI(
             stepTitle = "Оформите заказ",
             stepDetails = "Проверьте свой заказ и нажмите Оформить заказ",
-            stepImageResId = R.drawable.order_accept
+            stepImageResId = R.drawable.png_order_accept
         )
     )
     private val howToOrderStepsAdapter = HowToOrderStepsAdapter(howToOrderStepUIList)
@@ -56,20 +56,13 @@ class HowToOrderFragment : Fragment() {
     }.root
 
     private fun initAppBar() {
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        (requireActivity() as AppCompatActivity).supportActionBar?.let { noNullActionBar ->
-            noNullActionBar.setDisplayHomeAsUpEnabled(true)
-            noNullActionBar.setDisplayShowHomeEnabled(true)
-        }
-
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
+        binding.incAppBar.tvTitle.text = resources.getString(R.string.how_order_title)
+        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun initHowToOrderStepsPager() {
-        binding.howToOrderStepsPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.howToOrderStepsPager.adapter = howToOrderStepsAdapter
-        TabLayoutMediator(binding.tabIndicator, binding.howToOrderStepsPager) { _, _ -> }.attach()
+        binding.vpHowOrder.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.vpHowOrder.adapter = howToOrderStepsAdapter
+        TabLayoutMediator(binding.tlIndicators, binding.vpHowOrder) { _, _ -> }.attach()
     }
 }

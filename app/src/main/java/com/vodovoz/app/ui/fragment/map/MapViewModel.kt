@@ -80,7 +80,7 @@ class MapViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onSuccess = { response ->
-                    val addressId = addressUI?.id
+                    val addressId = addressUI?.id ?: 0
                     addressUI = (response as ResponseEntity.Success).data.mapToUI()
                     addressUI?.id = addressId
                     addressUIMLD.value = addressUI

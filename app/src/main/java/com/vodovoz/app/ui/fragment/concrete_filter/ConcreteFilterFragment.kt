@@ -67,18 +67,11 @@ class ConcreteFilterFragment : ViewStateBaseDialogFragment() {
     }
 
     private fun initActionBar() {
-        (requireActivity() as AppCompatActivity).let { appCompatActivity ->
-            appCompatActivity.setSupportActionBar(binding.toolbar)
-            appCompatActivity.supportActionBar?.setDisplayShowHomeEnabled(true)
-            appCompatActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        }
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
+        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun initApplyButton() {
-        binding.apply.setOnClickListener {
+        binding.tvApply.setOnClickListener {
             viewModel.prepareFilter(productFilterValuesAdapter.filterValueList)
             findNavController().previousBackStackEntry?.savedStateHandle?.set(
                 ProductFiltersFragment.CONCRETE_FILTER,
@@ -89,8 +82,8 @@ class ConcreteFilterFragment : ViewStateBaseDialogFragment() {
     }
 
     private fun initFilterValueRecycler() {
-        binding.filterValueRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.filterValueRecycler.adapter = productFilterValuesAdapter
+        binding.rvFilterValues.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvFilterValues.adapter = productFilterValuesAdapter
     }
 
     private fun observeViewModel() {
@@ -105,7 +98,7 @@ class ConcreteFilterFragment : ViewStateBaseDialogFragment() {
 
         viewModel.concreteFilterBundleUILD.observe(viewLifecycleOwner) { concreteFilterBundleUI ->
             fillFilterValueList(concreteFilterBundleUI.filterValueList)
-            binding.toolbar.title = concreteFilterBundleUI.filterUI.name
+            binding.incAppBar.tvTitle.text = concreteFilterBundleUI.filterUI.name
         }
     }
 

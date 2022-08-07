@@ -22,7 +22,7 @@ class ProductPropertiesFragment : Fragment() {
         }
     }
 
-    private val space: Int by lazy { resources.getDimension(R.dimen.primary_space).toInt() }
+    private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
 
     private lateinit var binding: FragmentProductPropertiesBinding
     private val productPropertyGroupsAdapter: ProductPropertyGroupsAdapter by lazy { ProductPropertyGroupsAdapter(space) }

@@ -8,7 +8,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vodovoz.app.data.model.common.ActionEntity
-import com.vodovoz.app.databinding.BottomFragmentPopupNewsBinding
+import com.vodovoz.app.databinding.BsPopupNewsBinding
 import com.vodovoz.app.ui.model.PopupNewsUI
 
 class PopupNewsBottomFragment : BottomSheetDialogFragment() {
@@ -26,13 +26,13 @@ class PopupNewsBottomFragment : BottomSheetDialogFragment() {
     private lateinit var popupNewsUI: PopupNewsUI
     private lateinit var iOnInvokeAction: IOnInvokeAction
 
-    private lateinit var binding: BottomFragmentPopupNewsBinding
+    private lateinit var binding: BsPopupNewsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = BottomFragmentPopupNewsBinding.inflate(
+    ) = BsPopupNewsBinding.inflate(
         inflater,
         container,
         false
@@ -50,18 +50,17 @@ class PopupNewsBottomFragment : BottomSheetDialogFragment() {
     }
 
     private fun initView() {
-        binding.name.text = popupNewsUI.name
-        binding.detailText.text = popupNewsUI.name
+        binding.incHeader.tvTitle.text = popupNewsUI.name
+        binding.tvDetails.text = popupNewsUI.name
         Glide.with(requireContext())
             .load(popupNewsUI.detailPicture)
-            .into(binding.detailPicture)
+            .into(binding.imgBanner)
 
-        binding.action.setOnClickListener {
+        binding.btnShowDetails.setOnClickListener {
             popupNewsUI.actionEntity?.let { action ->
                 iOnInvokeAction.invokeAction(action)
             }
         }
-
     }
 
 

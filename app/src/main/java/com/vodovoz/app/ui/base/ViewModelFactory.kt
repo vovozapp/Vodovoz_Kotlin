@@ -21,10 +21,11 @@ import com.vodovoz.app.ui.fragment.home.HomeViewModel
 import com.vodovoz.app.ui.fragment.login.LoginViewModel
 import com.vodovoz.app.ui.fragment.map.MapViewModel
 import com.vodovoz.app.ui.fragment.order_details.OrderDetailsViewModel
+import com.vodovoz.app.ui.fragment.ordering.OrderingViewModel
 import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogViewModel
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersViewModel
 import com.vodovoz.app.ui.fragment.past_purchases.PastPurchasesViewModel
-import com.vodovoz.app.ui.fragment.product_detail.ProductDetailViewModel
+import com.vodovoz.app.ui.fragment.product_details.ProductDetailsViewModel
 import com.vodovoz.app.ui.fragment.product_filters.ProductFiltersViewModel
 import com.vodovoz.app.ui.fragment.products_catalog.ProductsCatalogViewModel
 import com.vodovoz.app.ui.fragment.profile.ProfileViewModel
@@ -72,8 +73,8 @@ class ViewModelFactory(
             return SingleRootCatalogViewModel(dataRepository) as T
         }
 
-        if (modelClass.isAssignableFrom(ProductDetailViewModel::class.java)){
-            return ProductDetailViewModel(dataRepository) as T
+        if (modelClass.isAssignableFrom(ProductDetailsViewModel::class.java)){
+            return ProductDetailsViewModel(dataRepository) as T
         }
 
         if (modelClass.isAssignableFrom(SomeProductsByBrandViewModel::class.java)){
@@ -199,6 +200,10 @@ class ViewModelFactory(
 
         if (modelClass.isAssignableFrom(ServiceOrderViewModel::class.java)){
             return ServiceOrderViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(OrderingViewModel::class.java)){
+            return OrderingViewModel(dataRepository) as T
         }
 
         throw IllegalArgumentException("Unknown View Model Class")

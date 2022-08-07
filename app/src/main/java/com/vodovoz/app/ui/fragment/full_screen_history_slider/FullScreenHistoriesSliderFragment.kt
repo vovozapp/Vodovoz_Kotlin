@@ -76,24 +76,24 @@ class FullScreenHistoriesSliderFragment : ViewStateBaseDialogFragment(),
         }
 
         viewModel.historyUIListLD.observe(viewLifecycleOwner) { historyUIList ->
-            binding.historiesPager.adapter = HistoriesDetailStateAdapter(
+            binding.vpHistories.adapter = HistoriesDetailStateAdapter(
                 fragment = this,
                 historyUIList = historyUIList
             )
-            binding.historiesPager.currentItem = historyUIList.indexOfFirst { it.id == startHistoryId }
+            binding.vpHistories.currentItem = historyUIList.indexOfFirst { it.id == startHistoryId }
         }
     }
 
     override fun nextHistory() {
-        if (binding.historiesPager.currentItem == viewModel.historyUIList.indices.last) {
+        if (binding.vpHistories.currentItem == viewModel.historyUIList.indices.last) {
             findNavController().popBackStack()
         } else {
-            binding.historiesPager.currentItem = binding.historiesPager.currentItem + 1
+            binding.vpHistories.currentItem = binding.vpHistories.currentItem + 1
         }
     }
 
     override fun previousHistory() {
-        binding.historiesPager.currentItem = binding.historiesPager.currentItem -1
+        binding.vpHistories.currentItem = binding.vpHistories.currentItem -1
     }
 
     override fun close() {

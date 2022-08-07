@@ -74,12 +74,12 @@ class DropdownCategoryViewHolder(
     }
 
     private fun hideDetailCategoryRecycler() {
-        binding.detailController.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.image_plus))
+        binding.detailController.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_plus))
         binding.subcategoryRecycler.visibility = View.GONE
     }
 
     private fun showDetailCategoryRecycler() {
-        binding.detailController.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.image_minus))
+        binding.detailController.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_minus))
         binding.subcategoryRecycler.visibility = View.VISIBLE
     }
 

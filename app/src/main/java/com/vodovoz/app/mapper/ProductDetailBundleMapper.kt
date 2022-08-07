@@ -1,6 +1,7 @@
 package com.vodovoz.app.mapper
 
-import com.vodovoz.app.data.model.common.ProductDetailBundleEntity
+import com.vodovoz.app.data.model.common.ProductDetailsBundleEntity
+import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.CommentMapper.mapToUI
 import com.vodovoz.app.mapper.ProductDetailMapper.mapToUI
@@ -10,7 +11,7 @@ import com.vodovoz.app.mapper.ServiceMapper.mapToUI
 import com.vodovoz.app.ui.model.custom.ProductDetailBundleUI
 
 object ProductDetailBundleMapper {
-    fun ProductDetailBundleEntity.mapToUI() = ProductDetailBundleUI(
+    fun ProductDetailsBundleEntity.mapToUI() = ProductDetailBundleUI(
           productDetailUI = productDetailEntity.mapToUI(),
           serviceUIList = serviceEntityList.mapToUI(),
           categoryUI = categoryEntity.mapToUI(),
@@ -19,7 +20,8 @@ object ProductDetailBundleMapper {
           maybeLikeProductUIList = maybeLikeProductEntityList.mapToUI(),
           promotionUIList = promotionEntityList.mapToUI(),
           recommendProductUIList = recommendProductEntityList.mapToUI(),
-          buyWithProductUIList = buyWithProductEntityList.mapToUI()
+          buyWithProductUIList = buyWithProductEntityList.mapToUI(),
+          replacementProductsCategoryDetail = replacementProductsCategoryDetail?.mapToUI()
     )
 
 }

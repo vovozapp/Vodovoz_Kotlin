@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--deferred-->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -36,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginBottom="@dimen/primary_margin"
+            android:layout_marginBottom="@dimen/space_8"
             android:background="@color/white"
             android:translationZ="1dp"
             android:gravity="center"
@@ -50,26 +51,26 @@
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@drawable/ic_cart"
+                android:src="@drawable/png_cart"
                 app:tint="@color/bluePrimary"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/rotonda"
+                android:fontFamily="@font/rotonda_normal"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/blackTextPrimary"
-                android:padding="@dimen/primary_margin"
+                android:padding="@dimen/space_8"
                 android:text="Корзина пуста" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/rotonda"
+                android:fontFamily="@font/rotonda_normal"
                 android:textSize="14sp"
                 android:textColor="@color/blackTextLight"
-                android:padding="@dimen/primary_margin"
+                android:padding="@dimen/space_8"
                 android:text="Положите товар в корзину чтобы его купить" />
 
             <View
@@ -81,9 +82,9 @@
                 android:id="@+id/goToCatalog"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:background="@drawable/background_button_primary"
-                android:layout_margin="@dimen/primary_space"
-                android:fontFamily="@font/rotonda"
+                android:background="@drawable/bkg_button_blue_rect_disabled"
+                android:layout_margin="@dimen/space_16"
+                android:fontFamily="@font/rotonda_normal"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:text="Перейти к покупкам"
@@ -96,7 +97,7 @@
             android:id="@+id/bestForYouProductSliderFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/primary_margin"
+            android:layout_marginTop="@dimen/space_8"
             android:translationZ="1dp"/>
 
     </LinearLayout>
@@ -123,9 +124,9 @@
                     android:id="@+id/giftMessage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/primary_space"
+                    android:padding="@dimen/space_16"
                     android:background="@color/white"
-                    android:fontFamily="@font/rotonda"
+                    android:fontFamily="@font/rotonda_normal"
                     android:textSize="16sp"
                     android:textColor="@color/blackTextPrimary"
                     tools:text="Для получения более интересного подарка осталось 984 Р" />
@@ -139,13 +140,13 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/primary_margin"
-                        android:fontFamily="@font/rotonda"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:fontFamily="@font/rotonda_normal"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
                         android:text="Нет в наличии"
-                        android:paddingTop="@dimen/primary_margin"
-                        android:paddingBottom="@dimen/primary_margin"
+                        android:paddingTop="@dimen/space_8"
+                        android:paddingBottom="@dimen/space_8"
                         android:textColor="@color/blackTextPrimary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -154,8 +155,8 @@
                         android:id="@+id/notAvailableProductRecycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/primary_margin"
-                        android:layout_marginBottom="@dimen/primary_margin"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:layout_marginBottom="@dimen/space_8"
                         android:background="@color/white"
                         android:translationZ="1dp" />
 
@@ -170,11 +171,11 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
-                        android:paddingTop="@dimen/primary_margin"
-                        android:paddingBottom="@dimen/primary_margin"
+                        android:fontFamily="@font/rotonda_normal"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
+                        android:paddingTop="@dimen/space_8"
+                        android:paddingBottom="@dimen/space_8"
                         android:text="Товары в корзине"
                         android:textColor="@color/blackTextPrimary"
                         android:textSize="16sp"
@@ -184,7 +185,7 @@
                         android:id="@+id/availableProductRecycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/primary_margin"
+                        android:layout_marginTop="@dimen/space_8"
                         android:background="@color/white" />
 
                     <LinearLayout
@@ -193,7 +194,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:background="@color/white"
-                        android:layout_marginBottom="@dimen/primary_margin"
+                        android:layout_marginBottom="@dimen/space_8"
                         android:translationZ="1dp">
 
                         <TextView
@@ -204,8 +205,8 @@
                             android:textColor="@color/blackTextPrimary"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:padding="@dimen/primary_space"
-                            android:fontFamily="@font/rotonda"
+                            android:padding="@dimen/space_16"
+                            android:fontFamily="@font/rotonda_normal"
                             android:text="Будете ли вы возвращать пустые бутылки?" />
 
                         <CheckBox
@@ -226,11 +227,11 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
-                        android:paddingTop="@dimen/primary_margin"
-                        android:paddingBottom="@dimen/primary_margin"
+                        android:fontFamily="@font/rotonda_normal"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
+                        android:paddingTop="@dimen/space_8"
+                        android:paddingBottom="@dimen/space_8"
                         android:text="Промокод"
                         android:textColor="@color/blackTextPrimary"
                         android:textSize="16sp"
@@ -240,8 +241,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/primary_margin"
-                        android:padding="@dimen/primary_space"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:padding="@dimen/space_16"
                         android:background="@color/white"
                         android:gravity="center_vertical">
 
@@ -250,7 +251,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Введите промокод"
-                            android:fontFamily="@font/rotonda"
+                            android:fontFamily="@font/rotonda_normal"
                             android:textSize="14sp"
                             android:textColor="@color/blackTextLight"
                             android:background="@null"/>
@@ -260,7 +261,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Применить"
-                            android:fontFamily="@font/rotonda"
+                            android:fontFamily="@font/rotonda_normal"
                             android:textSize="14sp"
                             android:textColor="@color/bluePrimary"
                             android:background="@null"/>
@@ -270,8 +271,8 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda"
-                        android:padding="@dimen/primary_space"
+                        android:fontFamily="@font/rotonda_normal"
+                        android:padding="@dimen/space_16"
                         android:text="Стоимость без учета доставки"
                         android:textColor="@color/blackTextPrimary"
                         android:textSize="16sp"
@@ -281,10 +282,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:paddingTop="@dimen/primary_space"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
-                        android:paddingBottom="@dimen/primary_margin"
+                        android:paddingTop="@dimen/space_16"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
+                        android:paddingBottom="@dimen/space_8"
                         android:background="@color/white"
                         android:gravity="center_vertical">
 
@@ -293,7 +294,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Стоимость товаров"
-                            android:fontFamily="@font/rotonda"
+                            android:fontFamily="@font/rotonda_normal"
                             android:textSize="14sp"
                             android:textStyle="bold"
                             android:textColor="@color/blackTextPrimary"
@@ -304,7 +305,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
-                            android:fontFamily="@font/rotonda"
+                            android:fontFamily="@font/rotonda_normal"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:textColor="@color/blackTextPrimary"
@@ -316,10 +317,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:paddingTop="@dimen/primary_margin"
-                        android:paddingBottom="@dimen/primary_margin"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
+                        android:paddingTop="@dimen/space_8"
+                        android:paddingBottom="@dimen/space_8"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
                         android:background="@color/white"
                         android:gravity="center_vertical">
 
@@ -328,7 +329,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Залог"
-                            android:fontFamily="@font/rotonda"
+                            android:fontFamily="@font/rotonda_normal"
                             android:textSize="14sp"
                             android:textStyle="bold"
                             android:textColor="@color/blackTextPrimary"
@@ -339,7 +340,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
-                            android:fontFamily="@font/rotonda"
+                            android:fontFamily="@font/rotonda_normal"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:textColor="@color/blackTextPrimary"
@@ -351,10 +352,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:paddingTop="@dimen/primary_margin"
-                        android:paddingBottom="@dimen/primary_margin"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
+                        android:paddingTop="@dimen/space_8"
+                        android:paddingBottom="@dimen/space_8"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
                         android:background="@color/white"
                         android:gravity="center_vertical">
 
@@ -363,7 +364,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Скидка по акциям"
-                            android:fontFamily="@font/rotonda"
+                            android:fontFamily="@font/rotonda_normal"
                             android:textSize="14sp"
                             android:textStyle="bold"
                             android:textColor="@color/blackTextPrimary"
@@ -374,7 +375,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
-                            android:fontFamily="@font/rotonda"
+                            android:fontFamily="@font/rotonda_normal"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:textColor="@color/blackTextPrimary"
@@ -386,10 +387,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:paddingTop="@dimen/primary_margin"
-                        android:paddingBottom="@dimen/primary_space"
-                        android:paddingStart="@dimen/primary_space"
-                        android:paddingEnd="@dimen/primary_space"
+                        android:paddingTop="@dimen/space_8"
+                        android:paddingBottom="@dimen/space_16"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
                         android:background="@color/white"
                         android:gravity="center_vertical">
 
@@ -398,7 +399,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Скидка по акциям"
-                            android:fontFamily="@font/rotonda"
+                            android:fontFamily="@font/rotonda_normal"
                             android:textSize="14sp"
                             android:textStyle="bold"
                             android:textColor="@color/blackTextPrimary"
@@ -409,7 +410,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
-                            android:fontFamily="@font/rotonda"
+                            android:fontFamily="@font/rotonda_normal"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:textColor="@color/blackTextPrimary"
@@ -429,7 +430,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@color/white"
-            android:padding="@dimen/primary_margin"
+            android:padding="@dimen/space_8"
             android:translationZ="5dp"
             android:orientation="vertical">
 
@@ -451,14 +452,14 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:fontFamily="@font/rotonda"
+                    android:fontFamily="@font/rotonda_normal"
                     android:gravity="center"
                     android:text="Ваши подарки"
                     android:textColor="@color/green"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:paddingStart="@dimen/primary_space"
-                    android:paddingEnd="@dimen/primary_space"/>
+                    android:paddingStart="@dimen/space_16"
+                    android:paddingEnd="@dimen/space_16"/>
 
                 <ImageView
                     android:layout_width="45dp"
@@ -473,7 +474,7 @@
                 android:id="@+id/regOrder"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:layout_margin="@dimen/primary_margin"
+                android:layout_margin="@dimen/space_8"
                 app:cardBackgroundColor="@color/green"
                 app:cardCornerRadius="5dp"
                 app:cardElevation="3dp"
@@ -484,7 +485,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:fontFamily="@font/rotonda"
+                    android:fontFamily="@font/rotonda_normal"
                     android:gravity="center"
                     android:text="Оформить заказ на 3014 Р"
                     android:textColor="@color/white"

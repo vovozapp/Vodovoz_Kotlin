@@ -119,7 +119,7 @@ class MapDialogFragment : ViewStateBaseFragment(),
                 pair.second.longitude
             )
             moveCamera(pair.second)
-            placeMark(pair.second, R.drawable.map_marker)
+            placeMark(pair.second, R.drawable.png_map_marker)
             hideSearchResultRecyclerView()
         }.addTo(compositeDisposable)
     }
@@ -229,7 +229,7 @@ class MapDialogFragment : ViewStateBaseFragment(),
         binding.searchImage.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_left))
         binding.searchEdit.focusSearch(View.FOCUS_UP)
         binding.searchContainer.elevation = 0f
-        binding.searchContainer.setBackgroundResource(R.drawable.background_search_stroke_address)
+        binding.searchContainer.setBackgroundResource(R.drawable.bkg_search_address)
     }
 
     private fun searchAddresses(query: String) {
@@ -241,10 +241,10 @@ class MapDialogFragment : ViewStateBaseFragment(),
         binding.appBarLayout.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.transparent))
         binding.addAddress.visibility = View.VISIBLE
         binding.addressesRecycler.visibility = View.INVISIBLE
-        binding.searchImage.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.map_marker))
+        binding.searchImage.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_map_marker))
         binding.searchEdit.clearFocus()
         binding.searchContainer.elevation = resources.getDimension(R.dimen.card_elevation)
-        binding.searchContainer.setBackgroundResource(R.drawable.background_search_address)
+        binding.searchContainer.setBackgroundResource(R.drawable.bkg_search_address)
         val view = requireActivity().currentFocus
         if (view != null) {
             val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
@@ -322,7 +322,7 @@ class MapDialogFragment : ViewStateBaseFragment(),
 
     private fun onMapCLick(point: Point) {
         moveCamera(point)
-        placeMark(point, R.drawable.map_marker)
+        placeMark(point, R.drawable.png_map_marker)
         viewModel.fetchAddressByGeocode(
             point.latitude,
             point.longitude

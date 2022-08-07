@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/primary_margin">
+    android:paddingBottom="@dimen/space_8">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,24 +21,24 @@
             android:textSize="20sp"
             android:textColor="@color/blackTextDark"
             android:text="Отзывы"
-            android:paddingTop="@dimen/primary_margin"
-            android:paddingBottom="@dimen/primary_margin"
-            android:paddingStart="@dimen/primary_space"
-            android:paddingEnd="@dimen/primary_space"/>
+            android:paddingTop="@dimen/space_8"
+            android:paddingBottom="@dimen/space_8"
+            android:paddingStart="@dimen/space_16"
+            android:paddingEnd="@dimen/space_16"/>
 
         <TextView
             android:id="@+id/sendComment"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:fontFamily="@font/primary_normal"
-            android:textSize="@dimen/title_text_size"
+            android:fontFamily="@font/rotonda_normal"
+            android:textSize="@dimen/medium_text_size"
             android:textColor="@color/bluePrimary"
             android:gravity="center"
             android:text="Написать отзыв"
-            android:paddingTop="@dimen/primary_margin"
-            android:paddingBottom="@dimen/primary_margin"
-            android:paddingStart="@dimen/primary_space"
-            android:paddingEnd="@dimen/primary_space" />
+            android:paddingTop="@dimen/space_8"
+            android:paddingBottom="@dimen/space_8"
+            android:paddingStart="@dimen/space_16"
+            android:paddingEnd="@dimen/space_16" />
 
     </LinearLayout>
 

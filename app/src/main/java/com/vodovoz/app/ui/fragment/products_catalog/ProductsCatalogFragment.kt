@@ -100,7 +100,7 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
         binding.productRecycler.adapter = linearProductsAdapter
         binding.productRecycler.setScrollElevation(binding.appBar)
         binding.productRecycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
-        val space = resources.getDimension(R.dimen.primary_space).toInt()
+        val space = resources.getDimension(R.dimen.space_16).toInt()
         binding.productRecycler.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(

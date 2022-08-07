@@ -1,17 +1,17 @@
 package com.vodovoz.app.data.model.common
 
 class AddressEntity(
-    val id: Long? = null,
-    val type: Int? = null,
-    val fullAddress: String? = null,
-    val phone: String? = null,
-    val name: String? = null,
-    val email: String? = null,
-    val locality: String? = null,
-    val street: String? = null,
-    val house: String? = null,
-    val entrance: String? = null,
-    val floor: String? = null,
-    val flat: String? = null,
-    val comment: String? = null
+    val id: Long = 0,
+    val type: Int = 0,
+    val fullAddress: String = "",
+    val phone: String = "",
+    val name: String = "",
+    val email: String = "",
+    val locality: String = "",
+    val street: String = "",
+    val house: String = "",
+    val entrance: String = "",
+    val floor: String = "",
+    val flat: String = "",
+    val comment: String = ""
 )

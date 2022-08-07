@@ -37,9 +37,9 @@
                 android:id="@+id/firstNameContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/primary_space"
-                android:layout_marginEnd="@dimen/primary_space"
-                android:layout_marginTop="@dimen/primary_margin"
+                android:layout_marginStart="@dimen/space_16"
+                android:layout_marginEnd="@dimen/space_16"
+                android:layout_marginTop="@dimen/space_8"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -56,8 +56,8 @@
                 android:id="@+id/secondNameContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/primary_space"
-                android:layout_marginEnd="@dimen/primary_space"
+                android:layout_marginStart="@dimen/space_16"
+                android:layout_marginEnd="@dimen/space_16"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -74,8 +74,8 @@
                 android:id="@+id/emailContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/primary_space"
-                android:layout_marginEnd="@dimen/primary_space"
+                android:layout_marginStart="@dimen/space_16"
+                android:layout_marginEnd="@dimen/space_16"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -93,8 +93,8 @@
                 android:id="@+id/phoneContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/primary_space"
-                android:layout_marginEnd="@dimen/primary_space"
+                android:layout_marginStart="@dimen/space_16"
+                android:layout_marginEnd="@dimen/space_16"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -111,8 +111,8 @@
                 android:id="@+id/passwordContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/primary_space"
-                android:layout_marginEnd="@dimen/primary_space"
+                android:layout_marginStart="@dimen/space_16"
+                android:layout_marginEnd="@dimen/space_16"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -129,12 +129,12 @@
                 android:layout_height="wrap_content"
                 android:text="Подтверждаю согласие на обработку персональных данных"
                 android:checked="true"
-                android:fontFamily="@font/rotonda"
+                android:fontFamily="@font/rotonda_normal"
                 android:textStyle="bold"
                 android:textColor="@color/blackTextPrimary"
-                android:layout_marginStart="@dimen/primary_space"
-                android:layout_marginEnd="@dimen/primary_space"
-                android:layout_marginTop="@dimen/primary_margin"
+                android:layout_marginStart="@dimen/space_16"
+                android:layout_marginEnd="@dimen/space_16"
+                android:layout_marginTop="@dimen/space_8"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
 
             <Switch
@@ -142,12 +142,12 @@
                 android:layout_height="wrap_content"
                 android:text="Подписаться на рассылку"
                 android:checked="true"
-                android:fontFamily="@font/rotonda"
+                android:fontFamily="@font/rotonda_normal"
                 android:textStyle="bold"
                 android:textColor="@color/blackTextPrimary"
-                android:layout_marginStart="@dimen/primary_space"
-                android:layout_marginEnd="@dimen/primary_space"
-                android:layout_marginTop="@dimen/primary_space"
+                android:layout_marginStart="@dimen/space_16"
+                android:layout_marginEnd="@dimen/space_16"
+                android:layout_marginTop="@dimen/space_16"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         </LinearLayout>
@@ -163,12 +163,12 @@
             android:id="@+id/register"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:layout_marginStart="@dimen/primary_space"
-            android:layout_marginTop="@dimen/primary_space"
-            android:layout_marginEnd="@dimen/primary_space"
-            android:layout_marginBottom="@dimen/primary_space"
-            android:background="@drawable/background_button_primary"
-            android:fontFamily="@font/rotonda"
+            android:layout_marginStart="@dimen/space_16"
+            android:layout_marginTop="@dimen/space_16"
+            android:layout_marginEnd="@dimen/space_16"
+            android:layout_marginBottom="@dimen/space_16"
+            android:background="@drawable/bkg_button_blue_rect_disabled"
+            android:fontFamily="@font/rotonda_normal"
             android:gravity="center"
             android:text="Зарегистрироваться"
             android:textColor="@color/white"

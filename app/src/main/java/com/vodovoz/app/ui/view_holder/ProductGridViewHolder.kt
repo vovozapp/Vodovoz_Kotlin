@@ -74,11 +74,11 @@ class ProductGridViewHolder(
             when(productUI.isFavorite) {
                 true -> {
                     productUI.isFavorite = false
-                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite))
+                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite))
                 }
                 false -> {
                     productUI.isFavorite = true
-                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_red))
+                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite_red))
                 }
             }
             onFavoriteClickSubject.onNext(Pair(productUI.id, productUI.isFavorite))
@@ -125,8 +125,8 @@ class ProductGridViewHolder(
         }
 
         when(productUI.isFavorite) {
-            false -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite))
-            true -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_red))
+            false -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite))
+            true -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite_red))
         }
 
         when (productUI.commentAmount) {

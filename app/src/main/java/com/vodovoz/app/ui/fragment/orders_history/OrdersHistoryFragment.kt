@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.DialogFragmentAllOrdersBinding
+import com.vodovoz.app.databinding.FragmentOrdersHistoryBinding
 import com.vodovoz.app.ui.adapter.PagingOrdersAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
@@ -34,7 +34,7 @@ class OrdersHistoryFragment : ViewStateBaseFragment() {
         const val FILTERS_BUNDLE =  "FILTERS_BUNDLE"
     }
 
-    private lateinit var binding: DialogFragmentAllOrdersBinding
+    private lateinit var binding: FragmentOrdersHistoryBinding
     private lateinit var viewModel: OrdersHistoryViewModel
 
     private val compositeDisposable = CompositeDisposable()
@@ -97,7 +97,7 @@ class OrdersHistoryFragment : ViewStateBaseFragment() {
     override fun setContentView(
         inflater: LayoutInflater,
         container: ViewGroup
-    ) = DialogFragmentAllOrdersBinding.inflate(
+    ) = FragmentOrdersHistoryBinding.inflate(
         inflater,
         container,
         false
@@ -126,20 +126,20 @@ class OrdersHistoryFragment : ViewStateBaseFragment() {
 
     private fun initActionBar() {
         (requireActivity() as AppCompatActivity).let { appCompatActivity ->
-            appCompatActivity.setSupportActionBar(binding.toolbar)
+            appCompatActivity.setSupportActionBar(binding.tbToolbar)
             appCompatActivity.supportActionBar?.setDisplayShowHomeEnabled(true)
             appCompatActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
-        binding.toolbar.setNavigationOnClickListener {
+        binding.tbToolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
     }
 
     private fun initOrdersRecycler() {
-        val space = resources.getDimension(R.dimen.primary_space).toInt()
-        binding.ordersRecycler.setScrollElevation(binding.appBar)
-        binding.ordersRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.ordersRecycler.adapter = pagingOrdersAdapter.withLoadStateHeaderAndFooter(
+        val space = resources.getDimension(R.dimen.space_16).toInt()
+        binding.rvOrders.setScrollElevation(binding.apAppBar)
+        binding.rvOrders.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvOrders.adapter = pagingOrdersAdapter.withLoadStateHeaderAndFooter(
             header = LoadStateAdapter(updateSubject),
             footer = LoadStateAdapter(updateSubject)
         )
@@ -147,8 +147,8 @@ class OrdersHistoryFragment : ViewStateBaseFragment() {
         pagingOrdersAdapter.addLoadStateListener { state ->
             if (state.append.endOfPaginationReached) {
                 if (pagingOrdersAdapter.itemCount == 0) {
-                    binding.emptyResultContainer.visibility = View.VISIBLE
-                    binding.ordersRecycler.visibility = View.INVISIBLE
+                    binding.llEmptyHistoryContainer.visibility = View.VISIBLE
+                    binding.rvOrders.visibility = View.INVISIBLE
                 }
             }
 
@@ -159,7 +159,7 @@ class OrdersHistoryFragment : ViewStateBaseFragment() {
             }
         }
 
-        binding.ordersRecycler.addItemDecoration(
+        binding.rvOrders.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
                     outRect: Rect,

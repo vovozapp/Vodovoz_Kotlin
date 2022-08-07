@@ -49,7 +49,7 @@ class PopularCategoriesSliderFragment : BaseHiddenFragment() {
     private fun initPopularRecyclerView() {
         binding.popularRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        val space = resources.getDimension(R.dimen.primary_space).toInt()
+        val space = resources.getDimension(R.dimen.space_16).toInt()
         binding.popularRecycler.addItemDecoration(HorizontalMarginItemDecoration(space))
         binding.popularRecycler.adapter = popularCategoriesSliderAdapter
     }

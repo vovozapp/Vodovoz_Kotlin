@@ -85,25 +85,19 @@ class ProductFiltersFragment : ViewStateBaseDialogFragment() {
     }
 
     private fun initAppBar() {
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        (requireActivity() as AppCompatActivity).supportActionBar?.let { noNullActionBar ->
-            noNullActionBar.setDisplayHomeAsUpEnabled(true)
-            noNullActionBar.setDisplayShowHomeEnabled(true)
-        }
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
+        binding.incAppBar.tvTitle.text = resources.getString(R.string.products_filters_title)
+        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun initFilterRecycler() {
-        binding.filterRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.filterRecycler.adapter = productFiltersAdapter
+        binding.rvFilters.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvFilters.adapter = productFiltersAdapter
     }
 
     private fun initFilterPrice() {
-        binding.priceSlider.addOnChangeListener { rangeSlider, _, _ ->
-            binding.minPrice.text = rangeSlider.values.first().toInt().toString()
-            binding.maxPrice.text = rangeSlider.values.last().toInt().toString()
+        binding.rsPrice.addOnChangeListener { rangeSlider, _, _ ->
+            binding.tvMinPrice.text = rangeSlider.values.first().toInt().toString()
+            binding.tvMaxPrice.text = rangeSlider.values.last().toInt().toString()
 
             viewModel.customFilterBundle!!.filterPriceUI.minPrice =
                 if (rangeSlider.values.first().toInt() == rangeSlider.valueFrom.toInt()) Int.MIN_VALUE
@@ -115,8 +109,8 @@ class ProductFiltersFragment : ViewStateBaseDialogFragment() {
     }
 
     private fun initBottomButtons() {
-        binding.apply.setOnClickListener { sendFilterBundleBack() }
-        binding.clear.setOnClickListener {
+        binding.tvApply.setOnClickListener { sendFilterBundleBack() }
+        binding.tvClear.setOnClickListener {
             viewModel.clearCustomFilterBundle()
             sendFilterBundleBack()
         }
@@ -165,8 +159,8 @@ class ProductFiltersFragment : ViewStateBaseDialogFragment() {
 
     private fun fillFilterPrice(filterPriceUI: FilterPriceUI) {
         with(binding) {
-            priceSlider.valueFrom = filterPriceUI.minPrice.toFloat()
-            priceSlider.valueTo = filterPriceUI.maxPrice.toFloat()
+            rsPrice.valueFrom = filterPriceUI.minPrice.toFloat()
+            rsPrice.valueTo = filterPriceUI.maxPrice.toFloat()
 
             val currentMinPrice =
                 if (viewModel.customFilterBundle!!.filterPriceUI.minPrice == Int.MIN_VALUE) filterPriceUI.minPrice
@@ -176,13 +170,13 @@ class ProductFiltersFragment : ViewStateBaseDialogFragment() {
                 if (viewModel.customFilterBundle!!.filterPriceUI.maxPrice == Int.MAX_VALUE) filterPriceUI.maxPrice
                 else viewModel.customFilterBundle!!.filterPriceUI.maxPrice
 
-            priceSlider.values = listOf(
+            rsPrice.values = listOf(
                 currentMinPrice.toFloat(),
                 currentMaxPrice.toFloat()
             )
 
-            minPrice.text = currentMinPrice.toString()
-            maxPrice.text = currentMaxPrice.toString()
+            tvMaxPrice.text = currentMinPrice.toString()
+            tvMaxPrice.text = currentMaxPrice.toString()
         }
     }
 

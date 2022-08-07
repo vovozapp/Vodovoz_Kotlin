@@ -7,7 +7,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.vodovoz.app.databinding.BottomFragmentPromotionFilterBinding
+import com.vodovoz.app.databinding.BsSelectionPromotionFiltersBinding
 import com.vodovoz.app.ui.adapter.PromotionsFiltersAdapter
 import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -16,7 +16,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 
 class PromotionFiltersBottomFragment : BottomSheetDialogFragment() {
 
-    private lateinit var binding: BottomFragmentPromotionFilterBinding
+    private lateinit var binding: BsSelectionPromotionFiltersBinding
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -26,7 +26,7 @@ class PromotionFiltersBottomFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = BottomFragmentPromotionFilterBinding.inflate(
+    ) = BsSelectionPromotionFiltersBinding.inflate(
         inflater,
         container,
         false
@@ -36,11 +36,11 @@ class PromotionFiltersBottomFragment : BottomSheetDialogFragment() {
     }.root
 
     private fun initView() {
-        binding.promotionFiltersRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.promotionFiltersRecycler
+        binding.rvPromotionFilters.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvPromotionFilters
             .addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         PromotionFiltersBottomFragmentArgs.fromBundle(requireArguments()).let { args ->
-            binding.promotionFiltersRecycler.adapter = PromotionsFiltersAdapter(
+            binding.rvPromotionFilters.adapter = PromotionsFiltersAdapter(
                 selectedFilterId = args.selectedFilterId,
                 promotionFilterUIList = args.promotionFilterList.toList(),
                 onPromotionFilterClickSubject = onPromotionFilterClickSubject

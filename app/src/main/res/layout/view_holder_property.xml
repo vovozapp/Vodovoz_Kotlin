@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingStart="@dimen/primary_space"
-    android:paddingEnd="@dimen/primary_space">
+    android:paddingStart="@dimen/space_16"
+    android:paddingEnd="@dimen/space_16">
 
     <TextView
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/rotonda"
+        android:fontFamily="@font/rotonda_normal"
         android:textColor="@color/blackTextLight"
         tools:text="Артикул"/>
 
@@ -20,7 +20,7 @@
         android:id="@+id/value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/rotonda"
+        android:fontFamily="@font/rotonda_normal"
         android:textStyle="bold"
         android:textColor="@color/blackTextPrimary"
         android:textSize="16sp"

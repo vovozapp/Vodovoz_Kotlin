@@ -48,7 +48,7 @@ class ProductsSliderFragment : BaseHiddenFragment() {
     private lateinit var iOnFavoriteClick: IOnFavoriteClick
 
     private lateinit var binding: FragmentSliderProductBinding
-    private val space: Int by lazy { resources.getDimension(R.dimen.primary_space).toInt() }
+    private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
 
     private val compositeDisposable = CompositeDisposable()
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()

@@ -1,38 +1,31 @@
 package com.vodovoz.app.ui.fragment.service_detail
 
 import android.annotation.SuppressLint
-import android.graphics.Rect
 import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.vodovoz.app.databinding.BsSelectionServiceBinding
-import com.vodovoz.app.databinding.FragmentServiceDetailBinding
+import com.vodovoz.app.R
+import com.vodovoz.app.databinding.BsSelectionServicesBinding
+import com.vodovoz.app.databinding.FragmentServiceDetailsBinding
 import com.vodovoz.app.ui.adapter.ServiceNamesAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
-import com.vodovoz.app.ui.fragment.product_filters.ProductFiltersFragment
-import com.vodovoz.app.ui.fragment.questionnaires.QuestionnairesViewModel
-import com.vodovoz.app.ui.model.FilterUI
 
 private const val SERVICE_TYPE = "SERVICE_TYPE"
 
 class ServiceDetailFragment : ViewStateBaseFragment() {
 
-    private lateinit var binding: FragmentServiceDetailBinding
+    private lateinit var binding: FragmentServiceDetailsBinding
     private lateinit var viewModel: ServiceDetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +57,7 @@ class ServiceDetailFragment : ViewStateBaseFragment() {
     override fun setContentView(
         inflater: LayoutInflater,
         container: ViewGroup
-    ) = FragmentServiceDetailBinding.inflate(
+    ) = FragmentServiceDetailsBinding.inflate(
         inflater,
         container,
         false
@@ -75,20 +68,14 @@ class ServiceDetailFragment : ViewStateBaseFragment() {
         setupButtons()
         observeViewModel()
         observeResultLiveData()
-        binding.scrollableContentContainer.setScrollElevation(binding.appBar)
+        binding.nsvContent.setScrollElevation(binding.incAppBar.apAppBar)
     }
 
     private fun initAppBar() {
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        (requireActivity() as AppCompatActivity).supportActionBar?.let { noNullActionBar ->
-            noNullActionBar.setDisplayHomeAsUpEnabled(true)
-            noNullActionBar.setDisplayShowHomeEnabled(true)
-            noNullActionBar.title = ""
-        }
-        binding.toolbar.setNavigationOnClickListener {
+        binding.incAppBar.imgBack.setOnClickListener {
             findNavController().popBackStack()
         }
-        binding.serviceName.setOnClickListener {
+        binding.incAppBar.tvDropDownTitle.setOnClickListener {
             findNavController().navigate(ServiceDetailFragmentDirections.actionToServiceSelectionBS(
                 viewModel.serviceUIList.toTypedArray(),
                 viewModel.selectedServiceType
@@ -97,9 +84,9 @@ class ServiceDetailFragment : ViewStateBaseFragment() {
     }
 
     private fun setupButtons() {
-        binding.order.setOnClickListener {
+        binding.btnOrderService.setOnClickListener {
             findNavController().navigate(ServiceDetailFragmentDirections.actionToServiceOrderFragment(
-                binding.serviceName.text.toString(),
+                binding.incAppBar.tvDropDownTitle.text.toString(),
                 viewModel.selectedServiceType
             ))
         }
@@ -123,8 +110,8 @@ class ServiceDetailFragment : ViewStateBaseFragment() {
         }
 
         viewModel.serviceUILD.observe(viewLifecycleOwner) { serviceUI ->
-            binding.serviceName.text = serviceUI.name
-            binding.details.text = HtmlCompat.fromHtml(serviceUI.detail.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY)
+            binding.incAppBar.tvDropDownTitle.text = serviceUI.name
+            binding.tvDetails.text = HtmlCompat.fromHtml(serviceUI.detail.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY)
         }
     }
 
@@ -132,7 +119,7 @@ class ServiceDetailFragment : ViewStateBaseFragment() {
 
 class ServiceSelectionBS : BottomSheetDialogFragment() {
 
-    private lateinit var binding: BsSelectionServiceBinding
+    private lateinit var binding: BsSelectionServicesBinding
     private val serviceNamesAdapter = ServiceNamesAdapter { type ->
         findNavController().previousBackStackEntry?.savedStateHandle?.set(SERVICE_TYPE, type)
         dismiss()
@@ -142,7 +129,7 @@ class ServiceSelectionBS : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = BsSelectionServiceBinding.inflate(
+    ) = BsSelectionServicesBinding.inflate(
         inflater,
         container,
         false
@@ -151,13 +138,17 @@ class ServiceSelectionBS : BottomSheetDialogFragment() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupServicesRecycler()
+    }
 
-        binding.servicesRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.servicesRecycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
-        binding.servicesRecycler.addMarginDecoration { rect, view, parent, state ->
-
+    private fun setupServicesRecycler() {
+        binding.rvServices.layoutManager = LinearLayoutManager(requireContext())
+        val space = resources.getDimension(R.dimen.space_16).toInt()
+        binding.rvServices.addMarginDecoration { rect, view, parent, state ->
+            if (parent.getChildAdapterPosition(view) == 0) rect.top = space
+            if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.bottom = space
         }
-        binding.servicesRecycler.adapter = serviceNamesAdapter
+        binding.rvServices.adapter = serviceNamesAdapter
 
         ServiceSelectionBSArgs.fromBundle(requireArguments()).apply {
             serviceNamesAdapter.serviceDataList = serviceList.map { Pair(it.name, it.type) }

@@ -13,9 +13,9 @@ class CustomSnackbarView @JvmOverloads constructor(
     defaultStyle: Int = 0
 ) : ConstraintLayout(context, attributeSet, defaultStyle), ContentViewCallback {
 
-    init {
-        View.inflate(context, R.layout.item_custom_snack_bar, this)
-    }
+//    init {
+//        View.inflate(context, R.layout.item_custom_snack_bar, this)
+//    }
 
     override fun animateContentIn(delay: Int, duration: Int) {
 

@@ -8,24 +8,33 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.DialogFragmentAboutAppBinding
+import com.vodovoz.app.databinding.FragmentAboutAppBinding
+import com.vodovoz.app.ui.adapter.AboutAppAction
+import com.vodovoz.app.ui.adapter.AboutAppActionsAdapter
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
+import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 
 
-class AboutAppDialogFragment : DialogFragment() {
+class AboutAppDialogFragment : Fragment() {
 
-    private lateinit var binding: DialogFragmentAboutAppBinding
+    private lateinit var binding: FragmentAboutAppBinding
     private lateinit var viewModel: AboutAppDialogViewModel
+
+    private val aboutAppActionsAdapter = AboutAppActionsAdapter()
+
+    private val aboutAppActionsList = listOf(
+        AboutAppAction.WRITE_DEVELOPERS, AboutAppAction.RATE, AboutAppAction.SHARE
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
         initViewModel()
     }
 
@@ -36,73 +45,88 @@ class AboutAppDialogFragment : DialogFragment() {
         )[AboutAppDialogViewModel::class.java]
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ) = DialogFragmentAboutAppBinding.inflate(
+    ) = FragmentAboutAppBinding.inflate(
         inflater,
         container,
         false
     ).apply {
         binding = this
         initAppBar()
-        initView()
+        setupVersion()
+        setupAboutAppActionsRecycler()
     }.root
 
     private fun initAppBar() {
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        (requireActivity() as AppCompatActivity).supportActionBar?.let { noNullActionBar ->
-            noNullActionBar.setDisplayHomeAsUpEnabled(true)
-            noNullActionBar.setDisplayShowHomeEnabled(true)
-        }
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
+        binding.incAppBar.tvTitle.text = resources.getString(R.string.about_app_title)
+        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
     }
 
+    private fun setupVersion() {
+        binding.tvAppVersion.text = String.format(
+            requireContext().getString(R.string.app_version_text),
+            BuildConfig.VERSION_NAME
+        )
+    }
 
-    private fun initView() {
-        binding.version.text = StringBuilder()
-            .append("Версия")
-            .append(BuildConfig.VERSION_NAME)
-
-        binding.rateApp.setOnClickListener {
-            val appPackageName = requireActivity().packageName
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
+    private fun setupAboutAppActionsRecycler() {
+        binding.rvActions.layoutManager = LinearLayoutManager(requireContext())
+//        binding.rvActions.addItemDecoration(Divider(
+//            divider = ContextCompat.getDrawable(requireContext(), R.drawable.bkg_divider_gray)!!,
+//            addAfterLastItem = false
+//        ))
+        val space = resources.getDimension(R.dimen.space_8).toInt()
+        binding.rvActions.addMarginDecoration { rect, view, parent, state ->
+            if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.bottom = space
         }
-        binding.shareApp.setOnClickListener {
-            val sharingIntent = Intent(Intent.ACTION_SEND)
-            sharingIntent.type = "text/plain"
-            val shareBodyText = "https://play.google.com/store/apps/details?id=com.m.vodovoz"
-            sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBodyText)
-            startActivity(Intent.createChooser(sharingIntent, "Shearing Option"))
+        binding.rvActions.adapter = aboutAppActionsAdapter
+        aboutAppActionsAdapter.setupListeners { aboutAppAction ->
+            when(aboutAppAction) {
+                AboutAppAction.RATE -> rate()
+                AboutAppAction.WRITE_DEVELOPERS -> writeToDevelopers()
+                AboutAppAction.SHARE -> share()
+            }
         }
+        aboutAppActionsAdapter.updateData(aboutAppActionsList)
+    }
 
-        binding.writeDevelopers.setOnClickListener {
-            val aboutDevice = StringBuilder()
-                .append("Android:").append(Build.MODEL + " ,Версия:" + Build.VERSION.RELEASE)
-                .append(when(requireContext().isTablet()) {
-                    true -> "Планшет "
-                    false ->"Телефон "
-                })
+    private fun share() {
+        val sharingIntent = Intent(Intent.ACTION_SEND)
+        sharingIntent.type = "text/plain"
+        val shareBodyText = "https://play.google.com/store/apps/details?id=com.m.vodovoz"
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBodyText)
+        startActivity(Intent.createChooser(sharingIntent, "Shearing Option"))
+    }
 
-            val intent = Intent(Intent.ACTION_SENDTO)
-            intent.data = Uri.parse("mailto:")
-            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("android@vodovoz.ru"))
-            intent.putExtra(Intent.EXTRA_SUBJECT, "Обращение по мобильному приложению")
+    private fun rate() {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${requireActivity().packageName}")))
+    }
 
-            intent.putExtra(Intent.EXTRA_TEXT,
-                Html.fromHtml(StringBuilder()
-                    .append("<br><br><br><br><font size=\"2\">${aboutDevice.toString()}</font>")
-                    .append("<br>Версия приложения: ${BuildConfig.VERSION_NAME}")
-                    .append("<br>User id:" + viewModel.fetchUserId())
-                    .toString())
-            )
+    private fun writeToDevelopers() {
+        val aboutDevice = StringBuilder()
+            .append("Android:").append(Build.MODEL + " ,Версия:" + Build.VERSION.RELEASE)
+            .append(when(requireContext().isTablet()) {
+                true -> "Планшет "
+                false ->"Телефон "
+            })
 
-            startActivity(Intent.createChooser(intent, "Написать разработчиков..."))
-        }
+        val intent = Intent(Intent.ACTION_SENDTO)
+        intent.data = Uri.parse("mailto:")
+        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("android@vodovoz.ru"))
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Обращение по мобильному приложению")
+
+        intent.putExtra(Intent.EXTRA_TEXT,
+            Html.fromHtml(StringBuilder()
+                .append("<br><br><br><br><font size=\"2\">${aboutDevice.toString()}</font>")
+                .append("<br>Версия приложения: ${BuildConfig.VERSION_NAME}")
+                .append("<br>User id:" + viewModel.fetchUserId())
+                .toString())
+        )
+
+        startActivity(Intent.createChooser(intent, "Написать разработчиков..."))
     }
 
 }

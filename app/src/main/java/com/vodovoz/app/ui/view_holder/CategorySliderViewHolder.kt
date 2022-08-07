@@ -45,7 +45,7 @@ class CategorySliderViewHolder(
 
         if (!isAddItemDecoration) {
             binding.productRecycler.addItemDecoration(ProductSliderMarginDecoration(
-                space = context.resources.getDimension(R.dimen.primary_space).toInt(),
+                space = context.resources.getDimension(R.dimen.space_16).toInt(),
                 itemCount = categoryDetailUI.productUIList.size,
                 isLast = isLast
             ))

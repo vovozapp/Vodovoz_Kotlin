@@ -74,11 +74,11 @@ class AllPromotionsFragment : ViewStateBaseFragment() {
     }
 
     private fun initPromotionsRecycler() {
-        val space = resources.getDimension(R.dimen.primary_space).toInt()
-        binding.promotionRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.promotionRecycler.adapter = allPromotionsAdapter
-        binding.promotionRecycler.setScrollElevation(binding.appBar)
-        binding.promotionRecycler.addItemDecoration(
+        val space = resources.getDimension(R.dimen.space_16).toInt()
+        binding.rvPromotions.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvPromotions.adapter = allPromotionsAdapter
+        binding.rvPromotions.setScrollElevation(binding.incAppBar.apAppBar)
+        binding.rvPromotions.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
                     outRect: Rect,
@@ -98,20 +98,8 @@ class AllPromotionsFragment : ViewStateBaseFragment() {
     }
 
     private fun initAppBar() {
-        with((requireActivity() as AppCompatActivity)) {
-            setSupportActionBar(binding.toolbar)
-            supportActionBar?.let { noNullActionBar ->
-                title = null
-                noNullActionBar.setDisplayHomeAsUpEnabled(true)
-                noNullActionBar.setDisplayShowHomeEnabled(true)
-            }
-        }
-
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
-
-        binding.promotionFilter.setOnClickListener {
+        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
+        binding.incAppBar.tvDropDownTitle.setOnClickListener {
             findNavController().navigate(AllPromotionsFragmentDirections.actionToPromotionFiltersBottomFragment(
                 viewModel.selectedFilter.id,
                 viewModel.promotionFilterUIList.toTypedArray()
@@ -145,7 +133,7 @@ class AllPromotionsFragment : ViewStateBaseFragment() {
         }
 
         viewModel.selectedFilterLD.observe(viewLifecycleOwner) { filter ->
-            binding.promotionFilter.text = filter.name
+            binding.incAppBar.tvDropDownTitle.text = filter.name
         }
     }
 

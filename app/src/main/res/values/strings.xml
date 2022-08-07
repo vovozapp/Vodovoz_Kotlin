@@ -1,4 +1,6 @@
 <resources>
+    <string name="plug">Текст</string>
+
     <string name="app_name">Vodovoz</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -39,5 +41,56 @@
     <string name="resizable_text_read_less"> свернуть</string>
     <string name="cancel">Отмена</string>
     <string name="confirm">Подтвердить</string>
+
+    
+    //New Strings
+
+    //Base
+    <string name="default_text">Заглушка для превью</string>
+    <string name="price_text">%d Р</string>
+
+    //Ordering
+    <string name="ordering_title_text">Оформление заказа</string>
+    <string name="personal_btn_text">Частное лицо</string>
+    <string name="company_btn_text">Компания</string>
+    <string name="order_btn_text">Оформить заказ на %d Р</string>
+
+    //Form
+    <string name="ordering_form_address_title_text">Куда?</string>
+    <string name="ordering_form_address_hint_text">Выбрать адрес</string>
+    <string name="ordering_form_address_prompt_text">Бесплатные дни доставки</string>
+
+    <string name="ordering_form_name_title_text">ФИО</string>
+    <string name="ordering_form_name_hint_text">ФИО</string>
+
+    <string name="ordering_form_company_name_title_text">Название компании</string>
+    <string name="ordering_form_company_name_hint_text">Название компании</string>
+
+    <string name="ordering_form_email_title_text">Email</string>
+    <string name="ordering_form_email_hint_text">Email</string>
+
+    <string name="ordering_form_phone_title_text">Телефон</string>
+    <string name="ordering_form_phone_hint_text">+7–341–543-53-23</string>
+
+    <string name="ordering_form_date_title_text">Куда?</string>
+    <string name="ordering_form_date_hint_text">Дата</string>
+    <string name="ordering_form_time_hint_text">Время</string>
+
+    <string name="ordering_form_pay_method_title_text">Оплата</string>
+    <string name="ordering_form_pay_method_hint_text">Выберите способ оплаты</string>
+
+    <string name="ordering_form_operator_call_title_text">Требуется звонок оператора</string>
+
+    <string name="ordering_form_alert_driver_title_text">Предупредить о приезде водителя</string>
+
+    <string name="ordering_form_comment_title_text">Комментарий к заказу</string>
+    <string name="ordering_form_comment_hint_text">Комментарий к заказу</string>
+
+    <string name="ordering_form_price_title_text">Сумма</string>
+    <string name="ordering_form_products_price_title_text">Стоимость товаров</string>
+    <string name="ordering_form_deposit_title_text">Залог</string>
+    <string name="ordering_form_discount_title_text">Скидка по акциями</string>
+    <string name="ordering_form_delivery_price_title_text">Доставка</string>
+    <string name="ordering_form_total_title_text">Итого</string>
 
 </resources>

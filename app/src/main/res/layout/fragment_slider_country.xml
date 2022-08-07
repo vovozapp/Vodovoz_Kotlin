@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="@dimen/primary_margin">
+    android:paddingTop="@dimen/space_8">
 
     <LinearLayout
         android:id="@+id/contentContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/primary_margin"
+        android:layout_marginBottom="@dimen/space_8"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,10 +31,10 @@
                 android:textStyle="bold"
                 android:textSize="20sp"
                 android:text="Вода со всего мира"
-                android:textColor="@color/white"                android:paddingStart="@dimen/primary_space"
-                android:paddingTop="@dimen/primary_margin"
-                android:paddingEnd="@dimen/primary_space"
-                android:paddingBottom="@dimen/primary_margin" />
+                android:textColor="@color/white"                android:paddingStart="@dimen/space_16"
+                android:paddingTop="@dimen/space_8"
+                android:paddingEnd="@dimen/space_16"
+                android:paddingBottom="@dimen/space_8" />
 
         </LinearLayout>
 

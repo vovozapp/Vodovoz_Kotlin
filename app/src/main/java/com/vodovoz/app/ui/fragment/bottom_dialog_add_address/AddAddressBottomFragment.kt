@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.data.config.AddressConfig
-import com.vodovoz.app.databinding.DialogBottomAddAddressBinding
+import com.vodovoz.app.databinding.BsAddAddressBinding
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
 import com.vodovoz.app.ui.base.VodovozApplication
@@ -19,7 +19,7 @@ import com.vodovoz.app.util.LogSettings
 
 class AddAddressBottomFragment : ViewStateBaseBottomFragment() {
 
-    private lateinit var binding: DialogBottomAddAddressBinding
+    private lateinit var binding: BsAddAddressBinding
     private lateinit var viewModel: AddAddressViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +42,7 @@ class AddAddressBottomFragment : ViewStateBaseBottomFragment() {
     override fun setContentView(
         inflater: LayoutInflater,
         container: ViewGroup
-    ) = DialogBottomAddAddressBinding.inflate(
+    ) = BsAddAddressBinding.inflate(
         inflater,
         container,
         false
@@ -50,43 +50,33 @@ class AddAddressBottomFragment : ViewStateBaseBottomFragment() {
 
     override fun initView() {
         onStateSuccess()
-        initDialog()
         initSwitchGroup()
         initButtons()
         initFields()
         observeViewModel()
     }
 
-    private fun initDialog() {
-        dialog?.let {
-            val behavior = (dialog as BottomSheetDialog).behavior
-            binding.root.onRenderFinished { _, height ->
-                behavior.peekHeight = height
-            }
-        }
-    }
-
     private fun initSwitchGroup() {
-        binding.isOffice.setOnCheckedChangeListener { _, isCheck ->
+        binding.scOfficeDelivery.setOnCheckedChangeListener { _, isCheck ->
             when(isCheck) {
-                true -> binding.isPersonalHouse.isChecked = false
-                false -> binding.isPersonalHouse.isChecked = true
+                true -> binding.scPersonalHouseDelivery.isChecked = false
+                false -> binding.scPersonalHouseDelivery.isChecked = true
             }
         }
 
-        binding.isPersonalHouse.setOnCheckedChangeListener { _, isCheck ->
+        binding.scPersonalHouseDelivery.setOnCheckedChangeListener { _, isCheck ->
             when(isCheck) {
-                true -> binding.isOffice.isChecked = false
-                false -> binding.isOffice.isChecked = true
+                true -> binding.scOfficeDelivery.isChecked = false
+                false -> binding.scOfficeDelivery.isChecked = true
             }
         }
-        binding.isPersonalHouse.isChecked = true
+        binding.scPersonalHouseDelivery.isChecked = true
     }
 
     private fun initButtons() {
-        binding.addAddress.setOnClickListener {
+        binding.btnAdd.setOnClickListener {
             viewModel.validate(
-                when(binding.isPersonalHouse.isChecked) {
+                when(binding.scPersonalHouseDelivery.isChecked) {
                     true -> AddressConfig.PERSONAL_ADDRESS_TYPE
                     false -> AddressConfig.OFFICE_ADDRESS_TYPE
                 }
@@ -95,12 +85,12 @@ class AddAddressBottomFragment : ViewStateBaseBottomFragment() {
     }
 
     private fun initFields() {
-        binding.locality.addTextChangedListener { viewModel.locality = it.toString() }
-        binding.street.addTextChangedListener { viewModel.street = it.toString() }
-        binding.house.addTextChangedListener { viewModel.house = it.toString() }
-        binding.entrance.addTextChangedListener { viewModel.entrance = it.toString() }
-        binding.floor.addTextChangedListener { viewModel.floor = it.toString() }
-        binding.office.addTextChangedListener { viewModel.office = it.toString() }
+        binding.etLocality.addTextChangedListener { viewModel.locality = it.toString() }
+        binding.etStreet.addTextChangedListener { viewModel.street = it.toString() }
+        binding.etHouse.addTextChangedListener { viewModel.house = it.toString() }
+        binding.etEntrance.addTextChangedListener { viewModel.entrance = it.toString() }
+        binding.etFlat.addTextChangedListener { viewModel.floor = it.toString() }
+        binding.etFlat.addTextChangedListener { viewModel.office = it.toString() }
     }
 
     private fun observeViewModel() {
@@ -122,34 +112,34 @@ class AddAddressBottomFragment : ViewStateBaseBottomFragment() {
         }
 
         viewModel.addressLD.observe(viewLifecycleOwner) { address ->
-            binding.locality.setText(address.locality ?: "")
-            binding.street.setText(address.street ?: "")
-            binding.house.setText(address.house ?: "")
-            binding.address.text = address.fullAddress ?: ""
+            binding.etLocality.setText(address.locality ?: "")
+            binding.etStreet.setText(address.street ?: "")
+            binding.etHouse.setText(address.house ?: "")
+            binding.tvFullAddress.text = address.fullAddress ?: ""
         }
 
         viewModel.localityLD.observe(viewLifecycleOwner) { error ->
-            binding.localityContainer.error = error
+            binding.tilLocality.error = error
         }
 
         viewModel.streetLD.observe(viewLifecycleOwner) { error ->
-            binding.streetContainer.error = error
+            binding.tilStreet.error = error
         }
 
         viewModel.houseLD.observe(viewLifecycleOwner) { error ->
-            binding.houseContainer.error = error
+            binding.tilHouse.error = error
         }
 
         viewModel.entranceLD.observe(viewLifecycleOwner) { error ->
-            binding.entranceContainer.error = error
+            binding.tilEntrance.error = error
         }
 
         viewModel.floorLD.observe(viewLifecycleOwner) { error ->
-            binding.floorContainer.error = error
+            binding.tilFloor.error = error
         }
 
         viewModel.officeLD.observe(viewLifecycleOwner) { error ->
-            binding.officeContainer.error = error
+            binding.tilFlat.error = error
         }
     }
 

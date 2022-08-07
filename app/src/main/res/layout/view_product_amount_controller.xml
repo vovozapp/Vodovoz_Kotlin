@@ -6,15 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/add"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="@dimen/primary_margin"
-        android:layout_marginEnd="@dimen/primary_margin"
-        android:background="@drawable/background_add_to_cart"
+        android:layout_marginTop="@dimen/space_8"
+        android:layout_marginEnd="@dimen/space_8"
+        android:background="@drawable/bkg_button_green_circle_normal"
         android:padding="8dp"
-        android:src="@drawable/ic_cart"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/circleAmount"
@@ -26,9 +25,9 @@
         android:id="@+id/amountControllerDeployed"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/primary_margin"
+        android:layout_marginTop="@dimen/space_8"
         android:orientation="horizontal"
-        android:src="@drawable/ic_cart"
+        android:src="@drawable/png_cart"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,9 +38,9 @@
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_weight="1"
-            android:background="@drawable/background_reduce_amount"
+            android:background="@drawable/bkg_number_controller_part_reduce"
             android:padding="6dp"
-            android:src="@drawable/image_minus"
+            android:src="@drawable/ic_minus"
             app:tint="@color/green"
             tools:ignore="ContentDescription" />
 
@@ -50,7 +49,7 @@
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_weight="1"
-            android:background="@drawable/background_add_to_cart_amount"
+            android:background="@drawable/bkg_number_controller_part_number"
             android:fontFamily="@font/rotonda_bold"
             android:gravity="center"
             android:textColor="@color/blackTextPrimary"
@@ -62,9 +61,9 @@
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_weight="1"
-            android:background="@drawable/background_add_to_cart_deployed"
+            android:background="@drawable/bkg_number_controller_part_increase"
             android:padding="8dp"
-            android:src="@drawable/ic_cart"
+            android:src="@drawable/png_cart"
             tools:ignore="ContentDescription" />
 
     </LinearLayout>
@@ -73,8 +72,8 @@
         android:id="@+id/circleAmount"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:background="@drawable/background_amount"
-        android:fontFamily="@font/rotonda"
+        android:background="@drawable/bkg_number"
+        android:fontFamily="@font/rotonda_normal"
         android:textStyle="bold"
         android:gravity="center"
         android:visibility="visible"

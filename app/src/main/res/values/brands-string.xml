@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="all_brands_title">Бренды</string>
+    <string name="search_brand_hint_text">Введите название бренда</string>
+    <string name="nothing_brands_found_text">Ничего не анйдено по это запросу</string>
+</resources>

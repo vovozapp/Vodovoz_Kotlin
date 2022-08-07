@@ -9,7 +9,7 @@
     <View
         android:id="@+id/topMargin"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/primary_margin"
+        android:layout_height="@dimen/space_8"
         android:visibility="visible"/>
 
     <LinearLayout
@@ -25,29 +25,29 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/rotonda"
+            android:fontFamily="@font/rotonda_normal"
             android:textStyle="bold"
             android:textSize="20sp"
             android:text="@string/brands"
             android:textColor="@color/blackTextDark"
-            android:paddingTop="@dimen/primary_margin"
-            android:paddingBottom="@dimen/primary_margin"
-            android:paddingStart="@dimen/primary_space"
-            android:paddingEnd="@dimen/primary_space" />
+            android:paddingTop="@dimen/space_8"
+            android:paddingBottom="@dimen/space_8"
+            android:paddingStart="@dimen/space_16"
+            android:paddingEnd="@dimen/space_16" />
 
         <TextView
             android:id="@+id/showAll"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:fontFamily="@font/primary_normal"
+            android:fontFamily="@font/rotonda_normal"
             android:textSize="@dimen/normal_text_size"
             android:textColor="@color/bluePrimary"
             android:gravity="center"
             android:text="@string/show_all"
-            android:paddingTop="@dimen/primary_margin"
-            android:paddingBottom="@dimen/primary_margin"
-            android:paddingStart="@dimen/primary_space"
-            android:paddingEnd="@dimen/primary_space" />
+            android:paddingTop="@dimen/space_8"
+            android:paddingBottom="@dimen/space_8"
+            android:paddingStart="@dimen/space_16"
+            android:paddingEnd="@dimen/space_16" />
 
     </LinearLayout>
 
@@ -73,7 +73,7 @@
     <View
         android:id="@+id/bottomMargin"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/primary_margin"
+        android:layout_height="@dimen/space_8"
         android:visibility="visible"/>
 
 </LinearLayout>

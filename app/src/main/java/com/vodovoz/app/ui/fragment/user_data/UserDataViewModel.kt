@@ -62,7 +62,7 @@ class UserDataViewModel(
             .updateUserData(
                 firstName = userDataUI.firstName,
                 secondName = userDataUI.secondName,
-                sex = userDataUI.sex,
+                sex = userDataUI.gender.genderName,
                 birthday = userDataUI.birthday,
                 phone = userDataUI.phone,
                 email = userDataUI.email,

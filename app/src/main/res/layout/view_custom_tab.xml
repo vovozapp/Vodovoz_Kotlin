@@ -10,15 +10,15 @@
         android:id="@+id/card"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="@dimen/primary_corner_radius"
+        app:cardCornerRadius="@dimen/corner_5"
         app:cardElevation="3dp">
 
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/rotonda"
-            android:padding="@dimen/primary_margin"
+            android:fontFamily="@font/rotonda_normal"
+            android:padding="@dimen/space_8"
             android:textColor="@color/blackTextPrimary"
             tools:text="Some section" />
 

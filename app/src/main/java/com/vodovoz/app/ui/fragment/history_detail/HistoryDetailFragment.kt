@@ -58,9 +58,9 @@ class HistoryDetailFragment : Fragment() {
 
     private fun initView() {
         with(binding) {
-            storiesProgress.setStoriesCount(historyUI.bannerUIList.size)
-            storiesProgress.setStoryDuration(UIConfig.STORY_DURATION)
-            storiesProgress.setStoriesListener(
+            spProgress.setStoriesCount(historyUI.bannerUIList.size)
+            spProgress.setStoryDuration(UIConfig.STORY_DURATION)
+            spProgress.setStoriesListener(
                 object : StoriesProgressView.StoriesListener {
                     override fun onNext() {
                         increaseBannerIndex()
@@ -78,25 +78,25 @@ class HistoryDetailFragment : Fragment() {
                 }
             )
 
-            close.setOnClickListener {
+            imgClose.setOnClickListener {
                 iOnChangeHistory.close()
             }
 
-            primaryButtonContainer.setOnClickListener {
+            btnAction.setOnClickListener {
                 historyUI.bannerUIList[currentBannerIndex].actionEntity?.let { actionEntity ->
                     iOnInvokeAction.onInvokeAction(actionEntity)
                 }
             }
 
-            binding.previousHistory.setOnClickListener {
-                binding.storiesProgress.reverse()
+            binding.vPreviousHistory.setOnClickListener {
+                binding.spProgress.reverse()
             }
 
-            binding.nextHistory.setOnClickListener {
+            binding.vNextHistory.setOnClickListener {
                 if (currentBannerIndex == historyUI.bannerUIList.indices.last) {
                     iOnChangeHistory.nextHistory()
                 } else {
-                    binding.storiesProgress.skip()
+                    binding.spProgress.skip()
                 }
             }
         }
@@ -119,20 +119,17 @@ class HistoryDetailFragment : Fragment() {
 
     private fun updateBanner(bannerUI: BannerUI) {
         bannerUI.actionEntity?.action?.let { action ->
-            binding.primaryButton.text = action
-        }
-        bannerUI.actionEntity?.actionColor?.let { color ->
-            binding.primaryButtonContainer.setCardBackgroundColor(Color.parseColor(color))
+            binding.btnAction.text = action
         }
         Glide.with(requireContext())
             .load(bannerUI.detailPicture)
-            .into(binding.image)
+            .into(binding.imgHistory)
     }
 
     private fun startStories() {
         currentBannerIndex = 0
         updateBanner(historyUI.bannerUIList[currentBannerIndex])
-        binding.storiesProgress.startStories()
+        binding.spProgress.startStories()
     }
 
     override fun onResume() {
@@ -142,11 +139,11 @@ class HistoryDetailFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        binding.image.setImageDrawable(null)
+        binding.imgHistory.setImageDrawable(null)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.storiesProgress.destroy()
+        binding.spProgress.destroy()
     }
 }

@@ -11,17 +11,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.vodovoz.app.databinding.FragmentServiceDetailBinding
 import com.vodovoz.app.databinding.FragmentServiceOrderBinding
 import com.vodovoz.app.ui.adapter.ServiceOrderFormFieldsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
-import com.vodovoz.app.ui.fragment.service_detail.ServiceDetailFragmentArgs
-import com.vodovoz.app.ui.fragment.service_detail.ServiceDetailFragmentDirections
-import com.vodovoz.app.ui.fragment.service_detail.ServiceDetailViewModel
-import com.yandex.mapkit.search.Line
-import com.yandex.mapkit.search.Response
 
 class ServiceOrderFragment : ViewStateBaseFragment() {
 

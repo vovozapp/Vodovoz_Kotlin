@@ -16,6 +16,7 @@ object ProductDetailMapper  {
         detailText = detailText,
         isFavorite = isFavorite,
         youtubeVideoCode = youtubeVideoCode,
+        isAvailable = isAvailable,
         rating = rating,
         status = status,
         statusColor = statusColor,

@@ -8,26 +8,34 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
+import com.vodovoz.app.databinding.BsSelectionGenderBinding
 import com.vodovoz.app.databinding.FragmentUserDataBinding
-import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
+import com.vodovoz.app.ui.adapter.GendersAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
+import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.UserDataUI
 import java.util.*
+
+enum class Gender(
+    val genderName: String
+) {
+    MALE("Мужской"),
+    FEMALE("Женский")
+}
 
 class UserDataFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentUserDataBinding
     private lateinit var viewModel: UserDataViewModel
-
-    private lateinit var bsbChooseSex: BottomSheetBehavior<*>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,9 +61,9 @@ class UserDataFragment : ViewStateBaseFragment() {
 
     override fun initView() {
         initAppBar()
-        initBSChooseSex()
         initButtons()
         observeViewModel()
+        observeResultLiveData()
     }
 
     private fun initAppBar() {
@@ -70,44 +78,12 @@ class UserDataFragment : ViewStateBaseFragment() {
         }
     }
 
-    private fun initBSChooseSex() {
-        bsbChooseSex = BottomSheetBehavior.from(binding.bsChooseSex.root)
-        bsbChooseSex.state = BottomSheetBehavior.STATE_HIDDEN
-
-        bsbChooseSex.addBottomSheetCallback(
-            object : BottomSheetBehavior.BottomSheetCallback() {
-                override fun onStateChanged(bottomSheet: View, newState: Int) {}
-                override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                    if (slideOffset != 0f) {
-                        binding.bottomSheetBackgroundLayer.visibility = View.INVISIBLE
-                    } else {
-                        binding.bottomSheetBackgroundLayer.visibility = View.VISIBLE
-                    }
-                }
-            }
-        )
-
-        binding.bsChooseSex.men.setOnClickListener {
-            binding.sex.text = "Мужской"
-            binding.bsChooseSex.men.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackTextDark))
-            binding.bsChooseSex.woman.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackTextPrimary))
-            bsbChooseSex.state = BottomSheetBehavior.STATE_HIDDEN
-        }
-        binding.bsChooseSex.woman.setOnClickListener {
-            binding.sex.text = "Женский"
-            binding.bsChooseSex.woman.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackTextDark))
-            binding.bsChooseSex.men.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackTextPrimary))
-            bsbChooseSex.state = BottomSheetBehavior.STATE_HIDDEN
-        }
-    }
-
     private fun initButtons() {
         binding.scrollContainer.setScrollElevation(binding.appBar)
 
         binding.save.setOnClickListener {
             viewModel.userDataUI.firstName = binding.firstName.text.toString()
             viewModel.userDataUI.secondName = binding.secondName.text.toString()
-            viewModel.userDataUI.sex = binding.sex.text.toString()
             viewModel.userDataUI.birthday = binding.birthday.text.toString()
             viewModel.userDataUI.phone = binding.phone.text.toString()
 
@@ -115,7 +91,8 @@ class UserDataFragment : ViewStateBaseFragment() {
         }
 
         binding.sex.setOnClickListener {
-            bsbChooseSex.state = BottomSheetBehavior.STATE_EXPANDED
+            findNavController().navigate(UserDataFragmentDirections
+                .actionToGenderSelectionBS(viewModel.userDataUI.gender.name))
         }
 
         binding.birthday.setOnClickListener {
@@ -157,6 +134,13 @@ class UserDataFragment : ViewStateBaseFragment() {
         viewModel.updateData()
     }
 
+    private fun observeResultLiveData() {
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<String>(GenderSelectionBS.SELECTED_GENDER)?.observe(viewLifecycleOwner) { gender ->
+                viewModel.userDataUI.gender = Gender.valueOf(gender)
+            }
+    }
+
     private fun observeViewModel() {
         viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
             when(state) {
@@ -180,27 +164,76 @@ class UserDataFragment : ViewStateBaseFragment() {
         with(binding) {
             Glide.with(requireContext())
                 .load(userDataUI.avatar)
-                .placeholder(ContextCompat.getDrawable(requireContext(), R.drawable.default_avatar))
+                .placeholder(ContextCompat.getDrawable(requireContext(), R.drawable.png_default_avatar))
                 .into(avatar)
 
             firstName.setText(userDataUI.firstName)
             secondName.setText(userDataUI.secondName)
             email.text = userDataUI.email
             birthday.text = userDataUI.birthday
-            sex.text = userDataUI.sex
+            sex.text = userDataUI.gender.genderName
             phone.setText(userDataUI.phone)
-
-            when(userDataUI.sex) {
-                "Мужской" -> {
-                    binding.bsChooseSex.men.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackTextDark))
-                    binding.bsChooseSex.woman.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackTextPrimary))
-                }
-                "Женский" -> {
-                    binding.bsChooseSex.woman.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackTextDark))
-                    binding.bsChooseSex.men.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackTextPrimary))
-                }
-            }
         }
+    }
+
+}
+
+class GenderSelectionBS : BottomSheetDialogFragment() {
+
+    companion object {
+        public const val SELECTED_GENDER = "SELECTED_GENDER"
+    }
+
+    private lateinit var binding: BsSelectionGenderBinding
+
+    private val gendersAdapter = GendersAdapter()
+    private val genderList = listOf(Gender.MALE, Gender.FEMALE)
+    private lateinit var selectedGender: Gender
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        getArgs()
+    }
+
+    private fun getArgs() {
+        selectedGender = Gender.valueOf(GenderSelectionBSArgs.fromBundle(requireArguments()).selectedGender)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) = BsSelectionGenderBinding.inflate(
+        inflater,
+        container,
+        false
+    ).apply { binding = this }.root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupView()
+    }
+
+    private fun setupView() {
+        setupGendersRecycler()
+    }
+
+    private fun setupGendersRecycler() {
+        binding.rvGenders.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvGenders.adapter = gendersAdapter
+        val space8 = resources.getDimension(R.dimen.space_8).toInt()
+        binding.rvGenders.addMarginDecoration { rect, view, parent, state ->
+            if (parent.getChildAdapterPosition(view) == 0) rect.top = space8
+            if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.bottom = space8
+        }
+        gendersAdapter.setupListeners { gender ->
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(SELECTED_GENDER, gender.name)
+            dismiss()
+        }
+        gendersAdapter.updateData(
+            selectedGender = selectedGender,
+            genderList = genderList
+        )
     }
 
 }

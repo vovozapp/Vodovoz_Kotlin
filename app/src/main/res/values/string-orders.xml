@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    //History
+    <string name="orders_history_title">История заказов</string>
+    <string name="empty_history_title">Ничего не найдено</string>
+    <string name="empty_history_subtitle">Попробуйте изменить параметры фильтров</string>
+
+    //Filters
+    <string name="orders_filters_title">Фильтры</string>
+    <string name="order_number_hint_text">Номер заказа</string>
+    <string name="order_status_text">Статус заказа</string>
+    <string name="apply_orders_filters">Применить</string>
+    <string name="clear_orders_filters">Очистить</string>
+</resources>

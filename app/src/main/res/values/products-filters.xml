@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="apply_filter_btn_text">Применить</string>
+
+    //All Filters
+    <string name="products_filters_title">Фильтры</string>
+    <string name="price_filter_text">Цена</string>
+    <string name="price_filter_value_from_text">От</string>
+    <string name="price_filter_value_to_text">До</string>
+    <string name="apply_products_filters">Применить</string>
+    <string name="clear_products_filters">Сбросить</string>
+</resources>

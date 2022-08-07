@@ -86,7 +86,7 @@ class BannersSliderFragment : BaseHiddenFragment() {
         }
 
 
-        val space = resources.getDimension(R.dimen.primary_space).toInt()
+        val space = resources.getDimension(R.dimen.space_16).toInt()
         binding.bannerPager.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(

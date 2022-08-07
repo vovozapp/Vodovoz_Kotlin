@@ -309,7 +309,7 @@ class DataRepository(
 
     fun fetchAllFiltersByCategory(categoryId: Long) = remoteDataSource.fetchAllFiltersByCategory(categoryId = categoryId)
 
-    fun fetchProductDetails(productId: Long): Single<ResponseEntity<ProductDetailBundleEntity>> = remoteDataSource
+    fun fetchProductDetails(productId: Long): Single<ResponseEntity<ProductDetailsBundleEntity>> = remoteDataSource
         .fetchProductDetails(productId = productId)
         .doOnSuccess { response ->
             if(response is ResponseEntity.Success) {

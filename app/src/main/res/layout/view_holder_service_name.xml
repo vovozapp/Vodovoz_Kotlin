@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
+<!--new-->
+<androidx.appcompat.widget.AppCompatTextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/name"
+    style="@style/TextViewNormalGray"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textSize="16sp"
-    android:fontFamily="@font/rotonda"
-    android:textColor="@color/blackTextPrimary"
     android:gravity="center"
-    android:padding="@dimen/primary_space"
-    tools:text="Название услуги"/>
+    android:padding="@dimen/space_16"
+    tools:text="@string/plug"/>

@@ -5,20 +5,20 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:paddingTop="@dimen/primary_margin"
+    android:paddingTop="@dimen/space_8"
     android:background="@color/white"
     android:translationZ="1dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/primary_bold"
-        android:textSize="@dimen/title_text_size"
+        android:fontFamily="@font/rotonda_bold"
+        android:textSize="@dimen/medium_text_size"
         android:text="Возможно, вам понравится"
-        android:paddingTop="@dimen/primary_margin"
-        android:paddingBottom="@dimen/primary_margin"
-        android:paddingStart="@dimen/primary_space"
-        android:paddingEnd="@dimen/primary_space" />
+        android:paddingTop="@dimen/space_8"
+        android:paddingBottom="@dimen/space_8"
+        android:paddingStart="@dimen/space_16"
+        android:paddingEnd="@dimen/space_16" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/brandProductRecycler"
@@ -35,12 +35,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Показать еще"
-        android:fontFamily="@font/rotonda"
+        android:fontFamily="@font/rotonda_normal"
         android:textStyle="bold"
         android:textSize="16sp"
         android:textColor="@color/bluePrimary"
-        android:paddingTop="@dimen/primary_space"
-        android:paddingBottom="@dimen/primary_space"
+        android:paddingTop="@dimen/space_16"
+        android:paddingBottom="@dimen/space_16"
         android:layout_marginStart="4dp"/>
 
 </LinearLayout>

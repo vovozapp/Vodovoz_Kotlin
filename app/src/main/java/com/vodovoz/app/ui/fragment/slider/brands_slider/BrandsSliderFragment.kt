@@ -61,7 +61,7 @@ class BrandsSliderFragment : BaseHiddenFragment() {
         binding.brandsRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
-        val space = resources.getDimension(R.dimen.primary_space).toInt()
+        val space = resources.getDimension(R.dimen.space_16).toInt()
         binding.brandsRecycler.onRenderFinished { width, _ ->
             brandsSliderAdapter = BrandsSliderAdapter(
                 onBrandClickSubject = onBrandClickSubject,

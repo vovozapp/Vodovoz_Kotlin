@@ -31,4 +31,10 @@
     <color name="color_status_canceled">#D3D3D3</color>
     <color name="color_status_delivered">#D3D3D3</color>
 
+    //Text
+    <color name="text_black">#FF042033</color>
+    <color name="text_gray">#818F99</color>
+
+    <color name="divider_color">#E5EBF0</color>
+
 </resources>

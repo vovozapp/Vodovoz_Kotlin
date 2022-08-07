@@ -12,7 +12,7 @@ abstract class ViewStateBaseFragment : Fragment() {
     private lateinit var rootBinding: FragmentBaseBinding
     private var isLoading = false
 
-    override fun onCreateView(
+    final override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?

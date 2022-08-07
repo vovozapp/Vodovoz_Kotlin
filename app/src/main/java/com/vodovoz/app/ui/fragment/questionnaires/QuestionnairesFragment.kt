@@ -10,21 +10,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.FragmentFilterListBinding
 import com.vodovoz.app.databinding.FragmentQuestionnairesBinding
-import com.vodovoz.app.ui.adapter.ProductFiltersAdapter
 import com.vodovoz.app.ui.adapter.QuestionnaireTypesAdapter
 import com.vodovoz.app.ui.adapter.QuestionsAdapter
 import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
-import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogFragment
-import com.vodovoz.app.ui.fragment.product_filters.ProductFiltersViewModel
-import com.vodovoz.app.ui.model.FilterPriceUI
-import com.vodovoz.app.ui.model.FilterUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -98,7 +91,7 @@ class QuestionnairesFragment : ViewStateBaseFragment() {
     private fun initQuestionnaireTypesRecycler() {
         binding.questionnaireTypesRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.questionnaireTypesRecycler.adapter = questionnaireTypesAdapter
-        val space = resources.getDimension(R.dimen.primary_space).toInt()
+        val space = resources.getDimension(R.dimen.space_16).toInt()
         binding.questionnaireTypesRecycler.addMarginDecoration { rect, view, parent, state ->
             with(rect) {
                 if (parent.getChildAdapterPosition(view) == state.itemCount - 1) top = space/2

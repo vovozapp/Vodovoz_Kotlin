@@ -210,7 +210,7 @@ interface RemoteDataSource {
     fun fetchAllFiltersByCategory(categoryId: Long): Single<ResponseEntity<FilterBundleEntity>>
 
     //Подробная информация о продукте
-    fun fetchProductDetails(productId: Long): Single<ResponseEntity<ProductDetailBundleEntity>>
+    fun fetchProductDetails(productId: Long): Single<ResponseEntity<ProductDetailsBundleEntity>>
 
     //Филтр для продукта по id
     fun fetchProductFilterById(

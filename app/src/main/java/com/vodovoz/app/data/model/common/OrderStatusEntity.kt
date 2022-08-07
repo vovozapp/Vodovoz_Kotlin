@@ -30,7 +30,7 @@ enum class OrderStatusEntity(
         id = "N",
         color = R.color.color_status_accepted,
         statusName = "Принят",
-        image = R.drawable.ic_order_accepted
+        image = R.drawable.ic_check_round
     ),
     CANCELED(
         id = "R",

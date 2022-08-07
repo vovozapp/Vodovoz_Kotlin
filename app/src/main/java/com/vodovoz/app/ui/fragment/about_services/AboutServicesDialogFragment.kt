@@ -13,13 +13,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.DialogFragmentAboutServicesBinding
+import com.vodovoz.app.databinding.FragmentAboutServicesBinding
 import com.vodovoz.app.ui.adapter.ServicesDetailAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.ServiceDiffUtilCallback
-import com.vodovoz.app.ui.fragment.home.HomeFragmentDirections
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -27,7 +26,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 
 class AboutServicesDialogFragment : ViewStateBaseDialogFragment() {
 
-    private lateinit var binding: DialogFragmentAboutServicesBinding
+    private lateinit var binding: FragmentAboutServicesBinding
     private lateinit var viewModel: AboutServicesViewModel
 
     private val compositeDisposable = CompositeDisposable()
@@ -61,7 +60,7 @@ class AboutServicesDialogFragment : ViewStateBaseDialogFragment() {
     override fun setContentView(
         inflater: LayoutInflater,
         container: ViewGroup
-    ) = DialogFragmentAboutServicesBinding.inflate(
+    ) = FragmentAboutServicesBinding.inflate(
         inflater,
         container,
         false
@@ -76,21 +75,15 @@ class AboutServicesDialogFragment : ViewStateBaseDialogFragment() {
     }
 
     private fun initAppBar() {
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        (requireActivity() as AppCompatActivity).supportActionBar?.let { noNullActionBar ->
-            noNullActionBar.setDisplayHomeAsUpEnabled(true)
-            noNullActionBar.setDisplayShowHomeEnabled(true)
-        }
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
+        binding.incAppBar.tvTitle.text = resources.getString(R.string.services_title)
+        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun initServicesRecycler() {
-        val space = resources.getDimension(R.dimen.primary_space).toInt()
-        binding.servicesRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.servicesRecycler.adapter = servicesDetailAdapter
-        binding.servicesRecycler.addItemDecoration(
+        val space = resources.getDimension(R.dimen.space_16).toInt()
+        binding.rvServices.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvServices.adapter = servicesDetailAdapter
+        binding.rvServices.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
                     outRect: Rect,
@@ -122,8 +115,8 @@ class AboutServicesDialogFragment : ViewStateBaseDialogFragment() {
         }
 
         viewModel.aboutServicesBundleLD.observe(viewLifecycleOwner) { aboutServicesBundleUI ->
-            binding.detail.text = HtmlCompat.fromHtml(aboutServicesBundleUI.detail!!, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
-            binding.toolbar.title = aboutServicesBundleUI.title
+            binding.tvDetails.text = HtmlCompat.fromHtml(aboutServicesBundleUI.detail!!, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+            binding.incAppBar.tvTitle.text = aboutServicesBundleUI.title
 
             val diffUtil = ServiceDiffUtilCallback(
                 oldList = servicesDetailAdapter.serviceUIList,

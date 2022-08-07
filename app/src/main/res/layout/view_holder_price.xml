@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:paddingTop="@dimen/primary_space"
-        android:paddingBottom="@dimen/primary_space">
+        android:paddingTop="@dimen/space_16"
+        android:paddingBottom="@dimen/space_16">
 
         <TextView
             android:id="@+id/priceCondition"

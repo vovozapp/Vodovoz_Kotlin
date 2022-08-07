@@ -38,16 +38,16 @@ object FetchAddressesSavedResponseJsonParser {
             id = getString("ID").toLong(),
             fullAddress = getString("NAME"),
             type = getString("PERSON_TYPE_ID").toInt(),
-            phone = propsList.find { it.first == "PHONE" }?.second,
-            name = propsList.find { it.first == "FIO" }?.second,
-            email = propsList.find { it.first == "EMAIL" }?.second,
-            locality = propsList.find { it.first == "CITY" }?.second,
-            street = propsList.find { it.first == "ADDRESS" }?.second,
-            house = propsList.find { it.first == "DOM" || it.first == "F_DOM" }?.second,
-            entrance = propsList.find { it.first == "POD" || it.first == "F_POD"  }?.second,
-            floor = propsList.find { it.first == "ETAJ" || it.first == "F_ETAJ"  }?.second,
-            flat = propsList.find { it.first == "KV" || it.first == "F_OFIS" }?.second,
-            comment = propsList.find { it.first == "KOMENT" || it.first == "F_KOMENT" }?.second
+            phone = propsList.find { it.first == "PHONE" }?.second ?: "",
+            name = propsList.find { it.first == "FIO" }?.second?: "",
+            email = propsList.find { it.first == "EMAIL" }?.second?: "",
+            locality = propsList.find { it.first == "CITY" }?.second?: "",
+            street = propsList.find { it.first == "ADDRESS" }?.second?: "",
+            house = propsList.find { it.first == "DOM" || it.first == "F_DOM" }?.second?: "",
+            entrance = propsList.find { it.first == "POD" || it.first == "F_POD"  }?.second?: "",
+            floor = propsList.find { it.first == "ETAJ" || it.first == "F_ETAJ"  }?.second?: "",
+            flat = propsList.find { it.first == "KV" || it.first == "F_OFIS" }?.second?: "",
+            comment = propsList.find { it.first == "KOMENT" || it.first == "F_KOMENT" }?.second?: ""
         )
     }
 

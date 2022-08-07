@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--new-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/space_16"
+    android:paddingVertical="@dimen/space_8">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imgActionImage"
+        android:layout_width="@dimen/_20ssp"
+        android:layout_height="@dimen/_20ssp"
+        android:src="@drawable/png_share_app"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/text_black" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvAction"
+        style="@style/TextViewNormalBlack"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/space_16"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imgActionImage"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/plug" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

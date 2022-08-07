@@ -4,97 +4,97 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/primary_margin">
+    android:paddingBottom="@dimen/space_8">
 
     <TextView
         android:id="@+id/aboutShop"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:fontFamily="@font/primary_normal"
-        android:textSize="@dimen/title_text_size"
+        android:fontFamily="@font/rotonda_normal"
+        android:textSize="@dimen/medium_text_size"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:text="@string/about_shop"
         android:gravity="center_vertical"
-        android:drawableEnd="@drawable/ic_arrow_right"
+        android:drawableEnd="@drawable/ic_pointer_right"
         tools:ignore="UseCompatTextViewDrawableXml"/>
 
     <TextView
         android:id="@+id/aboutDelivery"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:fontFamily="@font/primary_normal"
-        android:textSize="@dimen/title_text_size"
+        android:fontFamily="@font/rotonda_normal"
+        android:textSize="@dimen/medium_text_size"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:text="@string/about_delivery"
         android:gravity="center_vertical"
-        android:drawableEnd="@drawable/ic_arrow_right"
+        android:drawableEnd="@drawable/ic_pointer_right"
         tools:ignore="UseCompatTextViewDrawableXml"/>
 
     <TextView
         android:id="@+id/aboutPay"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:fontFamily="@font/primary_normal"
-        android:textSize="@dimen/title_text_size"
+        android:fontFamily="@font/rotonda_normal"
+        android:textSize="@dimen/medium_text_size"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:text="@string/about_pay"
         android:gravity="center_vertical"
-        android:drawableEnd="@drawable/ic_arrow_right"
+        android:drawableEnd="@drawable/ic_pointer_right"
         tools:ignore="UseCompatTextViewDrawableXml"/>
 
     <TextView
         android:id="@+id/contacts"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:fontFamily="@font/primary_normal"
-        android:textSize="@dimen/title_text_size"
+        android:fontFamily="@font/rotonda_normal"
+        android:textSize="@dimen/medium_text_size"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:text="@string/about_contacts"
         android:gravity="center_vertical"
-        android:drawableEnd="@drawable/ic_arrow_right"
+        android:drawableEnd="@drawable/ic_pointer_right"
         tools:ignore="UseCompatTextViewDrawableXml"/>
 
     <TextView
         android:id="@+id/howToOrder"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:fontFamily="@font/primary_normal"
-        android:textSize="@dimen/title_text_size"
+        android:fontFamily="@font/rotonda_normal"
+        android:textSize="@dimen/medium_text_size"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:text="@string/about_how_to_order"
         android:gravity="center_vertical"
-        android:drawableEnd="@drawable/ic_arrow_right"
+        android:drawableEnd="@drawable/ic_pointer_right"
         tools:ignore="UseCompatTextViewDrawableXml"/>
 
     <TextView
         android:id="@+id/services"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:fontFamily="@font/primary_normal"
-        android:textSize="@dimen/title_text_size"
+        android:fontFamily="@font/rotonda_normal"
+        android:textSize="@dimen/medium_text_size"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:text="@string/about_services"
         android:gravity="center_vertical"
-        android:drawableEnd="@drawable/ic_arrow_right"
+        android:drawableEnd="@drawable/ic_pointer_right"
         tools:ignore="UseCompatTextViewDrawableXml"/>
 
     <TextView
         android:id="@+id/aboutApp"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:fontFamily="@font/primary_normal"
-        android:textSize="@dimen/title_text_size"
+        android:fontFamily="@font/rotonda_normal"
+        android:textSize="@dimen/medium_text_size"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:text="@string/about_app"
         android:gravity="center_vertical"
-        android:drawableEnd="@drawable/ic_arrow_right"
+        android:drawableEnd="@drawable/ic_pointer_right"
         tools:ignore="UseCompatTextViewDrawableXml" />
 
 </LinearLayout>

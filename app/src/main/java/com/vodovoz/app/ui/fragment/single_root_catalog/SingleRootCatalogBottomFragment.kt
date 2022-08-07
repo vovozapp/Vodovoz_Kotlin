@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.BottomFragmentCatalogMiniBinding
+import com.vodovoz.app.databinding.BsCatalogMiniBinding
 import com.vodovoz.app.ui.adapter.SingleRootCatalogAdapter
 import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
 import com.vodovoz.app.ui.base.ViewState
@@ -26,7 +26,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 
 class SingleRootCatalogBottomFragment : ViewStateBaseBottomFragment() {
 
-    private lateinit var binding: BottomFragmentCatalogMiniBinding
+    private lateinit var binding: BsCatalogMiniBinding
     private lateinit var viewModel: SingleRootCatalogViewModel
 
     private val categoryClickSubject: PublishSubject<CategoryUI> = PublishSubject.create()
@@ -36,7 +36,7 @@ class SingleRootCatalogBottomFragment : ViewStateBaseBottomFragment() {
         nestingPosition = 0
     )
 
-    private val space: Int by lazy { resources.getDimension(R.dimen.margin_bottom_button).toInt() }
+    private val space: Int by lazy { resources.getDimension(R.dimen.last_item_bottom_normal_space).toInt() }
     private val verticalMarginItemDecoration: SingleRootCatalogMarginDecoration by lazy {
         SingleRootCatalogMarginDecoration(space)
     }
@@ -64,7 +64,7 @@ class SingleRootCatalogBottomFragment : ViewStateBaseBottomFragment() {
     override fun setContentView(
         inflater: LayoutInflater,
         container: ViewGroup
-    ) = BottomFragmentCatalogMiniBinding.inflate(
+    ) = BsCatalogMiniBinding.inflate(
         inflater,
         container,
         false
@@ -97,7 +97,7 @@ class SingleRootCatalogBottomFragment : ViewStateBaseBottomFragment() {
         binding.categoryRecycler.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    binding.appBar.elevation =
+                    binding.ab.elevation =
                         if (binding.categoryRecycler.canScrollVertically(-1)) 16f
                         else 0f
                 }

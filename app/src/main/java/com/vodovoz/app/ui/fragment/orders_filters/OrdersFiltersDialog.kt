@@ -8,7 +8,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.DialogFragmentOrdersFiltersBinding
+import com.vodovoz.app.databinding.FragmentOrdersFiltersBinding
 import com.vodovoz.app.ui.adapter.OrderStatusesAdapter
 import com.vodovoz.app.ui.fragment.orders_history.OrdersHistoryFragment
 import com.vodovoz.app.ui.model.OrderStatusUI
@@ -17,7 +17,7 @@ import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
 class OrdersFiltersDialog : DialogFragment() {
 
     private lateinit var ordersFiltersBundleUI: OrdersFiltersBundleUI
-    private lateinit var binding: DialogFragmentOrdersFiltersBinding
+    private lateinit var binding: FragmentOrdersFiltersBinding
 
     private val orderStatusUIList = listOf(
         OrderStatusUI.IN_PROCESSING,
@@ -44,7 +44,7 @@ class OrdersFiltersDialog : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = DialogFragmentOrdersFiltersBinding.inflate(
+    ) = FragmentOrdersFiltersBinding.inflate(
         inflater,
         container,
         false
@@ -57,18 +57,12 @@ class OrdersFiltersDialog : DialogFragment() {
     }.root
 
     private fun initAppBar() {
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        (requireActivity() as AppCompatActivity).supportActionBar?.let { noNullActionBar ->
-            noNullActionBar.setDisplayHomeAsUpEnabled(true)
-            noNullActionBar.setDisplayShowHomeEnabled(true)
-        }
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
+        binding.incAppBar.tvTitle.text = resources.getString(R.string.orders_filters_title)
+        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun initSearchOrderId() {
-        ordersFiltersBundleUI.orderId?.let { binding.orderId.setText(ordersFiltersBundleUI.orderId.toString()) }
+        ordersFiltersBundleUI.orderId?.let { binding.etOrderId.setText(ordersFiltersBundleUI.orderId.toString()) }
     }
 
     private fun initOrderStatusesRecycler() {
@@ -81,17 +75,17 @@ class OrdersFiltersDialog : DialogFragment() {
     }
 
     private fun initButtons() {
-        binding.apply.setOnClickListener {
+        binding.tvApply.setOnClickListener {
             ordersFiltersBundleUI = OrdersFiltersBundleUI()
             orderStatusUIList.forEach { orderStatusUI ->
                 if (orderStatusUI.isChecked) {
                     ordersFiltersBundleUI.orderStatusUIList.add(orderStatusUI)
                 }
             }
-            ordersFiltersBundleUI.orderId = binding.orderId.text.toString().toLongOrNull()
+            ordersFiltersBundleUI.orderId = binding.etOrderId.text.toString().toLongOrNull()
             sentOrderFiltersBundleUIBack(ordersFiltersBundleUI)
         }
-        binding.clear.setOnClickListener {
+        binding.tvClear.setOnClickListener {
             ordersFiltersBundleUI = OrdersFiltersBundleUI()
             sentOrderFiltersBundleUIBack(ordersFiltersBundleUI)
         }

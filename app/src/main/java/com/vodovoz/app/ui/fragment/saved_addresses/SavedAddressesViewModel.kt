@@ -19,13 +19,11 @@ class SavedAddressesViewModel(
 ) : ViewModel() {
 
     private val viewStateMLD = MutableLiveData<ViewState>()
-    private val officeAddressUIListMLD = MutableLiveData<List<AddressUI>>()
-    private val personalAddressUIListMLD = MutableLiveData<List<AddressUI>>()
+    private val addressUIListMLD = MutableLiveData<Pair<List<AddressUI>, List<AddressUI>>>()
     private val errorMLD = MutableLiveData<String>()
 
     val viewStateLD: LiveData<ViewState> = viewStateMLD
-    val officeAddressUIListLD: LiveData<List<AddressUI>> = officeAddressUIListMLD
-    val personalAddressUIListLD: LiveData<List<AddressUI>> = personalAddressUIListMLD
+    val addressUIListLD: LiveData<Pair<List<AddressUI>, List<AddressUI>>> = addressUIListMLD
     val errorLD: LiveData<String> = errorMLD
 
     private val compositeDisposable = CompositeDisposable()
@@ -49,8 +47,10 @@ class SavedAddressesViewModel(
                          is ResponseEntity.Success -> {
                              isUpdateSuccess = true
                              val data = response.data.mapToUI()
-                             officeAddressUIListMLD.value = data.filter { it.type == AddressConfig.OFFICE_ADDRESS_TYPE }
-                             personalAddressUIListMLD.value = data.filter { it.type == AddressConfig.PERSONAL_ADDRESS_TYPE }
+                             addressUIListMLD.value = Pair(
+                                 data.filter { it.type == AddressConfig.PERSONAL_ADDRESS_TYPE },
+                                 data.filter { it.type == AddressConfig.OFFICE_ADDRESS_TYPE }
+                             )
                              viewStateMLD.value = ViewState.Success()
                          }
                      }

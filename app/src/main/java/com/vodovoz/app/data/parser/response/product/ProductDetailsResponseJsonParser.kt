@@ -11,11 +11,11 @@ import org.json.JSONObject
 
 object ProductDetailsResponseJsonParser {
 
-    fun ResponseBody.parseProductDetailsResponse(): ResponseEntity<ProductDetailBundleEntity> {
+    fun ResponseBody.parseProductDetailsResponse(): ResponseEntity<ProductDetailsBundleEntity> {
         val responseJson = JSONObject(this.string())
         return when(responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
-                ProductDetailBundleEntity(
+                ProductDetailsBundleEntity(
                     productDetailEntity = responseJson.getJSONObject("data").parseProductDetailEntity(
                         shareUrl = responseJson.getString("detail_page_url"),
                         commentsAmount = when(responseJson.isNull("comments")) {
@@ -44,6 +44,10 @@ object ProductDetailsResponseJsonParser {
                         true -> listOf()
                         false -> responseJson.getJSONObject("yslugi")
                             .getJSONArray("OSNOVA").parseServiceEntityList()
+                    },
+                    replacementProductsCategoryDetail = when(responseJson.isNull("nettovar")) {
+                        true -> null
+                        false -> responseJson.getJSONObject("nettovar").parseReplacementProductsCategoryDetailEntity()
                     }
                 )
             )
@@ -101,7 +105,8 @@ object ProductDetailsResponseJsonParser {
             status = status,
             propertiesGroupEntityList = getJSONArray("PROP").parsePropertyGroupEntityList(),
             detailPictureList = detailPictureList,
-            brandEntity = brandEntity
+            brandEntity = brandEntity,
+            isAvailable = true
         )
     }
 
@@ -199,5 +204,11 @@ object ProductDetailsResponseJsonParser {
             add(getString(index))
         }
     }
+
+    private fun JSONObject.parseReplacementProductsCategoryDetailEntity() = CategoryDetailEntity(
+        id = 0,
+        name = getString("glavtitle"),
+        productEntityList = getJSONArray("data").parseProductEntityList()
+    )
 
 }

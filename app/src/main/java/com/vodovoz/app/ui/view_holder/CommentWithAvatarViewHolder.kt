@@ -20,7 +20,7 @@ class CommentWithAvatarViewHolder(
 
         Glide.with(context)
             .load(commentUI.authorPhoto)
-            .placeholder(ContextCompat.getDrawable(context, R.drawable.default_avatar))
+            .placeholder(ContextCompat.getDrawable(context, R.drawable.png_default_avatar))
             .into(binding.authorPhoto)
     }
 

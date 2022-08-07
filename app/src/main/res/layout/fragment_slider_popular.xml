@@ -15,15 +15,15 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/rotonda"
+            android:fontFamily="@font/rotonda_normal"
             android:textStyle="bold"
             android:textSize="20sp"
             android:textColor="@color/blackTextDark"
             android:text="@string/popular_label"
-            android:paddingTop="@dimen/primary_margin"
-            android:paddingBottom="@dimen/primary_margin"
-            android:paddingStart="@dimen/primary_space"
-            android:paddingEnd="@dimen/primary_space"/>
+            android:paddingTop="@dimen/space_8"
+            android:paddingBottom="@dimen/space_8"
+            android:paddingStart="@dimen/space_16"
+            android:paddingEnd="@dimen/space_16"/>
 
     </LinearLayout>
 

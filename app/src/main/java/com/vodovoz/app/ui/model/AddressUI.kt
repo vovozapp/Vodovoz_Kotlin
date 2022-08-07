@@ -4,40 +4,39 @@ import android.os.Parcel
 import android.os.Parcelable
 
 class AddressUI(
-    var id: Long? = null,
-    val type: Int? = null,
-    val fullAddress: String? = null,
-    val phone: String? = null,
-    val name: String? = null,
-    val email: String? = null,
-    val locality: String? = null,
-    val street: String? = null,
-    val house: String? = null,
-    val entrance: String? = null,
-    val floor: String? = null,
-    val flat: String? = null,
-    val comment: String? = null
+    var id: Long,
+    val type: Int,
+    val fullAddress: String,
+    val phone: String,
+    val name: String,
+    val email: String,
+    val locality: String,
+    val street: String,
+    val house: String,
+    val entrance: String,
+    val floor: String,
+    val flat: String,
+    val comment: String
 ): Parcelable {
-
     constructor(parcel: Parcel) : this(
-        parcel.readValue(Long::class.java.classLoader) as? Long,
-        parcel.readValue(Int::class.java.classLoader) as? Int,
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString()) {
+        parcel.readLong(),
+        parcel.readInt(),
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "") {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeValue(id)
-        parcel.writeValue(type)
+        parcel.writeLong(id)
+        parcel.writeInt(type)
         parcel.writeString(fullAddress)
         parcel.writeString(phone)
         parcel.writeString(name)
@@ -64,6 +63,8 @@ class AddressUI(
             return arrayOfNulls(size)
         }
     }
+
+
 }
 
 

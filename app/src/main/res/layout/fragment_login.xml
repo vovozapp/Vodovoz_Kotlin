@@ -1,140 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<!--new-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:elevation="0dp">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:title="Авторизация"
-            app:titleTextAppearance="@style/ToolbarTitle"/>
-
-    </com.google.android.material.appbar.AppBarLayout>
+    <include
+        android:id="@+id/incAppBar"
+        layout="@layout/view_app_bar_default" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
-        android:layout_below="@id/appBar"
-        android:layout_above="@id/registerAccountContainer">
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilEmail"
             style="@style/TextInputLayout"
-            android:id="@+id/emailContainer"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            app:startIconDrawable="@drawable/image_email">
+            android:layout_marginHorizontal="@dimen/_50sdp"
+            app:startIconDrawable="@drawable/ic_email">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEmail"
                 style="@style/TextField"
-                android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Почта" />
+                android:hint="@string/email_hint_text" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPassword"
             style="@style/TextInputLayout"
-            android:id="@+id/passwordContainer"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:startIconDrawable="@drawable/image_password"
+            android:layout_marginHorizontal="@dimen/_50sdp"
+            android:layout_marginTop="@dimen/space_4"
+            app:startIconDrawable="@drawable/ic_password"
             app:endIconDrawable="@drawable/ic_show_password"
             app:endIconMode="password_toggle">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPassword"
                 style="@style/TextField"
-                android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Пароль" />
+                android:hint="@string/password_hint_text" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="end"
-            android:layout_marginTop="10dp">
+            android:gravity="center"
+            android:layout_marginTop="@dimen/space_8"
+            android:layout_marginHorizontal="@dimen/_50sdp">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextViewMediumGray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Забыли пароль?"
-                android:textSize="17sp"
-                android:fontFamily="@font/roboto_regular"
-                android:textColor="@color/blackTextPrimary"/>
+                android:text="@string/forgot_password_text"/>
 
-            <TextView
-                android:id="@+id/recoverPassword"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvRecoverPassword"
+                style="@style/TextViewMediumBlueBold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/bluePrimary"
-                android:text="Востановить"
-                android:textSize="17sp"
-                android:fontFamily="@font/roboto_medium"
-                android:layout_marginStart="10dp"/>
+                android:text="@string/recover_password_btn_text"
+                android:layout_marginStart="@dimen/space_4"/>
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/login"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:text="Войти"
-            android:fontFamily="@font/rotonda"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:textSize="18sp"
-            android:translationZ="3dp"
-            android:textStyle="bold"
-            android:background="@drawable/background_button_primary"
-            android:layout_marginTop="20dp" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSignIn"
+            style="@style/BlueButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_normal_height"
+            android:text="@string/sign_in_btn_text"
+            android:layout_marginTop="@dimen/space_8"
+            android:layout_marginHorizontal="@dimen/_50sdp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            android:layout_marginHorizontal="@dimen/_50sdp"
+            android:layout_marginBottom="@dimen/space_16">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextViewMediumGray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/have_not_account_text"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvRegister"
+                style="@style/TextViewMediumBlueBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/create_account_btn_text"
+                android:layout_marginStart="@dimen/space_4"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/registerAccountContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal"
-        android:layout_marginBottom="@dimen/primary_space">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Нет аккаунта?"
-            android:textSize="17sp"
-            android:fontFamily="@font/roboto_regular"
-            android:textColor="@color/blackTextPrimary"/>
-
-        <TextView
-            android:id="@+id/register"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/bluePrimary"
-            android:text="Создайте"
-            android:textSize="17sp"
-            android:fontFamily="@font/roboto_medium"
-            android:layout_marginStart="10dp"/>
-
-    </LinearLayout>
-
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

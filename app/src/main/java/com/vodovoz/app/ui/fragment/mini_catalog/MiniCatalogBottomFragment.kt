@@ -9,14 +9,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.vodovoz.app.databinding.BottomFragmentCatalogMiniBinding
+import com.vodovoz.app.databinding.BsCatalogMiniBinding
 import com.vodovoz.app.ui.adapter.MiniCatalogAdapter
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class MiniCatalogBottomFragment : BottomSheetDialogFragment() {
 
-    private lateinit var binding: BottomFragmentCatalogMiniBinding
+    private lateinit var binding: BsCatalogMiniBinding
 
     private val onCategoryClickSubject: PublishSubject<Long> = PublishSubject.create()
     private val miniCatalogAdapter = MiniCatalogAdapter(onCategoryClickSubject = onCategoryClickSubject)
@@ -25,7 +25,7 @@ class MiniCatalogBottomFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = BottomFragmentCatalogMiniBinding.inflate(
+    ) = BsCatalogMiniBinding.inflate(
         inflater,
         container,
         false

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:cardElevation="@dimen/card_elevation"
-    app:cardCornerRadius="@dimen/primary_corner_radius">
+    app:cardCornerRadius="@dimen/corner_5">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:fontFamily="@font/primary_normal"
+            android:fontFamily="@font/rotonda_normal"
             android:textSize="@dimen/normal_text_size"
             android:textColor="@color/blackTextPrimary"
             tools:text="Россия"/>

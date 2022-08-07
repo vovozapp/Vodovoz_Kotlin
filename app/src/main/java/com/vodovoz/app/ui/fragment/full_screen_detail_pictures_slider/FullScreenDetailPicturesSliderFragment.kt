@@ -7,14 +7,14 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.DialogFragmentFullScreenDetailPictureSliderBinding
+import com.vodovoz.app.databinding.DialogProductImagesPagerBinding
 import com.vodovoz.app.ui.adapter.FullScreenDetailPicturesAdapter
 
 class FullScreenDetailPicturesSliderFragment : DialogFragment() {
 
     private var startPosition = 0
     private lateinit var detailPictureUrlList: List<String>
-    private lateinit var binding: DialogFragmentFullScreenDetailPictureSliderBinding
+    private lateinit var binding: DialogProductImagesPagerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +33,7 @@ class FullScreenDetailPicturesSliderFragment : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = DialogFragmentFullScreenDetailPictureSliderBinding.inflate(
+    ) = DialogProductImagesPagerBinding.inflate(
         inflater,
         container,
         false
@@ -43,11 +43,11 @@ class FullScreenDetailPicturesSliderFragment : DialogFragment() {
     }.root
 
     private fun initView() {
-        binding.detailPicturesPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.detailPicturesPager.adapter = FullScreenDetailPicturesAdapter(detailPictureUrlList)
-        binding.detailPicturesPager.currentItem = startPosition
+        binding.vpImages.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.vpImages.adapter = FullScreenDetailPicturesAdapter(detailPictureUrlList)
+        binding.vpImages.currentItem = startPosition
 
-        binding.close.setOnClickListener { findNavController().popBackStack() }
+        binding.imgClose.setOnClickListener { findNavController().popBackStack() }
     }
 
 }
