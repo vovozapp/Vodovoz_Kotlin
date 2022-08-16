@@ -94,11 +94,9 @@
 
     <TextView
         android:id="@+id/name"
+        style="@style/TextViewNormalBlack"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:fontFamily="@font/rotonda_normal"
-        android:textColor="@color/blackTextPrimary"
-        android:textSize="@dimen/normal_text_size"
         android:layout_marginEnd="@dimen/space_8"
         android:maxLines="3"
         app:layout_constraintBottom_toTopOf="@+id/amountControllerContainer"
@@ -109,22 +107,18 @@
 
     <TextView
         android:id="@+id/price"
+        style="@style/TextViewMediumBlackExtraBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/rotonda_normal"
-        android:textColor="@color/blackTextPrimary"
-        android:textSize="@dimen/medium_text_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/name"
         tools:text="99,00 Р" />
 
     <TextView
         android:id="@+id/oldPrice"
+        style="@style/TextViewNormalGrayBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/rotonda_normal"
-        android:textColor="@color/blackTextLight"
-        android:textSize="@dimen/normal_text_size"
         android:visibility="visible"
         android:layout_marginStart="3dp"
         app:layout_constraintBottom_toBottomOf="parent"

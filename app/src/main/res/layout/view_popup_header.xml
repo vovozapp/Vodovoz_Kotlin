@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--new-->
+<!-- new-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -18,13 +18,12 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/plug"/>
 
-    <androidx.appcompat.widget.AppCompatImageButton
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgClose"
-        android:layout_width="@dimen/_24sdp"
-        android:layout_height="@dimen/_24sdp"
+        android:layout_width="@dimen/_22sdp"
+        android:layout_height="@dimen/_22sdp"
         android:layout_gravity="end"
-        android:background="@drawable/bkg_close_popup"
-        android:src="@drawable/ic_close_popup"
+        android:src="@drawable/ic_close"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

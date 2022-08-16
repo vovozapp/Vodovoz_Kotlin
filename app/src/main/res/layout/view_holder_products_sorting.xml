@@ -2,10 +2,11 @@
 <!--new-->
 <androidx.appcompat.widget.AppCompatTextView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/TextViewNormalGray"
-    android:id="@+id/name"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tvName"
+    style="@style/TextViewMediumGray"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/space_16"
-    android:gravity="center_vertical"
-    android:text="@string/plug" />
+    android:gravity="center"
+    tools:text="Название"/>

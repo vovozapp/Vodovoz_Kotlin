@@ -96,6 +96,8 @@ class ProductSliderViewHolder(
         binding.amountController.circleAmount.visibility = View.GONE
         binding.amountController.add.visibility = View.GONE
         binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
+        binding.price.visibility = View.INVISIBLE
+        binding.oldPrice.visibility = View.INVISIBLE
         amountControllerTimer.start()
     }
 
@@ -103,6 +105,8 @@ class ProductSliderViewHolder(
         if (productUI.cartQuantity > 0) {
             binding.amountController.circleAmount.visibility = View.VISIBLE
         }
+        binding.price.visibility = View.VISIBLE
+        binding.oldPrice.visibility = View.VISIBLE
         binding.amountController.add.visibility = View.VISIBLE
         binding.amountController.amountControllerDeployed.visibility = View.GONE
     }
@@ -146,6 +150,9 @@ class ProductSliderViewHolder(
             }
         }
 
+        if (productUI.oldPrice != productUI.newPrice && productUI.status.isNotEmpty()) {
+            binding.spaceBetweenStatuses.visibility = View.VISIBLE
+        }
         binding.price.setPriceText(productUI.newPrice)
 
         Glide

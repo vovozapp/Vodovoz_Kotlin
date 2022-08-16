@@ -29,12 +29,12 @@ class CategorySliderViewHolder(
     )
 
     init {
-        binding.productRecycler.layoutManager = LinearLayoutManager(
+        binding.rvProducts.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.HORIZONTAL,
             false
         )
-        binding.productRecycler.adapter = productsSliderAdapter
+        binding.rvProducts.adapter = productsSliderAdapter
     }
 
     private var isAddItemDecoration = false
@@ -44,7 +44,7 @@ class CategorySliderViewHolder(
         this.categoryDetailUI = categoryDetailUI
 
         if (!isAddItemDecoration) {
-            binding.productRecycler.addItemDecoration(ProductSliderMarginDecoration(
+            binding.rvProducts.addItemDecoration(ProductSliderMarginDecoration(
                 space = context.resources.getDimension(R.dimen.space_16).toInt(),
                 itemCount = categoryDetailUI.productUIList.size,
                 isLast = isLast

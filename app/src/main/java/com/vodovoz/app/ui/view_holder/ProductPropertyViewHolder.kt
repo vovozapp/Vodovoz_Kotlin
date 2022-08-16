@@ -9,8 +9,8 @@ class ProductPropertyViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun onBind(propertyUI: PropertyUI) {
-        binding.name.text = propertyUI.name
-        binding.value.text = propertyUI.value
+        binding.tvName.text = propertyUI.name
+        binding.tvValue.text = propertyUI.value
     }
 
 }

@@ -14,7 +14,7 @@ class GiftViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.pickUpGift.setOnClickListener { onPickUpGiftSubject.onNext(productUI) }
+        binding.btnPickUpGift.setOnClickListener { onPickUpGiftSubject.onNext(productUI) }
     }
 
     private lateinit var productUI: ProductUI
@@ -22,10 +22,10 @@ class GiftViewHolder(
     fun onBind(productUI: ProductUI) {
         this.productUI = productUI
 
-        binding.name.text = productUI.name
+        binding.tvName.text = productUI.name
         Glide.with(context)
             .load(productUI.detailPicture)
-            .into(binding.detailPicture)
+            .into(binding.imgPicture)
     }
 
 }

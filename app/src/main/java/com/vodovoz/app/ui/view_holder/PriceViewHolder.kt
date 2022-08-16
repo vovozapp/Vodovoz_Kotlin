@@ -9,12 +9,12 @@ class PriceViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun onBind(priceUI: PriceUI) {
-        binding.price.text = StringBuilder()
+        binding.tvPrice.text = StringBuilder()
             .append(priceUI.price)
             .append(" руб")
             .toString()
 
-        binding.priceCondition.text = StringBuilder()
+        binding.tvPriceCondition.text = StringBuilder()
             .append("От ")
             .append(priceUI.requiredAmount)
             .append(" шт")

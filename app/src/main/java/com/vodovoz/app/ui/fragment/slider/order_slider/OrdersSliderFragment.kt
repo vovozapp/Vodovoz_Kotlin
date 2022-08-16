@@ -69,9 +69,9 @@ class OrdersSliderFragment : BaseHiddenFragment() {
 
     private fun initOrderPager() {
         val space = resources.getDimension(R.dimen.space_16).toInt()
-        binding.orderPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.orderPager.adapter = orderSliderAdapter
-        binding.orderPager.addItemDecoration(
+        binding.vpOrders.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.vpOrders.adapter = orderSliderAdapter
+        binding.vpOrders.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
                     outRect: Rect,
@@ -90,11 +90,11 @@ class OrdersSliderFragment : BaseHiddenFragment() {
         )
 
         when(config.containTitleContainer) {
-            true -> binding.titleContainer.visibility = View.VISIBLE
-            false -> binding.titleContainer.visibility = View.GONE
+            true -> binding.llTitleContainer.visibility = View.VISIBLE
+            false -> binding.llTitleContainer.visibility = View.GONE
         }
 
-        binding.showAllOrders.setOnClickListener { iOnShowAllOrdersClick.onShowAllOrdersClick() }
+        binding.tvShowAll.setOnClickListener { iOnShowAllOrdersClick.onShowAllOrdersClick() }
     }
 
     private fun subscribeSubjects() {

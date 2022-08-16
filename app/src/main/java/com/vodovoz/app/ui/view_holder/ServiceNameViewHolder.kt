@@ -20,10 +20,10 @@ class ServiceNameViewHolder(
 
     fun onBind(serviceData: Triple<String, String, Boolean>) {
         this.serviceData = serviceData
-        binding.name.text = serviceData.first
+        binding.tvName.text = serviceData.first
         when(serviceData.third) {
-            true -> binding.name.setTextColor(ContextCompat.getColor(context, R.color.bluePrimary))
-            false -> binding.name.setTextColor(ContextCompat.getColor(context, R.color.text_gray))
+            true -> binding.tvName.setTextColor(ContextCompat.getColor(context, R.color.bluePrimary))
+            false -> binding.tvName.setTextColor(ContextCompat.getColor(context, R.color.text_gray))
         }
     }
 

@@ -33,7 +33,7 @@ class BrandSliderViewHolder(
         Glide
             .with(context)
             .load(brandUI.detailPicture)
-            .into(binding.detailPicture)
+            .into(binding.imgPicture)
 
     }
 

@@ -21,7 +21,7 @@ class PopularCategorySliderViewHolder(
     fun onBind(categoryUI: CategoryUI) {
         this.categoryUI = categoryUI
 
-        binding.name.text = categoryUI.name
+        binding.tvName.text = categoryUI.name
     }
 
 }

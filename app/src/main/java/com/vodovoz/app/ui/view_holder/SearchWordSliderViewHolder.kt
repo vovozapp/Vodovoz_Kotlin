@@ -10,7 +10,7 @@ class SearchWordSliderViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.word.setOnClickListener {
+        binding.tvWord.setOnClickListener {
             onQueryClickSubject.onNext(query)
         }
     }
@@ -18,7 +18,7 @@ class SearchWordSliderViewHolder(
     private lateinit var query: String
     fun onBind(query: String) {
         this.query = query
-        binding.word.text = query
+        binding.tvWord.text = query
     }
     
 }

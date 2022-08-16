@@ -76,10 +76,10 @@ class BannersSliderFragment : BaseHiddenFragment() {
     }
 
     private fun initBannerRecyclerView() {
-        binding.bannerPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.bannerPager.adapter = bannersSliderAdapter
-        binding.bannerPager.onRenderFinished { width, _ ->
-            binding.bannerPager.layoutParams = LinearLayout.LayoutParams(
+        binding.vpBanners.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.vpBanners.adapter = bannersSliderAdapter
+        binding.vpBanners.onRenderFinished { width, _ ->
+            binding.vpBanners.layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 (width * bannerRatio).toInt()
             )
@@ -87,7 +87,7 @@ class BannersSliderFragment : BaseHiddenFragment() {
 
 
         val space = resources.getDimension(R.dimen.space_16).toInt()
-        binding.bannerPager.addItemDecoration(
+        binding.vpBanners.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
                     outRect: Rect,

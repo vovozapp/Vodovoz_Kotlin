@@ -63,10 +63,10 @@ class ProductsSortingVH(
 
     fun onBind(sortType: SortType, isSelected: Boolean) {
         this.sortType = sortType
-        binding.name.text = sortType.sortName
+        binding.tvName.text = sortType.sortName
         when(isSelected) {
-            true -> TextViewCompat.setTextAppearance(binding.name, R.style.TextViewNormalBlue)
-            false -> TextViewCompat.setTextAppearance(binding.name, R.style.TextViewNormalGray)
+            true -> TextViewCompat.setTextAppearance(binding.tvName, R.style.TextViewNormalBlue)
+            false -> TextViewCompat.setTextAppearance(binding.tvName, R.style.TextViewNormalGray)
         }
     }
 

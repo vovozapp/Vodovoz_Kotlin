@@ -12,7 +12,7 @@ class StateViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.update.setOnClickListener {
+        binding.btnUpdate.setOnClickListener {
             updateSubject.onNext(true)
         }
     }
@@ -21,13 +21,13 @@ class StateViewHolder(
         with (binding) {
             when (loadState) {
                 is LoadState.Loading -> {
-                    errorContainer.visibility = View.INVISIBLE
-                    progressContainer.visibility = View.VISIBLE
+                    llErrorContainer.visibility = View.INVISIBLE
+                    pbLoading.visibility = View.VISIBLE
                 }
                 is LoadState.Error -> {
-                    errorMessage.text = loadState.error.message
-                    errorContainer.visibility = View.VISIBLE
-                    progressContainer.visibility = View.INVISIBLE
+                    tvErrorMessage.text = loadState.error.message
+                    llErrorContainer.visibility = View.VISIBLE
+                    pbLoading.visibility = View.INVISIBLE
                 }
                 else -> {}
             }

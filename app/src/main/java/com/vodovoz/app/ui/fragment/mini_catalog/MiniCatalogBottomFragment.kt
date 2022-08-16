@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.vodovoz.app.R
 import com.vodovoz.app.databinding.BsCatalogMiniBinding
 import com.vodovoz.app.ui.adapter.MiniCatalogAdapter
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
@@ -44,17 +45,18 @@ class MiniCatalogBottomFragment : BottomSheetDialogFragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initView() {
-        binding.categoryRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.categoryRecycler.adapter = miniCatalogAdapter
+        binding.rvCategories.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvCategories.adapter = miniCatalogAdapter
         miniCatalogAdapter.categoryUIList = MiniCatalogBottomFragmentArgs.fromBundle(requireArguments()).categoryList.toList()
         miniCatalogAdapter.selectedCategoryId = MiniCatalogBottomFragmentArgs.fromBundle(requireArguments()).categoryId
         miniCatalogAdapter.notifyDataSetChanged()
 
-        binding.close.setOnClickListener {
+        binding.incHeader.tvTitle.text = getString(R.string.categories_title)
+        binding.incHeader.imgClose.setOnClickListener {
             requireDialog().cancel()
         }
 
-        binding.apply.setOnClickListener {
+        binding.btnChoose.setOnClickListener {
             findNavController().previousBackStackEntry
                 ?.savedStateHandle?.set(PaginatedProductsCatalogWithoutFiltersFragment.CATEGORY_ID, miniCatalogAdapter.selectedCategoryId)
             dialog?.dismiss()

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--new-->
+<androidx.appcompat.widget.AppCompatEditText
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tvValue"
+    style="@style/EditTextViewNormalGray"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/field_height"
+    android:paddingHorizontal="@dimen/space_16"
+    android:gravity="center_vertical"
+    android:background="@color/white"
+    android:textColorHint="@color/blackTextPrimary"
+    android:hint="@string/plug"/>

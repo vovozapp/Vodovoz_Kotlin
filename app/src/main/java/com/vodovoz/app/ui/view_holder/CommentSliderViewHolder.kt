@@ -15,10 +15,10 @@ class CommentSliderViewHolder(
     fun onBind(commentUI: CommentUI) {
         this.commentUI = commentUI
 
-        binding.rating.rating = commentUI.rating!!.toFloat()
-        binding.author.text = commentUI.author
-        binding.comment.text = commentUI.text
-        binding.date.text = commentUI.date
+        binding.rbRating.rating = commentUI.rating!!.toFloat()
+        binding.tvAuthor.text = commentUI.author
+        binding.tvComment.text = commentUI.text
+        binding.tvDate.text = commentUI.date
     }
 
 }

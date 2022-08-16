@@ -6,4 +6,8 @@
 
     //Products Comments
     <string name="product_comments_title">Отзывы</string>
+
+    //HomeComments
+    <string name="comments_slider_title">Отзывы</string>
+    <string name="write_comment_btn_text">Написать отзыв</string>
 </resources>

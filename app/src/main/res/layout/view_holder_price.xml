@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--new-->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,27 +10,24 @@
     app:cardElevation="2dp">
 
     <LinearLayout
-        android:layout_width="80dp"
+        android:layout_width="@dimen/_80sdp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:paddingTop="@dimen/space_16"
-        android:paddingBottom="@dimen/space_16">
+        android:padding="@dimen/space_16">
 
-        <TextView
-            android:id="@+id/priceCondition"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvPriceCondition"
+            style="@style/TextViewNormalGrayExtraBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/rotonda_bold"
-            android:textSize="15sp"
             tools:text="От 1 шт"/>
 
-        <TextView
-            android:id="@+id/price"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvPrice"
+            style="@style/TextViewNormalGrayExtraBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/rotonda_bold"
-            android:textSize="15sp"
             tools:text="340 руб"/>
 
     </LinearLayout>

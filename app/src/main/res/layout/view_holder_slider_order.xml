@@ -1,63 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--new-->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardCornerRadius="5dp"
+    app:cardCornerRadius="@dimen/corner_5"
     app:cardElevation="@dimen/card_elevation">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgStatus"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_marginStart="@dimen/space_16"
+            android:src="@drawable/ic_check_round"
+            app:layout_constraintBottom_toBottomOf="@+id/tvPrice"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvPrice" />
+
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/status"
+            android:id="@+id/tvStatus"
+            style="@style/TextViewMediumBlue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="4dp"
-            android:textSize="16sp"
-            android:layout_marginStart="@dimen/space_16"
-            android:layout_marginTop="@dimen/space_16"
-            android:textColor="@color/bluePrimary"
-            app:drawableTint="@color/bluePrimary"
-            app:drawableStartCompat="@drawable/ic_check_round"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:drawablePadding="@dimen/space_4"
+            android:layout_marginStart="@dimen/space_4"
+            app:layout_constraintBottom_toBottomOf="@+id/imgStatus"
+            app:layout_constraintStart_toEndOf="@+id/imgStatus"
+            app:layout_constraintTop_toTopOf="@+id/imgStatus"
             tools:text="Заказ отменен" />
 
-        <TextView
-            android:id="@+id/price"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvPrice"
+            style="@style/TextViewMediumBlackBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/rotonda_normal"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/blackTextPrimary"
             android:layout_marginEnd="@dimen/space_16"
             android:layout_marginTop="@dimen/space_16"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="15476 Р" />
 
-        <TextView
-            android:id="@+id/address"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvAddress"
+            style="@style/TextViewNormalGray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_8"
+            android:singleLine="true"
             android:paddingStart="@dimen/space_16"
             android:paddingEnd="@dimen/space_16"
-            android:fontFamily="@font/rotonda_normal"
-            android:maxLines="2"
-            android:textSize="16sp"
-            android:textColor="@color/blackTextLight"
-            app:layout_constraintTop_toBottomOf="@+id/status"
+            android:layout_marginTop="@dimen/space_8"
+            app:layout_constraintTop_toBottomOf="@+id/imgStatus"
             tools:layout_editor_absoluteX="16dp"
             tools:text="Г Балашиха Проспект Ленина дом 32 д кв 313, нидекс 456342, подъезд 5" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/action"
+            android:id="@+id/tvAction"
+            style="@style/TextViewNormalWhite"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@color/bluePrimary"
@@ -66,13 +71,10 @@
             android:gravity="center_vertical"
             android:paddingStart="@dimen/space_16"
             android:paddingEnd="@dimen/space_16"
-            android:fontFamily="@font/rotonda_normal"
-            android:textSize="16sp"
-            android:textColor="@color/white"
+            android:text="@string/more_details_about_order_btn_text"
             app:drawableTint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/address"
-            android:text="Подробнее"/>
+            app:layout_constraintTop_toBottomOf="@+id/tvAddress" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

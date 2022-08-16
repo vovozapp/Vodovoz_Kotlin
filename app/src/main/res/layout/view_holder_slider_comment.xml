@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--new-->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="@dimen/space_16"
-    android:layout_marginEnd="@dimen/space_16"
-    android:layout_marginTop="@dimen/space_8"
-    android:layout_marginBottom="@dimen/space_8"
     app:cardCornerRadius="@dimen/corner_5"
     app:cardElevation="@dimen/card_elevation">
 
@@ -18,53 +15,49 @@
         android:orientation="vertical"
         android:padding="@dimen/space_16">
 
-        <RatingBar
-            android:id="@+id/rating"
+        <androidx.appcompat.widget.AppCompatRatingBar
+            android:id="@+id/rbRating"
             style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:max="5"
             android:theme="@style/RatingBar"
-            app:layout_constraintBottom_toBottomOf="@+id/author"
+            app:layout_constraintBottom_toBottomOf="@+id/tvAuthor"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/author" />
+            app:layout_constraintTop_toTopOf="@+id/tvAuthor" />
 
 
-        <TextView
-            android:id="@+id/author"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvAuthor"
+            style="@style/TextViewNormalBlackBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/rotonda_normal"
-            android:textColor="@color/blackTextPrimary"
-            android:textSize="@dimen/medium_text_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Вадим Енисов" />
 
-        <TextView
-            android:id="@+id/comment"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvComment"
+            style="@style/TextViewNormalGray"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:fontFamily="@font/rotonda_normal"
-            android:textSize="@dimen/normal_text_size"
-            android:layout_marginTop="@dimen/space_8"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/space_8"
+            android:maxLines="2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/author"
+            app:layout_constraintTop_toBottomOf="@+id/tvAuthor"
             tools:text="mvewpfewpmcewcopwemcpweocmpweocmwecmowemcpwmcwomcpwmcowecmweocmwcmpwemc" />
 
-        <TextView
-            android:id="@+id/date"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvDate"
+            style="@style/TextViewSmallGray"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/rotonda_normal"
-            android:textSize="@dimen/normal_text_size"
             android:layout_marginTop="@dimen/space_8"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/comment"
+            app:layout_constraintTop_toBottomOf="@+id/tvComment"
             tools:text="23.05.2022 11:17" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

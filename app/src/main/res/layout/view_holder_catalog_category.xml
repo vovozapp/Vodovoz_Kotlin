@@ -26,11 +26,10 @@
 
         <TextView
             android:id="@+id/name"
+            style="@style/TextViewNormalBlack"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:fontFamily="@font/rotonda_normal"
-            android:textSize="@dimen/normal_text_size"
             android:gravity="center_vertical"
             tools:text="Some section" />
 
@@ -39,7 +38,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/ic_plus"
-            android:padding="@dimen/space_16"
+            android:padding="@dimen/space_12"
+            app:tint="@color/text_gray"
             tools:ignore="ContentDescription" />
 
     </LinearLayout>

@@ -27,23 +27,23 @@ class CheckableCategoryWithChildrenViewHolder(
 
     init {
         binding.root.setOnClickListener { categoryClickSubject.onNext(categoryUI) }
-        binding.detailController.setOnClickListener { categoryClickSubject.onNext(categoryUI) }
-        binding.subcategoryRecycler.layoutManager = LinearLayoutManager(context)
-        binding.subcategoryRecycler.adapter = singleRootCatalogAdapter
+        binding.rbDropDown.setOnClickListener { categoryClickSubject.onNext(categoryUI) }
+        binding.rvSubcategories.layoutManager = LinearLayoutManager(context)
+        binding.rvSubcategories.adapter = singleRootCatalogAdapter
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun onBind(categoryUI: CategoryUI, way: List<CategoryUI>) {
         this.categoryUI = categoryUI
 
-        binding.detailController.isChecked = way.last().id == categoryUI.id
-        binding.name.setNameWithIndent(categoryUI.name, nestingPosition)
+        binding.rbDropDown.isChecked = way.last().id == categoryUI.id
+        binding.tvName.setNameWithIndent(categoryUI.name, nestingPosition)
 
         categoryUI.detailPicture?.let {
             Glide
                 .with(context)
                 .load(categoryUI.detailPicture)
-                .into(binding.image)
+                .into(binding.imgIcon)
         }
 
         singleRootCatalogAdapter.categoryUIList = categoryUI.categoryUIList

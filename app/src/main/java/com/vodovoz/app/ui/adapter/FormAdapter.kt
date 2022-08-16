@@ -39,32 +39,32 @@ class FormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         viewType: Int
     ) = when(viewType.viewTypeByValue()) {
         ViewType.SINGLE_LINE -> SingleLineFieldVH(
-            ViewHolderSingleLineFieldBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            ViewHolderFieldSingleLineBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             afterErrorChange,
             onFieldClick
         )
         ViewType.DOUBLE_LINE -> DoubleLineFieldVH(
-            ViewHolderDoubleLineFieldBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            ViewHolderFieldDoubleLineBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             afterErrorChange,
             onFieldClick
         )
         ViewType.TITLE -> TitleFieldVH(
-            ViewHolderTitleFieldBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ViewHolderFieldTitleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
         ViewType.SINGLE_LINE_WITH_PROMPT -> SingleLineWithPromptFieldVH(
-            ViewHolderSingleLineWithPromptFieldBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            ViewHolderFieldSingleLineWithPromptBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             afterErrorChange,
             onPromptClick,
             onFieldClick
         )
         ViewType.SWITCH -> SwitchFieldVH(
-            ViewHolderSwitchFieldBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ViewHolderFieldSwitchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
         ViewType.VALUE -> ValueFieldVH(
-            ViewHolderValueFieldBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ViewHolderFieldValueBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
         ViewType.PRICE -> PriceFieldVH(
-            ViewHolderPriceFieldBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            ViewHolderFieldPriceBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             parent.context
         )
     }
@@ -86,34 +86,34 @@ class FormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 }
 
 private class SingleLineWithPromptFieldVH(
-    private val binding: ViewHolderSingleLineWithPromptFieldBinding,
+    private val binding: ViewHolderFieldSingleLineWithPromptBinding,
     private val afterErrorChange: (FormField) -> Unit,
     private val onPromptClick: (FormField) -> Unit,
     private val onFieldClick: (FormField) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.value.doAfterTextChanged {
+        binding.tvValue.doAfterTextChanged {
             field.value = it.toString()
             field.error?.let { afterErrorChange(field) }
         }
-        binding.prompt.setOnClickListener { onPromptClick(field) }
+        binding.tvPrompt.setOnClickListener { onPromptClick(field) }
     }
 
     private lateinit var field: FormField.SingleLineWithPromptField
 
     fun onBind(field: FormField.SingleLineWithPromptField) {
         this.field = field
-        binding.name.text = field.name
-        binding.prompt.text = field.prompt
-        binding.value.setText(field.value)
-        binding.value.hint = field.hint
+        binding.tvName.text = field.name
+        binding.tvPrompt.text = field.prompt
+        binding.tvValue.setText(field.value)
+        binding.tvValue.hint = field.hint
     }
 
 }
 
 private class SingleLineFieldVH(
-    private val binding: ViewHolderSingleLineFieldBinding,
+    private val binding: ViewHolderFieldSingleLineBinding,
     private val afterErrorChange: (FormField) -> Unit,
     private val onFieldClick: (FormField) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -137,33 +137,33 @@ private class SingleLineFieldVH(
 }
 
 private class ValueFieldVH(
-    private val binding: ViewHolderValueFieldBinding
+    private val binding: ViewHolderFieldValueBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    init { binding.value.doAfterTextChanged { field.value = it.toString() } }
+    init { binding.tvValue.doAfterTextChanged { field.value = it.toString() } }
 
     private lateinit var field: FormField.ValueField
 
     fun onBind(field: FormField.ValueField) {
         this.field = field
-        binding.value.setText(field.value)
-        binding.value.hint = field.hint
+        binding.tvValue.setText(field.value)
+        binding.tvValue.hint = field.hint
     }
 
 }
 
 private class DoubleLineFieldVH(
-    private val binding: ViewHolderDoubleLineFieldBinding,
+    private val binding: ViewHolderFieldDoubleLineBinding,
     private val afterErrorChange: (FormField) -> Unit,
     private val onFieldClick: (FormField) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.firstValue.doAfterTextChanged {
+        binding.etFirstValue.doAfterTextChanged {
             field.firstValue = it.toString()
             field.error?.let { afterErrorChange(field) }
         }
-        binding.secondValue.doAfterTextChanged {
+        binding.etSecondValue.doAfterTextChanged {
             field.secondValue = it.toString()
             field.error?.let { afterErrorChange(field) }
         }
@@ -173,46 +173,46 @@ private class DoubleLineFieldVH(
 
     fun onBind(field: FormField.DoubleLineField) {
         this.field = field
-        binding.name.text = field.name
-        binding.firstValue.setText(field.firstValue)
-        binding.firstValue.setText(field.secondValue)
-        binding.firstValue.hint = field.firstHint
-        binding.secondValue.hint = field.secondHint
+        binding.tvName.text = field.name
+        binding.etFirstValue.setText(field.firstValue)
+        binding.etSecondValue.setText(field.secondValue)
+        binding.etFirstValue.hint = field.firstHint
+        binding.etSecondValue.hint = field.secondHint
     }
 
 }
 
 private class SwitchFieldVH(
-    private val binding: ViewHolderSwitchFieldBinding
+    private val binding: ViewHolderFieldSwitchBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    init { binding.value.setOnCheckedChangeListener { _, checked -> field.value = checked } }
+    init { binding.tvValue.setOnCheckedChangeListener { _, checked -> field.value = checked } }
 
     private lateinit var field: FormField.SwitchField
 
     fun onBind(field: FormField.SwitchField) {
         this.field = field
-        binding.value.text = field.name
-        binding.value.isChecked = field.value
+        binding.tvValue.text = field.name
+        binding.tvValue.isChecked = field.value
     }
 
 }
 
 private class TitleFieldVH(
-    private val binding: ViewHolderTitleFieldBinding
+    private val binding: ViewHolderFieldTitleBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private lateinit var field: FormField.TitleField
 
     fun onBind(field: FormField.TitleField) {
         this.field = field
-        binding.name.text = field.name
+        binding.tvName.text = field.name
     }
 
 }
 
 private class PriceFieldVH(
-    private val binding: ViewHolderPriceFieldBinding,
+    private val binding: ViewHolderFieldPriceBinding,
     private val context: Context
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -220,8 +220,8 @@ private class PriceFieldVH(
 
     fun onBind(field: FormField.PriceField) {
         this.field = field
-        binding.name.text = field.name
-        binding.value.text = String.format(context.getString(R.string.price_text), field.value)
+        binding.tvName.text = field.name
+        binding.tvValue.text = String.format(context.getString(R.string.price_text), field.value)
     }
 
 }

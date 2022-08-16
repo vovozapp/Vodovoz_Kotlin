@@ -58,23 +58,23 @@ class BrandsSliderFragment : BaseHiddenFragment() {
     }
 
     private fun initBrandsRecyclerView() {
-        binding.brandsRecycler.layoutManager =
+        binding.rvBrands.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         val space = resources.getDimension(R.dimen.space_16).toInt()
-        binding.brandsRecycler.onRenderFinished { width, _ ->
+        binding.rvBrands.onRenderFinished { width, _ ->
             brandsSliderAdapter = BrandsSliderAdapter(
                 onBrandClickSubject = onBrandClickSubject,
                 cardWidth = (width - (space * 4))/3
             )
-            binding.brandsRecycler.adapter = brandsSliderAdapter
+            binding.rvBrands.adapter = brandsSliderAdapter
             onAdapterReadySubject.subscribeBy { brandUIList ->
                 this.brandUIList = brandUIList
                 updateView(brandUIList)
             }.addTo(compositeDisposable)
         }
 
-        binding.brandsRecycler.addItemDecoration(
+        binding.rvBrands.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
                     outRect: Rect,
@@ -92,8 +92,8 @@ class BrandsSliderFragment : BaseHiddenFragment() {
             }
         )
         
-        binding.showAll.onRenderFinished { width, height ->  }
-        binding.showAll.setOnClickListener {
+        binding.tvShowAll.onRenderFinished { width, height ->  }
+        binding.tvShowAll.setOnClickListener {
             iOnShowAllBrandsClick.onShowAllBrandsClick()
         }
     }

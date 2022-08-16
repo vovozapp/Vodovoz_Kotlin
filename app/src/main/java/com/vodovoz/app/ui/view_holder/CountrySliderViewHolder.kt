@@ -27,12 +27,12 @@ class CountrySliderViewHolder(
     fun onBind(countryUI: CountryUI) {
         this.countryUI = countryUI
 
-        binding.name.text = countryUI.name
+        binding.tvName.text = countryUI.name
 
         Glide
             .with(context)
             .load(countryUI.detailPicture)
-            .into(binding.flag)
+            .into(binding.imgFlag)
 
     }
 

@@ -5,10 +5,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.viewpager2.widget.ViewPager2
+import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentSliderCommentBinding
 import com.vodovoz.app.ui.adapter.CommentsSliderAdapter
 import com.vodovoz.app.ui.base.BaseHiddenFragment
 import com.vodovoz.app.ui.diffUtils.CommentSliderDiffUtilCallback
+import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.interfaces.IOnCommentClick
 import com.vodovoz.app.ui.interfaces.IOnSendCommentAboutShop
 import com.vodovoz.app.ui.model.CommentUI
@@ -48,12 +50,19 @@ class CommentsSliderFragment : BaseHiddenFragment() {
     }
 
     private fun initButtons() {
-        binding.sendComment.setOnClickListener { iOnSendCommentAboutShop.sendCommentAboutShop() }
+        binding.tvSendComment.setOnClickListener { iOnSendCommentAboutShop.sendCommentAboutShop() }
     }
 
     private fun initCommentsPager() {
-        binding.commentsPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.commentsPager.adapter = commentsSliderAdapter
+        binding.vpComments.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.vpComments.adapter = commentsSliderAdapter
+        val space = resources.getDimension(R.dimen.space_16).toInt()
+        binding.vpComments.addMarginDecoration {  rect, view, parent, state ->
+            rect.left = space
+            rect.right = space
+            rect.bottom = space/2
+            rect.top = space/2
+        }
     }
 
     private fun subscribeSubjects() {

@@ -31,10 +31,10 @@ class PromotionSliderViewHolder(
     )
 
     init {
-        binding.productPager.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.productPager.setHasFixedSize(true)
+        binding.rvProducts.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvProducts.setHasFixedSize(true)
         val space = context.resources.getDimension(R.dimen.space_16).toInt()
-        binding.productPager.addItemDecoration(
+        binding.rvProducts.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
                     outRect: Rect,
@@ -51,7 +51,7 @@ class PromotionSliderViewHolder(
                 }
             }
         )
-        binding.productPager.adapter = promotionProductsSliderAdapter
+        binding.rvProducts.adapter = promotionProductsSliderAdapter
 
         binding.root.setOnClickListener { onPromotionClickSubject.onNext(promotionUI.id) }
     }
@@ -61,15 +61,15 @@ class PromotionSliderViewHolder(
     fun onBind(promotionUI: PromotionUI) {
         this.promotionUI = promotionUI
 
-        binding.title.text = promotionUI.name
-        binding.timeLeft.text = promotionUI.timeLeft
-        binding.customerCategory.text = promotionUI.customerCategory
-        binding.customerCategoryCard.setCardBackgroundColor(Color.parseColor(promotionUI.statusColor))
+        binding.tvName.text = promotionUI.name
+        binding.tvTimeLeft.text = promotionUI.timeLeft
+        binding.tvCustomerCategory.text = promotionUI.customerCategory
+        binding.cwCustomerCategory.setCardBackgroundColor(Color.parseColor(promotionUI.statusColor))
 
         Glide
             .with(context)
             .load(promotionUI.detailPicture)
-            .into(binding.detailPicture)
+            .into(binding.imgImage)
 
         val diffUtil = PromotionProductDiffUtilCallback(
             newList = promotionUI.productUIList,

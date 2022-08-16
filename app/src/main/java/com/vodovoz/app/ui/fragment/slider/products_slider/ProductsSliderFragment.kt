@@ -100,16 +100,16 @@ class ProductsSliderFragment : BaseHiddenFragment() {
     }
 
     private fun initCategoryRecycler() {
-        binding.categoryRecycler.layoutManager =
+        binding.rvCategories.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.categoryRecycler.onRenderFinished { width, _ ->
+        binding.rvCategories.onRenderFinished { width, _ ->
             categoriesAdapter = CategoriesAdapter(
                 onChangeProductQuantitySubject = onChangeProductQuantitySubject,
                 onProductClickSubject = onProductClickSubject,
                 onFavoriteClickSubject = onFavoriteClickSubject,
                 cardWidth = (width - (space * 3))/2
             )
-            binding.categoryRecycler.adapter = categoriesAdapter
+            binding.rvCategories.adapter = categoriesAdapter
             onAdapterReadySubject.subscribeBy { categoryDetailUIList ->
                 this.categoryDetailUIList = categoryDetailUIList
                 updateView(categoryDetailUIList)
@@ -118,7 +118,7 @@ class ProductsSliderFragment : BaseHiddenFragment() {
     }
 
     private fun initShowAllProductsButtons() {
-        binding.showAll.setOnClickListener {
+        binding.tvShowAll.setOnClickListener {
             categoryDetailUIList.first().id?.let { categoryId ->
                 iOnShowAllProductsClick.onShowAllProductsClick(categoryId)
             }
@@ -127,14 +127,14 @@ class ProductsSliderFragment : BaseHiddenFragment() {
 
     private fun initTabbedMediator() {
         tabbedListMediator = TabbedListMediator(
-            binding.categoryRecycler,
-            binding.categoryTabs,
+            binding.rvCategories,
+            binding.tlCategories,
             listOf()
         )
     }
 
     private fun initTabLayout() {
-        binding.categoryTabs.addOnTabSelectedListener(
+        binding.tlCategories.addOnTabSelectedListener(
             object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     tab?.view?.findViewById<TextView>(R.id.name)?.setTextColor(
@@ -172,19 +172,19 @@ class ProductsSliderFragment : BaseHiddenFragment() {
     private fun updateCategoryTabs(categoryDetailUIList: List<CategoryDetailUI>) {
         when(categoryDetailUIList.size) {
             1 -> {
-                binding.categoryTabs.visibility = View.GONE
-                binding.singleTitleContainer.visibility = View.VISIBLE
-                binding.title.text = categoryDetailUIList.first().name
+                binding.tlCategories.visibility = View.GONE
+                binding.llSingleTitleContainer.visibility = View.VISIBLE
+                binding.tvName.text = categoryDetailUIList.first().name
                 when (config.containShowAllButton) {
-                    true -> binding.showAll.visibility = View.VISIBLE
-                    false -> binding.showAll.visibility = View.INVISIBLE
+                    true -> binding.tvShowAll.visibility = View.VISIBLE
+                    false -> binding.tvShowAll.visibility = View.INVISIBLE
                 }
             }
             else -> {
-                binding.categoryTabs.visibility = View.VISIBLE
-                binding.singleTitleContainer.visibility = View.GONE
+                binding.tlCategories.visibility = View.VISIBLE
+                binding.llSingleTitleContainer.visibility = View.GONE
                 for (index in categoryDetailUIList.indices) {
-                    binding.categoryTabs.newTab().apply {
+                    binding.tlCategories.newTab().apply {
                         val customTabBinding = ViewCustomTabBinding.inflate(
                             LayoutInflater.from(requireContext()), null, false
                         )
@@ -221,7 +221,7 @@ class ProductsSliderFragment : BaseHiddenFragment() {
 
                         customTabBinding.name.text = categoryDetailUIList[index].name
                         customView = customTabBinding.root
-                        binding.categoryTabs.addTab(this)
+                        binding.tlCategories.addTab(this)
                     }
                 }
                 tabbedListMediator.updateMediatorWithNewIndices(categoryDetailUIList.indices.toList())

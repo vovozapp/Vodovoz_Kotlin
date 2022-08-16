@@ -13,14 +13,14 @@ class DetailPicturePagerViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.detailPicture.setOnClickListener { iOnProductDetailPictureClick.onProductDetailPictureClick() }
+        binding.imgPicture.setOnClickListener { iOnProductDetailPictureClick.onProductDetailPictureClick() }
     }
 
     fun onBind(detailPictureUrl: String) {
         Glide
             .with(context)
             .load(detailPictureUrl)
-            .into(binding.detailPicture)
+            .into(binding.imgPicture)
     }
 
 }

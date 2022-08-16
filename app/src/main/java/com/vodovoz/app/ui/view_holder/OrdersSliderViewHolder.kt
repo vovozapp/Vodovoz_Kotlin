@@ -3,6 +3,7 @@ package com.vodovoz.app.ui.view_holder
 import android.content.Context
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderSliderOrderBinding
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setDrawableColor
@@ -24,14 +25,14 @@ class OrdersSliderViewHolder(
     fun onBind(orderUI: OrderUI) {
         this.orderUI = orderUI
 
-        binding.status.text = orderUI.orderStatusUI?.statusName
-        binding.address.text = orderUI.address
-        binding.price.setPriceText(orderUI.price!!)
-        binding.status.setDrawableColor(orderUI.orderStatusUI!!.color)
-        binding.action.setBackgroundColor(ContextCompat.getColor(context, orderUI.orderStatusUI.color))
-        binding.status.setCompoundDrawablesWithIntrinsicBounds(
-            ContextCompat.getDrawable(context, orderUI.orderStatusUI.image), null, null, null
-        )
+        binding.tvStatus.text = orderUI.orderStatusUI?.statusName
+        binding.tvAddress.text = orderUI.address
+        binding.tvPrice.setPriceText(orderUI.price!!)
+        orderUI.orderStatusUI?.let {
+            binding.tvStatus.setTextColor(ContextCompat.getColor(context, orderUI.orderStatusUI.color))
+            binding.imgStatus.setImageDrawable(ContextCompat.getDrawable(context, orderUI.orderStatusUI.image))
+            binding.imgStatus.setColorFilter(ContextCompat.getColor(context, orderUI.orderStatusUI.color))
+        }
     }
 
 }

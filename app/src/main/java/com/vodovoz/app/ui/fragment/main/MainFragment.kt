@@ -35,10 +35,10 @@ class MainFragment : Fragment() {
     }.root
 
     private fun setupBottomNav() {
-        val navHostFragment = (childFragmentManager.findFragmentById(R.id.mainContainer)) as NavHostFragment
+        val navHostFragment = (childFragmentManager.findFragmentById(R.id.fgvContainer)) as NavHostFragment
         val navController = navHostFragment.navController
 
-        binding.navView.setOnItemSelectedListener { menuItem ->
+        binding.nvNavigation.setOnItemSelectedListener { menuItem ->
             when(menuItem.itemId) {
                 R.id.homeFragment -> navController.navigate(R.id.homeFragment, bundleOf(Pair(HomeFragment.IS_SHOW_POPUP_NEWS, false)))
                 else -> navController.navigate(menuItem.itemId)
@@ -61,11 +61,11 @@ class MainFragment : Fragment() {
     }
 
     private fun hideBottomNavigation() {
-        binding.navView.visibility = View.GONE
+        binding.nvNavigation.visibility = View.GONE
     }
 
     private fun showBottomNavigation() {
-        binding.navView.visibility = View.VISIBLE
+        binding.nvNavigation.visibility = View.VISIBLE
     }
 
     override fun onStart() {

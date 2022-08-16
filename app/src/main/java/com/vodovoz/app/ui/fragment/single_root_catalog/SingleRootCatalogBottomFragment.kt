@@ -91,14 +91,15 @@ class SingleRootCatalogBottomFragment : ViewStateBaseBottomFragment() {
     }
 
     private fun initCategoryRecycler() {
-        binding.categoryRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.categoryRecycler.adapter = singleRootCatalogAdapter
-        binding.categoryRecycler.addItemDecoration(verticalMarginItemDecoration)
-        binding.categoryRecycler.addOnScrollListener(
+        binding.incHeader.tvTitle.text = getString(R.string.categories_title)
+        binding.rvCategories.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvCategories.adapter = singleRootCatalogAdapter
+        binding.rvCategories.addItemDecoration(verticalMarginItemDecoration)
+        binding.rvCategories.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    binding.ab.elevation =
-                        if (binding.categoryRecycler.canScrollVertically(-1)) 16f
+                    binding.abAppBar.elevation =
+                        if (binding.rvCategories.canScrollVertically(-1)) 16f
                         else 0f
                 }
             }
@@ -106,7 +107,7 @@ class SingleRootCatalogBottomFragment : ViewStateBaseBottomFragment() {
     }
 
     private fun initCloseButton() {
-        binding.close.setOnClickListener {
+        binding.incHeader.imgClose.setOnClickListener {
             dialog?.cancel()
         }
     }
@@ -136,7 +137,7 @@ class SingleRootCatalogBottomFragment : ViewStateBaseBottomFragment() {
     }
 
     private fun initApplyButton() {
-        binding.apply.setOnClickListener {
+        binding.btnChoose.setOnClickListener {
             findNavController().previousBackStackEntry
                 ?.savedStateHandle?.set(PaginatedProductsCatalogFragment.CATEGORY_ID, viewModel.selectedCategoryId)
             dialog?.dismiss()

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--new(mnr)-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -6,8 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingStart="8dp"
-    android:paddingEnd="8dp"
+    android:paddingStart="@dimen/space_8"
+    android:paddingEnd="@dimen/space_8"
     android:baselineAligned="false">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,8 +20,8 @@
             android:id="@+id/lastPurchases"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
-            app:cardCornerRadius="10dp"
+            android:layout_margin="@dimen/space_8"
+            app:cardCornerRadius="@dimen/corner_5"
             app:cardElevation="@dimen/card_elevation"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
@@ -35,7 +36,7 @@
                 android:padding="8dp"
                 tools:ignore="UseCompoundDrawables">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_above="@+id/pastPurchasesDivider"
@@ -49,15 +50,14 @@
                     android:layout_height="10dp"
                     android:layout_centerInParent="true" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/TextViewNormalGray"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/pastPurchasesDivider"
                     android:layout_centerHorizontal="true"
-                    android:fontFamily="@font/rotonda_normal"
                     android:gravity="center"
-                    android:text="@string/last_purchases"
-                    android:textColor="@color/blackTextPrimary" />
+                    android:text="@string/last_purchases" />
 
             </RelativeLayout>
 
@@ -74,8 +74,8 @@
             android:id="@+id/favorite"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
-            app:cardCornerRadius="10dp"
+            android:layout_margin="@dimen/space_8"
+            app:cardCornerRadius="@dimen/corner_5"
             app:cardElevation="@dimen/card_elevation"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
@@ -90,12 +90,13 @@
                 android:padding="8dp"
                 tools:ignore="UseCompoundDrawables">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_above="@+id/favoriteDivider"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/ic_favorite_border"
+                    android:src="@drawable/png_ic_favorite"
+                    app:tint="@color/bluePrimary"
                     tools:ignore="ContentDescription" />
 
                 <View
@@ -104,15 +105,14 @@
                     android:layout_height="10dp"
                     android:layout_centerInParent="true" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/TextViewNormalGray"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/favoriteDivider"
                     android:layout_centerHorizontal="true"
-                    android:fontFamily="@font/rotonda_normal"
                     android:gravity="center"
-                    android:text="@string/additional_navigation_favorite"
-                    android:textColor="@color/blackTextPrimary" />
+                    android:text="@string/additional_navigation_favorite" />
 
             </RelativeLayout>
 
@@ -129,8 +129,8 @@
             android:id="@+id/ordersHistory"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
-            app:cardCornerRadius="10dp"
+            android:layout_margin="@dimen/space_8"
+            app:cardCornerRadius="@dimen/corner_5"
             app:cardElevation="@dimen/card_elevation"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
@@ -145,7 +145,7 @@
                 android:padding="8dp"
                 tools:ignore="UseCompoundDrawables">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_above="@+id/orderHistoryDivider"
@@ -159,15 +159,14 @@
                     android:layout_height="10dp"
                     android:layout_centerInParent="true" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/TextViewNormalGray"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/orderHistoryDivider"
                     android:layout_centerHorizontal="true"
-                    android:fontFamily="@font/rotonda_normal"
                     android:gravity="center"
-                    android:text="@string/additional_navigation_order_history"
-                    android:textColor="@color/blackTextPrimary" />
+                    android:text="@string/additional_navigation_order_history" />
 
             </RelativeLayout>
 

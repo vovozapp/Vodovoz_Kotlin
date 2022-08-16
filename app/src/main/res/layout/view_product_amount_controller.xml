@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--new(nr)-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -6,15 +7,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.AppCompatImageButton
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/add"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="@dimen/space_8"
-        android:layout_marginEnd="@dimen/space_8"
+        android:layout_marginTop="@dimen/space_6"
+        android:layout_marginEnd="@dimen/space_6"
         android:background="@drawable/bkg_button_green_circle_normal"
-        android:padding="8dp"
         android:visibility="visible"
+        android:src="@drawable/png_cart"
+        android:padding="@dimen/space_6"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/circleAmount"
         app:layout_constraintTop_toTopOf="@+id/circleAmount"
@@ -25,7 +27,7 @@
         android:id="@+id/amountControllerDeployed"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_8"
+        android:layout_marginTop="@dimen/space_6"
         android:orientation="horizontal"
         android:src="@drawable/png_cart"
         android:visibility="invisible"
@@ -46,14 +48,12 @@
 
         <TextView
             android:id="@+id/amount"
+            style="@style/TextViewNormalBlackBold"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_weight="1"
             android:background="@drawable/bkg_number_controller_part_number"
-            android:fontFamily="@font/rotonda_bold"
             android:gravity="center"
-            android:textColor="@color/blackTextPrimary"
-            android:textSize="16sp"
             tools:text="1" />
 
         <ImageView
@@ -62,7 +62,7 @@
             android:layout_height="30dp"
             android:layout_weight="1"
             android:background="@drawable/bkg_number_controller_part_increase"
-            android:padding="8dp"
+            android:padding="@dimen/space_6"
             android:src="@drawable/png_cart"
             tools:ignore="ContentDescription" />
 

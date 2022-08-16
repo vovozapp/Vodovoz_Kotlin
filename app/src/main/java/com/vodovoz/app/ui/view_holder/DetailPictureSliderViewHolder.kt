@@ -13,7 +13,7 @@ class DetailPictureSliderViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.detailPicture.setOnClickListener { onProductDetailPictureClickSubject.onNext(pair.first) }
+        binding.imgPicture.setOnClickListener { onProductDetailPictureClickSubject.onNext(pair.first) }
     }
 
     private lateinit var pair: Pair<Long, String>
@@ -23,7 +23,7 @@ class DetailPictureSliderViewHolder(
         Glide
             .with(context)
             .load(pair.second)
-            .into(binding.detailPicture)
+            .into(binding.imgPicture)
     }
 
 }

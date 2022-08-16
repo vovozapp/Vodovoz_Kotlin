@@ -10,11 +10,11 @@ class OrderStatusViewHolder(
 
     init {
         binding.root.setOnClickListener {
-            binding.check.isChecked = !binding.check.isChecked
-            orderStatusUI.isChecked = binding.check.isChecked
+            binding.cbChecked.isChecked = !binding.cbChecked.isChecked
+            orderStatusUI.isChecked = binding.cbChecked.isChecked
         }
 
-        binding.check.setOnCheckedChangeListener { _, isChecked ->
+        binding.cbChecked.setOnCheckedChangeListener { _, isChecked ->
             orderStatusUI.isChecked = isChecked
         }
     }
@@ -24,7 +24,7 @@ class OrderStatusViewHolder(
     fun onBind(orderStatusUI: OrderStatusUI) {
         this.orderStatusUI = orderStatusUI
 
-        binding.status.text = orderStatusUI.statusName
-        binding.check.isChecked = orderStatusUI.isChecked
+        binding.tvName.text = orderStatusUI.statusName
+        binding.cbChecked.isChecked = orderStatusUI.isChecked
     }
 }

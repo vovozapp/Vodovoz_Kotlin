@@ -24,11 +24,11 @@ class ServiceViewHolder(
     fun onBind(serviceUI: ServiceUI) {
         this.serviceUI = serviceUI
 
-        binding.name.text = serviceUI.name
-        binding.price.text = serviceUI.price
+        binding.tvName.text = serviceUI.name
+        binding.tvPrice.text = serviceUI.price
 
         Glide.with(context)
             .load(serviceUI.detailPicture)
-            .into(binding.picture)
+            .into(binding.imgPicture)
     }
 }

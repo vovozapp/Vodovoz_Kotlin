@@ -1,6 +1,8 @@
 package com.vodovoz.app.ui.extensions
 
+import android.util.Log
 import android.widget.TextView
+import com.vodovoz.app.util.LogSettings
 
 object PriceTextBuilderExtensions {
 
@@ -13,7 +15,7 @@ object PriceTextBuilderExtensions {
 
     fun TextView.setDiscountText(oldPrice: Int, newPrice: Int) {
         this.text = StringBuilder()
-            .append((100.0 - (newPrice/oldPrice) * 100).toInt())
+            .append((100.0 - ((newPrice.toDouble()/oldPrice.toDouble()) * 100)).toInt())
             .append("%")
             .toString()
     }

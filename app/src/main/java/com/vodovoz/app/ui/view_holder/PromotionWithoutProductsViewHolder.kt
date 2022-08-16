@@ -24,19 +24,19 @@ class PromotionWithoutProductsViewHolder(
     fun onBind(promotionUI: PromotionUI) {
         this.promotionUI = promotionUI
 
-        binding.title.text = promotionUI.name
-        binding.timeLeft.text = promotionUI.timeLeft
+        binding.tvName.text = promotionUI.name
+        binding.tvTimeLeft.text = promotionUI.timeLeft
         when(promotionUI.customerCategory) {
-            null -> binding.customerCategory.visibility = View.GONE
-            else -> binding.customerCategory.text = promotionUI.customerCategory
+            null -> binding.tvCustomerCategory.visibility = View.GONE
+            else -> binding.tvCustomerCategory.text = promotionUI.customerCategory
         }
         promotionUI.statusColor?.let { noNullColor ->
-            binding.customerCategoryCard.setCardBackgroundColor(Color.parseColor(noNullColor))
+            binding.cwCustomerCategory.setCardBackgroundColor(Color.parseColor(noNullColor))
         }
 
         Glide
             .with(context)
             .load(promotionUI.detailPicture)
-            .into(binding.detailPicture)
+            .into(binding.imgImage)
     }
 }

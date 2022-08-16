@@ -15,6 +15,7 @@ import com.vodovoz.app.databinding.FragmentSliderCountryBinding
 import com.vodovoz.app.ui.adapter.CountriesSliderAdapter
 import com.vodovoz.app.ui.base.*
 import com.vodovoz.app.ui.diffUtils.CountrySliderDiffUtilCallback
+import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.interfaces.IOnCountryClick
 import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
 import com.vodovoz.app.ui.model.CountryUI
@@ -59,17 +60,24 @@ class CountriesSliderFragment : BaseHiddenFragment() {
     }
 
     private fun initCountriesRecyclerView() {
-        binding.countriesRecycler.layoutManager =
+        binding.rvCountries.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         val space = resources.getDimension(R.dimen.space_16).toInt()
-        binding.countriesRecycler.addItemDecoration(HorizontalMarginItemDecoration(space))
-        binding.countriesRecycler.onRenderFinished { width, _ ->
+        binding.rvCountries.addMarginDecoration { rect, view, parent, state ->
+            if (parent.getChildAdapterPosition(view) == 0) {
+                rect.left = space
+            }
+            rect.top = space / 2
+            rect.right = space
+            rect.bottom = space
+        }
+        binding.rvCountries.onRenderFinished { width, _ ->
             countriesSliderAdapter = CountriesSliderAdapter(
                 onCountryClickSubject = onCountryClickSubject,
                 cardWidth = (width - (space * 4))/3
             )
-            binding.countriesRecycler.adapter = countriesSliderAdapter
+            binding.rvCountries.adapter = countriesSliderAdapter
             onAdapterReadySubject.subscribeBy { countriesSliderBundleUI ->
                 this.countriesSliderBundleUI = countriesSliderBundleUI
                 updateView(countriesSliderBundleUI)
@@ -95,6 +103,7 @@ class CountriesSliderFragment : BaseHiddenFragment() {
     private fun updateView(countrySliderBundleUI: CountriesSliderBundleUI) {
         updateCountriesRecycler(countrySliderBundleUI.countryUIList)
 
+        binding.tvName.text = countrySliderBundleUI.title
         Glide.with(requireContext())
             .load(countrySliderBundleUI.backgroundPicture)
             .into(object : CustomTarget<Drawable?>() {

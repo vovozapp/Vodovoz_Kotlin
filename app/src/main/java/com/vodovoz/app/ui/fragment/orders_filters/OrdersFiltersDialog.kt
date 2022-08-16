@@ -70,8 +70,8 @@ class OrdersFiltersDialog : DialogFragment() {
             orderStatusUIList.find { it == orderStatusUI }?.let { it.isChecked = true }
         }
         orderStatusesAdapter = OrderStatusesAdapter().also { it.orderStatusUIList = this.orderStatusUIList }
-        binding.orderStatusesRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.orderStatusesRecycler.adapter = orderStatusesAdapter
+        binding.rvOrderStatuses.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvOrderStatuses.adapter = orderStatusesAdapter
     }
 
     private fun initButtons() {

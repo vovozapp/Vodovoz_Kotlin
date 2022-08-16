@@ -60,14 +60,14 @@ class PromotionsSliderFragment : BaseHiddenFragment() {
     }
 
     private fun initHeader() {
-        binding.showAll.setOnClickListener {
+        binding.tvShowAll.setOnClickListener {
             iOnShowAllPromotionsClick.onShowAllPromotionsClick()
         }
     }
 
     private fun initPromotionPager() {
-        binding.promotionRager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.promotionRager.adapter = promotionsSliderAdapter
+        binding.vpPromotions.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.vpPromotions.adapter = promotionsSliderAdapter
     }
 
     private fun subscribeSubjects() {
@@ -99,10 +99,10 @@ class PromotionsSliderFragment : BaseHiddenFragment() {
     }
 
     private fun updateHeader(title: String, containShowAllButton: Boolean) {
-        binding.title.text = title
+        binding.tvName.text = title
         when(containShowAllButton) {
-            true -> binding.showAll.visibility = View.VISIBLE
-            false -> binding.showAll.visibility = View.INVISIBLE
+            true -> binding.tvShowAll.visibility = View.VISIBLE
+            false -> binding.tvShowAll.visibility = View.INVISIBLE
         }
     }
 

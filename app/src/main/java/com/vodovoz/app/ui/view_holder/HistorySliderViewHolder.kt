@@ -31,7 +31,7 @@ class HistorySliderViewHolder(
         Glide
             .with(context)
             .load(historyUI.detailPicture)
-            .into(binding.detailPicture)
+            .into(binding.imgPicture)
 
     }
 

@@ -27,7 +27,7 @@ class BannerSliderViewHolder(
         Glide
             .with(context)
             .load(bannerUI.detailPicture)
-            .into(binding.detailPicture)
+            .into(binding.imgPicture)
     }
 
 }

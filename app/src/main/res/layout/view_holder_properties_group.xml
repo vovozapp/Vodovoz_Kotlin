@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--new-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,28 +7,20 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/name"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvName"
+        style="@style/TextViewMediumBlackBold"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/space_8"
-        android:paddingBottom="@dimen/space_8"
-        android:paddingStart="@dimen/space_16"
-        android:paddingEnd="@dimen/space_16"
-        android:fontFamily="@font/rotonda_normal"
-        android:textSize="18sp"
-        android:textColor="@color/blackTextPrimary"
-        android:textStyle="bold"
+        android:layout_height="@dimen/field_height"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/space_16"
         android:background="@color/light_gray"
         tools:text="Основные"/>
 
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/propertyRecycler"
+        android:id="@+id/rvProperties"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/space_24"/>
 
 </LinearLayout>

@@ -14,4 +14,15 @@
     //How to Order
     <string name="how_order_title">Как заказать</string>
 
+    //Histories
+    <string name="histories_title">Истории</string>
+
+    //Popular
+    <string name="popular_categories_slider_title">Популярное</string>
+
+    //Promotions
+    <string name="promotions_slider_title">Акции</string>
+
+    //Orders
+    <string name="orders_slider_title">Мои заказы</string>
 </resources>

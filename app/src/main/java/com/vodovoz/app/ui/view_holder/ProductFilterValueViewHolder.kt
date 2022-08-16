@@ -10,7 +10,7 @@ class ProductFilterValueViewHolder(
 
     init {
         binding.root.setOnClickListener { changeSelectedState() }
-        binding.check.setOnClickListener { changeSelectedState() }
+        binding.cbChecked.setOnClickListener { changeSelectedState() }
     }
 
     private fun changeSelectedState() {
@@ -23,12 +23,12 @@ class ProductFilterValueViewHolder(
     fun onBind(filterValueUI: FilterValueUI) {
         this.filterValueUI = filterValueUI
 
-        binding.name.text = filterValueUI.value
+        binding.tvName.text = filterValueUI.value
         updateSelectedState()
     }
 
     private fun updateSelectedState() {
-        binding.check.isChecked = filterValueUI.isSelected
+        binding.cbChecked.isChecked = filterValueUI.isSelected
     }
 
 }

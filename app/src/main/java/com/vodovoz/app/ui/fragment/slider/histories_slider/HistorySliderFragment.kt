@@ -57,23 +57,23 @@ class HistorySliderFragment : BaseHiddenFragment() {
     }
 
     private fun initHistoriesRecyclerView() {
-        binding.historiesRecycler.layoutManager =
+        binding.rvHistories.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         val space = resources.getDimension(R.dimen.space_16).toInt()
-        binding.historiesRecycler.onRenderFinished { width, _ ->
+        binding.rvHistories.onRenderFinished { width, _ ->
             historiesSliderAdapter = HistoriesSliderAdapter(
                 onHistoryClickSubject = onHistoryClickSubject,
                 cardWidth = (width - (space * 4))/3
             )
-            binding.historiesRecycler.adapter = historiesSliderAdapter
+            binding.rvHistories.adapter = historiesSliderAdapter
             onAdapterReadySubject.subscribeBy { historyUIList ->
                 this.historyUIList = historyUIList
                 updateView(historyUIList)
             }.addTo(compositeDisposable)
         }
 
-        binding.historiesRecycler.addItemDecoration(
+        binding.rvHistories.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
                     outRect: Rect,

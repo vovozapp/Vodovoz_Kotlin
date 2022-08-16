@@ -47,11 +47,11 @@ class PopularCategoriesSliderFragment : BaseHiddenFragment() {
     }
 
     private fun initPopularRecyclerView() {
-        binding.popularRecycler.layoutManager =
+        binding.rvPopularCategories.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         val space = resources.getDimension(R.dimen.space_16).toInt()
-        binding.popularRecycler.addItemDecoration(HorizontalMarginItemDecoration(space))
-        binding.popularRecycler.adapter = popularCategoriesSliderAdapter
+        binding.rvPopularCategories.addItemDecoration(HorizontalMarginItemDecoration(space))
+        binding.rvPopularCategories.adapter = popularCategoriesSliderAdapter
     }
 
     private fun subscribeSubjects() {

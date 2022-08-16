@@ -33,7 +33,7 @@ class WebViewFragment : ViewStateBaseFragment() {
     }
 
     override fun update() {
-        binding.webContent.reload()
+        binding.wvContent.reload()
     }
 
     override fun setContentView(
@@ -51,23 +51,16 @@ class WebViewFragment : ViewStateBaseFragment() {
     }
 
     private fun initAppBar() {
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        (requireActivity() as AppCompatActivity).supportActionBar?.let { noNullActionBar ->
-            noNullActionBar.setDisplayHomeAsUpEnabled(true)
-            noNullActionBar.setDisplayShowHomeEnabled(true)
-        }
-        binding.toolbar.title = title
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
+        binding.incAppBar.tvTitle.text = title
+        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView() {
         onStateSuccess()
-        binding.contentScrollContainer.setScrollElevation(binding.appbar)
-        binding.webContent.settings.javaScriptEnabled = true
-        binding.webContent.webViewClient = object : WebViewClient() {
+        binding.svContentContainer.setScrollElevation(binding.appbar)
+        binding.wvContent.settings.javaScriptEnabled = true
+        binding.wvContent.webViewClient = object : WebViewClient() {
             override fun onReceivedError(
                 view: WebView?,
                 request: WebResourceRequest?,
@@ -78,7 +71,7 @@ class WebViewFragment : ViewStateBaseFragment() {
             }
         }
 
-        binding.webContent.loadUrl(url)
+        binding.wvContent.loadUrl(url)
     }
 
 }

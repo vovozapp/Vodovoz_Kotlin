@@ -4,8 +4,11 @@
     <dimen name="corner_10">@dimen/_10sdp</dimen>
 
     //Margin
+    <dimen name="space_2">@dimen/_2sdp</dimen>
     <dimen name="space_4">@dimen/_4sdp</dimen>
+    <dimen name="space_6">@dimen/_6sdp</dimen>
     <dimen name="space_8">@dimen/_8sdp</dimen>
+    <dimen name="space_12">@dimen/_12sdp</dimen>
     <dimen name="space_16">@dimen/_16sdp</dimen>
     <dimen name="space_24">@dimen/_24sdp</dimen>
     <dimen name="last_item_bottom_normal_space">@dimen/_72sdp</dimen>
@@ -25,5 +28,6 @@
     //Buttons
     <dimen name="button_normal_height">@dimen/_40sdp</dimen>
     <dimen name="button_small_height">@dimen/_30sdp</dimen>
+    <dimen name="field_height">@dimen/_35sdp</dimen>
 
 </resources>

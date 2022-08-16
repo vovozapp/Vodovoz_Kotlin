@@ -20,15 +20,15 @@ class ProductPropertyGroupViewHolder(
     private val productPropertiesAdapter = ProductPropertiesAdapter()
 
     init {
-        binding.propertyRecycler.layoutManager = LinearLayoutManager(context)
-        binding.propertyRecycler.adapter = productPropertiesAdapter
-        binding.propertyRecycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        binding.propertyRecycler.addItemDecoration(PropertyMarginDecoration(space))
+        binding.rvProperties.layoutManager = LinearLayoutManager(context)
+        binding.rvProperties.adapter = productPropertiesAdapter
+        binding.rvProperties.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        binding.rvProperties.addItemDecoration(PropertyMarginDecoration(space))
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun onBind(propertiesGroupUI: PropertiesGroupUI, viewMode: ProductPropertyGroupsAdapter.ViewMode) {
-        binding.name.text = propertiesGroupUI.name
+        binding.tvName.text = propertiesGroupUI.name
         productPropertiesAdapter.viewMode = viewMode
         productPropertiesAdapter.propertyUIList = propertiesGroupUI.propertyUIList
         productPropertiesAdapter.notifyDataSetChanged()
