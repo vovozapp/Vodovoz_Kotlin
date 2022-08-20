@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/name"
+        android:id="@+id/tvName"
         style="@style/TextViewNormalBlackBold"
         android:layout_width="match_parent"
         android:layout_height="@dimen/field_height"
@@ -18,7 +18,7 @@
         tools:text="Название"/>
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/value"
+        android:id="@+id/tvValue"
         style="@style/EditTextViewNormalGray"
         android:layout_width="match_parent"
         android:layout_height="@dimen/field_height"

@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/incAppBar"
-        layout="@layout/view_app_bar_search" />
+        layout="@layout/app_bar_search" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvBrands"

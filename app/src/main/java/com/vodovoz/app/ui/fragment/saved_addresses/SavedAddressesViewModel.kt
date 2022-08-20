@@ -8,6 +8,7 @@ import com.vodovoz.app.data.config.AddressConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.mapper.AddressMapper.mapToUI
+import com.vodovoz.app.ui.fragment.ordering.OrderType
 import com.vodovoz.app.ui.model.AddressUI
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -28,6 +29,14 @@ class SavedAddressesViewModel(
 
     private val compositeDisposable = CompositeDisposable()
     private var isUpdateSuccess = false
+
+    var openMode: OpenMode? = null
+    var orderType: OrderType? = null
+
+    fun updateArgs(openMode: OpenMode, orderType: OrderType) {
+        this.openMode = openMode
+        this.orderType = orderType
+    }
 
     fun updateData() {
         dataRepository

@@ -67,6 +67,17 @@ interface RemoteDataSource {
     //Превью для поиска
     fun fetchSearchDefaultData(): Single<ResponseEntity<DefaultSearchDataBundleEntity>>
 
+    fun fetchPayMethods(
+        addressId: Long?,
+        userId: Long?
+    ): Single<ResponseEntity<List<PayMethodEntity>>>
+
+    fun fetchShippingIntervals(
+        addressId: Long?,
+        userId: Long?,
+        date: String?
+    ): Single<ResponseEntity<List<ShippingIntervalEntity>>>
+
     //Удаление продукта из корзины
     fun deleteProductFromCart(
         productId: Long
@@ -83,6 +94,8 @@ interface RemoteDataSource {
 
     //Слайдер стран на главной странице
     fun fetchCountriesSlider(): Single<ResponseEntity<CountriesSliderBundleEntity>>
+
+    fun fetchFreeShippingDaysInfoResponse(): Single<ResponseEntity<FreeShippingDaysInfoBundleEntity>>
 
     //Информация о выбранной стране
     fun fetchCountryHeader(

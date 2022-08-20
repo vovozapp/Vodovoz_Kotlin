@@ -71,7 +71,7 @@
                 android:textColorHint="@color/blackTextPrimary"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:background="@android:color/transparent"
                 android:layout_weight="1" />
 

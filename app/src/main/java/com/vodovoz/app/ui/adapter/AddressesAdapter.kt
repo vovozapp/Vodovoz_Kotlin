@@ -28,7 +28,7 @@ class AddressesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var itemList = listOf<AddressesAdapterItem>()
     private lateinit var deleteAddress: (AddressUI) -> Unit
     private lateinit var editAddress: (AddressUI) -> Unit
-
+    private lateinit var onAddressClick: (AddressUI) -> Unit
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateData(itemList: List<AddressesAdapterItem>) {
@@ -38,10 +38,12 @@ class AddressesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     fun setupListeners(
         deleteAddress: (AddressUI) -> Unit,
-        editAddress: (AddressUI) -> Unit
+        editAddress: (AddressUI) -> Unit,
+        onAddressClick: (AddressUI) -> Unit
     ) {
         this.deleteAddress = deleteAddress
         this.editAddress = editAddress
+        this.onAddressClick = onAddressClick
     }
 
     override fun getItemViewType(position: Int) = when(val type = itemList[position].type) {
@@ -56,7 +58,8 @@ class AddressesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         AddressesAdapterItemType.ADDRESS.value -> AddressVH(
             binding = ViewHolderAddressBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             deleteAddress = deleteAddress,
-            editAddress = editAddress
+            editAddress = editAddress,
+            onAddressClick = onAddressClick
         )
         AddressesAdapterItemType.ADDRESSES_TYPE_TITLE.value -> AddressesTypeTitleVH(
             binding = ViewHolderAddressesTypeTitleBinding.inflate(LayoutInflater.from(parent.context), parent, false),
@@ -92,11 +95,13 @@ class AddressesTypeTitleVH(
 class AddressVH(
     private val binding: ViewHolderAddressBinding,
     private val deleteAddress: (AddressUI) -> Unit,
-    private val editAddress: (AddressUI) -> Unit
+    private val editAddress: (AddressUI) -> Unit,
+    private val onAddressClick: (AddressUI) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
         binding.imgEdit.setOnClickListener { editAddress(addressUI) }
+        binding.root.setOnClickListener { onAddressClick(addressUI) }
         binding.root.setOnLongClickListener {
             deleteAddress(addressUI)
             false

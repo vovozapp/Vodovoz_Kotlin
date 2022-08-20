@@ -16,7 +16,7 @@
 
         <include
             android:id="@+id/incAppBar"
-            layout="@layout/view_app_bar_default" />
+            layout="@layout/app_bar_default" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

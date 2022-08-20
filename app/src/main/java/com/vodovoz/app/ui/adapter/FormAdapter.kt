@@ -2,20 +2,28 @@ package com.vodovoz.app.ui.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.InputType
+import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doBeforeTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.*
 import com.vodovoz.app.ui.adapter.ViewType.Companion.viewTypeByValue
+import com.vodovoz.app.util.LogSettings
 import java.lang.Exception
 
 class FormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private lateinit var afterErrorChange: (FormField) -> Unit
     private lateinit var onPromptClick: (FormField) -> Unit
-    private lateinit var onFieldClick: (FormField) -> Unit
+    private lateinit var onFieldClick: (FormField, Int?) -> Unit
+    private lateinit var onSwitchChange: (FormField) -> Unit
 
     var formFieldList = listOf<FormField>()
         @SuppressLint("NotifyDataSetChanged")
@@ -26,10 +34,14 @@ class FormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     fun setupListeners(
         afterErrorChange: (FormField) -> Unit,
-        onPromptClick: (FormField) -> Unit
+        onPromptClick: (FormField) -> Unit,
+        onFieldClick: (FormField, Int?) -> Unit,
+        onSwitchChange: (FormField) -> Unit
     ) {
         this.afterErrorChange = afterErrorChange
         this.onPromptClick = onPromptClick
+        this.onFieldClick = onFieldClick
+        this.onSwitchChange = onSwitchChange
     }
 
     override fun getItemViewType(position: Int) = formFieldList[position].viewType.value
@@ -58,10 +70,12 @@ class FormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             onFieldClick
         )
         ViewType.SWITCH -> SwitchFieldVH(
-            ViewHolderFieldSwitchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ViewHolderFieldSwitchBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            onSwitchChange
         )
         ViewType.VALUE -> ValueFieldVH(
-            ViewHolderFieldValueBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ViewHolderFieldValueBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            onFieldClick
         )
         ViewType.PRICE -> PriceFieldVH(
             ViewHolderFieldPriceBinding.inflate(LayoutInflater.from(parent.context), parent, false),
@@ -89,7 +103,7 @@ private class SingleLineWithPromptFieldVH(
     private val binding: ViewHolderFieldSingleLineWithPromptBinding,
     private val afterErrorChange: (FormField) -> Unit,
     private val onPromptClick: (FormField) -> Unit,
-    private val onFieldClick: (FormField) -> Unit,
+    private val onFieldClick: (FormField, Int?) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
@@ -108,6 +122,15 @@ private class SingleLineWithPromptFieldVH(
         binding.tvPrompt.text = field.prompt
         binding.tvValue.setText(field.value)
         binding.tvValue.hint = field.hint
+        when(field.isEditable) {
+            true -> binding.tvValue.setOnEditorActionListener(null)
+            false -> {
+                binding.tvValue.onFocusChangeListener = View.OnFocusChangeListener { p0, p1 ->
+                    binding.tvValue.clearFocus()
+                    if (p1) onFieldClick(field, null)
+                }
+            }
+        }
     }
 
 }
@@ -115,11 +138,11 @@ private class SingleLineWithPromptFieldVH(
 private class SingleLineFieldVH(
     private val binding: ViewHolderFieldSingleLineBinding,
     private val afterErrorChange: (FormField) -> Unit,
-    private val onFieldClick: (FormField) -> Unit,
+    private val onFieldClick: (FormField, Int?) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.value.doAfterTextChanged {
+        binding.tvValue.doAfterTextChanged {
             field.value = it.toString()
             field.error?.let { afterErrorChange(field) }
         }
@@ -129,15 +152,25 @@ private class SingleLineFieldVH(
 
     fun onBind(field: FormField.SingleLineField) {
         this.field = field
-        binding.name.text = field.name
-        binding.value.setText(field.value)
-        binding.value.hint = field.hint
+        binding.tvName.text = field.name
+        binding.tvValue.setText(field.value)
+        binding.tvValue.hint = field.hint
+        when(field.isEditable) {
+            true -> binding.tvValue.setOnEditorActionListener(null)
+            false -> {
+                binding.tvValue.onFocusChangeListener = View.OnFocusChangeListener { p0, p1 ->
+                    binding.tvValue.clearFocus()
+                    if (p1) onFieldClick(field, null)
+                }
+            }
+        }
     }
 
 }
 
 private class ValueFieldVH(
-    private val binding: ViewHolderFieldValueBinding
+    private val binding: ViewHolderFieldValueBinding,
+    private val onFieldClick: (FormField, Int?) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init { binding.tvValue.doAfterTextChanged { field.value = it.toString() } }
@@ -148,6 +181,15 @@ private class ValueFieldVH(
         this.field = field
         binding.tvValue.setText(field.value)
         binding.tvValue.hint = field.hint
+        when(field.isEditable) {
+            true -> binding.tvValue.setOnEditorActionListener(null)
+            false -> {
+                binding.tvValue.onFocusChangeListener = View.OnFocusChangeListener { p0, p1 ->
+                    binding.tvValue.clearFocus()
+                    if (p1) onFieldClick(field, null)
+                }
+            }
+        }
     }
 
 }
@@ -155,7 +197,7 @@ private class ValueFieldVH(
 private class DoubleLineFieldVH(
     private val binding: ViewHolderFieldDoubleLineBinding,
     private val afterErrorChange: (FormField) -> Unit,
-    private val onFieldClick: (FormField) -> Unit
+    private val onFieldClick: (FormField, Int?) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
@@ -178,15 +220,39 @@ private class DoubleLineFieldVH(
         binding.etSecondValue.setText(field.secondValue)
         binding.etFirstValue.hint = field.firstHint
         binding.etSecondValue.hint = field.secondHint
+        when(field.isEditableFirst) {
+            true -> binding.etFirstValue.setOnEditorActionListener(null)
+            false -> {
+                binding.etFirstValue.onFocusChangeListener = View.OnFocusChangeListener { p0, p1 ->
+                    binding.etFirstValue.clearFocus()
+                    if (p1) onFieldClick(field, 1)
+                }
+            }
+        }
+        when(field.isEditableSecond) {
+            true -> binding.etSecondValue.setOnEditorActionListener(null)
+            false -> {
+                binding.etSecondValue.onFocusChangeListener = View.OnFocusChangeListener { p0, p1 ->
+                    binding.etSecondValue.clearFocus()
+                    if (p1) onFieldClick(field, 2)
+                }
+            }
+        }
     }
 
 }
 
 private class SwitchFieldVH(
-    private val binding: ViewHolderFieldSwitchBinding
+    private val binding: ViewHolderFieldSwitchBinding,
+    private val onSwitchChange: (FormField) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    init { binding.tvValue.setOnCheckedChangeListener { _, checked -> field.value = checked } }
+    init {
+        binding.tvValue.setOnCheckedChangeListener { _, checked ->
+            field.value = checked
+            onSwitchChange(field)
+        }
+    }
 
     private lateinit var field: FormField.SwitchField
 
@@ -262,14 +328,16 @@ sealed class FormField(
         val name: String,
         var value: String = "",
         val hint: String,
-        val prompt: String
+        val prompt: String,
+        val isEditable: Boolean
     ) : FormField(type, ViewType.SINGLE_LINE_WITH_PROMPT)
 
     class SingleLineField(
         type: FieldType,
         val name: String,
         var value: String = "",
-        val hint: String
+        val hint: String,
+        val isEditable: Boolean
     ) : FormField(type, ViewType.SINGLE_LINE)
 
     class DoubleLineField(
@@ -278,7 +346,9 @@ sealed class FormField(
         var firstValue: String = "",
         var secondValue: String = "",
         val firstHint: String,
-        val secondHint: String
+        val secondHint: String,
+        val isEditableFirst: Boolean,
+        val isEditableSecond: Boolean
     ) : FormField(type, ViewType.DOUBLE_LINE)
 
     class SwitchField(
@@ -295,7 +365,8 @@ sealed class FormField(
     class ValueField(
         type: FieldType,
         var value: String = "",
-        val hint: String
+        val hint: String,
+        val isEditable: Boolean
     ) : FormField(type, ViewType.VALUE)
 
     class PriceField(

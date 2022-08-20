@@ -1,6 +1,7 @@
 package com.vodovoz.app.ui.fragment.saved_addresses
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,9 +22,16 @@ import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.AddressDiffUtilCallback
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
+import com.vodovoz.app.ui.fragment.cart.CartFragment
+import com.vodovoz.app.ui.fragment.ordering.OrderType
 import com.vodovoz.app.ui.model.AddressUI
+import com.vodovoz.app.util.LogSettings
 
 class AddressesFragment : ViewStateBaseFragment() {
+
+    companion object {
+        const val SELECTED_ADDRESS = "SELECTED_ADDRESS"
+    }
 
     private lateinit var binding: FragmentAddressesBinding
     private lateinit var viewModel: SavedAddressesViewModel
@@ -33,6 +41,19 @@ class AddressesFragment : ViewStateBaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
+        getArgs()
+    }
+
+    private fun getArgs() {
+        AddressesFragmentArgs.fromBundle(requireArguments()).let { args ->
+            if (args.openMode != "null") {
+                if (args.addressType != "null") {
+                    args.addressType?.let { addressType ->
+                        viewModel.updateArgs(OpenMode.valueOf(args.openMode.toString()), OrderType.valueOf(args.addressType.toString()))
+                    }
+                }
+            }
+        }
     }
 
     private fun initViewModel() {
@@ -109,6 +130,13 @@ class AddressesFragment : ViewStateBaseFragment() {
                 findNavController().navigate(AddressesFragmentDirections.actionToMapDialogFragment().apply {
                     this.address = addressUI
                 })
+            },
+            onAddressClick = { addressUI ->
+                Log.d(LogSettings.MAP_LOG, "Address id : ${addressUI.id}")
+                if (viewModel.openMode == OpenMode.SelectAddress) {
+                    findNavController().previousBackStackEntry?.savedStateHandle?.set(SELECTED_ADDRESS, addressUI)
+                    findNavController().popBackStack()
+                }
             }
         )
     }
@@ -134,11 +162,11 @@ class AddressesFragment : ViewStateBaseFragment() {
 
     private fun updateAddresses(pair: Pair<List<AddressUI>, List<AddressUI>>) {
         val itemList = mutableListOf<AddressesAdapterItem>()
-        if (pair.first.isNotEmpty()) {
+        if (pair.first.isNotEmpty() && viewModel.orderType != OrderType.COMPANY) {
             itemList.add(AddressesAdapterItem.AddressesTypeTitle(resources.getString(R.string.personal_addresses_title)))
             itemList.addAll(pair.first.map { AddressesAdapterItem.Address(it) })
         }
-        if (pair.second.isNotEmpty()) {
+        if (pair.second.isNotEmpty() && viewModel.orderType != OrderType.PERSONAL) {
             itemList.add(AddressesAdapterItem.AddressesTypeTitle(resources.getString(R.string.company_addresses_title)))
             itemList.addAll(pair.second.map { AddressesAdapterItem.Address(it) })
         }
@@ -154,4 +182,12 @@ class AddressesFragment : ViewStateBaseFragment() {
         super.onDestroy()
     }
 
+}
+
+enum class AddressType {
+    Personal, Company
+}
+
+enum class OpenMode {
+    SelectAddress
 }

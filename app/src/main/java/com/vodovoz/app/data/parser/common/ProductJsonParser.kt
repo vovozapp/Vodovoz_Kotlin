@@ -1,5 +1,6 @@
 package com.vodovoz.app.data.parser.common
 
+import com.vodovoz.app.data.model.common.PriceEntity
 import com.vodovoz.app.data.model.common.ProductEntity
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import org.json.JSONArray
@@ -28,15 +29,13 @@ object ProductJsonParser {
         val detailPicture = getString("DETAIL_PICTURE")
 
         return ProductEntity(
-
             id = when(has("PRODUCT_ID")) {
                 true -> getLong("PRODUCT_ID")
                 false -> getLong("ID")
             },
             name = getString("NAME"),
             detailPicture = detailPicture.parseImagePath(),
-            newPrice = getJSONArray("EXTENDED_PRICE").getJSONObject(0).getInt("PRICE"),
-            oldPrice = getJSONArray("EXTENDED_PRICE").getJSONObject(0).getInt("OLD_PRICE"),
+            priceList = getJSONArray("EXTENDED_PRICE").parsePriceList(),
             rating = when(has("")) {
                 true -> getDouble("PROPERTY_RATING_VALUE")
                 else -> 0.0
@@ -62,6 +61,16 @@ object ProductJsonParser {
             }
         )
     }
+
+    private fun JSONArray.parsePriceList(): List<PriceEntity> = mutableListOf<PriceEntity>().also { list ->
+        for (index in 0 until length()) list.add(getJSONObject(index).parsePriceEntity())
+    }
+
+    private fun JSONObject.parsePriceEntity() = PriceEntity(
+        price = getInt("PRICE"),
+        oldPrice = getInt("OLD_PRICE"),
+        requiredAmount = getInt("QUANTITY_FROM")
+    )
 
     private fun JSONObject.parseIsCanReturnBottles(): Boolean {
         val categoryIdList = mutableListOf<Int>()

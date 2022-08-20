@@ -83,6 +83,7 @@ class AddAddressViewModel(
 
 
     fun updateArgs(addressUI: AddressUI?) {
+        Log.d(LogSettings.MAP_LOG, addressUI?.id.toString())
         this.addressUI = addressUI
         addressUI?.let { addressUIMLD.value = it }
     }
@@ -105,7 +106,6 @@ class AddAddressViewModel(
     }
 
     private fun addAddressOrUpdateAddress() {
-        Log.i(LogSettings.ID_LOG, "START")
         getSingle(addressUI?.id)
             .subscribeOn(Schedulers.io())
             .doOnSubscribe { viewStateMLD.value = ViewState.Loading() }
@@ -125,29 +125,35 @@ class AddAddressViewModel(
     }
 
     private fun getSingle(id: Long?) = when(id) {
-        null -> dataRepository
-            .addAddress(
-                locality = locality,
-                street = street,
-                house = house,
-                entrance = entrance,
-                floor = floor,
-                office = office,
-                comment = comment,
-                type = type,
-            )
-        else -> dataRepository
-            .updateAddress(
-                addressId = addressUI?.id,
-                locality = locality,
-                street = street,
-                house = house,
-                entrance = entrance,
-                floor = floor,
-                office = office,
-                comment = comment,
-                type = type,
-            )
+        null, 0L -> {
+            Log.d(LogSettings.MAP_LOG, "Null")
+            dataRepository
+                .addAddress(
+                    locality = locality,
+                    street = street,
+                    house = house,
+                    entrance = entrance,
+                    floor = floor,
+                    office = office,
+                    comment = comment,
+                    type = type,
+                )
+        }
+        else -> {
+            Log.d(LogSettings.MAP_LOG, "Else ${id}")
+            dataRepository
+                .updateAddress(
+                    addressId = addressUI?.id,
+                    locality = locality,
+                    street = street,
+                    house = house,
+                    entrance = entrance,
+                    floor = floor,
+                    office = office,
+                    comment = comment,
+                    type = type,
+                )
+        }
     }
 
     private fun validateLocality() = FieldValidateConfig.LOCALITY_LENGTH.contains(locality.length).apply {

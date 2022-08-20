@@ -21,6 +21,7 @@
 
     //Text
     <dimen name="header_text_size">@dimen/_16ssp</dimen>
+    <dimen name="large_text_size">@dimen/_15ssp</dimen>
     <dimen name="medium_text_size">@dimen/_13ssp</dimen>
     <dimen name="normal_text_size">@dimen/_12ssp</dimen>
     <dimen name="small_text_size">@dimen/_10ssp</dimen>

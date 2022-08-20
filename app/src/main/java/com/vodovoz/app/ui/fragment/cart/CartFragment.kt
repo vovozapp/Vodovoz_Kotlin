@@ -1,12 +1,14 @@
 package com.vodovoz.app.ui.fragment.cart
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -23,6 +25,7 @@ import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.ProductDiffUtilCallback
+import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
@@ -32,6 +35,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
+import java.lang.StringBuilder
 
 class CartFragment : ViewStateBaseFragment() {
 
@@ -145,14 +149,8 @@ class CartFragment : ViewStateBaseFragment() {
     }
 
     private fun initActionBar() {
-        (requireActivity() as AppCompatActivity).let { appCompatActivity ->
-            appCompatActivity.setSupportActionBar(binding.toolbar)
-            appCompatActivity.supportActionBar?.setDisplayShowHomeEnabled(true)
-            appCompatActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        }
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        binding.incAppBar.tvTitle.text = requireContext().getString(R.string.cart_title)
     }
 
     private fun initBestForYouProductsSlider() {
@@ -174,9 +172,14 @@ class CartFragment : ViewStateBaseFragment() {
             findNavController().navigate(R.id.catalogFragment)
         }
         binding.showGifts.setOnClickListener {
-            findNavController().navigate(CartFragmentDirections.actionToGiftsBottomFragment(
-                viewModel.getGiftList().toTypedArray()
-            ))
+            when (viewModel.isAlreadyLogin()) {
+                true -> {
+                    findNavController().navigate(CartFragmentDirections.actionToGiftsBottomFragment(
+                        viewModel.getGiftList().toTypedArray()
+                    ))
+                }
+                false -> findNavController().navigate(CartFragmentDirections.actionToProfileFragment())
+            }
         }
         binding.regOrder.setOnClickListener {
             findNavController().navigate(CartFragmentDirections.actionToOrderingFragment())
@@ -289,18 +292,26 @@ class CartFragment : ViewStateBaseFragment() {
                 false -> binding.showGifts.visibility = View.VISIBLE
             }
         }
+
+        viewModel.fullPriceLD.observe(viewLifecycleOwner) { binding.tvFullPrice.setPriceText(it) }
+        viewModel.discountPriceLD.observe(viewLifecycleOwner) { binding.tvDiscountPrice.setPriceText(it) }
+        viewModel.totalPriceLD.observe(viewLifecycleOwner) {
+            binding.tvTotalPrice.setPriceText(it)
+            binding.regOrder.text = StringBuilder().append("Оформить заказ на ").append(it).append("Р").toString()
+        }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun fillAvailableProductRecycler(productUIList: List<ProductUI>) {
-        val diffUtil = ProductDiffUtilCallback(
-            oldList = availableCartItemsAdapter.productUIList,
-            newList = productUIList
-        )
-
-        DiffUtil.calculateDiff(diffUtil).let { diffResult ->
-            availableCartItemsAdapter.productUIList = productUIList
-            diffResult.dispatchUpdatesTo(availableCartItemsAdapter)
-        }
+//        val diffUtil = ProductDiffUtilCallback(
+//            oldList = availableCartItemsAdapter.productUIList,
+//            newList = productUIList
+//        )
+//
+//        DiffUtil.calculateDiff(diffUtil).let { diffResult ->
+//            availableCartItemsAdapter.productUIList = productUIList
+//            diffResult.dispatchUpdatesTo(availableCartItemsAdapter)
+//        }
 
         var isCanReturnBottles = false
         for (product in productUIList) {
@@ -310,6 +321,8 @@ class CartFragment : ViewStateBaseFragment() {
             }
         }
 
+        availableCartItemsAdapter.productUIList = productUIList
+        availableCartItemsAdapter.notifyDataSetChanged()
         when(isCanReturnBottles) {
             true -> binding.isReturnBottlesContainer.visibility = View.VISIBLE
             false -> binding.isReturnBottlesContainer.visibility = View.GONE

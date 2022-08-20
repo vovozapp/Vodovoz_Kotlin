@@ -114,7 +114,6 @@ class ProductGridViewHolder(
         this.productUI = productUI
 
         binding.name.text = productUI.name
-        binding.price.setPriceText(productUI.newPrice)
         binding.rating.rating = productUI.rating.toFloat()
         binding.amountController.circleAmount.text = productUI.cartQuantity.toString()
         binding.amountController.amount.text = productUI.cartQuantity.toString()
@@ -146,18 +145,33 @@ class ProductGridViewHolder(
             }
         }
 
-        when (productUI.oldPrice) {
-            0 -> binding.discountContainer.visibility = View.GONE
+        when(productUI.priceList.size) {
+            1 -> {
+                binding.price.setPriceText(productUI.priceList.first().currentPrice)
+                when (productUI.priceList.first().oldPrice) {
+                    0 -> binding.discountContainer.visibility = View.GONE
+                    else -> {
+                        binding.discountContainer.visibility = View.VISIBLE
+                        binding.discount.visibility = View.VISIBLE
+                        binding.price.setTextColor(ContextCompat.getColor(context, R.color.red))
+                        binding.oldPrice.setPriceText(productUI.priceList.first().oldPrice)
+                        binding.oldPrice.visibility = View.VISIBLE
+                        binding.discount.setDiscountText(
+                            productUI.priceList.first().oldPrice,
+                            productUI.priceList.first().currentPrice
+                        )
+                        if (productUI.status != "") {
+                            binding.spaceBetweenStatuses.visibility = View.VISIBLE
+                        } else {
+                            binding.spaceBetweenStatuses.visibility = View.GONE
+                        }
+                    }
+                }
+            }
             else -> {
-                binding.discountContainer.visibility = View.VISIBLE
-                binding.discount.visibility = View.VISIBLE
-                binding.price.setTextColor(ContextCompat.getColor(context, R.color.red))
-                binding.oldPrice.setPriceText(productUI.oldPrice)
-                binding.oldPrice.visibility = View.VISIBLE
-                binding.discount.setDiscountText(
-                    productUI.oldPrice,
-                    productUI.newPrice
-                )
+                binding.spaceBetweenStatuses.visibility = View.GONE
+                binding.discount.visibility = View.GONE
+                binding.price.setPriceText(productUI.priceList.sortedBy { it.requiredAmount }.reversed().find { it.requiredAmount <= productUI.cartQuantity }!!.currentPrice)
             }
         }
 
@@ -165,9 +179,6 @@ class ProductGridViewHolder(
             1 -> binding.tabIndicator.visibility = View.INVISIBLE
             else -> binding.tabIndicator.visibility = View.VISIBLE
         }
-
-        if (productUI.oldPrice != 0 && productUI.status != "") binding.spaceBetweenStatuses.visibility = View.VISIBLE
-        else binding.spaceBetweenStatuses.visibility = View.GONE
 
         val diffUtil = DetailPictureDiffUtilCallback(
             oldList = detailPicturePagerAdapter.detailPictureUrlList,

@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/incAppBar"
-        layout="@layout/view_app_bar_drop_down" />
+        layout="@layout/app_bar_drop_down" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

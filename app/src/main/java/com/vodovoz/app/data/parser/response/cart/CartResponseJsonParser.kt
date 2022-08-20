@@ -1,6 +1,7 @@
 package com.vodovoz.app.data.parser.response.cart
 
 import com.vodovoz.app.data.model.common.CategoryDetailEntity
+import com.vodovoz.app.data.model.common.PriceEntity
 import com.vodovoz.app.data.model.common.ProductEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.features.CartBundleEntity
@@ -57,14 +58,26 @@ object CartResponseJsonParser {
         id = getString("ID").toLong(),
         name = getString("NAME"),
         detailPicture = getString("DETAIL_PICTURE").parseImagePath(),
-        oldPrice = 0,
-        newPrice = 0,
+        priceList = when(has("EXTENDED_PRICE")){
+            true -> getJSONArray("EXTENDED_PRICE").parsePriceList()
+            false -> listOf()
+        },
         status = "",
         statusColor = "",
         rating = 0.0,
         commentAmount = "",
         isFavorite = false,
         detailPictureList = listOf(getString("DETAIL_PICTURE"))
+    )
+
+    private fun JSONArray.parsePriceList(): List<PriceEntity> = mutableListOf<PriceEntity>().also { list ->
+        for (index in 0 until length()) list.add(getJSONObject(index).parsePriceEntity())
+    }
+
+    private fun JSONObject.parsePriceEntity() = PriceEntity(
+        price = getInt("PRICE"),
+        oldPrice = getInt("OLD_PRICE"),
+        requiredAmount = getInt("QUANTITY_FROM")
     )
 
 }

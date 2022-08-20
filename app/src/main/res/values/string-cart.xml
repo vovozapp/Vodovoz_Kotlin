@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cart_title">Корзина</string>
+
     //Gifts
     <string name="gift_selection_title">Ваши подарки</string>
     <string name="take_gift_btn_text">Забрать подарок</string>

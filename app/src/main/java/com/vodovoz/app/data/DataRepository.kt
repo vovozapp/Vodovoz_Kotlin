@@ -1,11 +1,13 @@
 package com.vodovoz.app.data
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.map
 import com.vodovoz.app.data.LocalSyncExtensions.syncCartQuantity
 import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
 import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteStatus
+import com.vodovoz.app.data.config.ShippingAlertConfig
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.model.features.CartBundleEntity
@@ -14,6 +16,7 @@ import com.vodovoz.app.data.paging.orders.OrdersPagingSource
 import com.vodovoz.app.data.paging.products.ProductsPagingSource
 import com.vodovoz.app.data.paging.products.source.*
 import com.vodovoz.app.data.remote.RemoteDataSource
+import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -41,6 +44,8 @@ class DataRepository(
                     }
                     cartBundleEntity.availableProductEntityList.syncFavoriteProducts(localDataSource)
                     cartBundleEntity.notAvailableProductEntityList.syncFavoriteProducts(localDataSource)
+                    Log.i(LogSettings.LOCAL_DATA, "AFTER FETCH CART")
+                    localDataSource.fetchCart()
                 }
             }
         }
@@ -50,6 +55,8 @@ class DataRepository(
         .doFinally { localDataSource.clearCart() }
 
     fun fetchBrandHeader(brandId: Long) = remoteDataSource.fetchBrandHeader(brandId = brandId)
+
+    fun fetchFreeShippingDaysInfo() = remoteDataSource.fetchFreeShippingDaysInfoResponse()
 
     fun fetchMatchesQueries(query: String?) = remoteDataSource.fetchMatchesQueries(query = query)
 
@@ -708,6 +715,26 @@ class DataRepository(
         comment = comment,
         type = type,
         userId = fetchUserId()
+    )
+
+    fun fetchPayMethods(
+        addressId: Long?
+    ) = remoteDataSource.fetchPayMethods(
+        addressId = addressId,
+        userId = fetchUserId()
+    )
+
+    fun fetchShippingAlertEntityList(): Single<List<ShippingAlertEntity>> = Single.create { emitter ->
+        emitter.onSuccess(ShippingAlertConfig.shippingAlertEntityList)
+    }
+
+    fun fetchShippingIntervals(
+        addressId: Long?,
+        date: String?
+    ) = remoteDataSource.fetchShippingIntervals(
+        addressId = addressId,
+        userId = fetchUserId()!!,
+        date = date
     )
 
     fun updateAddress(

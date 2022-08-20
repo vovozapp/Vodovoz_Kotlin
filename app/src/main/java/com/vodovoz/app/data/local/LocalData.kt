@@ -149,11 +149,19 @@ class LocalData(
     }
 
     override fun fetchUserId() = when(accountSettings.contains(USER_ID)) {
-        true -> accountSettings.getLong(USER_ID, 0)
-        false -> null
+        true -> {
+            val userId = accountSettings.getLong(USER_ID, 0)
+            Log.d(LogSettings.LOCAL_DATA, "User id $userId")
+            userId
+        }
+        false -> {
+            Log.d(LogSettings.LOCAL_DATA, "User id null")
+            null
+        }
     }
 
     override fun updateUserId(userId: Long) {
+        Log.d(LogSettings.LOCAL_DATA, "Update user id $userId")
         accountSettings.edit().putLong(USER_ID, userId).apply()
     }
 
@@ -168,14 +176,14 @@ class LocalData(
         val cart = fetchCart()
         cart[productId] = quantity
         cartSettings.edit().putString(cookieSessionId, buildCartStr(cart)).apply()
-        Log.i(LogSettings.DEVELOP_LOG, "Chance local cart $productId : $quantity")
+        Log.d(LogSettings.LOCAL_DATA, "Chance local cart $productId : $quantity")
     }
 
     override fun fetchCart(): HashMap<Long, Int> {
         val userId = fetchCookieSessionId()
         if (!cartSettings.contains(userId.toString())) return HashMap()
         val cartStr = cartSettings.getString(userId.toString(), null)!!
-        Log.i(LogSettings.DEVELOP_LOG, "Fetch cart $cartStr")
+        Log.d(LogSettings.LOCAL_DATA, "Fetch cart $cartStr")
         return parseCartStr(cartStr)
     }
 

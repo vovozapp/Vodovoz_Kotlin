@@ -12,8 +12,6 @@ class ProductDiffItemCallback: DiffUtil.ItemCallback<ProductUI>() {
     override fun areContentsTheSame(oldItem: ProductUI, newItem: ProductUI): Boolean {
         if (oldItem.name != newItem.name) return false
         if (oldItem.detailPicture != newItem.detailPicture) return false
-        if (oldItem.oldPrice != newItem.oldPrice) return false
-        if (oldItem.newPrice != newItem.newPrice) return false
         if (oldItem.rating != newItem.rating) return false
         if (oldItem.status != newItem.status) return false
         if (oldItem.statusColor != newItem.statusColor) return false

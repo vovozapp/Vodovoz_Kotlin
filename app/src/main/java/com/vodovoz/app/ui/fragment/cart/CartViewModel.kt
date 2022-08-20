@@ -1,5 +1,6 @@
 package com.vodovoz.app.ui.fragment.cart
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,7 @@ import com.vodovoz.app.mapper.CartBundleMapper.mapUoUI
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.custom.CartBundleUI
+import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -27,6 +29,9 @@ class CartViewModel(
     private val bestForYouCategoryDetailMLD = MutableLiveData<CategoryDetailUI>()
     private val giftMessageMLD = MutableLiveData<String?>()
     private val errorMLD = MutableLiveData<String>()
+    private val fullPriceMLD = MutableLiveData<Int>()
+    private val discountPriceMLD = MutableLiveData<Int>()
+    private val totalPriceMLD = MutableLiveData<Int>()
 
     val viewStateLD: LiveData<ViewState> = viewStateMLD
     val availableProductListLD: LiveData<List<ProductUI>> = availableProductListMLD
@@ -35,6 +40,9 @@ class CartViewModel(
     val bestForYouCategoryDetailLD: LiveData<CategoryDetailUI> = bestForYouCategoryDetailMLD
     val giftMessageLD: LiveData<String?> = giftMessageMLD
     val errorLD: LiveData<String> = errorMLD
+    val fullPriceLD: LiveData<Int> = fullPriceMLD
+    val discountPriceLD: LiveData<Int> = discountPriceMLD
+    val totalPriceLD: LiveData<Int> = totalPriceMLD
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -50,6 +58,7 @@ class CartViewModel(
         set(value) {
             field = value
             availableProductListMLD.value = value
+            calculatePrice()
         }
 
     var isTryToClearCart = false
@@ -63,6 +72,8 @@ class CartViewModel(
             }
         }
     }
+
+    fun isAlreadyLogin() = dataRepository.isAlreadyLogin()
 
     fun updateData() {
         dataRepository.fetchCart()
@@ -145,6 +156,45 @@ class CartViewModel(
                 errorMLD.value = throwable.message ?: "Неизвестная ошибка"
             }
         )
+    }
+
+    private fun calculatePrice() {
+        var fullPrice = 0
+        var discountPrice = 0
+        var totalPrice = 0
+        availableProductUIList.forEach { productUI ->
+            val price = when (productUI.priceList.size) {
+                1 -> productUI.priceList.first()
+                else -> {
+                    val sortedPriceList = productUI.priceList
+                        .sortedBy { it.requiredAmount }
+                        .reversed()
+                    val defaultPrice = sortedPriceList.last()
+                    val rightPrice = sortedPriceList.find { productUI.cartQuantity >= it.requiredAmount }
+                    rightPrice?.let {
+                        Log.i(LogSettings.PRICE_LOG, "DefaultPrice ${defaultPrice.currentPrice} : RightPrice ${rightPrice.currentPrice}")
+                        discountPrice += (defaultPrice.currentPrice - rightPrice.currentPrice) * productUI.cartQuantity
+                    }
+                    rightPrice
+                }
+            }
+            price?.let {
+                Log.i(LogSettings.PRICE_LOG, "${price.currentPrice} : ${price.oldPrice}")
+                when(price.oldPrice) {
+                    0 -> fullPrice += price.currentPrice * productUI.cartQuantity
+                    else -> {
+                        fullPrice += price.oldPrice * productUI.cartQuantity
+                        discountPrice += (price.oldPrice - price.currentPrice) * productUI.cartQuantity
+                    }
+                }
+            }
+            Log.i(LogSettings.PRICE_LOG, "$fullPrice : $discountPrice")
+        }
+        totalPrice = fullPrice - discountPrice
+
+        fullPriceMLD.value = fullPrice
+        discountPriceMLD.value = discountPrice
+        totalPriceMLD.value = totalPrice
     }
 
     override fun onCleared() {

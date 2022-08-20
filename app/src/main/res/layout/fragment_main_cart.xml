@@ -20,8 +20,13 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:titleTextAppearance="@style/ToolbarTitle"
-            app:title="Корзина"/>
+            app:contentInsetStart="0dp">
+
+            <include
+                android:id="@+id/incAppBar"
+                layout="@layout/app_bar_without_back" />
+
+        </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -301,7 +306,7 @@
                             android:background="@color/white"/>
 
                         <TextView
-                            android:id="@+id/deposit"
+                            android:id="@+id/tvFullPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
@@ -371,7 +376,7 @@
                             android:background="@color/white"/>
 
                         <TextView
-                            android:id="@+id/discount"
+                            android:id="@+id/tvDiscountPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
@@ -398,7 +403,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Скидка по акциям"
+                            android:text="Итого"
                             android:fontFamily="@font/rotonda_normal"
                             android:textSize="14sp"
                             android:textStyle="bold"
@@ -406,7 +411,7 @@
                             android:background="@color/white"/>
 
                         <TextView
-                            android:id="@+id/total"
+                            android:id="@+id/tvTotalPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
@@ -470,29 +475,11 @@
 
             </LinearLayout>
 
-            <androidx.cardview.widget.CardView
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/regOrder"
+                style="@style/GreenButton"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_margin="@dimen/space_8"
-                app:cardBackgroundColor="@color/green"
-                app:cardCornerRadius="5dp"
-                app:cardElevation="3dp"
-                app:layout_constraintBottom_toBottomOf="@+id/image"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:gravity="center"
-                    android:text="Оформить заказ на 3014 Р"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-            </androidx.cardview.widget.CardView>
+                android:layout_height="@dimen/button_normal_height" />
 
         </LinearLayout>
 

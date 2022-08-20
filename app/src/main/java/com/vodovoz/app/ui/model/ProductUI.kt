@@ -2,14 +2,14 @@ package com.vodovoz.app.ui.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.vodovoz.app.data.model.common.PriceEntity
 
 data class ProductUI(
     val id: Long = 0,
     val name: String = "",
     var detailPicture: String = "",
     var isFavorite: Boolean = false,
-    val oldPrice: Int = 0,
-    val newPrice: Int = 0,
+    val priceList: List<PriceUI>,
     val status: String = "",
     val statusColor: String = "",
     val rating: Double = 0.0,
@@ -21,19 +21,18 @@ data class ProductUI(
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
-        parcel.readString() ?: "",
-        parcel.readString() ?: "",
+        parcel.readString()!!,
+        parcel.readString()!!,
         parcel.readByte() != 0.toByte(),
-        parcel.readInt(),
-        parcel.readInt(),
-        parcel.readString() ?: "",
-        parcel.readString() ?: "",
+        TODO("priceList"),
+        parcel.readString()!!,
+        parcel.readString()!!,
         parcel.readDouble(),
         parcel.readInt(),
         parcel.readInt(),
         parcel.readByte() != 0.toByte(),
-        parcel.readString() ?: "",
-        parcel.createStringArrayList() ?: listOf()) {
+        parcel.readString()!!,
+        parcel.createStringArrayList()!!) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -41,8 +40,6 @@ data class ProductUI(
         parcel.writeString(name)
         parcel.writeString(detailPicture)
         parcel.writeByte(if (isFavorite) 1 else 0)
-        parcel.writeInt(oldPrice)
-        parcel.writeInt(newPrice)
         parcel.writeString(status)
         parcel.writeString(statusColor)
         parcel.writeDouble(rating)

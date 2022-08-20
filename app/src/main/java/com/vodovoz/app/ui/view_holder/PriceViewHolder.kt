@@ -10,7 +10,7 @@ class PriceViewHolder(
 
     fun onBind(priceUI: PriceUI) {
         binding.tvPrice.text = StringBuilder()
-            .append(priceUI.price)
+            .append(priceUI.currentPrice)
             .append(" руб")
             .toString()
 

@@ -650,8 +650,8 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
     private fun fillPrice(productDetailUI: ProductDetailUI) {
         when(productDetailUI.priceUIList.size) {
             1 -> {
-                binding.price.setPriceText(productDetailUI.priceUIList.first().price)
-                binding.floatingPrice.setPriceText(productDetailUI.priceUIList.first().price)
+                binding.price.setPriceText(productDetailUI.priceUIList.first().currentPrice)
+                binding.floatingPrice.setPriceText(productDetailUI.priceUIList.first().currentPrice)
                 if (productDetailUI.priceUIList.first().oldPrice != 0) {
                     binding.price.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
                     binding.floatingPrice.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
@@ -659,7 +659,7 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
                     binding.floatingOldPrice.setPriceText(productDetailUI.priceUIList.first().oldPrice)
                     binding.discount.setDiscountText(
                         oldPrice = productDetailUI.priceUIList.first().oldPrice,
-                        newPrice = productDetailUI.priceUIList.first().price,
+                        newPrice = productDetailUI.priceUIList.first().currentPrice,
                     )
                     binding.discount.visibility = View.VISIBLE
                 } else {
@@ -669,7 +669,7 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
             else -> {
                 binding.price.text = StringBuilder()
                     .append("от ")
-                    .append(productDetailUI.priceUIList.last().price)
+                    .append(productDetailUI.priceUIList.last().currentPrice)
                     .append(" Р")
                 binding.priceCondition.text = StringBuilder()
                     .append("при условии покупки от ")

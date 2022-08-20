@@ -14,6 +14,7 @@ import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountText
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.subjects.PublishSubject
+import java.lang.StringBuilder
 
 class PromotionProductSliderViewHolder(
     private val binding: ViewHolderSliderPromotionProductBinding,
@@ -128,29 +129,57 @@ class PromotionProductSliderViewHolder(
             true -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite_red))
         }
 
-        when(productUI.oldPrice) {
-            0 -> binding.discountContainer.visibility = View.GONE
+        when(productUI.priceList.size) {
+            1 -> {
+                binding.price.setPriceText(productUI.priceList.first().currentPrice)
+                when (productUI.priceList.first().oldPrice) {
+                    0 -> binding.discountContainer.visibility = View.GONE
+                    else -> {
+                        binding.discountContainer.visibility = View.VISIBLE
+                        binding.discount.visibility = View.VISIBLE
+                        binding.price.setTextColor(ContextCompat.getColor(context, R.color.red))
+                        binding.oldPrice.setPriceText(productUI.priceList.first().oldPrice)
+                        binding.oldPrice.visibility = View.VISIBLE
+                        binding.discount.setDiscountText(
+                            productUI.priceList.first().oldPrice,
+                            productUI.priceList.first().currentPrice
+                        )
+                        if (productUI.status != "") {
+                            binding.space.visibility = View.VISIBLE
+                            val padding = context.resources.getDimension(R.dimen.space_8) / 2
+                            binding.name.setPadding(0, padding.toInt(), 0, 0)
+                        }
+                    }
+                }
+            }
             else -> {
-                binding.discountContainer.visibility = View.VISIBLE
-                binding.discount.visibility = View.VISIBLE
-                binding.price.setTextColor(ContextCompat.getColor(context, R.color.red))
-                binding.oldPrice.setPriceText(productUI.oldPrice)
-                binding.oldPrice.visibility = View.VISIBLE
-                binding.discount.setDiscountText(
-                    productUI.oldPrice,
-                    productUI.newPrice
-                )
+                binding.discountContainer.visibility = View.GONE
+                binding.price.setPriceText(productUI.priceList.sortedBy { it.requiredAmount }.reversed().find { it.requiredAmount <= productUI.cartQuantity }!!.currentPrice)
             }
         }
+        when(productUI.priceList.size) {
+            1 -> {
+                binding.price.setPriceText(productUI.priceList.first().currentPrice)
+                when (productUI.priceList.first().oldPrice) {
+                    0 -> binding.discountContainer.visibility = View.GONE
+                    else -> {
+                        binding.discountContainer.visibility = View.VISIBLE
+                        binding.discount.visibility = View.VISIBLE
+                        binding.price.setTextColor(ContextCompat.getColor(context, R.color.red))
+                        binding.oldPrice.setPriceText(productUI.priceList.maxByOrNull { it.requiredAmount }!!.oldPrice)
+                        binding.oldPrice.visibility = View.VISIBLE
+                        binding.discount.setDiscountText(
+                            productUI.priceList.maxByOrNull { it.requiredAmount }!!.oldPrice,
+                            productUI.priceList.maxByOrNull { it.requiredAmount }!!.currentPrice
+                        )
 
-
-        if (productUI.oldPrice != 0 && productUI.status != "") binding.space.visibility = View.VISIBLE
-        if (productUI.oldPrice != 0 || productUI.status != "") {
-            val padding = context.resources.getDimension(R.dimen.space_8) / 2
-            binding.name.setPadding(0, padding.toInt(), 0, 0)
+                    }
+                }
+            }
+            else -> {
+                binding.price.text = StringBuilder().append("от ").append(productUI.priceList.first().currentPrice).append("Р").toString()
+            }
         }
-
-        binding.price.setPriceText(productUI.newPrice)
 
         Glide
             .with(context)

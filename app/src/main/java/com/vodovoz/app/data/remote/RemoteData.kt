@@ -47,6 +47,8 @@ import com.vodovoz.app.data.parser.response.novelties.NoveltiesHeaderResponseJso
 import com.vodovoz.app.data.parser.response.novelties.NoveltiesSliderResponseParser.parseNoveltiesSliderResponse
 import com.vodovoz.app.data.parser.response.order.OrderDetailsResponseJsonParser.parseOrderDetailsResponse
 import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
+import com.vodovoz.app.data.parser.response.ordering.PayMethodsResponseJsonParser.parsePayMethodsResponse
+import com.vodovoz.app.data.parser.response.ordering.ShippingIntervalsResponseJsonParser.parseShippingIntervalsResponse
 import com.vodovoz.app.data.parser.response.paginatedProducts.MaybeLikeProductsResponseJsonParser.parseMaybeLikeProductsResponse
 import com.vodovoz.app.data.parser.response.paginatedProducts.SomeProductsByBrandResponseJsonParser.parseSomeProductsByBrandResponse
 import com.vodovoz.app.data.parser.response.past_purchases.PastPurchasesHeaderResponseJsonParser.parsePastPurchasesHeaderResponse
@@ -66,6 +68,7 @@ import com.vodovoz.app.data.parser.response.service.AboutServicesResponseJsonPar
 import com.vodovoz.app.data.parser.response.service.OrderServiceResponseJsonParser.parseOrderServiceResponse
 import com.vodovoz.app.data.parser.response.service.ServiceByIdResponseJsonParser.parseServiceByIdResponse
 import com.vodovoz.app.data.parser.response.service.ServiceOrderFormResponseJsonParser.parseServiceOrderFormResponse
+import com.vodovoz.app.data.parser.response.shipping.FreeShippingDaysResponseJsonParser.parseFreeShippingDaysResponse
 import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
 import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
 import com.vodovoz.app.data.parser.response.user.RecoverPasswordJsonParser.parseRecoverPasswordResponse
@@ -73,6 +76,7 @@ import com.vodovoz.app.data.parser.response.user.RegisterResponseJsonParser.pars
 import com.vodovoz.app.data.parser.response.user.UpdateUserDataResponseJsonParser.parseUpdateUserDataResponse
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
+import com.vodovoz.app.ui.model.FreeShippingDaysInfoBundleUI
 import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
@@ -305,6 +309,19 @@ class RemoteData(
     override fun fetchPopularSlider(): Single<ResponseEntity<List<CategoryEntity>>> = vodovozApi.fetchPopularResponse(
         action = "popylrazdel"
     ).flatMap { Single.just(it.parsePopularSliderResponse()) }
+
+    override fun fetchFreeShippingDaysInfoResponse(): Single<ResponseEntity<FreeShippingDaysInfoBundleEntity>> =
+        vodovozApi.fetchInfoAboutOrderingResponse().flatMap { Single.just(it.parseFreeShippingDaysResponse()) }
+
+    override fun fetchShippingIntervals(
+        addressId: Long?,
+        userId: Long?,
+        date: String?
+    ): Single<ResponseEntity<List<ShippingIntervalEntity>>> = vodovozApi.fetchInfoAboutOrderingResponse(
+        addressId = addressId,
+        userId = userId,
+        date = date
+    ).flatMap { Single.just(it.parseShippingIntervalsResponse()) }
 
     //Информация о слайдере новинок на главной странице
     override fun fetchNoveltiesSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>> = rxSingle {
@@ -626,6 +643,14 @@ class RemoteData(
         birthday = birthday,
         email = email
     ).flatMap { Single.just(it.parseUpdateUserDataResponse()) }
+
+    override fun fetchPayMethods(
+        addressId: Long?,
+        userId: Long?
+    ): Single<ResponseEntity<List<PayMethodEntity>>> = vodovozApi.fetchInfoAboutOrderingResponse(
+        addressId = addressId,
+        userId = userId
+    ).flatMap { Single.just(it.parsePayMethodsResponse()) }
 
     //Добавить в избранное для авторизованного пользователя
     override fun addToFavorite(

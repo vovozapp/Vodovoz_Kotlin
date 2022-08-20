@@ -13,14 +13,13 @@ object FetchAddressesSavedResponseJsonParser {
 
     fun ResponseBody.parseFetchAddressesSavedResponse(): ResponseEntity<List<AddressEntity>> {
         val responseJson = JSONObject(string())
-        Log.i(LogSettings.ID_LOG, responseJson.toString())
         return when (responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 responseJson.getJSONArray("data").parseAddressEntityList().apply {
                     Log.i(LogSettings.ID_LOG, "SUCCESS PARSE")
                 }
             )
-            else -> ResponseEntity.Error("Неправильный запрос")
+            else ->  ResponseEntity.Success(listOf())
         }
     }
 

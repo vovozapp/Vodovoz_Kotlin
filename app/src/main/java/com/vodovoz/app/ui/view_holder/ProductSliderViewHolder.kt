@@ -136,24 +136,35 @@ class ProductSliderViewHolder(
             }
         }
 
-        when(productUI.oldPrice) {
-            0 -> binding.discountContainer.visibility = View.GONE
+        when(productUI.priceList.size) {
+            1 -> {
+                binding.price.setPriceText(productUI.priceList.first().currentPrice)
+                when (productUI.priceList.first().oldPrice) {
+                    0 -> binding.discountContainer.visibility = View.GONE
+                    else -> {
+                        binding.discountContainer.visibility = View.VISIBLE
+                        binding.discount.visibility = View.VISIBLE
+                        binding.price.setTextColor(ContextCompat.getColor(context, R.color.red))
+                        binding.oldPrice.setPriceText(productUI.priceList.first().oldPrice)
+                        binding.oldPrice.visibility = View.VISIBLE
+                        binding.discount.setDiscountText(
+                            productUI.priceList.first().oldPrice,
+                            productUI.priceList.first().currentPrice
+                        )
+                        if (productUI.status != "") {
+                            binding.spaceBetweenStatuses.visibility = View.VISIBLE
+                        } else {
+                            binding.spaceBetweenStatuses.visibility = View.GONE
+                        }
+                    }
+                }
+            }
             else -> {
-                binding.discountContainer.visibility = View.VISIBLE
-                binding.discount.visibility = View.VISIBLE
-                binding.price.setTextColor(ContextCompat.getColor(context, R.color.red))
-                binding.oldPrice.setPriceText(productUI.oldPrice)
-                binding.discount.setDiscountText(
-                    productUI.oldPrice,
-                    productUI.newPrice
-                )
+                binding.spaceBetweenStatuses.visibility = View.GONE
+                binding.discount.visibility = View.GONE
+                binding.price.setPriceText(productUI.priceList.sortedBy { it.requiredAmount }.reversed().find { it.requiredAmount <= productUI.cartQuantity }?.currentPrice ?: productUI.priceList.first().currentPrice)
             }
         }
-
-        if (productUI.oldPrice != productUI.newPrice && productUI.status.isNotEmpty()) {
-            binding.spaceBetweenStatuses.visibility = View.VISIBLE
-        }
-        binding.price.setPriceText(productUI.newPrice)
 
         Glide
             .with(context)

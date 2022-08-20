@@ -10,7 +10,7 @@ object PriceMapper  {
     }
 
     fun PriceEntity.mapToUI() = PriceUI(
-        price = price,
+        currentPrice = price,
         oldPrice = oldPrice,
         requiredAmount = requiredAmount
     )
