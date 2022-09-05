@@ -12,11 +12,14 @@ import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.custom.CartBundleUI
 import com.vodovoz.app.util.LogSettings
+import com.vodovoz.app.util.SingleLiveEvent
+import com.vodovoz.app.util.calculatePrice
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.lang.StringBuilder
 
 class CartViewModel(
     private val dataRepository: DataRepository
@@ -28,10 +31,12 @@ class CartViewModel(
     private val giftProductListMLD = MutableLiveData<List<ProductUI>>()
     private val bestForYouCategoryDetailMLD = MutableLiveData<CategoryDetailUI>()
     private val giftMessageMLD = MutableLiveData<String?>()
-    private val errorMLD = MutableLiveData<String>()
+    private val errorMLD = SingleLiveEvent<String>()
     private val fullPriceMLD = MutableLiveData<Int>()
+    private val depositPriceMLD = MutableLiveData<Int>()
     private val discountPriceMLD = MutableLiveData<Int>()
     private val totalPriceMLD = MutableLiveData<Int>()
+    private val infoMessageMLD = SingleLiveEvent<String>()
 
     val viewStateLD: LiveData<ViewState> = viewStateMLD
     val availableProductListLD: LiveData<List<ProductUI>> = availableProductListMLD
@@ -41,10 +46,37 @@ class CartViewModel(
     val giftMessageLD: LiveData<String?> = giftMessageMLD
     val errorLD: LiveData<String> = errorMLD
     val fullPriceLD: LiveData<Int> = fullPriceMLD
+    val depositPriceLD: LiveData<Int> = depositPriceMLD
     val discountPriceLD: LiveData<Int> = discountPriceMLD
     val totalPriceLD: LiveData<Int> = totalPriceMLD
+    val infoMessageLD: LiveData<String> = infoMessageMLD
 
     private val compositeDisposable = CompositeDisposable()
+
+    var needUpdateCart: Boolean = false
+
+    var coupon: String = ""
+
+    var full: Int = 0
+        set(value) {
+            field = value
+            fullPriceMLD.value = field
+        }
+    var deposit: Int = 0
+        set(value) {
+            field = value
+            depositPriceMLD.value = field
+        }
+    var discount: Int = 0
+        set(value) {
+            field = value
+            discountPriceMLD.value = field
+        }
+    var total: Int = 0
+        set(value) {
+            field = value
+            totalPriceMLD.value = field
+        }
 
     private var giftProductUIList = listOf<ProductUI>()
         set(value) {
@@ -54,11 +86,16 @@ class CartViewModel(
 
     fun getGiftList() = giftProductUIList
 
-    private var availableProductUIList = listOf<ProductUI>()
+    var notAvailableProductUIList = listOf<ProductUI>()
+    var availableProductUIList = listOf<ProductUI>()
         set(value) {
             field = value
             availableProductListMLD.value = value
-            calculatePrice()
+            val prices = calculatePrice(availableProductUIList)
+            full = prices.first
+            discount = prices.second
+            deposit = prices.third
+            total = prices.first + prices.third - prices.second
         }
 
     var isTryToClearCart = false
@@ -75,8 +112,18 @@ class CartViewModel(
 
     fun isAlreadyLogin() = dataRepository.isAlreadyLogin()
 
+    fun getCart(): String {
+        val cart = availableProductUIList.map { Pair(it.id, it.cartQuantity) }
+        val result = StringBuilder()
+        for (product in cart) {
+            result.append(product.first).append(":").append(product.second).append(",")
+        }
+        return result.toString()
+    }
+
     fun updateData() {
-        dataRepository.fetchCart()
+        dataRepository
+            .fetchCart(coupon)
             .subscribeOn(Schedulers.io())
             .doOnSubscribe { updateViewState(ViewState.Loading()) }
             .observeOn(AndroidSchedulers.mainThread())
@@ -101,10 +148,15 @@ class CartViewModel(
     }
 
     private fun updateLiveData(cartBundleUI: CartBundleUI) {
+        infoMessageMLD.value = cartBundleUI.infoMessage
+        if (cartBundleUI.infoMessage.isNotEmpty()) {
+            coupon = ""
+        }
         giftProductUIList = cartBundleUI.giftProductUIList
         availableProductUIList = cartBundleUI.availableProductUIList
 
         giftMessageMLD.value = cartBundleUI.giftMessage
+        notAvailableProductUIList = cartBundleUI.notAvailableProductUIList
         notAvailableProductListMLD.value = cartBundleUI.notAvailableProductUIList
 
         cartBundleUI.bestForYouCategoryDetailUI?.let { bestForYouCategoryDetailMLD.value = it }
@@ -144,57 +196,22 @@ class CartViewModel(
     }
 
     fun changeCart(productId: Long, quantity: Int) {
-        dataRepository.changeCart(
-            productId = productId,
-            quantity = quantity
-        ).subscribeBy(
-            onComplete = {
-                updateData()
-                updateData()
-            },
-            onError = { throwable ->
-                errorMLD.value = throwable.message ?: "Неизвестная ошибка"
-            }
-        )
-    }
-
-    private fun calculatePrice() {
-        var fullPrice = 0
-        var discountPrice = 0
-        var totalPrice = 0
-        availableProductUIList.forEach { productUI ->
-            val price = when (productUI.priceList.size) {
-                1 -> productUI.priceList.first()
-                else -> {
-                    val sortedPriceList = productUI.priceList
-                        .sortedBy { it.requiredAmount }
-                        .reversed()
-                    val defaultPrice = sortedPriceList.last()
-                    val rightPrice = sortedPriceList.find { productUI.cartQuantity >= it.requiredAmount }
-                    rightPrice?.let {
-                        Log.i(LogSettings.PRICE_LOG, "DefaultPrice ${defaultPrice.currentPrice} : RightPrice ${rightPrice.currentPrice}")
-                        discountPrice += (defaultPrice.currentPrice - rightPrice.currentPrice) * productUI.cartQuantity
-                    }
-                    rightPrice
+        dataRepository
+            .changeCart(
+                productId = productId,
+                quantity = quantity
+            )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onComplete = {
+                    updateData()
+                    updateData()
+                },
+                onError = { throwable ->
+                    errorMLD.value = throwable.message ?: "Неизвестная ошибка"
                 }
-            }
-            price?.let {
-                Log.i(LogSettings.PRICE_LOG, "${price.currentPrice} : ${price.oldPrice}")
-                when(price.oldPrice) {
-                    0 -> fullPrice += price.currentPrice * productUI.cartQuantity
-                    else -> {
-                        fullPrice += price.oldPrice * productUI.cartQuantity
-                        discountPrice += (price.oldPrice - price.currentPrice) * productUI.cartQuantity
-                    }
-                }
-            }
-            Log.i(LogSettings.PRICE_LOG, "$fullPrice : $discountPrice")
-        }
-        totalPrice = fullPrice - discountPrice
-
-        fullPriceMLD.value = fullPrice
-        discountPriceMLD.value = discountPrice
-        totalPriceMLD.value = totalPrice
+            )
     }
 
     override fun onCleared() {

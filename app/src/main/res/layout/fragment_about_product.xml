@@ -3,16 +3,14 @@
 <com.vodovoz.app.ui.base.ExpandableTextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/aboutProduct"
+    style="@style/TextViewMediumBlack"
+    android:id="@+id/tvAboutProduct"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
     android:paddingTop="@dimen/space_16"
     android:paddingStart="@dimen/space_16"
     android:paddingEnd="@dimen/space_16"
-    android:fontFamily="@font/rotonda_normal"
-    android:textColor="@color/blackTextLight"
-    android:textSize="17sp"
     app:expandAction="...еще"
     app:limitedMaxLines="6"
     app:expandActionColor="@color/bluePrimary"/>

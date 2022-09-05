@@ -132,7 +132,6 @@ class AddressesFragment : ViewStateBaseFragment() {
                 })
             },
             onAddressClick = { addressUI ->
-                Log.d(LogSettings.MAP_LOG, "Address id : ${addressUI.id}")
                 if (viewModel.openMode == OpenMode.SelectAddress) {
                     findNavController().previousBackStackEntry?.savedStateHandle?.set(SELECTED_ADDRESS, addressUI)
                     findNavController().popBackStack()

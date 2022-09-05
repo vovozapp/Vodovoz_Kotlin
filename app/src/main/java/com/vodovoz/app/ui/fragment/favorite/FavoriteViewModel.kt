@@ -155,15 +155,19 @@ class FavoriteViewModel(
     }
 
     fun changeCart(productId: Long, quantity: Int) {
-        dataRepository.changeCart(
-            productId = productId,
-            quantity = quantity
-        ).subscribeBy(
-            onComplete = {},
-            onError = { throwable ->
-                errorMLD.value = throwable.message ?: "Неизвестная ошибка"
-            }
-        )
+        dataRepository
+            .changeCart(
+                productId = productId,
+                quantity = quantity
+            )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onComplete = {},
+                onError = { throwable ->
+                    errorMLD.value = throwable.message ?: "Неизвестная ошибка"
+                }
+            )
     }
 
     override fun onCleared() {

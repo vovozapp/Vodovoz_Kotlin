@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_margin="@dimen/space_16"
-        android:translationZ="@dimen/card_elevation"
+        android:translationZ="@dimen/elevation_3"
         android:background="@drawable/bkg_button_blue_rect_disabled"
         android:fontFamily="@font/rotonda_normal"
         android:textColor="@color/white"

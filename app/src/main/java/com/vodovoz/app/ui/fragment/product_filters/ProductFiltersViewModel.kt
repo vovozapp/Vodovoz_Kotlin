@@ -79,19 +79,14 @@ class ProductFiltersViewModel(
     }
 
     fun changeConcreteFilter(concreteFilter: FilterUI) {
-        Log.i(LogSettings.ID_LOG, "SIZE PRE ${customFilterBundle?.filterUIList?.size}")
-        Log.i(LogSettings.ID_LOG, "CHANGE")
         if (concreteFilter.filterValueList.isNotEmpty()) {
-            Log.i(LogSettings.ID_LOG, "NOT EMPTY")
             customFilterBundle?.let { noNullCustomFilterBundle ->
                 when(val index = noNullCustomFilterBundle.filterUIList.indexOfFirst { it.code == concreteFilter.code }) {
                     -1 -> {
                         noNullCustomFilterBundle.filterUIList.add(concreteFilter)
-                        Log.i(LogSettings.ID_LOG, "-1")
                     }
                     else -> {
                         noNullCustomFilterBundle.filterUIList[index] = concreteFilter
-                        Log.i(LogSettings.ID_LOG, "ELSE")
                     }
                 }
             }

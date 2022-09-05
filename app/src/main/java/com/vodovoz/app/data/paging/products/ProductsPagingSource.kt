@@ -29,7 +29,6 @@ class ProductsPagingSource(
             val response = productsSource.getResponse(page)
 
             if (productsSource is ProductsFavoriteSource) {
-                Log.i(LogSettings.ID_LOG, response.toString())
             }
 
             if (!response.isSuccessful) return LoadResult.Error(HttpException(response))

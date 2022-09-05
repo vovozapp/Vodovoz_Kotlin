@@ -33,16 +33,16 @@ class ProductInfoFragment : Fragment() {
     ).apply {
         binding = this
         arguments?.getString(ABOUT_TEXT)?.let { aboutText ->
-            binding.aboutProduct.originalText = HtmlCompat.fromHtml(aboutText, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+            binding.tvAboutProduct.originalText = HtmlCompat.fromHtml(aboutText, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
         }
         if (isExpanded) {
-            binding.aboutProduct.toggle()
+            binding.tvAboutProduct.toggle()
         }
     }.root
 
     override fun onStop() {
         super.onStop()
-        isExpanded = !binding.aboutProduct.collapsed
+        isExpanded = !binding.tvAboutProduct.collapsed
     }
 
 }

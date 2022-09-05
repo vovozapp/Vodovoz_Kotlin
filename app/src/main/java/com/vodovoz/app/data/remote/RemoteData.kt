@@ -11,6 +11,7 @@ import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.pa
 import com.vodovoz.app.data.parser.response.brand.BrandHeaderResponseJsonParser.parseBrandHeaderResponse
 import com.vodovoz.app.data.parser.response.brand.BrandsSliderResponseJsonParser.parseBrandsSliderResponse
 import com.vodovoz.app.data.parser.response.cart.AddProductToCartResponseJsonParser.parseAddProductToCartResponse
+import com.vodovoz.app.data.parser.response.cart.BottlesResponseJsonParser.parseBottlesResponse
 import com.vodovoz.app.data.parser.response.cart.CartResponseJsonParser.parseCartResponse
 import com.vodovoz.app.data.parser.response.cart.ChangeProductQuantityInCartResponseJsonParser.parseChangeProductQuantityInCartResponse
 import com.vodovoz.app.data.parser.response.cart.ClearCartResponseJsonParser.parseClearCartResponse
@@ -45,10 +46,10 @@ import com.vodovoz.app.data.parser.response.map.FetchAddressesSavedResponseJsonP
 import com.vodovoz.app.data.parser.response.map.UpdateAddressResponseJsonParser.parseUpdateAddressResponse
 import com.vodovoz.app.data.parser.response.novelties.NoveltiesHeaderResponseJsonParser.parseNoveltiesHeaderResponse
 import com.vodovoz.app.data.parser.response.novelties.NoveltiesSliderResponseParser.parseNoveltiesSliderResponse
+import com.vodovoz.app.data.parser.response.order.CancelOrderResponseJsonParser.parseCancelOrderResponse
 import com.vodovoz.app.data.parser.response.order.OrderDetailsResponseJsonParser.parseOrderDetailsResponse
 import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
-import com.vodovoz.app.data.parser.response.ordering.PayMethodsResponseJsonParser.parsePayMethodsResponse
-import com.vodovoz.app.data.parser.response.ordering.ShippingIntervalsResponseJsonParser.parseShippingIntervalsResponse
+import com.vodovoz.app.data.parser.response.ordering.RegOrderResponseJsonParser.parseRegOrderResponse
 import com.vodovoz.app.data.parser.response.paginatedProducts.MaybeLikeProductsResponseJsonParser.parseMaybeLikeProductsResponse
 import com.vodovoz.app.data.parser.response.paginatedProducts.SomeProductsByBrandResponseJsonParser.parseSomeProductsByBrandResponse
 import com.vodovoz.app.data.parser.response.past_purchases.PastPurchasesHeaderResponseJsonParser.parsePastPurchasesHeaderResponse
@@ -69,18 +70,21 @@ import com.vodovoz.app.data.parser.response.service.OrderServiceResponseJsonPars
 import com.vodovoz.app.data.parser.response.service.ServiceByIdResponseJsonParser.parseServiceByIdResponse
 import com.vodovoz.app.data.parser.response.service.ServiceOrderFormResponseJsonParser.parseServiceOrderFormResponse
 import com.vodovoz.app.data.parser.response.shipping.FreeShippingDaysResponseJsonParser.parseFreeShippingDaysResponse
+import com.vodovoz.app.data.parser.response.shipping.ShippingInfoResponseJsonParser.parseShippingInfoResponse
+import com.vodovoz.app.data.parser.response.user.AuthByPhoneJsonParser.parseAuthByPhoneResponse
 import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
 import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
 import com.vodovoz.app.data.parser.response.user.RecoverPasswordJsonParser.parseRecoverPasswordResponse
 import com.vodovoz.app.data.parser.response.user.RegisterResponseJsonParser.parseRegisterResponse
+import com.vodovoz.app.data.parser.response.user.RequestCodeResponseJsonParser.parseRequestCodeResponse
 import com.vodovoz.app.data.parser.response.user.UpdateUserDataResponseJsonParser.parseUpdateUserDataResponse
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
-import com.vodovoz.app.ui.model.FreeShippingDaysInfoBundleUI
 import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Response
 
 class RemoteData(
@@ -178,8 +182,13 @@ class RemoteData(
     }
 
     //Содержимое корзины
-    override fun fetchCart(): Single<ResponseEntity<CartBundleEntity>> = vodovozApi.fetchCartResponse(
-        action = "getbasket"
+    override fun fetchCart(
+        userId: Long?,
+        coupon: String?
+    ): Single<ResponseEntity<CartBundleEntity>> = vodovozApi.fetchCartResponse(
+        action = "getbasket",
+        userId = userId,
+        coupon = coupon
     ).flatMap {
         Single.just(it.parseCartResponse())
     }
@@ -312,16 +321,6 @@ class RemoteData(
 
     override fun fetchFreeShippingDaysInfoResponse(): Single<ResponseEntity<FreeShippingDaysInfoBundleEntity>> =
         vodovozApi.fetchInfoAboutOrderingResponse().flatMap { Single.just(it.parseFreeShippingDaysResponse()) }
-
-    override fun fetchShippingIntervals(
-        addressId: Long?,
-        userId: Long?,
-        date: String?
-    ): Single<ResponseEntity<List<ShippingIntervalEntity>>> = vodovozApi.fetchInfoAboutOrderingResponse(
-        addressId = addressId,
-        userId = userId,
-        date = date
-    ).flatMap { Single.just(it.parseShippingIntervalsResponse()) }
 
     //Информация о слайдере новинок на главной странице
     override fun fetchNoveltiesSlider(): Single<ResponseEntity<List<CategoryDetailEntity>>> = rxSingle {
@@ -644,14 +643,6 @@ class RemoteData(
         email = email
     ).flatMap { Single.just(it.parseUpdateUserDataResponse()) }
 
-    override fun fetchPayMethods(
-        addressId: Long?,
-        userId: Long?
-    ): Single<ResponseEntity<List<PayMethodEntity>>> = vodovozApi.fetchInfoAboutOrderingResponse(
-        addressId = addressId,
-        userId = userId
-    ).flatMap { Single.just(it.parsePayMethodsResponse()) }
-
     //Добавить в избранное для авторизованного пользователя
     override fun addToFavorite(
         productIdList: List<Long>,
@@ -727,7 +718,6 @@ class RemoteData(
         geocode = "$longitude,$latitude",
         format = "json"
     ).flatMap {
-        Log.i(LogSettings.ID_LOG, it.toString())
         Single.just(it.body()!!.parseAddressByGeocodeResponse())
     }
 
@@ -768,7 +758,6 @@ class RemoteData(
         blockId = 102,
         action = "add"
     ).flatMap {
-        Log.i(LogSettings.ID_LOG, it.toString())
         Single.just(it.body()!!.parseAddAddressResponse())
     }
 
@@ -798,7 +787,6 @@ class RemoteData(
         blockId = 102,
         action = "update"
     ).flatMap {
-        Log.i(LogSettings.ID_LOG, it.toString())
         Single.just(it.body()!!.parseUpdateAddressResponse())
     }
 
@@ -812,7 +800,6 @@ class RemoteData(
         action = "del",
         blockId = 102
     ).flatMap {
-        Log.i(LogSettings.ID_LOG, it.toString())
         Single.just(it.body()!!.parseDeleteAddressResponse()) }
 
     //Постраничная загрузка всех заказов
@@ -956,6 +943,72 @@ class RemoteData(
         userId = userId,
         value = value
     ).flatMap { Single.just(it.parseOrderServiceResponse()) }
+
+    override fun fetchShippingInfo(
+        userId: Long?,
+        addressId: Long?,
+        date: String?
+    ): Single<ResponseEntity<ShippingInfoBundleEntity>> = vodovozApi.fetchInfoAboutOrderingResponse(
+        userId = userId,
+        addressId = addressId,
+        date = date
+    ).flatMap { Single.just(it.parseShippingInfoResponse()) }
+
+    override fun regOrder(
+        orderType: Int?, //Тип заказа (1/2)
+        device: String?, //Телефон Android:12 Версия: 1.4.83
+        addressId: Long?, //адрес id - (150543)
+        date: String?, //23.08.2022
+        paymentId: Long?, //Pay method Id
+        needOperatorCall: String?, // Y/N
+        needShippingAlert: String?, //За 90 минут
+        comment: String?,
+        totalPrice: Int?, //Итоговая сумма заказа
+        shippingId: Long?, //
+        shippingPrice: Int?, // цена доставки
+        name: String?,
+        phone: String?,
+        email: String?,
+        companyName: String?,
+        userId: Long?,
+        deposit: Int?, //?
+        fastShippingPrice: Int?, // 500 р
+        extraShippingPrice: Int?, // из delivery
+        commonShippingPrice: Int?, //?
+        coupon: String?, // передавать из корзины
+        shippingIntervalId: Long?, //id Интервал доставки
+        overMoney: Int?, //?
+        parking: Int?, // числовое значение
+    ) : Single<ResponseEntity<OrderingCompletedInfoBundleEntity>> = vodovozApi.fetchRegOrderResponse(
+        orderType, device, addressId, date, paymentId, needOperatorCall, needShippingAlert, comment, totalPrice, shippingId, shippingPrice, name, phone, email, companyName, userId, deposit, fastShippingPrice, extraShippingPrice, commonShippingPrice, coupon, shippingIntervalId, overMoney, parking
+    ).flatMap { Single.just(it.parseRegOrderResponse()) }
+
+    override fun fetchBottles(): Single<ResponseEntity<List<BottleEntity>>> =
+        vodovozApi.fetchBottlesResponse(iBlockId = 90).flatMap {
+            Single.just(it.parseBottlesResponse())
+        }
+
+    override fun cancelOrder(
+        orderId: Long?
+    ): Single<ResponseEntity<String>> = vodovozApi.cancelOrder(
+        orderId = orderId
+    ).flatMap { Single.just(it.parseCancelOrderResponse()) }
+
+    override fun requestCode(
+        phone: String?
+    ): Single<ResponseEntity<Int>> = vodovozApi.fetchAuthByPhoneResponse(
+        action = "tochkakarta",
+        phone = phone
+    ).flatMap { Single.just(it.parseRequestCodeResponse()) }
+
+    override fun authByPhone(
+        phone: String?,
+        code: String?
+    ): Single<ResponseEntity<Long>> = vodovozApi.fetchAuthByPhoneResponse(
+        action = "tochkakarta",
+        phone = phone,
+        code = code
+    ).flatMap { Single.just(it.parseAuthByPhoneResponse()) }
 
 //
 //    override fun updateUserPhoto(

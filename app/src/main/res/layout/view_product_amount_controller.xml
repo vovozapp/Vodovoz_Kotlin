@@ -9,8 +9,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/add"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
         android:layout_marginTop="@dimen/space_6"
         android:layout_marginEnd="@dimen/space_6"
         android:background="@drawable/bkg_button_green_circle_normal"
@@ -38,10 +38,10 @@
         <ImageView
             android:id="@+id/reduceAmount"
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="@dimen/_24sdp"
             android:layout_weight="1"
             android:background="@drawable/bkg_number_controller_part_reduce"
-            android:padding="6dp"
+            android:padding="@dimen/space_6"
             android:src="@drawable/ic_minus"
             app:tint="@color/green"
             tools:ignore="ContentDescription" />
@@ -50,7 +50,7 @@
             android:id="@+id/amount"
             style="@style/TextViewNormalBlackBold"
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="@dimen/_24sdp"
             android:layout_weight="1"
             android:background="@drawable/bkg_number_controller_part_number"
             android:gravity="center"
@@ -59,7 +59,7 @@
         <ImageView
             android:id="@+id/increaseAmount"
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="@dimen/_24sdp"
             android:layout_weight="1"
             android:background="@drawable/bkg_number_controller_part_increase"
             android:padding="@dimen/space_6"
@@ -70,8 +70,8 @@
 
     <TextView
         android:id="@+id/circleAmount"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="@dimen/_16sdp"
+        android:layout_height="@dimen/_16sdp"
         android:background="@drawable/bkg_number"
         android:fontFamily="@font/rotonda_normal"
         android:textStyle="bold"

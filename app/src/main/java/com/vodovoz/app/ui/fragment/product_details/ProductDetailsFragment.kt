@@ -7,11 +7,13 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -23,7 +25,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.BsSelectionReplacementProductsBinding
-import com.vodovoz.app.databinding.FragmentProductDetailBinding
+import com.vodovoz.app.databinding.FragmentProductDetailsBinding
 import com.vodovoz.app.ui.adapter.*
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
@@ -32,6 +34,7 @@ import com.vodovoz.app.ui.decoration.CommentMarginDecoration
 import com.vodovoz.app.ui.decoration.PriceMarginDecoration
 import com.vodovoz.app.ui.decoration.SearchMarginDecoration
 import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
+import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setCommentQuantity
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.product_info.ProductInfoFragment
 import com.vodovoz.app.ui.fragment.product_properties.ProductPropertiesFragment
@@ -40,13 +43,19 @@ import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.fragment.slider.promotion_slider.PromotionsSliderFragment
 import com.vodovoz.app.ui.fragment.some_products_by_brand.SomeProductsByBrandFragment
 import com.vodovoz.app.ui.fragment.some_products_maybe_like.SomeProductsMaybeLikeFragment
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountText
+import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountPercent
+import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setMinimalPriceText
+import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceCondition
+import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
+import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
+import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.*
 import com.vodovoz.app.ui.model.custom.ProductDetailBundleUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
+import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -55,7 +64,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 @SuppressLint("NotifyDataSetChanged")
 class ProductDetailsFragment : ViewStateBaseFragment() {
 
-    private lateinit var binding: FragmentProductDetailBinding
+    private lateinit var binding: FragmentProductDetailsBinding
     private lateinit var viewModel: ProductDetailsViewModel
 
     private val compositeDisposable = CompositeDisposable()
@@ -70,7 +79,7 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
     private val detailPicturePagerAdapter = DetailPicturePagerAdapter(
         iOnProductDetailPictureClick = {
             findNavController().navigate(ProductDetailsFragmentDirections.actionToFullScreenDetailPicturesSliderFragment(
-                binding.detailPicturePager.currentItem,
+                binding.vpPictures.currentItem,
                 viewModel.productDetailBundleUI.productDetailUI.detailPictureList.toTypedArray()
             ))
         }
@@ -151,14 +160,16 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
             iOnPromotionClick = { promotionId ->
                  findNavController().navigate(ProductDetailsFragmentDirections.actionToPromotionDetailFragment(promotionId))
             },
-            iOnShowAllPromotionsClick = {}
+            iOnShowAllPromotionsClick = {},
+            iOnFavoriteClick = { pair -> onFavoriteClickSubject.onNext(pair) },
+            iOnChangeProductQuantity = { pair -> onChangeProductQuantitySubject.onNext(pair) }
         )
     }
 
     override fun setContentView(
         inflater: LayoutInflater,
         container: ViewGroup,
-    ) = FragmentProductDetailBinding.inflate(
+    ) = FragmentProductDetailsBinding.inflate(
         inflater,
         container,
         false
@@ -175,6 +186,7 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
         initAmountController()
         initProductsSliders()
         observeViewModel()
+        observeResultLiveData()
     }
 
     override fun update() {
@@ -182,17 +194,17 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
     }
 
     private fun initDetailPictureRecycler() {
-        binding.back.setOnClickListener { findNavController().popBackStack() }
-        binding.detailPicturePager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.detailPicturePager.adapter = detailPicturePagerAdapter
-        TabLayoutMediator(binding.tabIndicator, binding.detailPicturePager) { _, _ -> }.attach()
+        binding.imgBack.setOnClickListener { findNavController().popBackStack() }
+        binding.vpPictures.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.vpPictures.adapter = detailPicturePagerAdapter
+        TabLayoutMediator(binding.tlIndicators, binding.vpPictures) { _, _ -> }.attach()
     }
 
     private fun initPriceRecycler() {
-        binding.priceRecycler.layoutManager =
+        binding.rvPrices.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.priceRecycler.addItemDecoration(PriceMarginDecoration(space))
-        binding.priceRecycler.adapter = pricesAdapter
+        binding.rvPrices.addItemDecoration(PriceMarginDecoration(space))
+        binding.rvPrices.adapter = pricesAdapter
     }
 
     private fun initCommentRecycler() {
@@ -220,10 +232,10 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
     }
 
     private fun initSearchWordRecycler() {
-        binding.searchWordRecycler.layoutManager =
+        binding.rvSearchWords.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.searchWordRecycler.adapter = searchWordAdapter
-        binding.searchWordRecycler.addItemDecoration(SearchMarginDecoration(space))
+        binding.rvSearchWords.adapter = searchWordAdapter
+        binding.rvSearchWords.addItemDecoration(SearchMarginDecoration(space))
     }
 
     private val amountControllerTimer = object: CountDownTimer(3000, 3000) {
@@ -245,8 +257,8 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
         binding.amountController.increaseAmount.setOnClickListener { increaseAmount() }
         binding.floatingAmountController.increaseAmount.setOnClickListener { increaseAmount() }
 
-        binding.productHeaderContainer.onRenderFinished { _, height ->
-            binding.contentScrollView.setOnScrollChangeListener(
+        binding.clHeader.onRenderFinished { _, height ->
+            binding.nsvContent.setOnScrollChangeListener(
                 NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
                     if (scrollY > height) {
                         binding.floatingAmountControllerContainer.visibility = View.VISIBLE
@@ -276,11 +288,22 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
     }
 
     private fun add() {
-        if (viewModel.productDetailBundleUI.productDetailUI.cartQuantity == 0) {
-            viewModel.productDetailBundleUI.productDetailUI.cartQuantity++
-            updateCartQuantity()
+        if (viewModel.productDetailBundleUI.productDetailUI.leftItems == 0) {
+            viewModel.productDetailBundleUI.replacementProductsCategoryDetail?.let {
+                if (it.productUIList.isNotEmpty()) {
+                    findNavController().navigate(ProductDetailsFragmentDirections.actionToReplacementProductsSelectionBS(
+                        viewModel.productDetailBundleUI.productDetailUI.detailPictureList.first(),
+                        it.productUIList.toTypedArray(),
+                    ))
+                }
+            }
+        } else {
+            if (viewModel.productDetailBundleUI.productDetailUI.cartQuantity == 0) {
+                viewModel.productDetailBundleUI.productDetailUI.cartQuantity++
+                updateCartQuantity()
+            }
+            showAmountController()
         }
-        showAmountController()
     }
 
 
@@ -339,9 +362,9 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
     }
 
     private fun initHeader() {
-        binding.oldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-        binding.floatingOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-        binding.share.setOnClickListener {
+        binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        binding.tvFloatingOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        binding.imgShare.setOnClickListener {
             Intent.createChooser(
                 Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
@@ -350,16 +373,18 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
                 "Shearing Option"
             ).let { startActivity(it) }
         }
+        binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        binding.tvFloatingOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 
-        binding.favorite.setOnClickListener {
+        binding.imgFavorite.setOnClickListener {
             when(viewModel.productDetailBundleUI.productDetailUI.isFavorite) {
                 true -> {
                     viewModel.productDetailBundleUI.productDetailUI.isFavorite = false
-                    binding.favorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_ic_favorite))
+                    binding.imgFavorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_ic_favorite))
                 }
                 false -> {
                     viewModel.productDetailBundleUI.productDetailUI.isFavorite = true
-                    binding.favorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_ic_favorite_red))
+                    binding.imgFavorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_ic_favorite_red))
                 }
             }
             onFavoriteClickSubject.onNext(Pair(
@@ -370,15 +395,17 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
     }
 
     private fun initButtons() {
-        binding.brand.setOnClickListener { showProductsByBrand() }
-        binding.brandContainer.setOnClickListener { showProductsByBrand() }
-        binding.categoryContainer.setOnClickListener { showProductsByCategory() }
-        binding.commentAmount.setOnClickListener {
-            findNavController().navigate(ProductDetailsFragmentDirections.actionToAllCommentsByProductDialogFragment(
-                viewModel.productId!!
-            ))
+        binding.tvBrand.setOnClickListener { showProductsByBrand() }
+        binding.clBrandContainer.setOnClickListener { showProductsByBrand() }
+        binding.clCategoryContainer.setOnClickListener { showProductsByCategory() }
+        binding.tvCommentAmount.setOnClickListener {
+            if (viewModel.productDetailBundleUI.productDetailUI.commentsAmount != 0) {
+                findNavController().navigate(ProductDetailsFragmentDirections.actionToAllCommentsByProductDialogFragment(
+                    viewModel.productId!!
+                ))
+            }
         }
-        binding.sendComment.setOnClickListener {
+        binding.tvSendComment.setOnClickListener {
             if (viewModel.isLogin()) {
                 findNavController().navigate(ProductDetailsFragmentDirections.actionToSendCommentAboutProductFragment(
                     viewModel.productId!!
@@ -387,12 +414,12 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
                 findNavController().navigate(R.id.profileFragment)
             }
         }
-        binding.playVideo.setOnClickListener {
+        binding.cwPlayVideo.setOnClickListener {
             viewModel.productDetailBundleUI.productDetailUI.youtubeVideoCode?.let { videoCode ->
                 findNavController().navigate(ProductDetailsFragmentDirections.actionToYouTubeVideoFragmentDialog(videoCode))
             }
         }
-        binding.showAllComment.setOnClickListener {
+        binding.tvShowAllComment.setOnClickListener {
             findNavController().navigate(ProductDetailsFragmentDirections.actionToAllCommentsByProductDialogFragment(
                 viewModel.productId!!
             ))
@@ -417,6 +444,17 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
         }
     }
 
+    private fun observeResultLiveData() {
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Long>(ReplacementProductsSelectionBS.SELECTED_PRODUCT_ID)
+            ?.observe(viewLifecycleOwner) { productId ->
+                if (findNavController().currentDestination?.id == R.id.replacementProductsSelectionBS) {
+                    findNavController().popBackStack()
+                    findNavController().navigate(ProductDetailsFragmentDirections.actionToSelf(productId))
+                }
+            }
+    }
+
     private fun observeViewModel() {
         viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
             when(state) {
@@ -437,7 +475,6 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
     private fun fillView(productDetailBundleUI: ProductDetailBundleUI) {
         fillHeader(productDetailBundleUI)
         fillDetailPictureRecycler(productDetailBundleUI.productDetailUI.detailPictureList)
-        fillPrice(productDetailBundleUI.productDetailUI)
         fillAboutProduct(productDetailBundleUI.productDetailUI)
         fillCategoryAndBrandSection(productDetailBundleUI)
         fillCommentRecycler(productDetailBundleUI.commentUIList)
@@ -481,8 +518,8 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
             false -> binding.servicesContainer.visibility = View.VISIBLE
         }
 
-        binding.servicesRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
-        binding.servicesRecycler.addItemDecoration(
+        binding.rvServices.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.rvServices.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
                     outRect: Rect,
@@ -505,7 +542,7 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
             }
         )
 
-        binding.servicesRecycler.adapter = ServicesAdapter(
+        binding.rvServices.adapter = ServicesAdapter(
             serviceUIList = serviceUIList,
             onServiceClickSubject = onServiceClickSubject
         )
@@ -522,7 +559,7 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
     }
 
     private fun fillAboutProduct(productDetailUI: ProductDetailUI) {
-        binding.consumerInfo.text = productDetailUI.consumerInfo
+        binding.tvConsumerInfo.text = productDetailUI.consumerInfo
         aboutProductFragment = ProductInfoFragment.newInstance(productDetailUI.detailText)
         propertiesFragment = ProductPropertiesFragment.newInstance(productDetailUI.propertiesGroupUIList)
         childFragmentManager.beginTransaction()
@@ -538,50 +575,104 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
     }
 
     private fun fillHeader(productDetailBundle: ProductDetailBundleUI) {
-        binding.name.text = productDetailBundle.productDetailUI.name
-        binding.rating.rating = requireNotNull(productDetailBundle.productDetailUI.rating).toFloat()
-        productDetailBundle.productDetailUI.brandUI?.let { binding.brand.text = it.name }
+        productDetailBundle.productDetailUI.brandUI?.let { binding.tvBrand.text = it.name }
 
-        when(productDetailBundle.productDetailUI.youtubeVideoCode) {
-            null -> binding.playVideo.visibility = View.GONE
-            else -> binding.playVideo.visibility = View.VISIBLE
-        }
+        binding.tvName.text = productDetailBundle.productDetailUI.name
+        binding.rbRating.rating = productDetailBundle.productDetailUI.rating.toFloat()
 
         Glide.with(requireContext())
             .load(productDetailBundle.productDetailUI.detailPictureList.first())
             .into(binding.miniDetailImage)
 
-        if (productDetailBundle.productDetailUI.pricePerUnit != null) {
-            binding.pricePerUnit.visibility = View.VISIBLE
-            binding.pricePerUnit.text = StringBuilder()
-                .append(productDetailBundle.productDetailUI.pricePerUnit)
-                .append("/кг")
-                .toString()
+
+        when(productDetailBundle.productDetailUI.youtubeVideoCode.isEmpty()) {
+            true -> binding.cwPlayVideo.visibility = View.GONE
+            false -> binding.cwPlayVideo.visibility = View.VISIBLE
         }
 
-        when(productDetailBundle.productDetailUI.isFavorite) {
-            false -> binding.favorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_ic_favorite))
-            true -> binding.favorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_ic_favorite_red))
+        //If left items = 0
+        when(productDetailBundle.productDetailUI.leftItems == 0) {
+            true -> {
+                when(productDetailBundle.replacementProductsCategoryDetail?.productUIList?.isEmpty()) {
+                    true -> {
+                        binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_gray_circle_normal)
+                        binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_alert))
+                        binding.floatingAmountController.add.setBackgroundResource(R.drawable.bkg_button_gray_circle_normal)
+                        binding.floatingAmountController.add.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_alert))
+                    }
+                    false -> {
+                        binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_orange_circle_normal)
+                        binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_swap))
+                        binding.floatingAmountController.add.setBackgroundResource(R.drawable.bkg_button_orange_circle_normal)
+                        binding.floatingAmountController.add.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_swap))
+                    }
+                }
+            }
+            false -> {
+                binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
+                binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_cart))
+                binding.floatingAmountController.add.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
+                binding.floatingAmountController.add.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_cart))
+            }
         }
 
-        if (productDetailBundle.productDetailUI.commentsAmount != 0) {
-            binding.commentAmount.text = StringBuilder()
-                .append(productDetailBundle.productDetailUI.commentsAmount)
-                .append(" | ")
-                .append(" Читать отзывы")
-                .toString()
+        //Price per unit / or order quantity
+        when(productDetailBundle.productDetailUI.pricePerUnit != 0) {
+            true -> {
+                binding.tvPricePerUnit.visibility = View.VISIBLE
+                binding.tvPricePerUnit.setPricePerUnitText(productDetailBundle.productDetailUI.pricePerUnit)
+            }
+            false -> binding.tvPricePerUnit.visibility = View.GONE
         }
 
-        if (productDetailBundle.productDetailUI.status != null) {
-            binding.statusContainer.setCardBackgroundColor(Color.parseColor(productDetailBundle.productDetailUI.statusColor))
-            binding.status.text = productDetailBundle.productDetailUI.status
-            binding.statusContainer.visibility = View.VISIBLE
-        } else {
-            binding.statusContainer.visibility = View.GONE
+        //Price
+        var haveDiscount = false
+        when(productDetailBundle.productDetailUI.priceUIList.size) {
+            1 -> {
+                binding.tvCurrentPrice.setPriceText(productDetailBundle.productDetailUI.priceUIList.first().currentPrice)
+                binding.tvFloatingCurrentPrice.setPriceText(productDetailBundle.productDetailUI.priceUIList.first().currentPrice)
+                binding.tvOldPrice.setPriceText(productDetailBundle.productDetailUI.priceUIList.first().oldPrice)
+                binding.tvFloatingOldPrice.setPriceText(productDetailBundle.productDetailUI.priceUIList.first().oldPrice)
+                binding.tvPriceCondition.visibility = View.GONE
+                binding.tvFloatingPriceCondition.visibility = View.GONE
+                if (productDetailBundle.productDetailUI.priceUIList.first().currentPrice <
+                    productDetailBundle.productDetailUI.priceUIList.first().oldPrice) haveDiscount = true
+            }
+            else -> {
+                val minimalPrice = productDetailBundle.productDetailUI.priceUIList.maxByOrNull { it.requiredAmount }!!
+                binding.tvCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice)
+                binding.tvFloatingCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice)
+                binding.tvPriceCondition.setPriceCondition(minimalPrice.requiredAmount)
+                binding.tvFloatingPriceCondition.setPriceCondition(minimalPrice.requiredAmount)
+                binding.tvPriceCondition.visibility = View.VISIBLE
+                binding.tvFloatingPriceCondition.visibility = View.VISIBLE
+                binding.tvPricePerUnit.visibility = View.GONE
+                pricesAdapter.priceUIList = productDetailBundle.productDetailUI.priceUIList
+                pricesAdapter.notifyDataSetChanged()
+            }
+        }
+        when(haveDiscount) {
+            true -> {
+                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                binding.tvFloatingCurrentPrice.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                binding.tvOldPrice.visibility = View.VISIBLE
+                binding.tvFloatingOldPrice.visibility = View.VISIBLE
+            }
+            false -> {
+                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+                binding.tvFloatingCurrentPrice.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+                binding.tvOldPrice.visibility = View.GONE
+                binding.tvFloatingOldPrice.visibility = View.GONE
+            }
         }
 
+        //Cart amount
         binding.amountController.circleAmount.text = productDetailBundle.productDetailUI.cartQuantity.toString()
         binding.amountController.amount.text = productDetailBundle.productDetailUI.cartQuantity.toString()
+        binding.floatingAmountController.circleAmount.text = productDetailBundle.productDetailUI.cartQuantity.toString()
+        binding.floatingAmountController.amount.text = productDetailBundle.productDetailUI.cartQuantity.toString()
+
+
         when (productDetailBundle.productDetailUI.cartQuantity > 0) {
             true -> {
                 binding.amountController.circleAmount.visibility = View.VISIBLE
@@ -592,26 +683,85 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
                 binding.floatingAmountController.circleAmount.visibility = View.GONE
             }
         }
+
+        //Comment
+        when (productDetailBundle.productDetailUI.commentsAmount == 0) {
+            true -> {
+                binding.tvCommentAmount.text = "Нет отзывов"
+                binding.tvCommentAmount.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_gray))
+            }
+            else -> {
+                binding.tvCommentAmount.setCommentQuantity(productDetailBundle.productDetailUI.commentsAmount)
+                binding.tvCommentAmount.setTextColor(ContextCompat.getColor(requireContext(), R.color.bluePrimary))
+            }
+        }
+
+        //Favorite
+        when(productDetailBundle.productDetailUI.isFavorite) {
+            false -> binding.imgFavorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_ic_favorite))
+            true -> binding.imgFavorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_ic_favorite_red))
+        }
+
+        //Status
+        var isNotHaveStatuses = true
+        when (productDetailBundle.productDetailUI.status.isEmpty()) {
+            true -> {}
+            false -> {
+                isNotHaveStatuses = false
+                binding.cwStatusContainer.visibility = View.VISIBLE
+                binding.tvStatus.text = productDetailBundle.productDetailUI.status
+                binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(productDetailBundle.productDetailUI.statusColor))
+            }
+        }
+
+        //DiscountPercent
+        when(productDetailBundle.productDetailUI.priceUIList.size == 1 &&
+                productDetailBundle.productDetailUI.priceUIList.first().currentPrice <
+                productDetailBundle.productDetailUI.priceUIList.first().oldPrice) {
+            true -> {
+                binding.cwDiscountContainer.visibility = View.VISIBLE
+                binding.tvDiscountPercent.setDiscountPercent(
+                    newPrice = productDetailBundle.productDetailUI.priceUIList.first().currentPrice,
+                    oldPrice = productDetailBundle.productDetailUI.priceUIList.first().oldPrice
+                )
+            }
+            false -> binding.cwDiscountContainer.visibility = View.GONE
+        }
+
+        when(isNotHaveStatuses) {
+            true -> binding.cgStatuses.visibility = View.GONE
+            false -> binding.cgStatuses.visibility = View.VISIBLE
+        }
+
+        val diffUtil = DetailPictureDiffUtilCallback(
+            oldList = detailPicturePagerAdapter.detailPictureUrlList,
+            newList = productDetailBundle.productDetailUI.detailPictureList
+        )
+
+        DiffUtil.calculateDiff(diffUtil).let { diffResult ->
+            detailPicturePagerAdapter.detailPictureUrlList = productDetailBundle.productDetailUI.detailPictureList
+            diffResult.dispatchUpdatesTo(detailPicturePagerAdapter)
+        }
     }
 
     private fun fillCategoryAndBrandSection(productDetailBundleUI: ProductDetailBundleUI) {
-        binding.categoryName.text = productDetailBundleUI.categoryUI.name
+        binding.tvCategoryName.text = productDetailBundleUI.categoryUI.name
         Glide.with(requireContext())
             .load(productDetailBundleUI.categoryUI.detailPicture)
-            .into(binding.categoryImage)
+            .into(binding.imgCategory)
 
         when(productDetailBundleUI.productDetailUI.brandUI) {
             null -> {
-                binding.brandContainer.visibility = View.GONE
-                binding.dividerBetweenCategoryAndBrand.visibility = View.GONE
+                binding.clBrandContainer.visibility = View.GONE
+                binding.mdBetweenCategoryAndBrand.visibility = View.GONE
             }
             else -> {
-                binding.brandContainer.visibility = View.VISIBLE
-                binding.dividerBetweenCategoryAndBrand.visibility = View.VISIBLE
-                binding.brandName.text = productDetailBundleUI.productDetailUI.brandUI.name
+                binding.clBrandContainer.visibility = View.VISIBLE
+                binding.mdBetweenCategoryAndBrand.visibility = View.VISIBLE
+                binding.tvBrandName.text = productDetailBundleUI.productDetailUI.brandUI.name
                 Glide.with(requireContext())
                     .load(productDetailBundleUI.productDetailUI.brandUI.detailPicture)
-                    .into(binding.brandImage)
+                    .into(binding.imgBrand)
             }
         }
     }
@@ -647,43 +797,9 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
         recommendProductsSliderFragment.updateData(listOf(categoryDetailUI))
     }
 
-    private fun fillPrice(productDetailUI: ProductDetailUI) {
-        when(productDetailUI.priceUIList.size) {
-            1 -> {
-                binding.price.setPriceText(productDetailUI.priceUIList.first().currentPrice)
-                binding.floatingPrice.setPriceText(productDetailUI.priceUIList.first().currentPrice)
-                if (productDetailUI.priceUIList.first().oldPrice != 0) {
-                    binding.price.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-                    binding.floatingPrice.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-                    binding.oldPrice.setPriceText(productDetailUI.priceUIList.first().oldPrice)
-                    binding.floatingOldPrice.setPriceText(productDetailUI.priceUIList.first().oldPrice)
-                    binding.discount.setDiscountText(
-                        oldPrice = productDetailUI.priceUIList.first().oldPrice,
-                        newPrice = productDetailUI.priceUIList.first().currentPrice,
-                    )
-                    binding.discount.visibility = View.VISIBLE
-                } else {
-                    binding.discount.visibility = View.GONE
-                }
-            }
-            else -> {
-                binding.price.text = StringBuilder()
-                    .append("от ")
-                    .append(productDetailUI.priceUIList.last().currentPrice)
-                    .append(" Р")
-                binding.priceCondition.text = StringBuilder()
-                    .append("при условии покупки от ")
-                    .append(productDetailUI.priceUIList.last().requiredAmount)
-                    .append(" шт")
-                binding.priceCondition.visibility = View.VISIBLE
-                pricesAdapter.priceUIList = productDetailUI.priceUIList
-                pricesAdapter.notifyDataSetChanged()
-            }
-        }
-    }
 
     private fun fillCommentRecycler(commentUIList: List<CommentUI>) {
-        binding.commentAmountTitle.text = StringBuilder()
+        binding.tvCommentAmountTitle.text = StringBuilder()
             .append("Отзывы (")
             .append(commentUIList.size)
             .append(")")
@@ -692,7 +808,7 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
         commentWithAvatarAdapter.notifyDataSetChanged()
 
         if (commentUIList.isEmpty()) {
-            binding.commentTitleContainer.visibility = View.GONE
+            binding.llCommentsTitleContainer.visibility = View.GONE
             binding.noCommentsTitle.visibility = View.VISIBLE
         }
     }
@@ -717,87 +833,6 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
-    }
-
-}
-
-class ReplacementProductsSelectionBS : BottomSheetDialogFragment() {
-
-    private lateinit var binding: BsSelectionReplacementProductsBinding
-    private lateinit var productUIList: List<ProductUI>
-    private lateinit var notAvailableProductDetailPicture: String
-
-    private val compositeDisposable = CompositeDisposable()
-    private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
-    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
-    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
-    private val linearProductsAdapter = LinearProductsAdapter(
-        onProductClickSubject = onProductClickSubject,
-        onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-        onFavoriteClickSubject = onFavoriteClickSubject
-    )
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        getArgs()
-        subscribeSubjects()
-    }
-
-    private fun getArgs() {
-        ReplacementProductsSelectionBSArgs.fromBundle(requireArguments()).let { args ->
-            productUIList = args.replacementProductList.toList()
-            notAvailableProductDetailPicture = args.notAvailableProductDetailPicture
-        }
-    }
-
-    private fun subscribeSubjects() {
-        onProductClickSubject.subscribeBy { productId ->
-
-        }.addTo(compositeDisposable)
-        onChangeProductQuantitySubject.subscribeBy { pair ->
-
-        }.addTo(compositeDisposable)
-        onFavoriteClickSubject.subscribeBy { pair ->
-
-        }.addTo(compositeDisposable)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ) = BsSelectionReplacementProductsBinding.inflate(
-        inflater,
-        container,
-        false
-    ).apply { binding = this }.root
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupHeader()
-        setupProductsRecycler()
-    }
-
-    private fun setupHeader() {
-        binding.imgClose.setOnClickListener { dismiss() }
-        binding.imgAlert.setOnClickListener { }
-        Glide.with(requireContext()).load(notAvailableProductDetailPicture).into(binding.imgProduct)
-    }
-
-    private fun setupProductsRecycler() {
-        binding.rvProducts.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvProducts.adapter = linearProductsAdapter
-        val space = resources.getDimension(R.dimen.space_16).toInt()
-        val lastItemBottomSpace = resources.getDimension(R.dimen.last_item_bottom_normal_space).toInt()
-        binding.rvProducts.addMarginDecoration {  rect, view, parent, state ->
-            with(rect) {
-                if (parent.getChildAdapterPosition(view) == 0) top = space
-                right = space
-                bottom =
-                    if (parent.getChildAdapterPosition(view) == state.itemCount - 1) lastItemBottomSpace
-                    else space
-            }
-        }
     }
 
 }

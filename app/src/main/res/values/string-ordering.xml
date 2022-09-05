@@ -31,7 +31,7 @@
     <string name="ordering_form_phone_title_text">Телефон</string>
     <string name="ordering_form_phone_hint_text">+7–341–543-53-23</string>
 
-    <string name="ordering_form_date_title_text">Куда?</string>
+    <string name="ordering_form_date_title_text">Когда?</string>
     <string name="ordering_form_date_hint_text">Дата</string>
     <string name="ordering_form_time_hint_text">Время</string>
 

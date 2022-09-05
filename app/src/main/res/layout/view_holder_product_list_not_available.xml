@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imgPicture"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="10dp"
+        android:alpha="0.5"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.25"
+        tools:ignore="ContentDescription" />
+
+    <LinearLayout
+        android:id="@+id/llStatusesAndNameContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/space_8"
+        app:layout_constraintBottom_toTopOf="@+id/imgSwap"
+        app:layout_constraintEnd_toStartOf="@+id/imgFavoriteStatus"
+        app:layout_constraintStart_toEndOf="@+id/imgPicture"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cwStatusContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/red"
+            app:cardCornerRadius="@dimen/corner_5"
+            app:cardElevation="0dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvStatus"
+                style="@style/TextViewSmallWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/space_8"
+                android:paddingVertical="@dimen/space_2"
+                android:text="Нет в наличии" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvName"
+            style="@style/TextViewNormalBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/space_8"
+            android:layout_marginTop="@dimen/space_4"
+            tools:ignore="RtlSymmetry"
+            tools:text="Какое-то интересное не короткое название какой-то" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvDepositPrice"
+            style="@style/TextViewSmallGray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_8"
+            android:paddingEnd="@dimen/space_8"
+            tools:ignore="RtlSymmetry"
+            tools:text="Стоимость залога 400 Р" />
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imgFavoriteStatus"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:src="@drawable/png_ic_favorite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imgSwap"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:background="@drawable/bkg_button_orange_circle_normal"
+        android:padding="@dimen/space_6"
+        android:src="@drawable/ic_swap"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/white"
+        tools:ignore="ContentDescription" />
+
+    <LinearLayout
+        android:id="@+id/clPricesContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/imgSwap"
+        app:layout_constraintEnd_toStartOf="@+id/imgSwap"
+        app:layout_constraintStart_toEndOf="@+id/imgPicture"
+        app:layout_constraintTop_toTopOf="@+id/imgSwap">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvPricePerUnit"
+            style="@style/TextViewSmallGray"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="start|bottom"
+            app:layout_constraintBottom_toTopOf="@+id/price"
+            app:layout_constraintStart_toEndOf="@+id/vpPictures"
+            tools:text="510/кг" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvPrice"
+                style="@style/TextViewMediumBlackBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="88888 Р" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvOldPrice"
+                style="@style/TextViewNormalGrayBold"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:gravity="bottom"
+                android:paddingStart="@dimen/space_4"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tvPrice"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="RtlSymmetry"
+                tools:text="88888 Р" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvPriceCondition"
+            style="@style/TextViewSmallGray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingTop="@dimen/space_2"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/price"
+            app:layout_constraintStart_toEndOf="@+id/vpPictures"
+            tools:text="При услови покупки от 10 шт" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

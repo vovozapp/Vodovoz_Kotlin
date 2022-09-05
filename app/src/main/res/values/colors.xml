@@ -12,7 +12,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#E1E1E1</color>
 
-    <color name="whiteDark">#EFF1F3</color>
+    <color name="dark_white">#EFF1F3</color>
     <color name="light_gray">#F2F2F2</color>
     <color name="transparent_white">#80FFFFFF</color>
     <color name="transparent_light_gray">#80EFF1F3</color>

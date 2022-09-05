@@ -17,7 +17,6 @@ object UpdateAddressResponseJsonParser {
 
     fun ResponseBody.parseUpdateAddressResponse(): ResponseEntity<String> {
         val responseJson = JSONObject(string())
-        Log.d(LogSettings.MAP_LOG, responseJson.toString())
         return when (responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(responseJson.getString("message"))
             else -> ResponseEntity.Error("Неправильный запрос")

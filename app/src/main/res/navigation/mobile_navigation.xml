@@ -68,6 +68,9 @@
         <action
             android:id="@+id/action_to_aboutAppDialogFragment"
             app:destination="@id/aboutAppDialogFragment" />
+        <action
+            android:id="@+id/action_to_pastPurchasesFragment"
+            app:destination="@id/pastPurchasesFragment" />
     </fragment>
     <fragment
         android:id="@+id/catalogFragment"
@@ -101,6 +104,12 @@
         <action
             android:id="@+id/action_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_to_allBottlesFragment"
+            app:destination="@id/allBottlesFragment" />
+        <action
+            android:id="@+id/action_to_replacementProductsSelectionBS"
+            app:destination="@id/replacementProductsSelectionBS" />
     </fragment>
     <fragment
         android:id="@+id/paginatedProductsCatalogFragment"
@@ -347,6 +356,9 @@
         <action
             android:id="@+id/action_to_aboutAppDialogFragment"
             app:destination="@id/aboutAppDialogFragment" />
+        <action
+            android:id="@+id/action_to_serviceDetailFragment"
+            app:destination="@id/serviceDetailFragment" />
     </fragment>
     <dialog
         android:id="@+id/popupNewsBottomFragment"
@@ -505,23 +517,15 @@
             android:id="@+id/action_to_productDetailFragment"
             app:destination="@id/productDetailFragment" />
         <action
-            android:id="@+id/action_to_ordersFiltersDialog"
-            app:destination="@id/ordersFiltersDialog" />
-        <action
             android:id="@+id/action_to_orderDetailsFragment"
             app:destination="@id/orderDetailsFragment" />
         <action
             android:id="@+id/action_to_cartFragment"
             app:destination="@id/cartFragment" />
+        <action
+            android:id="@+id/action_to_ordersFiltersDialog"
+            app:destination="@id/ordersFiltersDialog" />
     </fragment>
-    <dialog
-        android:id="@+id/ordersFiltersDialog"
-        android:name="com.vodovoz.app.ui.fragment.orders_filters.OrdersFiltersDialog"
-        android:label="OrdersFiltersDialog" >
-        <argument
-            android:name="ordersFiltersBundleUI"
-            app:argType="com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI" />
-    </dialog>
     <fragment
         android:id="@+id/orderDetailsFragment"
         android:name="com.vodovoz.app.ui.fragment.order_details.OrderDetailsFragment"
@@ -668,18 +672,24 @@
         <action
             android:id="@+id/action_to_shippingAlertsSelectionBS"
             app:destination="@id/shippingAlertsSelectionBS" />
-    </fragment>
-    <dialog
-        android:id="@+id/replacementProductsSelectionBS"
-        android:name="com.vodovoz.app.ui.fragment.product_details.ReplacementProductsSelectionBS"
-        android:label="ReplacementProductsSelectionBS" >
         <argument
-            android:name="replacementProductList"
-            app:argType="com.vodovoz.app.ui.model.ProductUI[]" />
+            android:name="total"
+            app:argType="integer" />
         <argument
-            android:name="notAvailableProductDetailPicture"
+            android:name="discount"
+            app:argType="integer" />
+        <argument
+            android:name="deposit"
+            app:argType="integer" />
+        <argument
+            android:name="full"
+            app:argType="integer" />
+        <argument android:name="lastActualCart"
             app:argType="string" />
-    </dialog>
+        <argument
+            android:name="coupon"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/aboutAppDialogFragment"
         android:name="com.vodovoz.app.ui.fragment.about_app.AboutAppDialogFragment"
@@ -729,5 +739,28 @@
         <argument
             android:name="shippingAlertList"
             app:argType="com.vodovoz.app.ui.model.ShippingAlertUI[]" />
+    </dialog>
+    <fragment
+        android:id="@+id/allBottlesFragment"
+        android:name="com.vodovoz.app.ui.fragment.bottles.AllBottlesFragment"
+        android:label="AllBottlesFragment" />
+    <fragment
+        android:id="@+id/ordersFiltersDialog"
+        android:name="com.vodovoz.app.ui.fragment.orders_filters.OrdersFiltersFragment"
+        android:label="OrdersFiltersDialog" >
+        <argument
+            android:name="ordersFiltersBundleUI"
+            app:argType="com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI" />
+    </fragment>
+    <dialog
+        android:id="@+id/replacementProductsSelectionBS"
+        android:name="com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS"
+        android:label="ReplacementProductsSelectionBS" >
+        <argument
+            android:name="notAvailableProductDetailPicture"
+            app:argType="string" />
+        <argument
+            android:name="productList"
+            app:argType="com.vodovoz.app.ui.model.ProductUI[]" />
     </dialog>
 </navigation>

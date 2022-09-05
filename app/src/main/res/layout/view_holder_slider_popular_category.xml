@@ -10,5 +10,5 @@
     android:paddingHorizontal="@dimen/space_16"
     android:paddingVertical="@dimen/space_8"
     android:background="@drawable/bkg_rect_rounded_white"
-    android:translationZ="@dimen/card_elevation"
+    android:translationZ="@dimen/elevation_3"
     tools:text="Name" />

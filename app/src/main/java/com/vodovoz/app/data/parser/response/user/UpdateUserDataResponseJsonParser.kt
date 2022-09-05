@@ -13,7 +13,6 @@ object UpdateUserDataResponseJsonParser {
 
     fun ResponseBody.parseUpdateUserDataResponse(): ResponseEntity<Boolean> {
         val responseJson = JSONObject(this.string())
-        Log.i(LogSettings.ID_LOG, responseJson.toString())
         return when(responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(true)
             else -> ResponseEntity.Error(responseJson.getString("data"))

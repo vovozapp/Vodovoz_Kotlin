@@ -15,6 +15,9 @@ class LocalData(
         private const val USER_ID = "USER_ID"
         private const val EMAIL = "EMAIL"
         private const val PASSWORD = "PASSWORD"
+        private const val PHONE = "PHONE"
+        private const val LAST_REQUEST_CODE_DATE = "LAST_REQUEST_CODE_DATE"
+        private const val LAST_REQUEST_CODE_TIME_OUT = "LAST_REQUEST_CODE_TIME_OUT"
 
         //Cart Settings
         private const val CART_SETTINGS = "cart_settings"
@@ -104,7 +107,6 @@ class LocalData(
     }.toString()
 
     private fun parseFavoriteStr(favoriteStr: String): List<Long> {
-        Log.i(LogSettings.ID_LOG, favoriteStr)
         val favoriteList = mutableListOf<Long>()
         favoriteStr.split(",").forEach { id ->
             if (id.isNotEmpty()) {
@@ -151,22 +153,48 @@ class LocalData(
     override fun fetchUserId() = when(accountSettings.contains(USER_ID)) {
         true -> {
             val userId = accountSettings.getLong(USER_ID, 0)
-            Log.d(LogSettings.LOCAL_DATA, "User id $userId")
             userId
         }
         false -> {
-            Log.d(LogSettings.LOCAL_DATA, "User id null")
             null
         }
     }
 
     override fun updateUserId(userId: Long) {
-        Log.d(LogSettings.LOCAL_DATA, "Update user id $userId")
         accountSettings.edit().putLong(USER_ID, userId).apply()
     }
 
     override fun removeUserId() {
         accountSettings.edit().remove(USER_ID).apply()
+    }
+
+    override fun updateLastAuthPhone(phone: String) {
+        accountSettings.edit().putString(PHONE, phone).apply()
+    }
+
+    override fun fetchLastAuthPhone() = when(accountSettings.contains(PHONE)) {
+        true -> accountSettings.getString(PHONE, "") ?: ""
+        false -> ""
+    }
+
+    override fun updateLastRequestCodeDate(time: Long) {
+        Log.d(LogSettings.LOCAL_DATA, "DATE = $time")
+        accountSettings.edit().putLong(LAST_REQUEST_CODE_DATE, time).apply()
+    }
+
+    override fun fetchLastRequestCodeDate() = when(accountSettings.contains(LAST_REQUEST_CODE_DATE)) {
+        true -> accountSettings.getLong(LAST_REQUEST_CODE_DATE, 0)
+        false -> 0L
+    }
+
+    override fun updateLastRequestCodeTimeOut(time: Int) {
+        Log.d(LogSettings.LOCAL_DATA, "TIMEOUT = $time")
+        accountSettings.edit().putInt(LAST_REQUEST_CODE_TIME_OUT, time).apply()
+    }
+
+    override fun fetchLastRequestCodeTimeOut() = when(accountSettings.contains(LAST_REQUEST_CODE_TIME_OUT)) {
+        true -> accountSettings.getInt(LAST_REQUEST_CODE_TIME_OUT, 0)
+        false -> 0
     }
 
     override fun isAlreadyLogin() = fetchUserId() != null
@@ -176,14 +204,12 @@ class LocalData(
         val cart = fetchCart()
         cart[productId] = quantity
         cartSettings.edit().putString(cookieSessionId, buildCartStr(cart)).apply()
-        Log.d(LogSettings.LOCAL_DATA, "Chance local cart $productId : $quantity")
     }
 
     override fun fetchCart(): HashMap<Long, Int> {
         val userId = fetchCookieSessionId()
         if (!cartSettings.contains(userId.toString())) return HashMap()
         val cartStr = cartSettings.getString(userId.toString(), null)!!
-        Log.d(LogSettings.LOCAL_DATA, "Fetch cart $cartStr")
         return parseCartStr(cartStr)
     }
 

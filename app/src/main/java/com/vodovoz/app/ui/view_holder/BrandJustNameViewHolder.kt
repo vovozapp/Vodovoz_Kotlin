@@ -20,7 +20,7 @@ class BrandJustNameViewHolder(
 
     fun onBind(brandUI: BrandUI) {
         this.brandUI = brandUI
-        binding.name.text = brandUI.name
+        binding.tvName.text = brandUI.name
     }
 
 }

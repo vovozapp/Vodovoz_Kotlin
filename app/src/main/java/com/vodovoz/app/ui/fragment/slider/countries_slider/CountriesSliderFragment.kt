@@ -88,7 +88,6 @@ class CountriesSliderFragment : BaseHiddenFragment() {
     private fun subscribeSubjects() {
         onCountryClickSubject.subscribeBy { countryId ->
             iOnCountryClick.onCountryClick(countryId)
-            Log.i(LogSettings.ID_LOG, "CID $countryId")
         }.addTo(compositeDisposable)
     }
 

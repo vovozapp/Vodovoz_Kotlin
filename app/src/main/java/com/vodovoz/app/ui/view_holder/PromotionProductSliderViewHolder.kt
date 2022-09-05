@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderSliderPromotionProductBinding
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountText
+import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountPercent
+import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setMinimalPriceText
+import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -32,12 +34,15 @@ class PromotionProductSliderViewHolder(
     }
 
     init {
-        binding.oldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.root.setOnClickListener {
             onProductClickSubject.onNext(productUI.id)
         }
 
         binding.amountController.add.setOnClickListener {
+            if (productUI.leftItems == 0) {
+                return@setOnClickListener
+            }
             if (productUI.cartQuantity == 0) {
                 productUI.cartQuantity++
                 onChangeProductQuantitySubject.onNext(Pair(productUI.id, productUI.cartQuantity))
@@ -63,15 +68,15 @@ class PromotionProductSliderViewHolder(
             updateCartQuantity()
         }
 
-        binding.favoriteStatus.setOnClickListener {
+        binding.imgFavoriteStatus.setOnClickListener {
             when(productUI.isFavorite) {
                 true -> {
                     productUI.isFavorite = false
-                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite))
+                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite))
                 }
                 false -> {
                     productUI.isFavorite = true
-                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite_red))
+                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite_red))
                 }
             }
             onFavoriteClickSubject.onNext(Pair(productUI.id, productUI.isFavorite))
@@ -87,8 +92,8 @@ class PromotionProductSliderViewHolder(
     }
 
     private fun showAmountController() {
-        binding.amountController.circleAmount.visibility = View.GONE
-        binding.amountController.add.visibility = View.GONE
+        binding.amountController.circleAmount.visibility = View.INVISIBLE
+        binding.amountController.add.visibility = View.INVISIBLE
         binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
         amountControllerTimer.start()
     }
@@ -98,7 +103,7 @@ class PromotionProductSliderViewHolder(
             binding.amountController.circleAmount.visibility = View.VISIBLE
         }
         binding.amountController.add.visibility = View.VISIBLE
-        binding.amountController.amountControllerDeployed.visibility = View.GONE
+        binding.amountController.amountControllerDeployed.visibility = View.INVISIBLE
     }
 
     private lateinit var productUI: ProductUI
@@ -106,86 +111,104 @@ class PromotionProductSliderViewHolder(
     fun onBind(productUI: ProductUI) {
         this.productUI = productUI
 
-        binding.name.text = productUI.name
+        binding.tvName.text = productUI.name
 
-        when(productUI.status) {
-            "" -> binding.statusContainer.visibility = View.GONE
-            else -> {
-                binding.statusContainer.visibility = View.VISIBLE
-                binding.status.text = productUI.status
-                binding.statusContainer.setCardBackgroundColor(Color.parseColor(productUI.statusColor))
+        //If left items = 0
+        when(productUI.leftItems == 0) {
+            true -> {
+                binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_gray_circle_normal)
+                binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_alert))
+            }
+            false -> {
+                binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
+                binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_cart))
             }
         }
 
+        //Price per unit / or order quantity
+        when(productUI.pricePerUnit != 0) {
+            true -> {
+                binding.tvPricePerUnit.visibility = View.VISIBLE
+                binding.tvPricePerUnit.setPricePerUnitText(productUI.pricePerUnit)
+            }
+            false -> binding.tvPricePerUnit.visibility = View.GONE
+        }
+
+        //Price
+        var haveDiscount = false
+        when(productUI.priceList.size) {
+            1 -> {
+                binding.tvCurrentPrice.setPriceText(productUI.priceList.first().currentPrice)
+                binding.tvOldPrice.setPriceText(productUI.priceList.first().oldPrice)
+                if (productUI.priceList.first().currentPrice < productUI.priceList.first().oldPrice || productUI.isGift) haveDiscount = true
+            }
+            else -> {
+                val minimalPrice = productUI.priceList.maxByOrNull { it.requiredAmount }!!
+                binding.tvCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice)
+                binding.tvPricePerUnit.visibility = View.GONE
+            }
+        }
+        when(haveDiscount) {
+            true -> {
+                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
+                binding.tvOldPrice.visibility = View.VISIBLE
+            }
+            false -> {
+                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
+                binding.tvOldPrice.visibility = View.GONE
+            }
+        }
+
+        //Cart amount
         binding.amountController.circleAmount.text = productUI.cartQuantity.toString()
         binding.amountController.amount.text = productUI.cartQuantity.toString()
+
         when (productUI.cartQuantity > 0) {
             true -> binding.amountController.circleAmount.visibility = View.VISIBLE
             false -> binding.amountController.circleAmount.visibility = View.GONE
         }
 
+        //Favorite
         when(productUI.isFavorite) {
-            false -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite))
-            true -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite_red))
+            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite))
+            true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
         }
 
-        when(productUI.priceList.size) {
-            1 -> {
-                binding.price.setPriceText(productUI.priceList.first().currentPrice)
-                when (productUI.priceList.first().oldPrice) {
-                    0 -> binding.discountContainer.visibility = View.GONE
-                    else -> {
-                        binding.discountContainer.visibility = View.VISIBLE
-                        binding.discount.visibility = View.VISIBLE
-                        binding.price.setTextColor(ContextCompat.getColor(context, R.color.red))
-                        binding.oldPrice.setPriceText(productUI.priceList.first().oldPrice)
-                        binding.oldPrice.visibility = View.VISIBLE
-                        binding.discount.setDiscountText(
-                            productUI.priceList.first().oldPrice,
-                            productUI.priceList.first().currentPrice
-                        )
-                        if (productUI.status != "") {
-                            binding.space.visibility = View.VISIBLE
-                            val padding = context.resources.getDimension(R.dimen.space_8) / 2
-                            binding.name.setPadding(0, padding.toInt(), 0, 0)
-                        }
-                    }
-                }
-            }
-            else -> {
-                binding.discountContainer.visibility = View.GONE
-                binding.price.setPriceText(productUI.priceList.sortedBy { it.requiredAmount }.reversed().find { it.requiredAmount <= productUI.cartQuantity }!!.currentPrice)
-            }
-        }
-        when(productUI.priceList.size) {
-            1 -> {
-                binding.price.setPriceText(productUI.priceList.first().currentPrice)
-                when (productUI.priceList.first().oldPrice) {
-                    0 -> binding.discountContainer.visibility = View.GONE
-                    else -> {
-                        binding.discountContainer.visibility = View.VISIBLE
-                        binding.discount.visibility = View.VISIBLE
-                        binding.price.setTextColor(ContextCompat.getColor(context, R.color.red))
-                        binding.oldPrice.setPriceText(productUI.priceList.maxByOrNull { it.requiredAmount }!!.oldPrice)
-                        binding.oldPrice.visibility = View.VISIBLE
-                        binding.discount.setDiscountText(
-                            productUI.priceList.maxByOrNull { it.requiredAmount }!!.oldPrice,
-                            productUI.priceList.maxByOrNull { it.requiredAmount }!!.currentPrice
-                        )
-
-                    }
-                }
-            }
-            else -> {
-                binding.price.text = StringBuilder().append("от ").append(productUI.priceList.first().currentPrice).append("Р").toString()
+        //Status
+        var isNotHaveStatuses = true
+        when (productUI.status.isEmpty()) {
+            true -> binding.cwStatusContainer.visibility = View.GONE
+            false -> {
+                isNotHaveStatuses = false
+                binding.cwStatusContainer.visibility = View.VISIBLE
+                binding.tvStatus.text = productUI.status
+                binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(productUI.statusColor))
             }
         }
 
+        //DiscountPercent
+        when(productUI.priceList.size == 1 &&
+                productUI.priceList.first().currentPrice < productUI.priceList.first().oldPrice) {
+            true -> {
+                binding.cwDiscountContainer.visibility = View.VISIBLE
+                binding.tvDiscountPercent.setDiscountPercent(
+                    newPrice = productUI.priceList.first().currentPrice,
+                    oldPrice = productUI.priceList.first().oldPrice
+                )
+            }
+            false -> binding.cwDiscountContainer.visibility = View.GONE
+        }
+
+        when(isNotHaveStatuses) {
+            true -> binding.cgStatuses.visibility = View.GONE
+            false -> binding.cgStatuses.visibility = View.VISIBLE
+        }
+
+        //UpdatePictures
         Glide
             .with(context)
             .load(productUI.detailPicture)
-            .into(binding.image)
-
+            .into(binding.imgPicture)
     }
 
 }

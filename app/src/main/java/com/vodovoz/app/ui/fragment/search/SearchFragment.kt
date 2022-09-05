@@ -41,6 +41,7 @@ import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
+import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.core.Observable
@@ -73,10 +74,18 @@ class SearchFragment : ViewStateBaseFragment() {
 
     private val categoryTabsAdapter = CategoryTabsAdapter(onCategoryClickSubject)
     private var productAdapter = PagingProductsAdapter(
-        onProductClickSubject = onProductClickSubject,
+        onProductClick = {
+            findNavController().navigate(SearchFragmentDirections.actionToProductDetailFragment(it))
+        },
+        onChangeFavoriteStatus = { productId, status ->
+            viewModel.changeFavoriteStatus(productId, status)
+        },
+        onChangeCartQuantity = { productId, quantity ->
+            viewModel.changeCart(productId, quantity)
+        },
+        onNotAvailableMore = {},
+        onNotifyWhenBeAvailable = {},
         productDiffItemCallback = ProductDiffItemCallback(),
-        onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-        onFavoriteClickSubject = onFavoriteClickSubject,
         viewMode = ViewMode.LIST
     )
 
@@ -199,7 +208,6 @@ class SearchFragment : ViewStateBaseFragment() {
         binding.root.isFocusableInTouchMode = true
         binding.root.requestFocus()
         binding.root.setOnKeyListener { _, keyCode, _ ->
-            Log.i(LogSettings.ID_LOG, keyCode.toString())
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 if (binding.searchDataContainer.visibility == View.VISIBLE) {
                     binding.searchDataContainer.visibility = View.INVISIBLE
@@ -226,7 +234,6 @@ class SearchFragment : ViewStateBaseFragment() {
 
     private fun initShare() {
         binding.share.setOnClickListener {
-            Log.i(LogSettings.ID_LOG, viewModel.categoryHeader!!.shareUrl)
             Intent.createChooser(
                 Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
@@ -411,10 +418,18 @@ class SearchFragment : ViewStateBaseFragment() {
 
     private fun updatePager() {
         productAdapter = PagingProductsAdapter(
-            onProductClickSubject = onProductClickSubject,
+            onProductClick = {
+                findNavController().navigate(ProfileFragmentDirections.actionToProductDetailFragment(it))
+            },
+            onChangeFavoriteStatus = { productId, status ->
+                viewModel.changeFavoriteStatus(productId, status)
+            },
+            onChangeCartQuantity = { productId, quantity ->
+                viewModel.changeCart(productId, quantity)
+            },
+            onNotAvailableMore = {},
+            onNotifyWhenBeAvailable = {},
             productDiffItemCallback = ProductDiffItemCallback(),
-            onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-            onFavoriteClickSubject = onFavoriteClickSubject,
             viewMode = productAdapter.viewMode
         )
 

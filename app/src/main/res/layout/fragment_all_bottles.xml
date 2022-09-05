@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--new -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/incAppBar"
+        layout="@layout/app_bar_search" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvBottles"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvNotFountLabel"
+        style="@style/TextViewNormalGray"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/nothing_brands_found_text"
+        android:visibility="invisible"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

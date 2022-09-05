@@ -7,6 +7,11 @@
         <item name="colorAccent">@color/bluePrimary</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialog</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="materialAlertDialogTheme">@style/AlertDialog</item>
+    </style>
+
+    <style name="AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="materialAlertDialogBodyTextStyle">@style/TextViewNormalBlack</item>
     </style>
 
     <style name="MapDialog" parent="Theme.MaterialComponents.Light.Dialog">

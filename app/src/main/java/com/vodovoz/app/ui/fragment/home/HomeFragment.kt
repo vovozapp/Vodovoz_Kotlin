@@ -153,7 +153,7 @@ class HomeFragment : ViewStateBaseFragment(),
         )
         tripleNavigationHomeFragment.initCallbacks(
             iOnLastPurchasesClick = {
-
+                findNavController().navigate(HomeFragmentDirections.actionToPastPurchasesFragment())
             },
             iOnOrdersHistoryClick = {
                 findNavController().navigate(HomeFragmentDirections.actionToAllOrdersFragment())
@@ -180,14 +180,15 @@ class HomeFragment : ViewStateBaseFragment(),
                 findNavController().navigate(HomeFragmentDirections.actionToAllPromotionsFragment(
                     AllPromotionsFragment.DataSource.All()
                 ))
-            }
+            },
+            iOnChangeProductQuantity = this,
+            iOnFavoriteClick = this
         )
         bottomProductsSliderFragment.initCallbacks(
             iOnProductClick = this,
             iOnChangeProductQuantity = this,
             iOnFavoriteClick = this,
             iOnShowAllProductsClick = { categoryId ->
-                Log.i(LogSettings.ID_LOG, "SID $categoryId")
                 findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(categoryId)
                 ))
@@ -353,7 +354,6 @@ class HomeFragment : ViewStateBaseFragment(),
 
         viewModel.popupNewsUILD.observe(viewLifecycleOwner) { popupNewsUI ->
             if (viewModel.isShowPopupNews) {
-                Log.i(LogSettings.ID_LOG, "IS SHOW ${viewModel.isShowPopupNews}")
                 viewModel.isShowPopupNews = false
                 val dialog = PopupNewsBottomFragment.newInstance(
                     popupNewsUI,
@@ -568,7 +568,6 @@ class HomeFragment : ViewStateBaseFragment(),
     }
 
     private fun ActionEntity.invoke(navController: NavController = findNavController(), activity: FragmentActivity = requireActivity())  {
-        Log.i(LogSettings.LIFECYCLE_LOG, "${this::class.simpleName}")
         val navDirect = when(this) {
             is ActionEntity.Brand ->
                 HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
@@ -612,16 +611,6 @@ class HomeFragment : ViewStateBaseFragment(),
 
     override fun onFavoriteClick(pair: Pair<Long, Boolean>) {
         viewModel.changeFavoriteStatus(pair.first, pair.second)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.i(LogSettings.ID_LOG, "STOP HOME")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.i(LogSettings.ID_LOG, "DESTROY HOME")
     }
 
 }

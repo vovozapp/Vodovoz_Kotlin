@@ -22,6 +22,7 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.flow.map
 import java.lang.Exception
+import java.util.*
 
 class DataRepository(
     private val remoteDataSource: RemoteDataSource,
@@ -30,8 +31,13 @@ class DataRepository(
 
     fun fetchPopupNews() = remoteDataSource.fetchPopupNews(userId = localDataSource.fetchUserId())
 
-    fun fetchCart(): Single<ResponseEntity<CartBundleEntity>> = remoteDataSource
-        .fetchCart()
+    fun fetchCart(
+        coupon: String? = null
+    ): Single<ResponseEntity<CartBundleEntity>> = remoteDataSource
+        .fetchCart(
+            userId = fetchUserId(),
+            coupon = coupon
+        )
         .doOnSuccess { response ->
             if (response is ResponseEntity.Success) {
                 response.data.let { cartBundleEntity ->
@@ -44,7 +50,6 @@ class DataRepository(
                     }
                     cartBundleEntity.availableProductEntityList.syncFavoriteProducts(localDataSource)
                     cartBundleEntity.notAvailableProductEntityList.syncFavoriteProducts(localDataSource)
-                    Log.i(LogSettings.LOCAL_DATA, "AFTER FETCH CART")
                     localDataSource.fetchCart()
                 }
             }
@@ -82,6 +87,8 @@ class DataRepository(
                 }
             }
         }
+
+    fun fetchBottles() = remoteDataSource.fetchBottles()
 
     fun sendCommentAboutShop(
         comment: String?,
@@ -717,25 +724,16 @@ class DataRepository(
         userId = fetchUserId()
     )
 
-    fun fetchPayMethods(
-        addressId: Long?
-    ) = remoteDataSource.fetchPayMethods(
+    fun fetchShippingInfo(
+        addressId: Long?,
+        date: String?
+    ) = remoteDataSource.fetchShippingInfo(
         addressId = addressId,
+        date = date,
         userId = fetchUserId()
     )
 
-    fun fetchShippingAlertEntityList(): Single<List<ShippingAlertEntity>> = Single.create { emitter ->
-        emitter.onSuccess(ShippingAlertConfig.shippingAlertEntityList)
-    }
-
-    fun fetchShippingIntervals(
-        addressId: Long?,
-        date: String?
-    ) = remoteDataSource.fetchShippingIntervals(
-        addressId = addressId,
-        userId = fetchUserId()!!,
-        date = date
-    )
+    fun fetchShippingAlertEntityList() = ShippingAlertConfig.shippingAlertEntityList
 
     fun updateAddress(
         addressId: Long?,
@@ -889,5 +887,64 @@ class DataRepository(
         userId = fetchUserId()!!,
         value = value
     )
+
+
+    fun regOrder(
+        orderType: Int?, //Тип заказа (1/2)
+        device: String?, //Телефон Android:12 Версия: 1.4.83
+        addressId: Long?, //адрес id - (150543)
+        date: String?, //23.08.2022
+        paymentId: Long?, //Pay method Id
+        needOperatorCall: String?, // Y/N
+        needShippingAlert: String?, //За 90 минут
+        comment: String?,
+        totalPrice: Int?, //Итоговая сумма заказа
+        shippingId: Long?, //
+        shippingPrice: Int?, // цена доставки
+        name: String?,
+        phone: String?,
+        email: String?,
+        companyName: String?,
+        deposit: Int?, //?
+        fastShippingPrice: Int?, // 500 р
+        extraShippingPrice: Int?, // из delivery
+        commonShippingPrice: Int?, //?
+        coupon: String?, // передавать из корзины
+        shippingIntervalId: Long?, //id Интервал доставки
+        overMoney: Int?, //?
+        parking: Int?, // числовое значение
+    ) = remoteDataSource.regOrder(orderType, device, addressId, date, paymentId, needOperatorCall, needShippingAlert, comment, totalPrice, shippingId, shippingPrice, name, phone, email, companyName, fetchUserId(), deposit, fastShippingPrice, extraShippingPrice, commonShippingPrice, coupon, shippingIntervalId, overMoney, parking)
+
+    fun cancelOrder(orderId: Long?) = remoteDataSource.cancelOrder(orderId)
+
+    fun requestCode(
+        phone: String?
+    ): Single<ResponseEntity<Int>> = remoteDataSource.requestCode(phone).doOnSuccess { response ->
+        if (response is ResponseEntity.Success) {
+            localDataSource.updateLastRequestCodeDate(Date().time)
+            localDataSource.updateLastAuthPhone(phone!!)
+            localDataSource.updateLastRequestCodeTimeOut(response.data)
+        }
+    }
+
+
+    fun authByPhone(
+        phone: String?,
+        code: String?
+    ) = remoteDataSource.authByPhone(
+        phone = phone,
+        code = code
+    ).doOnSuccess { response ->
+        if (response is ResponseEntity.Success) {
+            localDataSource.updateUserId(response.data)
+        }
+    }
+
+    fun fetchLastRequestCodeDate() = localDataSource.fetchLastRequestCodeDate()
+    fun updateLastRequestCodeDate(time: Long) = localDataSource.updateLastRequestCodeDate(time)
+    fun fetchLastRequestCodeTimeOut() = localDataSource.fetchLastRequestCodeTimeOut()
+    fun updateLastRequestCodeTimeOut(time: Int) = localDataSource.updateLastRequestCodeTimeOut(time)
+    fun fetchLastAuthPhone() = localDataSource.fetchLastAuthPhone()
+    fun updateLastAuthPhone(phone: String) = localDataSource.updateLastAuthPhone(phone)
 
 }

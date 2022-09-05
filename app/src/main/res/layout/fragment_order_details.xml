@@ -7,40 +7,74 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleTextAppearance="@style/ToolbarTitle"
-        app:title="Заказ от 31.03.2022"
-        app:subtitleTextAppearance="@style/ToolbarSubtitle"
-        app:subtitle="#124124214">
+        android:background="@color/white"
+        app:elevation="0dp">
 
-        <TextView
-            android:id="@+id/cancelOrder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:fontFamily="@font/rotonda_normal"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="@color/blackTextDark"
-            android:layout_marginEnd="@dimen/space_16"
-            android:text="Отменить" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:orientation="horizontal">
 
-    </androidx.appcompat.widget.Toolbar>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imgBack"
+                android:layout_width="@dimen/_52sdp"
+                android:layout_height="?attr/actionBarSize"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:src="@drawable/ic_arrow_left"
+                app:tint="@color/text_black"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvTitle"
+                    style="@style/TextViewMediumBlackBold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Дата заказа"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvSubtitle"
+                    style="@style/TextViewSmallGray"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Номер заказа"/>
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvCancelOrder"
+                style="@style/TextViewMediumBlackBold"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/space_16"
+                android:text="Отменить"/>
+
+        </LinearLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBar"
+            android:id="@+id/abAppBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:elevation="0dp">
 
             <LinearLayout
-                android:id="@+id/statusContainer"
+                android:id="@+id/llStatusContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/space_16"
@@ -48,90 +82,80 @@
                 android:orientation="vertical"
                 app:layout_scrollFlags="enterAlways|scroll">
 
-                <ImageView
-                    android:id="@+id/statusImage"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgStatus"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
                     android:src="@drawable/ic_order_in_processing"
                     android:background="@drawable/bkg_order_status_image"
-                    android:padding="5dp"
+                    android:padding="@dimen/space_4"
                     app:tint="@color/white"/>
 
-                <TextView
-                    android:id="@+id/price"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvTotalPriceHeader"
+                    style="@style/TextViewLargeWhiteBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
                     android:layout_marginTop="@dimen/space_8"
-                    android:text="2123 Р"/>
+                    tools:text="2123 Р"/>
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/actionsContainer"
+                android:id="@+id/llActionsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:baselineAligned="false">
 
                 <LinearLayout
-                    android:id="@+id/repeatOrder"
+                    android:id="@+id/llRepeatOrder"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="45dp"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:gravity="center">
 
-                    <ImageView
-                        android:id="@+id/repeatImage"
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imgRepeat"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:src="@drawable/ic_repeat"
                         app:tint="@color/white"
                         tools:ignore="ContentDescription" />
 
-                    <TextView
-                        android:id="@+id/repeatLabel"
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvRepeat"
+                        style="@style/TextViewMediumWhiteBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:fontFamily="@font/rotonda_normal"
-                        android:textStyle="bold"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
                         android:text="Повторить"
                         android:layout_marginStart="4dp"/>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/payOrder"
+                    android:id="@+id/llPayOrder"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="45dp"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:gravity="center">
 
-                    <ImageView
-                        android:id="@+id/payImage"
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imgPay"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:src="@drawable/png_rub"
                         app:tint="@color/white"
                         tools:ignore="ContentDescription" />
 
-                    <TextView
-                        android:id="@+id/payLabel"
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvPay"
+                        style="@style/TextViewMediumWhiteBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:fontFamily="@font/rotonda_normal"
-                        android:textStyle="bold"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
                         android:text="Оплатить"
                         android:layout_marginStart="@dimen/space_8"/>
 
@@ -152,348 +176,279 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/infoLabel"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvInfo"
+                    style="@style/TextViewNormalGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_16"
                     android:layout_marginTop="@dimen/space_16"
-                    android:fontFamily="@font/rotonda_normal"
                     android:text="Информация о заказе"
-                    android:textColor="@color/blackTextLight"
-                    android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/deliveryDate"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvShippingDate"
+                    style="@style/TextViewNormalBlackBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:textStyle="bold"
-                    android:textColor="@color/blackTextDark"
-                    android:textSize="16sp"
                     android:layout_marginStart="@dimen/space_16"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/space_4"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/infoLabel"
+                    app:layout_constraintTop_toBottomOf="@+id/tvInfo"
                     tools:text="20.07.2022" />
 
-                <TextView
-                    android:id="@+id/deliveryInterval"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvShippingInterval"
+                    style="@style/TextViewNormalBlackBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:textColor="@color/blackTextDark"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
                     android:layout_marginStart="@dimen/space_16"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/space_4"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/deliveryDate"
+                    app:layout_constraintTop_toBottomOf="@+id/tvShippingDate"
                     tools:text="C 14 до 20" />
 
-                <TextView
-                    android:id="@+id/payStatusLabel"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvPayStatus"
+                    style="@style/TextViewNormalGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_16"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:text="Не оплачен"
-                    android:textColor="@color/blackTextLight"
-                    android:textSize="14sp"
                     android:layout_marginEnd="@dimen/space_16"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Не оплачен"/>
 
-                <TextView
-                    android:id="@+id/status"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvStatus"
+                    style="@style/TextViewNormalBlackBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:textColor="@color/yellow"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/space_4"
                     android:layout_marginEnd="@dimen/space_16"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/payStatusLabel"
-                    tools:text="Принят" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvPayStatus"
+                    tools:text="Принят"
+                    tools:textColor="@color/yellow"/>
 
-                <TextView
-                    android:id="@+id/payMethod"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvPayMethod"
+                    style="@style/TextViewNormalBlackBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:textColor="@color/blackTextDark"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/space_4"
                     android:layout_marginEnd="@dimen/space_16"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/status"
+                    app:layout_constraintTop_toBottomOf="@+id/tvStatus"
                     tools:text="Наличные курьеру" />
 
                 <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/dividerAfterMainInfo"
+                    android:id="@+id/mdDividerAfterMainInfo"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_16"
-                    app:layout_constraintTop_toBottomOf="@+id/payMethod"/>
+                    app:dividerColor="@color/divider_color"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPayMethod"/>
 
-                <TextView
-                    android:id="@+id/addressLabel"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvAddressTitle"
+                    style="@style/TextViewNormalGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_16"
-                    android:fontFamily="@font/rotonda_normal"
                     android:text="Информация о заказе"
                     android:layout_marginTop="@dimen/space_16"
-                    android:textColor="@color/blackTextLight"
-                    android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/dividerAfterMainInfo" />
+                    app:layout_constraintTop_toBottomOf="@+id/mdDividerAfterMainInfo" />
 
-                <TextView
-                    android:id="@+id/address"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvAddress"
+                    style="@style/TextViewNormalBlackBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:textColor="@color/blackTextDark"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
                     android:layout_marginStart="@dimen/space_16"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/space_4"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/addressLabel"
+                    app:layout_constraintTop_toBottomOf="@+id/tvAddressTitle"
                     tools:text="Адрес" />
 
                 <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/dividerAfterAddress"
+                    android:id="@+id/mdDividerAfterAddress"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_16"
-                    app:layout_constraintTop_toBottomOf="@+id/address"/>
+                    app:dividerColor="@color/divider_color"
+                    app:layout_constraintTop_toBottomOf="@+id/tvAddress"/>
 
-                <TextView
-                    android:id="@+id/receiverLabel"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvConsumerTitle"
+                    style="@style/TextViewNormalGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_16"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:text="Информация о заказе"
+                    android:text="Получатель"
                     android:layout_marginTop="@dimen/space_16"
-                    android:textColor="@color/blackTextLight"
-                    android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/dividerAfterAddress" />
+                    app:layout_constraintTop_toBottomOf="@+id/mdDividerAfterAddress" />
 
-                <TextView
-                    android:id="@+id/receiverName"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvConsumerName"
+                    style="@style/TextViewNormalBlackBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:textColor="@color/blackTextDark"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
                     android:layout_marginStart="@dimen/space_16"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/space_4"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/receiverLabel"
+                    app:layout_constraintTop_toBottomOf="@+id/tvConsumerTitle"
                     tools:text="Инван Иванович" />
 
-                <TextView
-                    android:id="@+id/receiverPhone"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvConsumerPhone"
+                    style="@style/TextViewNormalBlackBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:textColor="@color/blackTextDark"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
                     android:layout_marginStart="@dimen/space_16"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/space_4"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/receiverName"
+                    app:layout_constraintTop_toBottomOf="@+id/tvConsumerName"
                     tools:text="+7 951 234 23 12" />
 
                 <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/dividerAfterReceiver"
+                    android:id="@+id/mdAfterConsumerInfo"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_16"
-                    app:layout_constraintTop_toBottomOf="@+id/receiverPhone"/>
+                    app:dividerColor="@color/divider_color"
+                    app:layout_constraintTop_toBottomOf="@+id/tvConsumerPhone"/>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/productsRecycler"
+                    android:id="@+id/rvProducts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:translationZ="@dimen/card_elevation"
-                    app:layout_constraintTop_toBottomOf="@+id/dividerAfterReceiver" />
+                    android:translationZ="@dimen/elevation_3"
+                    app:layout_constraintTop_toBottomOf="@+id/mdAfterConsumerInfo" />
 
-                <TextView
-                    android:id="@+id/priceLabel"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvPriceTitle"
+                    style="@style/TextViewNormalBlackBold"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/light_gray"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:paddingStart="@dimen/space_16"
-                    android:paddingTop="@dimen/space_8"
-                    android:paddingEnd="@dimen/space_16"
-                    android:paddingBottom="@dimen/space_8"
-                    android:text="Стоимость"
-                    android:textColor="@color/blackTextDark"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintTop_toBottomOf="@+id/productsRecycler" />
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/dividerAfterPriceLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    app:layout_constraintTop_toBottomOf="@+id/priceLabel"/>
+                    android:layout_height="@dimen/field_height"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:background="@color/dark_white"
+                    android:text="Стоимость без учета доставки"
+                    app:layout_constraintTop_toBottomOf="@+id/rvProducts" />
 
                 <LinearLayout
-                    android:id="@+id/productsPriceContainer"
+                    android:id="@+id/llProductsPriceContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/field_height"
                     android:orientation="horizontal"
-                    android:paddingStart="@dimen/space_16"
-                    android:paddingTop="@dimen/space_16"
-                    android:paddingEnd="@dimen/space_16"
-                    android:paddingBottom="@dimen/space_8"
-                    app:layout_constraintTop_toBottomOf="@+id/dividerAfterPriceLabel">
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toBottomOf="@id/tvPriceTitle">
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewNormalBlack"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="@font/rotonda_normal"
                         android:text="Стоимость товаров"
-                        android:textColor="@color/blackTextPrimary"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:background="@color/white"/>
 
-                    <TextView
-                        android:id="@+id/productsPrice"
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvProductsPrice"
+                        style="@style/TextViewMediumBlackBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:fontFamily="@font/rotonda_normal"
                         android:text="1135 Р"
-                        android:textColor="@color/blackTextPrimary"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:background="@color/white"/>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/depositContainer"
+                    android:id="@+id/llDepositPriceContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/field_height"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="@dimen/space_16"
                     android:background="@color/white"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="@dimen/space_16"
-                    android:paddingTop="@dimen/space_8"
-                    android:paddingEnd="@dimen/space_16"
-                    android:paddingBottom="@dimen/space_8"
-                    app:layout_constraintTop_toBottomOf="@+id/productsPriceContainer">
+                    app:layout_constraintTop_toBottomOf="@id/llProductsPriceContainer">
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewNormalBlack"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@color/white"
-                        android:fontFamily="@font/rotonda_normal"
                         android:text="Залог"
-                        android:textColor="@color/blackTextPrimary"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:background="@color/white"/>
 
                     <TextView
-                        android:id="@+id/depositPrice"
+                        android:id="@+id/tvDepositPrice"
+                        style="@style/TextViewMediumBlackBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:fontFamily="@font/rotonda_normal"
                         android:text="1135 Р"
-                        android:textColor="@color/blackTextPrimary"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:background="@color/white"/>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/discountContainer"
+                    android:id="@+id/llShippingPriceContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/field_height"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="@dimen/space_16"
                     android:background="@color/white"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="@dimen/space_16"
-                    android:paddingTop="@dimen/space_8"
-                    android:paddingEnd="@dimen/space_16"
-                    android:paddingBottom="@dimen/space_8"
-                    app:layout_constraintTop_toBottomOf="@+id/depositContainer">
+                    app:layout_constraintTop_toBottomOf="@id/llDepositPriceContainer">
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewNormalBlack"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@color/white"
-                        android:fontFamily="@font/rotonda_normal"
-                        android:text="Стоимость доставки"
-                        android:textColor="@color/blackTextPrimary"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:text="Доставка"
+                        android:background="@color/white"/>
 
                     <TextView
-                        android:id="@+id/deliveryPrice"
+                        android:id="@+id/tvShippingPrice"
+                        style="@style/TextViewMediumBlackBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:fontFamily="@font/rotonda_normal"
                         android:text="1135 Р"
-                        android:textColor="@color/blackTextPrimary"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:background="@color/white"/>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/totalPriceContainer"
+                    android:id="@+id/llTotalPriceContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/field_height"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="@dimen/space_16"
                     android:background="@color/white"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="@dimen/space_16"
-                    android:paddingTop="@dimen/space_8"
-                    android:paddingEnd="@dimen/space_16"
-                    android:paddingBottom="@dimen/space_16"
-                    app:layout_constraintTop_toBottomOf="@+id/discountContainer">
+                    app:layout_constraintTop_toBottomOf="@id/llShippingPriceContainer">
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewNormalBlack"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@color/white"
-                        android:fontFamily="@font/rotonda_normal"
                         android:text="Итого"
-                        android:textColor="@color/blackTextDark"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:background="@color/white"/>
 
                     <TextView
-                        android:id="@+id/total"
+                        android:id="@+id/tvTotalPrice"
+                        style="@style/TextViewMediumBlackBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:fontFamily="@font/rotonda_normal"
                         android:text="1135 Р"
-                        android:textColor="@color/blackTextDark"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:background="@color/white"/>
 
                 </LinearLayout>
 

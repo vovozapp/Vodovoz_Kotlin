@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Vodovoz" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/bluePrimary</item>
+        <item name="colorPrimaryDark">@color/bluePrimary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorAccent">@color/bluePrimary</item>
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDialog</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="materialAlertDialogTheme">@style/AlertDialog</item>
+    </style>
+</resources>

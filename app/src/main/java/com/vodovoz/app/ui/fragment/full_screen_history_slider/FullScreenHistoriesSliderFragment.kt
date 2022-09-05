@@ -105,7 +105,6 @@ class FullScreenHistoriesSliderFragment : ViewStateBaseDialogFragment(),
     }
 
     override fun onInvokeAction(actionEntity: ActionEntity) {
-        Log.i(LogSettings.ID_LOG, findNavController().previousBackStackEntry?.destination?.label.toString())
         actionEntity.invoke(findNavController(), requireActivity())
     }
 

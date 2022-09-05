@@ -17,7 +17,6 @@ object DeleteAddressResponseJsonParser {
 
     fun ResponseBody.parseDeleteAddressResponse(): ResponseEntity<String> {
         val responseJson = JSONObject(string())
-        Log.i(LogSettings.ID_LOG, responseJson.toString())
         return when (responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(responseJson.getString("message"))
             else -> ResponseEntity.Error("Неправильный запрос")

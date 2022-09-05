@@ -43,9 +43,9 @@ class ProductsSliderFragment : BaseHiddenFragment() {
     private lateinit var categoryDetailUIList: List<CategoryDetailUI>
     private lateinit var config: ProductsSliderConfig
     private lateinit var iOnProductClick: IOnProductClick
-    private lateinit var iOnChangeProductQuantity: IOnChangeProductQuantity
     private lateinit var iOnShowAllProductsClick: IOnShowAllProductsClick
     private lateinit var iOnFavoriteClick: IOnFavoriteClick
+    private lateinit var iOnChangeProductQuantity: IOnChangeProductQuantity
 
     private lateinit var binding: FragmentSliderProductBinding
     private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }

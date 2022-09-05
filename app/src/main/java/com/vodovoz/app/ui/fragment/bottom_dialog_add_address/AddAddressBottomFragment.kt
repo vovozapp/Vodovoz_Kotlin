@@ -95,7 +95,6 @@ class AddAddressBottomFragment : ViewStateBaseBottomFragment() {
 
     private fun observeViewModel() {
         viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
-            Log.i(LogSettings.ID_LOG,"${state::class.simpleName}")
             when(state) {
                 is ViewState.Hide -> onStateHide()
                 is ViewState.Error -> {

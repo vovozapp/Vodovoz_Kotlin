@@ -2,32 +2,25 @@ package com.vodovoz.app.ui.view
 
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
 
 class Divider(
     private val divider: Drawable,
+    private val marginTop: Int,
     private val addAfterLastItem: Boolean = false
 ) : RecyclerView.ItemDecoration() {
-
-    override fun onDraw(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        super.onDraw(canvas, parent, state)
-        val dividerLeft: Int = parent.paddingLeft
-        val dividerRight: Int = parent.width - parent.paddingRight
-        val childCount: Int = parent.childCount
-        val diff = when(addAfterLastItem) {
-            true -> 0
-            false -> 1
-        }
-        for (index in 0 until childCount - diff) {
-            val child: View = parent.getChildAt(index)
-            val params: RecyclerView.LayoutParams = child.layoutParams as RecyclerView.LayoutParams
-            val dividerTop: Int = child.bottom + params.bottomMargin
+    override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+        val dividerLeft = parent.paddingLeft
+        val dividerRight = parent.width - parent.paddingRight
+        val childCount = parent.childCount
+        for (i in 0..childCount - 2) {
+            val child = parent.getChildAt(i)
+            val params = child.layoutParams as RecyclerView.LayoutParams
+            val dividerTop = child.bottom + params.bottomMargin
             val dividerBottom = dividerTop + divider.intrinsicHeight
-            divider.setBounds(dividerLeft, dividerTop, dividerRight, dividerBottom)
+            divider.setBounds(dividerLeft, dividerTop + marginTop, dividerRight, dividerBottom + marginTop)
             divider.draw(canvas)
         }
     }
-
 }

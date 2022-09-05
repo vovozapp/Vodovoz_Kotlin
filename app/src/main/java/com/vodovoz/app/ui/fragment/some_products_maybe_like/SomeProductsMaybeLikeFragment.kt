@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
@@ -15,6 +16,7 @@ import com.vodovoz.app.ui.adapter.GridProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
+import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -41,9 +43,17 @@ class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
 
     private val gridProductsAdapter: GridProductsAdapter by lazy {
         GridProductsAdapter(
-            onProductClickSubject = onProductClickSubject,
-            onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-            onFavoriteClickSubject = onFavoriteClickSubject
+            onProductClick = {
+                onProductClickSubject.onNext(it)
+            },
+            onChangeFavoriteStatus = { productId, status ->
+                viewModel.changeFavoriteStatus(productId, status)
+            },
+            onChangeCartQuantity = { productId, quantity ->
+                viewModel.changeCart(productId, quantity)
+            },
+            onNotAvailableMore = {},
+            onNotifyWhenBeAvailable = {}
         )
     }
 
@@ -90,10 +100,10 @@ class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
 
     private fun initProductRecycler() {
         val space = resources.getDimension(R.dimen.space_16).toInt()
-        binding.brandProductRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
-        binding.brandProductRecycler.adapter = gridProductsAdapter
-        binding.nextPage.setOnClickListener { viewModel.nextPage() }
-        binding.brandProductRecycler.addItemDecoration(
+        binding.rvProducts.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.rvProducts.adapter = gridProductsAdapter
+        binding.tvNextPage.setOnClickListener { viewModel.nextPage() }
+        binding.rvProducts.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
                     outRect: Rect,
@@ -133,8 +143,7 @@ class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
             gridProductsAdapter.notifyDataSetChanged()
 
             if (viewModel.pageAmount == 1) {
-                binding.nextPage.visibility = View.GONE
-                binding.divider.visibility = View.GONE
+                binding.tvNextPage.visibility = View.GONE
             }
         }
     }

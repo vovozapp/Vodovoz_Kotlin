@@ -26,6 +26,7 @@ import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.Pa
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
+import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.PromotionDetailUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -50,9 +51,17 @@ class PromotionDetailsFragment : ViewStateBaseFragment() {
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
 
     private val linearProductAdapter = LinearProductsAdapter(
-        onProductClickSubject = onProductClickSubject,
-        onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-        onFavoriteClickSubject = onFavoriteClickSubject
+        onProductClick = {
+            findNavController().navigate(PromotionDetailsFragmentDirections.actionToProductDetailFragment(it))
+        },
+        onChangeFavoriteStatus = { productId, status ->
+            viewModel.changeFavoriteStatus(productId, status)
+        },
+        onChangeCartQuantity = { productId, quantity ->
+            viewModel.changeCart(productId, quantity)
+        },
+        onNotAvailableMore = {},
+        onNotifyWhenBeAvailable = {},
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,12 +111,7 @@ class PromotionDetailsFragment : ViewStateBaseFragment() {
     }
 
     private fun initActionBar() {
-        with((requireActivity() as AppCompatActivity)) {
-            setSupportActionBar(binding.toolbar)
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setDisplayShowHomeEnabled(true)
-        }
-        binding.toolbar.setNavigationOnClickListener {
+        binding.incAppBar.imgBack.setOnClickListener {
             findNavController().popBackStack()
         }
     }
@@ -115,7 +119,7 @@ class PromotionDetailsFragment : ViewStateBaseFragment() {
     private fun initPromotionProductRecycler() {
         binding.productRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.productRecycler.adapter = linearProductAdapter
-        binding.contentContainer.setScrollElevation(binding.appBar)
+        binding.contentContainer.setScrollElevation(binding.incAppBar.root)
         binding.productRecycler.addItemDecoration(ListMarginDecoration(
             resources.getDimension(R.dimen.space_16).toInt()
         ))
@@ -134,7 +138,7 @@ class PromotionDetailsFragment : ViewStateBaseFragment() {
         )
 
         childFragmentManager.beginTransaction().replace(
-            R.id.bestForYouProductsSliderFragment,
+            R.id.fcvProductSlider,
             bestForYouProductsSliderFragment
         ).commit()
 
@@ -170,7 +174,7 @@ class PromotionDetailsFragment : ViewStateBaseFragment() {
     }
 
     private fun fillPromotionHeader(promotionDetailUI: PromotionDetailUI) {
-        binding.toolbar.title = promotionDetailUI.name
+        binding.incAppBar.tvTitle.text = promotionDetailUI.name
         binding.customerCategoryCard.setCardBackgroundColor(Color.parseColor(promotionDetailUI.statusColor))
         binding.customerCategory.text = promotionDetailUI.status
         binding.timeLeft.text = promotionDetailUI.timeLeft

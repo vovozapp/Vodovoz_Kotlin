@@ -3,6 +3,7 @@ package com.vodovoz.app.data.parser.response.product
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.parser.common.BrandJsonParser.parserBrandEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
+import com.vodovoz.app.data.parser.common.safeInt
 import com.vodovoz.app.data.remote.ResponseStatus
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import okhttp3.ResponseBody
@@ -67,8 +68,8 @@ object ProductDetailsResponseJsonParser {
         commentsAmount: Int,
         shareUrl: String
     ): ProductDetailEntity {
-        var status: String? = null
-        var statusColor: String? = null
+        var status: String = ""
+        var statusColor: String = ""
         if (!isNull("NALICHIE")) {
             statusColor = getJSONObject("NALICHIE").getString("CVET")
             status = getJSONObject("NALICHIE").getString("NAME")
@@ -79,7 +80,7 @@ object ProductDetailsResponseJsonParser {
             detailPictureList.addAll(getJSONObject("MORE_PHOTO").getJSONArray("VALUE").parseDetailPictureList())
         }
 
-        var youtubeVideoCode: String? = null
+        var youtubeVideoCode: String = ""
         if (has("YOUTUBE_VIDEO")) {
             youtubeVideoCode = getJSONArray("YOUTUBE_VIDEO").getJSONObject(0).getString("VIDEO")
         }
@@ -106,7 +107,15 @@ object ProductDetailsResponseJsonParser {
             propertiesGroupEntityList = getJSONArray("PROP").parsePropertyGroupEntityList(),
             detailPictureList = detailPictureList,
             brandEntity = brandEntity,
-            isAvailable = true
+            isAvailable = true,
+            leftItems = when(has("CATALOG_QUANTITY")) {
+                true -> safeInt("CATALOG_QUANTITY")
+                false -> when(has("CATALOG")) {
+                    true -> getJSONObject("CATALOG").safeInt("CATALOG_QUANTITY")
+                    false -> 0
+                }
+            },
+            pricePerUnit = safeInt("PROPERTY_TSENA_ZA_EDINITSU_TOVARA_VALUE")
         )
     }
 

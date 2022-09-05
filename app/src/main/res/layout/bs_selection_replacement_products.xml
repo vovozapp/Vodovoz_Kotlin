@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--new -->
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clHeader"
@@ -25,29 +26,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgClose"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
             android:layout_gravity="end"
-            android:background="@drawable/bkg_close_popup"
-            android:src="@drawable/ic_close_popup"
+            android:src="@drawable/ic_close"
+            app:tint="@color/text_black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgAlert"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
             android:layout_gravity="end"
-            android:background="@drawable/bkg_close_popup"
             android:src="@drawable/ic_bell"
             android:layout_marginEnd="@dimen/space_8"
+            app:tint="@color/text_black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/imgClose"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="#818F99"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -59,47 +59,75 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/clHeader" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/imgProduct"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/space_16"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mdDivider"
-        app:layout_constraintWidth_percent="0.5" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvNotAvailable"
-        style="@style/TextViewNormalBlack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_16"
-        android:text="@string/replacement_text"
-        app:layout_constraintEnd_toEndOf="@+id/imgProduct"
-        app:layout_constraintStart_toStartOf="@+id/imgProduct"
-        app:layout_constraintTop_toBottomOf="@+id/imgProduct" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvProducts"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/space_16"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvNotAvailable" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnAllProducts"
-        style="@style/BlueButton"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/button_normal_height"
-        android:layout_margin="@dimen/space_16"
-        android:text="@string/all_products_of_this_category_btn_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_height="wrap_content">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imgProduct"
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_120sdp"
+                android:layout_margin="@dimen/space_16"
+                android:layout_gravity="center_horizontal"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mdDivider"
+                app:layout_constraintWidth_percent="0.5" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvNotAvailable"
+                style="@style/TextViewNormalBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/replacement_text"
+                android:layout_gravity="center_horizontal"
+                app:layout_constraintEnd_toEndOf="@+id/imgProduct"
+                app:layout_constraintStart_toStartOf="@+id/imgProduct"
+                app:layout_constraintTop_toBottomOf="@+id/imgProduct" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_16"
+                app:dividerColor="@color/divider_color"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/clHeader" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvProducts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnAllProducts"
+                    style="@style/BlueButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_normal_height"
+                    android:layout_margin="@dimen/space_16"
+                    android:text="@string/all_products_of_this_category_btn_text"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

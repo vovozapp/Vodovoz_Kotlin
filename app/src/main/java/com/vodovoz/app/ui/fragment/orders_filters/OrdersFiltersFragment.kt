@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
@@ -14,7 +15,7 @@ import com.vodovoz.app.ui.fragment.orders_history.OrdersHistoryFragment
 import com.vodovoz.app.ui.model.OrderStatusUI
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
 
-class OrdersFiltersDialog : DialogFragment() {
+class OrdersFiltersFragment : Fragment() {
 
     private lateinit var ordersFiltersBundleUI: OrdersFiltersBundleUI
     private lateinit var binding: FragmentOrdersFiltersBinding
@@ -32,12 +33,11 @@ class OrdersFiltersDialog : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
         getArgs()
     }
 
     private fun getArgs() {
-        ordersFiltersBundleUI = OrdersFiltersDialogArgs.fromBundle(requireArguments()).ordersFiltersBundleUI
+        ordersFiltersBundleUI = OrdersFiltersFragmentArgs.fromBundle(requireArguments()).ordersFiltersBundleUI
     }
 
     override fun onCreateView(
@@ -96,7 +96,7 @@ class OrdersFiltersDialog : DialogFragment() {
             OrdersHistoryFragment.FILTERS_BUNDLE,
             ordersFiltersBundleUI
         )
-        dialog?.cancel()
+        findNavController().popBackStack()
     }
 
 }

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--new-->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,111 +7,100 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="5dp"
-    app:cardElevation="@dimen/card_elevation">
+    app:cardElevation="@dimen/elevation_3">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/statusImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgStatus"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
             android:layout_marginStart="@dimen/space_16"
-            android:layout_marginTop="@dimen/space_16"
             android:src="@drawable/ic_check_round"
+            app:layout_constraintBottom_toBottomOf="@+id/tvPrice"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
+            app:layout_constraintTop_toTopOf="@+id/tvPrice" />
 
-        <TextView
-            android:id="@+id/status"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvStatus"
+            style="@style/TextViewMediumBlue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_16"
-            android:drawablePadding="4dp"
-            android:textColor="@color/bluePrimary"
-            android:textSize="16sp"
-            android:layout_marginStart="@dimen/space_8"
-            app:layout_constraintStart_toEndOf="@+id/statusImage"
-            app:layout_constraintTop_toTopOf="parent"
+            android:drawablePadding="@dimen/space_4"
+            android:layout_marginStart="@dimen/space_4"
+            app:layout_constraintBottom_toBottomOf="@+id/imgStatus"
+            app:layout_constraintStart_toEndOf="@+id/imgStatus"
+            app:layout_constraintTop_toTopOf="@+id/imgStatus"
             tools:text="Заказ отменен" />
 
-        <TextView
-            android:id="@+id/price"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvPrice"
+            style="@style/TextViewMediumBlackBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/rotonda_normal"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/blackTextDark"
             android:layout_marginEnd="@dimen/space_16"
             android:layout_marginTop="@dimen/space_16"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="15476 Р" />
 
-        <TextView
-            android:id="@+id/address"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvAddress"
+            style="@style/TextViewNormalGray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_8"
-            android:paddingStart="@dimen/space_16"
-            android:paddingEnd="@dimen/space_16"
-            android:fontFamily="@font/rotonda_normal"
+            android:layout_marginHorizontal="@dimen/space_16"
             android:maxLines="2"
-            android:textSize="16sp"
-            android:textColor="@color/blackTextPrimary"
-            app:layout_constraintTop_toBottomOf="@+id/status"
+            app:layout_constraintTop_toBottomOf="@+id/imgStatus"
             tools:layout_editor_absoluteX="16dp"
             tools:text="Г Балашиха Проспект Ленина дом 32 д кв 313, нидекс 456342, подъезд 5" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/productsDetailPicturesRecycler"
+            android:id="@+id/rvProducts"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/space_16"
             app:layout_constraintDimensionRatio="w,1:4.5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/address" />
+            app:layout_constraintTop_toBottomOf="@+id/tvAddress" />
 
         <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider"
+            android:id="@+id/mdBetweenActions"
             android:layout_width="1dp"
-            android:layout_height="20dp"
-            app:layout_constraintBottom_toBottomOf="@+id/repeatOrder"
+            android:layout_height="@dimen/_15sdp"
+            app:dividerColor="@color/divider_color"
+            app:layout_constraintBottom_toBottomOf="@+id/tvMoreDetails"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/repeatOrder" />
+            app:layout_constraintTop_toTopOf="@+id/tvRepeatOrder" />
 
-        <TextView
-            android:id="@+id/repeatOrder"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvRepeatOrder"
+            style="@style/TextViewMediumBlue"
             android:layout_width="0dp"
-            android:layout_height="45dp"
+            android:layout_height="@dimen/field_height"
             android:gravity="center"
-            android:textColor="@color/bluePrimary"
-            android:textSize="16sp"
-            android:fontFamily="@font/rotonda_normal"
             android:text="Повторить"
             android:layout_marginTop="@dimen/space_16"
-            app:layout_constraintEnd_toStartOf="@+id/divider"
+            app:layout_constraintEnd_toStartOf="@+id/mdBetweenActions"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/productsDetailPicturesRecycler" />
+            app:layout_constraintTop_toBottomOf="@+id/rvProducts" />
 
-        <TextView
-            android:id="@+id/moreDetails"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvMoreDetails"
+            style="@style/TextViewMediumBlue"
             android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:fontFamily="@font/rotonda_normal"
+            android:layout_height="@dimen/field_height"
             android:gravity="center"
             android:text="Подробнее"
-            android:textColor="@color/bluePrimary"
-            android:textSize="16sp"
             android:layout_marginTop="@dimen/space_16"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/divider"
-            app:layout_constraintTop_toBottomOf="@+id/productsDetailPicturesRecycler" />
+            app:layout_constraintStart_toEndOf="@+id/mdBetweenActions"
+            app:layout_constraintTop_toBottomOf="@+id/rvProducts" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

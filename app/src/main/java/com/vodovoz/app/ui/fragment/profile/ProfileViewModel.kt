@@ -111,15 +111,11 @@ class ProfileViewModel(
     }
 
     fun changeCart(productId: Long, quantity: Int) {
-        dataRepository.changeCart(
-            productId = productId,
-            quantity = quantity
-        ).subscribeBy(
-            onComplete = {},
-            onError = { throwable ->
-                errorMLD.value = throwable.message ?: "Неизвестная ошибка"
-            }
-        )
+        dataRepository
+            .changeCart(productId, quantity)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(onError = { errorMLD.value = it.message ?: "Неизвестная ошибка" })
     }
 
 

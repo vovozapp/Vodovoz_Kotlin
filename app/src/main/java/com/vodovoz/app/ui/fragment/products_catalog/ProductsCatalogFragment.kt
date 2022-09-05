@@ -18,6 +18,7 @@ import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
+import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -36,9 +37,17 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
 
     private val linearProductsAdapter =  LinearProductsAdapter(
-        onProductClickSubject = onProductClickSubject,
-        onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-        onFavoriteClickSubject = onFavoriteClickSubject
+        onProductClick = {
+            findNavController().navigate(ProductsCatalogFragmentDirections.actionToProductDetailFragment(it))
+        },
+        onChangeFavoriteStatus = { productId, status ->
+            viewModel.changeFavoriteStatus(productId, status)
+        },
+        onChangeCartQuantity = { productId, quantity ->
+            viewModel.changeCart(productId, quantity)
+        },
+        onNotAvailableMore = {},
+        onNotifyWhenBeAvailable = {},
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

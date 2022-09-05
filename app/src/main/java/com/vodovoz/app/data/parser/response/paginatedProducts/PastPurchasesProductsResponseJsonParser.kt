@@ -13,7 +13,6 @@ object PastPurchasesProductsResponseJsonParser {
 
     fun ResponseBody.parsePastPurchasesProductsResponse(): ResponseEntity<List<ProductEntity>> {
         val responseJson = JSONObject(string())
-        Log.i(LogSettings.ID_LOG, responseJson.toString())
         return when (responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 when(responseJson.isNull("data")) {

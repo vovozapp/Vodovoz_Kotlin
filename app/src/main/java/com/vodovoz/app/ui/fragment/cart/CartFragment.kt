@@ -26,10 +26,15 @@ import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.ProductDiffUtilCallback
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
+import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
+import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
+import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
+import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.ui.view.Divider
 import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -46,27 +51,38 @@ class CartFragment : ViewStateBaseFragment() {
     private lateinit var binding: FragmentMainCartBinding
     private lateinit var viewModel: CartViewModel
 
-    private val compositeDisposable = CompositeDisposable()
-
-    private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
-    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
-    private val onSwapClickSubject: PublishSubject<Long> = PublishSubject.create()
-    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
-
     private val bestForYouProductsSliderFragment: ProductsSliderFragment by lazy {
         ProductsSliderFragment.newInstance(ProductsSliderConfig(
             containShowAllButton = false
         )) }
 
     private val availableCartItemsAdapter = LinearProductsAdapter(
-        onProductClickSubject = onProductClickSubject,
-        onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-        onFavoriteClickSubject = onFavoriteClickSubject,
+        onProductClick = {
+            findNavController().navigate(CartFragmentDirections.actionToProductDetailFragment(it))
+        },
+        onChangeFavoriteStatus = { productId, status ->
+            viewModel.changeFavoriteStatus(productId, status)
+        },
+        onChangeCartQuantity = { productId, quantity ->
+            viewModel.changeCart(productId, quantity)
+        },
+        onNotAvailableMore = {},
+        onNotifyWhenBeAvailable = {},
+        isCart = true
     )
 
     private val notAvailableCartItemsAdapter = NotAvailableCartItemsAdapter(
-        onProductClickSubject = onProductClickSubject,
-        onSwapClickSubject = onSwapClickSubject
+        onProductClick = { productId ->
+            findNavController().navigate(CartFragmentDirections.actionToProductDetailFragment(productId))
+        },
+        onSwapProduct = { productId ->
+            viewModel.notAvailableProductUIList.find { it.id == productId }?.let {
+                findNavController().navigate(CartFragmentDirections.actionToReplacementProductsSelectionBS(
+                    it.detailPicture,
+                    it.replacementProductUIList.toTypedArray()
+                ))
+            }
+        }
     )
 
     val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
@@ -75,7 +91,6 @@ class CartFragment : ViewStateBaseFragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         initViewModel()
-        subscribeSubjects()
     }
 
     private fun initViewModel() {
@@ -83,19 +98,6 @@ class CartFragment : ViewStateBaseFragment() {
             this,
             (requireActivity().application as VodovozApplication).viewModelFactory
         )[CartViewModel::class.java]
-    }
-
-    private fun subscribeSubjects() {
-        onFavoriteClickSubject.subscribeBy { pair ->
-            Toast.makeText(requireContext(), "${pair.first} : ${pair.second}", Toast.LENGTH_LONG).show()
-            viewModel.changeFavoriteStatus(pair.first, pair.second)
-        }.addTo(compositeDisposable)
-        onProductClickSubject.subscribeBy { productId ->
-            findNavController().navigate(CartFragmentDirections.actionToProductDetailFragment(productId))
-        }.addTo(compositeDisposable)
-        onChangeProductQuantitySubject.subscribeBy { pair ->
-            viewModel.changeCart(pair.first, pair.second)
-        }.addTo(compositeDisposable)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -142,36 +144,52 @@ class CartFragment : ViewStateBaseFragment() {
 
     private fun observeResultLiveData() {
         findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<ProductUI>(GIFT_ID)?.observe(viewLifecycleOwner) { gift ->
+            ?.getLiveData<ProductUI>(GIFT_ID)
+            ?.observe(viewLifecycleOwner) { gift ->
                 gift.cartQuantity++
                 viewModel.changeCart(gift.id, gift.cartQuantity)
+            }
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Long>(ReplacementProductsSelectionBS.SELECTED_PRODUCT_ID)
+            ?.observe(viewLifecycleOwner) { productId ->
+                if (findNavController().currentDestination?.id == R.id.replacementProductsSelectionBS) {
+                    findNavController().popBackStack()
+                    findNavController().navigate(CartFragmentDirections.actionToProductDetailFragment(productId))
+                }
+            }
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Boolean>(ReplacementProductsSelectionBS.CHANGE_CART)
+            ?.observe(viewLifecycleOwner) {
+                if (it) viewModel.updateData()
             }
     }
 
     private fun initActionBar() {
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.incAppBar.tbToolbar)
         binding.incAppBar.tvTitle.text = requireContext().getString(R.string.cart_title)
     }
 
     private fun initBestForYouProductsSlider() {
         childFragmentManager.beginTransaction().replace(
-            R.id.bestForYouProductSliderFragment,
+            R.id.fcvBestForYouProductSliderFragment,
             bestForYouProductsSliderFragment
         ).commit()
 
         bestForYouProductsSliderFragment.initCallbacks(
-            iOnProductClick = { productId -> onProductClickSubject.onNext(productId)},
-            iOnChangeProductQuantity = { pair -> onChangeProductQuantitySubject.onNext(pair) },
-            iOnFavoriteClick = { pair -> onFavoriteClickSubject.onNext(pair) },
+            iOnProductClick = { productId ->
+                findNavController().navigate(ProfileFragmentDirections.actionToProductDetailFragment(productId))
+            },
+            iOnChangeProductQuantity = { pair -> viewModel.changeCart(pair.first, pair.second) },
+            iOnFavoriteClick = { pair -> viewModel.changeFavoriteStatus(pair.first, pair.second) },
             iOnShowAllProductsClick = {}
         )
     }
 
     private fun initButtons() {
-        binding.goToCatalog.setOnClickListener {
+        binding.btnGoToCatalog.setOnClickListener {
             findNavController().navigate(R.id.catalogFragment)
         }
-        binding.showGifts.setOnClickListener {
+        binding.llShowGifts.setOnClickListener {
             when (viewModel.isAlreadyLogin()) {
                 true -> {
                     findNavController().navigate(CartFragmentDirections.actionToGiftsBottomFragment(
@@ -181,55 +199,48 @@ class CartFragment : ViewStateBaseFragment() {
                 false -> findNavController().navigate(CartFragmentDirections.actionToProfileFragment())
             }
         }
-        binding.regOrder.setOnClickListener {
-            findNavController().navigate(CartFragmentDirections.actionToOrderingFragment())
+        binding.btnRegOrder.setOnClickListener {
+            findNavController().navigate(CartFragmentDirections.actionToOrderingFragment(
+                viewModel.total, viewModel.discount, viewModel.deposit, viewModel.full, viewModel.getCart(), viewModel.coupon
+            ))
+        }
+        binding.tvApplyPromoCode.setOnClickListener {
+            viewModel.coupon = binding.etCoupon.text.toString()
+            viewModel.updateData()
         }
     }
 
     private fun initAvailableProductRecycler() {
-        binding.availableProductRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.availableProductRecycler.adapter = availableCartItemsAdapter
-        binding.cartScrollContainer.setScrollElevation(binding.appBar)
-        binding.availableProductRecycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
-        binding.isReturnBottlesContainer.setOnClickListener {
-            binding.isReturnBottles.isChecked = !binding.isReturnBottles.isChecked
+        binding.rvAvailableProductRecycler.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvAvailableProductRecycler.adapter = availableCartItemsAdapter
+        ContextCompat.getDrawable(requireContext(), R.drawable.bkg_divider)?.let {
+            binding.rvAvailableProductRecycler.addItemDecoration(Divider(it, space))
         }
-        binding.availableProductRecycler.addItemDecoration(
-            object : RecyclerView.ItemDecoration() {override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State
-            ) {
-                with(outRect) {
-                    top = space
-                    bottom = space
-                    right = space
-                }
-            }}
-        )
+        binding.cbReturnBottles.setOnCheckedChangeListener { _, isChecked ->
+            when(isChecked) {
+                true -> binding.rlChooseBottleBtnContainer.visibility = View.VISIBLE
+                false -> binding.rlChooseBottleBtnContainer.visibility = View.GONE
+            }
+        }
+        binding.btnChooseBottle.setOnClickListener { findNavController().navigate(CartFragmentDirections.actionToAllBottlesFragment()) }
+        binding.rvAvailableProductRecycler.addMarginDecoration { rect, _, _, _ ->
+            rect.top = space
+            rect.bottom = space
+            rect.right = space
+        }
     }
 
     private fun initNotAvailableProductRecycler() {
-        binding.notAvailableProductRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.notAvailableProductRecycler.adapter = notAvailableCartItemsAdapter
-        binding.notAvailableProductRecycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
-        binding.notAvailableProductRecycler.addItemDecoration(
-            object : RecyclerView.ItemDecoration() {
-                override fun getItemOffsets(
-                    outRect: Rect,
-                    view: View,
-                    parent: RecyclerView,
-                    state: RecyclerView.State
-                ) {
-                    with(outRect) {
-                        top = space
-                        bottom = space
-                        right = space
-                    }
-                }
-            }
-        )
+        binding.rvNotAvailableProductRecycler.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvNotAvailableProductRecycler.adapter = notAvailableCartItemsAdapter
+        ContextCompat.getDrawable(requireContext(), R.drawable.bkg_divider)?.let {
+            binding.rvNotAvailableProductRecycler.addItemDecoration(Divider(it, space))
+        }
+        binding.rvNotAvailableProductRecycler.addMarginDecoration { rect, _, _, _ ->
+            rect.top = space
+            rect.bottom = space
+            rect.right = space
+        }
     }
 
     override fun update() {
@@ -250,16 +261,17 @@ class CartFragment : ViewStateBaseFragment() {
         }
 
         viewModel.availableProductListLD.observe(viewLifecycleOwner) { productUIList ->
-            Log.i(LogSettings.LOCAL_DATA, "SIZE CART ${productUIList.size}")
             when (productUIList.isEmpty()) {
                 true -> {
-                    binding.emptyCartContainer.visibility = View.VISIBLE
-                    binding.cartContainer.visibility = View.INVISIBLE
+                    binding.llEmptyCartContainer.visibility = View.VISIBLE
+                    binding.rlCartContainer.visibility = View.INVISIBLE
+                    binding.incAppBar.abAppBar.translationZ = 0f
                 }
                 false -> {
-                    binding.emptyCartContainer.visibility = View.INVISIBLE
-                    binding.cartContainer.visibility = View.VISIBLE
+                    binding.llEmptyCartContainer.visibility = View.INVISIBLE
+                    binding.rlCartContainer.visibility = View.VISIBLE
                     fillAvailableProductRecycler(productUIList)
+                    binding.nsvCartScrollContainer.setScrollElevation(binding.incAppBar.abAppBar)
                 }
             }
         }
@@ -274,10 +286,10 @@ class CartFragment : ViewStateBaseFragment() {
 
         viewModel.giftMessageLD.observe(viewLifecycleOwner) { giftMessage ->
             when(giftMessage) {
-                null -> binding.giftMessage.visibility = View.GONE
+                null -> binding.tvGiftMessage.visibility = View.GONE
                 else -> {
-                    binding.giftMessage.visibility = View.VISIBLE
-                    binding.giftMessage.text = giftMessage
+                    binding.tvGiftMessage.visibility = View.VISIBLE
+                    binding.tvGiftMessage.text = giftMessage
                 }
             }
         }
@@ -288,16 +300,20 @@ class CartFragment : ViewStateBaseFragment() {
 
         viewModel.giftProductListLD.observe(viewLifecycleOwner) { giftList ->
             when(giftList.isEmpty()) {
-                true -> binding.showGifts.visibility = View.GONE
-                false -> binding.showGifts.visibility = View.VISIBLE
+                true -> binding.llShowGifts.visibility = View.GONE
+                false -> binding.llShowGifts.visibility = View.VISIBLE
             }
         }
 
         viewModel.fullPriceLD.observe(viewLifecycleOwner) { binding.tvFullPrice.setPriceText(it) }
-        viewModel.discountPriceLD.observe(viewLifecycleOwner) { binding.tvDiscountPrice.setPriceText(it) }
+        viewModel.depositPriceLD.observe(viewLifecycleOwner) { binding.tvDepositPrice.setPriceText(it) }
+        viewModel.discountPriceLD.observe(viewLifecycleOwner) { binding.tvDiscountPrice.setPriceText(it, true) }
         viewModel.totalPriceLD.observe(viewLifecycleOwner) {
             binding.tvTotalPrice.setPriceText(it)
-            binding.regOrder.text = StringBuilder().append("Оформить заказ на ").append(it).append("Р").toString()
+            binding.btnRegOrder.text = StringBuilder().append("Оформить заказ на ").append(it).append("Р").toString()
+        }
+        viewModel.infoMessageLD.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
         }
     }
 
@@ -315,7 +331,7 @@ class CartFragment : ViewStateBaseFragment() {
 
         var isCanReturnBottles = false
         for (product in productUIList) {
-            if (product.isCanReturnBottles) {
+            if (product.depositPrice != 0) {
                 isCanReturnBottles = true
                 break
             }
@@ -323,34 +339,29 @@ class CartFragment : ViewStateBaseFragment() {
 
         availableCartItemsAdapter.productUIList = productUIList
         availableCartItemsAdapter.notifyDataSetChanged()
-        when(isCanReturnBottles) {
-            true -> binding.isReturnBottlesContainer.visibility = View.VISIBLE
-            false -> binding.isReturnBottlesContainer.visibility = View.GONE
+        binding.rlChooseBottleBtnContainer.visibility = View.GONE
+        when(isCanReturnBottles || binding.cbReturnBottles.isChecked) {
+            true -> binding.llReturnBottlesContainer.visibility = View.VISIBLE
+            false -> binding.llReturnBottlesContainer.visibility = View.GONE
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun fillNotAvailableProductRecycler(productUIList: List<ProductUI>) {
         when(productUIList.isEmpty()) {
-            true -> binding.notAvailableProductsContainer.visibility = View.GONE
+            true -> binding.llNotAvailableProductsContainer.visibility = View.GONE
             false -> {
-                binding.notAvailableProductsContainer.visibility = View.VISIBLE
+                binding.llNotAvailableProductsContainer.visibility = View.VISIBLE
                 notAvailableCartItemsAdapter.productUIList = productUIList
                 notAvailableCartItemsAdapter.notifyDataSetChanged()
             }
         }
     }
 
-
     override fun onStart() {
         super.onStart()
         viewModel.isFirstUpdate = true
         viewModel.updateData()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.clear()
     }
 
 }

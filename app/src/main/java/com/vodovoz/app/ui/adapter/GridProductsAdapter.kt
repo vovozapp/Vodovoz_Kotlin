@@ -9,9 +9,11 @@ import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class GridProductsAdapter(
-    private val onProductClickSubject: PublishSubject<Long>,
-    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
-    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>
+    private val onProductClick: (Long) -> Unit,
+    private val onChangeCartQuantity: (Long, Int) -> Unit,
+    private val onChangeFavoriteStatus: (Long, Boolean) -> Unit,
+    private val onNotifyWhenBeAvailable: (Long) -> Unit,
+    private val onNotAvailableMore: () -> Unit
 ) : RecyclerView.Adapter<ProductGridViewHolder>() {
 
     var productUiList = listOf<ProductUI>()
@@ -23,10 +25,11 @@ class GridProductsAdapter(
         binding = ViewHolderProductGridBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         ),
-        onProductClickSubject = onProductClickSubject,
-        onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-        onFavoriteClickSubject = onFavoriteClickSubject,
-        context = parent.context
+        onProductClick = onProductClick,
+        onChangeCartQuantity = onChangeCartQuantity,
+        onChangeFavoriteStatus = onChangeFavoriteStatus,
+        onNotifyWhenBeAvailable = onNotifyWhenBeAvailable,
+        onNotAvailableMore = onNotAvailableMore
     )
 
     override fun onBindViewHolder(

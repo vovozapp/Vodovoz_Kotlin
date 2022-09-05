@@ -6,23 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/whiteDark">
+    android:background="@color/dark_white">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:elevation="0dp">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:title="Скидка до 16% на природную"
-            app:titleTextAppearance="@style/ToolbarTitle"/>
-
-    </com.google.android.material.appbar.AppBarLayout>
+    <include
+        android:id="@+id/incAppBar"
+        layout="@layout/app_bar_default" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/contentContainer"
@@ -39,7 +27,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@color/white"
-                android:translationZ="1dp">
+                android:translationZ="@dimen/elevation_1"
+                android:layout_marginBottom="@dimen/space_8">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -86,14 +75,13 @@
 
                     </androidx.cardview.widget.CardView>
 
-
                     <androidx.cardview.widget.CardView
                         android:id="@+id/timeLeftContainer"
                         android:layout_width="wrap_content"
                         android:layout_height="20dp"
                         android:layout_marginStart="@dimen/space_16"
                         android:layout_marginBottom="4dp"
-                        app:cardBackgroundColor="@color/gray"
+                        app:cardBackgroundColor="@color/text_gray"
                         app:cardCornerRadius="5dp"
                         app:cardElevation="3dp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -117,12 +105,10 @@
 
                 <TextView
                     android:id="@+id/detail"
+                    style="@style/TextViewNormalGray"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_8"
-                    android:textSize="16sp"
-                    android:textColor="@color/blackTextLight"
-                    android:fontFamily="@font/rotonda_normal"
                     android:paddingStart="@dimen/space_16"
                     android:paddingEnd="@dimen/space_16"
                     android:layout_marginBottom="@dimen/space_16"
@@ -130,13 +116,10 @@
 
                 <TextView
                     android:id="@+id/promotionProductsTitle"
+                    style="@style/TextViewMediumBlackBold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Товары учавствующие в акции"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:textStyle="bold"
-                    android:textColor="@color/blackTextPrimary"
-                    android:textSize="18sp"
                     android:paddingStart="@dimen/space_16"
                     android:paddingEnd="@dimen/space_16"/>
 
@@ -148,11 +131,13 @@
             </LinearLayout>
 
             <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/bestForYouProductsSliderFragment"
+                android:id="@+id/fcvProductSlider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:translationZ="1dp"
-                android:layout_marginTop="@dimen/space_16"/>
+                android:translationZ="@dimen/elevation_1"
+                android:layout_marginTop="@dimen/space_8"
+                android:background="@color/white"
+                android:paddingVertical="@dimen/space_8"/>
 
         </LinearLayout>
 

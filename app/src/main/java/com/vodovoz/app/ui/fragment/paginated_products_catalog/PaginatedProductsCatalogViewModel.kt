@@ -98,7 +98,6 @@ class PaginatedProductsCatalogViewModel(
     }
 
     fun updateCategoryHeader() {
-        Log.i(LogSettings.ID_LOG, "UPDATE CATEGORY")
         dataRepository.fetchCategoryHeader(categoryId)
             .subscribeOn(Schedulers.io())
             .doOnSubscribe { viewStateMLD.value = ViewState.Loading() }
@@ -148,15 +147,11 @@ class PaginatedProductsCatalogViewModel(
     }
 
     fun changeCart(productId: Long, quantity: Int) {
-        dataRepository.changeCart(
-            productId = productId,
-            quantity = quantity
-        ).subscribeBy(
-            onComplete = {},
-            onError = { throwable ->
-                errorMLD.value = throwable.message ?: "Неизвестная ошибка"
-            }
-        )
+        dataRepository
+            .changeCart(productId, quantity)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(onError = { errorMLD.value = it.message ?: "Неизвестная ошибка" })
     }
 
     override fun onCleared() {

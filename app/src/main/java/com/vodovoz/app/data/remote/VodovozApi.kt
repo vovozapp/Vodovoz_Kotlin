@@ -1,6 +1,6 @@
 package com.vodovoz.app.data.remote
 
-import io.reactivex.rxjava3.core.Completable
+import com.vodovoz.app.data.model.common.ResponseEntity
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -194,6 +194,7 @@ interface VodovozApi {
     fun fetchCartResponse(
         @Query("action") action: String? = null,
         @Query("userid") userId: Long? = null,
+        @Query("coupon") coupon: String? = null,
         @Query("quantity") amount: Int? = null,
     ): Single<ResponseBody>
 
@@ -394,7 +395,7 @@ interface VodovozApi {
         @Query("name") name: String? = null,
         @Query("phone") phone: String? = null,
         @Query("email") email: String? = null,
-        @Query("comment") comment: String? = null
+        @Query("comment") comment: String? = null,
     ): Single<ResponseBody>
 
     @GET("/newmobile/glavnaya/uslygi/form.php")
@@ -402,15 +403,66 @@ interface VodovozApi {
         @Query("action") action: String? = null,
         @Query("tip") type: String? = null,
         @Query("userid") userId: Long? = null,
-        @Query("filtervalue") value: String? = null
+        @Query("filtervalue") value: String? = null,
     ): Single<ResponseBody>
 
     @GET("newmobile/getActualDelivery.php")
     fun fetchInfoAboutOrderingResponse(
         @Query("address_id") addressId: Long? = null,
         @Query("userid") userId: Long? = null,
-        @Query("curDate") date: String? = null
+        @Query("curDate") date: String? = null,
     ): Single<ResponseBody>
+
+    @POST("newmobile/doorder.php")
+    fun fetchRegOrderResponse(
+        @Query("type") orderType: Int?, //Тип заказа (1/2)
+        @Query("device") device: String?, //Телефон Android:12 Версия: 1.4.83
+        @Query("profile_buyer") addressId: Long?, //адрес id - (150543)
+        @Query("date") date: String?, //23.08.2022
+        @Query("payment") paymentId: Long?, //Pay method Id
+        @Query("operator") needOperatorCall: String?, // Y/N
+        @Query("driver") needShippingAlert: String?, //За 90 минут
+        @Query("comment") comment: String?,
+        @Query("summ") totalPrice: Int?, //Итоговая сумма заказа
+        @Query("delivery_id") shippingId: Long?, //
+        @Query("summdelivery") shippingPrice: Int?, // цена доставки
+        @Query("fio_f") name: String?,
+        @Query("phone_f") phone: String?,
+        @Query("email_f") email: String?,
+        @Query("companyname") companyName: String?,
+        @Query("userid") userId: Long?,
+        @Query("zalogcena") deposit: Int?, //?
+        @Query("sroch") fastShippingPrice: Int?, // 500 р
+        @Query("nacenka") extraShippingPrice: Int?, // из delivery
+        @Query("obichd") commonShippingPrice: Int?, //?
+        @Query("kupon") coupon: String?, // передавать из корзины
+        @Query("indos") shippingIntervalId: Long?, //id Интервал доставки
+        @Query("sdacha") overMoney: Int?, //?
+        @Query("parkovka") parking: Int?, // числовое значение
+    ): Single<ResponseBody>
+
+    @GET("newmobile/el.php")
+    fun fetchBottlesResponse(
+        @Query("iblock_id") iBlockId: Int? = null
+    ): Single<ResponseBody>
+
+    @GET("newmobile/changeOrderStatus.php")
+    fun cancelOrder(
+        @Query("orderID") orderId: Long?
+    ): Single<ResponseBody>
+
+    @GET("newmobile/profile/auth/authtelefon.php")
+    fun fetchAuthByPhoneResponse(
+        @Query("action") action: String? = null,
+        @Query("telefon") phone: String? = null,
+        @Query("code") code: String? = null
+    ): Single<ResponseBody>
+
+    //http://m.vodovoz.ru/newmobile/profile/auth/authtelefon.php?action=tochkakarta&telefon=номертелефона&code=9267
+    //http://m.vodovoz.ru/newmobile/profile/auth/authtelefon.php?action=tochkakarta&telefon=+79639266603
+    //Pred zakaz
+    ///newmobile/osnova/predzakaz.php?action=predzakaz&userid
+
 
     //newmobile/details/index_new.php?iblock_id=12&detail="+ID_products+"&userid="+User.getInstance().getuser_id()+"&android="+ BuildConfig.VERSION_NAME
     //newmobile/voteRating.php?element_id="+ID_products+"&rating_value="+rating

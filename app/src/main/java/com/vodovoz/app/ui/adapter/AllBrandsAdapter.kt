@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderBrandWithNameBinding
-import com.vodovoz.app.ui.diffUtils.BrandSliderDiffUtilCallback
+import com.vodovoz.app.ui.diffUtils.BrandDiffUtilCallback
 import com.vodovoz.app.ui.view_holder.BrandJustNameViewHolder
 import com.vodovoz.app.ui.model.BrandUI
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -31,7 +31,7 @@ class AllBrandsAdapter(
     }
 
     private fun updateData(brandUIList: List<BrandUI>) {
-        val diffUtil = BrandSliderDiffUtilCallback(
+        val diffUtil = BrandDiffUtilCallback(
             oldList = brandUIFilteredList,
             newList = brandUIList
         )

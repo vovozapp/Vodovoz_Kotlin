@@ -47,27 +47,21 @@ class RegisterFragment : ViewStateBaseFragment() {
     }
 
     private fun initAppBar() {
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        (requireActivity() as AppCompatActivity).supportActionBar?.let { noNullActionBar ->
-            noNullActionBar.setDisplayHomeAsUpEnabled(true)
-            noNullActionBar.setDisplayShowHomeEnabled(true)
-        }
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
+        binding.incAppBar.tvTitle.text = "Регистрация"
+        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun initButtons() {
-        binding.register.setOnClickListener { viewModel.validate() }
+        binding.btnRegister.setOnClickListener { viewModel.validate() }
     }
 
     private fun initFieldListeners() {
         with(binding) {
-            firstName.addTextChangedListener { viewModel.firstName = it.toString() }
-            secondName.addTextChangedListener { viewModel.secondName = it.toString() }
-            email.addTextChangedListener { viewModel.email = it.toString() }
-            phone.addTextChangedListener { viewModel.phone = it.toString() }
-            password.addTextChangedListener { viewModel.password = it.toString() }
+            etFirstName.addTextChangedListener { viewModel.firstName = it.toString() }
+            etSecondName.addTextChangedListener { viewModel.secondName = it.toString() }
+            etEmail.addTextChangedListener { viewModel.email = it.toString() }
+            etPhone.addTextChangedListener { viewModel.phone = it.toString() }
+            etPassword.addTextChangedListener { viewModel.password = it.toString() }
         }
     }
 
@@ -92,11 +86,11 @@ class RegisterFragment : ViewStateBaseFragment() {
         }
 
         with(binding) {
-            viewModel.firstNameErrorLD.observe(viewLifecycleOwner) { firstNameContainer.error = it }
-            viewModel.secondNameErrorLD.observe(viewLifecycleOwner) { secondNameContainer.error = it }
-            viewModel.phoneErrorLD.observe(viewLifecycleOwner) { phoneContainer.error = it }
-            viewModel.emailErrorLD.observe(viewLifecycleOwner) { emailContainer.error = it }
-            viewModel.passwordErrorLD.observe(viewLifecycleOwner) { passwordContainer.error = it }
+            viewModel.firstNameErrorLD.observe(viewLifecycleOwner) { tilFirstName.error = it }
+            viewModel.secondNameErrorLD.observe(viewLifecycleOwner) { tilSecondName.error = it }
+            viewModel.phoneErrorLD.observe(viewLifecycleOwner) { tilPhone.error = it }
+            viewModel.emailErrorLD.observe(viewLifecycleOwner) { tilEmail.error = it }
+            viewModel.passwordErrorLD.observe(viewLifecycleOwner) { tilPassword.error = it }
         }
     }
 

@@ -1,12 +1,18 @@
 package com.vodovoz.app.ui.fragment.ordering
 
-import android.app.AlertDialog
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +20,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
+import com.vodovoz.app.data.config.FieldValidateConfig.EMAIL_REGEX
+import com.vodovoz.app.data.config.FieldValidateConfig.PHONE_REGEX
 import com.vodovoz.app.databinding.BsFreeShippingDaysBinding
 import com.vodovoz.app.databinding.BsSelectionPayMethodBinding
 import com.vodovoz.app.databinding.FragmentOrderingBinding
@@ -23,19 +31,21 @@ import com.vodovoz.app.ui.adapter.FormField
 import com.vodovoz.app.ui.adapter.PayMethodsAdapter
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
+import com.vodovoz.app.ui.extensions.ContextExtensions.getDeviceInfo
 import com.vodovoz.app.ui.extensions.Date
 import com.vodovoz.app.ui.extensions.Date.dd
 import com.vodovoz.app.ui.extensions.Date.mm
+import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
+import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
+import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
 import com.vodovoz.app.ui.fragment.saved_addresses.AddressesFragment
 import com.vodovoz.app.ui.fragment.saved_addresses.OpenMode
-import com.vodovoz.app.ui.fragment.user_data.GenderSelectionBS
-import com.vodovoz.app.ui.model.AddressUI
-import com.vodovoz.app.ui.model.FreeShippingDaysInfoBundleUI
-import com.vodovoz.app.ui.model.PayMethodUI
-import com.vodovoz.app.ui.model.ShippingIntervalUI
+import com.vodovoz.app.ui.model.*
+import com.vodovoz.app.ui.model.custom.OrderingCompletedInfoBundleUI
 import com.vodovoz.app.util.LogSettings
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -50,12 +60,12 @@ class OrderingFragment : ViewStateBaseFragment() {
     private lateinit var binding: FragmentOrderingBinding
     private lateinit var viewModel: OrderingViewModel
 
-    private val orderingAdapter = FormAdapter()
-    private lateinit var orderingForm: List<FormField>
+    private var trackErrors: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
+        getArgs()
     }
 
     private fun initViewModel() {
@@ -65,9 +75,13 @@ class OrderingFragment : ViewStateBaseFragment() {
         )[OrderingViewModel::class.java]
     }
 
-    override fun update() {
-
+    private fun getArgs() {
+        OrderingFragmentArgs.fromBundle(requireArguments()).let { args ->
+            viewModel.updateArgs(args.full, args.deposit, args.discount, args.total, args.lastActualCart, args.coupon)
+        }
     }
+
+    override fun update() {}
 
     override fun setContentView(
         inflater: LayoutInflater,
@@ -79,12 +93,13 @@ class OrderingFragment : ViewStateBaseFragment() {
     ).apply { binding = this }.root
 
     override fun initView() {
+        clearFields()
         onStateSuccess()
         setupActionBar()
-        setupOrderingRecycler()
         setupButtons()
         observeViewModel()
         observeResultLiveData()
+        setupTextWatchers()
     }
 
     private fun setupActionBar() {
@@ -93,22 +108,123 @@ class OrderingFragment : ViewStateBaseFragment() {
         binding.nsvContent.setScrollElevation(binding.ab)
     }
 
-    private fun setupOrderingRecycler() {
-        binding.rvOrdering.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvOrdering.adapter = orderingAdapter
-        orderingAdapter.setupListeners(
-            afterErrorChange = {
-
-            },
-            onPromptClick = { onPromptClick(it) },
-            onFieldClick = { field, number -> onFieldClick(field, number) },
-            onSwitchChange = { onSwitchChange(it) }
-        )
-        orderingForm = when(viewModel.orderType) {
-            OrderType.COMPANY -> buildForm(OrderType.COMPANY)
-            OrderType.PERSONAL -> buildForm(OrderType.PERSONAL)
+    private fun setupTextWatchers() {
+        binding.etName.doAfterTextChanged {
+            viewModel.name = it.toString()
+            if (trackErrors) validateSimpleField(binding.tvNameName, it.toString())
         }
-        orderingAdapter.formFieldList = orderingForm
+        binding.etCompanyName.doAfterTextChanged {
+            viewModel.companyName = it.toString()
+            if (trackErrors) validateSimpleField(binding.tvNameCompanyName, it.toString())
+        }
+        binding.etPhone.setPhoneValidator {
+            viewModel.phone = it.toString()
+            if (trackErrors) validatePhone(binding.tvNamePhone, it.toString())
+        }
+
+        binding.etEmail.doAfterTextChanged {
+            viewModel.email = it.toString()
+            if (trackErrors) validateEmail(binding.tvNameEmail, it.toString())
+        }
+        binding.etComment.doAfterTextChanged { viewModel.comment = it.toString() }
+        binding.etInputCash.doAfterTextChanged {
+            if (viewModel.selectedPayMethodUI?.id == 1L) {
+                if (it.toString().isNotEmpty()) viewModel.inputCash = it.toString().toInt()
+                if (trackErrors) validateSimpleField(binding.tvNamePayMethod, it.toString())
+            }
+        }
+        binding.scOperatorCall.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.needOperatorCall = isChecked
+        }
+    }
+
+    private fun setupButtons() {
+        binding.btnOrder.setOnClickListener { validateForm() }
+        binding.btnPersonal.setOnClickListener {
+            if (viewModel.selectedOrderType != OrderType.PERSONAL) {
+                viewModel.clearData()
+                viewModel.selectedOrderType = OrderType.PERSONAL
+                binding.btnPersonal.setBackgroundResource(R.drawable.selector_bkg_button_gray_rect)
+                binding.btnCompany.setBackgroundResource(R.drawable.bkg_button_blue_rect_disabled)
+                binding.llCompanyNameContainer.visibility = View.GONE
+                clearFields()
+            }
+        }
+
+        binding.btnCompany.setOnClickListener {
+            if (viewModel.selectedOrderType != OrderType.COMPANY) {
+                viewModel.clearData()
+                viewModel.selectedOrderType = OrderType.COMPANY
+                binding.btnCompany.setBackgroundResource(R.drawable.selector_bkg_button_gray_rect)
+                binding.btnPersonal.setBackgroundResource(R.drawable.bkg_button_blue_rect_disabled)
+                binding.llCompanyNameContainer.visibility = View.VISIBLE
+                clearFields()
+            }
+        }
+        binding.tvAddress.setOnClickListener {
+            if (findNavController().currentDestination?.id == R.id.orderingFragment) {
+                findNavController().navigate(OrderingFragmentDirections.actionToSavedAddressesDialogFragment().apply {
+                    this.openMode = OpenMode.SelectAddress.name
+                    this.addressType = viewModel.selectedOrderType.name
+                })
+            }
+        }
+        binding.tvFreeShipping.setOnClickListener {
+            when (viewModel.freeShippingDaysInfoBundleUI) {
+                null -> viewModel.fetchFreeShippingDaysInfo()
+                else -> showFreeShippingDaysInfoPopup(viewModel.freeShippingDaysInfoBundleUI!!)
+            }
+        }
+        binding.tvDate.setOnClickListener {
+            when(viewModel.selectedAddressUI) {
+                null -> Snackbar.make(binding.root, "Выберите адрес!", Snackbar.LENGTH_LONG).show()
+                else -> showDatePickerDialog()
+            }
+        }
+        binding.tvShippingInterval.setOnClickListener {
+            viewModel.waitToShowIntervalSelection = true
+            viewModel.fetchShippingInfo()
+        }
+        binding.tvPayMethod.setOnClickListener {
+            viewModel.waitToShowPayMethodSelection = true
+            viewModel.fetchShippingInfo()
+        }
+        binding.scShippingAlert.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked) {
+                if (findNavController().currentDestination?.id == R.id.orderingFragment) {
+                    findNavController().navigate(OrderingFragmentDirections.actionToShippingAlertsSelectionBS(
+                        viewModel.fetchShippingAlertsList().toTypedArray()
+                    ))
+                }
+            }
+        }
+    }
+
+    private fun clearFields() {
+        trackErrors = false
+        viewModel.clearData()
+        binding.root.clearFocus()
+        binding.tvNameAddress.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+        binding.tvNameCompanyName.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+        binding.tvNameName.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+        binding.tvNameEmail.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+        binding.tvNamePhone.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+        binding.tvNameDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+        binding.tvNamePayMethod.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+        binding.etCompanyName.text = null
+        binding.etName.text = null
+        binding.etEmail.text = null
+        binding.tvAddress.text = "Адрес"
+        binding.tvDate.text = "Дата"
+        binding.etPhone.setText("")
+        binding.tvShippingInterval.text = "Время"
+        binding.tvShippingPrice.setPriceText(0)
+        binding.tvParkingPrice.setPriceText(0)
+        binding.tvPayMethod.text = "Выберите способ оплаты"
+        binding.etInputCash.text = null
+        binding.mtBetweenPayMethodAndInputCash.visibility = View.GONE
+        binding.etInputCash.visibility = View.GONE
+        binding.etComment.text = null
     }
 
     private fun observeViewModel() {
@@ -117,126 +233,131 @@ class OrderingFragment : ViewStateBaseFragment() {
             Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
         }
         viewModel.payMethodUIListLD.observe(viewLifecycleOwner) { payMethodUIList ->
-            showPayMethodPopup(
-                payMethodUIList = payMethodUIList,
-                selectedPayMethodId = viewModel.selectedPayMethodUI?.id ?: payMethodUIList.first().id
-            )
+            if (viewModel.waitToShowPayMethodSelection) {
+                viewModel.waitToShowPayMethodSelection = false
+                showPayMethodPopup(
+                    payMethodUIList = payMethodUIList,
+                    selectedPayMethodId = viewModel.selectedPayMethodUI?.id ?: payMethodUIList.first().id
+                )
+            }
         }
         viewModel.shippingIntervalUiListLD.observe(viewLifecycleOwner) { shippingIntervalUIList ->
-            showShippingIntervalSelectionPopup(shippingIntervalUIList)
+            if (viewModel.waitToShowIntervalSelection) {
+                viewModel.waitToShowIntervalSelection = false
+                showShippingIntervalSelectionPopup(shippingIntervalUIList)
+            }
         }
+        viewModel.fullPriceLD.observe(viewLifecycleOwner) { binding.tvFullPrice.setPriceText(it) }
+        viewModel.depositPriceLD.observe(viewLifecycleOwner) { binding.tvDepositPrice.setPriceText(it) }
+        viewModel.discountPriceLD.observe(viewLifecycleOwner) { binding.tvDiscountPrice.setPriceText(it, true) }
+        viewModel.shippingPriceLD.observe(viewLifecycleOwner) { binding.tvShippingPrice.setPriceText(it) }
+        viewModel.parkingPriceLD.observe(viewLifecycleOwner) { binding.tvParkingPrice.setPriceText(it) }
+        viewModel.totalPriceLD.observe(viewLifecycleOwner) {
+            binding.btnOrder.text = String.format(getString(R.string.order_btn_text), it)
+            binding.tvTotalPrice.setPriceText(it)
+        }
+        viewModel.cartChangeMessageLD.observe(viewLifecycleOwner) {
+            MaterialAlertDialogBuilder(requireContext())
+                .setMessage(it)
+                .setPositiveButton("Ок") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+        }
+        viewModel.todayShippingMessageLD.observe(viewLifecycleOwner) {
+            if (viewModel.waitToShowTodayShippingInfo) {
+                viewModel.waitToShowTodayShippingInfo = false
+                MaterialAlertDialogBuilder(requireContext())
+                    .setMessage(it)
+                    .setPositiveButton("Ок") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+            }
+        }
+        viewModel.orderingCompletedInfoBundleUILD.observe(viewLifecycleOwner) { orderingCompleted(it) }
+    }
+
+    private fun orderingCompleted(orderingCompletedInfoBundleUI: OrderingCompletedInfoBundleUI) {
+        binding.ab.translationZ = 0f
+        binding.nsvContent.visibility = View.INVISIBLE
+        binding.tvOrderId.text = orderingCompletedInfoBundleUI.message
+        binding.llOrderingCompleted.visibility = View.VISIBLE
+        when(orderingCompletedInfoBundleUI.paymentURL.isNotEmpty()) {
+            true -> {
+                binding.btnGoToPayment.visibility = View.VISIBLE
+                binding.btnGoToPayment.setOnClickListener { binding.root.openLink(orderingCompletedInfoBundleUI.paymentURL) }
+            }
+            false -> binding.btnGoToPayment.visibility = View.INVISIBLE
+        }
+        binding.incAppBar.tvTitle.text = "Спасибо за заказ"
     }
 
     private fun showPayMethodPopup(payMethodUIList: List<PayMethodUI>, selectedPayMethodId: Long) {
-        findNavController().navigate(OrderingFragmentDirections.actionToPayMethodSelectionBS(
-            payMethodUIList.toTypedArray(),
-            selectedPayMethodId
-        ))
+        if (findNavController().currentDestination?.id == R.id.orderingFragment) {
+            findNavController().navigate(OrderingFragmentDirections.actionToPayMethodSelectionBS(
+                payMethodUIList.toTypedArray(),
+                selectedPayMethodId
+            ))
+        }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun observeResultLiveData() {
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<Long>(SELECTED_PAY_METHOD)?.observe(viewLifecycleOwner) { payMethodId ->
-                viewModel.selectedPayMethodUI = viewModel.payMethodUIList?.find { it.id == payMethodId }
-                orderingAdapter.formFieldList.find { it.fieldType == FieldType.PAY_METHOD }?.let {
-                    (it as FormField.SingleLineField).value = viewModel.selectedPayMethodUI?.name.toString()
-                    orderingAdapter.notifyItemChanged(orderingAdapter.formFieldList.indexOf(it))
+                viewModel.selectedPayMethodUI = viewModel.shippingInfoBundleUI!!.payMethodUIList.find { it.id == payMethodId }
+                binding.tvPayMethod.text = viewModel.selectedPayMethodUI?.name
+                if (payMethodId == 1L) {
+                    binding.etInputCash.visibility = View.VISIBLE
+                    binding.mtBetweenPayMethodAndInputCash.visibility = View.VISIBLE
+                } else {
+                    binding.etInputCash.visibility = View.GONE
+                    binding.mtBetweenPayMethodAndInputCash.visibility = View.GONE
+                    binding.tvNamePayMethod.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+                    binding.etInputCash.text = null
                 }
         }
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<Long>(SELECTED_SHIPPING_INTERVAL)?.observe(viewLifecycleOwner) { shippingIntervalId ->
-                viewModel.selectedShippingIntervalUI = viewModel.shippingIntervalUIList?.find { it.id == shippingIntervalId }
-                orderingAdapter.formFieldList.find { it.fieldType == FieldType.DATE }?.let {
-                    (it as FormField.DoubleLineField).secondValue = viewModel.selectedShippingIntervalUI?.name.toString()
-                    orderingAdapter.notifyItemChanged(orderingAdapter.formFieldList.indexOf(it))
-                }
+                viewModel.selectedShippingIntervalUI = viewModel.shippingInfoBundleUI!!.shippingIntervalUIList.find { it.id == shippingIntervalId }
+                binding.tvShippingInterval.text = viewModel.selectedShippingIntervalUI?.name.toString()
+                binding.tvNameDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+            }
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Long>(SELECTED_SHIPPING_ALERT)?.observe(viewLifecycleOwner) { shippingAlertId ->
+                viewModel.selectedShippingAlertUI = viewModel.shippingAlertUIList?.find { it.id == shippingAlertId }
             }
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<AddressUI>(AddressesFragment.SELECTED_ADDRESS)?.observe(viewLifecycleOwner) { addressUI ->
                 viewModel.clearData()
-                orderingForm = buildForm(viewModel.orderType)
-                orderingAdapter.formFieldList = orderingForm
+                clearFields()
                 viewModel.selectedAddressUI = addressUI
-                orderingForm.find { it.fieldType == FieldType.ADDRESS }?.let {
-                    (it as FormField.SingleLineWithPromptField).value = addressUI.fullAddress
-                    orderingAdapter.notifyItemChanged(orderingAdapter.formFieldList.indexOf(it))
+                when(viewModel.selectedOrderType) {
+                    OrderType.COMPANY -> binding.llCompanyNameContainer.visibility = View.VISIBLE
+                    OrderType.PERSONAL -> binding.llCompanyNameContainer.visibility = View.GONE
                 }
-
-                orderingForm.find { it.fieldType == FieldType.EMAIL }?.let {
-                    (it as FormField.SingleLineField).value = addressUI.email
-                    orderingAdapter.notifyItemChanged(orderingAdapter.formFieldList.indexOf(it))
-                }
-
-                orderingForm.find { it.fieldType == FieldType.PHONE }?.let {
-                    (it as FormField.SingleLineField).value = addressUI.phone
-                    orderingAdapter.notifyItemChanged(orderingAdapter.formFieldList.indexOf(it))
-                }
-
-                orderingForm.find { it.fieldType == FieldType.NAME }?.let {
-                    (it as FormField.SingleLineField).value = addressUI.name
-                    orderingAdapter.notifyItemChanged(orderingAdapter.formFieldList.indexOf(it))
-                }
+                binding.tvAddress.text = addressUI.fullAddress
+                binding.etName.setText(addressUI.name)
+                binding.etEmail.setText(addressUI.email)
+                binding.etPhone.setText(addressUI.phone)
+                viewModel.fetchShippingInfo()
             }
-    }
-
-    private fun onPromptClick(formField: FormField) {
-        when(formField.fieldType) {
-            FieldType.ADDRESS -> {
-                when (viewModel.freeShippingDaysInfoBundleUI) {
-                    null -> viewModel.fetchFreeShippingDaysInfo()
-                    else -> showFreeShippingDaysInfoPopup(viewModel.freeShippingDaysInfoBundleUI!!)
-                }
-            }
-        }
-    }
-
-    private fun onSwitchChange(formField: FormField) {
-        when(formField.fieldType) {
-            FieldType.ALERT_DRIVER -> {
-                //findNavController().navigate(OrderingFragmentDirections.)
-            }
-        }
-    }
-
-    private fun onFieldClick(formField: FormField, fieldNumber: Int?) {
-        when(formField.fieldType) {
-            FieldType.ADDRESS -> {
-                findNavController().navigate(OrderingFragmentDirections.actionToSavedAddressesDialogFragment().apply {
-                    this.openMode = OpenMode.SelectAddress.name
-                    this.addressType = viewModel.orderType.name
-                })
-            }
-            FieldType.DATE -> {
-                when(fieldNumber) {
-                    1 -> when(viewModel.selectedAddressUI) {
-                        null -> Snackbar.make(binding.root, "Выберите адрес!", Snackbar.LENGTH_LONG).show()
-                        else -> showDatePickerDialog()
-                    }
-                    2 -> when(viewModel.shippingIntervalUIList) {
-                        null -> viewModel.fetchShippingIntervalList()
-                        else -> showShippingIntervalSelectionPopup(viewModel.shippingIntervalUIList!!)
-                    }
-                }
-            }
-            FieldType.PAY_METHOD -> {
-                when(viewModel.payMethodUIList) {
-                    null -> viewModel.fetchPayMethods()
-                    else -> showPayMethodPopup(
-                        payMethodUIList = viewModel.payMethodUIList!!,
-                        selectedPayMethodId = viewModel.selectedPayMethodUI?.id ?: viewModel.payMethodUIList!!.first().id
-                    )
-                }
-            }
-        }
     }
 
     private fun showShippingIntervalSelectionPopup(shippingIntervalUIList: List<ShippingIntervalUI>) {
+        if (viewModel.selectedDate == null) {
+            Snackbar.make(binding.root, "Выберите дату!", Snackbar.LENGTH_LONG).show()
+            return
+        }
         if (shippingIntervalUIList.isEmpty()) {
             Snackbar.make(binding.root, "На эту дату нет доставок!", Snackbar.LENGTH_LONG).show()
         } else {
-            findNavController().navigate(OrderingFragmentDirections.actionToShippingIntervalSelectionBS(
-                shippingIntervalUIList.toTypedArray()
-            ))
+            if (findNavController().currentDestination?.id == R.id.orderingFragment) {
+                findNavController().navigate(OrderingFragmentDirections.actionToShippingIntervalSelectionBS(
+                    shippingIntervalUIList.toTypedArray()
+                ))
+            }
         }
     }
 
@@ -248,19 +369,14 @@ class OrderingFragment : ViewStateBaseFragment() {
 
         val datePickerListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
             val date = Date.from(day, month, year)
-            orderingForm.find { it.fieldType == FieldType.DATE }?.let {
-                (it as FormField.DoubleLineField).firstValue = "${date.dd()}.${date.mm()}.$year"
-                orderingAdapter.notifyItemChanged(orderingAdapter.formFieldList.indexOf(it))
-            }
+            binding.tvDate.text = viewModel.dateFormatter.format(date)
             viewModel.selectedDate = date
-//            if (currentYear == year && currentMonth == month && currentDay == day) {
-//                MaterialAlertDialogBuilder(requireContext())
-//                    .setMessage(dialogMessage)
-//                    .setPositiveButton("Ок") { dialog, _ ->
-//                        dialog.dismiss()
-//                    }
-//                    .show()
-//            }
+            if (currentYear == year && currentMonth == month && currentDay == day) {
+                viewModel.waitToShowTodayShippingInfo = true
+                viewModel.fetchShippingInfo()
+            }
+            binding.tvShippingInterval.text = "Время"
+            viewModel.fetchShippingInfo()
         }
         val datePicker = DatePickerDialog(
             requireContext(),
@@ -272,155 +388,113 @@ class OrderingFragment : ViewStateBaseFragment() {
     }
 
     private fun showFreeShippingDaysInfoPopup(freeShippingDaysInfoBundleUI: FreeShippingDaysInfoBundleUI) {
-        findNavController().navigate(OrderingFragmentDirections.actionToFreeShippingSaysBS(
-            freeShippingDaysInfoBundleUI.title,
-            freeShippingDaysInfoBundleUI.info
-        ))
-    }
-
-    private fun setupButtons() {
-        binding.btnPersonal.setOnClickListener {
-            if (viewModel.orderType != OrderType.PERSONAL) {
-                viewModel.clearData()
-                viewModel.orderType = OrderType.PERSONAL
-                binding.btnPersonal.setBackgroundResource(R.drawable.selector_bkg_button_gray_rect)
-                binding.btnCompany.setBackgroundResource(R.drawable.bkg_button_blue_rect_disabled)
-                orderingForm = buildForm(OrderType.PERSONAL)
-                orderingAdapter.formFieldList = orderingForm
-            }
-        }
-
-        binding.btnCompany.setOnClickListener {
-            if (viewModel.orderType != OrderType.COMPANY) {
-                viewModel.clearData()
-                viewModel.orderType = OrderType.COMPANY
-                binding.btnCompany.setBackgroundResource(R.drawable.selector_bkg_button_gray_rect)
-                binding.btnPersonal.setBackgroundResource(R.drawable.bkg_button_blue_rect_disabled)
-                orderingForm = buildForm(OrderType.COMPANY)
-                orderingAdapter.formFieldList = orderingForm
-            }
-        }
-    }
-
-    private fun buildForm(orderType: OrderType): List<FormField> {
-        val formFieldList = mutableListOf<FormField>()
-
-        formFieldList.add(FormField.SingleLineWithPromptField(
-            type = FieldType.ADDRESS,
-            name = getString(R.string.ordering_form_address_title_text),
-            hint = getString(R.string.ordering_form_address_hint_text),
-            prompt = getString(R.string.ordering_form_address_prompt_text),
-            isEditable = false
-        ))
-
-        if (orderType == OrderType.COMPANY) {
-            formFieldList.add(FormField.SingleLineField(
-                type = FieldType.COMPANY_NAME,
-                name = getString(R.string.ordering_form_company_name_title_text),
-                hint = getString(R.string.ordering_form_company_name_hint_text),
-                isEditable = true
+        if (findNavController().currentDestination?.id == R.id.orderingFragment) {
+            findNavController().navigate(OrderingFragmentDirections.actionToFreeShippingSaysBS(
+                freeShippingDaysInfoBundleUI.title,
+                freeShippingDaysInfoBundleUI.info
             ))
         }
-
-        formFieldList.add(FormField.SingleLineField(
-            type = FieldType.NAME,
-            name = getString(R.string.ordering_form_name_title_text),
-            hint = getString(R.string.ordering_form_name_hint_text),
-            isEditable = true
-        ))
-
-        formFieldList.add(FormField.SingleLineField(
-            type = FieldType.EMAIL,
-            name = getString(R.string.ordering_form_email_title_text),
-            hint = getString(R.string.ordering_form_email_hint_text),
-            isEditable = true
-        ))
-
-        formFieldList.add(FormField.SingleLineField(
-            type = FieldType.PHONE,
-            name = getString(R.string.ordering_form_phone_title_text),
-            hint = getString(R.string.ordering_form_phone_hint_text),
-            isEditable = true
-        ))
-
-        formFieldList.add(FormField.DoubleLineField(
-            type = FieldType.DATE,
-            name = getString(R.string.ordering_form_date_title_text),
-            firstHint = getString(R.string.ordering_form_date_hint_text),
-            secondHint = getString(R.string.ordering_form_time_hint_text),
-            isEditableFirst = false,
-            isEditableSecond = false
-        ))
-
-        formFieldList.add(FormField.SingleLineField(
-            type = FieldType.PAY_METHOD,
-            name = getString(R.string.ordering_form_pay_method_title_text),
-            hint = getString(R.string.ordering_form_pay_method_hint_text),
-            isEditable = false
-        ))
-
-        formFieldList.add(FormField.SwitchField(
-            type = FieldType.OPERATOR_CALL,
-            name = getString(R.string.ordering_form_operator_call_title_text)
-        ))
-
-        formFieldList.add(FormField.SwitchField(
-            type = FieldType.ALERT_DRIVER,
-            name = getString(R.string.ordering_form_alert_driver_title_text)
-        ))
-
-        formFieldList.add(FormField.ValueField(
-            type = FieldType.COMMENT,
-            hint = getString(R.string.ordering_form_comment_hint_text),
-            isEditable = true
-        ))
-
-        formFieldList.add(FormField.TitleField(
-            type = FieldType.TITLE,
-            name = getString(R.string.ordering_form_price_title_text)
-        ))
-
-        formFieldList.add(FormField.PriceField(
-            type = FieldType.PRODUCTS_PRICE,
-            name = getString(R.string.ordering_form_products_price_title_text),
-            value = 1
-        ))
-
-        formFieldList.add(FormField.PriceField(
-            type = FieldType.DEPOSIT,
-            name = getString(R.string.ordering_form_deposit_title_text),
-            value = 2
-        ))
-
-        formFieldList.add(FormField.PriceField(
-            type = FieldType.DISCOUNT,
-            name = getString(R.string.ordering_form_discount_title_text),
-            value = 3
-        ))
-
-        formFieldList.add(FormField.PriceField(
-            type = FieldType.DELIVERY_PRICE,
-            name = getString(R.string.ordering_form_delivery_price_title_text),
-            value = 4
-        ))
-
-        formFieldList.add(FormField.PriceField(
-            type = FieldType.TOTAL,
-            name = getString(R.string.ordering_form_total_title_text),
-            value = 5
-        ))
-
-        return formFieldList
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(LogSettings.MAP_LOG, "DESTROY")
+    private fun validateSimpleField(name: TextView, input: String) = when(input.isNotEmpty()) {
+        false -> {
+            name.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            false
+        }
+        true -> {
+            name.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+            true
+        }
     }
+
+    private fun validateEmail(name: TextView, input: String) = when(EMAIL_REGEX.matches(input)) {
+        false -> {
+            name.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            false
+        }
+        true -> {
+            name.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+            true
+        }
+    }
+
+    private fun validatePhone(name: TextView, input: String) = when(PHONE_REGEX.matches(input)) {
+        false -> {
+            name.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            false
+        }
+        true -> {
+            name.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+            true
+        }
+    }
+
+    private fun validateForm() {
+        var isValid = true
+
+        if (!validateSimpleField(binding.tvNameName, binding.etName.text.toString())) isValid = false
+        if (!validateEmail(binding.tvNameEmail, binding.etEmail.text.toString())) isValid = false
+        if (!validatePhone(binding.tvNamePhone, binding.etPhone.text.toString())) isValid = false
+        if (viewModel.selectedOrderType == OrderType.COMPANY) {
+            if (!validateSimpleField(binding.tvNameCompanyName, binding.etCompanyName.text.toString())) isValid = false
+        }
+        if (viewModel.selectedAddressUI == null) {
+            isValid = false
+            binding.tvNameAddress.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+        }
+        if (viewModel.selectedDate == null) {
+            isValid = false
+            binding.tvNameDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+        }
+        if (viewModel.selectedShippingIntervalUI == null) {
+            isValid = false
+            binding.tvNameDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+        }
+        if (viewModel.selectedPayMethodUI == null) {
+            isValid = false
+            binding.tvNamePayMethod.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+        }
+
+        if (isValid) viewModel.checkActualCart(requireContext().getDeviceInfo())
+        else {
+            trackErrors = true
+            Snackbar.make(binding.root, "Пожалуйста, заполните верно все необходимые поля!", Snackbar.LENGTH_LONG).show()
+        }
+    }
+
+    private fun validateField(formField: FormField) =  when(formField.fieldType) {
+        FieldType.NAME,
+        FieldType.PAY_METHOD,
+        FieldType.COMPANY_NAME -> {
+            formField.isValid = (formField as FormField.SingleLineField).value.isNotEmpty()
+            formField.isValid
+        }
+        FieldType.ADDRESS -> {
+            formField.isValid = (formField as FormField.SingleLineWithPromptField).value.isNotEmpty()
+            formField.isValid
+        }
+        FieldType.DATE -> {
+            val first = (formField as FormField.DoubleLineField).firstValue.isNotEmpty()
+            val second = (formField as FormField.DoubleLineField).secondValue.isNotEmpty()
+            formField.isValid = first && second
+            formField.isValid
+        }
+        FieldType.EMAIL -> {
+            formField.isValid = EMAIL_REGEX.matches((formField as FormField.SingleLineField).value)
+            formField.isValid
+        }
+//        FieldType.PHONE -> {
+//            formField.isValid = PHONE_REGEX.matches((formField as FormField.SingleLineField).value)
+//            formField.isValid
+//        }
+
+        else -> true
+    }
+
 }
 
-enum class OrderType {
-    PERSONAL, COMPANY
+enum class OrderType(val value: Int) {
+    PERSONAL(1), COMPANY(2)
 }
 
 class FreeShippingSaysBS : BottomSheetDialogFragment() {

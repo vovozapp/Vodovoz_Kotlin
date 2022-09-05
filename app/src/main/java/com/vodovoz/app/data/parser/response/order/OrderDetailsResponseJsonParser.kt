@@ -2,6 +2,7 @@ package com.vodovoz.app.data.parser.response.order
 
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
+import com.vodovoz.app.data.parser.common.safeInt
 import com.vodovoz.app.data.remote.ResponseStatus
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import okhttp3.ResponseBody
@@ -25,8 +26,8 @@ object OrderDetailsResponseJsonParser {
         id = getString("ID").toLong(),
         dateOrder = getString("DATE_START"),
         dateDelivery = getString("DATE_OUT"),
-        productsPrice = getString("PRICE_GOODS_ITOGO").toDouble().toInt(),
-        depositPrice = getString("ZALOG_ITOGO").toDouble().toInt(),
+        productsPrice = safeInt("PRICE_GOODS_ITOGO"),//getString("PRICE_GOODS_ITOGO").toDouble().toInt(),
+        depositPrice = safeInt("ZALOG_ITOGO"),//getString("ZALOG_ITOGO").toDouble().toInt(),
         totalPrice = getString("PRICE").toDouble().toInt(),
         deliveryPrice = getString("PRICE_DELIVERY").toDouble().toInt(),
         userFirstName = getString("USER_NAME"),
@@ -87,19 +88,12 @@ object OrderDetailsResponseJsonParser {
                 false -> ""
             },
             orderQuantity = getInt("QUANTITY"),
-            cartQuantity = when(has("QUANTITY")) {
-                true -> getInt("QUANTITY")
-                false -> 0
-            },
             isFavorite = when(has("FAVORITE")) {
                 true -> getBoolean("FAVORITE")
                 false -> false
             },
             detailPictureList = parseDetailPictureList(detailPicture),
-            isCanReturnBottles = when(has("CATALOG")) {
-                true -> getJSONObject("CATALOG").parseIsCanReturnBottles()
-                false -> false
-            }
+            depositPrice = 0
         )
     }
 

@@ -13,8 +13,11 @@ object ProductMapper {
     fun ProductEntity.mapToUI() = ProductUI(
         id = id,
         name = name,
+        isBottle = isBottle,
         detailPicture = detailPicture,
         isFavorite = isFavorite,
+        leftItems = leftItems,
+        pricePerUnit = pricePerUnit,
         priceList = priceList.mapToUI(),
         status = status,
         statusColor = statusColor,
@@ -22,7 +25,9 @@ object ProductMapper {
         cartQuantity = cartQuantity,
         commentAmount = commentAmount,
         orderQuantity = orderQuantity,
-        isCanReturnBottles = isCanReturnBottles,
+        depositPrice = depositPrice,
+        isGift = isGift,
+        replacementProductUIList = replacementProductEntityList.mapToUI(),
         detailPictureList = detailPictureList
     )
 

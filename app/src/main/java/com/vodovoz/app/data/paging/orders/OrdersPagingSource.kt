@@ -27,8 +27,6 @@ class OrdersPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, OrderEntity> {
         try {
             val page = params.key ?: 1
-            Log.i(LogSettings.ID_LOG, "STATUSES ${status}")
-            Log.i(LogSettings.ID_LOG, "ID ${orderId}")
             val response = remoteDataSource.fetchAllOrders(
                 userId = userId,
                 appVersion = appVersion,

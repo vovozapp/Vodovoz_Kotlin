@@ -6,6 +6,7 @@ import com.vodovoz.app.data.model.common.ProductEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.features.CartBundleEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
+import com.vodovoz.app.data.parser.common.safeInt
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import okhttp3.ResponseBody
 import org.json.JSONArray
@@ -17,6 +18,10 @@ object CartResponseJsonParser {
         val responseJson = JSONObject(this.string())
         return ResponseEntity.Success(
             CartBundleEntity(
+                infoMessage = when(responseJson.getJSONArray("textkorzina").getJSONObject(1).isNull("MESSAGETEXT")) {
+                    true -> ""
+                    false -> responseJson.getJSONArray("textkorzina").getJSONObject(1).getString("MESSAGETEXT")
+                },
                 giftMessage = when(responseJson.getJSONArray("textkorzina").getJSONObject(0).isNull("MESSAGETEXT")) {
                     true -> null
                     false -> responseJson.getJSONArray("textkorzina").getJSONObject(0).getString("MESSAGETEXT")
@@ -67,6 +72,9 @@ object CartResponseJsonParser {
         rating = 0.0,
         commentAmount = "",
         isFavorite = false,
+        depositPrice = 0,
+        isGift = true,
+        isBottle = false,
         detailPictureList = listOf(getString("DETAIL_PICTURE"))
     )
 

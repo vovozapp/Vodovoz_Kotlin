@@ -2,8 +2,6 @@ package com.vodovoz.app.ui.fragment.all_brands
 
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -16,7 +14,7 @@ import com.vodovoz.app.ui.adapter.AllBrandsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
-import com.vodovoz.app.ui.diffUtils.BrandSliderDiffUtilCallback
+import com.vodovoz.app.ui.diffUtils.BrandDiffUtilCallback
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -113,7 +111,7 @@ class AllBrandsFragment : ViewStateBaseFragment() {
         }
 
         viewModel.brandUIListLD.observe(viewLifecycleOwner) { brandUIList ->
-            val diffUtil = BrandSliderDiffUtilCallback(
+            val diffUtil = BrandDiffUtilCallback(
                 oldList = allBrandsAdapter.brandUIFullList,
                 newList = brandUIList
             )

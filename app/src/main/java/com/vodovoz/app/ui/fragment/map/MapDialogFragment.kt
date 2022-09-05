@@ -243,7 +243,7 @@ class MapDialogFragment : ViewStateBaseFragment(),
         binding.addressesRecycler.visibility = View.INVISIBLE
         binding.searchImage.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_map_marker))
         binding.searchEdit.clearFocus()
-        binding.searchContainer.elevation = resources.getDimension(R.dimen.card_elevation)
+        binding.searchContainer.elevation = resources.getDimension(R.dimen.elevation_3)
         binding.searchContainer.setBackgroundResource(R.drawable.bkg_search_address)
         val view = requireActivity().currentFocus
         if (view != null) {

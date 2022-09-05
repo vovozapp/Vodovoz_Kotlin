@@ -1,46 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--new-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:paddingTop="@dimen/space_8"
-    android:background="@color/white"
-    android:translationZ="1dp">
+    android:orientation="vertical">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/TextViewHeaderBlackBold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/rotonda_bold"
-        android:textSize="@dimen/medium_text_size"
         android:text="Возможно, вам понравится"
-        android:paddingTop="@dimen/space_8"
-        android:paddingBottom="@dimen/space_8"
-        android:paddingStart="@dimen/space_16"
-        android:paddingEnd="@dimen/space_16" />
+        android:paddingVertical="@dimen/space_8"
+        android:paddingHorizontal="@dimen/space_16"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/brandProductRecycler"
+        android:id="@+id/rvProducts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:dividerColor="@color/divider_color"/>
 
-    <TextView
-        android:id="@+id/nextPage"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvNextPage"
+        style="@style/TextViewNormalBlueBold"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Показать еще"
-        android:fontFamily="@font/rotonda_normal"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:textColor="@color/bluePrimary"
-        android:paddingTop="@dimen/space_16"
-        android:paddingBottom="@dimen/space_16"
-        android:layout_marginStart="4dp"/>
+        android:paddingVertical="@dimen/space_16"
+        android:gravity="center"/>
 
 </LinearLayout>

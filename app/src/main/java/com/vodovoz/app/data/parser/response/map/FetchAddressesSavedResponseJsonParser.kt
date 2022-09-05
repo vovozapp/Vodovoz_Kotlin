@@ -15,18 +15,14 @@ object FetchAddressesSavedResponseJsonParser {
         val responseJson = JSONObject(string())
         return when (responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
-                responseJson.getJSONArray("data").parseAddressEntityList().apply {
-                    Log.i(LogSettings.ID_LOG, "SUCCESS PARSE")
-                }
+                responseJson.getJSONArray("data").parseAddressEntityList()
             )
             else ->  ResponseEntity.Success(listOf())
         }
     }
 
     private fun JSONArray.parseAddressEntityList(): List<AddressEntity> = mutableListOf<AddressEntity>().also { list ->
-        Log.i(LogSettings.ID_LOG, "PRE PARSE")
         for (index in 0 until length()) {
-            Log.i(LogSettings.ID_LOG, index.toString())
             list.add(getJSONObject(index).parseAddressEntity())
         }
     }

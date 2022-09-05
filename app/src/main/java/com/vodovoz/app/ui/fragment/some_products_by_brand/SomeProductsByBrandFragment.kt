@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
@@ -15,6 +17,8 @@ import com.vodovoz.app.ui.adapter.LinearProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
+import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
+import com.vodovoz.app.ui.view.Divider
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -39,20 +43,24 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
         }
     }
 
-    private val compositeDisposable = CompositeDisposable()
-
     private lateinit var onProductClickSubject: PublishSubject<Long>
-    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
-    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
 
     private lateinit var binding: FragmentPaginatedBrandProductListBinding
     private lateinit var viewModel: SomeProductsByBrandViewModel
 
     private val linearProductAdapter: LinearProductsAdapter by lazy {
         LinearProductsAdapter(
-            onProductClickSubject = onProductClickSubject,
-            onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-            onFavoriteClickSubject = onFavoriteClickSubject
+            onProductClick = {
+                onProductClickSubject.onNext(it)
+            },
+            onChangeFavoriteStatus = { productId, status ->
+                viewModel.changeFavoriteStatus(productId, status)
+            },
+            onChangeCartQuantity = { productId, quantity ->
+                viewModel.changeCart(productId, quantity)
+            },
+            onNotAvailableMore = {},
+            onNotifyWhenBeAvailable = {},
         )
     }
 
@@ -60,7 +68,6 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
         super.onCreate(savedInstanceState)
         initViewModel()
         getArgs()
-        subscribeSubjects()
     }
 
     private fun getArgs() {
@@ -77,15 +84,6 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
             this,
             (requireActivity().application as VodovozApplication).viewModelFactory
         )[SomeProductsByBrandViewModel::class.java]
-    }
-
-    private fun subscribeSubjects() {
-        onChangeProductQuantitySubject.subscribeBy { pair ->
-            viewModel.changeCart(pair.first, pair.second)
-        }.addTo(compositeDisposable)
-        onFavoriteClickSubject.subscribeBy { pair ->
-            viewModel.changeFavoriteStatus(pair.first, pair.second)
-        }.addTo(compositeDisposable)
     }
 
     override fun setContentView(
@@ -110,6 +108,9 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
         val space = resources.getDimension(R.dimen.space_16).toInt()
         binding.nextPage.setOnClickListener { viewModel.nextPage() }
         binding.brandProductRecycler.layoutManager = LinearLayoutManager(requireContext())
+        ContextCompat.getDrawable(requireContext(), R.drawable.bkg_divider)?.let {
+            binding.brandProductRecycler.addItemDecoration(Divider(it, space))
+        }
         binding.brandProductRecycler.adapter = linearProductAdapter
         binding.brandProductRecycler.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
@@ -150,11 +151,5 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
             }
         }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.clear()
-    }
-
 
 }

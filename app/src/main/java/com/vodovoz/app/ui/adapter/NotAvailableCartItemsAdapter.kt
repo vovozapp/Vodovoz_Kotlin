@@ -3,32 +3,28 @@ package com.vodovoz.app.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.vodovoz.app.databinding.ViewHolderCartItemNotAvailableBinding
-import com.vodovoz.app.ui.view_holder.CartItemNotAvailableViewHolder
+import com.vodovoz.app.databinding.ViewHolderProductListNotAvailableBinding
+import com.vodovoz.app.ui.view_holder.ProductListNotAvailableViewHolder
 import com.vodovoz.app.ui.model.ProductUI
-import io.reactivex.rxjava3.subjects.PublishSubject
 
 class NotAvailableCartItemsAdapter(
-    private val onProductClickSubject: PublishSubject<Long>,
-    private val onSwapClickSubject: PublishSubject<Long>
-) : RecyclerView.Adapter<CartItemNotAvailableViewHolder>() {
+    private val onProductClick: (Long) -> Unit,
+    private val onSwapProduct: (Long) -> Unit
+) : RecyclerView.Adapter<ProductListNotAvailableViewHolder>() {
 
     var productUIList = listOf<ProductUI>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ) = CartItemNotAvailableViewHolder(
-        binding = ViewHolderCartItemNotAvailableBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        ),
-        onProductClickSubject = onProductClickSubject,
-        onSwapClickSubject = onSwapClickSubject,
-        context = parent.context
+    ) = ProductListNotAvailableViewHolder(
+        binding = ViewHolderProductListNotAvailableBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+        onProductClick = onProductClick,
+        onSwapProduct = onSwapProduct
     )
 
     override fun onBindViewHolder(
-        holder: CartItemNotAvailableViewHolder,
+        holder: ProductListNotAvailableViewHolder,
         position: Int
     ) = holder.onBind(productUIList[position])
 

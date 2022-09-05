@@ -12,6 +12,7 @@ import com.vodovoz.app.data.remote.RemoteData
 import com.vodovoz.app.data.remote.RemoteDataSource
 import com.vodovoz.app.util.LogSettings
 import okhttp3.OkHttpClient
+import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -45,9 +46,8 @@ class VodovozApplication : Application() {
     private fun buildVodovozClient(): VodovozApi {
         val clientBuilder = OkHttpClient.Builder()
         clientBuilder.addInterceptor { chain ->
-            Log.i(LogSettings.REQ_RES_LOG, chain.request().toString())
+            Log.d(LogSettings.NETWORK_LOG, chain.request().toString())
             val builder = chain.request().newBuilder()
-
             localDataSource.fetchCookieSessionId()?.let { cookieSessionId ->
                 builder.addHeader("Cookie", cookieSessionId)
             }
@@ -57,8 +57,10 @@ class VodovozApplication : Application() {
             if (!localDataSource.isAvailableCookieSessionId()) {
                 localDataSource.updateCookieSessionId(originalResponse.headers().values("Set-Cookie").first())
             }
-
-            Log.i(LogSettings.REQ_RES_LOG, originalResponse.toString())
+//
+//            if (chain.request().toString().contains("tual")) {
+//                Log.d(LogSettings.NETWORK_LOG, "Response: \n${JSONObject(originalResponse.body()!!.string()).toString(2)}")
+//            }
             originalResponse
         }
 

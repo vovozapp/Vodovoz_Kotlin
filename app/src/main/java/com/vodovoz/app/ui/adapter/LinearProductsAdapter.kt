@@ -9,9 +9,12 @@ import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class LinearProductsAdapter(
-    private val onProductClickSubject: PublishSubject<Long>,
-    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
-    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>
+    private val onProductClick: (Long) -> Unit,
+    private val onChangeCartQuantity: (Long, Int) -> Unit,
+    private val onChangeFavoriteStatus: (Long, Boolean) -> Unit,
+    private val onNotifyWhenBeAvailable: (Long) -> Unit,
+    private val onNotAvailableMore: () -> Unit,
+    private val isCart: Boolean = false
 ) : RecyclerView.Adapter<ProductListViewHolder>() {
 
     var productUIList = listOf<ProductUI>()
@@ -20,13 +23,13 @@ class LinearProductsAdapter(
         parent: ViewGroup,
         viewType: Int
     ) = ProductListViewHolder(
-        binding = ViewHolderProductListBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        ),
-        onProductClickSubject = onProductClickSubject,
-        onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-        onFavoriteClickSubject = onFavoriteClickSubject,
-        context = parent.context
+        binding = ViewHolderProductListBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+        isCartItem = isCart,
+        onProductClick = onProductClick,
+        onChangeCartQuantity = onChangeCartQuantity,
+        onChangeFavoriteStatus = onChangeFavoriteStatus,
+        onNotifyWhenBeAvailable = onNotifyWhenBeAvailable,
+        onNotAvailableMore = onNotAvailableMore,
     )
 
     override fun onBindViewHolder(

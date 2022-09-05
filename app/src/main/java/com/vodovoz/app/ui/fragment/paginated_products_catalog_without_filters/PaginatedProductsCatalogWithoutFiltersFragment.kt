@@ -63,10 +63,18 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
 
     private var productAdapter: PagingProductsAdapter = PagingProductsAdapter(
-        onProductClickSubject = onProductClickSubject,
+        onProductClick = {
+            findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToProductDetailFragment(it))
+        },
+        onChangeFavoriteStatus = { productId, status ->
+            viewModel.changeFavoriteStatus(productId, status)
+        },
+        onChangeCartQuantity = { productId, quantity ->
+            viewModel.changeCart(productId, quantity)
+        },
+        onNotAvailableMore = {},
+        onNotifyWhenBeAvailable = {},
         productDiffItemCallback = ProductDiffItemCallback(),
-        onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-        onFavoriteClickSubject = onFavoriteClickSubject,
         viewMode = viewMode
     )
 
@@ -169,7 +177,6 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
 
     private fun initShare() {
         binding.share.setOnClickListener {
-            Log.i(LogSettings.ID_LOG, viewModel.categoryHeader!!.shareUrl)
             Intent.createChooser(
                 Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
@@ -285,10 +292,18 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
 
     private fun updatePager() {
         productAdapter = PagingProductsAdapter(
-            onProductClickSubject = onProductClickSubject,
+            onProductClick = {
+                findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToProductDetailFragment(it))
+            },
+            onChangeFavoriteStatus = { productId, status ->
+                viewModel.changeFavoriteStatus(productId, status)
+            },
+            onChangeCartQuantity = { productId, quantity ->
+                viewModel.changeCart(productId, quantity)
+            },
+            onNotAvailableMore = {},
+            onNotifyWhenBeAvailable = {},
             productDiffItemCallback = ProductDiffItemCallback(),
-            onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-            onFavoriteClickSubject = onFavoriteClickSubject,
             viewMode = viewMode
         )
 

@@ -13,7 +13,6 @@ object UserDataResponseJsonParser {
 
     fun ResponseBody.parseUserDataResponse(): ResponseEntity<UserDataEntity> {
         val responseJson = JSONObject(this.string())
-        Log.i(LogSettings.ID_LOG, responseJson.toString())
         return when(responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(responseJson.getJSONObject("data").parseUserDataEntity())
             else -> ResponseEntity.Error(responseJson.getString("message"))

@@ -29,6 +29,7 @@ import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
+import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.model.CategoryUI
@@ -54,10 +55,18 @@ class PastPurchasesFragment : ViewStateBaseFragment() {
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
 
     private var productAdapter: PagingProductsAdapter = PagingProductsAdapter(
-        onProductClickSubject = onProductClickSubject,
+        onProductClick = {
+            findNavController().navigate(PastPurchasesFragmentDirections.actionToProductDetailFragment(it))
+        },
+        onChangeFavoriteStatus = { productId, status ->
+            viewModel.changeFavoriteStatus(productId, status)
+        },
+        onChangeCartQuantity = { productId, quantity ->
+            viewModel.changeCart(productId, quantity)
+        },
+        onNotAvailableMore = {},
+        onNotifyWhenBeAvailable = {},
         productDiffItemCallback = ProductDiffItemCallback(),
-        onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-        onFavoriteClickSubject = onFavoriteClickSubject,
         viewMode = viewMode
     )
 
@@ -156,14 +165,14 @@ class PastPurchasesFragment : ViewStateBaseFragment() {
         binding.categories.setOnClickListener { showMiniCatalog() }
         binding.availableButton.setOnClickListener {
             binding.availableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-            binding.availableButton.elevation = resources.getDimension(R.dimen.root_elevation)
+            binding.availableButton.elevation = resources.getDimension(R.dimen.elevation_1)
             binding.notAvailableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
             binding.notAvailableButton.elevation = 0f
             viewModel.updateIsAvailable(true)
         }
         binding.notAvailableButton.setOnClickListener {
             binding.notAvailableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-            binding.notAvailableButton.elevation = resources.getDimension(R.dimen.root_elevation)
+            binding.notAvailableButton.elevation = resources.getDimension(R.dimen.elevation_1)
             binding.availableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
             binding.availableButton.elevation = 0f
             viewModel.updateIsAvailable(false)
@@ -294,10 +303,18 @@ class PastPurchasesFragment : ViewStateBaseFragment() {
 
     private fun updatePager() {
         productAdapter = PagingProductsAdapter(
-            onProductClickSubject = onProductClickSubject,
+            onProductClick = {
+                findNavController().navigate(ProfileFragmentDirections.actionToProductDetailFragment(it))
+            },
+            onChangeFavoriteStatus = { productId, status ->
+                viewModel.changeFavoriteStatus(productId, status)
+            },
+            onChangeCartQuantity = { productId, quantity ->
+                viewModel.changeCart(productId, quantity)
+            },
+            onNotAvailableMore = {},
+            onNotifyWhenBeAvailable = {},
             productDiffItemCallback = ProductDiffItemCallback(),
-            onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-            onFavoriteClickSubject = onFavoriteClickSubject,
             viewMode = viewMode
         )
 

@@ -15,13 +15,13 @@ class CommentWithAvatarViewHolder(
 
     fun onBind(commentUI: CommentUI) {
         binding.date.text = commentUI.date
-        binding.author.text = commentUI.author
-        binding.comment.text = commentUI.text
+        binding.tvAuthor.text = commentUI.author
+        binding.tvComment.text = commentUI.text
 
         Glide.with(context)
             .load(commentUI.authorPhoto)
             .placeholder(ContextCompat.getDrawable(context, R.drawable.png_default_avatar))
-            .into(binding.authorPhoto)
+            .into(binding.imgAuthorPhoto)
     }
 
 }

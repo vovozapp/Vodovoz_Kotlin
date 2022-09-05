@@ -5,7 +5,10 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.CountDownTimer
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -14,38 +17,51 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderProductGridBinding
 import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
 import com.vodovoz.app.ui.adapter.DetailPicturePagerAdapter
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountText
+import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDepositPriceText
+import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountPercent
+import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setMinimalPriceText
+import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setOrderQuantity
+import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceCondition
+import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class ProductGridViewHolder(
-    private val onProductClickSubject: PublishSubject<Long>,
-    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
-    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
     private val binding: ViewHolderProductGridBinding,
-    private val context: Context
+    private val onProductClick: (Long) -> Unit,
+    private val onChangeCartQuantity: (Long, Int) -> Unit,
+    private val onChangeFavoriteStatus: (Long, Boolean) -> Unit,
+    private val onNotifyWhenBeAvailable: (Long) -> Unit,
+    private val onNotAvailableMore: () -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private val detailPicturePagerAdapter = DetailPicturePagerAdapter(
-        iOnProductDetailPictureClick = { onProductClickSubject.onNext(productUI.id) }
+        iOnProductDetailPictureClick = { onProductClick(productUI.id) }
     )
 
     private val amountControllerTimer = object: CountDownTimer(3000, 3000) {
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
-            onChangeProductQuantitySubject.onNext(Pair(productUI.id, productUI.cartQuantity))
+            onChangeCartQuantity(productUI.id, productUI.cartQuantity)
             hideAmountController()
         }
     }
 
     init {
-        binding.root.setOnClickListener { onProductClickSubject.onNext(productUI.id) }
-        binding.oldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-        binding.detailPicturePager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.detailPicturePager.adapter = detailPicturePagerAdapter
+        binding.tvName.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            height = binding.tvName.lineHeight * 3
+        }
+        binding.root.setOnClickListener { onProductClick(productUI.id) }
+        binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        binding.pvPictures.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.pvPictures.adapter = detailPicturePagerAdapter
 
         binding.amountController.add.setOnClickListener {
+            if (productUI.leftItems == 0) {
+                onNotifyWhenBeAvailable(productUI.id)
+                return@setOnClickListener
+            }
             if (productUI.cartQuantity == 0) {
                 productUI.cartQuantity++
                 updateCartQuantity()
@@ -68,20 +84,20 @@ class ProductGridViewHolder(
             updateCartQuantity()
         }
 
-        TabLayoutMediator(binding.tabIndicator, binding.detailPicturePager) { _, _ -> }.attach()
+        TabLayoutMediator(binding.tlIndicators, binding.pvPictures) { _, _ -> }.attach()
 
-        binding.favoriteStatus.setOnClickListener {
+        binding.imgFavoriteStatus.setOnClickListener {
             when(productUI.isFavorite) {
                 true -> {
                     productUI.isFavorite = false
-                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite))
+                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite))
                 }
                 false -> {
                     productUI.isFavorite = true
-                    binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite_red))
+                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
                 }
             }
-            onFavoriteClickSubject.onNext(Pair(productUI.id, productUI.isFavorite))
+            onChangeFavoriteStatus(productUI.id, productUI.isFavorite)
         }
     }
 
@@ -113,8 +129,59 @@ class ProductGridViewHolder(
     fun onBind(productUI: ProductUI) {
         this.productUI = productUI
 
-        binding.name.text = productUI.name
-        binding.rating.rating = productUI.rating.toFloat()
+        binding.tvName.text = productUI.name
+        binding.rbRating.rating = productUI.rating.toFloat()
+
+        //If left items = 0
+        when(productUI.leftItems == 0) {
+            true -> {
+                binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_gray_circle_normal)
+                binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_alert))
+            }
+            false -> {
+                binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
+                binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_cart))
+            }
+        }
+
+        //Price per unit / or order quantity
+        when(productUI.pricePerUnit != 0) {
+            true -> {
+                binding.tvPricePerUnit.visibility = View.VISIBLE
+                binding.tvPricePerUnit.setPricePerUnitText(productUI.pricePerUnit)
+            }
+            false -> binding.tvPricePerUnit.visibility = View.GONE
+        }
+
+        //Price
+        var haveDiscount = false
+        when(productUI.priceList.size) {
+            1 -> {
+                binding.tvCurrentPrice.setPriceText(productUI.priceList.first().currentPrice)
+                binding.tvOldPrice.setPriceText(productUI.priceList.first().oldPrice)
+                binding.tvPriceCondition.visibility = View.GONE
+                if (productUI.priceList.first().currentPrice < productUI.priceList.first().oldPrice || productUI.isGift) haveDiscount = true
+            }
+            else -> {
+                val minimalPrice = productUI.priceList.maxByOrNull { it.requiredAmount }!!
+                binding.tvCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice)
+                binding.tvPriceCondition.setPriceCondition(minimalPrice.requiredAmount)
+                binding.tvPriceCondition.visibility = View.VISIBLE
+                binding.tvPricePerUnit.visibility = View.GONE
+            }
+        }
+        when(haveDiscount) {
+            true -> {
+                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
+                binding.tvOldPrice.visibility = View.VISIBLE
+            }
+            false -> {
+                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
+                binding.tvOldPrice.visibility = View.GONE
+            }
+        }
+
+        //Cart amount
         binding.amountController.circleAmount.text = productUI.cartQuantity.toString()
         binding.amountController.amount.text = productUI.cartQuantity.toString()
 
@@ -123,62 +190,50 @@ class ProductGridViewHolder(
             false -> binding.amountController.circleAmount.visibility = View.GONE
         }
 
+        //Comment
+        when (productUI.commentAmount.isEmpty()) {
+            true -> binding.tvCommentAmount.text = "Нет отзывов"
+            else -> binding.tvCommentAmount.text = productUI.commentAmount
+        }
+
+        //Favorite
         when(productUI.isFavorite) {
-            false -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite))
-            true -> binding.favoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite_red))
+            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite))
+            true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
         }
 
-        when (productUI.commentAmount) {
-            "" -> binding.commentAmount.visibility = View.GONE
-            else -> {
-                binding.commentAmount.visibility = View.VISIBLE
-                binding.commentAmount.text = productUI.commentAmount
+        //Status
+        var isNotHaveStatuses = true
+        when (productUI.status.isEmpty()) {
+            true -> binding.cwStatusContainer.visibility = View.GONE
+            false -> {
+                isNotHaveStatuses = false
+                binding.cwStatusContainer.visibility = View.VISIBLE
+                binding.tvStatus.text = productUI.status
+                binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(productUI.statusColor))
             }
         }
 
-        when (productUI.status) {
-            "" -> binding.statusContainer.visibility = View.GONE
-            else -> {
-                binding.statusContainer.visibility = View.VISIBLE
-                binding.status.text = productUI.status
-                binding.statusContainer.setCardBackgroundColor(Color.parseColor(productUI.statusColor))
+        //DiscountPercent
+        when(productUI.priceList.size == 1 &&
+                productUI.priceList.first().currentPrice < productUI.priceList.first().oldPrice) {
+            true -> {
+                binding.cwDiscountContainer.visibility = View.VISIBLE
+                binding.tvDiscountPercent.setDiscountPercent(
+                    newPrice = productUI.priceList.first().currentPrice,
+                    oldPrice = productUI.priceList.first().oldPrice
+                )
             }
+            false -> binding.cwDiscountContainer.visibility = View.GONE
         }
 
-        when(productUI.priceList.size) {
-            1 -> {
-                binding.price.setPriceText(productUI.priceList.first().currentPrice)
-                when (productUI.priceList.first().oldPrice) {
-                    0 -> binding.discountContainer.visibility = View.GONE
-                    else -> {
-                        binding.discountContainer.visibility = View.VISIBLE
-                        binding.discount.visibility = View.VISIBLE
-                        binding.price.setTextColor(ContextCompat.getColor(context, R.color.red))
-                        binding.oldPrice.setPriceText(productUI.priceList.first().oldPrice)
-                        binding.oldPrice.visibility = View.VISIBLE
-                        binding.discount.setDiscountText(
-                            productUI.priceList.first().oldPrice,
-                            productUI.priceList.first().currentPrice
-                        )
-                        if (productUI.status != "") {
-                            binding.spaceBetweenStatuses.visibility = View.VISIBLE
-                        } else {
-                            binding.spaceBetweenStatuses.visibility = View.GONE
-                        }
-                    }
-                }
-            }
-            else -> {
-                binding.spaceBetweenStatuses.visibility = View.GONE
-                binding.discount.visibility = View.GONE
-                binding.price.setPriceText(productUI.priceList.sortedBy { it.requiredAmount }.reversed().find { it.requiredAmount <= productUI.cartQuantity }!!.currentPrice)
-            }
+        when(isNotHaveStatuses) {
+            true -> binding.cgStatuses.visibility = View.GONE
+            false -> binding.cgStatuses.visibility = View.VISIBLE
         }
 
-        when (productUI.detailPictureList.size) {
-            1 -> binding.tabIndicator.visibility = View.INVISIBLE
-            else -> binding.tabIndicator.visibility = View.VISIBLE
-        }
+        //UpdatePictures
+        binding.tlIndicators.isVisible = productUI.detailPictureList.size != 1
 
         val diffUtil = DetailPictureDiffUtilCallback(
             oldList = detailPicturePagerAdapter.detailPictureUrlList,

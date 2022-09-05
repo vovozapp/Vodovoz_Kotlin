@@ -26,12 +26,12 @@ class OrderDetailViewHolder(
 
     init {
         binding.root.setOnClickListener { onMoreDetailClickSubject.onNext(orderUI.id!!) }
-        binding.moreDetails.setOnClickListener { onMoreDetailClickSubject.onNext(orderUI.id!!) }
-        binding.repeatOrder.setOnClickListener { onRepeatOrderClickSubject.onNext(orderUI.id!!) }
+        binding.tvMoreDetails.setOnClickListener { onMoreDetailClickSubject.onNext(orderUI.id!!) }
+        binding.tvRepeatOrder.setOnClickListener { onRepeatOrderClickSubject.onNext(orderUI.id!!) }
 
-        binding.productsDetailPicturesRecycler.layoutManager =
+        binding.rvProducts.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.productsDetailPicturesRecycler.adapter = detailPictureSliderAdapter
+        binding.rvProducts.adapter = detailPictureSliderAdapter
     }
 
     private lateinit var orderUI: OrderUI
@@ -39,12 +39,12 @@ class OrderDetailViewHolder(
     fun onBind(orderUI: OrderUI) {
         this.orderUI = orderUI
 
-        binding.status.text = orderUI.orderStatusUI?.statusName
-        binding.address.text = orderUI.address
-        binding.price.setPriceText(orderUI.price!!)
-        binding.status.setTextColor(ContextCompat.getColor(context, orderUI.orderStatusUI!!.color))
-        binding.statusImage.setImageDrawable(ContextCompat.getDrawable(context, orderUI.orderStatusUI.image))
-        binding.statusImage.setColorFilter(ContextCompat.getColor(context, orderUI.orderStatusUI.color))
+        binding.tvStatus.text = orderUI.orderStatusUI?.statusName
+        binding.tvAddress.text = orderUI.address
+        binding.tvPrice.setPriceText(orderUI.price!!)
+        binding.tvStatus.setTextColor(ContextCompat.getColor(context, orderUI.orderStatusUI!!.color))
+        binding.imgStatus.setImageDrawable(ContextCompat.getDrawable(context, orderUI.orderStatusUI.image))
+        binding.imgStatus.setColorFilter(ContextCompat.getColor(context, orderUI.orderStatusUI.color))
 
         val newDetailPictureList = mutableListOf<Pair<Long, String>>().apply {
             orderUI.productUIList.forEach { add(Pair(it.id, it.detailPicture)) }

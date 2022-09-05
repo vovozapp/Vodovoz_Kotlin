@@ -36,7 +36,7 @@ object ProductJsonParser {
             name = getString("NAME"),
             detailPicture = detailPicture.parseImagePath(),
             priceList = getJSONArray("EXTENDED_PRICE").parsePriceList(),
-            rating = when(has("")) {
+            rating = when(has("PROPERTY_RATING_VALUE")) {
                 true -> getDouble("PROPERTY_RATING_VALUE")
                 else -> 0.0
             },
@@ -55,9 +55,41 @@ object ProductJsonParser {
                 false -> false
             },
             detailPictureList = parseDetailPictureList(detailPicture),
-            isCanReturnBottles = when(has("CATALOG")) {
-                true -> getJSONObject("CATALOG").parseIsCanReturnBottles()
+            depositPrice = when(has("PROPERTY_ZALOGCIFR_VALUE")) {
+                true -> safeInt("PROPERTY_ZALOGCIFR_VALUE")
+                false -> when(isNull("PROPERTY_ZALOG_VALUE")) {
+                    true -> 0
+                    false -> when(safeString("PROPERTY_ZALOG_VALUE").filter { it.isDigit() }.isEmpty()) {
+                        true -> 0
+                        false -> safeString("PROPERTY_ZALOG_VALUE").filter { it.isDigit() }.toInt()
+                    }
+                }
+            },
+            isBottle = when(has("CATALOG")) {
+                true -> when(getJSONObject("CATALOG").getLong("IBLOCK_ID")) {
+                    90L -> true
+                    else -> false
+                }
                 false -> false
+            },
+            isGift = when(has("CATALOG")) {
+                true -> when(getJSONObject("CATALOG").getLong("IBLOCK_ID")) {
+                    26L -> true
+                    else -> false
+                }
+                false -> false
+            },
+            leftItems = when(has("CATALOG_QUANTITY")) {
+                true -> safeInt("CATALOG_QUANTITY")
+                false -> when(has("CATALOG")) {
+                    true -> getJSONObject("CATALOG").safeInt("CATALOG_QUANTITY")
+                    false -> 0
+                }
+            },
+            pricePerUnit = safeInt("PROPERTY_TSENA_ZA_EDINITSU_TOVARA_VALUE"),
+            replacementProductEntityList = when(has("nettovar")) {
+                false -> listOf()
+                true -> getJSONObject("nettovar").getJSONArray("data").parseProductEntityList()
             }
         )
     }

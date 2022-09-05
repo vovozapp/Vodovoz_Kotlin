@@ -13,7 +13,6 @@ object ViewedProductSliderResponseJsonParser {
 
     fun ResponseBody.parseViewedProductsSliderResponse(): ResponseEntity<List<CategoryDetailEntity>> {
         val responseJson = JSONObject(this.string())
-        Log.i(LogSettings.REQ_RES_LOG, responseJson.toString())
         return when(responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 listOf(CategoryDetailEntity(

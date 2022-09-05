@@ -5,6 +5,7 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorAccent">@color/bluePrimary</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialog</item>
+        <item name="materialAlertDialogTheme">@style/AlertDialog</item>
     </style>
 
     <style name="CustomShapeAppearanceBottomSheetDialog" parent="">
@@ -14,11 +15,15 @@
         <item name="cornerSizeBottomRight">0dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
-
-
+    
+    <style name="AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="materialAlertDialogBodyTextStyle">@style/TextViewNormalBlack</item>
+    </style>
+    
     <style name="Tab" parent="@android:style/TextAppearance.Widget.TabWidget">
-        <item name="android:fontFamily">@font/rotonda_normal</item>
-        <item name="android:textSize">17sp</item>
+        <item name="android:textSize">@dimen/medium_text_size</item>
+        <item name="android:textColor">@drawable/selector_text_menu_tab</item>
+        <item name="fontFamily">@font/rotonda_normal</item>
     </style>
 
     <style name="RatingBar" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -99,6 +104,10 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="TextViewSmallBlue" parent="@style/TextViewSmallBlack">
+        <item name="android:textColor">@color/bluePrimary</item>
+    </style>
+
     //Normal
     <style name="TextViewNormalBlack" parent="@style/Theme.AppCompat">
         <item name="android:textSize">@dimen/normal_text_size</item>
@@ -117,6 +126,10 @@
 
     <style name="TextViewNormalWhite" parent="@style/TextViewNormalBlack">
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextViewNormalBlueBold" parent="@style/TextViewNormalGrayBold">
+        <item name="android:textColor">@color/bluePrimary</item>
     </style>
 
     <style name="EditTextViewNormalGray" parent="@style/TextViewNormalBlack">
@@ -162,6 +175,10 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="TextViewMediumWhiteBold" parent="@style/TextViewMediumBlackBold">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="TextViewMediumBlue" parent="@style/TextViewMediumBlack">
         <item name="android:textColor">@color/bluePrimary</item>
     </style>
@@ -184,6 +201,11 @@
         <item name="android:textColor">@color/text_gray</item>
     </style>
 
+    <style name="TextViewMediumGreenBold" parent="@style/TextViewMediumBlack">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/green</item>
+    </style>
+
     //Large
     <style name="TextViewLargeBlack" parent="@style/Theme.AppCompat">
         <item name="android:textSize">@dimen/large_text_size</item>
@@ -194,6 +216,26 @@
     <style name="TextViewLargeGray" parent="@style/TextViewLargeBlack">
         <item name="android:textColor">@color/text_gray</item>
     </style>
+
+    <style name="TextViewLargeGreen" parent="@style/TextViewLargeBlack">
+        <item name="android:textColor">@color/green</item>
+    </style>
+
+    <style name="TextViewLargeBlackBold" parent="@style/Theme.AppCompat">
+        <item name="android:textSize">@dimen/large_text_size</item>
+        <item name="android:textColor">@color/text_black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/rotonda_normal</item>
+    </style>
+
+    <style name="TextViewLargeGreenBold" parent="@style/TextViewLargeBlackBold">
+        <item name="android:textColor">@color/green</item>
+    </style>
+
+    <style name="TextViewLargeWhiteBold" parent="@style/TextViewLargeBlackBold">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 
     //Header
     <style name="TextViewHeaderBlack" parent="@style/Theme.AppCompat">

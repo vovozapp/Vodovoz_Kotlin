@@ -67,17 +67,6 @@ interface RemoteDataSource {
     //Превью для поиска
     fun fetchSearchDefaultData(): Single<ResponseEntity<DefaultSearchDataBundleEntity>>
 
-    fun fetchPayMethods(
-        addressId: Long?,
-        userId: Long?
-    ): Single<ResponseEntity<List<PayMethodEntity>>>
-
-    fun fetchShippingIntervals(
-        addressId: Long?,
-        userId: Long?,
-        date: String?
-    ): Single<ResponseEntity<List<ShippingIntervalEntity>>>
-
     //Удаление продукта из корзины
     fun deleteProductFromCart(
         productId: Long
@@ -90,12 +79,17 @@ interface RemoteDataSource {
     ): Single<ResponseEntity<Boolean>>
 
     //Содержимое корзины
-    fun fetchCart(): Single<ResponseEntity<CartBundleEntity>>
+    fun fetchCart(
+        userId: Long?,
+        coupon: String?
+    ): Single<ResponseEntity<CartBundleEntity>>
 
     //Слайдер стран на главной странице
     fun fetchCountriesSlider(): Single<ResponseEntity<CountriesSliderBundleEntity>>
 
     fun fetchFreeShippingDaysInfoResponse(): Single<ResponseEntity<FreeShippingDaysInfoBundleEntity>>
+
+    fun fetchBottles(): Single<ResponseEntity<List<BottleEntity>>>
 
     //Информация о выбранной стране
     fun fetchCountryHeader(
@@ -439,5 +433,47 @@ interface RemoteDataSource {
         userId: Long?,
         value: String?
     ): Single<ResponseEntity<String>>
+
+    fun fetchShippingInfo(
+        userId: Long?,
+        addressId: Long?,
+        date: String?
+    ): Single<ResponseEntity<ShippingInfoBundleEntity>>
+
+    fun regOrder(
+        orderType: Int?, //Тип заказа (1/2)
+        device: String?, //Телефон Android:12 Версия: 1.4.83
+        addressId: Long?, //адрес id - (150543)
+        date: String?, //23.08.2022
+        paymentId: Long?, //Pay method Id
+        needOperatorCall: String?, // Y/N
+        needShippingAlert: String?, //За 90 минут
+        comment: String?,
+        totalPrice: Int?, //Итоговая сумма заказа
+        shippingId: Long?, //
+        shippingPrice: Int?, // цена доставки
+        name: String?,
+        phone: String?,
+        email: String?,
+        companyName: String?,
+        userId: Long?,
+        deposit: Int?, //?
+        fastShippingPrice: Int?, // 500 р
+        extraShippingPrice: Int?, // из delivery
+        commonShippingPrice: Int?, //?
+        coupon: String?, // передавать из корзины
+        shippingIntervalId: Long?, //id Интервал доставки
+        overMoney: Int?, //?
+        parking: Int?, // числовое значение
+    ) : Single<ResponseEntity<OrderingCompletedInfoBundleEntity>>
+
+    fun cancelOrder(orderId: Long?): Single<ResponseEntity<String>>
+
+    fun requestCode(phone: String?): Single<ResponseEntity<Int>>
+
+    fun authByPhone(
+        phone: String?,
+        code: String?
+    ): Single<ResponseEntity<Long>>
 
 }

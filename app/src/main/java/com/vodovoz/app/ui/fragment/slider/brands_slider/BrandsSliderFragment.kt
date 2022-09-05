@@ -2,7 +2,6 @@ package com.vodovoz.app.ui.fragment.slider.brands_slider
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +12,11 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentSliderBrandBinding
 import com.vodovoz.app.ui.adapter.BrandsSliderAdapter
 import com.vodovoz.app.ui.base.BaseHiddenFragment
-import com.vodovoz.app.ui.diffUtils.BrandSliderDiffUtilCallback
+import com.vodovoz.app.ui.diffUtils.BrandDiffUtilCallback
 import com.vodovoz.app.ui.interfaces.IOnBrandClick
 import com.vodovoz.app.ui.interfaces.IOnShowAllBrandsClick
 import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
 import com.vodovoz.app.ui.model.BrandUI
-import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -101,7 +99,6 @@ class BrandsSliderFragment : BaseHiddenFragment() {
     private fun subscribeSubjects() {
         onBrandClickSubject.subscribeBy { brandId ->
             iOnBrandClick.onBrandClick(brandId)
-            Log.i(LogSettings.ID_LOG, "BID $brandId")
         }.addTo(compositeDisposable)
     }
 
@@ -118,7 +115,7 @@ class BrandsSliderFragment : BaseHiddenFragment() {
     }
 
     private fun updateView(brandUIList: List<BrandUI>) {
-        val diffUtil = BrandSliderDiffUtilCallback(
+        val diffUtil = BrandDiffUtilCallback(
             oldList = brandsSliderAdapter.brandUIList,
             newList = brandUIList
         )

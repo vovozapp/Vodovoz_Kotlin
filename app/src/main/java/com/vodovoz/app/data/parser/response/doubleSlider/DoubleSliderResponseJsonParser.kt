@@ -25,7 +25,6 @@ object DoubleSliderResponseJsonParser {
 
     fun ResponseBody.parseTopSliderResponse(): ResponseEntity<List<CategoryDetailEntity>> {
         val responseJson = JSONObject(string())
-        Log.i(LogSettings.LOCAL_DATA, responseJson.toString())
         return when(responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 responseJson.getJSONObject("RAZDEL_VERH")

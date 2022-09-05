@@ -8,9 +8,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.vodovoz.app.databinding.FragmentSliderPromotionBinding
 import com.vodovoz.app.ui.adapter.PromotionsSliderAdapter
 import com.vodovoz.app.ui.base.BaseHiddenFragment
-import com.vodovoz.app.ui.interfaces.IOnProductClick
-import com.vodovoz.app.ui.interfaces.IOnPromotionClick
-import com.vodovoz.app.ui.interfaces.IOnShowAllPromotionsClick
+import com.vodovoz.app.ui.interfaces.*
 import com.vodovoz.app.ui.model.PromotionUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -24,6 +22,8 @@ class PromotionsSliderFragment : BaseHiddenFragment() {
     private lateinit var iOnPromotionClick: IOnPromotionClick
     private lateinit var iOnShowAllPromotionsClick: IOnShowAllPromotionsClick
     private lateinit var iOnProductClick: IOnProductClick
+    private lateinit var iOnFavoriteClick: IOnFavoriteClick
+    private lateinit var iOnChangeProductQuantity: IOnChangeProductQuantity
 
     private lateinit var binding: FragmentSliderPromotionBinding
 
@@ -74,20 +74,29 @@ class PromotionsSliderFragment : BaseHiddenFragment() {
         onPromotionClickSubject.subscribeBy { promotionId ->
             iOnPromotionClick.onPromotionClick(promotionId)
         }.addTo(compositeDisposable)
-
         onPromotionProductClickSubject.subscribeBy { productId ->
             iOnProductClick.onProductClick(productId)
+        }.addTo(compositeDisposable)
+        onChangeProductQuantitySubject.subscribeBy {
+            iOnChangeProductQuantity.onChangeProductQuantity(it)
+        }.addTo(compositeDisposable)
+        onFavoriteClickSubject.subscribeBy {
+            iOnFavoriteClick.onFavoriteClick(it)
         }.addTo(compositeDisposable)
     }
 
     fun initCallbacks(
         iOnPromotionClick: IOnPromotionClick,
         iOnProductClick: IOnProductClick,
-        iOnShowAllPromotionsClick: IOnShowAllPromotionsClick
+        iOnShowAllPromotionsClick: IOnShowAllPromotionsClick,
+        iOnChangeProductQuantity: IOnChangeProductQuantity,
+        iOnFavoriteClick: IOnFavoriteClick
     ) {
         this.iOnPromotionClick = iOnPromotionClick
         this.iOnProductClick = iOnProductClick
         this.iOnShowAllPromotionsClick = iOnShowAllPromotionsClick
+        this.iOnFavoriteClick = iOnFavoriteClick
+        this.iOnChangeProductQuantity = iOnChangeProductQuantity
     }
 
     fun updateData(promotionsSliderBundleUI: PromotionsSliderBundleUI) {

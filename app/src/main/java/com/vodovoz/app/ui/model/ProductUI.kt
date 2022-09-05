@@ -1,69 +1,29 @@
 package com.vodovoz.app.ui.model
 
-import android.os.Parcel
+import kotlinx.parcelize.Parcelize
 import android.os.Parcelable
 import com.vodovoz.app.data.model.common.PriceEntity
+import com.vodovoz.app.data.model.common.ProductEntity
 
+@Parcelize
 data class ProductUI(
-    val id: Long = 0,
-    val name: String = "",
-    var detailPicture: String = "",
-    var isFavorite: Boolean = false,
+    val id: Long,
+    val name: String,
+    var detailPicture: String,
+    var isFavorite: Boolean,
+    var leftItems: Int,
+    val pricePerUnit: Int,
     val priceList: List<PriceUI>,
-    val status: String = "",
-    val statusColor: String = "",
-    val rating: Double = 0.0,
+    val status: String,
+    val statusColor: String,
+    val rating: Double,
+    val isBottle: Boolean,
+    val isGift: Boolean,
+    val commentAmount: String,
     var cartQuantity: Int = 0,
     var orderQuantity: Int = 0,
-    val isCanReturnBottles: Boolean = false,
-    val commentAmount: String = "",
-    val detailPictureList: List<String>
-) : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readLong(),
-        parcel.readString()!!,
-        parcel.readString()!!,
-        parcel.readByte() != 0.toByte(),
-        TODO("priceList"),
-        parcel.readString()!!,
-        parcel.readString()!!,
-        parcel.readDouble(),
-        parcel.readInt(),
-        parcel.readInt(),
-        parcel.readByte() != 0.toByte(),
-        parcel.readString()!!,
-        parcel.createStringArrayList()!!) {
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeLong(id)
-        parcel.writeString(name)
-        parcel.writeString(detailPicture)
-        parcel.writeByte(if (isFavorite) 1 else 0)
-        parcel.writeString(status)
-        parcel.writeString(statusColor)
-        parcel.writeDouble(rating)
-        parcel.writeInt(cartQuantity)
-        parcel.writeInt(orderQuantity)
-        parcel.writeByte(if (isCanReturnBottles) 1 else 0)
-        parcel.writeString(commentAmount)
-        parcel.writeStringList(detailPictureList)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<ProductUI> {
-        override fun createFromParcel(parcel: Parcel): ProductUI {
-            return ProductUI(parcel)
-        }
-
-        override fun newArray(size: Int): Array<ProductUI?> {
-            return arrayOfNulls(size)
-        }
-    }
-
-
-}
+    val depositPrice: Int = 0,
+    val detailPictureList: List<String> = listOf(),
+    val replacementProductUIList: List<ProductUI> = listOf()
+) : Parcelable
 

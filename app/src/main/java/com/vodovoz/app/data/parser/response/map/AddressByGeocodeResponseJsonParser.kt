@@ -11,23 +11,18 @@ object AddressByGeocodeResponseJsonParser {
 
     fun ResponseBody.parseAddressByGeocodeResponse(): ResponseEntity<AddressEntity> {
         val responseJson = JSONObject(string())
-        Log.i(LogSettings.ID_LOG, "0")
         return ResponseEntity.Success(responseJson.getJSONObject("response").parseAddressEntity())
     }
 
     private fun JSONObject.parseAddressEntity(): AddressEntity {
         if (has("GeoObjectCollection")) {
-            Log.i(LogSettings.ID_LOG, "1")
             if (getJSONObject("GeoObjectCollection").has("featureMember")) {
-                Log.i(LogSettings.ID_LOG, "2")
                 if (getJSONObject("GeoObjectCollection").getJSONArray("featureMember").length() != 0) {
-                    Log.i(LogSettings.ID_LOG, "3")
                     if (getJSONObject("GeoObjectCollection")
                             .getJSONArray("featureMember")
                             .getJSONObject(0)
                             .has("GeoObject")
                     ) {
-                        Log.i(LogSettings.ID_LOG, "4")
                         if (getJSONObject("GeoObjectCollection")
                                 .getJSONArray("featureMember")
                                 .getJSONObject(0)
@@ -35,7 +30,6 @@ object AddressByGeocodeResponseJsonParser {
                                 .getJSONObject("metaDataProperty")
                                 .has("GeocoderMetaData")
                         ) {
-                            Log.i(LogSettings.ID_LOG, "5")
                             if (getJSONObject("GeoObjectCollection")
                                     .getJSONArray("featureMember")
                                     .getJSONObject(0)
@@ -44,7 +38,6 @@ object AddressByGeocodeResponseJsonParser {
                                     .getJSONObject("GeocoderMetaData")
                                     .has("Address")
                             ) {
-                                Log.i(LogSettings.ID_LOG, "6")
                                 if (getJSONObject("GeoObjectCollection")
                                         .getJSONArray("featureMember")
                                         .getJSONObject(0)
@@ -54,7 +47,6 @@ object AddressByGeocodeResponseJsonParser {
                                         .getJSONObject("Address")
                                         .has("Components")
                                 ) {
-                                    Log.i(LogSettings.ID_LOG, "7")
                                     val addressComponentList = getJSONObject("GeoObjectCollection")
                                         .getJSONArray("featureMember")
                                         .getJSONObject(0)
@@ -73,7 +65,6 @@ object AddressByGeocodeResponseJsonParser {
                                         .getJSONObject("GeocoderMetaData")
                                         .getString("text")
 
-                                    Log.i(LogSettings.ID_LOG, "8")
                                     return AddressEntity(
                                         fullAddress = fullAddress,
                                         locality = addressComponentList.find { it.first == "locality" }?.second ?: "1",

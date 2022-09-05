@@ -20,13 +20,10 @@ object LocalSyncExtensions {
     }
 
     fun PagingData<ProductEntity>?.syncCartQuantity(localDataSource: LocalDataSource) {
-        Log.i(LogSettings.DEVELOP_LOG, "Start sync cart quantity")
         val localCart = localDataSource.fetchCart()
         this?.map { productEntity ->
-            Log.i(LogSettings.DEVELOP_LOG, "${productEntity.id}")
             localCart[productEntity.id]?.let { localQuantity ->
                 productEntity.cartQuantity = localQuantity
-                Log.i(LogSettings.DEVELOP_LOG, "Find ${productEntity.id} : $localQuantity")
             }
             productEntity
         }

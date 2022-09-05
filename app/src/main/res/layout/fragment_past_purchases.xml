@@ -82,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_8"
                     android:background="@color/white"
-                    android:translationZ="@dimen/card_elevation"/>
+                    android:translationZ="@dimen/elevation_3"/>
 
             </LinearLayout>
 

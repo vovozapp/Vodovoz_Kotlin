@@ -6,419 +6,364 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/whiteDark"
+    android:background="@color/dark_white"
     tools:context=".ui.fragment.cart.CartFragment">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:elevation="0dp">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:contentInsetStart="0dp">
-
-            <include
-                android:id="@+id/incAppBar"
-                layout="@layout/app_bar_without_back" />
-
-        </androidx.appcompat.widget.Toolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
+    <include
+        android:id="@+id/incAppBar"
+        layout="@layout/app_bar_without_back" />
 
     <LinearLayout
-        android:id="@+id/emptyCartContainer"
+        android:id="@+id/llEmptyCartContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="invisible"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginBottom="@dimen/space_8"
             android:background="@color/white"
-            android:translationZ="1dp"
             android:gravity="center"
             android:orientation="vertical">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/appCompatImageView"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/png_cart"
-                app:tint="@color/bluePrimary"/>
+                android:layout_marginBottom="@dimen/space_8"
+                app:layout_constraintBottom_toTopOf="@+id/appCompatTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:tint="@color/bluePrimary" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/appCompatTextView"
+                style="@style/TextViewMediumBlackBold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/rotonda_normal"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/blackTextPrimary"
-                android:padding="@dimen/space_8"
-                android:text="Корзина пуста" />
+                android:text="Корзина пуста"
+                app:layout_constraintBottom_toTopOf="@+id/btnGoToCatalog"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextViewNormalGray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/rotonda_normal"
-                android:textSize="14sp"
-                android:textColor="@color/blackTextLight"
-                android:padding="@dimen/space_8"
-                android:text="Положите товар в корзину чтобы его купить" />
+                android:layout_marginTop="@dimen/space_4"
+                android:text="Положите товар в корзину чтобы его купить"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView" />
 
-            <View
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnGoToCatalog"
+                style="@style/BlueButton"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-
-            <TextView
-                android:id="@+id/goToCatalog"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:background="@drawable/bkg_button_blue_rect_disabled"
+                android:layout_height="@dimen/button_normal_height"
                 android:layout_margin="@dimen/space_16"
-                android:fontFamily="@font/rotonda_normal"
-                android:textStyle="bold"
-                android:textSize="16sp"
                 android:text="Перейти к покупкам"
-                android:textColor="@color/white"
-                android:gravity="center"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/bestForYouProductSliderFragment"
+            android:id="@+id/fcvBestForYouProductSliderFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_8"
-            android:translationZ="1dp"/>
+            android:paddingBottom="@dimen/space_8"/>
 
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/cartContainer"
+        android:id="@+id/rlCartContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.core.widget.NestedScrollView
-            android:id="@+id/cartScrollContainer"
+            android:id="@+id/nsvCartScrollContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/buttonsContainer">
+            android:layout_above="@id/llButtonsContainer">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/giftMessage"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvGiftMessage"
+                    style="@style/TextViewNormalBlack"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/space_16"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:paddingVertical="@dimen/space_8"
                     android:background="@color/white"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:textSize="16sp"
-                    android:textColor="@color/blackTextPrimary"
                     tools:text="Для получения более интересного подарка осталось 984 Р" />
 
                 <LinearLayout
-                    android:id="@+id/notAvailableProductsContainer"
+                    android:id="@+id/llNotAvailableProductsContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_8"
-                        android:fontFamily="@font/rotonda_normal"
+                        style="@style/TextViewNormalBlackBold"
+                        android:layout_height="@dimen/field_height"
                         android:paddingStart="@dimen/space_16"
                         android:paddingEnd="@dimen/space_16"
-                        android:text="Нет в наличии"
-                        android:paddingTop="@dimen/space_8"
-                        android:paddingBottom="@dimen/space_8"
-                        android:textColor="@color/blackTextPrimary"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical"
+                        android:text="Нет в наличии"/>
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/notAvailableProductRecycler"
+                        android:id="@+id/rvNotAvailableProductRecycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_8"
-                        android:layout_marginBottom="@dimen/space_8"
-                        android:background="@color/white"
-                        android:translationZ="1dp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/availableProductsContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda_normal"
-                        android:paddingStart="@dimen/space_16"
-                        android:paddingEnd="@dimen/space_16"
-                        android:paddingTop="@dimen/space_8"
-                        android:paddingBottom="@dimen/space_8"
-                        android:text="Товары в корзине"
-                        android:textColor="@color/blackTextPrimary"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/availableProductRecycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_8"
                         android:background="@color/white" />
 
-                    <LinearLayout
-                        android:id="@+id/isReturnBottlesContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:background="@color/white"
-                        android:layout_marginBottom="@dimen/space_8"
-                        android:translationZ="1dp">
-
-                        <TextView
-                            android:id="@+id/name"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColor="@color/blackTextPrimary"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:padding="@dimen/space_16"
-                            android:fontFamily="@font/rotonda_normal"
-                            android:text="Будете ли вы возвращать пустые бутылки?" />
-
-                        <CheckBox
-                            android:id="@+id/isReturnBottles"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                    </LinearLayout>
-
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/totalContainer"
+                    android:id="@+id/llAvailableProductsContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <TextView
+                        style="@style/TextViewNormalBlackBold"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/field_height"
+                        android:fontFamily="@font/rotonda_normal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="@dimen/space_16"
+                        android:text="Товары в корзине" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvAvailableProductRecycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda_normal"
-                        android:paddingStart="@dimen/space_16"
-                        android:paddingEnd="@dimen/space_16"
-                        android:paddingTop="@dimen/space_8"
-                        android:paddingBottom="@dimen/space_8"
-                        android:text="Промокод"
-                        android:textColor="@color/blackTextPrimary"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:background="@color/white" />
 
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/llReturnBottlesContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/space_8"
-                        android:padding="@dimen/space_16"
+                        android:background="@color/white">
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:id="@+id/mdAboveReturnBottlesLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:dividerColor="@color/divider_color"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvReturnBottles"
+                            style="@style/TextViewNormalGray"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/space_16"
+                            android:text="Будете ли вы возвращать пустые бутылки?"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/cbReturnBottles"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/cbReturnBottles"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rlChooseBottleBtnContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white">
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btnChooseBottle"
+                            style="@style/BlueButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/button_small_height"
+                            android:layout_marginHorizontal="@dimen/space_16"
+                            android:layout_marginTop="@dimen/space_8"
+                            android:layout_marginBottom="@dimen/space_16"
+                            android:text="Выберите бренд бутыли" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llTotalContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewNormalBlackBold"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/field_height"
+                        android:paddingHorizontal="@dimen/space_16"
+                        android:gravity="center_vertical"
+                        android:text="Промокод" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/field_height"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="@dimen/space_16"
                         android:background="@color/white"
                         android:gravity="center_vertical">
 
-                        <EditText
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/etCoupon"
+                            style="@style/EditTextViewNormalGray"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Введите промокод"
-                            android:fontFamily="@font/rotonda_normal"
-                            android:textSize="14sp"
-                            android:textColor="@color/blackTextLight"
+                            android:hint="Введите промокод"
                             android:background="@null"/>
 
-                        <TextView
-                            android:id="@+id/applyPromoCode"
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvApplyPromoCode"
+                            style="@style/TextViewNormalBlue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Применить"
-                            android:fontFamily="@font/rotonda_normal"
-                            android:textSize="14sp"
-                            android:textColor="@color/bluePrimary"
                             android:background="@null"/>
 
                     </LinearLayout>
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewNormalBlackBold"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda_normal"
-                        android:padding="@dimen/space_16"
-                        android:text="Стоимость без учета доставки"
-                        android:textColor="@color/blackTextPrimary"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:layout_height="@dimen/field_height"
+                        android:paddingHorizontal="@dimen/space_16"
+                        android:gravity="center_vertical"
+                        android:text="Стоимость без учета доставки" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/field_height"
                         android:orientation="horizontal"
-                        android:paddingTop="@dimen/space_16"
-                        android:paddingStart="@dimen/space_16"
-                        android:paddingEnd="@dimen/space_16"
-                        android:paddingBottom="@dimen/space_8"
+                        android:paddingHorizontal="@dimen/space_16"
                         android:background="@color/white"
                         android:gravity="center_vertical">
 
-                        <TextView
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/TextViewNormalBlack"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Стоимость товаров"
-                            android:fontFamily="@font/rotonda_normal"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/blackTextPrimary"
                             android:background="@color/white"/>
 
-                        <TextView
+                        <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tvFullPrice"
+                            style="@style/TextViewMediumBlackBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
-                            android:fontFamily="@font/rotonda_normal"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/blackTextPrimary"
                             android:background="@color/white"/>
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/field_height"
                         android:orientation="horizontal"
-                        android:paddingTop="@dimen/space_8"
-                        android:paddingBottom="@dimen/space_8"
-                        android:paddingStart="@dimen/space_16"
-                        android:paddingEnd="@dimen/space_16"
+                        android:paddingHorizontal="@dimen/space_16"
                         android:background="@color/white"
                         android:gravity="center_vertical">
 
-                        <TextView
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/TextViewNormalBlack"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Залог"
-                            android:fontFamily="@font/rotonda_normal"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/blackTextPrimary"
                             android:background="@color/white"/>
 
                         <TextView
-                            android:id="@+id/productsTotal"
+                            android:id="@+id/tvDepositPrice"
+                            style="@style/TextViewMediumBlackBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
-                            android:fontFamily="@font/rotonda_normal"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/blackTextPrimary"
                             android:background="@color/white"/>
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/field_height"
                         android:orientation="horizontal"
-                        android:paddingTop="@dimen/space_8"
-                        android:paddingBottom="@dimen/space_8"
-                        android:paddingStart="@dimen/space_16"
-                        android:paddingEnd="@dimen/space_16"
+                        android:paddingHorizontal="@dimen/space_16"
                         android:background="@color/white"
                         android:gravity="center_vertical">
 
-                        <TextView
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/TextViewNormalBlack"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Скидка по акциям"
-                            android:fontFamily="@font/rotonda_normal"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/blackTextPrimary"
                             android:background="@color/white"/>
 
                         <TextView
                             android:id="@+id/tvDiscountPrice"
+                            style="@style/TextViewMediumBlackBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
-                            android:fontFamily="@font/rotonda_normal"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/blackTextPrimary"
                             android:background="@color/white"/>
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/field_height"
                         android:orientation="horizontal"
-                        android:paddingTop="@dimen/space_8"
-                        android:paddingBottom="@dimen/space_16"
-                        android:paddingStart="@dimen/space_16"
-                        android:paddingEnd="@dimen/space_16"
+                        android:paddingHorizontal="@dimen/space_16"
                         android:background="@color/white"
                         android:gravity="center_vertical">
 
-                        <TextView
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/TextViewNormalBlack"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Итого"
-                            android:fontFamily="@font/rotonda_normal"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/blackTextPrimary"
                             android:background="@color/white"/>
 
                         <TextView
                             android:id="@+id/tvTotalPrice"
+                            style="@style/TextViewMediumBlackBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
-                            android:fontFamily="@font/rotonda_normal"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/blackTextPrimary"
                             android:background="@color/white"/>
 
                     </LinearLayout>
@@ -430,45 +375,44 @@
         </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
-            android:id="@+id/buttonsContainer"
+            android:id="@+id/llButtonsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@color/white"
-            android:padding="@dimen/space_8"
-            android:translationZ="5dp"
+            android:translationZ="@dimen/elevation_3"
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/showGifts"
+                android:id="@+id/llShowGifts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/space_16"
+                android:layout_marginTop="@dimen/space_4"
                 android:gravity="center">
 
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/_35sdp"
+                    android:layout_height="@dimen/_35sdp"
                     android:src="@drawable/ic_pointer_top"
                     app:tint="@color/green"
                     tools:ignore="ContentDescription" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/TextViewMediumGreenBold"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:fontFamily="@font/rotonda_normal"
                     android:gravity="center"
                     android:text="Ваши подарки"
-                    android:textColor="@color/green"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
                     android:paddingStart="@dimen/space_16"
                     android:paddingEnd="@dimen/space_16"/>
 
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/_35sdp"
+                    android:layout_height="@dimen/_35sdp"
                     android:src="@drawable/ic_pointer_top"
                     app:tint="@color/green"
                     tools:ignore="ContentDescription" />
@@ -476,10 +420,13 @@
             </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/regOrder"
+                android:id="@+id/btnRegOrder"
                 style="@style/GreenButton"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/button_normal_height" />
+                android:layout_height="@dimen/button_normal_height"
+                android:layout_marginHorizontal="@dimen/space_16"
+                android:layout_marginTop="@dimen/space_8"
+                android:layout_marginBottom="@dimen/space_16"/>
 
         </LinearLayout>
 

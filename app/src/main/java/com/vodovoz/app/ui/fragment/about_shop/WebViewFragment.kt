@@ -60,17 +60,6 @@ class WebViewFragment : ViewStateBaseFragment() {
         onStateSuccess()
         binding.svContentContainer.setScrollElevation(binding.appbar)
         binding.wvContent.settings.javaScriptEnabled = true
-        binding.wvContent.webViewClient = object : WebViewClient() {
-            override fun onReceivedError(
-                view: WebView?,
-                request: WebResourceRequest?,
-                error: WebResourceError?,
-            ) {
-                super.onReceivedError(view, request, error)
-                onStateError("Ошибка")
-            }
-        }
-
         binding.wvContent.loadUrl(url)
     }
 

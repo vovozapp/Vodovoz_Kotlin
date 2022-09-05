@@ -13,9 +13,12 @@ import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class PagingProductsAdapter(
-    private val onProductClickSubject: PublishSubject<Long>,
-    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
-    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
+    private val onProductClick: (Long) -> Unit,
+    private val onChangeCartQuantity: (Long, Int) -> Unit,
+    private val onChangeFavoriteStatus: (Long, Boolean) -> Unit,
+    private val onNotifyWhenBeAvailable: (Long) -> Unit,
+    private val onNotAvailableMore: () -> Unit,
+    private val isCart: Boolean = false,
     private val productDiffItemCallback: ProductDiffItemCallback,
     var viewMode: ViewMode
 ) : PagingDataAdapter<ProductUI, RecyclerView.ViewHolder>(productDiffItemCallback) {
@@ -27,15 +30,13 @@ class PagingProductsAdapter(
         viewType: Int
     ) = when (viewType) {
         ViewMode.LIST.code -> ProductListViewHolder(
-            binding = ViewHolderProductListBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            ),
-            context = parent.context,
-            onProductClickSubject = onProductClickSubject,
-            onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-            onFavoriteClickSubject = onFavoriteClickSubject
+            binding = ViewHolderProductListBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            isCartItem = isCart,
+            onProductClick = onProductClick,
+            onChangeCartQuantity = onChangeCartQuantity,
+            onChangeFavoriteStatus = onChangeFavoriteStatus,
+            onNotifyWhenBeAvailable = onNotifyWhenBeAvailable,
+            onNotAvailableMore = onNotAvailableMore
         )
         ViewMode.GRID.code -> ProductGridViewHolder(
             binding = ViewHolderProductGridBinding.inflate(
@@ -43,10 +44,11 @@ class PagingProductsAdapter(
                 parent,
                 false
             ),
-            context = parent.context,
-            onProductClickSubject = onProductClickSubject,
-            onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-            onFavoriteClickSubject = onFavoriteClickSubject
+            onProductClick = onProductClick,
+            onChangeCartQuantity = onChangeCartQuantity,
+            onChangeFavoriteStatus = onChangeFavoriteStatus,
+            onNotifyWhenBeAvailable = onNotifyWhenBeAvailable,
+            onNotAvailableMore = onNotAvailableMore
         )
         else -> throw Exception()
     }

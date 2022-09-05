@@ -29,6 +29,7 @@ import com.vodovoz.app.ui.base.loadStateAdapter.LoadStateAdapter
 import com.vodovoz.app.ui.decoration.ProductsFiltersMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
+import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.FilterValueUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
@@ -61,9 +62,17 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
     private val onBrandClickSubject: PublishSubject<FilterValueUI> = PublishSubject.create()
 
     private var productAdapter: PagingProductsAdapter = PagingProductsAdapter(
-        onProductClickSubject = onProductClickSubject,
-        onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-        onFavoriteClickSubject = onFavoriteClickSubject,
+        onProductClick = {
+            findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToProductDetailFragment(it))
+        },
+        onChangeFavoriteStatus = { productId, status ->
+            viewModel.changeFavoriteStatus(productId, status)
+        },
+        onChangeCartQuantity = { productId, quantity ->
+            viewModel.changeCart(productId, quantity)
+        },
+        onNotAvailableMore = {},
+        onNotifyWhenBeAvailable = {},
         productDiffItemCallback = ProductDiffItemCallback(),
         viewMode = viewMode
     )
@@ -342,10 +351,18 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
 
     private fun updatePager() {
         productAdapter = PagingProductsAdapter(
-            onProductClickSubject = onProductClickSubject,
+            onProductClick = {
+                findNavController().navigate(ProfileFragmentDirections.actionToProductDetailFragment(it))
+            },
+            onChangeFavoriteStatus = { productId, status ->
+                viewModel.changeFavoriteStatus(productId, status)
+            },
+            onChangeCartQuantity = { productId, quantity ->
+                viewModel.changeCart(productId, quantity)
+            },
+            onNotAvailableMore = {},
+            onNotifyWhenBeAvailable = {},
             productDiffItemCallback = ProductDiffItemCallback(),
-            onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-            onFavoriteClickSubject = onFavoriteClickSubject,
             viewMode = viewMode
         )
 

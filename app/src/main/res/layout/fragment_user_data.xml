@@ -91,7 +91,7 @@
                     android:gravity="center_vertical"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:background="@color/whiteDark"
+                    android:background="@color/dark_white"
                     android:paddingStart="@dimen/space_16"
                     android:paddingEnd="@dimen/space_16"
                     android:text="Личные данные" />
@@ -305,7 +305,7 @@
                     android:gravity="center_vertical"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:background="@color/whiteDark"
+                    android:background="@color/dark_white"
                     android:paddingStart="@dimen/space_16"
                     android:paddingEnd="@dimen/space_16"
                     android:text="Изменение пароля" />

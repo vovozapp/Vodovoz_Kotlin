@@ -11,7 +11,7 @@
         android:id="@+id/profileContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -91,7 +91,7 @@
                 android:id="@+id/orderRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/whiteDark"/>
+                android:background="@color/dark_white"/>
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/ordersSliderFragment"
@@ -143,7 +143,7 @@
                 android:gravity="center_vertical"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:background="@color/whiteDark"
+                android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Покупки"
@@ -192,13 +192,14 @@
                 android:gravity="center_vertical"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:background="@color/whiteDark"
+                android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Услуги"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <TextView
+                android:id="@+id/tvRepair"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:paddingTop="@dimen/space_8"
@@ -214,6 +215,7 @@
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <TextView
+                android:id="@+id/tvSanitar"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:paddingTop="@dimen/space_8"
@@ -239,7 +241,7 @@
                 android:gravity="center_vertical"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:background="@color/whiteDark"
+                android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Личная информация"
@@ -288,7 +290,7 @@
                 android:gravity="center_vertical"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:background="@color/whiteDark"
+                android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Акции и подписки"
@@ -320,7 +322,7 @@
                 android:gravity="center_vertical"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:background="@color/whiteDark"
+                android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Популярные вопросы"
@@ -384,7 +386,7 @@
                 android:gravity="center_vertical"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:background="@color/whiteDark"
+                android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Приложения"
@@ -413,7 +415,7 @@
                 android:gravity="center"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:background="@color/whiteDark"
+                android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Выйти из аккаунта"/>
@@ -453,60 +455,59 @@
 
     </ScrollView>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/noLoginContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible">
+        android:visibility="visible">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="250dp"
             android:layout_height="300dp"
-            android:layout_above="@id/title"
             android:layout_centerHorizontal="true"
             android:src="@drawable/png_large_avatar"
+            app:layout_constraintBottom_toTopOf="@+id/tvTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription" />
 
-        <TextView
-            android:id="@+id/title"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvTitle"
+            style="@style/TextViewMediumBlackBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:fontFamily="@font/rotonda_normal"
             android:text="Вы не авторизованы"
-            android:textColor="@color/blackTextPrimary"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvSubTitle"
+            style="@style/TextViewNormalGray"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/title"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="@dimen/space_8"
-            android:fontFamily="@font/rotonda_normal"
             android:gravity="center"
+            android:layout_marginTop="@dimen/space_4"
             android:text="Войти под своим аккаунтом или\n зарегистрируйтесь"
-            android:textColor="@color/blackTextLight" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
-        <TextView
-            android:id="@+id/loginOrRegister"
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnLoginOrReg"
+            style="@style/BlueButton"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="@dimen/space_16"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="@dimen/space_16"
-            android:layout_marginBottom="@dimen/space_16"
-            android:background="@drawable/bkg_button_blue_rect_disabled"
-            android:fontFamily="@font/rotonda_normal"
-            android:gravity="center"
+            android:layout_height="@dimen/button_normal_height"
             android:text="Войти или зарегистрироваться"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:layout_margin="@dimen/space_16"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </RelativeLayout>
 

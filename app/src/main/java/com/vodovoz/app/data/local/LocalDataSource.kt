@@ -10,6 +10,12 @@ interface LocalDataSource {
     fun fetchUserId(): Long?
     fun updateUserId(userId: Long)
     fun removeUserId()
+    fun updateLastRequestCodeDate(time: Long)
+    fun fetchLastRequestCodeDate(): Long
+    fun updateLastRequestCodeTimeOut(time: Int)
+    fun fetchLastRequestCodeTimeOut(): Int
+    fun updateLastAuthPhone(phone: String)
+    fun fetchLastAuthPhone(): String
 
     fun isAlreadyLogin(): Boolean
 

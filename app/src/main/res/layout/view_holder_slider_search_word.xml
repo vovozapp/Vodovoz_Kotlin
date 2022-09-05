@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--new-->
-<androidx.appcompat.widget.AppCompatTextView
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tvWord"
-    style="@style/TextViewNormalGray"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/bkg_rectangle_light_gray"
-    android:paddingVertical="@dimen/space_8"
-    android:paddingHorizontal="@dimen/space_16"
-    android:translationZ="@dimen/card_elevation"
-    tools:text="Природная вода"/>
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="@dimen/corner_5"
+    app:cardElevation="@dimen/elevation_1">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvWord"
+        style="@style/TextViewNormalGray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/space_8"
+        android:paddingHorizontal="@dimen/space_16"
+        android:translationZ="@dimen/elevation_3"
+        tools:text="Природная вода"/>
+
+</androidx.cardview.widget.CardView>

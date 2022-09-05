@@ -83,7 +83,6 @@ class AddAddressViewModel(
 
 
     fun updateArgs(addressUI: AddressUI?) {
-        Log.d(LogSettings.MAP_LOG, addressUI?.id.toString())
         this.addressUI = addressUI
         addressUI?.let { addressUIMLD.value = it }
     }
@@ -126,7 +125,6 @@ class AddAddressViewModel(
 
     private fun getSingle(id: Long?) = when(id) {
         null, 0L -> {
-            Log.d(LogSettings.MAP_LOG, "Null")
             dataRepository
                 .addAddress(
                     locality = locality,
@@ -140,7 +138,6 @@ class AddAddressViewModel(
                 )
         }
         else -> {
-            Log.d(LogSettings.MAP_LOG, "Else ${id}")
             dataRepository
                 .updateAddress(
                     addressId = addressUI?.id,

@@ -121,7 +121,6 @@ class HistorySliderFragment : BaseHiddenFragment() {
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
-        Log.i(LogSettings.REQ_RES_LOG, "onStop")
     }
 
 }

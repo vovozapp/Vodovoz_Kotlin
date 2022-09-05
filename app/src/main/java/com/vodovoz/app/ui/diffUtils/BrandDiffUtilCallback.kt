@@ -3,7 +3,7 @@ package com.vodovoz.app.ui.diffUtils
 import androidx.recyclerview.widget.DiffUtil
 import com.vodovoz.app.ui.model.BrandUI
 
-class BrandSliderDiffUtilCallback(
+class BrandDiffUtilCallback(
     private val oldList: List<BrandUI>,
     private val newList: List<BrandUI>
 ) : DiffUtil.Callback() {

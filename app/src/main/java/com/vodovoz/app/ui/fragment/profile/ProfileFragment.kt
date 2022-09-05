@@ -36,15 +36,18 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
     private lateinit var binding: FragmentProfileBinding
     private lateinit var viewModel: ProfileViewModel
 
-    private val compositeDisposable = CompositeDisposable()
-    private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
-    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
-    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
-
     private val gridProductsAdapter = GridProductsAdapter(
-        onProductClickSubject = onProductClickSubject,
-        onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-        onFavoriteClickSubject = onFavoriteClickSubject
+        onProductClick = {
+            findNavController().navigate(ProfileFragmentDirections.actionToProductDetailFragment(it))
+        },
+        onChangeFavoriteStatus = { productId, status ->
+            viewModel.changeFavoriteStatus(productId, status)
+        },
+        onChangeCartQuantity = { productId, quantity ->
+            viewModel.changeCart(productId, quantity)
+        },
+        onNotAvailableMore = {},
+        onNotifyWhenBeAvailable = {}
     )
 
     private val ordersSliderFragment: OrdersSliderFragment by lazy {
@@ -62,7 +65,6 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
-        subscribeSubjects()
     }
 
     private fun initViewModel() {
@@ -71,18 +73,6 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
             (requireActivity().application as VodovozApplication).viewModelFactory
         )[ProfileViewModel::class.java]
         viewModel.isAlreadyLogin()
-    }
-
-    private fun subscribeSubjects() {
-        onProductClickSubject.subscribeBy { productId ->
-            findNavController().navigate(ProfileFragmentDirections.actionToProductDetailFragment(productId))
-        }.addTo(compositeDisposable)
-        onChangeProductQuantitySubject.subscribeBy { pair ->
-            viewModel.changeCart(pair.first, pair.second)
-        }.addTo(compositeDisposable)
-        onFavoriteClickSubject.subscribeBy { pair ->
-            viewModel.changeFavoriteStatus(pair.first, pair.second)
-        }.addTo(compositeDisposable)
     }
 
     override fun setContentView(
@@ -154,7 +144,7 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
             header.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionToUserDataFragment())
             }
-            loginOrRegister.setOnClickListener {
+            btnLoginOrReg.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionToLoginFragment())
             }
             addresses.setOnClickListener {
@@ -168,22 +158,34 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
             }
             binding.deliveryPrice.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
-                    "Стоимость доставки",
-                    ApiConfig.ABOUT_DELIVERY_URL
+                    ApiConfig.ABOUT_DELIVERY_URL,
+                    "Стоимость доставки"
+                ))
+            }
+            binding.tvRepair.setOnClickListener {
+                findNavController().navigate(ProfileFragmentDirections.actionToServiceDetailFragment(
+                    listOf("sanitar", "remont").toTypedArray(),
+                    "remont"
+                ))
+            }
+            binding.tvSanitar.setOnClickListener {
+                findNavController().navigate(ProfileFragmentDirections.actionToServiceDetailFragment(
+                    listOf("sanitar", "remont").toTypedArray(),
+                    "sanitar"
                 ))
             }
             binding.pastPurchases.setOnClickListener { findNavController().navigate(ProfileFragmentDirections.actionToPastPurchasesFragment()) }
             binding.questionnaires.setOnClickListener { findNavController().navigate(ProfileFragmentDirections.actionToQuestionnairesFragment()) }
             binding.aboutDelivery.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
-                    "Стоимость доставки",
-                    ApiConfig.ABOUT_DELIVERY_URL
+                    ApiConfig.ABOUT_DELIVERY_URL,
+                    "Стоимость доставки"
                 ))
             }
             binding.aboutPay.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
-                    "Об оплате",
-                    ApiConfig.ABOUT_PAY_URL
+                    ApiConfig.ABOUT_PAY_URL,
+                    "Об оплате"
                 ))
             }
             binding.aboutApp.setOnClickListener {
@@ -194,9 +196,9 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
 
     private fun initViewedProductsSlider() {
         viewedProductsSliderFragment.initCallbacks(
-            iOnProductClick = { productId -> onProductClickSubject.onNext(productId) },
-            iOnChangeProductQuantity = { pair -> onChangeProductQuantitySubject.onNext(pair) },
-            iOnFavoriteClick = { pair -> onFavoriteClickSubject.onNext(pair) },
+            iOnProductClick = { productId -> findNavController().navigate(ProfileFragmentDirections.actionToProductDetailFragment(productId)) },
+            iOnChangeProductQuantity = { pair -> viewModel.changeCart(pair.first, pair.second) },
+            iOnFavoriteClick = { pair -> viewModel.changeFavoriteStatus(pair.first, pair.second) },
             iOnShowAllProductsClick = {}
         )
 
@@ -242,7 +244,6 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
         }
 
         viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
-            Log.i(LogSettings.LOCAL_DATA, "${state::class.simpleName}")
             when(state) {
                 is ViewState.Loading -> onStateLoading()
                 is ViewState.Error -> onStateError(state.errorMessage)
@@ -271,9 +272,5 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
         viewModel.isAlreadyLogin()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.clear()
-    }
 
 }

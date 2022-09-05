@@ -9,6 +9,7 @@ object CartBundleMapper {
 
     fun CartBundleEntity.mapUoUI() = CartBundleUI(
         giftMessage = giftMessage,
+        infoMessage = infoMessage,
         availableProductUIList = availableProductEntityList.mapToUI(),
         notAvailableProductUIList = notAvailableProductEntityList.mapToUI(),
         giftProductUIList = giftProductEntityList.mapToUI(),

@@ -56,7 +56,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_30sdp"
             android:layout_gravity="center_vertical"
-            android:translationZ="@dimen/_1sdp"
             android:visibility="gone"
             android:background="@drawable/bkg_rectangle_light_gray">
 

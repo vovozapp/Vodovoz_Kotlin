@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentOrderDetailsBinding
@@ -25,6 +27,8 @@ import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.ProductDiffUtilCallback
 import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
+import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
+import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.model.OrderDetailsUI
 import com.vodovoz.app.ui.model.OrderStatusUI
 import com.vodovoz.app.ui.model.ProductUI
@@ -44,9 +48,17 @@ class OrderDetailsFragment : ViewStateBaseFragment() {
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
 
     private val linearProductsAdapter = LinearProductsAdapter(
-        onProductClickSubject = onProductClickSubject,
-        onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-        onFavoriteClickSubject = onFavoriteClickSubject
+        onProductClick = {
+            findNavController().navigate(OrderDetailsFragmentDirections.actionToProductDetailFragment(it))
+        },
+        onChangeFavoriteStatus = { productId, status ->
+            viewModel.changeFavoriteStatus(productId, status)
+        },
+        onChangeCartQuantity = { productId, quantity ->
+            viewModel.changeCart(productId, quantity)
+        },
+        onNotAvailableMore = {},
+        onNotifyWhenBeAvailable = {},
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,23 +110,18 @@ class OrderDetailsFragment : ViewStateBaseFragment() {
     }
 
     private fun initActionBar() {
-        (requireActivity() as AppCompatActivity).let { appCompatActivity ->
-            appCompatActivity.setSupportActionBar(binding.toolbar)
-            appCompatActivity.supportActionBar?.setDisplayShowHomeEnabled(true)
-            appCompatActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        }
-        binding.toolbar.setNavigationOnClickListener {
+        binding.imgBack.setOnClickListener {
             findNavController().popBackStack()
         }
-        binding.scrollContainer.setScrollElevation(binding.appBar)
+        binding.scrollContainer.setScrollElevation(binding.abAppBar)
     }
 
     private fun initProductsRecycler() {
         val space = resources.getDimension(R.dimen.space_16).toInt()
-        binding.productsRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.productsRecycler.adapter = linearProductsAdapter
-        binding.productsRecycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
-        binding.productsRecycler.addItemDecoration(
+        binding.rvProducts.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvProducts.adapter = linearProductsAdapter
+        binding.rvProducts.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        binding.rvProducts.addItemDecoration(
             object : RecyclerView.ItemDecoration() {override fun getItemOffsets(
                 outRect: Rect,
                 view: View,
@@ -131,12 +138,17 @@ class OrderDetailsFragment : ViewStateBaseFragment() {
     }
 
     private fun initButtons() {
-        binding.repeatOrder.setOnClickListener {
-            viewModel.repeatOrder()
-        }
-        binding.payOrder.setOnClickListener {
-            val openLinkIntent = Intent(Intent.ACTION_VIEW, Uri.parse(viewModel.orderDetailsUI.payUri))
-            requireActivity().startActivity(openLinkIntent)
+        binding.llRepeatOrder.setOnClickListener { viewModel.repeatOrder() }
+        binding.llPayOrder.setOnClickListener { binding.root.openLink(viewModel.orderDetailsUI.payUri) }
+        binding.tvCancelOrder.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setMessage("Вы уверены, что хотите отменить заказ?")
+                .setPositiveButton("Да") { dialog, _ ->
+                    viewModel.cancelOrder()
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
+                .show()
         }
     }
 
@@ -148,6 +160,19 @@ class OrderDetailsFragment : ViewStateBaseFragment() {
                 is ViewState.Loading -> onStateLoading()
                 is ViewState.Success -> onStateSuccess()
             }
+        }
+
+        viewModel.cancelOrderLD.observe(viewLifecycleOwner) { message ->
+            binding.llStatusContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), OrderStatusUI.CANCELED.color))
+            binding.llActionsContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), OrderStatusUI.CANCELED.color))
+            binding.imgStatus.setImageDrawable(ContextCompat.getDrawable(requireContext(), OrderStatusUI.CANCELED.image))
+            binding.tvStatus.text = "Отменен"
+            binding.tvCancelOrder.visibility = View.INVISIBLE
+            binding.llPayOrder.visibility = View.GONE
+            MaterialAlertDialogBuilder(requireContext())
+                .setMessage(message)
+                .setPositiveButton("Ок") { dialog, _ -> dialog.dismiss() }
+                .show()
         }
 
         viewModel.orderDetailsUILD.observe(viewLifecycleOwner) { orderDetailsUI ->
@@ -168,47 +193,52 @@ class OrderDetailsFragment : ViewStateBaseFragment() {
 
     private fun fillOrderData(orderDetailsUI: OrderDetailsUI) {
         with(binding) {
-            toolbar.title = StringBuilder()
+            binding.tvTitle.text = StringBuilder()
                 .append("Заказ от ")
                 .append(orderDetailsUI.dateOrder)
                 .toString()
-            toolbar.subtitle = StringBuilder()
+            binding.tvSubtitle.text = StringBuilder()
                 .append("№")
                 .append(orderDetailsUI.id)
                 .toString()
             when(orderDetailsUI.status) {
                 OrderStatusUI.COMPLETED,
-                OrderStatusUI.CANCELED -> binding.cancelOrder.visibility = View.INVISIBLE
-                else -> binding.cancelOrder.visibility = View.VISIBLE
+                OrderStatusUI.DELIVERED,
+                OrderStatusUI.CANCELED -> binding.tvCancelOrder.visibility = View.INVISIBLE
+                else -> binding.tvCancelOrder.visibility = View.VISIBLE
             }
             when(orderDetailsUI.isPayed) {
-                true -> binding.payStatusLabel.text = "Оплачен"
-                false -> binding.payStatusLabel.text = "Не оплачен"
+                true -> binding.tvPayStatus.text = "Оплачен"
+                false -> binding.tvPayStatus.text = "Не оплачен"
             }
             when(orderDetailsUI.payUri.isEmpty()) {
-                false ->binding.payOrder.visibility = View.VISIBLE
-                true -> binding.payOrder.visibility = View.GONE
+                false -> when(orderDetailsUI.status) {
+                    OrderStatusUI.COMPLETED,
+                    OrderStatusUI.CANCELED -> binding.llPayOrder.visibility = View.GONE
+                    else -> binding.llPayOrder.visibility = View.VISIBLE
+                }
+                true -> binding.llPayOrder.visibility = View.GONE
             }
 
-            statusContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), orderDetailsUI.status!!.color))
-            actionsContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), orderDetailsUI.status.color))
-            statusImage.setImageDrawable(ContextCompat.getDrawable(requireContext(), orderDetailsUI.status.image))
-            price.setPriceText(orderDetailsUI.totalPrice)
-            deliveryDate.text = orderDetailsUI.dateDelivery
-            deliveryInterval.text = orderDetailsUI.deliveryTimeInterval
-            payMethod.text = orderDetailsUI.payMethod
-            status.text = orderDetailsUI.status.statusName
-            status.setTextColor(ContextCompat.getColor(requireContext(), orderDetailsUI.status.color))
-            address.text = orderDetailsUI.address
-            receiverName.text = StringBuilder()
+            llStatusContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), orderDetailsUI.status!!.color))
+            llActionsContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), orderDetailsUI.status.color))
+            imgStatus.setImageDrawable(ContextCompat.getDrawable(requireContext(), orderDetailsUI.status.image))
+            tvTotalPriceHeader.setPriceText(orderDetailsUI.totalPrice)
+            tvShippingDate.text = orderDetailsUI.dateDelivery
+            tvShippingInterval.text = orderDetailsUI.deliveryTimeInterval
+            tvPayMethod.text = orderDetailsUI.payMethod
+            tvStatus.text = orderDetailsUI.status.statusName
+            tvStatus.setTextColor(ContextCompat.getColor(requireContext(), orderDetailsUI.status.color))
+            tvAddress.text = orderDetailsUI.address
+            tvConsumerName.text = StringBuilder()
                 .append(orderDetailsUI.userFirstName)
                 .append(" ")
                 .append(orderDetailsUI.userSecondName)
-            receiverPhone.text = orderDetailsUI.userPhone
-            productsPrice.setPriceText(orderDetailsUI.productsPrice)
-            depositPrice.setPriceText(orderDetailsUI.depositPrice)
-            deliveryPrice.setPriceText(orderDetailsUI.deliveryPrice)
-            total.setPriceText(orderDetailsUI.totalPrice)
+            tvConsumerPhone.text = orderDetailsUI.userPhone
+            tvProductsPrice.setPriceText(orderDetailsUI.productsPrice)
+            tvDepositPrice.setPriceText(orderDetailsUI.depositPrice)
+            tvShippingPrice.setPriceText(orderDetailsUI.deliveryPrice)
+            tvTotalPrice.setPriceText(orderDetailsUI.totalPrice)
         }
     }
 

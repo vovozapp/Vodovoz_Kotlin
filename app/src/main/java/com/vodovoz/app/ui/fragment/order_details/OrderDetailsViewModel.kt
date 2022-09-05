@@ -24,11 +24,15 @@ class OrderDetailsViewModel(
     private val orderDetailsUIMLD = MutableLiveData<OrderDetailsUI>()
     private val errorMLD = MutableLiveData<String>()
     private val showCartMLD = MutableLiveData<Boolean>()
+    private val messageMLD = MutableLiveData<String>()
+    private val cancelOrderMLD = MutableLiveData<String>()
 
     val viewStateLD: LiveData<ViewState> = viewStateMLD
     val orderDetailsUILD: LiveData<OrderDetailsUI> = orderDetailsUIMLD
     val errorLD: LiveData<String> = errorMLD
     val showCartLD: LiveData<Boolean> = showCartMLD
+    val messageLD: LiveData<String> = messageMLD
+    val cancelOrderLD: LiveData<String> = cancelOrderMLD
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -87,6 +91,24 @@ class OrderDetailsViewModel(
             ).addTo(compositeDisposable)
     }
 
+    fun cancelOrder() {
+        dataRepository
+            .cancelOrder(orderId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onSuccess = {
+                    when(it) {
+                        is ResponseEntity.Error -> errorMLD.value = it.errorMessage
+                        is ResponseEntity.Hide -> errorMLD.value = "Неизвестная ошибка!"
+                        is ResponseEntity.Success -> {
+                            cancelOrderMLD.value = it.data.toString()
+                        }
+                    }
+                },
+                onError = { errorMLD.value = it.message ?: "Неизвестная ошибка!"}
+            )
+    }
     fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
         when(isFavorite) {
             true -> dataRepository.addToFavorite(productId)
@@ -101,15 +123,11 @@ class OrderDetailsViewModel(
     }
 
     fun changeCart(productId: Long, quantity: Int) {
-        dataRepository.changeCart(
-            productId = productId,
-            quantity = quantity
-        ).subscribeBy(
-            onComplete = {},
-            onError = { throwable ->
-                errorMLD.value = throwable.message ?: "Неизвестная ошибка"
-            }
-        )
+        dataRepository
+            .changeCart(productId, quantity)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(onError = { errorMLD.value = it.message ?: "Неизвестная ошибка" })
     }
 
     override fun onCleared() {

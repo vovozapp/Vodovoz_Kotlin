@@ -123,10 +123,6 @@ class HomeViewModel(
         PublishSubject.create()
     private val commentsSliderUpdateSubject: PublishSubject<ViewState> = PublishSubject.create()
 
-    init {
-        Log.i(LogSettings.ID_LOG, "INIT VM")
-    }
-
     var isShowPopupNews = true
     private var isUpdateSuccess = false
 
@@ -226,7 +222,6 @@ class HomeViewModel(
                     }
                 },
                 onError = { throwable ->
-                    Log.i(LogSettings.ID_LOG, "ADVERTISING $throwable")
                     advertisingBannersSliderUpdateSubject.onNext(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
@@ -257,7 +252,6 @@ class HomeViewModel(
                     }
                 },
                 onError = { throwable ->
-                    Log.i(LogSettings.ID_LOG, "HISTORY $throwable")
                     historiesSliderUpdateSubject.onNext(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
@@ -288,7 +282,6 @@ class HomeViewModel(
                     }
                 },
                 onError = { throwable ->
-                    Log.i(LogSettings.ID_LOG, "POPULAR $throwable")
                     popularCategoriesSliderUpdateSubject.onNext(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
@@ -319,7 +312,6 @@ class HomeViewModel(
                     }
                 },
                 onError = { throwable ->
-                    Log.i(LogSettings.ID_LOG, "CATEGORY $throwable")
                     categoryBannersSliderUpdateSubject.onNext(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
@@ -350,7 +342,6 @@ class HomeViewModel(
                     }
                 },
                 onError = { throwable ->
-                    Log.i(LogSettings.ID_LOG, "DISCOUNT $throwable")
                     discountProductsSliderUpdateSubject.onNext(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
@@ -381,7 +372,6 @@ class HomeViewModel(
                     }
                 },
                 onError = { throwable ->
-                    Log.i(LogSettings.ID_LOG, "TOP $throwable")
                     topProductsSliderUpdateSubject.onNext(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
@@ -401,7 +391,6 @@ class HomeViewModel(
                             ordersSliderUpdateSubject.onNext(ViewState.Success())
                         }
                         is ResponseEntity.Error -> {
-                            Log.i(LogSettings.ID_LOG, "ORDERS ${response.errorMessage}")
                             ordersSliderHideMLD.value = true
                             ordersSliderUpdateSubject.onNext(ViewState.Error(response.errorMessage))
                         }
@@ -413,7 +402,6 @@ class HomeViewModel(
                     }
                 },
                 onError = { throwable ->
-                    Log.i(LogSettings.ID_LOG, "ORDER $throwable")
                     ordersSliderUpdateSubject.onNext(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
@@ -444,7 +432,6 @@ class HomeViewModel(
                     }
                 },
                 onError = { throwable ->
-                    Log.i(LogSettings.ID_LOG, "NOVELTIES $throwable")
                     noveltiesProductsSliderUpdateSubject.onNext(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
@@ -479,7 +466,6 @@ class HomeViewModel(
                     }
                 },
                 onError = { throwable ->
-                    Log.i(LogSettings.ID_LOG, "PROMOTION $throwable")
                     promotionsSliderUpdateSubject.onNext(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
@@ -510,7 +496,6 @@ class HomeViewModel(
                     }
                 },
                 onError = { throwable ->
-                    Log.i(LogSettings.ID_LOG, "BOTTOM $throwable")
                     bottomProductsSliderUpdateSubject.onNext(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
@@ -541,7 +526,6 @@ class HomeViewModel(
                     }
                 },
                 onError = { throwable ->
-                    Log.i(LogSettings.ID_LOG, "BRANDS $throwable")
                     brandsSliderUpdateSubject.onNext(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
@@ -572,7 +556,6 @@ class HomeViewModel(
                     }
                 },
                 onError = { throwable ->
-                    Log.i(LogSettings.ID_LOG, "COUNTRIES $throwable")
                     countriesSliderUpdateSubject.onNext(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
@@ -592,7 +575,6 @@ class HomeViewModel(
                             viewedProductsSliderUpdateSubject.onNext(ViewState.Success())
                         }
                         is ResponseEntity.Error -> {
-                            Log.i(LogSettings.ID_LOG, "VIEWED ${response.errorMessage}")
                             viewedProductsSliderHideMLD.value = true
                             viewedProductsSliderUpdateSubject.onNext(ViewState.Error(response.errorMessage))
                         }
@@ -604,7 +586,6 @@ class HomeViewModel(
                     }
                 },
                 onError = { throwable ->
-                    Log.i(LogSettings.ID_LOG, "VIEWED $throwable")
                     viewedProductsSliderUpdateSubject.onNext(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
@@ -635,7 +616,6 @@ class HomeViewModel(
                     }
                 },
                 onError = { throwable ->
-                    Log.i(LogSettings.ID_LOG, "COMMENT $throwable")
                     commentsSliderUpdateSubject.onNext(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
@@ -673,15 +653,19 @@ class HomeViewModel(
     }
 
     fun changeCart(productId: Long, quantity: Int) {
-        dataRepository.changeCart(
-            productId = productId,
-            quantity = quantity
-        ).subscribeBy(
-            onComplete = {},
-            onError = { throwable ->
-                errorMLD.value = throwable.message ?: "Неизвестная ошибка"
-            }
-        )
+        dataRepository
+            .changeCart(
+                productId = productId,
+                quantity = quantity
+            )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onComplete = {},
+                onError = { throwable ->
+                    errorMLD.value = throwable.message ?: "Неизвестная ошибка"
+                }
+            )
     }
 
     fun isLoginAlready() = dataRepository.isAlreadyLogin()

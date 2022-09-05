@@ -35,7 +35,7 @@ enum class OrderStatusUI(
     ),
     CANCELED(
         id = "R",
-        color = R.color.color_status_canceled,
+        color = R.color.text_gray,
         statusName = "Отменен",
         image = R.drawable.ic_order_canceled
     ),
