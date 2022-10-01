@@ -21,6 +21,7 @@
         android:id="@+id/rvProperties"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/space_24"/>
+        android:paddingStart="@dimen/space_24"
+        android:paddingEnd="@dimen/space_16"/>
 
 </LinearLayout>

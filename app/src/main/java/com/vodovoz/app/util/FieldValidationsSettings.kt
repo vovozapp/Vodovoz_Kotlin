@@ -1,11 +1,16 @@
-package com.vodovoz.app.data.config
+package com.vodovoz.app.util
 
-object FieldValidateConfig {
+import com.vodovoz.app.R
 
-    val MIN_COMMENT_LENGTH = 30
+object FieldValidationsSettings {
 
-    val FIRST_NAME_LENGTH = 1..20
-    val SECOND_NAME_LENGTH = 1..30
+    const val VALID_COLOR_ID: Int = R.color.text_gray
+    const val INVALID_COLOR_ID: Int = R.color.red
+    const val ACTIVATED_COLOR_ID: Int = R.color.bluePrimary
+
+    const val MIN_COMMENT_LENGTH = 30
+
+    val NAME_LENGTH = 2..20
     val PASSWORD_LENGTH = 6..30
     val PHONE_REGEX = Regex("\\+7-[0-9]{3}-([0-9]{3})-([0-9]{2})-([0-9]{2})")
     val EMAIL_REGEX = Regex("^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")

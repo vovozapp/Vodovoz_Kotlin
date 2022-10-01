@@ -3,7 +3,6 @@ package com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +32,6 @@ import com.vodovoz.app.ui.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
 import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogFragmentDirections
 import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -73,7 +71,11 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
             viewModel.changeCart(productId, quantity)
         },
         onNotAvailableMore = {},
-        onNotifyWhenBeAvailable = {},
+        onNotifyWhenBeAvailable = { id, name, picture ->
+            findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToPreOrderBS(
+                id, name, picture
+            ))
+        },
         productDiffItemCallback = ProductDiffItemCallback(),
         viewMode = viewMode
     )
@@ -176,7 +178,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
     }
 
     private fun initShare() {
-        binding.share.setOnClickListener {
+        binding.imgShare.setOnClickListener {
             Intent.createChooser(
                 Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
@@ -188,10 +190,10 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
     }
 
     private fun initSearch() {
-        binding.searchContainer.searchRoot.setOnClickListener {
+        binding.incAppBar.incSearch.clSearchContainer.setOnClickListener {
             findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
         }
-        binding.searchContainer.search.setOnFocusChangeListener { _, isFocusable ->
+        binding.incAppBar.incSearch.etSearch.setOnFocusChangeListener { _, isFocusable ->
             if (isFocusable) {
                 findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
             }
@@ -199,10 +201,10 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
     }
 
     private fun initHeader() {
-        binding.viewMode.setOnClickListener { changeViewMode() }
-        binding.sort.setOnClickListener { showBottomSortSettings() }
-        binding.categories.setOnClickListener { showMiniCatalog() }
-        binding.back.setOnClickListener { findNavController().popBackStack() }
+        binding.imgViewMode.setOnClickListener { changeViewMode() }
+        binding.tvSort.setOnClickListener { showBottomSortSettings() }
+        binding.imgCategories.setOnClickListener { showMiniCatalog() }
+        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun initBrandRecycler() {
@@ -238,12 +240,13 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<String>(SORT_TYPE)?.observe(viewLifecycleOwner) { sortType ->
                 viewModel.updateSortType(SortType.valueOf(sortType))
+                binding.tvSort.text = SortType.valueOf(sortType).sortName
             }
     }
 
     private fun observeViewModel() {
         viewModel.sortTypeLD.observe(viewLifecycleOwner) { sortType ->
-            binding.sort.text = sortType.sortName
+            binding.tvSort.text = sortType.sortName
         }
 
         viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
@@ -263,21 +266,21 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateHeader(categoryUI: CategoryUI) {
-        binding.categoryName.text = categoryUI.name
-        binding.productAmount.text = categoryUI.productAmount.toString()
+        binding.tvCategoryName.text = categoryUI.name
+        binding.tvProductAmount.text = categoryUI.productAmount.toString()
 
         when(categoryUI.shareUrl.isEmpty()) {
-            true -> binding.share.visibility = View.INVISIBLE
-            false -> binding.share.visibility = View.VISIBLE
+            true -> binding.imgShare.visibility = View.INVISIBLE
+            false -> binding.imgShare.visibility = View.VISIBLE
         }
 
         when(categoryUI.categoryUIList.isNotEmpty()) {
             true -> {
                 binding.categoriesRecycler.visibility = View.VISIBLE
-                binding.categories.visibility = View.VISIBLE
+                binding.imgCategories.visibility = View.VISIBLE
             }
             else -> {
-                binding.categories.visibility = View.GONE
+                binding.imgCategories.visibility = View.GONE
                 binding.categoriesRecycler.visibility = View.GONE
             }
         }
@@ -302,7 +305,11 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
                 viewModel.changeCart(productId, quantity)
             },
             onNotAvailableMore = {},
-            onNotifyWhenBeAvailable = {},
+            onNotifyWhenBeAvailable = { id, name, picture ->
+                findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToPreOrderBS(
+                    id, name, picture
+                ))
+            },
             productDiffItemCallback = ProductDiffItemCallback(),
             viewMode = viewMode
         )
@@ -351,14 +358,14 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
         when (viewMode) {
             ViewMode.GRID -> {
                 viewMode = ViewMode.LIST
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_list))
+                binding.imgViewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_list))
                 firstVisiblePosition = gridLayoutManager.findFirstVisibleItemPosition()
                 lastVisiblePosition = gridLayoutManager.findLastVisibleItemPosition()
                 binding.productRecycler.layoutManager = linearLayoutManager
             }
             ViewMode.LIST -> {
                 viewMode = ViewMode.GRID
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_table))
+                binding.imgViewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_table))
                 firstVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition()
                 lastVisiblePosition = linearLayoutManager.findLastVisibleItemPosition()
                 binding.productRecycler.layoutManager = gridLayoutManager
@@ -393,7 +400,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
     sealed class DataSource : Serializable {

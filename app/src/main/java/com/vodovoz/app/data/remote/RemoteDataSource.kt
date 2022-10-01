@@ -8,6 +8,18 @@ import retrofit2.Response
 
 interface RemoteDataSource {
 
+    fun fetchPreOrderFormData(
+        userId: Long?
+    ): Single<ResponseEntity<PreOrderFormDataEntity>>
+
+    fun preOrderProduct(
+        userId: Long?,
+        productId: Long?,
+        name: String?,
+        email: String?,
+        phone: String?
+    ): Single<ResponseEntity<String>>
+
     //Общая информация о предоставляемых услугах
     fun fetchAboutServices(): Single<ResponseEntity<AboutServicesBundleEntity>>
 

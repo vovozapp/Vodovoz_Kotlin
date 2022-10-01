@@ -7,16 +7,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderProductGridBinding
 import com.vodovoz.app.databinding.ViewHolderProductListBinding
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
+import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.view_holder.ProductGridViewHolder
 import com.vodovoz.app.ui.view_holder.ProductListViewHolder
-import com.vodovoz.app.ui.model.ProductUI
-import io.reactivex.rxjava3.subjects.PublishSubject
 
 class PagingProductsAdapter(
     private val onProductClick: (Long) -> Unit,
     private val onChangeCartQuantity: (Long, Int) -> Unit,
     private val onChangeFavoriteStatus: (Long, Boolean) -> Unit,
-    private val onNotifyWhenBeAvailable: (Long) -> Unit,
+    private val onNotifyWhenBeAvailable: (Long, String, String) -> Unit,
     private val onNotAvailableMore: () -> Unit,
     private val isCart: Boolean = false,
     private val productDiffItemCallback: ProductDiffItemCallback,

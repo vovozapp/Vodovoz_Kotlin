@@ -158,7 +158,7 @@ class AllCommentsByProductDialogFragment : ViewStateBaseDialogFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

@@ -1,6 +1,8 @@
 package com.vodovoz.app.data.parser.response.shipping
 
-import com.vodovoz.app.data.model.common.*
+import com.vodovoz.app.data.model.common.PayMethodEntity
+import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.model.common.ShippingIntervalEntity
 import com.vodovoz.app.data.model.features.ShippingInfoBundleEntity
 import com.vodovoz.app.data.parser.common.safeInt
 import com.vodovoz.app.data.parser.common.safeString

@@ -1,20 +1,10 @@
 package com.vodovoz.app.ui.base
 
-import android.graphics.Color
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.snackbar.Snackbar.SnackbarLayout
-import com.google.android.youtube.player.internal.v
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ActivityMainBinding
-
 import com.vodovoz.app.ui.fragment.main.MainFragment
-import com.vodovoz.app.ui.view.CustomSnackbar
 import com.vodovoz.app.util.Keys
 import com.yandex.mapkit.MapKitFactory
 

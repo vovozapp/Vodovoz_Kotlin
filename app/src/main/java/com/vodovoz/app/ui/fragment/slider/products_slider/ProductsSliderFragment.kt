@@ -1,6 +1,7 @@
 package com.vodovoz.app.ui.fragment.slider.products_slider
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +9,9 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahmadhamwi.tabsync.TabbedListMediator
 import com.google.android.material.tabs.TabLayout
@@ -17,11 +20,13 @@ import com.vodovoz.app.databinding.FragmentSliderProductBinding
 import com.vodovoz.app.databinding.ViewCustomTabBinding
 import com.vodovoz.app.ui.adapter.CategoriesAdapter
 import com.vodovoz.app.ui.base.BaseHiddenFragment
+import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
+import com.vodovoz.app.ui.fragment.home.HomeFragmentDirections
+import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
 import com.vodovoz.app.ui.interfaces.IOnChangeProductQuantity
 import com.vodovoz.app.ui.interfaces.IOnFavoriteClick
 import com.vodovoz.app.ui.interfaces.IOnProductClick
 import com.vodovoz.app.ui.interfaces.IOnShowAllProductsClick
-import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -46,6 +51,8 @@ class ProductsSliderFragment : BaseHiddenFragment() {
     private lateinit var iOnShowAllProductsClick: IOnShowAllProductsClick
     private lateinit var iOnFavoriteClick: IOnFavoriteClick
     private lateinit var iOnChangeProductQuantity: IOnChangeProductQuantity
+    private lateinit var onNotifyWhenBeAvailable: (Long, String, String) -> Unit
+    private lateinit var onNotAvailableMore: () -> Unit
 
     private lateinit var binding: FragmentSliderProductBinding
     private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
@@ -100,21 +107,33 @@ class ProductsSliderFragment : BaseHiddenFragment() {
     }
 
     private fun initCategoryRecycler() {
+        when(config.largeTitle) {
+            true -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                binding.tvName.setTextAppearance(R.style.TextViewHeaderBlackBold)
+            } else {
+                binding.tvName.setTextAppearance(null, R.style.TextViewHeaderBlackBold)
+            }
+            false -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                binding.tvName.setTextAppearance(R.style.TextViewMediumBlackBold)
+            } else {
+                binding.tvName.setTextAppearance(null, R.style.TextViewMediumBlackBold)
+            }
+        }
         binding.rvCategories.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvCategories.onRenderFinished { width, _ ->
-            categoriesAdapter = CategoriesAdapter(
-                onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-                onProductClickSubject = onProductClickSubject,
-                onFavoriteClickSubject = onFavoriteClickSubject,
-                cardWidth = (width - (space * 3))/2
-            )
-            binding.rvCategories.adapter = categoriesAdapter
-            onAdapterReadySubject.subscribeBy { categoryDetailUIList ->
-                this.categoryDetailUIList = categoryDetailUIList
-                updateView(categoryDetailUIList)
-            }.addTo(compositeDisposable)
-        }
+        categoriesAdapter = CategoriesAdapter(
+            onChangeProductQuantitySubject = onChangeProductQuantitySubject,
+            onProductClickSubject = onProductClickSubject,
+            onFavoriteClickSubject = onFavoriteClickSubject,
+            cardWidth = 0,
+            onNotifyWhenBeAvailable = { id, name, picture -> onNotifyWhenBeAvailable(id, name, picture) },
+            onNotAvailableMore = { onNotAvailableMore() }
+        )
+        binding.rvCategories.adapter = categoriesAdapter
+        onAdapterReadySubject.subscribeBy { categoryDetailUIList ->
+            this.categoryDetailUIList = categoryDetailUIList
+            updateView(categoryDetailUIList)
+        }.addTo(compositeDisposable)
     }
 
     private fun initShowAllProductsButtons() {
@@ -234,17 +253,21 @@ class ProductsSliderFragment : BaseHiddenFragment() {
         iOnProductClick: IOnProductClick,
         iOnChangeProductQuantity: IOnChangeProductQuantity,
         iOnShowAllProductsClick: IOnShowAllProductsClick,
-        iOnFavoriteClick: IOnFavoriteClick
+        iOnFavoriteClick: IOnFavoriteClick,
+        onNotifyWhenBeAvailable: (Long, String, String) -> Unit,
+        onNotAvailableMore: () -> Unit
     ) {
         this.iOnProductClick = iOnProductClick
         this.iOnChangeProductQuantity = iOnChangeProductQuantity
         this.iOnShowAllProductsClick = iOnShowAllProductsClick
         this.iOnFavoriteClick = iOnFavoriteClick
+        this.onNotAvailableMore = onNotAvailableMore
+        this.onNotifyWhenBeAvailable = onNotifyWhenBeAvailable
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

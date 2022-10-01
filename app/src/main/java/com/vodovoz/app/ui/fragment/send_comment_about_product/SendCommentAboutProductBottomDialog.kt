@@ -1,9 +1,9 @@
 package com.vodovoz.app.ui.fragment.send_comment_about_product
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar

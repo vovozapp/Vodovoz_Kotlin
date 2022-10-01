@@ -2,22 +2,17 @@ package com.vodovoz.app.ui.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.text.InputType
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
-import androidx.core.widget.doBeforeTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.*
 import com.vodovoz.app.ui.adapter.ViewType.Companion.viewTypeByValue
 import com.vodovoz.app.util.LogSettings
-import java.lang.Exception
 
 class FormAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

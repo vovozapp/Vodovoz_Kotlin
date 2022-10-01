@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderFilterBinding
-import com.vodovoz.app.ui.view_holder.ProductFilterViewHolder
 import com.vodovoz.app.ui.model.FilterUI
+import com.vodovoz.app.ui.view_holder.ProductFilterViewHolder
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class ProductFiltersAdapter(

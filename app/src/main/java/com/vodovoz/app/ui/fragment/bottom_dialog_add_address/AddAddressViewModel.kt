@@ -1,16 +1,14 @@
 package com.vodovoz.app.ui.fragment.bottom_dialog_add_address
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.config.AddressConfig
-import com.vodovoz.app.data.config.FieldValidateConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.AddressUI
-import com.vodovoz.app.util.LogSettings
+import com.vodovoz.app.util.FieldValidationsSettings
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -153,28 +151,28 @@ class AddAddressViewModel(
         }
     }
 
-    private fun validateLocality() = FieldValidateConfig.LOCALITY_LENGTH.contains(locality.length).apply {
+    private fun validateLocality() = FieldValidationsSettings.LOCALITY_LENGTH.contains(locality.length).apply {
         localityErrorMLD.value =
-            if (!this && !isFirstTry) "Длина ${FieldValidateConfig.LOCALITY_LENGTH}"
+            if (!this && !isFirstTry) "Длина ${FieldValidationsSettings.LOCALITY_LENGTH}"
             else ""
     }
 
-    private fun validateStreet() = FieldValidateConfig.STREET_LENGTH.contains(street.length).apply {
+    private fun validateStreet() = FieldValidationsSettings.STREET_LENGTH.contains(street.length).apply {
         streetErrorMLD.value =
-            if (!this && !isFirstTry) "Длина ${FieldValidateConfig.STREET_LENGTH}"
+            if (!this && !isFirstTry) "Длина ${FieldValidationsSettings.STREET_LENGTH}"
             else ""
     }
 
-    private fun validateHouse() = FieldValidateConfig.HOUSE_LENGTH.contains(house.length).apply {
+    private fun validateHouse() = FieldValidationsSettings.HOUSE_LENGTH.contains(house.length).apply {
         houseErrorMLD.value =
-            if (!this && !isFirstTry) "Длина ${FieldValidateConfig.HOUSE_LENGTH}"
+            if (!this && !isFirstTry) "Длина ${FieldValidationsSettings.HOUSE_LENGTH}"
             else ""
     }
 
     private fun validateEntrance() = when(type) {
-        AddressConfig.OFFICE_ADDRESS_TYPE -> FieldValidateConfig.ENTRANCE_LENGTH.contains(entrance.length).apply {
+        AddressConfig.OFFICE_ADDRESS_TYPE -> FieldValidationsSettings.ENTRANCE_LENGTH.contains(entrance.length).apply {
             entranceErrorMLD.value =
-                if (!this && !isFirstTry) "Длина ${FieldValidateConfig.ENTRANCE_LENGTH}"
+                if (!this && !isFirstTry) "Длина ${FieldValidationsSettings.ENTRANCE_LENGTH}"
                 else ""
         }
         else -> {
@@ -184,9 +182,9 @@ class AddAddressViewModel(
     }
 
     private fun validateFloor() = when(type) {
-        AddressConfig.OFFICE_ADDRESS_TYPE -> FieldValidateConfig.FLOOR_LENGTH.contains(floor.length).apply {
+        AddressConfig.OFFICE_ADDRESS_TYPE -> FieldValidationsSettings.FLOOR_LENGTH.contains(floor.length).apply {
             floorErrorMLD.value =
-                if (!this && !isFirstTry) "Длина ${FieldValidateConfig.FLOOR_LENGTH}"
+                if (!this && !isFirstTry) "Длина ${FieldValidationsSettings.FLOOR_LENGTH}"
                 else ""
         }
         else -> {
@@ -196,9 +194,9 @@ class AddAddressViewModel(
     }
 
     private fun validateOffice() = when(type) {
-        AddressConfig.OFFICE_ADDRESS_TYPE -> FieldValidateConfig.OFFICE_LENGTH.contains(office.length).apply {
+        AddressConfig.OFFICE_ADDRESS_TYPE -> FieldValidationsSettings.OFFICE_LENGTH.contains(office.length).apply {
             officeErrorMLD.value =
-                if (!this && !isFirstTry) "Длина ${FieldValidateConfig.OFFICE_LENGTH}"
+                if (!this && !isFirstTry) "Длина ${FieldValidationsSettings.OFFICE_LENGTH}"
                 else ""
         }
         else -> {
@@ -209,7 +207,7 @@ class AddAddressViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

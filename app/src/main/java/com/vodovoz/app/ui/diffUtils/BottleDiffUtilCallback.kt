@@ -2,7 +2,6 @@ package com.vodovoz.app.ui.diffUtils
 
 import androidx.recyclerview.widget.DiffUtil
 import com.vodovoz.app.ui.model.BottleUI
-import com.vodovoz.app.ui.model.BrandUI
 
 class BottleDiffUtilCallback(
     private val oldList: List<BottleUI>,

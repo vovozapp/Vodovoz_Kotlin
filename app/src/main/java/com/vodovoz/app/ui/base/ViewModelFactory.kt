@@ -7,7 +7,6 @@ import com.vodovoz.app.ui.fragment.about_app.AboutAppDialogViewModel
 import com.vodovoz.app.ui.fragment.about_services.AboutServicesViewModel
 import com.vodovoz.app.ui.fragment.all_brands.AllBrandsViewModel
 import com.vodovoz.app.ui.fragment.all_comments_by_product.AllCommentsByProductViewModel
-import com.vodovoz.app.ui.fragment.orders_history.OrdersHistoryViewModel
 import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsViewModel
 import com.vodovoz.app.ui.fragment.bottles.AllBottlesViewModel
 import com.vodovoz.app.ui.fragment.bottom_dialog_add_address.AddAddressViewModel
@@ -23,9 +22,11 @@ import com.vodovoz.app.ui.fragment.login.LoginViewModel
 import com.vodovoz.app.ui.fragment.map.MapViewModel
 import com.vodovoz.app.ui.fragment.order_details.OrderDetailsViewModel
 import com.vodovoz.app.ui.fragment.ordering.OrderingViewModel
+import com.vodovoz.app.ui.fragment.orders_history.OrdersHistoryViewModel
 import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogViewModel
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersViewModel
 import com.vodovoz.app.ui.fragment.past_purchases.PastPurchasesViewModel
+import com.vodovoz.app.ui.fragment.pre_order.PreOrderViewModel
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsViewModel
 import com.vodovoz.app.ui.fragment.product_filters.ProductFiltersViewModel
 import com.vodovoz.app.ui.fragment.products_catalog.ProductsCatalogViewModel
@@ -214,6 +215,10 @@ class ViewModelFactory(
 
         if (modelClass.isAssignableFrom(ReplacementProductsSelectionViewModel::class.java)){
             return ReplacementProductsSelectionViewModel(dataRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(PreOrderViewModel::class.java)){
+            return PreOrderViewModel(dataRepository) as T
         }
 
         throw IllegalArgumentException("Unknown View Model Class")

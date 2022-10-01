@@ -3,7 +3,6 @@ package com.vodovoz.app.ui.fragment.profile
 import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,16 +19,12 @@ import com.vodovoz.app.ui.adapter.GridProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
 import com.vodovoz.app.ui.base.VodovozApplication
+import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
 import com.vodovoz.app.ui.fragment.slider.order_slider.OrdersSliderConfig
 import com.vodovoz.app.ui.fragment.slider.order_slider.OrdersSliderFragment
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.model.UserDataUI
-import com.vodovoz.app.util.LogSettings
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.subjects.PublishSubject
 
 class ProfileFragment : ViewStateBaseDialogFragment() {
 
@@ -47,7 +42,11 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
             viewModel.changeCart(productId, quantity)
         },
         onNotAvailableMore = {},
-        onNotifyWhenBeAvailable = {}
+        onNotifyWhenBeAvailable = { id, name, picture ->
+            findNavController().navigate(ProfileFragmentDirections.actionToPreOrderBS(
+                id, name, picture
+            ))
+        },
     )
 
     private val ordersSliderFragment: OrdersSliderFragment by lazy {
@@ -140,23 +139,23 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
 
     private fun initButtons() {
         with(binding) {
-            logout.setOnClickListener { viewModel.logout() }
+            tvLogout.setOnClickListener { viewModel.logout() }
             header.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionToUserDataFragment())
             }
             btnLoginOrReg.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionToLoginFragment())
             }
-            addresses.setOnClickListener {
+            tvAddresses.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionToSavedAddressesDialogFragment())
             }
-            ordersHistory.setOnClickListener {
+            tvOrdersHistory.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionToAllOrdersFragment())
             }
-            discountCard.setOnClickListener {
+            tvDiscountCard.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionToDiscountCardFragment())
             }
-            binding.deliveryPrice.setOnClickListener {
+            binding.tvShippingPrice.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
                     ApiConfig.ABOUT_DELIVERY_URL,
                     "Стоимость доставки"
@@ -174,21 +173,21 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
                     "sanitar"
                 ))
             }
-            binding.pastPurchases.setOnClickListener { findNavController().navigate(ProfileFragmentDirections.actionToPastPurchasesFragment()) }
-            binding.questionnaires.setOnClickListener { findNavController().navigate(ProfileFragmentDirections.actionToQuestionnairesFragment()) }
-            binding.aboutDelivery.setOnClickListener {
+            binding.tvPastPurchases.setOnClickListener { findNavController().navigate(ProfileFragmentDirections.actionToPastPurchasesFragment()) }
+            binding.tvQuestionnaires.setOnClickListener { findNavController().navigate(ProfileFragmentDirections.actionToQuestionnairesFragment()) }
+            binding.tvAboutDelivery.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
                     ApiConfig.ABOUT_DELIVERY_URL,
                     "Стоимость доставки"
                 ))
             }
-            binding.aboutPay.setOnClickListener {
+            binding.tvAboutPay.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
                     ApiConfig.ABOUT_PAY_URL,
                     "Об оплате"
                 ))
             }
-            binding.aboutApp.setOnClickListener {
+            binding.tvAboutApp.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionToAboutAppDialogFragment())
             }
         }
@@ -199,7 +198,11 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
             iOnProductClick = { productId -> findNavController().navigate(ProfileFragmentDirections.actionToProductDetailFragment(productId)) },
             iOnChangeProductQuantity = { pair -> viewModel.changeCart(pair.first, pair.second) },
             iOnFavoriteClick = { pair -> viewModel.changeFavoriteStatus(pair.first, pair.second) },
-            iOnShowAllProductsClick = {}
+            iOnShowAllProductsClick = {},
+            onNotAvailableMore = {},
+            onNotifyWhenBeAvailable = { id, name, picture ->
+                findNavController().navigate(ProductDetailsFragmentDirections.actionToPreOrderBS(id, name, picture))
+            }
         )
 
         childFragmentManager.beginTransaction().replace(
@@ -213,10 +216,12 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
         viewModel.isAlreadyLoginLD.observe(viewLifecycleOwner) { isAlreadyLogin ->
             when(isAlreadyLogin) {
                 true -> {
+                    //requireActivity().setTheme(R.style.Theme_Vodovoz_DarkStatusBar)
                     binding.profileContainer.visibility = View.VISIBLE
                     binding.noLoginContainer.visibility = View.GONE
                 }
                 false -> {
+                    //requireActivity().setTheme(R.style.Theme_Vodovoz)
                     binding.profileContainer.visibility = View.GONE
                     binding.noLoginContainer.visibility = View.VISIBLE
                     onStateSuccess()
@@ -233,14 +238,17 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
         }
 
         viewModel.viewedProductsSliderLD.observe(viewLifecycleOwner) { categoryDetailUIList ->
-            viewedProductsSliderFragment.updateData(categoryDetailUIList)
+            when(categoryDetailUIList.isEmpty()) {
+                true -> binding.viewedProductsSliderFragment.visibility = View.GONE
+                false -> viewedProductsSliderFragment.updateData(categoryDetailUIList)
+            }
         }
 
         viewModel.bestForYouProductsListLD.observe(viewLifecycleOwner) { categoryDetailUI ->
             gridProductsAdapter.productUiList = categoryDetailUI.productUIList
             gridProductsAdapter.notifyDataSetChanged()
 
-            binding.titleBestForYou.text = categoryDetailUI.name
+            binding.tvTitleBestForYou.text = categoryDetailUI.name
         }
 
         viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
@@ -272,5 +280,9 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
         viewModel.isAlreadyLogin()
     }
 
+    override fun onStop() {
+        super.onStop()
+        //requireActivity().setTheme(R.style.Theme_Vodovoz)
+    }
 
 }

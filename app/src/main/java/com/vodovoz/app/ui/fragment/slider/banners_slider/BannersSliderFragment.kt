@@ -2,6 +2,7 @@ package com.vodovoz.app.ui.fragment.slider.banners_slider
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import android.widget.LinearLayout
 import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.vodovoz.app.R
 import com.vodovoz.app.data.model.common.ActionEntity
@@ -16,8 +18,8 @@ import com.vodovoz.app.databinding.FragmentSliderBannerBinding
 import com.vodovoz.app.ui.adapter.BannersSliderAdapter
 import com.vodovoz.app.ui.base.BaseHiddenFragment
 import com.vodovoz.app.ui.diffUtils.BannerDiffUtilCallback
-import com.vodovoz.app.ui.interfaces.IOnInvokeAction
 import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
+import com.vodovoz.app.ui.interfaces.IOnInvokeAction
 import com.vodovoz.app.ui.model.BannerUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -75,9 +77,28 @@ class BannersSliderFragment : BaseHiddenFragment() {
         initBannerRecyclerView()
     }
 
+    fun Int.dpToPx(displayMetrics: DisplayMetrics): Int = (this * displayMetrics.density).toInt()
+
+    fun Int.pxToDp(displayMetrics: DisplayMetrics): Int = (this / displayMetrics.density).toInt()
+
     private fun initBannerRecyclerView() {
+        val space = resources.getDimension(R.dimen.space_16).toInt()
         binding.vpBanners.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.vpBanners.adapter = bannersSliderAdapter
+        binding.vpBanners.apply {
+            clipToPadding = false   // allow full width shown with padding
+            clipChildren = false    // allow left/right item is not clipped
+            offscreenPageLimit = 2  // make sure left/right item is rendered
+        }
+
+// increase this offset to show more of left/right
+        val offsetPx = space
+        binding.vpBanners.setPadding(offsetPx, 0, offsetPx, 0)
+
+// increase this offset to increase distance between 2 items
+        val pageMarginPx = space/2
+        val marginTransformer = MarginPageTransformer(pageMarginPx)
+        binding.vpBanners.setPageTransformer(marginTransformer)
         binding.vpBanners.onRenderFinished { width, _ ->
             binding.vpBanners.layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -85,8 +106,6 @@ class BannersSliderFragment : BaseHiddenFragment() {
             )
         }
 
-
-        val space = resources.getDimension(R.dimen.space_16).toInt()
         binding.vpBanners.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
@@ -98,8 +117,8 @@ class BannersSliderFragment : BaseHiddenFragment() {
                     with(outRect) {
                         top = space/2
                         bottom = space/2
-                        left = space
-                        right = space
+                        //left = space
+                        //right = space
                     }
                 }
             }

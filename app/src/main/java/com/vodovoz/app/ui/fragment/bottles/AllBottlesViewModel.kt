@@ -7,9 +7,7 @@ import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.mapper.BottleMapper.mapToUI
 import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.mapper.BrandMapper.mapToUI
 import com.vodovoz.app.ui.model.BottleUI
-import com.vodovoz.app.ui.model.BrandUI
 import com.vodovoz.app.util.SingleLiveEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -72,7 +70,7 @@ class AllBottlesViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

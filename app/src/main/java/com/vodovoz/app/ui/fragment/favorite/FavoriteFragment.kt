@@ -28,6 +28,8 @@ import com.vodovoz.app.ui.decoration.CategoryTabsMarginDecoration
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
+import com.vodovoz.app.ui.fragment.cart.CartFragmentDirections
+import com.vodovoz.app.ui.fragment.home.HomeFragmentDirections
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
@@ -65,14 +67,19 @@ class FavoriteFragment : ViewStateBaseFragment() {
             viewModel.changeCart(productId, quantity)
         },
         onNotAvailableMore = {},
-        onNotifyWhenBeAvailable = {},
+        onNotifyWhenBeAvailable = { id, name, picture ->
+            findNavController().navigate(FavoriteFragmentDirections.actionToPreOrderBS(
+                id, name, picture
+            ))
+        },
         productDiffItemCallback = ProductDiffItemCallback(),
         viewMode = viewMode
     )
 
     private val bestForYouProductsSliderFragment: ProductsSliderFragment by lazy {
         ProductsSliderFragment.newInstance(ProductsSliderConfig(
-            containShowAllButton = false
+            containShowAllButton = false,
+            largeTitle = true
         )) }
 
     private val onCategoryClickSubject: PublishSubject<Long> = PublishSubject.create()
@@ -160,9 +167,9 @@ class FavoriteFragment : ViewStateBaseFragment() {
     override fun update() { viewModel.updateFavoriteProductsHeader() }
 
     private fun initHeader() {
-        binding.viewMode.setOnClickListener { changeViewMode() }
-        binding.sort.setOnClickListener { showBottomSortSettings() }
-        binding.categories.setOnClickListener { showMiniCatalog() }
+        binding.imgViewMode.setOnClickListener { changeViewMode() }
+        binding.tvSort.setOnClickListener { showBottomSortSettings() }
+        binding.imgCategories.setOnClickListener { showMiniCatalog() }
         binding.availableButton.setOnClickListener {
             binding.availableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
             binding.availableButton.elevation = resources.getDimension(R.dimen.elevation_1)
@@ -180,10 +187,10 @@ class FavoriteFragment : ViewStateBaseFragment() {
     }
 
     private fun initSearch() {
-        binding.searchContainer.searchRoot.setOnClickListener {
+        binding.searchContainer.clSearchContainer.setOnClickListener {
             findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment())
         }
-        binding.searchContainer.search.setOnFocusChangeListener { _, isFocusable ->
+        binding.searchContainer.etSearch.setOnFocusChangeListener { _, isFocusable ->
             if (isFocusable) {
                 findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment())
             }
@@ -200,7 +207,14 @@ class FavoriteFragment : ViewStateBaseFragment() {
             iOnProductClick = { productId -> onProductClickSubject.onNext(productId) },
             iOnChangeProductQuantity = {},
             iOnShowAllProductsClick = {},
-            iOnFavoriteClick = { pair -> viewModel.changeFavoriteStatus(pair.first, pair.second) }
+            iOnFavoriteClick = { pair -> viewModel.changeFavoriteStatus(pair.first, pair.second) },
+            onNotAvailableMore = {},
+            onNotifyWhenBeAvailable = { id, name, picture ->
+                when(viewModel.isAlreadyLogin()) {
+                    true -> findNavController().navigate(FavoriteFragmentDirections.actionToPreOrderBS(id, name, picture))
+                    false -> findNavController().navigate(FavoriteFragmentDirections.actionToProfileFragment())
+                }
+            }
         )
     }
 
@@ -242,7 +256,7 @@ class FavoriteFragment : ViewStateBaseFragment() {
 
     private fun observeViewModel() {
         viewModel.sortTypeLD.observe(viewLifecycleOwner) { sortType ->
-            binding.sort.text = sortType.sortName
+            binding.tvSort.text = sortType.sortName
         }
 
         viewModel.availableTitleLD.observe(viewLifecycleOwner) { availableTitle ->
@@ -286,16 +300,16 @@ class FavoriteFragment : ViewStateBaseFragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateHeader(categoryUI: CategoryUI) {
-        binding.categoryName.text = categoryUI.name
-        binding.productAmount.text = categoryUI.productAmount.toString()
+        binding.tvCategoryName.text = categoryUI.name
+        binding.tvProductAmount.text = categoryUI.productAmount.toString()
 
         when(categoryUI.categoryUIList.isNotEmpty()) {
             true -> {
                 binding.categoriesRecycler.visibility = View.VISIBLE
-                binding.categories.visibility = View.VISIBLE
+                binding.imgCategories.visibility = View.VISIBLE
             }
             else -> {
-                binding.categories.visibility = View.GONE
+                binding.imgCategories.visibility = View.GONE
                 binding.categoriesRecycler.visibility = View.GONE
             }
         }
@@ -320,8 +334,11 @@ class FavoriteFragment : ViewStateBaseFragment() {
                 viewModel.changeCart(productId, quantity)
             },
             onNotAvailableMore = {},
-            onNotifyWhenBeAvailable = {},
-            productDiffItemCallback = ProductDiffItemCallback(),
+            onNotifyWhenBeAvailable = { id, name, picture ->
+                findNavController().navigate(FavoriteFragmentDirections.actionToPreOrderBS(
+                    id, name, picture
+                ))
+            },            productDiffItemCallback = ProductDiffItemCallback(),
             viewMode = viewMode
         )
 
@@ -370,14 +387,14 @@ class FavoriteFragment : ViewStateBaseFragment() {
         when (viewMode) {
             PagingProductsAdapter.ViewMode.GRID -> {
                 viewMode = PagingProductsAdapter.ViewMode.LIST
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_list))
+                binding.imgViewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_list))
                 firstVisiblePosition = gridLayoutManager.findFirstVisibleItemPosition()
                 lastVisiblePosition = gridLayoutManager.findLastVisibleItemPosition()
                 binding.productRecycler.layoutManager = linearLayoutManager
             }
             PagingProductsAdapter.ViewMode.LIST -> {
                 viewMode = PagingProductsAdapter.ViewMode.GRID
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_table))
+                binding.imgViewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_table))
                 firstVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition()
                 lastVisiblePosition = linearLayoutManager.findLastVisibleItemPosition()
                 binding.productRecycler.layoutManager = gridLayoutManager
@@ -407,7 +424,7 @@ class FavoriteFragment : ViewStateBaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
 
     }
 }

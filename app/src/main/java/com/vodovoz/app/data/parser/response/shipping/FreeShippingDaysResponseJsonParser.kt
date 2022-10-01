@@ -1,12 +1,8 @@
 package com.vodovoz.app.data.parser.response.shipping
 
-import com.vodovoz.app.data.model.common.AboutServicesBundleEntity
 import com.vodovoz.app.data.model.common.FreeShippingDaysInfoBundleEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.model.common.ServiceEntity
-import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
-import org.json.JSONArray
 import org.json.JSONObject
 
 object FreeShippingDaysResponseJsonParser {

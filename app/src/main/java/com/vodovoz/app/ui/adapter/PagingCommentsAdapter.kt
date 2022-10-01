@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import com.vodovoz.app.databinding.ViewHolderCommentWithAvatarBinding
 import com.vodovoz.app.ui.diffUtils.CommentDiffItemCallback
-import com.vodovoz.app.ui.view_holder.CommentWithAvatarViewHolder
 import com.vodovoz.app.ui.model.CommentUI
+import com.vodovoz.app.ui.view_holder.CommentWithAvatarViewHolder
 
 class PagingCommentsAdapter(
     private val commentDiffItemCallback: CommentDiffItemCallback

@@ -19,7 +19,7 @@
         android:id="@+id/mtDivider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:dividerColor="@color/divider_color"
+        app:dividerColor="@color/divider_gray_color"
         app:layout_constraintTop_toBottomOf="@id/incHeader"/>
 
     <androidx.appcompat.widget.AppCompatRatingBar

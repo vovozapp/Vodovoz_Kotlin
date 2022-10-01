@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.config.AddressConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.mapper.AddressMapper.mapToUI
+import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.fragment.ordering.OrderType
 import com.vodovoz.app.ui.model.AddressUI
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers

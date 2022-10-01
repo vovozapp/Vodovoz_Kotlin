@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,13 +13,16 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.BsCatalogMiniBinding
+import com.vodovoz.app.databinding.BsCatalogSingleRootBinding
 import com.vodovoz.app.ui.adapter.SingleRootCatalogAdapter
-import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
 import com.vodovoz.app.ui.base.ViewState
+import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.decoration.SingleRootCatalogMarginDecoration
+import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogFragment
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.ui.view.Divider
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -26,7 +30,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 
 class SingleRootCatalogBottomFragment : ViewStateBaseBottomFragment() {
 
-    private lateinit var binding: BsCatalogMiniBinding
+    private lateinit var binding: BsCatalogSingleRootBinding
     private lateinit var viewModel: SingleRootCatalogViewModel
 
     private val categoryClickSubject: PublishSubject<CategoryUI> = PublishSubject.create()
@@ -37,9 +41,6 @@ class SingleRootCatalogBottomFragment : ViewStateBaseBottomFragment() {
     )
 
     private val space: Int by lazy { resources.getDimension(R.dimen.last_item_bottom_normal_space).toInt() }
-    private val verticalMarginItemDecoration: SingleRootCatalogMarginDecoration by lazy {
-        SingleRootCatalogMarginDecoration(space)
-    }
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -64,7 +65,7 @@ class SingleRootCatalogBottomFragment : ViewStateBaseBottomFragment() {
     override fun setContentView(
         inflater: LayoutInflater,
         container: ViewGroup
-    ) = BsCatalogMiniBinding.inflate(
+    ) = BsCatalogSingleRootBinding.inflate(
         inflater,
         container,
         false
@@ -91,23 +92,17 @@ class SingleRootCatalogBottomFragment : ViewStateBaseBottomFragment() {
     }
 
     private fun initCategoryRecycler() {
-        binding.incHeader.tvTitle.text = getString(R.string.categories_title)
+        val lastItemSpace = resources.getDimension(R.dimen.last_item_bottom_normal_space).toInt()
         binding.rvCategories.layoutManager = LinearLayoutManager(requireContext())
         binding.rvCategories.adapter = singleRootCatalogAdapter
-        binding.rvCategories.addItemDecoration(verticalMarginItemDecoration)
-        binding.rvCategories.addOnScrollListener(
-            object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    binding.abAppBar.elevation =
-                        if (binding.rvCategories.canScrollVertically(-1)) 16f
-                        else 0f
-                }
-            }
-        )
+        binding.rvCategories.addMarginDecoration { rect, view, parent, state ->
+            if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.bottom = lastItemSpace
+        }
+
     }
 
     private fun initCloseButton() {
-        binding.incHeader.imgClose.setOnClickListener {
+        binding.imgClose.setOnClickListener {
             dialog?.cancel()
         }
     }
@@ -146,7 +141,7 @@ class SingleRootCatalogBottomFragment : ViewStateBaseBottomFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

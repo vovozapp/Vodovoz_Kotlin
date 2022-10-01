@@ -10,19 +10,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderSliderPromotionProductBinding
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountPercent
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setMinimalPriceText
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPricePerUnitText
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.subjects.PublishSubject
-import java.lang.StringBuilder
 
 class PromotionProductSliderViewHolder(
     private val binding: ViewHolderSliderPromotionProductBinding,
     private val onProductClickSubject: PublishSubject<Long>,
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
     private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
+    private val onNotifyWhenBeAvailable: (Long, String, String) -> Unit,
+    private val onNotAvailableMore: () -> Unit,
     private val context: Context
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -41,6 +42,7 @@ class PromotionProductSliderViewHolder(
 
         binding.amountController.add.setOnClickListener {
             if (productUI.leftItems == 0) {
+                onNotifyWhenBeAvailable(productUI.id, productUI.name, productUI.detailPicture)
                 return@setOnClickListener
             }
             if (productUI.cartQuantity == 0) {
@@ -179,7 +181,6 @@ class PromotionProductSliderViewHolder(
         when (productUI.status.isEmpty()) {
             true -> binding.cwStatusContainer.visibility = View.GONE
             false -> {
-                isNotHaveStatuses = false
                 binding.cwStatusContainer.visibility = View.VISIBLE
                 binding.tvStatus.text = productUI.status
                 binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(productUI.statusColor))
@@ -190,6 +191,7 @@ class PromotionProductSliderViewHolder(
         when(productUI.priceList.size == 1 &&
                 productUI.priceList.first().currentPrice < productUI.priceList.first().oldPrice) {
             true -> {
+                isNotHaveStatuses = false
                 binding.cwDiscountContainer.visibility = View.VISIBLE
                 binding.tvDiscountPercent.setDiscountPercent(
                     newPrice = productUI.priceList.first().currentPrice,

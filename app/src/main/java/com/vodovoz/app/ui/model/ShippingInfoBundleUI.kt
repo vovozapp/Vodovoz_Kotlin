@@ -1,8 +1,5 @@
 package com.vodovoz.app.ui.model
 
-import com.vodovoz.app.data.model.common.PayMethodEntity
-import com.vodovoz.app.data.model.common.ShippingIntervalEntity
-
 class ShippingInfoBundleUI(
     val id: Long = 0,
     val parkingPrice: Int = 0,

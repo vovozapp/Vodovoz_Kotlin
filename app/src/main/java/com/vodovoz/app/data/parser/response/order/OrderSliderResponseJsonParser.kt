@@ -1,9 +1,12 @@
 package com.vodovoz.app.data.parser.response.order
 
+import android.util.Log
 import com.vodovoz.app.data.model.common.OrderEntity
 import com.vodovoz.app.data.model.common.OrderStatusEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
+import com.vodovoz.app.util.LogSettings
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
@@ -12,9 +15,10 @@ object OrderSliderResponseJsonParser {
 
     fun ResponseBody.parseOrderSliderResponse(): ResponseEntity<List<OrderEntity>> {
         val responseJson = JSONObject(this.string())
+        Log.d(LogSettings.RESPONSE_BODY_LOG, responseJson.toString(2))
         return when(responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(responseJson.getJSONArray("data").parseOrderEntityList())
-            else -> ResponseEntity.Hide()
+            else -> ResponseEntity.Error("Ошибка парсинга заказы")
         }
     }
 
@@ -27,6 +31,7 @@ object OrderSliderResponseJsonParser {
     private fun JSONObject.parseOrderEntity() = OrderEntity(
         id = getLong("ID"),
         price = getInt("PRICE"),
+        date = safeString("DATE_OUT"),
         status = OrderStatusEntity.fromId(getString("STATUS_NAME_ID")),
         address = getString("ADRESSDOSTAVKI")
     )

@@ -1,11 +1,8 @@
 package com.vodovoz.app.ui.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R

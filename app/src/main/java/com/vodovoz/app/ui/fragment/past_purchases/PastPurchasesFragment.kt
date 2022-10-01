@@ -28,6 +28,7 @@ import com.vodovoz.app.ui.decoration.CategoryTabsMarginDecoration
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
+import com.vodovoz.app.ui.fragment.favorite.FavoriteFragmentDirections
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
@@ -65,14 +66,19 @@ class PastPurchasesFragment : ViewStateBaseFragment() {
             viewModel.changeCart(productId, quantity)
         },
         onNotAvailableMore = {},
-        onNotifyWhenBeAvailable = {},
+        onNotifyWhenBeAvailable = { id, name, picture ->
+            findNavController().navigate(PastPurchasesFragmentDirections.actionToPreOrderBS(
+                id, name, picture
+            ))
+        },
         productDiffItemCallback = ProductDiffItemCallback(),
         viewMode = viewMode
     )
 
     private val bestForYouProductsSliderFragment: ProductsSliderFragment by lazy {
         ProductsSliderFragment.newInstance(ProductsSliderConfig(
-            containShowAllButton = false
+            containShowAllButton = false,
+            largeTitle = true
         )) }
 
     private val onCategoryClickSubject: PublishSubject<Long> = PublishSubject.create()
@@ -160,30 +166,31 @@ class PastPurchasesFragment : ViewStateBaseFragment() {
     override fun update() { viewModel.updateFavoriteProductsHeader() }
 
     private fun initHeader() {
-        binding.viewMode.setOnClickListener { changeViewMode() }
-        binding.sort.setOnClickListener { showBottomSortSettings() }
-        binding.categories.setOnClickListener { showMiniCatalog() }
-        binding.availableButton.setOnClickListener {
-            binding.availableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-            binding.availableButton.elevation = resources.getDimension(R.dimen.elevation_1)
-            binding.notAvailableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
-            binding.notAvailableButton.elevation = 0f
+        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
+        binding.imgViewMode.setOnClickListener { changeViewMode() }
+        binding.tvSort.setOnClickListener { showBottomSortSettings() }
+        binding.imgCategories.setOnClickListener { showMiniCatalog() }
+        binding.cwAvailableButton.setOnClickListener {
+            binding.cwAvailableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.cwAvailableButton.elevation = resources.getDimension(R.dimen.elevation_1)
+            binding.cwNotAvailableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
+            binding.cwNotAvailableButton.elevation = 0f
             viewModel.updateIsAvailable(true)
         }
-        binding.notAvailableButton.setOnClickListener {
-            binding.notAvailableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-            binding.notAvailableButton.elevation = resources.getDimension(R.dimen.elevation_1)
-            binding.availableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
-            binding.availableButton.elevation = 0f
+        binding.cwNotAvailableButton.setOnClickListener {
+            binding.cwNotAvailableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.cwNotAvailableButton.elevation = resources.getDimension(R.dimen.elevation_1)
+            binding.cwAvailableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
+            binding.cwAvailableButton.elevation = 0f
             viewModel.updateIsAvailable(false)
         }
     }
 
     private fun initSearch() {
-        binding.searchContainer.searchRoot.setOnClickListener {
+        binding.incAppBar.incSearch.clSearchContainer.setOnClickListener {
             findNavController().navigate(PastPurchasesFragmentDirections.actionToSearchFragment())
         }
-        binding.searchContainer.search.setOnFocusChangeListener { _, isFocusable ->
+        binding.incAppBar.incSearch.etSearch.setOnFocusChangeListener { _, isFocusable ->
             if (isFocusable) {
                 findNavController().navigate(PastPurchasesFragmentDirections.actionToSearchFragment())
             }
@@ -200,7 +207,14 @@ class PastPurchasesFragment : ViewStateBaseFragment() {
             iOnProductClick = { productId -> onProductClickSubject.onNext(productId) },
             iOnChangeProductQuantity = {},
             iOnShowAllProductsClick = {},
-            iOnFavoriteClick = { pair -> viewModel.changeFavoriteStatus(pair.first, pair.second) }
+            iOnFavoriteClick = { pair -> viewModel.changeFavoriteStatus(pair.first, pair.second) },
+            onNotAvailableMore = {},
+            onNotifyWhenBeAvailable = { id, name, picture ->
+                when(viewModel.isAlreadyLogin()) {
+                    true -> findNavController().navigate(PastPurchasesFragmentDirections.actionToPreOrderBS(id, name, picture))
+                    false -> {}
+                }
+            }
         )
     }
 
@@ -220,7 +234,7 @@ class PastPurchasesFragment : ViewStateBaseFragment() {
         binding.productRecycler.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    binding.appBar.elevation =
+                    binding.abAppBar.elevation =
                         if (binding.productRecycler.canScrollVertically(-1)) 16f
                         else 0f
                 }
@@ -242,21 +256,21 @@ class PastPurchasesFragment : ViewStateBaseFragment() {
 
     private fun observeViewModel() {
         viewModel.sortTypeLD.observe(viewLifecycleOwner) { sortType ->
-            binding.sort.text = sortType.sortName
+            binding.tvSort.text = sortType.sortName
         }
 
         viewModel.availableTitleLD.observe(viewLifecycleOwner) { availableTitle ->
-            binding.availableTitle.text = availableTitle
+            binding.tvAvailableTitle.text = availableTitle
         }
 
         viewModel.notAvailableTitleLD.observe(viewLifecycleOwner) { notAvailableTitle ->
-            binding.notAvailableTitle.text = notAvailableTitle
+            binding.tvNotAvailableTitle.text = notAvailableTitle
         }
 
         viewModel.isShowAvailableSettingsLD.observe(viewLifecycleOwner) { isShow ->
             when(isShow) {
-                true -> binding.availableContainer.visibility = View.VISIBLE
-                false -> binding.availableContainer.visibility = View.GONE
+                true -> binding.clAvailableContainer.visibility = View.VISIBLE
+                false -> binding.clAvailableContainer.visibility = View.GONE
             }
         }
 
@@ -271,7 +285,7 @@ class PastPurchasesFragment : ViewStateBaseFragment() {
 
         viewModel.favoriteCategoryUILD.observe(viewLifecycleOwner) { categoryUI ->
             binding.emptyFavoriteContainer.visibility = View.INVISIBLE
-            binding.favoriteContainer.visibility = View.VISIBLE
+            binding.llFavoriteContainer.visibility = View.VISIBLE
             updateHeader(categoryUI)
             updatePager()
         }
@@ -279,16 +293,16 @@ class PastPurchasesFragment : ViewStateBaseFragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateHeader(categoryUI: CategoryUI) {
-        binding.categoryName.text = categoryUI.name
-        binding.productAmount.text = categoryUI.productAmount.toString()
+        binding.tvCategoryName.text = categoryUI.name
+        binding.tvProductAmount.text = categoryUI.productAmount.toString()
 
         when(categoryUI.categoryUIList.isNotEmpty()) {
             true -> {
                 binding.categoriesRecycler.visibility = View.VISIBLE
-                binding.categories.visibility = View.VISIBLE
+                binding.imgCategories.visibility = View.VISIBLE
             }
             else -> {
-                binding.categories.visibility = View.GONE
+                binding.imgCategories.visibility = View.GONE
                 binding.categoriesRecycler.visibility = View.GONE
             }
         }
@@ -313,7 +327,11 @@ class PastPurchasesFragment : ViewStateBaseFragment() {
                 viewModel.changeCart(productId, quantity)
             },
             onNotAvailableMore = {},
-            onNotifyWhenBeAvailable = {},
+            onNotifyWhenBeAvailable = { id, name, picture ->
+                findNavController().navigate(PastPurchasesFragmentDirections.actionToPreOrderBS(
+                    id, name, picture
+                ))
+            },
             productDiffItemCallback = ProductDiffItemCallback(),
             viewMode = viewMode
         )
@@ -363,14 +381,14 @@ class PastPurchasesFragment : ViewStateBaseFragment() {
         when (viewMode) {
             PagingProductsAdapter.ViewMode.GRID -> {
                 viewMode = PagingProductsAdapter.ViewMode.LIST
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_list))
+                binding.imgViewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_list))
                 firstVisiblePosition = gridLayoutManager.findFirstVisibleItemPosition()
                 lastVisiblePosition = gridLayoutManager.findLastVisibleItemPosition()
                 binding.productRecycler.layoutManager = linearLayoutManager
             }
             PagingProductsAdapter.ViewMode.LIST -> {
                 viewMode = PagingProductsAdapter.ViewMode.GRID
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_table))
+                binding.imgViewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_table))
                 firstVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition()
                 lastVisiblePosition = linearLayoutManager.findLastVisibleItemPosition()
                 binding.productRecycler.layoutManager = gridLayoutManager
@@ -400,7 +418,7 @@ class PastPurchasesFragment : ViewStateBaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
 
     }
 }

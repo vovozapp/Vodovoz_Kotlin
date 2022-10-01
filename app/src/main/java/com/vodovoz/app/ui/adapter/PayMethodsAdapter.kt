@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
-import com.vodovoz.app.data.model.common.PayMethodEntity
 import com.vodovoz.app.databinding.ViewHolderPayMethodBinding
 import com.vodovoz.app.ui.model.PayMethodUI
 

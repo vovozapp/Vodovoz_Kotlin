@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderCatalogCategoryMiniBinding
-import com.vodovoz.app.ui.view_holder.CheckableCategoryViewHolder
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.ui.view_holder.CheckableCategoryViewHolder
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 

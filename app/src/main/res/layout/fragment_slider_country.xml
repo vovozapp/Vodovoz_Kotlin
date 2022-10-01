@@ -9,11 +9,11 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvName"
-        style="@style/TextViewHeaderWhiteBold"
+        style="@style/TextViewMediumWhiteBold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/space_16"
-        android:paddingBottom="@dimen/space_8"
+        android:paddingBottom="@dimen/space_6"
         android:paddingTop="@dimen/space_16"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

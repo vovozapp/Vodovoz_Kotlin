@@ -9,11 +9,9 @@ import androidx.paging.map
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.SortType
-import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.mapper.FavoriteProductsHeaderBundleMapper.mapToUI
 import com.vodovoz.app.mapper.PastPurchasesHeaderBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
-import com.vodovoz.app.ui.model.CategoryDetailUI
+import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.CategoryUI
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -160,7 +158,9 @@ class PastPurchasesViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
+
+    fun isAlreadyLogin() = dataRepository.isAlreadyLogin()
 
 }

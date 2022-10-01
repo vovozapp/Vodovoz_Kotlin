@@ -37,7 +37,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnPersonal"
-                    style="@style/GrayButton"
+                    style="@style/BlueButton"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="@dimen/button_small_height"
@@ -49,7 +49,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnCompany"
-                    style="@style/BlueButton"
+                    style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="@dimen/button_small_height"
@@ -243,7 +243,7 @@
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:dividerColor="@color/divider_color"/>
+                    app:dividerColor="@color/divider_gray_color"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvShippingInterval"
@@ -287,7 +287,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
-                    app:dividerColor="@color/divider_color"/>
+                    app:dividerColor="@color/divider_gray_color"/>
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/etInputCash"

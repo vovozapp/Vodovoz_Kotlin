@@ -72,7 +72,7 @@
             android:id="@+id/mdBetweenActions"
             android:layout_width="1dp"
             android:layout_height="@dimen/_15sdp"
-            app:dividerColor="@color/divider_color"
+            app:dividerColor="@color/divider_gray_color"
             app:layout_constraintBottom_toBottomOf="@+id/tvMoreDetails"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

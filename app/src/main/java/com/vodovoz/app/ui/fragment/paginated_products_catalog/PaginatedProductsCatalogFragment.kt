@@ -72,7 +72,11 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
             viewModel.changeCart(productId, quantity)
         },
         onNotAvailableMore = {},
-        onNotifyWhenBeAvailable = {},
+        onNotifyWhenBeAvailable = { id, name, picture ->
+            findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToPreOrderBS(
+                id, name, picture
+            ))
+        },
         productDiffItemCallback = ProductDiffItemCallback(),
         viewMode = viewMode
     )
@@ -93,8 +97,8 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
                 state: RecyclerView.State
             ) {
                 with(outRect) {
-                    top = space
-                    bottom = space
+                    top = space/2
+                    bottom = space/2
                     right = space
                 }
             }
@@ -119,8 +123,8 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
                         left = space/2
                         right = space
                     }
-                    top = space
-                    bottom = space
+                    top = space/2
+                    bottom = space/2
                 }
             }
         }
@@ -203,18 +207,18 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
     }
 
     private fun initHeader() {
-        binding.viewMode.setOnClickListener { changeViewMode() }
-        binding.sort.setOnClickListener { showBottomSortSettings() }
-        binding.filter.setOnClickListener { showAllFiltersFragment() }
+        binding.imgViewMode.setOnClickListener { changeViewMode() }
+        binding.tvSort.setOnClickListener { showBottomSortSettings() }
+        binding.imgFilters.setOnClickListener { showAllFiltersFragment() }
         binding.categoryContainer.setOnClickListener { showSingleRootCatalogCatalog() }
-        binding.back.setOnClickListener { findNavController().popBackStack() }
+        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun initSearch() {
-        binding.searchContainer.searchRoot.setOnClickListener {
+        binding.incAppBar.incSearch.clSearchContainer.setOnClickListener {
             findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
         }
-        binding.searchContainer.search.setOnFocusChangeListener { _, isFocusable ->
+        binding.incAppBar.incSearch.etSearch.setOnFocusChangeListener { _, isFocusable ->
             if (isFocusable) {
                 findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
             }
@@ -264,7 +268,7 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
         when (viewMode) {
             ViewMode.LIST -> {
                 viewMode = ViewMode.LIST
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_list))
+                binding.imgViewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_list))
                 binding.productRecycler.layoutManager = linearLayoutManager
                 binding.productRecycler.removeItemDecoration(gridMarginDecoration)
                 binding.productRecycler.addItemDecoration(linearMarginDecoration)
@@ -272,7 +276,7 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
             }
             ViewMode.GRID -> {
                 viewMode = ViewMode.GRID
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_table))
+                binding.imgViewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_table))
                 binding.productRecycler.layoutManager = gridLayoutManager
                 binding.productRecycler.removeItemDecoration(linearMarginDecoration)
                 binding.productRecycler.removeItemDecoration(linearDividerItemDecoration)
@@ -300,15 +304,15 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
 
     private fun observeViewModel() {
         viewModel.sortTypeLD.observe(viewLifecycleOwner) { sortType ->
-            binding.sort.text = sortType.sortName
+            binding.tvSort.text = sortType.sortName
         }
 
         viewModel.filtersAmountLD.observe(viewLifecycleOwner) { amount ->
             when(amount) {
-                0 -> binding.filterAmount.visibility = View.INVISIBLE
+                0 -> binding.tvFiltersAmount.visibility = View.INVISIBLE
                 else -> {
-                    binding.filterAmount.text = amount.toString()
-                    binding.filterAmount.visibility = View.VISIBLE
+                    binding.tvFiltersAmount.text = amount.toString()
+                    binding.tvFiltersAmount.visibility = View.VISIBLE
                 }
             }
         }
@@ -330,8 +334,8 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateHeader(categoryUI: CategoryUI) {
-        binding.categoryName.text = categoryUI.name
-        binding.productAmount.text = categoryUI.productAmount.toString()
+        binding.tvCategoryName.text = categoryUI.name
+        binding.tvProductAmount.text = categoryUI.productAmount.toString()
         binding.additionalName.text = categoryUI.primaryFilterName
 
         when(categoryUI.primaryFilterValueList.isNotEmpty()) {
@@ -361,7 +365,11 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
                 viewModel.changeCart(productId, quantity)
             },
             onNotAvailableMore = {},
-            onNotifyWhenBeAvailable = {},
+            onNotifyWhenBeAvailable = { id, name, picture ->
+                findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToPreOrderBS(
+                    id, name, picture
+                ))
+            },
             productDiffItemCallback = ProductDiffItemCallback(),
             viewMode = viewMode
         )
@@ -403,6 +411,6 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 }

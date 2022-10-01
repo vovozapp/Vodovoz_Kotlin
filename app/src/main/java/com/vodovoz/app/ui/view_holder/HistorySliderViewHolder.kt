@@ -14,14 +14,7 @@ class HistorySliderViewHolder(
     private val cardWidth: Int
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    init {
-        binding.root.layoutParams = RecyclerView.LayoutParams(
-            cardWidth,
-            (cardWidth * 1.77).toInt()
-        )
-
-        binding.root.setOnClickListener { onHistoryClickSubject.onNext(historyUI.id) }
-    }
+    init { binding.root.setOnClickListener { onHistoryClickSubject.onNext(historyUI.id) } }
 
     private lateinit var historyUI: HistoryUI
 

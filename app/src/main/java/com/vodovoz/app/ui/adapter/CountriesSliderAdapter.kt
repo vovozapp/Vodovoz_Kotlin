@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderSliderCountryBinding
-import com.vodovoz.app.ui.view_holder.CountrySliderViewHolder
 import com.vodovoz.app.ui.model.CountryUI
+import com.vodovoz.app.ui.view_holder.CountrySliderViewHolder
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class CountriesSliderAdapter(

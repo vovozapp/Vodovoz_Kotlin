@@ -16,6 +16,7 @@ class ProductEntity(
     val isBottle: Boolean = false,
     val isGift: Boolean = false,
     var isFavorite: Boolean = false,
+    var isAvailable: Boolean = true,
     val priceList: List<PriceEntity> = listOf(),
     val detailPictureList: List<String> = listOf(),
     val replacementProductEntityList: List<ProductEntity> = listOf()

@@ -9,9 +9,9 @@ import androidx.paging.map
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.mapper.OrderDetailsMapper.mapToUI
 import com.vodovoz.app.mapper.OrderMapper.mapToUI
+import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.OrderDetailsUI
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -103,7 +103,7 @@ class OrdersHistoryViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

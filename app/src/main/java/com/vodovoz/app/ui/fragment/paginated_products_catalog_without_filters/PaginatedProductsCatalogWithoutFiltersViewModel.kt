@@ -9,10 +9,10 @@ import androidx.paging.map
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.SortType
-import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment.DataSource
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
+import com.vodovoz.app.ui.base.ViewState
+import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment.DataSource
 import com.vodovoz.app.ui.model.CategoryUI
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -180,7 +180,7 @@ class PaginatedProductsCatalogWithoutFiltersViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

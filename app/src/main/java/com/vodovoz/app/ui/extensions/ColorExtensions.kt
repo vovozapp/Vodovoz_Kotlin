@@ -1,7 +1,5 @@
 package com.vodovoz.app.ui.extensions
 
-import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Color
 import kotlin.math.roundToInt
 

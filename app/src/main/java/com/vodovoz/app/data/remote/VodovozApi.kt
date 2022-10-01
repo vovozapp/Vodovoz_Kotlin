@@ -1,9 +1,7 @@
 package com.vodovoz.app.data.remote
 
-import com.vodovoz.app.data.model.common.ResponseEntity
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -458,6 +456,17 @@ interface VodovozApi {
         @Query("code") code: String? = null
     ): Single<ResponseBody>
 
+    @GET("newmobile/osnova/predzakaz.php")
+    fun fetchPreOrderResponse(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("fio") name: String? = null,
+        @Query("email") email: String? = null,
+        @Query("phone") phone: String? = null,
+        @Query("tovar") productId: Long? = null
+    ): Single<ResponseBody>
+
+    //action=otpravka&userid=515&fio=test&email=email@mail.ru&phone=+78945612300&tovar=213123
     //http://m.vodovoz.ru/newmobile/profile/auth/authtelefon.php?action=tochkakarta&telefon=номертелефона&code=9267
     //http://m.vodovoz.ru/newmobile/profile/auth/authtelefon.php?action=tochkakarta&telefon=+79639266603
     //Pred zakaz

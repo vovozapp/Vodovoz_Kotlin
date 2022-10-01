@@ -1,14 +1,12 @@
 package com.vodovoz.app.ui.fragment.saved_addresses
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -20,12 +18,10 @@ import com.vodovoz.app.ui.adapter.AddressesAdapterItemType
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
-import com.vodovoz.app.ui.diffUtils.AddressDiffUtilCallback
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
-import com.vodovoz.app.ui.fragment.cart.CartFragment
 import com.vodovoz.app.ui.fragment.ordering.OrderType
 import com.vodovoz.app.ui.model.AddressUI
-import com.vodovoz.app.util.LogSettings
+import com.vodovoz.app.ui.view.Divider
 
 class AddressesFragment : ViewStateBaseFragment() {
 
@@ -37,6 +33,7 @@ class AddressesFragment : ViewStateBaseFragment() {
     private lateinit var viewModel: SavedAddressesViewModel
 
     private val addressesAdapter = AddressesAdapter()
+    private var dividerItemDecoration: Divider? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,18 +104,15 @@ class AddressesFragment : ViewStateBaseFragment() {
     }
 
     private fun initAddressesRecyclers() {
-        binding.rvAddresses.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvAddresses.adapter = addressesAdapter
         val space16 = resources.getDimension(R.dimen.space_16).toInt()
         val spaceLastItemBottomSpace = resources.getDimension(R.dimen.last_item_bottom_normal_space).toInt()
+        binding.rvAddresses.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvAddresses.adapter = addressesAdapter
         binding.rvAddresses.addMarginDecoration { rect, view, parent, state ->
-            rect.left = space16
-            rect.right = space16
             rect.top = space16
             val position = parent.getChildAdapterPosition(view)
             if (parent.adapter?.getItemViewType(position) == AddressesAdapterItemType.ADDRESS.value) {
                 if (position == state.itemCount - 1) rect.bottom = spaceLastItemBottomSpace
-                else rect.bottom = space16
             }
         }
 

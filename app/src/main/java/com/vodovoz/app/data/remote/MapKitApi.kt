@@ -1,6 +1,5 @@
 package com.vodovoz.app.data.remote
 
-import android.widget.RatingBar
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import retrofit2.Response

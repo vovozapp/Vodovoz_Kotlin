@@ -1,6 +1,5 @@
 package com.vodovoz.app.util
 
-import android.util.Log
 import com.vodovoz.app.ui.model.ProductUI
 
 fun calculatePrice(productUIList: List<ProductUI>): Triple<Int, Int, Int> {

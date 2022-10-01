@@ -1,19 +1,14 @@
 package com.vodovoz.app.ui.fragment.order_details
 
-import android.content.Intent
 import android.graphics.Rect
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -25,13 +20,13 @@ import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.ProductDiffUtilCallback
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
-import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.model.OrderDetailsUI
 import com.vodovoz.app.ui.model.OrderStatusUI
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.ui.view.Divider
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -57,8 +52,14 @@ class OrderDetailsFragment : ViewStateBaseFragment() {
         onChangeCartQuantity = { productId, quantity ->
             viewModel.changeCart(productId, quantity)
         },
-        onNotAvailableMore = {},
-        onNotifyWhenBeAvailable = {},
+        onNotAvailableMore = {
+
+        },
+        onNotifyWhenBeAvailable = { id, name, picture ->
+            findNavController().navigate(OrderDetailsFragmentDirections.actionToPreOrderBS(
+                id, name, picture
+            ))
+        },
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,7 +121,9 @@ class OrderDetailsFragment : ViewStateBaseFragment() {
         val space = resources.getDimension(R.dimen.space_16).toInt()
         binding.rvProducts.layoutManager = LinearLayoutManager(requireContext())
         binding.rvProducts.adapter = linearProductsAdapter
-        binding.rvProducts.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        ContextCompat.getDrawable(requireContext(), R.drawable.bkg_gray_divider)?.let {
+            binding.rvProducts.addItemDecoration(Divider(it, space))
+        }
         binding.rvProducts.addItemDecoration(
             object : RecyclerView.ItemDecoration() {override fun getItemOffsets(
                 outRect: Rect,
@@ -208,16 +211,17 @@ class OrderDetailsFragment : ViewStateBaseFragment() {
                 else -> binding.tvCancelOrder.visibility = View.VISIBLE
             }
             when(orderDetailsUI.isPayed) {
-                true -> binding.tvPayStatus.text = "Оплачен"
-                false -> binding.tvPayStatus.text = "Не оплачен"
-            }
-            when(orderDetailsUI.payUri.isEmpty()) {
-                false -> when(orderDetailsUI.status) {
-                    OrderStatusUI.COMPLETED,
-                    OrderStatusUI.CANCELED -> binding.llPayOrder.visibility = View.GONE
-                    else -> binding.llPayOrder.visibility = View.VISIBLE
+                true -> {
+                    binding.tvPayStatus.text = "Оплачен"
+                    binding.llPayOrder.visibility = View.GONE
                 }
-                true -> binding.llPayOrder.visibility = View.GONE
+                false -> {
+                    when(orderDetailsUI.payUri.isEmpty()) {
+                        true -> binding.llPayOrder.visibility = View.GONE
+                        false -> binding.llPayOrder.visibility = View.VISIBLE
+                    }
+                    binding.tvPayStatus.text = "Не оплачен"
+                }
             }
 
             llStatusContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), orderDetailsUI.status!!.color))

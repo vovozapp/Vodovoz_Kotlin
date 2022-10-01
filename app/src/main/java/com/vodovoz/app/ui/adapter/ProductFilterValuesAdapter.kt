@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderFilterValueBinding
-import com.vodovoz.app.ui.view_holder.ProductFilterValueViewHolder
 import com.vodovoz.app.ui.model.FilterValueUI
+import com.vodovoz.app.ui.view_holder.ProductFilterValueViewHolder
 
 class ProductFilterValuesAdapter() : RecyclerView.Adapter<ProductFilterValueViewHolder>() {
 

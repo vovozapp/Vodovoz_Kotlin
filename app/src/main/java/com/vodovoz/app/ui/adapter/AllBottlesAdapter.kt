@@ -5,12 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderBottleNameBinding
-import com.vodovoz.app.databinding.ViewHolderBrandWithNameBinding
 import com.vodovoz.app.ui.diffUtils.BottleDiffUtilCallback
-import com.vodovoz.app.ui.diffUtils.BrandDiffUtilCallback
 import com.vodovoz.app.ui.model.BottleUI
 import com.vodovoz.app.ui.view_holder.BottleNameViewHolder
-import com.vodovoz.app.ui.view_holder.BrandJustNameViewHolder
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class AllBottlesAdapter(

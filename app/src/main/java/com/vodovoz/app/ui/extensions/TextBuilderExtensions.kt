@@ -4,7 +4,17 @@ import android.util.Log
 import android.widget.TextView
 import com.vodovoz.app.util.LogSettings
 
-object PriceTextBuilderExtensions {
+object TextBuilderExtensions {
+
+    fun TextView.setLimitedText(limitedText: String) {
+        this.text = limitedText
+        if (this.text.length != limitedText.length) {
+            val result = StringBuilder().append(this.text)
+            result.delete((result.indices.last - 2), result.indices.last)
+            result.append("...")
+            this.text = result.toString()
+        }
+    }
 
     fun TextView.setExpiredCodeText(
         seconds: Int,

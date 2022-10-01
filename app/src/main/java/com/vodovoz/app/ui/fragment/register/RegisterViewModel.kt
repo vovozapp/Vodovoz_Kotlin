@@ -5,13 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.config.AuthConfig.EMAIL_IS_ALREADY_REGISTERED
-import com.vodovoz.app.data.config.FieldValidateConfig.EMAIL_REGEX
-import com.vodovoz.app.data.config.FieldValidateConfig.FIRST_NAME_LENGTH
-import com.vodovoz.app.data.config.FieldValidateConfig.PASSWORD_LENGTH
-import com.vodovoz.app.data.config.FieldValidateConfig.PHONE_REGEX
-import com.vodovoz.app.data.config.FieldValidateConfig.SECOND_NAME_LENGTH
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.ui.base.ViewState
+import com.vodovoz.app.util.FieldValidationsSettings
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -23,65 +19,28 @@ class RegisterViewModel(
 ) : ViewModel() {
 
     private val viewStateMLD = MutableLiveData<ViewState>()
-    private val firstNameErrorMLD = MutableLiveData<String>()
-    private val secondNameErrorMLD = MutableLiveData<String>()
-    private val emailErrorMLD = MutableLiveData<String>()
-    private val passwordErrorMLD = MutableLiveData<String>()
-    private val phoneErrorMLD = MutableLiveData<String>()
+    private val errorMLD = MutableLiveData<String>()
     private val isRegisterSuccessMLD = MutableLiveData<Boolean>()
 
     val viewStateLD: LiveData<ViewState> = viewStateMLD
-    val firstNameErrorLD: LiveData<String> = firstNameErrorMLD
-    val secondNameErrorLD: LiveData<String> = secondNameErrorMLD
-    val emailErrorLD: LiveData<String> = emailErrorMLD
-    val passwordErrorLD: LiveData<String> = passwordErrorMLD
-    val phoneErrorLD: LiveData<String> = phoneErrorMLD
+    val errorLD: LiveData<String> = errorMLD
     val isRegisterSuccessLD: LiveData<Boolean> = isRegisterSuccessMLD
 
     private val compositeDisposable = CompositeDisposable()
 
-    private var isFirstTry = true
+    var validEmail = false
+    var validPhone = false
+    var validFirstName = false
+    var validSecondName = false
+    var validPassword = false
 
-    var firstName = ""
-        set(value) {
-            field = value
-            validateFirstName()
-        }
-    var secondName = ""
-        set(value) {
-            field = value
-            validateSecondName()
-        }
-    var phone = ""
-        set(value) {
-            field = value
-            validatePhone()
-        }
-    var email = ""
-        set(value) {
-            field = value
-            validateEmail()
-        }
-    var password = ""
-        set(value) {
-            field = value
-            validatePassword()
-        }
-
-    fun validate() {
-        isFirstTry = false
-        var isValid = true
-
-        if (!validateFirstName()) isValid = false
-        if (!validateSecondName()) isValid = false
-        if (!validateEmail()) isValid = false
-        if (!validatePhone()) isValid = false
-        if (!validatePassword()) isValid = false
-
-        if (isValid) register()
-    }
-
-    private fun register() {
+    fun register(
+        firstName: String,
+        secondName: String,
+        email: String,
+        phone: String,
+        password: String
+    ) {
         dataRepository
             .register(
                 firstName = firstName,
@@ -99,7 +58,7 @@ class RegisterViewModel(
                         is ResponseEntity.Hide -> viewStateMLD.value = ViewState.Hide()
                         is ResponseEntity.Error -> {
                             when(response.errorMessage) {
-                                EMAIL_IS_ALREADY_REGISTERED -> emailErrorMLD.value = EMAIL_IS_ALREADY_REGISTERED
+                                EMAIL_IS_ALREADY_REGISTERED -> errorMLD.value = EMAIL_IS_ALREADY_REGISTERED
                             }
                             viewStateMLD.value = ViewState.Success()
                         }
@@ -109,43 +68,14 @@ class RegisterViewModel(
                         }
                     }
                 },
-                onError = { throwable -> viewStateMLD.value = ViewState.Error(throwable.message!!) }
+                onError = { throwable -> errorMLD.value = throwable.message ?: "" }
             ).addTo(compositeDisposable)
     }
 
-    private fun validateFirstName() = FIRST_NAME_LENGTH.contains(firstName.length).apply {
-        firstNameErrorMLD.value =
-            if (!this && !isFirstTry) "Длина $FIRST_NAME_LENGTH"
-            else ""
-    }
-
-    private fun validateSecondName() = SECOND_NAME_LENGTH.contains(secondName.length).apply {
-        secondNameErrorMLD.value =
-            if (!this && !isFirstTry) "Длина $SECOND_NAME_LENGTH"
-            else ""
-    }
-
-    private fun validatePassword() = PASSWORD_LENGTH.contains(password.length).apply {
-        passwordErrorMLD.value =
-            if (!this && !isFirstTry) "Длина $PASSWORD_LENGTH"
-            else ""
-    }
-
-    private fun validatePhone() = PHONE_REGEX.matches(phone).apply {
-        phoneErrorMLD.value =
-            if (!this && !isFirstTry) "Некорректная номер"
-            else ""
-    }
-
-    private fun validateEmail() = EMAIL_REGEX.matches(email).apply {
-        emailErrorMLD.value =
-            if (!this && !isFirstTry) "Некорректная почта"
-            else ""
-    }
 
     override fun onCleared() {
         super.onCleared()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

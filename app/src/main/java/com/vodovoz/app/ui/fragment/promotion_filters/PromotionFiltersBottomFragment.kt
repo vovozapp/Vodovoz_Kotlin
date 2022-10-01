@@ -60,7 +60,7 @@ class PromotionFiltersBottomFragment : BottomSheetDialogFragment() {
 
     override fun onStop() {
         super.onStop()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

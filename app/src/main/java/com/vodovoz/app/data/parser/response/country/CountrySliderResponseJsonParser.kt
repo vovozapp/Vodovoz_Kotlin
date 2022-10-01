@@ -23,7 +23,7 @@ object CountrySliderResponseJsonParser {
                         .getJSONArray("STRANY").parseCountryEntityList()
                 )
             )
-            else -> ResponseEntity.Error("Неправильный запрос")
+            else -> ResponseEntity.Error("Ошибка парсинга страны")
         }
     }
 

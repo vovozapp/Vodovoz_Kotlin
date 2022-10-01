@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bluePrimary">#49a3f7</color>
+    <color name="bluePrimary">#00a5dd</color>
     <color name="blueLight">#85d4ff</color>
     <color name="blueDark">#0075c4</color>
+    <color name="accentPrimary">#ffa700</color>
 
     <color name="blackTextDark">#262626</color>
     <color name="blackTextPrimary">#828282</color>
@@ -28,13 +29,18 @@
     <color name="color_status_completed">#7ABA05</color>
     <color name="color_status_in_delivery">#9C0993</color>
     <color name="color_status_accepted">#F7D107</color>
-    <color name="color_status_canceled">#D3D3D3</color>
-    <color name="color_status_delivered">#D3D3D3</color>
+    <color name="color_status_canceled">#d3d3d3</color>
+    <color name="color_status_delivered">#d3d3d3</color>
 
     //Text
-    <color name="text_black">#FF042033</color>
-    <color name="text_gray">#818F99</color>
+    <color name="text_black">#434343</color>
+    <color name="text_gray">#555555</color>
+    <color name="text_gray_light">#808080</color>
 
-    <color name="divider_color">@color/gray</color>
+
+    <color name="divider_gray_color">@color/light_gray</color>
+    <color name="divider_light_gray_color">#F5F5F5</color>
+
+    <color name="old_gray_bk">#F5F5F5</color>
 
 </resources>

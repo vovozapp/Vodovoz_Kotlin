@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -37,13 +36,13 @@ import com.vodovoz.app.ui.decoration.CategoryTabsMarginDecoration
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
-import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
-import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
+import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
 import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
+import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
+import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -64,6 +63,7 @@ class SearchFragment : ViewStateBaseFragment() {
     private lateinit var binding: FragmentSearchBinding
     private lateinit var viewModel: SearchViewModel
 
+    private val space8 by lazy { resources.getDimension(R.dimen.space_8) }
     private val compositeDisposable = CompositeDisposable()
 
     private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
@@ -84,7 +84,11 @@ class SearchFragment : ViewStateBaseFragment() {
             viewModel.changeCart(productId, quantity)
         },
         onNotAvailableMore = {},
-        onNotifyWhenBeAvailable = {},
+        onNotifyWhenBeAvailable = { id, name, picture ->
+            findNavController().navigate(SearchFragmentDirections.actionToPreOrderBS(
+                id, name, picture
+            ))
+        },
         productDiffItemCallback = ProductDiffItemCallback(),
         viewMode = ViewMode.LIST
     )
@@ -172,10 +176,10 @@ class SearchFragment : ViewStateBaseFragment() {
     }
 
     private fun initHeader() {
-        binding.viewMode.setOnClickListener { changeViewMode() }
-        binding.sort.setOnClickListener { showBottomSortSettings() }
-        binding.categories.setOnClickListener { showMiniCatalog() }
-        binding.back.setOnClickListener { findNavController().popBackStack() }
+        binding.imgViewMode.setOnClickListener { changeViewMode() }
+        binding.tvSort.setOnClickListener { showBottomSortSettings() }
+        binding.imgCategories.setOnClickListener { showMiniCatalog() }
+        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun initCategoriesRecycler() {
@@ -194,7 +198,14 @@ class SearchFragment : ViewStateBaseFragment() {
             iOnProductClick = { productId -> onProductClickSubject.onNext(productId) },
             iOnChangeProductQuantity = { pair -> onChangeProductQuantitySubject.onNext(pair)},
             iOnFavoriteClick = { pair -> onFavoriteClickSubject.onNext(pair) },
-            iOnShowAllProductsClick = {}
+            iOnShowAllProductsClick = {},
+            onNotAvailableMore = {},
+            onNotifyWhenBeAvailable = { id, name, picture ->
+                when(viewModel.isAlreadyLogin()) {
+                    true -> findNavController().navigate(SearchFragmentDirections.actionToPreOrderBS(id, name, picture))
+                    false -> findNavController().navigate(SearchFragmentDirections.actionToProfileFragment())
+                }
+            }
         )
 
         childFragmentManager.beginTransaction().replace(
@@ -233,7 +244,7 @@ class SearchFragment : ViewStateBaseFragment() {
     }
 
     private fun initShare() {
-        binding.share.setOnClickListener {
+        binding.imgShare.setOnClickListener {
             Intent.createChooser(
                 Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
@@ -245,12 +256,14 @@ class SearchFragment : ViewStateBaseFragment() {
     }
 
     private fun initSearch() {
-        binding.searchDataContainer.setScrollElevation(binding.searchToolbar)
+        binding.incAppBar.incSearch.imgMicro.visibility = View.GONE
+        binding.incAppBar.incSearch.imgQr.visibility = View.GONE
+        binding.searchDataContainer.setScrollElevation(binding.incAppBar.root)
         binding.clearSearchHistory.setOnClickListener {
             viewModel.clearSearchHistory()
         }
 
-        binding.search.setOnFocusChangeListener { _, isFocusable ->
+        binding.incAppBar.incSearch.etSearch.setOnFocusChangeListener { _, isFocusable ->
             if (isFocusable) {
                 binding.searchDataContainer.visibility = View.VISIBLE
                 binding.productsContainer.visibility = View.INVISIBLE
@@ -258,10 +271,10 @@ class SearchFragment : ViewStateBaseFragment() {
         }
 
         Observable.create<String> { emitter ->
-            binding.search.doAfterTextChanged { query ->
+            binding.incAppBar.incSearch.etSearch.doAfterTextChanged { query ->
                 when(query?.trim().toString().isNotEmpty()) {
-                    true ->  binding.clear.visibility = View.VISIBLE
-                    false -> binding.clear.visibility = View.INVISIBLE
+                    true ->  binding.incAppBar.incSearch.imgClear.visibility = View.VISIBLE
+                    false ->binding.incAppBar.incSearch.imgClear.visibility = View.INVISIBLE
                 }
                 emitter.onNext(query.toString())
             }
@@ -269,14 +282,14 @@ class SearchFragment : ViewStateBaseFragment() {
             viewModel.updateMatchesQueries(query)
         }.addTo(compositeDisposable)
 
-        binding.clear.setOnClickListener {
-            binding.search.setText("")
-            binding.search.requestFocus()
+        binding.incAppBar.incSearch.imgClear.setOnClickListener {
+            binding.incAppBar.incSearch.etSearch.setText("")
+            binding.incAppBar.incSearch.etSearch.requestFocus()
         }
 
-        binding.search.setOnEditorActionListener{ _, actionId, _ ->
+        binding.incAppBar.incSearch.etSearch.setOnEditorActionListener{ _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val query = binding.search.text.trim().toString()
+                val query = binding.incAppBar.incSearch.etSearch.text.toString().trim()
                 if (query.isNotEmpty()) {
                     updateProductsByQuery(query)
                 }
@@ -299,7 +312,7 @@ class SearchFragment : ViewStateBaseFragment() {
 
     private fun observeViewModel() {
         viewModel.sortTypeLD.observe(viewLifecycleOwner) { sortType ->
-            binding.sort.text = sortType.sortName
+            binding.tvSort.text = sortType.sortName
         }
 
         viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
@@ -371,6 +384,7 @@ class SearchFragment : ViewStateBaseFragment() {
 
     private fun buildQueryChip(query: String): Chip {
         val chip = ViewSimpleTextChipBinding.inflate(layoutInflater, null, false).root
+        chip.chipCornerRadius = space8
         chip.text = query
 
         chip.setOnClickListener {
@@ -383,7 +397,7 @@ class SearchFragment : ViewStateBaseFragment() {
     private fun updateProductsByQuery(query: String) {
         binding.searchDataContainer.visibility = View.INVISIBLE
         binding.productsContainer.visibility = View.VISIBLE
-        binding.search.setText(query)
+        binding.incAppBar.incSearch.etSearch.setText(query)
         viewModel.updateQuery(query)
 
         val view = requireActivity().currentFocus
@@ -395,15 +409,16 @@ class SearchFragment : ViewStateBaseFragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateHeader(categoryUI: CategoryUI) {
-        binding.categoryName.text = categoryUI.productAmount
+        binding.tvCategoryName.text = categoryUI.name
+        binding.tvProductAmount.text = categoryUI.productAmount
 
         when(categoryUI.categoryUIList.isNotEmpty()) {
             true -> {
                 binding.categoriesRecycler.visibility = View.VISIBLE
-                binding.categories.visibility = View.VISIBLE
+                binding.imgCategories.visibility = View.VISIBLE
             }
             else -> {
-                binding.categories.visibility = View.GONE
+                binding.imgCategories.visibility = View.GONE
                 binding.categoriesRecycler.visibility = View.GONE
             }
         }
@@ -428,7 +443,11 @@ class SearchFragment : ViewStateBaseFragment() {
                 viewModel.changeCart(productId, quantity)
             },
             onNotAvailableMore = {},
-            onNotifyWhenBeAvailable = {},
+            onNotifyWhenBeAvailable = { id, name, picture ->
+                findNavController().navigate(SearchFragmentDirections.actionToPreOrderBS(
+                    id, name, picture
+                ))
+            },
             productDiffItemCallback = ProductDiffItemCallback(),
             viewMode = productAdapter.viewMode
         )
@@ -486,13 +505,13 @@ class SearchFragment : ViewStateBaseFragment() {
         when (productAdapter.viewMode) {
             ViewMode.GRID -> {
                 productAdapter.viewMode = ViewMode.LIST
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_list))
+                binding.imgViewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_list))
                 firstVisiblePosition = productsGridLayoutManager.findFirstVisibleItemPosition()
                 lastVisiblePosition = productsGridLayoutManager.findLastVisibleItemPosition()
             }
             ViewMode.LIST -> {
                 productAdapter.viewMode = ViewMode.GRID
-                binding.viewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_table))
+                binding.imgViewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_table))
                 firstVisiblePosition = productLinearLayoutManager.findFirstVisibleItemPosition()
                 lastVisiblePosition = productLinearLayoutManager.findLastVisibleItemPosition()
             }
@@ -523,13 +542,13 @@ class SearchFragment : ViewStateBaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        binding.search.requestFocus()
+        binding.incAppBar.incSearch.etSearch.requestFocus()
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

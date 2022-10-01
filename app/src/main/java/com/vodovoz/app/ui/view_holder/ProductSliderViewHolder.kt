@@ -6,18 +6,14 @@ import android.graphics.Paint
 import android.os.CountDownTimer
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderSliderProductBinding
-import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountPercent
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setMinimalPriceText
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceCondition
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPricePerUnitText
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.subjects.PublishSubject
 
@@ -26,6 +22,8 @@ class ProductSliderViewHolder(
     private val onProductClickSubject: PublishSubject<Long>,
     private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
+    private val onNotifyWhenBeAvailable: (Long, String, String) -> Unit,
+    private val onNotAvailableMore: () -> Unit,
     private val context: Context,
     private val cardWidth: Int
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -40,10 +38,6 @@ class ProductSliderViewHolder(
     }
 
     init {
-        binding.root.layoutParams = RecyclerView.LayoutParams(
-            cardWidth,
-            (cardWidth * 1.2).toInt()
-        )
         binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.root.setOnClickListener {
             onProductClickSubject.onNext(productUI.id)
@@ -51,6 +45,7 @@ class ProductSliderViewHolder(
 
         binding.amountController.add.setOnClickListener {
             if (productUI.leftItems == 0) {
+                onNotifyWhenBeAvailable(productUI.id, productUI.name, productUI.detailPicture)
                 return@setOnClickListener
             }
             if (productUI.cartQuantity == 0) {
@@ -185,10 +180,10 @@ class ProductSliderViewHolder(
         //Status
         var isNotHaveStatuses = true
         when (productUI.status.isEmpty()) {
-            true -> binding.cwStatusContainer.visibility = View.GONE
+            true -> binding.rlStatusContainer.visibility = View.GONE
             false -> {
                 isNotHaveStatuses = false
-                binding.cwStatusContainer.visibility = View.VISIBLE
+                binding.rlStatusContainer.visibility = View.VISIBLE
                 binding.tvStatus.text = productUI.status
                 binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(productUI.statusColor))
             }
@@ -198,6 +193,7 @@ class ProductSliderViewHolder(
         when(productUI.priceList.size == 1 &&
                 productUI.priceList.first().currentPrice < productUI.priceList.first().oldPrice) {
             true -> {
+                isNotHaveStatuses = false
                 binding.cwDiscountContainer.visibility = View.VISIBLE
                 binding.tvDiscountPercent.setDiscountPercent(
                     newPrice = productUI.priceList.first().currentPrice,

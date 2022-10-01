@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderSliderPromotionBinding
-import com.vodovoz.app.ui.view_holder.PromotionSliderViewHolder
 import com.vodovoz.app.ui.model.PromotionUI
+import com.vodovoz.app.ui.view_holder.PromotionSliderViewHolder
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class PromotionsSliderAdapter(
@@ -13,6 +13,8 @@ class PromotionsSliderAdapter(
     private val onProductClickSubject: PublishSubject<Long>,
     private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
+    private val onNotifyWhenBeAvailable: (Long, String, String) -> Unit,
+    private val onNotAvailableMore: () -> Unit,
 ) : RecyclerView.Adapter<PromotionSliderViewHolder>() {
 
     var promotionUIList = listOf<PromotionUI>()
@@ -28,6 +30,8 @@ class PromotionsSliderAdapter(
         onProductClickSubject = onProductClickSubject,
         onChangeProductQuantitySubject = onChangeProductQuantitySubject,
         onFavoriteClickSubject = onFavoriteClickSubject,
+        onNotifyWhenBeAvailable = onNotifyWhenBeAvailable,
+        onNotAvailableMore = onNotAvailableMore,
         context = parent.context
     )
 

@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderBrandFilterValueBinding
-import com.vodovoz.app.ui.view_holder.CategoryTabViewHolder
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.ui.view_holder.CategoryTabViewHolder
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class CategoryTabsAdapter(

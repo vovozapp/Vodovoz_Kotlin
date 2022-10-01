@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderServiceBinding
-import com.vodovoz.app.ui.view_holder.ServiceViewHolder
 import com.vodovoz.app.ui.model.ServiceUI
+import com.vodovoz.app.ui.view_holder.ServiceViewHolder
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class ServicesAdapter(

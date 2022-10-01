@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -16,18 +15,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.BsSelectionReplacementProductsBinding
+import com.vodovoz.app.databinding.BsReplacementProductsBinding
 import com.vodovoz.app.ui.adapter.LinearProductsAdapter
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
-import com.vodovoz.app.ui.fragment.ordering.OrderingFragment
-import com.vodovoz.app.ui.fragment.product_details.ProductDetailsViewModel
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.view.Divider
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.subjects.PublishSubject
 
 
 class ReplacementProductsSelectionBS : BottomSheetDialogFragment() {
@@ -37,7 +30,7 @@ class ReplacementProductsSelectionBS : BottomSheetDialogFragment() {
         const val CHANGE_CART = "CHANGE_CART"
     }
 
-    private lateinit var binding: BsSelectionReplacementProductsBinding
+    private lateinit var binding: BsReplacementProductsBinding
     private lateinit var viewModel: ReplacementProductsSelectionViewModel
 
     private lateinit var productUIList: List<ProductUI>
@@ -54,7 +47,7 @@ class ReplacementProductsSelectionBS : BottomSheetDialogFragment() {
             viewModel.changeCart(productId, quantity)
         },
         onNotAvailableMore = {},
-        onNotifyWhenBeAvailable = {},
+        onNotifyWhenBeAvailable = { _, _, _ -> },
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,7 +74,7 @@ class ReplacementProductsSelectionBS : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = BsSelectionReplacementProductsBinding.inflate(
+    ) = BsReplacementProductsBinding.inflate(
         inflater,
         container,
         false
@@ -97,14 +90,20 @@ class ReplacementProductsSelectionBS : BottomSheetDialogFragment() {
 
     private fun setupHeader() {
         binding.imgClose.setOnClickListener { dismiss() }
-        binding.imgAlert.setOnClickListener { }
+        binding.imgAlert.setOnClickListener {
+            findNavController().navigate(ReplacementProductsSelectionBSDirections.actionToPreOrderBS(
+                ReplacementProductsSelectionBSArgs.fromBundle(requireArguments()).productId,
+                ReplacementProductsSelectionBSArgs.fromBundle(requireArguments()).productName,
+                ReplacementProductsSelectionBSArgs.fromBundle(requireArguments()).notAvailableProductDetailPicture
+                ))
+        }
         Glide.with(requireContext()).load(notAvailableProductDetailPicture).into(binding.imgProduct)
     }
 
     private fun setupProductsRecycler() {
         val space = resources.getDimension(R.dimen.space_16).toInt()
         binding.rvProducts.layoutManager = LinearLayoutManager(requireContext())
-        ContextCompat.getDrawable(requireContext(), R.drawable.bkg_divider)?.let {
+        ContextCompat.getDrawable(requireContext(), R.drawable.bkg_gray_divider)?.let {
             binding.rvProducts.addItemDecoration(Divider(it, space))
         }
         linearProductsAdapter.productUIList = productUIList

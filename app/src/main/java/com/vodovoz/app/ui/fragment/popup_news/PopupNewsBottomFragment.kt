@@ -52,6 +52,8 @@ class PopupNewsBottomFragment : BottomSheetDialogFragment() {
     private fun initView() {
         binding.incHeader.tvTitle.text = popupNewsUI.name
         binding.tvDetails.text = popupNewsUI.name
+        binding.btnShowDetails.text = popupNewsUI.actionEntity?.action
+        binding.incHeader.imgClose.setOnClickListener { dismiss() }
         Glide.with(requireContext())
             .load(popupNewsUI.detailPicture)
             .into(binding.imgBanner)

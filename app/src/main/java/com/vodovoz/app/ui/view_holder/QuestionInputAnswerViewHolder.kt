@@ -2,7 +2,6 @@ package com.vodovoz.app.ui.view_holder
 
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.RecyclerView
-import com.vodovoz.app.databinding.FragmentQuestionnairesBinding
 import com.vodovoz.app.databinding.ViewHolderQusetionInputAnswerBinding
 import com.vodovoz.app.ui.model.QuestionUI
 

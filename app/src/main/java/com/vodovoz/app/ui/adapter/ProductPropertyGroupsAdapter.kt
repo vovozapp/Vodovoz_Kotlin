@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderPropertiesGroupBinding
-import com.vodovoz.app.ui.view_holder.ProductPropertyGroupViewHolder
 import com.vodovoz.app.ui.model.PropertiesGroupUI
+import com.vodovoz.app.ui.view_holder.ProductPropertyGroupViewHolder
 
 class ProductPropertyGroupsAdapter(
     private val space: Int

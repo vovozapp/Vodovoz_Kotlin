@@ -2,14 +2,11 @@ package com.vodovoz.app.ui.fragment.ordering
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.widget.doAfterTextChanged
@@ -20,33 +17,29 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
-import com.vodovoz.app.data.config.FieldValidateConfig.EMAIL_REGEX
-import com.vodovoz.app.data.config.FieldValidateConfig.PHONE_REGEX
 import com.vodovoz.app.databinding.BsFreeShippingDaysBinding
 import com.vodovoz.app.databinding.BsSelectionPayMethodBinding
 import com.vodovoz.app.databinding.FragmentOrderingBinding
 import com.vodovoz.app.ui.adapter.FieldType
-import com.vodovoz.app.ui.adapter.FormAdapter
 import com.vodovoz.app.ui.adapter.FormField
 import com.vodovoz.app.ui.adapter.PayMethodsAdapter
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.ContextExtensions.getDeviceInfo
 import com.vodovoz.app.ui.extensions.Date
-import com.vodovoz.app.ui.extensions.Date.dd
-import com.vodovoz.app.ui.extensions.Date.mm
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
 import com.vodovoz.app.ui.fragment.saved_addresses.AddressesFragment
 import com.vodovoz.app.ui.fragment.saved_addresses.OpenMode
-import com.vodovoz.app.ui.model.*
+import com.vodovoz.app.ui.model.AddressUI
+import com.vodovoz.app.ui.model.FreeShippingDaysInfoBundleUI
+import com.vodovoz.app.ui.model.PayMethodUI
+import com.vodovoz.app.ui.model.ShippingIntervalUI
 import com.vodovoz.app.ui.model.custom.OrderingCompletedInfoBundleUI
-import com.vodovoz.app.util.LogSettings
-import java.lang.Exception
-import java.text.SimpleDateFormat
+import com.vodovoz.app.util.FieldValidationsSettings
 import java.util.*
 
 class OrderingFragment : ViewStateBaseFragment() {
@@ -144,8 +137,8 @@ class OrderingFragment : ViewStateBaseFragment() {
             if (viewModel.selectedOrderType != OrderType.PERSONAL) {
                 viewModel.clearData()
                 viewModel.selectedOrderType = OrderType.PERSONAL
-                binding.btnPersonal.setBackgroundResource(R.drawable.selector_bkg_button_gray_rect)
-                binding.btnCompany.setBackgroundResource(R.drawable.bkg_button_blue_rect_disabled)
+                binding.btnCompany.setBackgroundResource(R.drawable.selector_bkg_button_gray_rect)
+                binding.btnPersonal.setBackgroundResource(R.drawable.bkg_button_blue_rect_disabled)
                 binding.llCompanyNameContainer.visibility = View.GONE
                 clearFields()
             }
@@ -155,8 +148,8 @@ class OrderingFragment : ViewStateBaseFragment() {
             if (viewModel.selectedOrderType != OrderType.COMPANY) {
                 viewModel.clearData()
                 viewModel.selectedOrderType = OrderType.COMPANY
-                binding.btnCompany.setBackgroundResource(R.drawable.selector_bkg_button_gray_rect)
-                binding.btnPersonal.setBackgroundResource(R.drawable.bkg_button_blue_rect_disabled)
+                binding.btnPersonal.setBackgroundResource(R.drawable.selector_bkg_button_gray_rect)
+                binding.btnCompany.setBackgroundResource(R.drawable.bkg_button_blue_rect_disabled)
                 binding.llCompanyNameContainer.visibility = View.VISIBLE
                 clearFields()
             }
@@ -407,7 +400,7 @@ class OrderingFragment : ViewStateBaseFragment() {
         }
     }
 
-    private fun validateEmail(name: TextView, input: String) = when(EMAIL_REGEX.matches(input)) {
+    private fun validateEmail(name: TextView, input: String) = when(FieldValidationsSettings.EMAIL_REGEX.matches(input)) {
         false -> {
             name.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
             false
@@ -418,7 +411,7 @@ class OrderingFragment : ViewStateBaseFragment() {
         }
     }
 
-    private fun validatePhone(name: TextView, input: String) = when(PHONE_REGEX.matches(input)) {
+    private fun validatePhone(name: TextView, input: String) = when(FieldValidationsSettings.PHONE_REGEX.matches(input)) {
         false -> {
             name.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
             false
@@ -480,7 +473,7 @@ class OrderingFragment : ViewStateBaseFragment() {
             formField.isValid
         }
         FieldType.EMAIL -> {
-            formField.isValid = EMAIL_REGEX.matches((formField as FormField.SingleLineField).value)
+            formField.isValid = FieldValidationsSettings.EMAIL_REGEX.matches((formField as FormField.SingleLineField).value)
             formField.isValid
         }
 //        FieldType.PHONE -> {

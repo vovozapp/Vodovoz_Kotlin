@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.vodovoz.app.databinding.BsShippingAlertsSelectionBinding
 import com.vodovoz.app.databinding.ViewHolderShippingAlertBinding
 import com.vodovoz.app.ui.model.ShippingAlertUI
 

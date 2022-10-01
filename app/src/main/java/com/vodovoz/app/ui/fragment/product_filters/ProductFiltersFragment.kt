@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentFilterListBinding
@@ -14,9 +14,11 @@ import com.vodovoz.app.ui.adapter.ProductFiltersAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
 import com.vodovoz.app.ui.base.VodovozApplication
+import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogFragment
 import com.vodovoz.app.ui.model.FilterPriceUI
 import com.vodovoz.app.ui.model.FilterUI
+import com.vodovoz.app.ui.view.Divider
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -90,7 +92,16 @@ class ProductFiltersFragment : ViewStateBaseDialogFragment() {
     }
 
     private fun initFilterRecycler() {
+        val space16 = resources.getDimension(R.dimen.space_16).toInt()
+        val space12 = resources.getDimension(R.dimen.space_12).toInt()
         binding.rvFilters.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvFilters.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        binding.rvFilters.addMarginDecoration { rect, view, parent, state ->
+            rect.left = space16
+            rect.right = space16
+            rect.top = space12
+            rect.bottom = space12
+        }
         binding.rvFilters.adapter = productFiltersAdapter
     }
 
@@ -197,7 +208,7 @@ class ProductFiltersFragment : ViewStateBaseDialogFragment() {
 
     override fun onStop() {
         super.onStop()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

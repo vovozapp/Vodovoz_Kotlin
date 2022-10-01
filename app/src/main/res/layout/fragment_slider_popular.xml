@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatTextView
-        style="@style/TextViewHeaderBlackBold"
+        style="@style/TextViewMediumBlackBold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/popular_categories_slider_title"

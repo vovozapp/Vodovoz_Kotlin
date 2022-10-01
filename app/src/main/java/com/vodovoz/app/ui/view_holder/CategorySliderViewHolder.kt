@@ -17,6 +17,8 @@ class CategorySliderViewHolder(
     private val onProductClickSubject: PublishSubject<Long>,
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
     private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
+    private val onNotifyWhenBeAvailable: (Long, String, String) -> Unit,
+    private val onNotAvailableMore: () -> Unit,
     private val context: Context,
     private val cardWidth: Int
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -25,7 +27,9 @@ class CategorySliderViewHolder(
         onProductClickSubject = onProductClickSubject,
         onChangeProductQuantitySubject = onChangeProductQuantitySubject,
         onFavoriteClickSubject = onFavoriteClickSubject,
-        cardWidth = cardWidth
+        onNotAvailableMore = onNotAvailableMore,
+        onNotifyWhenBeAvailable = onNotifyWhenBeAvailable,
+        cardWidth = cardWidth,
     )
 
     init {

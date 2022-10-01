@@ -1,6 +1,5 @@
 package com.vodovoz.app.ui.model.custom
 
-import com.vodovoz.app.data.model.common.CountryEntity
 import com.vodovoz.app.ui.model.CountryUI
 
 class CountriesSliderBundleUI(

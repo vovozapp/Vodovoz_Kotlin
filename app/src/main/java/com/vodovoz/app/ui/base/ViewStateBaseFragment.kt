@@ -1,13 +1,11 @@
 package com.vodovoz.app.ui.base
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.vodovoz.app.databinding.FragmentBaseBinding
-import com.vodovoz.app.util.LogSettings
 
 abstract class ViewStateBaseFragment : Fragment() {
 

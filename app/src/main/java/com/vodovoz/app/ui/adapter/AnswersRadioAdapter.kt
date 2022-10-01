@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderAnswerRadioBinding
 import com.vodovoz.app.ui.model.AnswerUI
-import com.vodovoz.app.ui.view_holder.AnswerCheckViewHolder
 import com.vodovoz.app.ui.view_holder.AnswerRadioViewHolder
 
 class AnswersRadioAdapter(

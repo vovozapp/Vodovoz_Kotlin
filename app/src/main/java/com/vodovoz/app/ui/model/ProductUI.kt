@@ -1,9 +1,7 @@
 package com.vodovoz.app.ui.model
 
-import kotlinx.parcelize.Parcelize
 import android.os.Parcelable
-import com.vodovoz.app.data.model.common.PriceEntity
-import com.vodovoz.app.data.model.common.ProductEntity
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ProductUI(
@@ -19,6 +17,7 @@ data class ProductUI(
     val rating: Double,
     val isBottle: Boolean,
     val isGift: Boolean,
+    var isAvailable: Boolean,
     val commentAmount: String,
     var cartQuantity: Int = 0,
     var orderQuantity: Int = 0,

@@ -4,15 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderProductGridBinding
-import com.vodovoz.app.ui.view_holder.ProductGridViewHolder
 import com.vodovoz.app.ui.model.ProductUI
-import io.reactivex.rxjava3.subjects.PublishSubject
+import com.vodovoz.app.ui.view_holder.ProductGridViewHolder
 
 class GridProductsAdapter(
     private val onProductClick: (Long) -> Unit,
     private val onChangeCartQuantity: (Long, Int) -> Unit,
     private val onChangeFavoriteStatus: (Long, Boolean) -> Unit,
-    private val onNotifyWhenBeAvailable: (Long) -> Unit,
+    private val onNotifyWhenBeAvailable: (Long, String, String) -> Unit,
     private val onNotAvailableMore: () -> Unit
 ) : RecyclerView.Adapter<ProductGridViewHolder>() {
 

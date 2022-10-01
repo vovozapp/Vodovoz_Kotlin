@@ -71,6 +71,12 @@
         <action
             android:id="@+id/action_to_pastPurchasesFragment"
             app:destination="@id/pastPurchasesFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+        <action
+            android:id="@+id/action_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/catalogFragment"
@@ -110,6 +116,9 @@
         <action
             android:id="@+id/action_to_replacementProductsSelectionBS"
             app:destination="@id/replacementProductsSelectionBS" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
     </fragment>
     <fragment
         android:id="@+id/paginatedProductsCatalogFragment"
@@ -133,6 +142,9 @@
         <action
             android:id="@+id/action_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
     </fragment>
     <dialog
         android:id="@+id/sortProductsSettingsBottomFragment"
@@ -179,6 +191,12 @@
         <action
             android:id="@+id/action_to_replacementProductsSelectionBS"
             app:destination="@id/replacementProductsSelectionBS" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+        <action
+            android:id="@+id/action_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/promotionDetailFragment"
@@ -190,6 +208,12 @@
         <action
             android:id="@+id/action_to_productDetailFragment"
             app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+        <action
+            android:id="@+id/action_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/allPromotionsFragment"
@@ -235,6 +259,9 @@
         <action
             android:id="@+id/action_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
     </fragment>
     <dialog
         android:id="@+id/miniCatalogBottomFragment"
@@ -273,6 +300,9 @@
         <action
             android:id="@+id/action_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -302,6 +332,12 @@
         <action
             android:id="@+id/action_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+        <action
+            android:id="@+id/action_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <dialog
         android:id="@+id/giftsBottomFragment"
@@ -359,6 +395,9 @@
         <action
             android:id="@+id/action_to_serviceDetailFragment"
             app:destination="@id/serviceDetailFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
     </fragment>
     <dialog
         android:id="@+id/popupNewsBottomFragment"
@@ -539,6 +578,9 @@
         <action
             android:id="@+id/action_to_productDetailFragment"
             app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
     </fragment>
     <fragment
         android:id="@+id/webViewFragment"
@@ -576,6 +618,12 @@
             android:name="query"
             app:argType="string"
             android:defaultValue=""/>
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+        <action
+            android:id="@+id/action_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/pastPurchasesFragment"
@@ -593,6 +641,9 @@
         <action
             android:id="@+id/action_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
     </fragment>
     <fragment
         android:id="@+id/userDataFragment"
@@ -762,5 +813,28 @@
         <argument
             android:name="productList"
             app:argType="com.vodovoz.app.ui.model.ProductUI[]" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+        <argument
+            android:name="productId"
+            app:argType="long" />
+        <argument
+            android:name="productName"
+            app:argType="string" />
+    </dialog>
+    <dialog
+        android:id="@+id/preOrderBS"
+        android:name="com.vodovoz.app.ui.fragment.pre_order.PreOrderBS"
+        android:label="PreOrderBS" >
+        <argument
+            android:name="productId"
+            app:argType="long" />
+        <argument
+            android:name="productName"
+            app:argType="string" />
+        <argument
+            android:name="productPictureUrl"
+            app:argType="string" />
     </dialog>
 </navigation>

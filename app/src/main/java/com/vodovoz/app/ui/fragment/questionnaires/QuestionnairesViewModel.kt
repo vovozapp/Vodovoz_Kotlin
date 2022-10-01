@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
-import com.vodovoz.app.data.model.common.QuestionnaireTypeEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.mapper.QuestionMapper.mapToUI
 import com.vodovoz.app.mapper.QuestionnaireTypeMapper.mapToUI
@@ -16,7 +15,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
-import java.util.*
 
 class QuestionnairesViewModel(
     private val dataRepository: DataRepository
@@ -83,7 +81,7 @@ class QuestionnairesViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

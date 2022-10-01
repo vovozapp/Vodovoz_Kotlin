@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderCommentWithAvatarBinding
-import com.vodovoz.app.ui.view_holder.CommentWithAvatarViewHolder
 import com.vodovoz.app.ui.model.CommentUI
+import com.vodovoz.app.ui.view_holder.CommentWithAvatarViewHolder
 
 class CommentsWithAvatarAdapter : RecyclerView.Adapter<CommentWithAvatarViewHolder>() {
 

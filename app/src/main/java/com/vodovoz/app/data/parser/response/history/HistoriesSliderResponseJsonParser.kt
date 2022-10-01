@@ -1,13 +1,10 @@
 package com.vodovoz.app.data.parser.response.history
 
 import com.vodovoz.app.data.model.common.HistoryEntity
-import com.vodovoz.app.data.model.common.PointEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.model.features.DeliveryZonesBundleEntity
 import com.vodovoz.app.data.parser.common.HistoryJsonParser.parseHistoryEntityList
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
-import org.json.JSONArray
 import org.json.JSONObject
 
 object HistoriesSliderResponseJsonParser {
@@ -18,7 +15,7 @@ object HistoriesSliderResponseJsonParser {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 responseJson.getJSONArray("data").parseHistoryEntityList()
             )
-            else -> ResponseEntity.Error("Неправильный запрос")
+            else -> ResponseEntity.Error("Ошибка парсинга истории")
         }
     }
 

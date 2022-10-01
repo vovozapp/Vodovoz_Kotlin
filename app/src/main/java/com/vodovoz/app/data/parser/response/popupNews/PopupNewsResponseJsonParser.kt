@@ -1,7 +1,9 @@
 package com.vodovoz.app.data.parser.response.popupNews
 
 import android.util.Log
-import com.vodovoz.app.data.model.common.*
+import com.vodovoz.app.data.model.common.ActionEntity
+import com.vodovoz.app.data.model.common.PopupNewsEntity
+import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.remote.ResponseStatus
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import com.vodovoz.app.util.LogSettings
@@ -12,11 +14,12 @@ object PopupNewsResponseJsonParser {
 
     fun ResponseBody.parsePopupNewsResponse(): ResponseEntity<PopupNewsEntity> {
         val responseJson = JSONObject(this.string())
+        Log.d(LogSettings.RESPONSE_BODY_LOG, responseJson.toString(2))
         return when(responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 responseJson.getJSONObject("data").parsePopupNewsEntity()
             )
-            else -> ResponseEntity.Error("Неправильный запрос")
+            else -> ResponseEntity.Error("Ошибка парсинга вспылвающая новость")
         }
     }
 

@@ -1,5 +1,6 @@
 package com.vodovoz.app.data
 
+import android.os.Build
 import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -21,13 +22,27 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.flow.map
-import java.lang.Exception
 import java.util.*
 
 class DataRepository(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
 ) {
+
+    fun preOrderProduct(
+        productId: Long?,
+        name: String?,
+        email: String?,
+        phone: String?
+    ) = remoteDataSource.preOrderProduct(
+        userId = fetchUserId(),
+        productId = productId,
+        name = name,
+        email = email,
+        phone = phone,
+    )
+
+    fun fetchPreOrderFormData() = remoteDataSource.fetchPreOrderFormData(fetchUserId())
 
     fun fetchPopupNews() = remoteDataSource.fetchPopupNews(userId = localDataSource.fetchUserId())
 
@@ -794,7 +809,7 @@ class DataRepository(
     fun fetchOrderDetails(
         orderId: Long?,
         appVersion: String?
-    ) = remoteDataSource.fetchOrderDetailsResponse(
+    ): Single<ResponseEntity<OrderDetailsEntity>> = remoteDataSource.fetchOrderDetailsResponse(
         userId = fetchUserId()!!,
         orderId = orderId,
         appVersion = appVersion
@@ -931,7 +946,7 @@ class DataRepository(
     fun authByPhone(
         phone: String?,
         code: String?
-    ) = remoteDataSource.authByPhone(
+    ): Single<ResponseEntity<Long>> = remoteDataSource.authByPhone(
         phone = phone,
         code = code
     ).doOnSuccess { response ->

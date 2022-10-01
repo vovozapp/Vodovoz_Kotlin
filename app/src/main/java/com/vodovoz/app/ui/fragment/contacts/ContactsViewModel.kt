@@ -3,7 +3,6 @@ package com.vodovoz.app.ui.fragment.contacts
 import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.mapper.ContactsBundleMapper.mapToUI

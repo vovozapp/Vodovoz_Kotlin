@@ -1,15 +1,11 @@
 package com.vodovoz.app.data.paging.products
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.vodovoz.app.data.model.common.ProductEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.paging.products.source.ProductsFavoriteSource
 import com.vodovoz.app.data.paging.products.source.ProductsSource
-import com.vodovoz.app.data.parser.response.comment.AllCommentsByProductResponseJsonParser.parseAllCommentsByProductResponse
-import com.vodovoz.app.data.remote.RemoteData
-import com.vodovoz.app.util.LogSettings
 import retrofit2.HttpException
 
 class ProductsPagingSource(

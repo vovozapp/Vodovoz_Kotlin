@@ -7,8 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderAddressBinding
 import com.vodovoz.app.databinding.ViewHolderAddressesTypeTitleBinding
 import com.vodovoz.app.ui.model.AddressUI
-import io.reactivex.rxjava3.subjects.PublishSubject
-import java.lang.Exception
 
 enum class AddressesAdapterItemType(val value: Int) {
     ADDRESSES_TYPE_TITLE(0), ADDRESS(1)

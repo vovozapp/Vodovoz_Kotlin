@@ -26,6 +26,7 @@ object ProductMapper {
         commentAmount = commentAmount,
         orderQuantity = orderQuantity,
         depositPrice = depositPrice,
+        isAvailable = isAvailable,
         isGift = isGift,
         replacementProductUIList = replacementProductEntityList.mapToUI(),
         detailPictureList = detailPictureList

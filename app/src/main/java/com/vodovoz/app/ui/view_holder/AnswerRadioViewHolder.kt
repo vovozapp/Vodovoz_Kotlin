@@ -1,7 +1,6 @@
 package com.vodovoz.app.ui.view_holder
 
 import androidx.recyclerview.widget.RecyclerView
-import com.vodovoz.app.databinding.ViewHolderAnswerCheckBinding
 import com.vodovoz.app.databinding.ViewHolderAnswerRadioBinding
 import com.vodovoz.app.ui.model.AnswerUI
 

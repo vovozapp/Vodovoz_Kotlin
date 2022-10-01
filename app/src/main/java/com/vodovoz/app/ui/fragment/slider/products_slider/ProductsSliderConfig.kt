@@ -4,7 +4,8 @@ import android.os.Parcel
 import android.os.Parcelable
 
 class ProductsSliderConfig(
-    val containShowAllButton: Boolean
+    val containShowAllButton: Boolean,
+    val largeTitle: Boolean = false
 ) : Parcelable {
     constructor(parcel: Parcel) : this(parcel.readByte() != 0.toByte()) {
     }

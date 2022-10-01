@@ -13,9 +13,10 @@ import com.vodovoz.app.databinding.FragmentSliderBrandBinding
 import com.vodovoz.app.ui.adapter.BrandsSliderAdapter
 import com.vodovoz.app.ui.base.BaseHiddenFragment
 import com.vodovoz.app.ui.diffUtils.BrandDiffUtilCallback
+import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
+import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
 import com.vodovoz.app.ui.interfaces.IOnBrandClick
 import com.vodovoz.app.ui.interfaces.IOnShowAllBrandsClick
-import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
 import com.vodovoz.app.ui.model.BrandUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -60,35 +61,23 @@ class BrandsSliderFragment : BaseHiddenFragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         val space = resources.getDimension(R.dimen.space_16).toInt()
-        binding.rvBrands.onRenderFinished { width, _ ->
-            brandsSliderAdapter = BrandsSliderAdapter(
-                onBrandClickSubject = onBrandClickSubject,
-                cardWidth = (width - (space * 4))/3
-            )
-            binding.rvBrands.adapter = brandsSliderAdapter
-            onAdapterReadySubject.subscribeBy { brandUIList ->
-                this.brandUIList = brandUIList
-                updateView(brandUIList)
-            }.addTo(compositeDisposable)
-        }
-
-        binding.rvBrands.addItemDecoration(
-            object : RecyclerView.ItemDecoration() {
-                override fun getItemOffsets(
-                    outRect: Rect,
-                    view: View,
-                    parent: RecyclerView,
-                    state: RecyclerView.State
-                ) {
-                    with(outRect) {
-                        if (parent.getChildAdapterPosition(view) == 0) left = space
-                        top = space / 2
-                        right = space
-                        bottom = space / 2
-                    }
-                }
-            }
+        brandsSliderAdapter = BrandsSliderAdapter(
+            onBrandClickSubject = onBrandClickSubject,
+            cardWidth = 0
         )
+        binding.rvBrands.adapter = brandsSliderAdapter
+        onAdapterReadySubject.subscribeBy { brandUIList ->
+            this.brandUIList = brandUIList
+            updateView(brandUIList)
+        }.addTo(compositeDisposable)
+
+        binding.rvBrands.addMarginDecoration { rect, view, parent, state ->
+            if (parent.getChildAdapterPosition(view) == 0) rect.left = space
+            if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.right = space
+            else rect.right = space/2
+            rect.top = space / 2
+            rect.bottom = space / 2
+        }
         
         binding.tvShowAll.onRenderFinished { width, height ->  }
         binding.tvShowAll.setOnClickListener {
@@ -128,7 +117,7 @@ class BrandsSliderFragment : BaseHiddenFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

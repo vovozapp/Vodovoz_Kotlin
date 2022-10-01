@@ -2,7 +2,6 @@ package com.vodovoz.app.ui.fragment.full_screen_history_slider
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
@@ -18,9 +17,8 @@ import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragment
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.products_catalog.ProductsCatalogFragment
-import com.vodovoz.app.ui.interfaces.IOnInvokeAction
 import com.vodovoz.app.ui.interfaces.IOnChangeHistory
-import com.vodovoz.app.util.LogSettings
+import com.vodovoz.app.ui.interfaces.IOnInvokeAction
 
 class FullScreenHistoriesSliderFragment : ViewStateBaseDialogFragment(),
     IOnChangeHistory, IOnInvokeAction

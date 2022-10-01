@@ -9,9 +9,9 @@ import com.vodovoz.app.data.model.common.OrderEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.UserDataEntity
 import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
-import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.mapper.UserDataMapper.mapToUI
+import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.OrderUI
 import com.vodovoz.app.ui.model.UserDataUI
@@ -73,6 +73,8 @@ class ProfileViewModel(
 
                     if (response.second.first is ResponseEntity.Success) {
                         viewedProductsSliderMLD.value = (response.second.first as ResponseEntity.Success<List<CategoryDetailEntity>>).data.mapToUI()
+                    } else {
+                        viewedProductsSliderMLD.value = listOf()
                     }
 
                     if (response.second.second is ResponseEntity.Success) {
@@ -121,7 +123,7 @@ class ProfileViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

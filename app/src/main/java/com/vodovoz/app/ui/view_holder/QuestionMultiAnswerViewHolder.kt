@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderQuestionBinding
 import com.vodovoz.app.ui.adapter.AnswersCheckAdapter
-import com.vodovoz.app.ui.adapter.AnswersRadioAdapter
 import com.vodovoz.app.ui.model.QuestionUI
 
 class QuestionMultiAnswerViewHolder(

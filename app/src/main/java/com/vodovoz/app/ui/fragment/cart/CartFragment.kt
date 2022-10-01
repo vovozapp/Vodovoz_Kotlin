@@ -1,20 +1,13 @@
 package com.vodovoz.app.ui.fragment.cart
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
@@ -24,23 +17,15 @@ import com.vodovoz.app.ui.adapter.NotAvailableCartItemsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
-import com.vodovoz.app.ui.diffUtils.ProductDiffUtilCallback
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
-import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
-import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
-import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
 import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS
+import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
+import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.view.Divider
-import com.vodovoz.app.util.LogSettings
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.subjects.PublishSubject
-import java.lang.StringBuilder
 
 class CartFragment : ViewStateBaseFragment() {
 
@@ -53,7 +38,8 @@ class CartFragment : ViewStateBaseFragment() {
 
     private val bestForYouProductsSliderFragment: ProductsSliderFragment by lazy {
         ProductsSliderFragment.newInstance(ProductsSliderConfig(
-            containShowAllButton = false
+            containShowAllButton = false,
+            largeTitle = true
         )) }
 
     private val availableCartItemsAdapter = LinearProductsAdapter(
@@ -67,7 +53,11 @@ class CartFragment : ViewStateBaseFragment() {
             viewModel.changeCart(productId, quantity)
         },
         onNotAvailableMore = {},
-        onNotifyWhenBeAvailable = {},
+        onNotifyWhenBeAvailable = { id, name, picture ->
+            findNavController().navigate(CartFragmentDirections.actionToPreOrderBS(
+                id, name, picture
+            ))
+        },
         isCart = true
     )
 
@@ -79,7 +69,9 @@ class CartFragment : ViewStateBaseFragment() {
             viewModel.notAvailableProductUIList.find { it.id == productId }?.let {
                 findNavController().navigate(CartFragmentDirections.actionToReplacementProductsSelectionBS(
                     it.detailPicture,
-                    it.replacementProductUIList.toTypedArray()
+                    it.replacementProductUIList.toTypedArray(),
+                    it.id,
+                    it.name
                 ))
             }
         }
@@ -181,7 +173,14 @@ class CartFragment : ViewStateBaseFragment() {
             },
             iOnChangeProductQuantity = { pair -> viewModel.changeCart(pair.first, pair.second) },
             iOnFavoriteClick = { pair -> viewModel.changeFavoriteStatus(pair.first, pair.second) },
-            iOnShowAllProductsClick = {}
+            iOnShowAllProductsClick = {},
+            onNotAvailableMore = {},
+            onNotifyWhenBeAvailable = { id, name, picture ->
+                when(viewModel.isAlreadyLogin()) {
+                    true -> findNavController().navigate(CartFragmentDirections.actionToPreOrderBS(id, name, picture))
+                    false -> findNavController().navigate(CartFragmentDirections.actionToProfileFragment())
+                }
+            }
         )
     }
 
@@ -213,7 +212,7 @@ class CartFragment : ViewStateBaseFragment() {
     private fun initAvailableProductRecycler() {
         binding.rvAvailableProductRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.rvAvailableProductRecycler.adapter = availableCartItemsAdapter
-        ContextCompat.getDrawable(requireContext(), R.drawable.bkg_divider)?.let {
+        ContextCompat.getDrawable(requireContext(), R.drawable.bkg_gray_divider)?.let {
             binding.rvAvailableProductRecycler.addItemDecoration(Divider(it, space))
         }
         binding.cbReturnBottles.setOnCheckedChangeListener { _, isChecked ->
@@ -233,7 +232,7 @@ class CartFragment : ViewStateBaseFragment() {
     private fun initNotAvailableProductRecycler() {
         binding.rvNotAvailableProductRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.rvNotAvailableProductRecycler.adapter = notAvailableCartItemsAdapter
-        ContextCompat.getDrawable(requireContext(), R.drawable.bkg_divider)?.let {
+        ContextCompat.getDrawable(requireContext(), R.drawable.bkg_gray_divider)?.let {
             binding.rvNotAvailableProductRecycler.addItemDecoration(Divider(it, space))
         }
         binding.rvNotAvailableProductRecycler.addMarginDecoration { rect, _, _, _ ->

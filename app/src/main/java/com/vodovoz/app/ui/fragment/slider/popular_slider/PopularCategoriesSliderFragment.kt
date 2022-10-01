@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentSliderPopularBinding
 import com.vodovoz.app.ui.adapter.PopularCategoriesSliderAdapter
-import com.vodovoz.app.ui.base.*
+import com.vodovoz.app.ui.base.BaseHiddenFragment
+import com.vodovoz.app.ui.base.HorizontalMarginItemDecoration
 import com.vodovoz.app.ui.diffUtils.PopularDiffUtilCallback
+import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.interfaces.IOnPopularCategoryClick
 import com.vodovoz.app.ui.model.CategoryUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -50,7 +52,13 @@ class PopularCategoriesSliderFragment : BaseHiddenFragment() {
         binding.rvPopularCategories.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         val space = resources.getDimension(R.dimen.space_16).toInt()
-        binding.rvPopularCategories.addItemDecoration(HorizontalMarginItemDecoration(space))
+        binding.rvPopularCategories.addMarginDecoration { rect, view, parent, state ->
+            if (parent.getChildAdapterPosition(view) == 0) rect.left = space
+            if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.right = space
+            else rect.right = space/2
+            rect.top = space / 2
+            rect.bottom = space / 2
+        }
         binding.rvPopularCategories.adapter = popularCategoriesSliderAdapter
     }
 
@@ -80,7 +88,7 @@ class PopularCategoriesSliderFragment : BaseHiddenFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

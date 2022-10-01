@@ -17,7 +17,7 @@ class ProductFilterViewHolder(
         binding.root.setOnClickListener {
             onFilterClickSubject.onNext(filterUI)
         }
-        binding.clear.setOnClickListener {
+        binding.imgClear.setOnClickListener {
             filterUI.filterValueList.clear()
             fillValue(filterUI)
             onFilterClearClickSubject.onNext(filterUI)
@@ -28,7 +28,7 @@ class ProductFilterViewHolder(
 
     fun onBind(filterUI: FilterUI) {
         this.filterUI = filterUI
-        binding.name.text = filterUI.name
+        binding.tvName.text = filterUI.name
         fillValue(filterUI)
     }
 
@@ -36,13 +36,13 @@ class ProductFilterViewHolder(
         with(binding) {
             when(filterUI.filterValueList.size) {
                 0 -> {
-                    value.visibility = View.GONE
-                    clear.visibility = View.INVISIBLE
+                    tvValue.visibility = View.GONE
+                    imgClear.visibility = View.INVISIBLE
                 }
                 else -> {
-                    value.visibility = View.VISIBLE
-                    clear.visibility = View.VISIBLE
-                    value.setFilterValue(filterUI.filterValueList)
+                    tvValue.visibility = View.VISIBLE
+                    imgClear.visibility = View.VISIBLE
+                    tvValue.setFilterValue(filterUI.filterValueList)
                 }
             }
         }

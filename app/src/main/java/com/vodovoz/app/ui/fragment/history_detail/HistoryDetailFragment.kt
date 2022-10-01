@@ -1,6 +1,5 @@
 package com.vodovoz.app.ui.fragment.history_detail
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,9 +7,9 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.vodovoz.app.databinding.FragmentHistoryDetailBinding
-import com.vodovoz.app.ui.interfaces.IOnInvokeAction
-import com.vodovoz.app.ui.interfaces.IOnChangeHistory
 import com.vodovoz.app.ui.config.UIConfig
+import com.vodovoz.app.ui.interfaces.IOnChangeHistory
+import com.vodovoz.app.ui.interfaces.IOnInvokeAction
 import com.vodovoz.app.ui.model.BannerUI
 import com.vodovoz.app.ui.model.HistoryUI
 import jp.shts.android.storiesprogressview.StoriesProgressView

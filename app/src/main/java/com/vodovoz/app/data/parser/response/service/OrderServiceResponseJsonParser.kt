@@ -1,14 +1,8 @@
 package com.vodovoz.app.data.parser.response.service
 
-import com.vodovoz.app.data.model.common.AboutServicesBundleEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.model.common.ServiceEntity
-import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
-import com.vodovoz.app.data.parser.common.PromotionJsonParser.parsePromotionEntityList
-import com.vodovoz.app.data.parser.common.PromotionParser.parsePromotionFilterEntityList
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
-import org.json.JSONArray
 import org.json.JSONObject
 
 object OrderServiceResponseJsonParser {

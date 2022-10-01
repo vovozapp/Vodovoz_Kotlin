@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.PagerHowToOrderBinding
-import com.vodovoz.app.ui.view_holder.HowToOrderStepPage
 import com.vodovoz.app.ui.model.HowToOrderStepUI
+import com.vodovoz.app.ui.view_holder.HowToOrderStepPage
 
 class HowToOrderStepsAdapter(
     val howToOrderStepUIList: List<HowToOrderStepUI>

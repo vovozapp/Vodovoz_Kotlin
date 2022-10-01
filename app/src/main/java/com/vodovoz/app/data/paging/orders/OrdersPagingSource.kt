@@ -1,13 +1,11 @@
 package com.vodovoz.app.data.paging.orders
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.vodovoz.app.data.model.common.OrderEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.order.AllOrdersResponseJsonParser.parseAllOrdersSliderResponse
 import com.vodovoz.app.data.remote.RemoteDataSource
-import com.vodovoz.app.util.LogSettings
 import retrofit2.HttpException
 
 class OrdersPagingSource(

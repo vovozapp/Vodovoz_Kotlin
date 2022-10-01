@@ -136,7 +136,7 @@ class QuestionnairesFragment : ViewStateBaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

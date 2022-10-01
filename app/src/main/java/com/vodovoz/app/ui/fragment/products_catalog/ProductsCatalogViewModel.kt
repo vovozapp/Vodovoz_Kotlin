@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
+import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -30,6 +30,8 @@ class ProductsCatalogViewModel(
 
     private lateinit var dataSource: ProductsCatalogFragment.DataSource
 
+    var productUIList: List<ProductUI> = listOf()
+
     fun updateArgs(dataSource: ProductsCatalogFragment.DataSource) {
         this.dataSource = dataSource
         updateData()
@@ -46,7 +48,8 @@ class ProductsCatalogViewModel(
                         is ResponseEntity.Hide -> viewStateMLD.value = ViewState.Hide()
                         is ResponseEntity.Error -> viewStateMLD.value = ViewState.Error(response.errorMessage)
                         is ResponseEntity.Success -> {
-                            productUIListMLD.value = response.data.mapToUI()
+                            productUIList = response.data.mapToUI()
+                            productUIListMLD.value = productUIList
                             viewStateMLD.value = ViewState.Success()
                         }
                     }
@@ -83,7 +86,7 @@ class ProductsCatalogViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

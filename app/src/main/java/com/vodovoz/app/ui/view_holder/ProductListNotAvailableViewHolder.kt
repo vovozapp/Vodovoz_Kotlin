@@ -1,33 +1,20 @@
 package com.vodovoz.app.ui.view_holder
 
-import android.content.Context
-import android.graphics.Color
 import android.graphics.Paint
-import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
-import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderProductListNotAvailableBinding
-import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
-import com.vodovoz.app.ui.adapter.DetailPicturePagerAdapter
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDepositPriceText
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountPercent
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setMinimalPriceText
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setOrderQuantity
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceCondition
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPricePerUnitText
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDepositPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
-import com.vodovoz.app.util.LogSettings
-import io.reactivex.rxjava3.subjects.PublishSubject
 
 class ProductListNotAvailableViewHolder(
     private val binding: ViewHolderProductListNotAvailableBinding,

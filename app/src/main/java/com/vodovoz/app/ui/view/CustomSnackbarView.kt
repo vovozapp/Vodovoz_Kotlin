@@ -2,10 +2,8 @@ package com.vodovoz.app.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.snackbar.ContentViewCallback
-import com.vodovoz.app.R
 
 class CustomSnackbarView @JvmOverloads constructor(
     context: Context,

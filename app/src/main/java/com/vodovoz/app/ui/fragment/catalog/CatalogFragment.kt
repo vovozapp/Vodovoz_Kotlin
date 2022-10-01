@@ -35,6 +35,7 @@ class CatalogFragment : ViewStateBaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
+        observeOnCategoryClick()
     }
 
     private fun initViewModel() {
@@ -58,7 +59,6 @@ class CatalogFragment : ViewStateBaseFragment() {
         initViewModel()
         initCategoryRecycler()
         observeViewModel()
-        observeOnCategoryClick()
         initSearch()
     }
 
@@ -81,10 +81,10 @@ class CatalogFragment : ViewStateBaseFragment() {
     }
 
     private fun initSearch() {
-        binding.searchContainer.searchRoot.setOnClickListener {
+        binding.searchContainer.clSearchContainer.setOnClickListener {
             findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment())
         }
-        binding.searchContainer.search.setOnFocusChangeListener { _, isFocusable ->
+        binding.searchContainer.etSearch.setOnFocusChangeListener { _, isFocusable ->
             if (isFocusable) {
                 findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment())
             }
@@ -114,9 +114,9 @@ class CatalogFragment : ViewStateBaseFragment() {
         }.addTo(compositeDisposable)
     }
 
-    override fun onStop() {
-        super.onStop()
-        compositeDisposable.clear()
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.dispose()
     }
 
 }

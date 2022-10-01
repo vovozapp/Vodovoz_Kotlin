@@ -18,7 +18,6 @@ import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
-import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -47,7 +46,11 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
             viewModel.changeCart(productId, quantity)
         },
         onNotAvailableMore = {},
-        onNotifyWhenBeAvailable = {},
+        onNotifyWhenBeAvailable = { id, name, picture ->
+            findNavController().navigate(ProductsCatalogFragmentDirections.actionToPreOrderBS(
+                id, name, picture
+            ))
+        },
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -129,10 +132,10 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
     }
 
     private fun initSearch() {
-        binding.searchContainer.searchRoot.setOnClickListener {
+        binding.searchContainer.clSearchContainer.setOnClickListener {
             findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment())
         }
-        binding.searchContainer.search.setOnFocusChangeListener { _, isFocusable ->
+        binding.searchContainer.etSearch.setOnFocusChangeListener { _, isFocusable ->
             if (isFocusable) {
                 findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment())
             }
@@ -166,7 +169,7 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -21,12 +20,12 @@ import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffUtilCallback
+import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
+import com.vodovoz.app.ui.fragment.favorite.FavoriteFragmentDirections
 import com.vodovoz.app.ui.fragment.home.HomeFragmentDirections
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
-import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
-import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.PromotionDetailUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -61,7 +60,11 @@ class PromotionDetailsFragment : ViewStateBaseFragment() {
             viewModel.changeCart(productId, quantity)
         },
         onNotAvailableMore = {},
-        onNotifyWhenBeAvailable = {},
+        onNotifyWhenBeAvailable = { id, name, picture ->
+            findNavController().navigate(PromotionDetailsFragmentDirections.actionToPreOrderBS(
+                id, name, picture
+            ))
+        }
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -134,6 +137,13 @@ class PromotionDetailsFragment : ViewStateBaseFragment() {
                 findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
                 ))
+            },
+            onNotAvailableMore = {},
+            onNotifyWhenBeAvailable = { id, name, picture ->
+                when(viewModel.isAlreadyLogin()) {
+                    true -> findNavController().navigate(PromotionDetailsFragmentDirections.actionToPreOrderBS(id, name, picture))
+                    false -> findNavController().navigate(PromotionDetailsFragmentDirections.actionToProfileFragment())
+                }
             }
         )
 
@@ -210,7 +220,7 @@ class PromotionDetailsFragment : ViewStateBaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

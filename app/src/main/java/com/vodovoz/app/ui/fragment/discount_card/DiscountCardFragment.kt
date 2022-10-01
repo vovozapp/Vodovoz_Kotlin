@@ -3,11 +3,9 @@ package com.vodovoz.app.ui.fragment.discount_card
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,8 +15,6 @@ import com.vodovoz.app.ui.adapter.DiscountCardPropertiesAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
-import com.vodovoz.app.ui.fragment.concrete_filter.ConcreteFilterViewModel
-import com.vodovoz.app.ui.model.custom.ActivateDiscountCardBundleUI
 
 class DiscountCardFragment : ViewStateBaseFragment() {
 

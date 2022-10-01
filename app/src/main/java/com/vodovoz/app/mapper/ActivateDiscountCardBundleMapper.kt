@@ -1,6 +1,5 @@
 package com.vodovoz.app.mapper
 
-import com.vodovoz.app.data.model.common.DiscountCardPropertyEntity
 import com.vodovoz.app.data.model.features.ActivateDiscountCardBundleEntity
 import com.vodovoz.app.mapper.DiscountCardPropertyMapper.mapToUI
 import com.vodovoz.app.ui.model.custom.ActivateDiscountCardBundleUI

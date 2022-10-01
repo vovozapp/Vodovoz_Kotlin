@@ -7,10 +7,12 @@
     <dimen name="space_2">@dimen/_2sdp</dimen>
     <dimen name="space_4">@dimen/_4sdp</dimen>
     <dimen name="space_6">@dimen/_6sdp</dimen>
-    <dimen name="space_8">@dimen/_8sdp</dimen>
+    <dimen name="space_8">@dimen/_7sdp</dimen>
+    <dimen name="space_10">@dimen/_10sdp</dimen>
     <dimen name="space_12">@dimen/_12sdp</dimen>
-    <dimen name="space_16">@dimen/_16sdp</dimen>
+    <dimen name="space_16">@dimen/_14sdp</dimen>
     <dimen name="space_24">@dimen/_24sdp</dimen>
+    <dimen name="space_32">@dimen/_32sdp</dimen>
     <dimen name="last_item_bottom_normal_space">@dimen/_72sdp</dimen>
     <dimen name="last_item_bottom_small_space">@dimen/_62sdp</dimen>
 
@@ -23,13 +25,30 @@
     //Text
     <dimen name="header_text_size">@dimen/_16ssp</dimen>
     <dimen name="large_text_size">@dimen/_15ssp</dimen>
-    <dimen name="medium_text_size">@dimen/_13ssp</dimen>
+    <dimen name="medium_text_size">@dimen/_12ssp</dimen>
     <dimen name="normal_text_size">@dimen/_12ssp</dimen>
-    <dimen name="small_text_size">@dimen/_10ssp</dimen>
+    <dimen name="small_text_size">@dimen/_11ssp</dimen>
 
     //Buttons
-    <dimen name="button_normal_height">@dimen/_40sdp</dimen>
+    <dimen name="button_normal_height">@dimen/_35sdp</dimen>
     <dimen name="button_small_height">@dimen/_30sdp</dimen>
     <dimen name="field_height">@dimen/_35sdp</dimen>
+
+    //Action image
+    <dimen name="action_image_size">@dimen/_20sdp</dimen>
+    <dimen name="action_image_size_with_padding_8">@dimen/_36sdp</dimen>
+
+    //Card size
+    <dimen name="history_slider_card_width">@dimen/_71sdp</dimen>
+    <dimen name="history_slider_card_height">@dimen/_115sdp</dimen>
+    <dimen name="product_slider_card_width">@dimen/_115sdp</dimen>
+    <dimen name="product_slider_card_height">@dimen/_120sdp</dimen>
+    <dimen name="brand_slider_card_width">@dimen/_86sdp</dimen>
+    <dimen name="brand_slider_card_height">@dimen/_46sdp</dimen>
+    <dimen name="comment_slider_text_height">@dimen/_41sdp</dimen>
+
+    //Text
+    <dimen name="line_spacing_multiplier">1.3</dimen>
+    <dimen name="line_spacing_extra">0.8dp</dimen>
 
 </resources>

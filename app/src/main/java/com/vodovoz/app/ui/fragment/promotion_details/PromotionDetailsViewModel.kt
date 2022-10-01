@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.mapper.PromotionDetailMapper.mapToUI
+import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.PromotionDetailUI
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -29,6 +29,7 @@ class PromotionDetailsViewModel(
     private val compositeDisposable = CompositeDisposable()
 
     var promotionId: Long? = null
+    var promotionDetailUI: PromotionDetailUI? = null
 
     fun updateArgs(promotionId: Long) {
         this.promotionId = promotionId
@@ -45,7 +46,8 @@ class PromotionDetailsViewModel(
                         is ResponseEntity.Hide -> viewStateMLD.value = ViewState.Hide()
                         is ResponseEntity.Error -> viewStateMLD.value = ViewState.Error(response.errorMessage)
                         is ResponseEntity.Success -> {
-                            promotionDetailUIMLD.value = response.data.mapToUI()
+                            promotionDetailUI = response.data.mapToUI()
+                            promotionDetailUIMLD.value = promotionDetailUI
                             viewStateMLD.value = ViewState.Success()
                         }
                     }
@@ -77,7 +79,9 @@ class PromotionDetailsViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
+
+    fun isAlreadyLogin() = dataRepository.isAlreadyLogin()
 
 }

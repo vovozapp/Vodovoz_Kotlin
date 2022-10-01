@@ -21,13 +21,17 @@ class PromotionSliderViewHolder(
     private val onProductClickSubject: PublishSubject<Long>,
     private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>>,
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>>,
+    private val onNotifyWhenBeAvailable: (Long, String, String) -> Unit,
+    private val onNotAvailableMore: () -> Unit,
     private val context: Context
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private val promotionProductsSliderAdapter = PromotionProductsSliderAdapter(
         onProductClickSubject = onProductClickSubject,
         onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-        onFavoriteClickSubject = onFavoriteClickSubject
+        onFavoriteClickSubject = onFavoriteClickSubject,
+        onNotifyWhenBeAvailable = onNotifyWhenBeAvailable,
+        onNotAvailableMore = onNotAvailableMore
     )
 
     init {

@@ -19,6 +19,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="invisible"
+        android:translationZ="@dimen/elevation_1"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -79,6 +80,9 @@
             android:id="@+id/fcvBestForYouProductSliderFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingTop="@dimen/space_8"
+            android:layout_marginTop="@dimen/space_8"
             android:paddingBottom="@dimen/space_8"/>
 
     </LinearLayout>
@@ -166,7 +170,7 @@
                             android:id="@+id/mdAboveReturnBottlesLabel"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:dividerColor="@color/divider_color"
+                            app:dividerColor="@color/divider_gray_color"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />

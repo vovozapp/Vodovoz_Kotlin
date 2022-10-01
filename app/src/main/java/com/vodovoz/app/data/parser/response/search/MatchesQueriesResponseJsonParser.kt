@@ -1,10 +1,6 @@
 package com.vodovoz.app.data.parser.response.search
 
-import com.vodovoz.app.data.model.common.CategoryDetailEntity
-import com.vodovoz.app.data.model.common.DefaultSearchDataBundleEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
-import com.vodovoz.app.data.parser.response.search.MatchesQueriesResponseJsonParser.parseMatchesQueriesResponse
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
 import org.json.JSONArray

@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
-import com.vodovoz.app.data.config.FieldValidateConfig.MIN_COMMENT_LENGTH
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.ui.base.ViewState
+import com.vodovoz.app.util.FieldValidationsSettings
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -36,8 +36,8 @@ class SendCommentAboutProductViewModel(
             return
         }
 
-        if (comment.length < MIN_COMMENT_LENGTH) {
-            errorMLD.value = "Длина отзыва должа быть не менее $MIN_COMMENT_LENGTH символов"
+        if (comment.length < FieldValidationsSettings.MIN_COMMENT_LENGTH) {
+            errorMLD.value = "Длина отзыва должа быть не менее ${FieldValidationsSettings.MIN_COMMENT_LENGTH} символов"
             return
         }
 

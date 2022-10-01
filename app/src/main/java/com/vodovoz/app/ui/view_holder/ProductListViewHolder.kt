@@ -1,6 +1,5 @@
 package com.vodovoz.app.ui.view_holder
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.CountDownTimer
@@ -14,18 +13,17 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderProductListBinding
-import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
 import com.vodovoz.app.ui.adapter.DetailPicturePagerAdapter
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDepositPriceText
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountPercent
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setMinimalPriceText
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setOrderQuantity
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceCondition
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPricePerUnitText
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
+import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDepositPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setOrderQuantity
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.LogSettings
-import io.reactivex.rxjava3.subjects.PublishSubject
 
 class ProductListViewHolder(
     private val binding: ViewHolderProductListBinding,
@@ -33,7 +31,7 @@ class ProductListViewHolder(
     private val onProductClick: (Long) -> Unit,
     private val onChangeCartQuantity: (Long, Int) -> Unit,
     private val onChangeFavoriteStatus: (Long, Boolean) -> Unit,
-    private val onNotifyWhenBeAvailable: (Long) -> Unit,
+    private val onNotifyWhenBeAvailable: (Long, String, String) -> Unit,
     private val onNotAvailableMore: () -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -61,7 +59,7 @@ class ProductListViewHolder(
         binding.amountController.add.setOnClickListener {
             if (productUI.isGift) return@setOnClickListener
             if (productUI.leftItems == 0) {
-                onNotifyWhenBeAvailable(productUI.id)
+                onNotifyWhenBeAvailable(productUI.id, productUI.name, productUI.detailPicture)
                 return@setOnClickListener
             }
             if (productUI.cartQuantity == 0) {
@@ -148,11 +146,13 @@ class ProductListViewHolder(
         binding.cgStatuses.visibility = View.VISIBLE
         binding.clPricesContainer.visibility = View.VISIBLE
         binding.tvOldPrice.visibility = View.VISIBLE
+        binding.rlAmountControllerContainer.visibility = View.VISIBLE
 
         binding.tvName.text = productUI.name
         binding.rbRating.rating = productUI.rating.toFloat()
 
         //If left items = 0
+        Log.d(LogSettings.DEVELOP_LOG, "LEFT ITEMS = ${productUI.leftItems}")
         when(productUI.leftItems == 0) {
             true -> {
                 binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_gray_circle_normal)
@@ -233,8 +233,11 @@ class ProductListViewHolder(
 
         //Comment
         when (productUI.commentAmount.isEmpty()) {
-            true -> binding.tvCommentAmount.text = "Нет отзывов"
-            else -> binding.tvCommentAmount.text = productUI.commentAmount
+            true -> binding.tvCommentAmount.visibility = View.GONE
+            else -> {
+                binding.tvCommentAmount.visibility = View.VISIBLE
+                binding.tvCommentAmount.text = productUI.commentAmount
+            }
         }
 
         //Favorite
@@ -268,6 +271,7 @@ class ProductListViewHolder(
         when(productUI.priceList.size == 1 &&
             productUI.priceList.first().currentPrice < productUI.priceList.first().oldPrice) {
             true -> {
+                isNotHaveStatuses = false
                 binding.cwDiscountContainer.visibility = View.VISIBLE
                 binding.tvDiscountPercent.setDiscountPercent(
                     newPrice = productUI.priceList.first().currentPrice,
@@ -297,16 +301,22 @@ class ProductListViewHolder(
 
         //If is bottle
         if (productUI.isBottle) {
-            binding.imgFavoriteStatus.visibility = View.GONE
+            binding.imgFavoriteStatus.visibility = View.INVISIBLE
             binding.cgStatuses.visibility = View.GONE
             binding.clPricesContainer.visibility = View.GONE
         }
 
         //If is gift
         if (productUI.isGift) {
-            binding.imgFavoriteStatus.visibility = View.GONE
+            binding.imgFavoriteStatus.visibility = View.INVISIBLE
             binding.cgStatuses.visibility = View.GONE
             if (productUI.isGift) binding.tvOldPrice.visibility = View.GONE
+        }
+
+        //If is not available
+        if (!productUI.isAvailable) {
+            binding.imgFavoriteStatus.visibility = View.INVISIBLE
+            binding.rlAmountControllerContainer.visibility = View.INVISIBLE
         }
     }
 

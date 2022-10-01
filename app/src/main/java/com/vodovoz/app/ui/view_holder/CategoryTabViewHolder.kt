@@ -23,11 +23,11 @@ class CategoryTabViewHolder(
     fun onBind(categoryUI: CategoryUI, isSelected: Boolean) {
         this.categoryUI = categoryUI
 
-        binding.name.text = categoryUI.name
+        binding.tvName.text = categoryUI.name
 
         when(isSelected) {
-            true -> binding.name.setTextColor(ContextCompat.getColor(context, R.color.bluePrimary))
-            false -> binding.name.setTextColor(ContextCompat.getColor(context, R.color.blackTextPrimary))
+            true -> binding.tvName.setTextColor(ContextCompat.getColor(context, R.color.bluePrimary))
+            false -> binding.tvName.setTextColor(ContextCompat.getColor(context, R.color.text_gray))
         }
     }
 

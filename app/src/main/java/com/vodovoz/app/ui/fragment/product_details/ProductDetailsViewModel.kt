@@ -1,15 +1,13 @@
 package com.vodovoz.app.ui.fragment.product_details
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.mapper.ProductDetailBundleMapper.mapToUI
+import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.custom.ProductDetailBundleUI
-import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -92,7 +90,9 @@ class ProductDetailsViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
+
+    fun isAlreadyLogin() = dataRepository.isAlreadyLogin()
 
 }

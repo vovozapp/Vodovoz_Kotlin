@@ -1,12 +1,10 @@
 package com.vodovoz.app.data
 
-import android.util.Log
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ProductDetailEntity
 import com.vodovoz.app.data.model.common.ProductEntity
-import com.vodovoz.app.util.LogSettings
 
 object LocalSyncExtensions {
 

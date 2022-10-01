@@ -1,6 +1,5 @@
 package com.vodovoz.app.ui.view_holder
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.CountDownTimer
@@ -15,24 +14,22 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderProductGridBinding
-import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
 import com.vodovoz.app.ui.adapter.DetailPicturePagerAdapter
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDepositPriceText
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountPercent
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setMinimalPriceText
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setOrderQuantity
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceCondition
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPricePerUnitText
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
+import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setLimitedText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
-import io.reactivex.rxjava3.subjects.PublishSubject
 
 class ProductGridViewHolder(
     private val binding: ViewHolderProductGridBinding,
     private val onProductClick: (Long) -> Unit,
     private val onChangeCartQuantity: (Long, Int) -> Unit,
     private val onChangeFavoriteStatus: (Long, Boolean) -> Unit,
-    private val onNotifyWhenBeAvailable: (Long) -> Unit,
+    private val onNotifyWhenBeAvailable: (Long, String, String) -> Unit,
     private val onNotAvailableMore: () -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -49,9 +46,6 @@ class ProductGridViewHolder(
     }
 
     init {
-        binding.tvName.updateLayoutParams<ConstraintLayout.LayoutParams> {
-            height = binding.tvName.lineHeight * 3
-        }
         binding.root.setOnClickListener { onProductClick(productUI.id) }
         binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.pvPictures.orientation = ViewPager2.ORIENTATION_HORIZONTAL
@@ -59,7 +53,7 @@ class ProductGridViewHolder(
 
         binding.amountController.add.setOnClickListener {
             if (productUI.leftItems == 0) {
-                onNotifyWhenBeAvailable(productUI.id)
+                onNotifyWhenBeAvailable(productUI.id, productUI.name, productUI.detailPicture)
                 return@setOnClickListener
             }
             if (productUI.cartQuantity == 0) {
@@ -129,7 +123,7 @@ class ProductGridViewHolder(
     fun onBind(productUI: ProductUI) {
         this.productUI = productUI
 
-        binding.tvName.text = productUI.name
+        binding.tvName.setLimitedText(productUI.name)
         binding.rbRating.rating = productUI.rating.toFloat()
 
         //If left items = 0
@@ -192,7 +186,7 @@ class ProductGridViewHolder(
 
         //Comment
         when (productUI.commentAmount.isEmpty()) {
-            true -> binding.tvCommentAmount.text = "Нет отзывов"
+            true -> binding.tvCommentAmount.text = ""
             else -> binding.tvCommentAmount.text = productUI.commentAmount
         }
 
@@ -205,10 +199,10 @@ class ProductGridViewHolder(
         //Status
         var isNotHaveStatuses = true
         when (productUI.status.isEmpty()) {
-            true -> binding.cwStatusContainer.visibility = View.GONE
+            true -> binding.rlStatusContainer.visibility = View.GONE
             false -> {
                 isNotHaveStatuses = false
-                binding.cwStatusContainer.visibility = View.VISIBLE
+                binding.rlStatusContainer.visibility = View.VISIBLE
                 binding.tvStatus.text = productUI.status
                 binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(productUI.statusColor))
             }
@@ -218,6 +212,7 @@ class ProductGridViewHolder(
         when(productUI.priceList.size == 1 &&
                 productUI.priceList.first().currentPrice < productUI.priceList.first().oldPrice) {
             true -> {
+                isNotHaveStatuses = false
                 binding.cwDiscountContainer.visibility = View.VISIBLE
                 binding.tvDiscountPercent.setDiscountPercent(
                     newPrice = productUI.priceList.first().currentPrice,

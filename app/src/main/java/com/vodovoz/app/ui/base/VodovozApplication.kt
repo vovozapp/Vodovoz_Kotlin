@@ -7,12 +7,11 @@ import com.vodovoz.app.data.config.ApiConfig
 import com.vodovoz.app.data.local.LocalData
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.remote.MapKitApi
-import com.vodovoz.app.data.remote.VodovozApi
 import com.vodovoz.app.data.remote.RemoteData
 import com.vodovoz.app.data.remote.RemoteDataSource
+import com.vodovoz.app.data.remote.VodovozApi
 import com.vodovoz.app.util.LogSettings
 import okhttp3.OkHttpClient
-import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory

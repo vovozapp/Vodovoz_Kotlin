@@ -9,7 +9,6 @@ import com.vodovoz.app.ui.model.QuestionUI
 import com.vodovoz.app.ui.view_holder.QuestionInputAnswerViewHolder
 import com.vodovoz.app.ui.view_holder.QuestionMultiAnswerViewHolder
 import com.vodovoz.app.ui.view_holder.QuestionSingleAnswerViewHolder
-import java.lang.Exception
 
 class QuestionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

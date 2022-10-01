@@ -12,7 +12,7 @@
         style="@style/TextViewNormalBlack"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/space_16"
+        android:layout_marginHorizontal="@dimen/space_16"
         android:fontFamily="@font/rotonda_normal"
         android:textColor="@color/blackTextDark"
         app:layout_constraintEnd_toStartOf="@+id/imgEdit"
@@ -26,8 +26,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:layout_marginEnd="@dimen/space_16"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="@dimen/space_16"
         app:layout_constraintEnd_toStartOf="@+id/imgEdit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvAddress"
@@ -35,12 +34,22 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_edit"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:src="@drawable/png_edit_old"
+        android:layout_marginEnd="@dimen/space_16"
+        app:layout_constraintBottom_toBottomOf="@+id/tvAdditionalInfo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvAddress"
         app:tint="@color/text_gray"
         tools:ignore="ContentDescription" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/materialDivider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_16"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvAdditionalInfo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

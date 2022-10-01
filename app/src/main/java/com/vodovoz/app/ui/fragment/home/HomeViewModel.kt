@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.mapper.BannerMapper.mapToUI
 import com.vodovoz.app.mapper.BrandMapper.mapToUI
 import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
@@ -17,6 +16,7 @@ import com.vodovoz.app.mapper.HistoryMapper.mapToUI
 import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.mapper.PopupNewsMapper.mapToUI
 import com.vodovoz.app.mapper.PromotionMapper.mapToUI
+import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.*
 import com.vodovoz.app.ui.model.custom.CountriesSliderBundleUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
@@ -222,6 +222,7 @@ class HomeViewModel(
                     }
                 },
                 onError = { throwable ->
+                    Log.d(LogSettings.HOME_LOG, "Error Advertising banners slider")
                     advertisingBannersSliderUpdateSubject.onNext(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
@@ -569,12 +570,15 @@ class HomeViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onSuccess = { response ->
+                    Log.d(LogSettings.HOME_LOG, "On get response")
                     when (response) {
                         is ResponseEntity.Hide -> {
+                            Log.d(LogSettings.HOME_LOG, "Hide")
                             viewedProductsSliderHideMLD.value = true
                             viewedProductsSliderUpdateSubject.onNext(ViewState.Success())
                         }
                         is ResponseEntity.Error -> {
+                            Log.d(LogSettings.HOME_LOG, "Error")
                             viewedProductsSliderHideMLD.value = true
                             viewedProductsSliderUpdateSubject.onNext(ViewState.Error(response.errorMessage))
                         }
@@ -586,6 +590,7 @@ class HomeViewModel(
                     }
                 },
                 onError = { throwable ->
+                    Log.d(LogSettings.HOME_LOG, "Error viewed products slider")
                     viewedProductsSliderUpdateSubject.onNext(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
@@ -616,6 +621,7 @@ class HomeViewModel(
                     }
                 },
                 onError = { throwable ->
+                    Log.d(LogSettings.HOME_LOG, "Error comment slider")
                     commentsSliderUpdateSubject.onNext(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
@@ -672,7 +678,7 @@ class HomeViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

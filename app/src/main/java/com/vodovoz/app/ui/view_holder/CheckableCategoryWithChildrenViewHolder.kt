@@ -2,13 +2,19 @@ package com.vodovoz.app.ui.view_holder
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
+import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderSingleRootCatalogCategoryBinding
 import com.vodovoz.app.ui.adapter.SingleRootCatalogAdapter
 import com.vodovoz.app.ui.extensions.CatalogTitleExtensions.setNameWithIndent
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.ui.view.Divider
+import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class CheckableCategoryWithChildrenViewHolder(
@@ -27,7 +33,10 @@ class CheckableCategoryWithChildrenViewHolder(
 
     init {
         binding.root.setOnClickListener { categoryClickSubject.onNext(categoryUI) }
-        binding.rbDropDown.setOnClickListener { categoryClickSubject.onNext(categoryUI) }
+        binding.imgDropDown.setOnClickListener {
+            categoryClickSubject.onNext(categoryUI)
+            binding.imgDropDown.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_check_round))
+        }
         binding.rvSubcategories.layoutManager = LinearLayoutManager(context)
         binding.rvSubcategories.adapter = singleRootCatalogAdapter
     }
@@ -36,15 +45,11 @@ class CheckableCategoryWithChildrenViewHolder(
     fun onBind(categoryUI: CategoryUI, way: List<CategoryUI>) {
         this.categoryUI = categoryUI
 
-        binding.rbDropDown.isChecked = way.last().id == categoryUI.id
-        binding.tvName.setNameWithIndent(categoryUI.name, nestingPosition)
-
-        categoryUI.detailPicture?.let {
-            Glide
-                .with(context)
-                .load(categoryUI.detailPicture)
-                .into(binding.imgIcon)
+        when(way.last().id == categoryUI.id) {
+            true -> binding.imgDropDown.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_round_check))
+            false -> binding.imgDropDown.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_round_uncheck))
         }
+        binding.tvName.text = categoryUI.name
 
         singleRootCatalogAdapter.categoryUIList = categoryUI.categoryUIList
         singleRootCatalogAdapter.way = way

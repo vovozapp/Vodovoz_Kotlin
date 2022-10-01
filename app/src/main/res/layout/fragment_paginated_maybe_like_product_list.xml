@@ -20,14 +20,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dividerColor="@color/divider_color"/>
-
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvNextPage"
-        style="@style/TextViewNormalBlueBold"
+        style="@style/TextViewNormalBlue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Показать еще"

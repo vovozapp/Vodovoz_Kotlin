@@ -4,9 +4,7 @@ import com.vodovoz.app.data.LocalSyncExtensions.syncCartQuantity
 import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.paginatedProducts.FavoriteProductsResponseJsonParser.parseFavoriteProductsResponse
 import com.vodovoz.app.data.parser.response.paginatedProducts.PastPurchasesProductsResponseJsonParser.parsePastPurchasesProductsResponse
-import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsByBrandResponseJsonParser.parseProductsByBrandResponse
 import com.vodovoz.app.data.remote.RemoteDataSource
 import okhttp3.ResponseBody
 import retrofit2.Response

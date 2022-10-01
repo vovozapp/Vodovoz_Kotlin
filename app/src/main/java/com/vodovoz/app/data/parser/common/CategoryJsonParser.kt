@@ -22,8 +22,11 @@ object CategoryJsonParser {
     )
 
     private fun JSONObject.parseDetailImage() = when(has("PICTURE")) {
-        true -> getString("PICTURE").parseImagePath()
-        false -> ""
+        true -> when(isNull("PICTURE")) {
+            true -> null
+            else -> getString("PICTURE").parseImagePath()
+        }
+        false -> null
     }
 
     private fun JSONObject.parseSubCategoryEntityList() = when (has("PODRAZDEL")) {

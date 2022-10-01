@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.vodovoz.app.R
 import com.vodovoz.app.databinding.LayoutCustomSnackbarBinding
 
 class CustomSnackbar(

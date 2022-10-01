@@ -95,7 +95,7 @@ class CommentsSliderFragment : BaseHiddenFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

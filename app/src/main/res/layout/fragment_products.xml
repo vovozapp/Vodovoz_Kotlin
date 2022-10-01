@@ -6,35 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/searchToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/space_16"
-        android:paddingEnd="@dimen/space_16">
-
-        <ImageView
-            android:id="@+id/back"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="@dimen/space_16"
-            android:src="@drawable/ic_arrow_left"
-            app:tint="@color/blackTextPrimary"
-            tools:ignore="ContentDescription" />
-
-        <include
-            android:id="@+id/searchContainer"
-            layout="@layout/view_search" />
-
-    </LinearLayout>
+    <include
+        android:id="@+id/incAppBar"
+        layout="@layout/app_bar_search_open" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:layout_below="@id/searchToolbar">
+        android:layout_below="@id/incAppBar">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBar"
@@ -50,57 +30,58 @@
                 android:orientation="vertical"
                 app:layout_scrollFlags="enterAlways|scroll">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingStart="@dimen/space_16"
-                    android:paddingEnd="@dimen/space_16"
-                    android:paddingBottom="@dimen/space_8"
-                    android:paddingTop="@dimen/space_8"
+                    android:paddingVertical="@dimen/space_4"
                     android:visibility="visible">
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="@dimen/space_16"
                         android:gravity="center_vertical"
-                        android:layout_marginEnd="@dimen/space_16">
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgShare"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:id="@+id/categoryName"
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvCategoryName"
+                            style="@style/TextViewLargeBlackBold"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/rotonda_normal"
+                            android:gravity="bottom"
                             android:maxLines="1"
-                            android:textColor="@color/blackTextPrimary"
-                            android:textSize="19sp"
-                            android:textStyle="bold"
-                            tools:text="Возьми на природу" />
+                            tools:text="Прошлые покупки" />
 
-                        <TextView
-                            android:id="@+id/productAmount"
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvProductAmount"
+                            style="@style/TextViewNormalGray"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/rotonda_normal"
                             android:maxLines="1"
-                            android:textColor="@color/blackTextLight"
                             tools:layout_editor_absoluteX="16dp"
                             tools:text="452 товара" />
 
                     </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/share"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imgShare"
+                        android:layout_width="@dimen/_18sdp"
+                        android:layout_height="@dimen/_18sdp"
                         android:src="@drawable/png_share"
-                        app:tint="@color/blackTextPrimary"
+                        android:layout_marginEnd="@dimen/space_16"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/text_black"
                         tools:ignore="ContentDescription" />
 
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
                     android:id="@+id/brandTabsContainer"
@@ -113,15 +94,12 @@
 
                     <TextView
                         android:id="@+id/additionalName"
+                        style="@style/TextViewMediumBlackBold"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/rotonda_normal"
                         android:maxLines="1"
-                        android:textSize="17sp"
-                        android:textColor="@color/blackTextPrimary"
                         android:paddingStart="@dimen/space_16"
                         android:paddingEnd="@dimen/space_16"
-                        android:textStyle="bold"
                         tools:text="Популярные бренды" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -159,28 +137,24 @@
                                 android:layout_height="25dp"
                                 android:layout_marginStart="16dp"
                                 android:src="@drawable/png_ic_categories"
-                                app:tint="@color/blackTextLight"
+                                app:tint="@color/text_black"
                                 tools:ignore="ContentDescription" />
 
                             <TextView
+                                style="@style/TextViewNormalBlack"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/space_8"
                                 android:layout_weight="1"
-                                android:fontFamily="@font/rotonda_normal"
                                 android:maxLines="1"
-                                android:textColor="@color/blackTextPrimary"
-                                android:textSize="17sp"
-                                android:text="Категории"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/categoryName" />
+                                android:text="Категории" />
 
                             <ImageView
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
                                 android:layout_marginStart="16dp"
                                 android:src="@drawable/ic_pointer_right"
-                                app:tint="@color/blackTextLight"
+                                app:tint="@color/text_black"
                                 tools:ignore="ContentDescription" />
 
                         </LinearLayout>
@@ -191,78 +165,71 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/sortContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingStart="@dimen/space_16"
-                android:paddingEnd="@dimen/space_16"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
                 android:gravity="center_vertical">
 
-                <ImageView
-                    android:id="@+id/viewMode"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgViewMode"
+                    android:layout_width="@dimen/action_image_size_with_padding_8"
+                    android:layout_height="@dimen/action_image_size_with_padding_8"
+                    android:paddingHorizontal="@dimen/space_8"
+                    android:paddingVertical="@dimen/space_10"
                     android:src="@drawable/png_table"
-                    app:tint="@color/blackTextPrimary"
+                    android:layout_marginStart="@dimen/space_8"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/text_black"
                     tools:ignore="ContentDescription" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"/>
-
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/sort"
+                    android:id="@+id/tvSort"
+                    style="@style/TextViewNormalBlack"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:textColor="@color/blackTextPrimary"
-                    android:textStyle="bold"
                     android:drawableEnd="@drawable/ic_drop_down"
+                    android:gravity="center"
                     android:text="Выбрать сортировку"
+                    android:drawableTint="@color/text_black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/imgFilters"
+                    app:layout_constraintStart_toEndOf="@+id/imgViewMode"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="UseCompatTextViewDrawableXml" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"/>
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgFilters"
+                    android:layout_width="@dimen/action_image_size_with_padding_8"
+                    android:layout_height="@dimen/action_image_size_with_padding_8"
+                    android:paddingHorizontal="@dimen/space_8"
+                    android:paddingVertical="@dimen/space_10"
+                    android:src="@drawable/ic_filter"
+                    android:layout_marginEnd="@dimen/space_8"
+                    app:tint="@color/text_black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvFiltersAmount"
+                    style="@style/TextViewSmallWhite"
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:background="@drawable/bkg_button_green_circle_normal"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/space_2"
+                    android:layout_marginEnd="@dimen/space_2"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="@+id/imgFilters"
+                    app:layout_constraintTop_toTopOf="@+id/imgFilters"
+                    tools:text="3" />
 
-                    <ImageView
-                        android:id="@+id/filter"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:src="@drawable/ic_filter"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginStart="5dp"
-                        app:tint="@color/blackTextPrimary"
-                        tools:ignore="ContentDescription" />
-
-                    <TextView
-                        android:id="@+id/filterAmount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bkg_filters_number"
-                        android:fontFamily="@font/rotonda_normal"
-                        android:paddingStart="5dp"
-                        android:paddingTop="2dp"
-                        android:paddingEnd="5dp"
-                        android:paddingBottom="2dp"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        tools:text="3"/>
-
-                </RelativeLayout>
-
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
 

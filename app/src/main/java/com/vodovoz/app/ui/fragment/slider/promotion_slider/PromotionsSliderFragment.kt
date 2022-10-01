@@ -1,13 +1,17 @@
 package com.vodovoz.app.ui.fragment.slider.promotion_slider
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentSliderPromotionBinding
 import com.vodovoz.app.ui.adapter.PromotionsSliderAdapter
 import com.vodovoz.app.ui.base.BaseHiddenFragment
+import com.vodovoz.app.ui.fragment.home.HomeFragmentDirections
 import com.vodovoz.app.ui.interfaces.*
 import com.vodovoz.app.ui.model.PromotionUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
@@ -24,6 +28,8 @@ class PromotionsSliderFragment : BaseHiddenFragment() {
     private lateinit var iOnProductClick: IOnProductClick
     private lateinit var iOnFavoriteClick: IOnFavoriteClick
     private lateinit var iOnChangeProductQuantity: IOnChangeProductQuantity
+    private lateinit var onNotifyWhenBeAvailable: (Long, String, String) -> Unit
+    private lateinit var onNotAvailableMore: () -> Unit
 
     private lateinit var binding: FragmentSliderPromotionBinding
 
@@ -37,7 +43,9 @@ class PromotionsSliderFragment : BaseHiddenFragment() {
         onPromotionClickSubject = onPromotionClickSubject,
         onProductClickSubject = onPromotionProductClickSubject,
         onChangeProductQuantitySubject = onChangeProductQuantitySubject,
-        onFavoriteClickSubject = onFavoriteClickSubject
+        onFavoriteClickSubject = onFavoriteClickSubject,
+        onNotifyWhenBeAvailable = { id, name, picture -> onNotifyWhenBeAvailable(id, name, picture) },
+        onNotAvailableMore = { onNotAvailableMore() }
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,13 +98,17 @@ class PromotionsSliderFragment : BaseHiddenFragment() {
         iOnProductClick: IOnProductClick,
         iOnShowAllPromotionsClick: IOnShowAllPromotionsClick,
         iOnChangeProductQuantity: IOnChangeProductQuantity,
-        iOnFavoriteClick: IOnFavoriteClick
+        iOnFavoriteClick: IOnFavoriteClick,
+        onNotifyWhenBeAvailable: (Long, String, String) -> Unit,
+        onNotAvailableMore: () -> Unit
     ) {
         this.iOnPromotionClick = iOnPromotionClick
         this.iOnProductClick = iOnProductClick
         this.iOnShowAllPromotionsClick = iOnShowAllPromotionsClick
         this.iOnFavoriteClick = iOnFavoriteClick
         this.iOnChangeProductQuantity = iOnChangeProductQuantity
+        this.onNotifyWhenBeAvailable = onNotifyWhenBeAvailable
+        this.onNotAvailableMore = onNotAvailableMore
     }
 
     fun updateData(promotionsSliderBundleUI: PromotionsSliderBundleUI) {
@@ -119,6 +131,20 @@ class PromotionsSliderFragment : BaseHiddenFragment() {
         this.promotionUIList = promotionUIList
         promotionsSliderAdapter.promotionUIList = promotionUIList
         promotionsSliderAdapter.notifyDataSetChanged()
+        if (promotionUIList.isNotEmpty()) {
+            when (promotionUIList.first().productUIList.isEmpty()) {
+                true -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    binding.tvName.setTextAppearance(R.style.TextViewHeaderBlackBold)
+                } else {
+                    binding.tvName.setTextAppearance(null, R.style.TextViewHeaderBlackBold)
+                }
+                false -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    binding.tvName.setTextAppearance(R.style.TextViewMediumBlackBold)
+                } else {
+                    binding.tvName.setTextAppearance(null, R.style.TextViewMediumBlackBold)
+                }
+            }
+        }
 //        val diffUtil = PromotionDiffUtilCallback(
 //            oldList = promotionsSliderAdapter.promotionUIList,
 //            newList = promotionUIList
@@ -132,7 +158,7 @@ class PromotionsSliderFragment : BaseHiddenFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

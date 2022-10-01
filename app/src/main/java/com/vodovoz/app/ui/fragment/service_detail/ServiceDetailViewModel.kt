@@ -2,7 +2,6 @@ package com.vodovoz.app.ui.fragment.service_detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.mapper.ServiceMapper.mapToUI

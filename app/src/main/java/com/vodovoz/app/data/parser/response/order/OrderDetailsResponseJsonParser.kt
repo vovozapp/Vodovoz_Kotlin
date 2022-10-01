@@ -1,14 +1,13 @@
 package com.vodovoz.app.data.parser.response.order
 
 import com.vodovoz.app.data.model.common.*
-import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
 import com.vodovoz.app.data.parser.common.safeInt
+import com.vodovoz.app.data.parser.common.safeStringConvertToBoolean
 import com.vodovoz.app.data.remote.ResponseStatus
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
-import java.lang.Exception
 
 object OrderDetailsResponseJsonParser {
 
@@ -93,7 +92,9 @@ object OrderDetailsResponseJsonParser {
                 false -> false
             },
             detailPictureList = parseDetailPictureList(detailPicture),
-            depositPrice = 0
+            depositPrice = 0,
+            leftItems = safeInt("CATALOG_QUANTITY"),
+            isAvailable = safeStringConvertToBoolean("ACTIVE")
         )
     }
 

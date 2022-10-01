@@ -23,14 +23,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/space_8"
-                android:background="@color/white"
-                android:translationZ="@dimen/elevation_1">
+                android:background="@color/white">
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/vpPictures"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:padding="10dp"
+                    app:layout_constraintWidth_percent="0.7"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -73,8 +73,8 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imgBack"
-                    android:layout_width="@dimen/_52sdp"
-                    android:layout_height="@dimen/_52sdp"
+                    android:layout_width="@dimen/_50sdp"
+                    android:layout_height="@dimen/_50sdp"
                     android:padding="@dimen/space_16"
                     android:src="@drawable/ic_arrow_left"
                     app:layout_constraintStart_toStartOf="parent"
@@ -83,13 +83,11 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imgShare"
-                    android:layout_width="@dimen/_42sdp"
-                    android:layout_height="@dimen/_52sdp"
-                    android:paddingStart="@dimen/space_16"
-                    android:paddingTop="@dimen/space_16"
-                    android:paddingEnd="@dimen/space_4"
-                    android:paddingBottom="@dimen/space_16"
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_height="@dimen/_18sdp"
                     android:src="@drawable/png_share"
+                    android:layout_marginTop="@dimen/space_16"
+                    android:layout_marginEnd="@dimen/space_8"
                     app:layout_constraintEnd_toStartOf="@+id/imgFavorite"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/text_black"
@@ -97,16 +95,12 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imgFavorite"
-                    android:layout_width="@dimen/_42sdp"
-                    android:layout_height="@dimen/_52sdp"
-                    android:paddingStart="@dimen/space_4"
-                    android:paddingTop="@dimen/space_16"
-                    android:paddingEnd="@dimen/space_16"
-                    android:paddingBottom="@dimen/space_16"
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_height="@dimen/_18sdp"
                     android:src="@drawable/png_ic_favorite"
+                    android:layout_margin="@dimen/space_16"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/text_black"
                     tools:ignore="ContentDescription,RtlSymmetry" />
 
                 <com.google.android.material.chip.ChipGroup
@@ -171,7 +165,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvName"
-                    style="@style/TextViewMediumBlack"
+                    style="@style/TextViewMediumBlackBold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_16"
@@ -235,40 +229,43 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/space_4"
-                            android:gravity="bottom"
                             android:orientation="horizontal">
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/tvCurrentPrice"
-                                style="@style/TextViewMediumBlackBold"
+                                style="@style/TextViewLargeGrayBold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:gravity="start|bottom"
                                 tools:text="280 Р" />
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/tvOldPrice"
-                                style="@style/TextViewNormalGrayBold"
+                                style="@style/TextViewNormalLightGrayBold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:gravity="start|bottom"
                                 android:paddingStart="@dimen/space_4"
+                                android:paddingBottom="@dimen/line_spacing_extra"
                                 tools:ignore="RtlSymmetry"
                                 tools:text="300 Р" />
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/tvPricePerUnit"
-                                style="@style/TextViewSmallGray"
+                                style="@style/TextViewSmallLightGray"
+                                android:textColor="@color/text_gray_light"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:gravity="start|bottom"
                                 android:paddingStart="@dimen/space_4"
+                                android:paddingBottom="@dimen/line_spacing_extra"
                                 tools:text="510/кг" />
 
                         </LinearLayout>
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tvPriceCondition"
-                            style="@style/TextViewSmallGray"
+                            style="@style/TextViewSmallLightGray"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="start|bottom"
@@ -308,19 +305,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/space_16"
+                android:layout_marginTop="@dimen/space_8"
                 android:background="@color/white"
-                android:orientation="vertical"
-                android:translationZ="@dimen/elevation_1">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/TextViewHeaderBlackBold"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/space_16"
-                    android:paddingTop="@dimen/space_16"
-                    android:paddingEnd="@dimen/space_16"
-                    android:text="Услуги"
-                    android:textColor="@color/blackTextDark" />
+                android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvServices"
@@ -335,8 +322,7 @@
                 android:layout_marginTop="@dimen/space_8"
                 android:layout_marginBottom="@dimen/space_8"
                 android:background="@color/white"
-                android:orientation="vertical"
-                android:translationZ="@dimen/elevation_1">
+                android:orientation="vertical">
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/aboutTabs"
@@ -369,6 +355,7 @@
                     style="@style/TextViewSmallBlack"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/text_gray_light"
                     android:layout_marginStart="@dimen/space_16"
                     android:layout_marginTop="@dimen/space_16"
                     android:layout_marginEnd="@dimen/space_16"
@@ -377,6 +364,7 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvConsumerInfo"
                     style="@style/TextViewSmallGray"
+                    android:textColor="@color/text_gray_light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_16"
@@ -393,8 +381,7 @@
                 android:layout_marginTop="@dimen/space_8"
                 android:layout_marginBottom="@dimen/space_8"
                 android:background="@color/white"
-                android:orientation="vertical"
-                android:translationZ="1dp">
+                android:orientation="vertical">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/clCategoryContainer"
@@ -410,7 +397,7 @@
                         app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintWidth_percent="0.2"
+                        app:layout_constraintWidth_percent="0.18"
                         tools:ignore="ContentDescription" />
 
                     <LinearLayout
@@ -425,7 +412,7 @@
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tvCategoryName"
-                            style="@style/TextViewMediumBlack"
+                            style="@style/TextViewMediumGray"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
@@ -441,6 +428,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="top"
+                            android:textColor="@color/text_gray_light"
                             android:text="Категория"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/categoryImage"
@@ -457,7 +445,7 @@
                         app:layout_constraintBottom_toBottomOf="@+id/imgCategory"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/imgCategory"
-                        app:tint="@color/text_black"
+                        app:tint="@color/text_gray_light"
                         tools:ignore="ContentDescription" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -465,8 +453,8 @@
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/mdBetweenCategoryAndBrand"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:dividerColor="@color/divider_color" />
+                    android:layout_height="5dp"
+                    app:dividerColor="@color/divider_gray_color" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/clBrandContainer"
@@ -481,7 +469,7 @@
                         app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintWidth_percent="0.2"
+                        app:layout_constraintWidth_percent="0.18"
                         tools:ignore="ContentDescription" />
 
                     <LinearLayout
@@ -496,7 +484,7 @@
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tvBrandName"
-                            style="@style/TextViewMediumBlack"
+                            style="@style/TextViewMediumGray"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
@@ -512,6 +500,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="top"
+                            android:textColor="@color/text_gray_light"
                             android:text="Бренд"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/brandImage"
@@ -528,7 +517,7 @@
                         app:layout_constraintBottom_toBottomOf="@+id/imgBrand"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/imgBrand"
-                        app:tint="@color/text_black"
+                        app:tint="@color/text_gray_light"
                         tools:ignore="ContentDescription" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -536,8 +525,8 @@
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/mdBetweenCategoryAndProductList"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:dividerColor="@color/divider_color" />
+                    android:layout_height="5dp"
+                    app:dividerColor="@color/divider_gray_color" />
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/brandProductListFragment"
@@ -555,7 +544,6 @@
                 android:background="@color/white"
                 android:paddingTop="@dimen/space_8"
                 android:paddingBottom="@dimen/space_8"
-                android:translationZ="@dimen/elevation_1"
                 android:visibility="visible" />
 
             <androidx.fragment.app.FragmentContainerView
@@ -567,7 +555,6 @@
                 android:background="@color/white"
                 android:paddingTop="@dimen/space_8"
                 android:paddingBottom="@dimen/space_8"
-                android:translationZ="@dimen/elevation_1"
                 android:visibility="gone" />
 
             <androidx.fragment.app.FragmentContainerView
@@ -577,8 +564,7 @@
                 android:layout_marginTop="@dimen/space_8"
                 android:paddingTop="@dimen/space_8"
                 android:layout_marginBottom="@dimen/space_8"
-                android:background="@color/white"
-                android:translationZ="@dimen/elevation_1" />
+                android:background="@color/white" />
 
             <LinearLayout
                 android:id="@+id/searchWordContainer"
@@ -589,8 +575,7 @@
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:translationZ="@dimen/elevation_1">
+                android:paddingBottom="@dimen/space_8">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/TextViewHeaderBlackBold"
@@ -615,7 +600,6 @@
                 android:layout_marginBottom="@dimen/space_8"
                 android:paddingVertical="@dimen/space_8"
                 android:background="@color/white"
-                android:translationZ="@dimen/elevation_1"
                 android:visibility="visible" />
 
             <LinearLayout
@@ -623,8 +607,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_8"
                 android:background="@color/white"
-                android:orientation="vertical"
-                android:translationZ="@dimen/elevation_1">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/llCommentsTitleContainer"
@@ -646,7 +629,7 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvShowAllComment"
-                        style="@style/TextViewMediumBlue"
+                        style="@style/TextViewSmallBlue"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -671,7 +654,7 @@
                     android:layout_marginEnd="@dimen/space_16"
                     android:gravity="bottom"
                     android:text="Нет отзывов"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"

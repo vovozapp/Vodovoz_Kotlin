@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderProductListNotAvailableBinding
-import com.vodovoz.app.ui.view_holder.ProductListNotAvailableViewHolder
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.ui.view_holder.ProductListNotAvailableViewHolder
 
 class NotAvailableCartItemsAdapter(
     private val onProductClick: (Long) -> Unit,

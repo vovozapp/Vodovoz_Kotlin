@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import com.vodovoz.app.databinding.ViewHolderOrderDetailsBinding
 import com.vodovoz.app.ui.diffUtils.OrderDiffItemCallback
-import com.vodovoz.app.ui.view_holder.OrderDetailViewHolder
 import com.vodovoz.app.ui.model.OrderUI
+import com.vodovoz.app.ui.view_holder.OrderDetailViewHolder
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class PagingOrdersAdapter(

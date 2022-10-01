@@ -17,11 +17,8 @@ import com.vodovoz.app.ui.adapter.LinearProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
-import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
+import com.vodovoz.app.ui.fragment.order_details.OrderDetailsFragmentDirections
 import com.vodovoz.app.ui.view.Divider
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class SomeProductsByBrandFragment : ViewStateBaseFragment() {
@@ -60,7 +57,11 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
                 viewModel.changeCart(productId, quantity)
             },
             onNotAvailableMore = {},
-            onNotifyWhenBeAvailable = {},
+            onNotifyWhenBeAvailable = { id, name, picture ->
+                requireParentFragment().findNavController().navigate(OrderDetailsFragmentDirections.actionToPreOrderBS(
+                    id, name, picture
+                ))
+            },
         )
     }
 
@@ -108,9 +109,6 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
         val space = resources.getDimension(R.dimen.space_16).toInt()
         binding.nextPage.setOnClickListener { viewModel.nextPage() }
         binding.brandProductRecycler.layoutManager = LinearLayoutManager(requireContext())
-        ContextCompat.getDrawable(requireContext(), R.drawable.bkg_divider)?.let {
-            binding.brandProductRecycler.addItemDecoration(Divider(it, space))
-        }
         binding.brandProductRecycler.adapter = linearProductAdapter
         binding.brandProductRecycler.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
@@ -147,7 +145,6 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
 
             if (viewModel.pageAmount == 1) {
                 binding.nextPage.visibility = View.GONE
-                binding.divider.visibility = View.GONE
             }
         }
     }

@@ -2,11 +2,23 @@
 <resources>
     <style name="Theme.Vodovoz" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/bluePrimary</item>
-        <item name="colorPrimaryDark">@color/bluePrimary</item>
+        <item name="colorPrimaryDark">@color/white</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorAccent">@color/bluePrimary</item>
+        <item name="colorAccent">@color/accentPrimary</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialog</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="materialAlertDialogTheme">@style/AlertDialog</item>
+        <item name="colorControlActivated">@color/accentPrimary</item>
+        <item name="android:lineSpacingExtra">@dimen/line_spacing_extra</item>
+        <item name="android:lineSpacingMultiplier">@dimen/line_spacing_multiplier</item>
+    </style>
+
+    <style name="Theme.Vodovoz.DarkStatusBar" parent="Theme.Vodovoz">
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="colorPrimaryDark">@color/bluePrimary</item>
+    </style>
+
+    <style name="AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="materialAlertDialogBodyTextStyle">@style/TextViewNormalBlack</item>
     </style>
 </resources>

@@ -7,24 +7,20 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.BsSelectionReplacementProductsBinding
 import com.vodovoz.app.databinding.FragmentProductDetailsBinding
 import com.vodovoz.app.ui.adapter.*
 import com.vodovoz.app.ui.base.ViewState
@@ -34,28 +30,25 @@ import com.vodovoz.app.ui.decoration.CommentMarginDecoration
 import com.vodovoz.app.ui.decoration.PriceMarginDecoration
 import com.vodovoz.app.ui.decoration.SearchMarginDecoration
 import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setCommentQuantity
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setCommentQuantity
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
+import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.product_info.ProductInfoFragment
 import com.vodovoz.app.ui.fragment.product_properties.ProductPropertiesFragment
+import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.fragment.slider.promotion_slider.PromotionsSliderFragment
 import com.vodovoz.app.ui.fragment.some_products_by_brand.SomeProductsByBrandFragment
 import com.vodovoz.app.ui.fragment.some_products_maybe_like.SomeProductsMaybeLikeFragment
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setDiscountPercent
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setMinimalPriceText
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceCondition
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPricePerUnitText
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
-import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
-import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
-import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
-import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.*
 import com.vodovoz.app.ui.model.custom.ProductDetailBundleUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
-import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -96,11 +89,17 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
 
 
     private val recommendProductsSliderFragment: ProductsSliderFragment by lazy {
-        ProductsSliderFragment.newInstance(ProductsSliderConfig(containShowAllButton = false))
+        ProductsSliderFragment.newInstance(ProductsSliderConfig(
+            containShowAllButton = false,
+            largeTitle = true
+        ))
     }
 
     private val byWithProductsSliderFragment: ProductsSliderFragment by lazy {
-        ProductsSliderFragment.newInstance(ProductsSliderConfig(containShowAllButton = false))
+        ProductsSliderFragment.newInstance(ProductsSliderConfig(
+            containShowAllButton = false,
+            largeTitle = true
+        ))
     }
 
     private val promotionsSliderFragment: PromotionsSliderFragment by lazy { PromotionsSliderFragment() }
@@ -147,13 +146,27 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
             iOnProductClick = { productId -> onProductClickSubject.onNext(productId) },
             iOnFavoriteClick = { pair -> onFavoriteClickSubject.onNext(pair) },
             iOnChangeProductQuantity = { pair -> onChangeProductQuantitySubject.onNext(pair) },
-            iOnShowAllProductsClick = {}
+            iOnShowAllProductsClick = {},
+            onNotAvailableMore = {},
+            onNotifyWhenBeAvailable = { id, name, picture ->
+                when(viewModel.isAlreadyLogin()) {
+                    true -> findNavController().navigate(ProductDetailsFragmentDirections.actionToPreOrderBS(id, name, picture))
+                    false -> findNavController().navigate(ProductDetailsFragmentDirections.actionToProfileFragment())
+                }
+            }
         )
         recommendProductsSliderFragment.initCallbacks(
             iOnProductClick = { productId -> onProductClickSubject.onNext(productId) },
             iOnFavoriteClick = { pair -> onFavoriteClickSubject.onNext(pair) },
             iOnChangeProductQuantity = { pair -> onChangeProductQuantitySubject.onNext(pair) },
-            iOnShowAllProductsClick = {}
+            iOnShowAllProductsClick = {},
+            onNotAvailableMore = {},
+            onNotifyWhenBeAvailable = { id, name, picture ->
+                when(viewModel.isAlreadyLogin()) {
+                    true -> findNavController().navigate(ProductDetailsFragmentDirections.actionToPreOrderBS(id, name, picture))
+                    false -> findNavController().navigate(ProductDetailsFragmentDirections.actionToProfileFragment())
+                }
+            }
         )
         promotionsSliderFragment.initCallbacks(
             iOnProductClick = {},
@@ -162,7 +175,14 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
             },
             iOnShowAllPromotionsClick = {},
             iOnFavoriteClick = { pair -> onFavoriteClickSubject.onNext(pair) },
-            iOnChangeProductQuantity = { pair -> onChangeProductQuantitySubject.onNext(pair) }
+            iOnChangeProductQuantity = { pair -> onChangeProductQuantitySubject.onNext(pair) },
+            onNotAvailableMore = {},
+            onNotifyWhenBeAvailable = { id, name, picture ->
+                when(viewModel.isAlreadyLogin()) {
+                    true -> findNavController().navigate(ProductDetailsFragmentDirections.actionToPreOrderBS(id, name, picture))
+                    false -> findNavController().navigate(ProductDetailsFragmentDirections.actionToProfileFragment())
+                }
+            }
         )
     }
 
@@ -294,6 +314,8 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
                     findNavController().navigate(ProductDetailsFragmentDirections.actionToReplacementProductsSelectionBS(
                         viewModel.productDetailBundleUI.productDetailUI.detailPictureList.first(),
                         it.productUIList.toTypedArray(),
+                        viewModel.productId!!,
+                        viewModel.productDetailBundleUI.productDetailUI.name
                     ))
                 }
             }
@@ -530,9 +552,9 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
                     with(outRect) {
                         if (parent.getChildAdapterPosition(view) % 2 == 0) {
                             left = space
-                            right = space/2
+                            right = space/4
                         } else {
-                            left = space/2
+                            left = space/4
                             right = space
                         }
                         top = space
@@ -687,7 +709,7 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
         //Comment
         when (productDetailBundle.productDetailUI.commentsAmount == 0) {
             true -> {
-                binding.tvCommentAmount.text = "Нет отзывов"
+                binding.tvCommentAmount.text = ""
                 binding.tvCommentAmount.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_gray))
             }
             else -> {
@@ -832,7 +854,7 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

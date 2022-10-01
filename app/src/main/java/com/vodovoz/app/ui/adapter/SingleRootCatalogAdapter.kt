@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderSingleRootCatalogCategoryBinding
-import com.vodovoz.app.ui.view_holder.CheckableCategoryWithChildrenViewHolder
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.ui.view_holder.CheckableCategoryWithChildrenViewHolder
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 @SuppressLint("NotifyDataSetChanged")

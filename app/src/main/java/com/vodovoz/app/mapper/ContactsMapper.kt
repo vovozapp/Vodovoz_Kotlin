@@ -6,7 +6,6 @@ import com.vodovoz.app.mapper.ChatMapper.mapToUI
 import com.vodovoz.app.mapper.EmailMapper.mapToUI
 import com.vodovoz.app.mapper.PhoneMapper.mapToUI
 import com.vodovoz.app.ui.model.*
-import java.util.*
 
 object ContactsBundleMapper {
 

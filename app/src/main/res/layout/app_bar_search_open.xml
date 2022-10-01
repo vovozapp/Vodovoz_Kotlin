@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--new -->
+<com.google.android.material.appbar.AppBarLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    app:elevation="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:orientation="horizontal"
+        android:layout_marginEnd="@dimen/space_16"
+        android:gravity="center_vertical">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgBack"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="?attr/actionBarSize"
+            android:paddingStart="@dimen/space_16"
+            android:paddingEnd="@dimen/space_16"
+            android:src="@drawable/ic_arrow_left"
+            app:tint="@color/text_black"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingVertical="@dimen/space_6">
+
+            <include
+                android:id="@+id/incSearch"
+                layout="@layout/view_search" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.appbar.AppBarLayout>

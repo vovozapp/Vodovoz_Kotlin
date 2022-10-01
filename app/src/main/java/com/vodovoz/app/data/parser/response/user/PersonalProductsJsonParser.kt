@@ -1,7 +1,6 @@
 package com.vodovoz.app.data.parser.response.user
 
 import com.vodovoz.app.data.model.common.CategoryDetailEntity
-import com.vodovoz.app.data.model.common.ProductDetailEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
 import com.vodovoz.app.data.remote.ResponseStatus

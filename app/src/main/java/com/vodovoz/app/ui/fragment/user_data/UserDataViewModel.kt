@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.mapper.UserDataMapper.mapToUI
+import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.UserDataUI
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -30,6 +30,14 @@ class UserDataViewModel(
 
     private val compositeDisposable = CompositeDisposable()
 
+    var validEmail = false
+    var validPhone = false
+    var validFirstName = false
+    var validSecondName = false
+    var validPassword = false
+
+    var canChangeBirthday = true
+
     fun updateData() {
         dataRepository
             .fetchUserData(userId = dataRepository.fetchUserId()!!)
@@ -43,6 +51,7 @@ class UserDataViewModel(
                         is ResponseEntity.Error -> viewStateMLD.value = ViewState.Error(response.errorMessage)
                         is ResponseEntity.Success -> {
                             userDataUI = response.data.mapToUI()
+                            canChangeBirthday = userDataUI.birthday == "Не указано"
                             userDataUIMLD.value = userDataUI
                             viewStateMLD.value = ViewState.Success()
                         }
@@ -54,18 +63,26 @@ class UserDataViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
-    fun updateUserData(password: String) {
+    fun updateUserData(
+        firstName: String? = null,
+        secondName: String? = null,
+        gender: String? = null,
+        birthday: String? = null,
+        email: String? = null,
+        phone: String? = null,
+        password: String? = null
+    ) {
         dataRepository
             .updateUserData(
-                firstName = userDataUI.firstName,
-                secondName = userDataUI.secondName,
-                sex = userDataUI.gender.genderName,
-                birthday = userDataUI.birthday,
-                phone = userDataUI.phone,
-                email = userDataUI.email,
+                firstName = firstName,
+                secondName = secondName,
+                sex = gender,
+                birthday = birthday,
+                phone = phone,
+                email = email,
                 password = password
             )
             .subscribeOn(Schedulers.io())
@@ -74,7 +91,10 @@ class UserDataViewModel(
             .subscribeBy(
                 onSuccess = { response ->
                     when(response) {
-                        is ResponseEntity.Success -> messageMLD.value = "Данные успешно изменены"
+                        is ResponseEntity.Success -> {
+                            if (birthday?.isNotEmpty() == true) canChangeBirthday = false
+                            messageMLD.value = "Данные успешно изменены"
+                        }
                         is ResponseEntity.Hide -> messageMLD.value = "Неизвестная ошибка"
                         is ResponseEntity.Error -> messageMLD.value = response.errorMessage
                     }

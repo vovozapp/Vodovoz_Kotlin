@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--new-->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -29,8 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_16"
                 android:layout_marginEnd="@dimen/space_16"
-                android:layout_marginTop="@dimen/space_8"
-                app:errorEnabled="true">
+                android:layout_marginTop="@dimen/space_8">
 
                 <com.google.android.material.textfield.TextInputEditText
                     style="@style/TextField"
@@ -48,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_16"
                 android:layout_marginEnd="@dimen/space_16"
-                app:errorEnabled="true">
+                android:layout_marginTop="@dimen/space_12">
 
                 <com.google.android.material.textfield.TextInputEditText
                     style="@style/TextField"
@@ -66,8 +63,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_16"
                 android:layout_marginEnd="@dimen/space_16"
-                app:startIconDrawable="@drawable/ic_email"
-                app:errorEnabled="true">
+                android:layout_marginTop="@dimen/space_12"
+                app:startIconDrawable="@drawable/ic_email">
 
                 <com.google.android.material.textfield.TextInputEditText
                     style="@style/TextField"
@@ -86,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_16"
                 android:layout_marginEnd="@dimen/space_16"
-                app:errorEnabled="true"
+                android:layout_marginTop="@dimen/space_12"
                 app:startIconDrawable="@drawable/ic_phone">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -105,8 +102,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_16"
                 android:layout_marginEnd="@dimen/space_16"
-                app:errorEnabled="true"
-                app:startIconDrawable="@drawable/ic_password">
+                android:layout_marginTop="@dimen/space_12"
+                app:startIconDrawable="@drawable/ic_password"
+                app:endIconMode="password_toggle">
 
                 <com.google.android.material.textfield.TextInputEditText
                     style="@style/TextField"
@@ -123,7 +121,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Я подтверждаю согласие на обработку персональных данных"
-                android:layout_marginHorizontal="@dimen/space_16"/>
+                android:layout_marginHorizontal="@dimen/space_16"
+                android:layout_marginTop="@dimen/space_16"/>
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/scDistribution"

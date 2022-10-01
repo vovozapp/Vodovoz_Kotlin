@@ -16,6 +16,7 @@ object OrderMapper {
         price = price,
         orderStatusUI = status?.mapToUI(),
         address = address,
+        date = date,
         productUIList = productEntityList.mapToUI()
     )
 

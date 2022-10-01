@@ -3,7 +3,6 @@ package com.vodovoz.app.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.vodovoz.app.data.model.common.EmailEntity
 import com.vodovoz.app.databinding.ViewHolderContactChatIconBinding
 import com.vodovoz.app.databinding.ViewHolderContactChatsBundleBinding
 import com.vodovoz.app.databinding.ViewHolderContactEmailBinding

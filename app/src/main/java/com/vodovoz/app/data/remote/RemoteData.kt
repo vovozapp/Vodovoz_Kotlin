@@ -1,6 +1,5 @@
 package com.vodovoz.app.data.remote
 
-import android.util.Log
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.model.features.*
@@ -55,6 +54,8 @@ import com.vodovoz.app.data.parser.response.paginatedProducts.SomeProductsByBran
 import com.vodovoz.app.data.parser.response.past_purchases.PastPurchasesHeaderResponseJsonParser.parsePastPurchasesHeaderResponse
 import com.vodovoz.app.data.parser.response.popular.PopularSliderResponseJsonParser.parsePopularSliderResponse
 import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
+import com.vodovoz.app.data.parser.response.pre_order.PreOrderFormDataResponseJsonParser.parsePreOrderFormDataResponse
+import com.vodovoz.app.data.parser.response.pre_order.PreOrderProductResponseJsonParser.parsePreOrderProductResponse
 import com.vodovoz.app.data.parser.response.product.ProductDetailsResponseJsonParser.parseProductDetailsResponse
 import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonParser.parseAllPromotionsResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
@@ -80,17 +81,37 @@ import com.vodovoz.app.data.parser.response.user.RequestCodeResponseJsonParser.p
 import com.vodovoz.app.data.parser.response.user.UpdateUserDataResponseJsonParser.parseUpdateUserDataResponse
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
-import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
 import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Response
 
 class RemoteData(
     private val vodovozApi: VodovozApi,
     private val mapKitApi: MapKitApi
 ) : RemoteDataSource {
+
+    override fun fetchPreOrderFormData(
+        userId: Long?
+    ): Single<ResponseEntity<PreOrderFormDataEntity>> = vodovozApi.fetchPreOrderResponse(
+        action = "predzakaz",
+        userId = userId
+    ).flatMap { Single.just(it.parsePreOrderFormDataResponse()) }
+
+    override fun preOrderProduct(
+        userId: Long?,
+        productId: Long?,
+        name: String?,
+        email: String?,
+        phone: String?
+    ): Single<ResponseEntity<String>> = vodovozApi.fetchPreOrderResponse(
+        action = "otpravka",
+        userId = userId,
+        productId = productId,
+        email = email,
+        phone = phone,
+        name = name
+    ).flatMap { Single.just(it.parsePreOrderProductResponse()) }
 
     //Общая информация о предоставляемых услугах
     override fun fetchAboutServices(): Single<ResponseEntity<AboutServicesBundleEntity>> = vodovozApi.fetchServicesResponse(

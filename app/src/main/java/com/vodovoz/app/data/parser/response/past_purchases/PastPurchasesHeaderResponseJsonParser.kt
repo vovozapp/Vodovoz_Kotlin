@@ -1,14 +1,10 @@
 package com.vodovoz.app.data.parser.response.past_purchases
 
 import android.util.Log
-import com.vodovoz.app.data.model.common.CategoryDetailEntity
 import com.vodovoz.app.data.model.common.CategoryEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.model.features.FavoriteProductsHeaderBundleEntity
 import com.vodovoz.app.data.model.features.PastPurchasesHeaderBundleEntity
-import com.vodovoz.app.data.parser.common.CategoryJsonParser.parseCategoryEntity
-import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
-import com.vodovoz.app.data.remote.ResponseStatus
+import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.util.LogSettings
 import okhttp3.ResponseBody
 import org.json.JSONArray
@@ -18,6 +14,7 @@ object PastPurchasesHeaderResponseJsonParser {
 
     fun ResponseBody.parsePastPurchasesHeaderResponse(): ResponseEntity<PastPurchasesHeaderBundleEntity> {
         val responseJson = JSONObject(string())
+        Log.d(LogSettings.RESPONSE_BODY_LOG, responseJson.toString(2))
         return ResponseEntity.Success(
             PastPurchasesHeaderBundleEntity(
                 favoriteCategoryEntity = when(responseJson.has("glavtitle")) {
@@ -31,19 +28,27 @@ object PastPurchasesHeaderResponseJsonParser {
                 notAvailableTitle = when(responseJson.has("nalichie") && !responseJson.isNull("nalichie")) {
                     true -> responseJson.getJSONObject("nalichie").getString("NAMENETNALICHIE")
                     false -> null
-                }
+                },
+                emptyTitle = responseJson.safeString("title"),
+                emptySubtitle = responseJson.safeString("message")
             )
         )
     }
 
     private fun JSONObject.parseFavoriteCategoryEntity() = CategoryEntity(
         id = 0,
-        shareUrl = getString("detail_page_url"),
+        shareUrl = safeString("detail_page_url"),
         name = getString("glavtitle"),
-        productAmount = getString("tovarvsego"),
-        subCategoryEntityList = when(getJSONObject("razdel").isNull("LISTRAZDEL")) {
-            true -> listOf()
-            false -> getJSONObject("razdel").getJSONArray("LISTRAZDEL").parseSubCategoryEntityList()
+        productAmount = when(isNull("tovarvsego")) {
+            true -> "Нет товаров"
+            false -> safeString("tovarvsego")
+        },
+        subCategoryEntityList = when(has("razdel")) {
+            true -> when(getJSONObject("razdel").isNull("LISTRAZDEL")) {
+                true -> listOf()
+                false -> getJSONObject("razdel").getJSONArray("LISTRAZDEL").parseSubCategoryEntityList()
+            }
+            false -> listOf()
         }
     )
 

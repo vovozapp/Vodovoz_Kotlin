@@ -4,12 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
-import com.vodovoz.app.data.config.FieldValidateConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.mapper.ActivateDiscountCardBundleMapper.mapToUI
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.custom.ActivateDiscountCardBundleUI
-import com.vodovoz.app.ui.model.custom.DiscountCardPropertyUI
+import com.vodovoz.app.util.FieldValidationsSettings
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -59,7 +58,7 @@ class DiscountCardViewModel(
         var isCorrectly = true
         for (property in activateDiscountCardBundleUI.discountCardPropertyUIList) {
             when(property.code) {
-                "TELEFON" -> if (!FieldValidateConfig.PHONE_REGEX.matches(property.value)) {
+                "TELEFON" -> if (!FieldValidationsSettings.PHONE_REGEX.matches(property.value)) {
                     isCorrectly = false
                     property.isValid = false
                 }
@@ -103,7 +102,7 @@ class DiscountCardViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

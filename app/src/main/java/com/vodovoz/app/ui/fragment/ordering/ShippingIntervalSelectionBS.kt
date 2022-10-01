@@ -7,9 +7,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.BsSelectionPayMethodBinding
 import com.vodovoz.app.databinding.BsSelectionShippingIntervalsBinding
-import com.vodovoz.app.ui.adapter.PayMethodsAdapter
 import com.vodovoz.app.ui.adapter.ShippingIntervalsAdapter
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 

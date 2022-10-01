@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.SimpleAddressDiffUtilCallback
 import com.vodovoz.app.ui.extensions.ColorExtensions.getColorWithAlpha
 import com.vodovoz.app.ui.model.DeliveryZoneUI
+import com.vodovoz.app.util.LogSettings
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
@@ -330,10 +332,11 @@ class MapDialogFragment : ViewStateBaseFragment(),
     }
 
     override fun onObjectAdded(userLocationView: UserLocationView) {
+        Log.d(LogSettings.DEVELOP_LOG, "${userLocationView.arrow.geometry.latitude} : ${userLocationView.arrow.geometry.longitude}")
         binding.mapView.map.move(
             CameraPosition(Point(
-                userLocationView.arrow.geometry.latitude,
-                userLocationView.arrow.geometry.longitude
+                userLocationView.arrow.geometry.longitude,
+                userLocationView.arrow.geometry.latitude
             ), 16f, 0f, 0f),
             Animation(Animation.Type.SMOOTH, 1f),
             null

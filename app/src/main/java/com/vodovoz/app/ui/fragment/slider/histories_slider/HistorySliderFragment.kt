@@ -2,7 +2,6 @@ package com.vodovoz.app.ui.fragment.slider.histories_slider
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,10 +13,10 @@ import com.vodovoz.app.databinding.FragmentSliderHistoryBinding
 import com.vodovoz.app.ui.adapter.HistoriesSliderAdapter
 import com.vodovoz.app.ui.base.BaseHiddenFragment
 import com.vodovoz.app.ui.diffUtils.HistoryDiffUtilCallback
-import com.vodovoz.app.ui.interfaces.IOnHistoryClick
+import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
+import com.vodovoz.app.ui.interfaces.IOnHistoryClick
 import com.vodovoz.app.ui.model.HistoryUI
-import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -61,35 +60,23 @@ class HistorySliderFragment : BaseHiddenFragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         val space = resources.getDimension(R.dimen.space_16).toInt()
-        binding.rvHistories.onRenderFinished { width, _ ->
-            historiesSliderAdapter = HistoriesSliderAdapter(
-                onHistoryClickSubject = onHistoryClickSubject,
-                cardWidth = (width - (space * 4))/3
-            )
-            binding.rvHistories.adapter = historiesSliderAdapter
-            onAdapterReadySubject.subscribeBy { historyUIList ->
-                this.historyUIList = historyUIList
-                updateView(historyUIList)
-            }.addTo(compositeDisposable)
-        }
-
-        binding.rvHistories.addItemDecoration(
-            object : RecyclerView.ItemDecoration() {
-                override fun getItemOffsets(
-                    outRect: Rect,
-                    view: View,
-                    parent: RecyclerView,
-                    state: RecyclerView.State
-                ) {
-                    with(outRect) {
-                        if (parent.getChildAdapterPosition(view) == 0) left = space
-                        top = space / 2
-                        right = space
-                        bottom = space / 2
-                    }
-                }
-            }
+        historiesSliderAdapter = HistoriesSliderAdapter(
+            onHistoryClickSubject = onHistoryClickSubject,
+            cardWidth = 0
         )
+        binding.rvHistories.adapter = historiesSliderAdapter
+        onAdapterReadySubject.subscribeBy { historyUIList ->
+            this.historyUIList = historyUIList
+            updateView(historyUIList)
+        }.addTo(compositeDisposable)
+
+        binding.rvHistories.addMarginDecoration { rect, view, parent, state ->
+            if (parent.getChildAdapterPosition(view) == 0) rect.left = space
+            if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.right = space
+            else rect.right = space/2
+            rect.top = space / 2
+            rect.bottom = space / 2
+        }
     }
 
     private fun subscribeSubjects() {
@@ -120,7 +107,7 @@ class HistorySliderFragment : BaseHiddenFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

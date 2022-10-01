@@ -1,10 +1,10 @@
 package com.vodovoz.app.ui.fragment.user_data
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -20,9 +20,20 @@ import com.vodovoz.app.ui.adapter.GendersAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
+import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setEmailValidation
+import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setNameValidation
+import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setPasswordValidation
+import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setPhoneValidation
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.UserDataUI
+import com.vodovoz.app.util.LogSettings
+import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
+import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToFullFormat
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.*
 
 enum class Gender(
@@ -37,9 +48,18 @@ class UserDataFragment : ViewStateBaseFragment() {
     private lateinit var binding: FragmentUserDataBinding
     private lateinit var viewModel: UserDataViewModel
 
+    private val compositeDisposable = CompositeDisposable()
+    private val trackErrorSubject: PublishSubject<Boolean> = PublishSubject.create()
+    private val validEmailSubject: PublishSubject<Boolean> = PublishSubject.create()
+    private val validPhoneSubject: PublishSubject<Boolean> = PublishSubject.create()
+    private val validFirstNameSubject: PublishSubject<Boolean> = PublishSubject.create()
+    private val validSecondNameSubject: PublishSubject<Boolean> = PublishSubject.create()
+    private val validPasswordSubject: PublishSubject<Boolean> = PublishSubject.create()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
+        subscribeSubjects()
     }
 
     private fun initViewModel() {
@@ -48,6 +68,14 @@ class UserDataFragment : ViewStateBaseFragment() {
             (requireActivity().application as VodovozApplication).viewModelFactory
         )[UserDataViewModel::class.java]
         viewModel.updateData()
+    }
+
+    private fun subscribeSubjects() {
+        validEmailSubject.subscribeBy { viewModel.validEmail = it }.addTo(compositeDisposable)
+        validPhoneSubject.subscribeBy { viewModel.validPhone = it }.addTo(compositeDisposable)
+        validFirstNameSubject.subscribeBy { viewModel.validFirstName = it }.addTo(compositeDisposable)
+        validSecondNameSubject.subscribeBy { viewModel.validSecondName = it }.addTo(compositeDisposable)
+        validPasswordSubject.subscribeBy { viewModel.validPassword = it }.addTo(compositeDisposable)
     }
 
     override fun setContentView(
@@ -62,41 +90,64 @@ class UserDataFragment : ViewStateBaseFragment() {
     override fun initView() {
         initAppBar()
         initButtons()
+        setupFields()
         observeViewModel()
         observeResultLiveData()
     }
 
     private fun initAppBar() {
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        (requireActivity() as AppCompatActivity).supportActionBar?.let { noNullActionBar ->
-            noNullActionBar.setDisplayHomeAsUpEnabled(true)
-            noNullActionBar.setDisplayShowHomeEnabled(true)
-        }
-
-        binding.toolbar.setNavigationOnClickListener {
+        binding.incAppBar.tvTitle.text = "Мои данные"
+        binding.incAppBar.imgBack.setOnClickListener {
             findNavController().popBackStack()
         }
     }
 
+    private fun setupFields() {
+        binding.etEmail.setEmailValidation(binding.tilEmail, compositeDisposable, trackErrorSubject, validEmailSubject)
+        binding.etPhone.setPhoneValidation(binding.tilPhone, compositeDisposable, trackErrorSubject, validPhoneSubject)
+        binding.etFirstName.setNameValidation(binding.tilFirstName, compositeDisposable, trackErrorSubject, validFirstNameSubject)
+        binding.etSecondName.setNameValidation(binding.tilSecondName, compositeDisposable, trackErrorSubject, validSecondNameSubject)
+        binding.etPassword.setPasswordValidation(binding.tilPassword, compositeDisposable, trackErrorSubject, validPasswordSubject)
+    }
+
     private fun initButtons() {
-        binding.scrollContainer.setScrollElevation(binding.appBar)
+        binding.swContentContainer.setScrollElevation(binding.incAppBar.root)
 
-        binding.save.setOnClickListener {
-            viewModel.userDataUI.firstName = binding.firstName.text.toString()
-            viewModel.userDataUI.secondName = binding.secondName.text.toString()
-            viewModel.userDataUI.birthday = binding.birthday.text.toString()
-            viewModel.userDataUI.phone = binding.phone.text.toString()
-
-            viewModel.updateUserData(binding.newPassword.text.toString())
+        binding.btnSave.setOnClickListener {
+            trackErrorSubject.onNext(true)
+            Log.d(LogSettings.ID_LOG, "${viewModel.validEmail} ${viewModel.validPhone} ${viewModel.validFirstName} ${viewModel.validSecondName}")
+            when(
+                viewModel.validEmail &&
+                viewModel.validPhone &&
+                viewModel.validFirstName &&
+                viewModel.validSecondName &&
+                viewModel.validPassword
+            ) {
+                true -> viewModel.updateUserData(
+                    firstName = binding.etFirstName.text.toString(),
+                    secondName = binding.etSecondName.text.toString(),
+                    gender = binding.etGender.text.toString(),
+                    birthday = binding.etBirthday.text.toString(),
+                    email = binding.etEmail.text.toString(),
+                    phone = binding.etPhone.text.toString(),
+                    password = binding.etPassword.text.toString()
+                )
+                false -> {
+                    Snackbar.make(binding.root, "Проверьте правильность введенных данных!", Snackbar.LENGTH_LONG).show()
+                }
+            }
         }
 
-        binding.sex.setOnClickListener {
-            findNavController().navigate(UserDataFragmentDirections
-                .actionToGenderSelectionBS(viewModel.userDataUI.gender.name))
+        binding.vGender.setOnClickListener {
+            findNavController().navigate(UserDataFragmentDirections.actionToGenderSelectionBS(viewModel.userDataUI.gender.name))
         }
 
-        binding.birthday.setOnClickListener {
-            if (viewModel.userDataUI.birthday == "Не указано") {
+        binding.vEmail.setOnClickListener {
+            Snackbar.make(binding.root, "Это поле нельзя изменить!", Snackbar.LENGTH_SHORT).show()
+        }
+
+        binding.vBirthday.setOnClickListener {
+            if (viewModel.userDataUI.birthday == "Не указано" && viewModel.canChangeBirthday){
                 val datePickerDialog = MaterialDatePicker.Builder.datePicker()
                     .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                     .setTitleText("Дата рождения")
@@ -121,11 +172,13 @@ class UserDataFragment : ViewStateBaseFragment() {
                             .append(get(Calendar.YEAR))
                             .toString()
 
-                        binding.birthday.text = birthDay
+                        binding.etBirthday.setText(birthDay)
                     }
                 }
 
                 datePickerDialog.show(childFragmentManager, datePickerDialog::class.simpleName)
+            } else {
+                Snackbar.make(binding.root, "Это поле нельзя изменить!", Snackbar.LENGTH_SHORT).show()
             }
         }
     }
@@ -156,6 +209,10 @@ class UserDataFragment : ViewStateBaseFragment() {
         }
 
         viewModel.messageLD.observe(viewLifecycleOwner) { message ->
+            when (binding.etBirthday.text.toString() == "Не указано") {
+                false -> binding.tilBirthday.hint = "Дата рождения(нельзя менять)"
+                true ->  binding.tilBirthday.hint = "Дата рождения(можно изменить 1 раз!)"
+            }
             Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
         }
     }
@@ -167,13 +224,22 @@ class UserDataFragment : ViewStateBaseFragment() {
                 .placeholder(ContextCompat.getDrawable(requireContext(), R.drawable.png_default_avatar))
                 .into(avatar)
 
-            firstName.setText(userDataUI.firstName)
-            secondName.setText(userDataUI.secondName)
-            email.text = userDataUI.email
-            birthday.text = userDataUI.birthday
-            sex.text = userDataUI.gender.genderName
-            phone.setText(userDataUI.phone)
+            etFirstName.setText(userDataUI.firstName)
+            etSecondName.setText(userDataUI.secondName)
+            etEmail.setText(userDataUI.email)
+            etBirthday.setText(userDataUI.birthday)
+            when (userDataUI.birthday == "Не указано") {
+                false -> binding.tilBirthday.hint = "Дата рождения(нельзя менять)"
+                true ->  binding.tilBirthday.hint = "Дата рождения(можно изменить 1 раз!)"
+            }
+            etGender.setText(userDataUI.gender.genderName)
+            etPhone.setText(userDataUI.phone.convertPhoneToBaseFormat().convertPhoneToFullFormat())
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.dispose()
     }
 
 }

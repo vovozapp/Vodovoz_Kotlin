@@ -16,7 +16,7 @@ import com.vodovoz.app.ui.adapter.GridProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
-import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
+import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -53,7 +53,11 @@ class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
                 viewModel.changeCart(productId, quantity)
             },
             onNotAvailableMore = {},
-            onNotifyWhenBeAvailable = {}
+            onNotifyWhenBeAvailable = { id, name, picture ->
+                requireParentFragment().findNavController().navigate(ProductDetailsFragmentDirections.actionToPreOrderBS(
+                    id, name, picture
+                ))
+            },
         )
     }
 
@@ -150,7 +154,7 @@ class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

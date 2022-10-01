@@ -13,16 +13,26 @@ class DetailPictureSliderViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.imgPicture.setOnClickListener { onProductDetailPictureClickSubject.onNext(pair.first) }
+        binding.imgPicture.setOnClickListener {
+            if (triple.third) onProductDetailPictureClickSubject.onNext(triple.first)
+        }
     }
 
-    private lateinit var pair: Pair<Long, String>
+    private lateinit var triple: Triple<Long, String, Boolean>
 
-    fun onBind(pair: Pair<Long, String>) {
-        this.pair = pair
+    fun onBind(triple: Triple<Long, String, Boolean>) {
+        this.triple = triple
+        when(triple.third) {
+            true -> {
+                binding.imgPicture.alpha = 1.0f
+            }
+            false -> {
+                binding.imgPicture.alpha = 0.5f
+            }
+        }
         Glide
             .with(context)
-            .load(pair.second)
+            .load(triple.second)
             .into(binding.imgPicture)
     }
 

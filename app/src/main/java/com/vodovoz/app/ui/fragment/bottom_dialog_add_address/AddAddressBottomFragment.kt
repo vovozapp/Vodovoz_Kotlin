@@ -1,21 +1,17 @@
 package com.vodovoz.app.ui.fragment.bottom_dialog_add_address
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.data.config.AddressConfig
 import com.vodovoz.app.databinding.BsAddAddressBinding
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
 import com.vodovoz.app.ui.base.VodovozApplication
-import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
-import com.vodovoz.app.util.LogSettings
 
 class AddAddressBottomFragment : ViewStateBaseBottomFragment() {
 

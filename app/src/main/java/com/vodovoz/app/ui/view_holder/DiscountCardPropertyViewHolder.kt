@@ -1,10 +1,7 @@
 package com.vodovoz.app.ui.view_holder
 
 import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R

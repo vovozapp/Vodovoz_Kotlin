@@ -1,8 +1,7 @@
 package com.vodovoz.app.data.parser.response.map
 
-import android.util.Log
-import com.vodovoz.app.data.model.common.*
-import com.vodovoz.app.util.LogSettings
+import com.vodovoz.app.data.model.common.AddressEntity
+import com.vodovoz.app.data.model.common.ResponseEntity
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject

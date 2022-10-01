@@ -3,10 +3,7 @@ package com.vodovoz.app.ui.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.vodovoz.app.R
-import com.vodovoz.app.databinding.ViewHolderPayMethodBinding
 import com.vodovoz.app.databinding.ViewHolderShippingIntervalBinding
 import com.vodovoz.app.ui.model.ShippingIntervalUI
 

@@ -1,6 +1,5 @@
 package com.vodovoz.app.ui.fragment.search
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,13 +9,12 @@ import androidx.paging.map
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.SortType
-import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.DefaultSearchDataBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
+import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.util.LogSettings
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -201,8 +199,10 @@ class SearchViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
         matchesQueriesDisposable?.dispose()
     }
+
+    fun isAlreadyLogin() = dataRepository.isAlreadyLogin()
 
 }

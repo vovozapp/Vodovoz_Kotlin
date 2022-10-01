@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderSliderHistoryBinding
-import com.vodovoz.app.ui.view_holder.HistorySliderViewHolder
 import com.vodovoz.app.ui.model.HistoryUI
+import com.vodovoz.app.ui.view_holder.HistorySliderViewHolder
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class HistoriesSliderAdapter(

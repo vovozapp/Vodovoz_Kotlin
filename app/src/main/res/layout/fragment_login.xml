@@ -99,7 +99,6 @@
                 android:layout_marginHorizontal="@dimen/space_16"
                 android:layout_marginTop="@dimen/space_4"
                 app:startIconDrawable="@drawable/ic_password"
-                app:endIconDrawable="@drawable/ic_show_password"
                 app:endIconMode="password_toggle">
 
                 <com.google.android.material.textfield.TextInputEditText

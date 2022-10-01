@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderOrderDetailsBinding
 import com.vodovoz.app.ui.adapter.DetailPictureSliderAdapter
 import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
-import com.vodovoz.app.ui.extensions.PriceTextBuilderExtensions.setPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.OrderUI
 import io.reactivex.rxjava3.subjects.PublishSubject
 
@@ -46,8 +46,8 @@ class OrderDetailViewHolder(
         binding.imgStatus.setImageDrawable(ContextCompat.getDrawable(context, orderUI.orderStatusUI.image))
         binding.imgStatus.setColorFilter(ContextCompat.getColor(context, orderUI.orderStatusUI.color))
 
-        val newDetailPictureList = mutableListOf<Pair<Long, String>>().apply {
-            orderUI.productUIList.forEach { add(Pair(it.id, it.detailPicture)) }
+        val newDetailPictureList = mutableListOf<Triple<Long, String, Boolean>>().apply {
+            orderUI.productUIList.forEach { add(Triple(it.id, it.detailPicture, it.isAvailable)) }
         }.toList()
 
         val diffUtil = DetailPictureDiffUtilCallback(

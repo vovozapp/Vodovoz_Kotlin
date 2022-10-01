@@ -10,6 +10,32 @@
     android:focusable="true"
     android:clickable="true">
 
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pvPictures"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="13dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgFavoriteStatus"
+        tools:ignore="ContentDescription" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tlIndicators"
+        android:layout_width="0dp"
+        android:layout_height="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/pvPictures"
+        app:layout_constraintStart_toStartOf="@+id/pvPictures"
+        app:layout_constraintTop_toBottomOf="@id/pvPictures"
+        app:tabBackground="@drawable/selector_pager_indicator"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="0dp"
+        app:tabMode="fixed"
+        app:tabPadding="0dp"
+        app:tabPaddingEnd="3dp"
+        app:tabPaddingStart="3dp" />
+
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/cgStatuses"
         android:layout_width="0dp"
@@ -18,26 +44,35 @@
         app:layout_constraintEnd_toStartOf="@+id/imgFavoriteStatus"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:chipSpacingVertical="0dp"
         tools:ignore="RtlSymmetry">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cwStatusContainer"
+        <RelativeLayout
+            android:id="@+id/rlStatusContainer"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/bluePrimary"
-            app:cardCornerRadius="@dimen/corner_5"
-            app:cardElevation="0dp">
+            android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvStatus"
-                style="@style/TextViewSmallWhite"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cwStatusContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/space_8"
-                android:paddingVertical="@dimen/space_2"
-                tools:text="Новинка" />
+                android:layout_marginBottom="@dimen/space_2"
+                app:cardBackgroundColor="@color/bluePrimary"
+                app:cardCornerRadius="@dimen/corner_5"
+                app:cardElevation="0dp">
 
-        </androidx.cardview.widget.CardView>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvStatus"
+                    style="@style/TextViewSmallWhite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="@dimen/space_8"
+                    android:paddingVertical="@dimen/space_2"
+                    tools:text="Новинка" />
+
+            </androidx.cardview.widget.CardView>
+
+        </RelativeLayout>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cwDiscountContainer"
@@ -61,36 +96,10 @@
 
     </com.google.android.material.chip.ChipGroup>
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/pvPictures"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:padding="10dp"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgFavoriteStatus"
-        tools:ignore="ContentDescription" />
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tlIndicators"
-        android:layout_width="0dp"
-        android:layout_height="10dp"
-        app:layout_constraintEnd_toEndOf="@+id/pvPictures"
-        app:layout_constraintStart_toStartOf="@+id/pvPictures"
-        app:layout_constraintTop_toBottomOf="@id/pvPictures"
-        app:tabBackground="@drawable/selector_pager_indicator"
-        app:tabGravity="center"
-        app:tabIndicatorHeight="0dp"
-        app:tabMode="fixed"
-        app:tabPadding="0dp"
-        app:tabPaddingEnd="3dp"
-        app:tabPaddingStart="3dp" />
-
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgFavoriteStatus"
-        android:layout_width="@dimen/_20sdp"
-        android:layout_height="@dimen/_20sdp"
+        android:layout_width="@dimen/_16sdp"
+        android:layout_height="@dimen/_16sdp"
         android:src="@drawable/png_ic_favorite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -102,6 +111,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:maxLines="2"
+        android:ellipsize="end"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tlIndicators"
@@ -112,7 +123,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="@dimen/space_4"
+        android:paddingTop="@dimen/space_2"
         app:layout_constraintStart_toStartOf="@+id/pvPictures"
         app:layout_constraintTop_toBottomOf="@id/tvName">
 
@@ -144,7 +155,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="@dimen/space_2"
         app:layout_constraintTop_toBottomOf="@+id/llRatingContainer">
 
         <LinearLayout
@@ -160,7 +170,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvPricePerUnit"
-                style="@style/TextViewSmallGray"
+                style="@style/TextViewSmallLightGray"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -182,7 +192,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvOldPrice"
-                    style="@style/TextViewNormalGrayBold"
+                    style="@style/TextViewSmallLightGrayBold"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:paddingStart="@dimen/space_4"

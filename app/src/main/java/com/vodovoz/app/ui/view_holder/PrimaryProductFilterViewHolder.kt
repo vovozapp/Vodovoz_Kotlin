@@ -23,11 +23,11 @@ class PrimaryProductFilterViewHolder(
     fun onBind(filterValue: FilterValueUI) {
         this.filterValue = filterValue
 
-        binding.name.text = filterValue.value
+        binding.tvName.text = filterValue.value
 
         when(filterValue.isSelected) {
-            true -> binding.name.setTextColor(ContextCompat.getColor(context, R.color.bluePrimary))
-            false -> binding.name.setTextColor(ContextCompat.getColor(context, R.color.blackTextPrimary))
+            true -> binding.tvName.setTextColor(ContextCompat.getColor(context, R.color.bluePrimary))
+            false -> binding.tvName.setTextColor(ContextCompat.getColor(context, R.color.text_gray))
         }
     }
 

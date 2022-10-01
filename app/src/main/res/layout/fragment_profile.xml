@@ -7,11 +7,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/profileContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -87,334 +87,253 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/orderRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/dark_white"/>
-
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/ordersSliderFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/space_8"
-                android:background="@color/white"/>
+                android:paddingVertical="@dimen/space_8"
+                android:background="@color/light_gray"/>
 
-            <TextView
-                android:id="@+id/addresses"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvAddresses"
+                style="@style/TextViewNormalGray"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
+                android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
-                android:gravity="center_vertical"
-                android:textSize="16sp"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
+                android:gravity="center_vertical"
                 android:text="Адреса"
+                android:drawableTint="@color/text_gray"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
-                android:id="@+id/deliveryPrice"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvShippingPrice"
+                style="@style/TextViewNormalGray"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
+                android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Стоимость доставки"
+                android:drawableTint="@color/text_gray"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextViewNormalBlack"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
-                android:drawableEnd="@drawable/ic_pointer_right"
+                android:layout_height="@dimen/field_height"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Покупки"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
-                android:id="@+id/ordersHistory"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvOrdersHistory"
+                style="@style/TextViewNormalGray"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
+                android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="История заказов"
+                android:drawableTint="@color/text_gray"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
-                android:id="@+id/pastPurchases"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvPastPurchases"
+                style="@style/TextViewNormalGray"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
+                android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Прошлые покупки"
+                android:drawableTint="@color/text_gray"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextViewNormalBlack"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
-                android:drawableEnd="@drawable/ic_pointer_right"
+                android:layout_height="@dimen/field_height"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Услуги"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvRepair"
+                style="@style/TextViewNormalGray"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
+                android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Ремонт кулеров"
+                android:drawableTint="@color/text_gray"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvSanitar"
+                style="@style/TextViewNormalGray"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
+                android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Озонация клеров"
+                android:drawableTint="@color/text_gray"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextViewNormalBlack"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
-                android:drawableEnd="@drawable/ic_pointer_right"
+                android:layout_height="@dimen/field_height"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Личная информация"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
-                android:id="@+id/questionnaires"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvQuestionnaires"
+                style="@style/TextViewNormalGray"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
-                android:drawableEnd="@drawable/ic_pointer_right"
+                android:layout_height="@dimen/field_height"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
+                android:drawableEnd="@drawable/ic_pointer_right"
                 android:text="Анкета"
+                android:drawableTint="@color/text_gray"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
-                android:id="@+id/discountCard"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvDiscountCard"
+                style="@style/TextViewNormalGray"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
+                android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Активация скидочной карты"
+                android:drawableTint="@color/text_gray"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextViewNormalBlack"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
-                android:drawableEnd="@drawable/ic_pointer_right"
+                android:layout_height="@dimen/field_height"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Акции и подписки"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextViewNormalGray"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
+                android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Настройки уведомлений"
+                android:drawableTint="@color/text_gray"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextViewNormalBlack"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
-                android:drawableEnd="@drawable/ic_pointer_right"
+                android:layout_height="@dimen/field_height"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Популярные вопросы"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
-                android:id="@+id/aboutDelivery"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvAboutDelivery"
+                style="@style/TextViewNormalGray"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
+                android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="О доставке"
+                android:drawableTint="@color/text_gray"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
-                android:id="@+id/aboutPay"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvAboutPay"
+                style="@style/TextViewNormalGray"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
+                android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Оп оплате"
+                android:drawableTint="@color/text_gray"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextViewNormalGray"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
+                android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Онлайн чат"
+                android:drawableTint="@color/text_gray"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextViewNormalBlack"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
-                android:drawableEnd="@drawable/ic_pointer_right"
+                android:layout_height="@dimen/field_height"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Приложения"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
-                android:id="@+id/aboutApp"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvAboutApp"
+                style="@style/TextViewNormalGray"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextPrimary"
+                android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="О приложении"
+                android:drawableTint="@color/text_gray"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <TextView
-                android:id="@+id/logout"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvLogout"
+                style="@style/TextViewNormalBlackBold"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:fontFamily="@font/rotonda_normal"
+                android:layout_height="@dimen/field_height"
                 android:textColor="@color/red"
                 android:gravity="center"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
@@ -423,26 +342,26 @@
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/viewedProductsSliderFragment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/space_8"/>
 
             <LinearLayout
                 android:id="@+id/bestForYouProductsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingTop="@dimen/space_8">
 
-                <TextView
-                    android:id="@+id/titleBestForYou"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvTitleBestForYou"
+                    style="@style/TextViewHeaderBlackBold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:textColor="@color/blackTextDark"
                     android:paddingTop="@dimen/space_8"
                     android:paddingBottom="@dimen/space_8"
                     android:paddingStart="@dimen/space_16"
-                    android:paddingEnd="@dimen/space_16" />
+                    android:paddingEnd="@dimen/space_16"
+                    tools:text="Лучшее для вас"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/bestForYouProductsRecycler"
@@ -453,13 +372,13 @@
 
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/noLoginContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="250dp"

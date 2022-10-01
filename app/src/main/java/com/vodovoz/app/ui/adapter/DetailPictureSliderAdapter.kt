@@ -11,7 +11,7 @@ class DetailPictureSliderAdapter(
     private val onProductDetailPictureClickSubject: PublishSubject<Long>
 ) : RecyclerView.Adapter<DetailPictureSliderViewHolder>() {
 
-    var detailPictureUrlList = listOf<Pair<Long, String>>()
+    var detailPictureUrlList = listOf<Triple<Long, String, Boolean>>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

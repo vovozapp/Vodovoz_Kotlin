@@ -15,11 +15,6 @@ class BrandSliderViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.root.layoutParams = RecyclerView.LayoutParams(
-            cardWidth,
-            (cardWidth * 0.55).toInt()
-        )
-
         binding.root.setOnClickListener {
             onBrandClickSubject.onNext(brandUI.id)
         }

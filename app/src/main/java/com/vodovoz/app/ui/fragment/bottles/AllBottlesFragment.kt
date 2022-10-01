@@ -1,26 +1,22 @@
 package com.vodovoz.app.ui.fragment.bottles
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentAllBottlesBinding
-import com.vodovoz.app.databinding.FragmentAllBrandsBinding
 import com.vodovoz.app.ui.adapter.AllBottlesAdapter
-import com.vodovoz.app.ui.adapter.AllBrandsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.BottleDiffUtilCallback
-import com.vodovoz.app.ui.diffUtils.BrandDiffUtilCallback
-import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
-import com.vodovoz.app.ui.fragment.ordering.OrderingFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -140,7 +136,7 @@ class AllBottlesFragment : ViewStateBaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

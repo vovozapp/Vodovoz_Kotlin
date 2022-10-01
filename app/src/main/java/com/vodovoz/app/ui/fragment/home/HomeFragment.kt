@@ -3,7 +3,6 @@ package com.vodovoz.app.ui.fragment.home
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -38,7 +37,6 @@ import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.fragment.slider.promotion_slider.PromotionsSliderFragment
 import com.vodovoz.app.ui.interfaces.*
-import com.vodovoz.app.util.LogSettings
 
 class HomeFragment : ViewStateBaseFragment(),
     IOnInvokeAction,
@@ -66,7 +64,7 @@ class HomeFragment : ViewStateBaseFragment(),
     private val historiesSliderFragment: HistorySliderFragment by lazy { HistorySliderFragment() }
     private val popularCategoriesSliderFragment: PopularCategoriesSliderFragment by lazy { PopularCategoriesSliderFragment() }
     private val categoryBannersSliderFragment: BannersSliderFragment by lazy {
-        BannersSliderFragment.newInstance(bannerRatio = 0.48) }
+        BannersSliderFragment.newInstance(bannerRatio = 0.5) }
     private val discountProductsSliderFragment: ProductsSliderFragment by lazy {
         ProductsSliderFragment.newInstance(ProductsSliderConfig(
             containShowAllButton = true
@@ -130,7 +128,9 @@ class HomeFragment : ViewStateBaseFragment(),
                 findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
                 ))
-            }
+            },
+            onNotifyWhenBeAvailable = { id, name, picture -> showPreOrderProductPopup(id, name, picture) },
+            onNotAvailableMore = {}
         )
         categoryBannersSliderFragment.initCallbacks( iOnInvokeAction = this)
         topProductsSliderFragment.initCallbacks(
@@ -141,7 +141,9 @@ class HomeFragment : ViewStateBaseFragment(),
                 findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(categoryId)
                 ))
-            }
+            },
+            onNotifyWhenBeAvailable = { id, name, picture -> showPreOrderProductPopup(id, name, picture) },
+            onNotAvailableMore = {}
         )
         ordersSliderFragment.initCallbacks(
             iOnOrderClick = { orderId ->
@@ -171,7 +173,9 @@ class HomeFragment : ViewStateBaseFragment(),
                 findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
                 ))
-            }
+            },
+            onNotifyWhenBeAvailable = { id, name, picture -> showPreOrderProductPopup(id, name, picture) },
+            onNotAvailableMore = {}
         )
         promotionsSliderFragment.initCallbacks(
             iOnPromotionClick = this,
@@ -182,7 +186,9 @@ class HomeFragment : ViewStateBaseFragment(),
                 ))
             },
             iOnChangeProductQuantity = this,
-            iOnFavoriteClick = this
+            iOnFavoriteClick = this,
+            onNotAvailableMore = {},
+            onNotifyWhenBeAvailable = { id, name, picture -> showPreOrderProductPopup(id, name, picture) }
         )
         bottomProductsSliderFragment.initCallbacks(
             iOnProductClick = this,
@@ -192,7 +198,9 @@ class HomeFragment : ViewStateBaseFragment(),
                 findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(categoryId)
                 ))
-            }
+            },
+            onNotifyWhenBeAvailable = { id, name, picture -> showPreOrderProductPopup(id, name, picture) },
+            onNotAvailableMore = {}
         )
         brandsSliderFragment.initCallbacks(
             iOnBrandClick = this,
@@ -205,7 +213,9 @@ class HomeFragment : ViewStateBaseFragment(),
             iOnProductClick = this,
             iOnChangeProductQuantity = this,
             iOnFavoriteClick = this,
-            iOnShowAllProductsClick = {}
+            iOnShowAllProductsClick = {},
+            onNotifyWhenBeAvailable = { id, name, picture -> showPreOrderProductPopup(id, name, picture) },
+            onNotAvailableMore = {}
         )
         commentsSliderFragment.initCallbacks(
             iOnCommentClick = this,
@@ -327,10 +337,10 @@ class HomeFragment : ViewStateBaseFragment(),
         binding.refreshContainer.setOnRefreshListener {
             update()
         }
-        binding.searchContainer.searchRoot.setOnClickListener {
+        binding.searchContainer.clSearchContainer.setOnClickListener {
             findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment())
         }
-        binding.searchContainer.search.setOnFocusChangeListener { _, isFocusable ->
+        binding.searchContainer.etSearch.setOnFocusChangeListener { _, isFocusable ->
             if (isFocusable) {
                 findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment())
             }
@@ -611,6 +621,13 @@ class HomeFragment : ViewStateBaseFragment(),
 
     override fun onFavoriteClick(pair: Pair<Long, Boolean>) {
         viewModel.changeFavoriteStatus(pair.first, pair.second)
+    }
+
+    private fun showPreOrderProductPopup(id: Long, name: String, picture: String) {
+        when(viewModel.isLoginAlready()) {
+            true -> findNavController().navigate(HomeFragmentDirections.actionToPreOrderBS(id, name, picture))
+            false -> findNavController().navigate(HomeFragmentDirections.actionToProfileFragment())
+        }
     }
 
 }
