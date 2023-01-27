@@ -4,8 +4,11 @@ import android.content.Context
 import android.util.Log
 import com.vodovoz.app.data.model.common.LastLoginDataEntity
 import com.vodovoz.app.util.LogSettings
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class LocalData(
+class LocalData @Inject constructor(
+    @ApplicationContext
     private val context: Context
 ) : LocalDataSource {
 

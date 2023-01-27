@@ -85,8 +85,9 @@ import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
 import okhttp3.ResponseBody
 import retrofit2.Response
+import javax.inject.Inject
 
-class RemoteData(
+class RemoteData @Inject constructor(
     private val vodovozApi: VodovozApi,
     private val mapKitApi: MapKitApi
 ) : RemoteDataSource {

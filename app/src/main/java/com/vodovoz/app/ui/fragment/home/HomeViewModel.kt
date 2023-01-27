@@ -21,6 +21,7 @@ import com.vodovoz.app.ui.model.*
 import com.vodovoz.app.ui.model.custom.CountriesSliderBundleUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 import com.vodovoz.app.util.LogSettings
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -28,8 +29,10 @@ import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
+import javax.inject.Inject
 
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val dataRepository: DataRepository
 ) : ViewModel() {
 

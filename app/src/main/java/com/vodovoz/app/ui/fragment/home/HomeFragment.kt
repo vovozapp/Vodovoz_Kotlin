@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -37,7 +38,10 @@ import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.fragment.slider.promotion_slider.PromotionsSliderFragment
 import com.vodovoz.app.ui.interfaces.*
+import com.vodovoz.app.util.extensions.debugLog
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : ViewStateBaseFragment(),
     IOnInvokeAction,
     IOnProductClick,
@@ -57,7 +61,7 @@ class HomeFragment : ViewStateBaseFragment(),
     }
 
     private lateinit var binding: FragmentMainHomeBinding
-    private lateinit var viewModel: HomeViewModel
+    private val viewModel: HomeViewModel by viewModels()
 
     private val advertisingBannersSliderFragment: BannersSliderFragment by lazy {
         BannersSliderFragment.newInstance(bannerRatio = 0.41) }
@@ -99,16 +103,15 @@ class HomeFragment : ViewStateBaseFragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
         getArgs()
         initCallbacks()
     }
 
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[HomeViewModel::class.java]
+    override fun onResume() {
+        super.onResume()
+        debugLog {
+            "spasibo $this $viewModel"
+        }
     }
 
     private fun getArgs() {

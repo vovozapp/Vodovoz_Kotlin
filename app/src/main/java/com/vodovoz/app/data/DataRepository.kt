@@ -23,8 +23,9 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.flow.map
 import java.util.*
+import javax.inject.Inject
 
-class DataRepository(
+class DataRepository @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
 ) {

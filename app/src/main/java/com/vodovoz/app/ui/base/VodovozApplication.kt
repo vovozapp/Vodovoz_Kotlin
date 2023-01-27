@@ -16,6 +16,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import timber.log.Timber
 
 @HiltAndroidApp
 class VodovozApplication : Application() {
@@ -30,6 +31,8 @@ class VodovozApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        Timber.plant(Timber.DebugTree())
 
         vodovozApi = buildVodovozClient()
         mapKitApi = buildMapkitClient()
@@ -55,7 +58,7 @@ class VodovozApplication : Application() {
             val originalResponse = chain.proceed(builder.build())
 
             if (!localDataSource.isAvailableCookieSessionId()) {
-                localDataSource.updateCookieSessionId(originalResponse.headers().values("Set-Cookie").first())
+                localDataSource.updateCookieSessionId(originalResponse.headers.values("Set-Cookie").first())
             }
 //
 //            if (chain.request().toString().contains("tual")) {
