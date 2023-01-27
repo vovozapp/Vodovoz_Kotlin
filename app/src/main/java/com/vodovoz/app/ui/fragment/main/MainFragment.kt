@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
@@ -11,7 +12,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentMainBinding
 import com.vodovoz.app.ui.fragment.home.HomeFragment
@@ -19,7 +24,6 @@ import com.vodovoz.app.ui.fragment.home.HomeFragment
 class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
-    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,48 +39,28 @@ class MainFragment : Fragment() {
     }.root
 
     private fun setupBottomNav() {
-        val navHostFragment = (childFragmentManager.findFragmentById(R.id.fgvContainer)) as NavHostFragment
+        val navHostFragment =
+            (childFragmentManager.findFragmentById(R.id.fgvContainer)) as NavHostFragment
         val navController = navHostFragment.navController
 
-        binding.nvNavigation.setOnItemSelectedListener { menuItem ->
-            when(menuItem.itemId) {
-                R.id.homeFragment -> navController.navigate(R.id.homeFragment, bundleOf(Pair(HomeFragment.IS_SHOW_POPUP_NEWS, false)))
-                else -> navController.navigate(menuItem.itemId)
-            }
-            true
-        }
-
-        navController.addOnDestinationChangedListener { _, destination, args ->
-//            when(destination.id) {
-//                R.id.homeFragment,
-//                R.id.catalogFragment,
-//                R.id.cartFragment,
-//                R.id.accountFragment -> showBottomNavigation()
-//                R.id.filtersFragment,
-//                R.id.concreteFilterFragment,
-//                R.id.loginFragment,
-//                R.id.registerFragment -> hideBottomNavigation()
-//            }
-        }
-    }
-
-    private fun hideBottomNavigation() {
-        binding.nvNavigation.visibility = View.GONE
-    }
-
-    private fun showBottomNavigation() {
-        binding.nvNavigation.visibility = View.VISIBLE
+        binding.nvNavigation.setSetupWithNavController(navController)
     }
 
     override fun onStart() {
         super.onStart()
-        if (ContextCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
 
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    requireActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
 
                 // Show an expanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
@@ -86,7 +70,11 @@ class MainFragment : Fragment() {
 
                 // No explanation needed, we can request the permission.
 
-                ActivityCompat.requestPermissions(requireActivity(), listOf(Manifest.permission.ACCESS_FINE_LOCATION).toTypedArray(), 0)
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    listOf(Manifest.permission.ACCESS_FINE_LOCATION).toTypedArray(),
+                    0
+                )
 
                 // MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION is an
                 // app-defined int constant. The callback method gets the
@@ -95,4 +83,30 @@ class MainFragment : Fragment() {
         }
     }
 
+    private fun BottomNavigationView.setSetupWithNavController(navController: NavController?) {
+        navController?.let {
+            setupWithNavController(navController)
+        }
+
+        setOnItemSelectedListener { menuItem ->
+            val builder = NavOptions.Builder().setLaunchSingleTop(true).setRestoreState(true)
+            val graph = navController?.currentDestination?.parent
+            val destination = graph?.findNode(menuItem.itemId)
+
+            if (menuItem.order and Menu.CATEGORY_SECONDARY == 0) {
+                navController?.graph?.findStartDestination()?.id?.let {
+                    builder.setPopUpTo(
+                        it,
+                        inclusive = false,
+                        saveState = true
+                    )
+                }
+            }
+
+            val options = builder.build()
+            destination?.id?.let { id -> navController.navigate(id, null, options) }
+
+            return@setOnItemSelectedListener true
+        }
+    }
 }

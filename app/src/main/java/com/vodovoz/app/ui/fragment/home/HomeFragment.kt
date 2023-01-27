@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -105,13 +106,6 @@ class HomeFragment : ViewStateBaseFragment(),
         super.onCreate(savedInstanceState)
         getArgs()
         initCallbacks()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        debugLog {
-            "spasibo $this $viewModel"
-        }
     }
 
     private fun getArgs() {
