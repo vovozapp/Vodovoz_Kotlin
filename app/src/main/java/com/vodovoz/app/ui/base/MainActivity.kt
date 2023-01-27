@@ -8,14 +8,13 @@ import com.vodovoz.app.ui.fragment.main.MainFragment
 import com.vodovoz.app.util.Keys
 import com.yandex.mapkit.MapKitFactory
 
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         MapKitFactory.setApiKey(Keys.MAPKIT_API_KEY)
+        super.onCreate(savedInstanceState)
         MapKitFactory.initialize(this)
         binding = ActivityMainBinding.inflate(layoutInflater).apply { setContentView(root) }
 
