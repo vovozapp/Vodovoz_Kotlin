@@ -18,6 +18,7 @@ import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.PromotionDiffUtilCallback
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
+import com.vodovoz.app.ui.model.ListOfPromotionFilterUi
 import com.vodovoz.app.ui.model.PromotionUI
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -101,7 +102,7 @@ class AllPromotionsFragment : ViewStateBaseFragment() {
         binding.incAppBar.tvDropDownTitle.setOnClickListener {
             findNavController().navigate(AllPromotionsFragmentDirections.actionToPromotionFiltersBottomFragment(
                 viewModel.selectedFilter.id,
-                viewModel.promotionFilterUIList.toTypedArray()
+                viewModel.promotionFilterUIList as ListOfPromotionFilterUi
             ))
         }
     }

@@ -137,7 +137,7 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
             findNavController().navigate(ProductDetailsFragmentDirections.actionToPromotionDetailFragment(promotionId))
         }.addTo(compositeDisposable)
         onQueryClickSubject.subscribeBy { query ->
-            findNavController().navigate(ProductDetailsFragmentDirections.actionToSearchFragment().apply { this.query = query })
+            findNavController().navigate(ProductDetailsFragmentDirections.actionToSearchFragment(query))
         }.addTo(compositeDisposable)
     }
 

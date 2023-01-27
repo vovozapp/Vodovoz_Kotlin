@@ -113,9 +113,7 @@ class FullScreenHistoriesSliderFragment : ViewStateBaseDialogFragment(),
                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Brand(brandId = this.brandId)
                 )
             is ActionEntity.Brands -> {
-                FullScreenHistoriesSliderFragmentDirections.actionToAllBrandsFragment().also { navDirect ->
-                    navDirect.brandIdList = this.brandIdList.toLongArray()
-                }
+                FullScreenHistoriesSliderFragmentDirections.actionToAllBrandsFragment(this.brandIdList.toLongArray())
             }
             is ActionEntity.Product ->
                 FullScreenHistoriesSliderFragmentDirections.actionToProductDetailFragment(this.productId)

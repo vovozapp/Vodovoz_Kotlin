@@ -7,7 +7,9 @@ import com.vodovoz.app.databinding.ActivityMainBinding
 import com.vodovoz.app.ui.fragment.main.MainFragment
 import com.vodovoz.app.util.Keys
 import com.yandex.mapkit.MapKitFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding

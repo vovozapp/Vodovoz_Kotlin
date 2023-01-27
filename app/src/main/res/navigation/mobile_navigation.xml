@@ -238,7 +238,7 @@
             app:argType="long" />
         <argument
             android:name="promotionFilterList"
-            app:argType="com.vodovoz.app.ui.model.PromotionFilterUI[]" />
+            app:argType="com.vodovoz.app.ui.model.ListOfPromotionFilterUi" />
     </dialog>
     <fragment
         android:id="@+id/paginatedProductsCatalogWithoutFiltersFragment"

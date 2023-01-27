@@ -584,9 +584,7 @@ class HomeFragment : ViewStateBaseFragment(),
                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Brand(brandId = this.brandId)
                 )
             is ActionEntity.Brands -> {
-                HomeFragmentDirections.actionToAllBrandsFragment().also { navDirect ->
-                    navDirect.brandIdList = this.brandIdList.toLongArray()
-                }
+                HomeFragmentDirections.actionToAllBrandsFragment(this.brandIdList.toLongArray())
             }
             is ActionEntity.Product ->
                 HomeFragmentDirections.actionToProductDetailFragment(this.productId)

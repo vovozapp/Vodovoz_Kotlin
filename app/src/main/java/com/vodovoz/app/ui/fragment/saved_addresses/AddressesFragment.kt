@@ -121,9 +121,7 @@ class AddressesFragment : ViewStateBaseFragment() {
                 showDeleteAddressDialog(addressUI.id)
             },
             editAddress = { addressUI ->
-                findNavController().navigate(AddressesFragmentDirections.actionToMapDialogFragment().apply {
-                    this.address = addressUI
-                })
+                findNavController().navigate(AddressesFragmentDirections.actionToMapDialogFragment(addressUI))
             },
             onAddressClick = { addressUI ->
                 if (viewModel.openMode == OpenMode.SelectAddress) {

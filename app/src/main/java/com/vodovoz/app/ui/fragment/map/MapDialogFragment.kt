@@ -217,9 +217,7 @@ class MapDialogFragment : ViewStateBaseFragment(),
 
     private fun showAddAddressBottomDialog() {
         findNavController().navigate(
-            MapDialogFragmentDirections.actionToAddAddressBottomFragment().apply {
-                this.address = viewModel.addressUI
-            }
+            MapDialogFragmentDirections.actionToAddAddressBottomFragment(viewModel.addressUI)
         )
     }
 

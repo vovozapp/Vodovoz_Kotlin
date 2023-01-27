@@ -156,10 +156,10 @@ class OrderingFragment : ViewStateBaseFragment() {
         }
         binding.tvAddress.setOnClickListener {
             if (findNavController().currentDestination?.id == R.id.orderingFragment) {
-                findNavController().navigate(OrderingFragmentDirections.actionToSavedAddressesDialogFragment().apply {
-                    this.openMode = OpenMode.SelectAddress.name
-                    this.addressType = viewModel.selectedOrderType.name
-                })
+                findNavController().navigate(OrderingFragmentDirections.actionToSavedAddressesDialogFragment(
+                    OpenMode.SelectAddress.name,
+                    viewModel.selectedOrderType.name
+                ))
             }
         }
         binding.tvFreeShipping.setOnClickListener {

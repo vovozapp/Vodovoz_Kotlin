@@ -42,7 +42,7 @@ class PromotionFiltersBottomFragment : BottomSheetDialogFragment() {
         PromotionFiltersBottomFragmentArgs.fromBundle(requireArguments()).let { args ->
             binding.rvPromotionFilters.adapter = PromotionsFiltersAdapter(
                 selectedFilterId = args.selectedFilterId,
-                promotionFilterUIList = args.promotionFilterList.toList(),
+                promotionFilterUIList = args.promotionFilterList,
                 onPromotionFilterClickSubject = onPromotionFilterClickSubject
             )
         }

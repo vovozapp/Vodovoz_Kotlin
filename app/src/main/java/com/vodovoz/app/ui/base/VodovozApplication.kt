@@ -11,12 +11,13 @@ import com.vodovoz.app.data.remote.RemoteData
 import com.vodovoz.app.data.remote.RemoteDataSource
 import com.vodovoz.app.data.remote.VodovozApi
 import com.vodovoz.app.util.LogSettings
+import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-
+@HiltAndroidApp
 class VodovozApplication : Application() {
 
     //Repository
