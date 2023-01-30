@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ActivityMainBinding
 import com.vodovoz.app.ui.fragment.main.MainFragment
+import com.vodovoz.app.ui.fragment.splash.SplashFragment
 import com.vodovoz.app.util.Keys
 import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showMainFragment() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fcvMainContainer, MainFragment())
+            .replace(R.id.fcvMainContainer, SplashFragment())
             .commit()
     }
 

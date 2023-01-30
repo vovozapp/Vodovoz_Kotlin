@@ -76,10 +76,13 @@ class CountriesSliderFragment : BaseHiddenFragment() {
                 cardWidth = (width - (space * 4))/3
             )
             binding.rvCountries.adapter = countriesSliderAdapter
-            onAdapterReadySubject.subscribeBy { countriesSliderBundleUI ->
+            onAdapterReadySubject.subscribeBy(onNext = { countriesSliderBundleUI ->
                 this.countriesSliderBundleUI = countriesSliderBundleUI
                 updateView(countriesSliderBundleUI)
-            }.addTo(compositeDisposable)
+            },
+            onError = {
+
+            }).addTo(compositeDisposable)
         }
     }
 

@@ -8,6 +8,7 @@
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/app_bar_default.xml" value="0.2672082086361693" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/app_bar_drop_down.xml" value="0.2672082086361693" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/app_bar_search.xml" value="0.2672082086361693" />
+        <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/bs_catalog_single_root.xml" value="0.2672082086361693" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_about_app.xml" value="0.2672082086361693" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_about_product.xml" value="0.13168020521590423" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_base.xml" value="0.2672082086361693" />
@@ -21,6 +22,7 @@
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_slider_banner.xml" value="0.2672082086361693" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_slider_order.xml" value="0.2672082086361693" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_slider_product.xml" value="0.2672082086361693" />
+        <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_splash.xml" value="0.2663531423685336" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/view_holder_brand_with_name.xml" value="0.2672082086361693" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/view_holder_catalog_category.xml" value="0.2672082086361693" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/view_holder_product_grid.xml" value="0.335" />

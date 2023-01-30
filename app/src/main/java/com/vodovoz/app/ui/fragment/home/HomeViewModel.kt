@@ -183,7 +183,20 @@ class HomeViewModel @Inject constructor(
         ).addTo(compositeDisposable)
     }
 
-    fun updateData() {
+    private var isFirstLoad: Boolean = false
+
+    fun firstLoad() {
+        if (!isFirstLoad) {
+            isFirstLoad = true
+            updateData()
+        }
+    }
+
+    fun refresh() {
+        updateData()
+    }
+
+    private fun updateData() {
         if (!isUpdateSuccess) viewStateMLD.value = ViewState.Loading()
 
         updateAdvertisingBannersSlider()

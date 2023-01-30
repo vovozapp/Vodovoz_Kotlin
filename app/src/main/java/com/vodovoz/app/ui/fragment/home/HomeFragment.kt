@@ -6,10 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -18,7 +17,6 @@ import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentMainHomeBinding
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragment
 import com.vodovoz.app.ui.fragment.catalog.CatalogFragmentDirections
@@ -62,7 +60,7 @@ class HomeFragment : ViewStateBaseFragment(),
     }
 
     private lateinit var binding: FragmentMainHomeBinding
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
 
     private val advertisingBannersSliderFragment: BannersSliderFragment by lazy {
         BannersSliderFragment.newInstance(bannerRatio = 0.41) }
@@ -110,7 +108,7 @@ class HomeFragment : ViewStateBaseFragment(),
 
     private fun getArgs() {
         viewModel.updateArgs(HomeFragmentArgs.fromBundle(requireArguments()).isShowPopupNews)
-        viewModel.updateData()
+        viewModel.firstLoad()
     }
 
     private fun initCallbacks() {
@@ -226,7 +224,7 @@ class HomeFragment : ViewStateBaseFragment(),
         )
     }
 
-    override fun update() { viewModel.updateData() }
+    override fun update() { viewModel.refresh() }
 
     override fun setContentView(
         inflater: LayoutInflater,
@@ -244,90 +242,27 @@ class HomeFragment : ViewStateBaseFragment(),
     }
 
     private fun loadFragments() {
-        childFragmentManager.beginTransaction().replace(
-            R.id.advertisingBannersSliderFragment,
-            advertisingBannersSliderFragment
-        ).commit()
+        replaceFragment(R.id.advertisingBannersSliderFragment, advertisingBannersSliderFragment)
+        replaceFragment(R.id.historiesSliderFragment, historiesSliderFragment)
+        replaceFragment(R.id.popularCategoriesSliderFragment, popularCategoriesSliderFragment)
+        replaceFragment(R.id.discountProductsSliderFragment, discountProductsSliderFragment)
+        replaceFragment(R.id.categoryBannersSliderFragment, categoryBannersSliderFragment)
+        replaceFragment(R.id.topProductsSliderFragment, topProductsSliderFragment)
+        replaceFragment(R.id.ordersSliderFragment, ordersSliderFragment)
+        replaceFragment(R.id.tripleNavigationHomeFragment, tripleNavigationHomeFragment)
+        replaceFragment(R.id.noveltiesProductsSliderFragment, noveltiesProductsSliderFragment)
+        replaceFragment(R.id.promotionsSliderFragment, promotionsSliderFragment)
+        replaceFragment(R.id.bottomProductsSliderFragment, bottomProductsSliderFragment)
+        replaceFragment(R.id.brandsSliderFragment, brandsSliderFragment)
+        replaceFragment(R.id.countriesSliderFragment, countriesSliderFragment)
+        replaceFragment(R.id.viewedProductsSliderFragment, viewedProductsSliderFragment)
+        replaceFragment(R.id.commentsSliderFragment, commentsSliderFragment)
+        replaceFragment(R.id.commentsSliderFragment, commentsSliderFragment)
+        replaceFragment(R.id.bottomInfoFragment, bottomInfoFragment)
+    }
 
-        childFragmentManager.beginTransaction().replace(
-            R.id.historiesSliderFragment,
-            historiesSliderFragment
-        ).commit()
-
-        childFragmentManager.beginTransaction().replace(
-            R.id.popularCategoriesSliderFragment,
-            popularCategoriesSliderFragment
-        ).commit()
-
-        childFragmentManager.beginTransaction().replace(
-            R.id.discountProductsSliderFragment,
-            discountProductsSliderFragment
-        ).commit()
-
-        childFragmentManager.beginTransaction().replace(
-            R.id.categoryBannersSliderFragment,
-            categoryBannersSliderFragment
-        ).commit()
-
-        childFragmentManager.beginTransaction().replace(
-            R.id.topProductsSliderFragment,
-            topProductsSliderFragment
-        ).commit()
-
-        childFragmentManager.beginTransaction().replace(
-            R.id.ordersSliderFragment,
-            ordersSliderFragment
-        ).commit()
-
-        childFragmentManager.beginTransaction().replace(
-            R.id.tripleNavigationHomeFragment,
-            tripleNavigationHomeFragment
-        ).commit()
-
-        childFragmentManager.beginTransaction().replace(
-            R.id.noveltiesProductsSliderFragment,
-            noveltiesProductsSliderFragment
-        ).commit()
-
-        childFragmentManager.beginTransaction().replace(
-            R.id.promotionsSliderFragment,
-            promotionsSliderFragment
-        ).commit()
-
-        childFragmentManager.beginTransaction().replace(
-            R.id.bottomProductsSliderFragment,
-            bottomProductsSliderFragment
-        ).commit()
-
-        childFragmentManager.beginTransaction().replace(
-            R.id.brandsSliderFragment,
-            brandsSliderFragment
-        ).commit()
-
-        childFragmentManager.beginTransaction().replace(
-            R.id.countriesSliderFragment,
-            countriesSliderFragment
-        ).commit()
-
-        childFragmentManager.beginTransaction().replace(
-            R.id.viewedProductsSliderFragment,
-            viewedProductsSliderFragment
-        ).commit()
-
-        childFragmentManager.beginTransaction().replace(
-            R.id.commentsSliderFragment,
-            commentsSliderFragment
-        ).commit()
-
-        childFragmentManager.beginTransaction().replace(
-            R.id.commentsSliderFragment,
-            commentsSliderFragment
-        ).commit()
-
-        childFragmentManager.beginTransaction().replace(
-            R.id.bottomInfoFragment,
-            bottomInfoFragment
-        ).commit()
+    private fun replaceFragment(id: Int, fragment: Fragment) {
+        childFragmentManager.beginTransaction().replace(id, fragment).commit()
     }
 
     private fun initOther() {
