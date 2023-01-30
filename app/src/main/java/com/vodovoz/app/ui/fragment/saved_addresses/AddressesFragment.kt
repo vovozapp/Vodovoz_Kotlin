@@ -3,9 +3,7 @@ package com.vodovoz.app.ui.fragment.saved_addresses
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -17,12 +15,13 @@ import com.vodovoz.app.ui.adapter.AddressesAdapterItem
 import com.vodovoz.app.ui.adapter.AddressesAdapterItemType
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.fragment.ordering.OrderType
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.ui.view.Divider
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AddressesFragment : ViewStateBaseFragment() {
 
     companion object {
@@ -30,14 +29,14 @@ class AddressesFragment : ViewStateBaseFragment() {
     }
 
     private lateinit var binding: FragmentAddressesBinding
-    private lateinit var viewModel: SavedAddressesViewModel
+    private val viewModel: SavedAddressesViewModel by viewModels()
 
     private val addressesAdapter = AddressesAdapter()
     private var dividerItemDecoration: Divider? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
+        viewModel.updateData()
         getArgs()
     }
 
@@ -51,14 +50,6 @@ class AddressesFragment : ViewStateBaseFragment() {
                 }
             }
         }
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[SavedAddressesViewModel::class.java]
-        viewModel.updateData()
     }
 
     private fun showDeleteAddressDialog(addressId: Long) {

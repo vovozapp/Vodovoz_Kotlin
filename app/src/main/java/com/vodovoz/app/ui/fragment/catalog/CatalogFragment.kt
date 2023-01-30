@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,17 +12,18 @@ import com.vodovoz.app.databinding.FragmentMainCatalogBinding
 import com.vodovoz.app.ui.adapter.MainCatalogAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.model.CategoryUI
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
+@AndroidEntryPoint
 class CatalogFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentMainCatalogBinding
-    private lateinit var viewModel: CatalogViewModel
+    private val viewModel: CatalogViewModel by viewModels()
 
     private val categoryClickSubject: PublishSubject<CategoryUI> = PublishSubject.create()
     private val mainCatalogAdapter = MainCatalogAdapter(
@@ -34,16 +35,8 @@ class CatalogFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
-        observeOnCategoryClick()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[CatalogViewModel::class.java]
         viewModel.updateData()
+        observeOnCategoryClick()
     }
 
     override fun setContentView(
@@ -56,7 +49,7 @@ class CatalogFragment : ViewStateBaseFragment() {
     ).apply { binding = this }.root
 
     override fun initView() {
-        initViewModel()
+       /* viewModel.updateData()*/
         initCategoryRecycler()
         observeViewModel()
         initSearch()

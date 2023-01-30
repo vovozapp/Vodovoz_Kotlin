@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -16,7 +16,6 @@ import com.vodovoz.app.ui.adapter.LinearProductsAdapter
 import com.vodovoz.app.ui.adapter.NotAvailableCartItemsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
@@ -26,7 +25,9 @@ import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.view.Divider
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CartFragment : ViewStateBaseFragment() {
 
     companion object {
@@ -34,7 +35,7 @@ class CartFragment : ViewStateBaseFragment() {
     }
 
     private lateinit var binding: FragmentMainCartBinding
-    private lateinit var viewModel: CartViewModel
+    private val viewModel: CartViewModel by viewModels()
 
     private val bestForYouProductsSliderFragment: ProductsSliderFragment by lazy {
         ProductsSliderFragment.newInstance(ProductsSliderConfig(
@@ -82,14 +83,6 @@ class CartFragment : ViewStateBaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        initViewModel()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[CartViewModel::class.java]
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

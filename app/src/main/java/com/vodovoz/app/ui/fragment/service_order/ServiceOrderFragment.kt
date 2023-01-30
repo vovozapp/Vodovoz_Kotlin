@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,29 +16,23 @@ import com.vodovoz.app.ui.adapter.ServiceOrderFormFieldsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ServiceOrderFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentServiceOrderBinding
-    private lateinit var viewModel: ServiceOrderViewModel
+    private val viewModel: ServiceOrderViewModel by viewModels()
 
     private val serviceOrderFormFieldsAdapter = ServiceOrderFormFieldsAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
         getArgs()
     }
 
     override fun update() {
         viewModel.fetchData()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[ServiceOrderViewModel::class.java]
     }
 
     private fun getArgs() {

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,8 +22,9 @@ import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.view.Divider
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class ReplacementProductsSelectionBS : BottomSheetDialogFragment() {
 
     companion object {
@@ -31,7 +33,7 @@ class ReplacementProductsSelectionBS : BottomSheetDialogFragment() {
     }
 
     private lateinit var binding: BsReplacementProductsBinding
-    private lateinit var viewModel: ReplacementProductsSelectionViewModel
+    private val viewModel: ReplacementProductsSelectionViewModel by viewModels()
 
     private lateinit var productUIList: List<ProductUI>
     private lateinit var notAvailableProductDetailPicture: String
@@ -52,15 +54,7 @@ class ReplacementProductsSelectionBS : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
         getArgs()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[ReplacementProductsSelectionViewModel::class.java]
     }
 
     private fun getArgs() {

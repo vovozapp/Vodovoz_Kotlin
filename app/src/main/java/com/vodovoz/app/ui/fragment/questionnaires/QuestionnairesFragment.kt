@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
@@ -15,19 +15,19 @@ import com.vodovoz.app.ui.adapter.QuestionnaireTypesAdapter
 import com.vodovoz.app.ui.adapter.QuestionsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-
+@AndroidEntryPoint
 class QuestionnairesFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentQuestionnairesBinding
-    private lateinit var viewModel: QuestionnairesViewModel
+    private val viewModel: QuestionnairesViewModel by viewModels()
 
     private val compositeDisposable = CompositeDisposable()
     private val onQuestionnaireTypeClickSubject: PublishSubject<String> = PublishSubject.create()
@@ -36,16 +36,8 @@ class QuestionnairesFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
-        subscribeSubjects()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[QuestionnairesViewModel::class.java]
         viewModel.fetchQuestionnaireTypes()
+        subscribeSubjects()
     }
 
     private fun subscribeSubjects() {

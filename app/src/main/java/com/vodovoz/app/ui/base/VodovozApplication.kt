@@ -10,7 +10,9 @@ import com.vodovoz.app.data.remote.MapKitApi
 import com.vodovoz.app.data.remote.RemoteData
 import com.vodovoz.app.data.remote.RemoteDataSource
 import com.vodovoz.app.data.remote.VodovozApi
+import com.vodovoz.app.util.Keys
 import com.vodovoz.app.util.LogSettings
+import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -31,7 +33,7 @@ class VodovozApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
+        MapKitFactory.setApiKey(Keys.MAPKIT_API_KEY)
         Timber.plant(Timber.DebugTree())
 
         vodovozApi = buildVodovozClient()

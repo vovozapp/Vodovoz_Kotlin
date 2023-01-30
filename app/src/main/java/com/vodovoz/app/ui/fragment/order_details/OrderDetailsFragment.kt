@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -27,15 +28,17 @@ import com.vodovoz.app.ui.model.OrderDetailsUI
 import com.vodovoz.app.ui.model.OrderStatusUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.view.Divider
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
+@AndroidEntryPoint
 class OrderDetailsFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentOrderDetailsBinding
-    private lateinit var viewModel: OrderDetailsViewModel
+    private val viewModel: OrderDetailsViewModel by viewModels()
 
     private val compositeDisposable = CompositeDisposable()
     private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
@@ -64,20 +67,12 @@ class OrderDetailsFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
         getArgs()
         subscribeSubjects()
     }
 
     private fun getArgs() {
         viewModel.updateArgs(OrderDetailsFragmentArgs.fromBundle(requireArguments()).orderId)
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[OrderDetailsViewModel::class.java]
     }
 
     private fun subscribeSubjects() {

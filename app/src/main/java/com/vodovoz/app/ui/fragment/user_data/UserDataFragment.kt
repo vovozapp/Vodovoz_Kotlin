@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +31,7 @@ import com.vodovoz.app.ui.model.UserDataUI
 import com.vodovoz.app.util.LogSettings
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToFullFormat
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -43,10 +45,11 @@ enum class Gender(
     FEMALE("Женский")
 }
 
+@AndroidEntryPoint
 class UserDataFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentUserDataBinding
-    private lateinit var viewModel: UserDataViewModel
+    private val viewModel: UserDataViewModel by viewModels()
 
     private val compositeDisposable = CompositeDisposable()
     private val trackErrorSubject: PublishSubject<Boolean> = PublishSubject.create()
@@ -58,16 +61,8 @@ class UserDataFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
-        subscribeSubjects()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[UserDataViewModel::class.java]
         viewModel.updateData()
+        subscribeSubjects()
     }
 
     private fun subscribeSubjects() {

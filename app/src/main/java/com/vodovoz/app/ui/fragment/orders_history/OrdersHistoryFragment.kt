@@ -4,7 +4,7 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -16,11 +16,11 @@ import com.vodovoz.app.databinding.FragmentOrdersHistoryBinding
 import com.vodovoz.app.ui.adapter.PagingOrdersAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.base.loadStateAdapter.LoadStateAdapter
 import com.vodovoz.app.ui.diffUtils.OrderDiffItemCallback
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -28,6 +28,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class OrdersHistoryFragment : ViewStateBaseFragment() {
 
     companion object {
@@ -35,7 +36,7 @@ class OrdersHistoryFragment : ViewStateBaseFragment() {
     }
 
     private lateinit var binding: FragmentOrdersHistoryBinding
-    private lateinit var viewModel: OrdersHistoryViewModel
+    private val viewModel: OrdersHistoryViewModel by viewModels()
 
     private val compositeDisposable = CompositeDisposable()
     private val updateSubject: PublishSubject<Boolean> = PublishSubject.create()
@@ -53,15 +54,7 @@ class OrdersHistoryFragment : ViewStateBaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        initViewModel()
         subscribeSubjects()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[OrdersHistoryViewModel::class.java]
     }
 
     private fun subscribeSubjects() {

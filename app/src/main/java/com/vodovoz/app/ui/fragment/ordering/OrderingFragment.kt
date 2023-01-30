@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -24,12 +24,11 @@ import com.vodovoz.app.ui.adapter.FieldType
 import com.vodovoz.app.ui.adapter.FormField
 import com.vodovoz.app.ui.adapter.PayMethodsAdapter
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.ContextExtensions.getDeviceInfo
 import com.vodovoz.app.ui.extensions.Date
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
 import com.vodovoz.app.ui.fragment.saved_addresses.AddressesFragment
@@ -40,8 +39,10 @@ import com.vodovoz.app.ui.model.PayMethodUI
 import com.vodovoz.app.ui.model.ShippingIntervalUI
 import com.vodovoz.app.ui.model.custom.OrderingCompletedInfoBundleUI
 import com.vodovoz.app.util.FieldValidationsSettings
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
+@AndroidEntryPoint
 class OrderingFragment : ViewStateBaseFragment() {
 
     companion object {
@@ -51,21 +52,13 @@ class OrderingFragment : ViewStateBaseFragment() {
     }
 
     private lateinit var binding: FragmentOrderingBinding
-    private lateinit var viewModel: OrderingViewModel
+    private val viewModel: OrderingViewModel by viewModels()
 
     private var trackErrors: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
         getArgs()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[OrderingViewModel::class.java]
     }
 
     private fun getArgs() {

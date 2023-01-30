@@ -7,13 +7,16 @@ import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.mapper.ServiceMapper.mapToUI
 import com.vodovoz.app.ui.base.BaseViewModel
 import com.vodovoz.app.ui.model.ServiceUI
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class ServiceDetailViewModel(
+@HiltViewModel
+class ServiceDetailViewModel @Inject constructor(
     private val dataRepository: DataRepository
 ) : BaseViewModel() {
 
@@ -68,6 +71,5 @@ class ServiceDetailViewModel(
         this.selectedServiceType = type
         serviceUIMLD.value = serviceUIList.find { it.type == type } ?: serviceUIList.first()
     }
-
 
 }

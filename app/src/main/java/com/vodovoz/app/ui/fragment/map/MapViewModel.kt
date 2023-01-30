@@ -12,14 +12,16 @@ import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.ui.model.DeliveryZoneUI
 import com.vodovoz.app.ui.model.custom.DeliveryZonesBundleUI
 import com.vodovoz.app.util.Keys
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-
-class MapViewModel(
+@HiltViewModel
+class MapViewModel @Inject constructor(
     private val dataRepository: DataRepository
 ) : ViewModel() {
 

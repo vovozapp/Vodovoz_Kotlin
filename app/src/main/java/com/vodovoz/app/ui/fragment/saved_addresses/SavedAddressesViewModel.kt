@@ -10,12 +10,15 @@ import com.vodovoz.app.mapper.AddressMapper.mapToUI
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.fragment.ordering.OrderType
 import com.vodovoz.app.ui.model.AddressUI
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import javax.inject.Inject
 
-class SavedAddressesViewModel(
+@HiltViewModel
+class SavedAddressesViewModel @Inject constructor(
     private val dataRepository: DataRepository
 ) : ViewModel() {
 

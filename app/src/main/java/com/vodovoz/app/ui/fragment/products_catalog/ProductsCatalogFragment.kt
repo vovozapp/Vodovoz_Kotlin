@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -18,16 +19,18 @@ import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.io.Serializable
 
+@AndroidEntryPoint
 class ProductsCatalogFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentFixAmountProductsBinding
-    private lateinit var viewModel: ProductsCatalogViewModel
+    private val viewModel: ProductsCatalogViewModel by viewModels()
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -55,16 +58,8 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
         getArgs()
         subscribeSubjects()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[ProductsCatalogViewModel::class.java]
     }
 
     private fun getArgs() {

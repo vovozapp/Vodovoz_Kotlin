@@ -15,14 +15,17 @@ import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.OrderUI
 import com.vodovoz.app.ui.model.UserDataUI
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class ProfileViewModel(
+@HiltViewModel
+class ProfileViewModel @Inject constructor(
     private val dataRepository: DataRepository
 ) : ViewModel() {
 

@@ -3,6 +3,7 @@ package com.vodovoz.app.ui.fragment.concrete_filter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -16,26 +17,20 @@ import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.FilterValueDiffUtilCallback
 import com.vodovoz.app.ui.fragment.product_filters.ProductFiltersFragment
 import com.vodovoz.app.ui.model.FilterValueUI
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ConcreteFilterFragment : ViewStateBaseDialogFragment() {
 
     private lateinit var binding: FragmentFilterConcreteBinding
-    private lateinit var viewModel: ConcreteFilterViewModel
+    private val viewModel: ConcreteFilterViewModel by viewModels()
 
     private val productFilterValuesAdapter = ProductFilterValuesAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
-        initViewModel()
         getArgs()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[ConcreteFilterViewModel::class.java]
     }
 
     private fun getArgs() {

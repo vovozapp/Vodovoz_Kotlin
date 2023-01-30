@@ -1,14 +1,13 @@
 package com.vodovoz.app.ui.fragment.login
 
 import android.graphics.Typeface
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -16,29 +15,18 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentLoginBinding
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setExpiredCodeText
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.ui.model.enum.AuthType
 import com.vodovoz.app.util.FieldValidationsSettings
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
+@AndroidEntryPoint
 class LoginFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentLoginBinding
-    private lateinit var viewModel: LoginViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initViewModel()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[LoginViewModel::class.java]
-    }
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun setContentView(
         inflater: LayoutInflater,

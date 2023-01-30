@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -19,16 +20,17 @@ import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.BrandDiffUtilCallback
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-
+@AndroidEntryPoint
 class AllBrandsFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentAllBrandsBinding
-    private lateinit var viewModel: AllBrandsViewModel
+    private val viewModel: AllBrandsViewModel by viewModels()
 
     private val compositeDisposable = CompositeDisposable()
     private val onBrandClickSubject: PublishSubject<Long> = PublishSubject.create()
@@ -36,15 +38,7 @@ class AllBrandsFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
         getArgs()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[AllBrandsViewModel::class.java]
     }
 
     private fun getArgs() {

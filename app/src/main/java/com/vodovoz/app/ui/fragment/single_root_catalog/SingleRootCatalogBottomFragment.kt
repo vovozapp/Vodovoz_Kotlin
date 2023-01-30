@@ -4,34 +4,30 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.BsCatalogMiniBinding
 import com.vodovoz.app.databinding.BsCatalogSingleRootBinding
 import com.vodovoz.app.ui.adapter.SingleRootCatalogAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
-import com.vodovoz.app.ui.base.VodovozApplication
-import com.vodovoz.app.ui.decoration.SingleRootCatalogMarginDecoration
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogFragment
 import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.ui.view.Divider
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
+@AndroidEntryPoint
 class SingleRootCatalogBottomFragment : ViewStateBaseBottomFragment() {
 
     private lateinit var binding: BsCatalogSingleRootBinding
-    private lateinit var viewModel: SingleRootCatalogViewModel
+    private val viewModel: SingleRootCatalogViewModel by viewModels()
 
     private val categoryClickSubject: PublishSubject<CategoryUI> = PublishSubject.create()
 
@@ -46,15 +42,7 @@ class SingleRootCatalogBottomFragment : ViewStateBaseBottomFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
         getArgs()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[SingleRootCatalogViewModel::class.java]
     }
 
     private fun getArgs() {

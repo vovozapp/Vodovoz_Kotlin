@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.NestedScrollView
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
@@ -49,16 +50,18 @@ import com.vodovoz.app.ui.fragment.some_products_maybe_like.SomeProductsMaybeLik
 import com.vodovoz.app.ui.model.*
 import com.vodovoz.app.ui.model.custom.ProductDetailBundleUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 @SuppressLint("NotifyDataSetChanged")
+@AndroidEntryPoint
 class ProductDetailsFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentProductDetailsBinding
-    private lateinit var viewModel: ProductDetailsViewModel
+    private val viewModel: ProductDetailsViewModel by viewModels()
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -107,20 +110,12 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initCallbacks()
-        initViewModel()
         getArgs()
         subscribeSubjects()
     }
 
     private fun getArgs() {
         viewModel.updateArgs(ProductDetailsFragmentArgs.fromBundle(requireArguments()).productId)
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[ProductDetailsViewModel::class.java]
     }
 
     private fun subscribeSubjects() {
@@ -596,6 +591,7 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
             .commit()
     }
 
+    @SuppressLint("Range")
     private fun fillHeader(productDetailBundle: ProductDetailBundleUI) {
         productDetailBundle.productDetailUI.brandUI?.let { binding.tvBrand.text = it.name }
 

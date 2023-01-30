@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -28,15 +29,17 @@ import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.PromotionDetailUI
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
+@AndroidEntryPoint
 class PromotionDetailsFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentPromotionDetailBinding
-    private lateinit var viewModel: PromotionDetailsViewModel
+    private val viewModel: PromotionDetailsViewModel by viewModels()
 
     private val bestForYouProductsSliderFragment: ProductsSliderFragment by lazy {
         ProductsSliderFragment.newInstance(ProductsSliderConfig(
@@ -69,7 +72,6 @@ class PromotionDetailsFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
         getArgs()
         subscribeSubjects()
     }
@@ -84,13 +86,6 @@ class PromotionDetailsFragment : ViewStateBaseFragment() {
         onFavoriteClickSubject.subscribeBy { pair ->
             viewModel.changeFavoriteStatus(pair.first, pair.second)
         }.addTo(compositeDisposable)
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[PromotionDetailsViewModel::class.java]
     }
 
     private fun getArgs() {

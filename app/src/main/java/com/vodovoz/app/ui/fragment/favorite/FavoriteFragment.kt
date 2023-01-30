@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -22,19 +22,17 @@ import com.vodovoz.app.ui.adapter.CategoryTabsAdapter
 import com.vodovoz.app.ui.adapter.PagingProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.base.loadStateAdapter.LoadStateAdapter
 import com.vodovoz.app.ui.decoration.CategoryTabsMarginDecoration
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
-import com.vodovoz.app.ui.fragment.cart.CartFragmentDirections
-import com.vodovoz.app.ui.fragment.home.HomeFragmentDirections
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.model.CategoryUI
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -42,10 +40,11 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class FavoriteFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentMainFavoriteBinding
-    private lateinit var viewModel: FavoriteViewModel
+    private val viewModel: FavoriteViewModel by viewModels()
 
     private var viewMode: PagingProductsAdapter.ViewMode = PagingProductsAdapter.ViewMode.LIST
 
@@ -117,16 +116,8 @@ class FavoriteFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
-        subscribeSubjects()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[FavoriteViewModel::class.java]
         viewModel.updateFavoriteProductsHeader()
+        subscribeSubjects()
     }
 
     private fun subscribeSubjects() {

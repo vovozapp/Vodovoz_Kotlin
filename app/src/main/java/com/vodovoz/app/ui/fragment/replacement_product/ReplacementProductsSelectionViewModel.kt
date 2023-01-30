@@ -4,13 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.util.SingleLiveEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class ReplacementProductsSelectionViewModel(
+@HiltViewModel
+class ReplacementProductsSelectionViewModel @Inject constructor(
     private val dataRepository: DataRepository
 ) : ViewModel() {
 

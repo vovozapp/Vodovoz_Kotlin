@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -49,12 +50,13 @@ import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.Error
 import com.yandex.runtime.image.ImageProvider
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-
+@AndroidEntryPoint
 class MapDialogFragment : ViewStateBaseFragment(),
     InputListener,
     UserLocationObjectListener,
@@ -62,7 +64,7 @@ class MapDialogFragment : ViewStateBaseFragment(),
 {
 
     private lateinit var binding: FragmentMapBinding
-    private lateinit var viewModel: MapViewModel
+    private val viewModel: MapViewModel by viewModels()
 
     private lateinit var userLocationLayer: UserLocationLayer
     private lateinit var mapKit: MapKit
@@ -92,18 +94,9 @@ class MapDialogFragment : ViewStateBaseFragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setStyle(STYLE_NORMAL, R.style.MapDialog)
-
-        initViewModel()
+        viewModel.updateData()
         getArgs()
         subscribeSubjects()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[MapViewModel::class.java]
-        viewModel.updateData()
     }
 
     private fun getArgs() {

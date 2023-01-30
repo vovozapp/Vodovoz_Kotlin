@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -17,12 +18,13 @@ import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.BottleDiffUtilCallback
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-
+@AndroidEntryPoint
 class AllBottlesFragment : ViewStateBaseFragment() {
 
     companion object {
@@ -30,7 +32,7 @@ class AllBottlesFragment : ViewStateBaseFragment() {
     }
 
     private lateinit var binding: FragmentAllBottlesBinding
-    private lateinit var viewModel: AllBottlesViewModel
+    private val viewModel: AllBottlesViewModel by viewModels()
 
     private val compositeDisposable = CompositeDisposable()
     private val onBottleClickSubject: PublishSubject<Long> = PublishSubject.create()
@@ -38,16 +40,8 @@ class AllBottlesFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
-        subscribeSubjects()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[AllBottlesViewModel::class.java]
         viewModel.updateData()
+        subscribeSubjects()
     }
 
     private fun subscribeSubjects() {

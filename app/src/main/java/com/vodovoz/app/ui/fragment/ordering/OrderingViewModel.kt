@@ -15,14 +15,17 @@ import com.vodovoz.app.ui.model.*
 import com.vodovoz.app.ui.model.custom.OrderingCompletedInfoBundleUI
 import com.vodovoz.app.util.SingleLiveEvent
 import com.vodovoz.app.util.calculatePrice
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-class OrderingViewModel(
+@HiltViewModel
+class OrderingViewModel @Inject constructor(
     private val dataRepository: DataRepository
 ) : BaseViewModel() {
 

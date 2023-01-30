@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -24,7 +24,6 @@ import com.vodovoz.app.ui.adapter.PagingProductsAdapter.ViewMode
 import com.vodovoz.app.ui.adapter.PrimaryProductFiltersAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.base.loadStateAdapter.LoadStateAdapter
 import com.vodovoz.app.ui.decoration.ProductsFiltersMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
@@ -33,6 +32,7 @@ import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.FilterValueUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -40,7 +40,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
 
     companion object {
@@ -50,7 +50,7 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
     }
 
     private lateinit var binding: FragmentProductsBinding
-    private lateinit var viewModel: PaginatedProductsCatalogViewModel
+    private val viewModel: PaginatedProductsCatalogViewModel by viewModels()
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -133,7 +133,6 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        initViewModel()
         getArgs()
         subscribeSubjects()
     }
@@ -148,13 +147,6 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
         onChangeProductQuantitySubject.subscribeBy { pair ->
             viewModel.changeCart(pair.first, pair.second)
         }.addTo(compositeDisposable)
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[PaginatedProductsCatalogViewModel::class.java]
     }
 
     private fun getArgs() {

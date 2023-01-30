@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -18,15 +19,17 @@ import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.ServiceDiffUtilCallback
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
+@AndroidEntryPoint
 class AboutServicesDialogFragment : ViewStateBaseDialogFragment() {
 
     private lateinit var binding: FragmentAboutServicesBinding
-    private lateinit var viewModel: AboutServicesViewModel
+    private val viewModel: AboutServicesViewModel by viewModels()
 
     private val compositeDisposable = CompositeDisposable()
     private val onServiceClickSubject: PublishSubject<String> = PublishSubject.create()
@@ -35,16 +38,8 @@ class AboutServicesDialogFragment : ViewStateBaseDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
-        initViewModel()
-        subscribeSubjects()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[AboutServicesViewModel::class.java]
         viewModel.updateData()
+        subscribeSubjects()
     }
 
     private fun subscribeSubjects() {

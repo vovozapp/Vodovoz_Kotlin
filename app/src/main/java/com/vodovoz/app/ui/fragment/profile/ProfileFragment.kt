@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -25,11 +26,13 @@ import com.vodovoz.app.ui.fragment.slider.order_slider.OrdersSliderFragment
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.model.UserDataUI
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ProfileFragment : ViewStateBaseDialogFragment() {
 
     private lateinit var binding: FragmentProfileBinding
-    private lateinit var viewModel: ProfileViewModel
+    private val viewModel: ProfileViewModel by viewModels()
 
     private val gridProductsAdapter = GridProductsAdapter(
         onProductClick = {
@@ -63,14 +66,6 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[ProfileViewModel::class.java]
         viewModel.isAlreadyLogin()
     }
 

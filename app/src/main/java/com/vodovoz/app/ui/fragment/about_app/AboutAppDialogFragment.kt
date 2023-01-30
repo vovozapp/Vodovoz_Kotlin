@@ -8,7 +8,7 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.BuildConfig
@@ -16,33 +16,21 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentAboutAppBinding
 import com.vodovoz.app.ui.adapter.AboutAppAction
 import com.vodovoz.app.ui.adapter.AboutAppActionsAdapter
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class AboutAppDialogFragment : Fragment() {
 
     private lateinit var binding: FragmentAboutAppBinding
-    private lateinit var viewModel: AboutAppDialogViewModel
+    private val viewModel: AboutAppDialogViewModel by viewModels()
 
     private val aboutAppActionsAdapter = AboutAppActionsAdapter()
 
     private val aboutAppActionsList = listOf(
         AboutAppAction.WRITE_DEVELOPERS, AboutAppAction.RATE, AboutAppAction.SHARE
     )
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initViewModel()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[AboutAppDialogViewModel::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -73,10 +61,6 @@ class AboutAppDialogFragment : Fragment() {
 
     private fun setupAboutAppActionsRecycler() {
         binding.rvActions.layoutManager = LinearLayoutManager(requireContext())
-//        binding.rvActions.addItemDecoration(Divider(
-//            divider = ContextCompat.getDrawable(requireContext(), R.drawable.bkg_divider_gray)!!,
-//            addAfterLastItem = false
-//        ))
         val space = resources.getDimension(R.dimen.space_8).toInt()
         binding.rvActions.addMarginDecoration { rect, view, parent, state ->
             if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.bottom = space

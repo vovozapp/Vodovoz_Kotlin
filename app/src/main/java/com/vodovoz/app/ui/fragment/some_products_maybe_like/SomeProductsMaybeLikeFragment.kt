@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -17,11 +18,13 @@ import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
+@AndroidEntryPoint
 class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
 
     companion object {
@@ -39,7 +42,7 @@ class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
     private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
 
     private lateinit var binding: FragmentPaginatedMaybeLikeProductListBinding
-    private lateinit var viewModel: SomeProductsMaybeLikeViewModel
+    private val viewModel: SomeProductsMaybeLikeViewModel by viewModels()
 
     private val gridProductsAdapter: GridProductsAdapter by lazy {
         GridProductsAdapter(
@@ -63,16 +66,8 @@ class SomeProductsMaybeLikeFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
-        subscribeSubjects()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[SomeProductsMaybeLikeViewModel::class.java]
         viewModel.nextPage()
+        subscribeSubjects()
     }
 
     private fun subscribeSubjects() {

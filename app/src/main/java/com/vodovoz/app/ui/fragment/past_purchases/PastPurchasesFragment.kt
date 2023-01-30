@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -34,6 +35,7 @@ import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.model.CategoryUI
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -41,10 +43,11 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class PastPurchasesFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentPastPurchasesBinding
-    private lateinit var viewModel: PastPurchasesViewModel
+    private val viewModel: PastPurchasesViewModel by viewModels()
 
     private var viewMode: PagingProductsAdapter.ViewMode = PagingProductsAdapter.ViewMode.LIST
 
@@ -116,16 +119,8 @@ class PastPurchasesFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
-        subscribeSubjects()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[PastPurchasesViewModel::class.java]
         viewModel.updateFavoriteProductsHeader()
+        subscribeSubjects()
     }
 
     private fun subscribeSubjects() {

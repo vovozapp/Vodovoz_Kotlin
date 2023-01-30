@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -14,30 +14,22 @@ import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.databinding.BsPreOrderBinding
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.ContextExtensions.showSimpleMessageDialog
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToFullFormat
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class PreOrderBS : ViewStateBaseBottomFragment() {
 
     private lateinit var binding: BsPreOrderBinding
-    private lateinit var viewModel: PreOrderViewModel
+    private val viewModel: PreOrderViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
         getArgs()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[PreOrderViewModel::class.java]
     }
 
     private fun getArgs() {

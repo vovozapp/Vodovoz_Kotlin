@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,11 +16,13 @@ import com.vodovoz.app.ui.adapter.DiscountCardPropertiesAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DiscountCardFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentDiscountCardBinding
-    private lateinit var viewModel: DiscountCardViewModel
+    private val viewModel: DiscountCardViewModel by viewModels()
 
     private val discountCardPropertiesAdapter = DiscountCardPropertiesAdapter()
 
@@ -29,14 +32,6 @@ class DiscountCardFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[DiscountCardViewModel::class.java]
         update()
     }
 

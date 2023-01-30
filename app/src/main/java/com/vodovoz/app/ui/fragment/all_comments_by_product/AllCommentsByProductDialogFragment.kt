@@ -4,7 +4,7 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -15,11 +15,11 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentProductCommentsBinding
 import com.vodovoz.app.ui.adapter.PagingCommentsAdapter
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.base.loadStateAdapter.LoadStateAdapter
 import com.vodovoz.app.ui.diffUtils.CommentDiffItemCallback
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -27,10 +27,11 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class AllCommentsByProductDialogFragment : ViewStateBaseDialogFragment() {
 
     private lateinit var binding: FragmentProductCommentsBinding
-    private lateinit var viewModel: AllCommentsByProductViewModel
+    private val viewModel: AllCommentsByProductViewModel by viewModels()
 
     private val compositeDisposable = CompositeDisposable()
     private val onUpdateSubject: PublishSubject<Boolean> = PublishSubject.create()
@@ -40,16 +41,8 @@ class AllCommentsByProductDialogFragment : ViewStateBaseDialogFragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
-        initViewModel()
         getArgs()
         subscribeSubjects()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[AllCommentsByProductViewModel::class.java]
     }
 
     private fun getArgs() {

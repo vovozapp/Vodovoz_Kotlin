@@ -10,13 +10,16 @@ import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.enum.AuthType
 import com.vodovoz.app.util.LogSettings
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class LoginViewModel(
+@HiltViewModel
+class LoginViewModel @Inject constructor(
     private val dataRepository: DataRepository
 ) : ViewModel() {
 

@@ -6,9 +6,12 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.mapper.CommentMapper.mapToUI
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class AllCommentsByProductViewModel(
+@HiltViewModel
+class AllCommentsByProductViewModel @Inject constructor(
     private val dataRepository: DataRepository
 ) : ViewModel() {
 

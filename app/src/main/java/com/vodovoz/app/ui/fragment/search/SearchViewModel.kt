@@ -15,6 +15,7 @@ import com.vodovoz.app.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.CategoryUI
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -22,8 +23,10 @@ import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class SearchViewModel(
+@HiltViewModel
+class SearchViewModel @Inject constructor(
     private val dataRepository: DataRepository
 ) : ViewModel() {
 

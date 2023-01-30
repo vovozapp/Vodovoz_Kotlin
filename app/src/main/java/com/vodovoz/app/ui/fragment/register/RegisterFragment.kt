@@ -4,28 +4,28 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.databinding.FragmentRegisterBinding
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setEmailValidation
 import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setNameValidation
 import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setPasswordValidation
 import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setPhoneValidation
 import com.vodovoz.app.util.LogSettings
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
+@AndroidEntryPoint
 class RegisterFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentRegisterBinding
-    private lateinit var viewModel: RegisterViewModel
+    private val viewModel: RegisterViewModel by viewModels()
 
     private val compositeDisposable = CompositeDisposable()
     private val trackErrorSubject: PublishSubject<Boolean> = PublishSubject.create()
@@ -37,15 +37,7 @@ class RegisterFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
         subscribeSubjects()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[RegisterViewModel::class.java]
     }
 
     private fun subscribeSubjects() {

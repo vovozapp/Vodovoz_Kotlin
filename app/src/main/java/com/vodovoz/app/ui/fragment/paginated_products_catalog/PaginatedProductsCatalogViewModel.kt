@@ -19,14 +19,17 @@ import com.vodovoz.app.ui.model.FilterValueUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
 import com.vodovoz.app.util.FilterBuilderExtensions.buildFilterQuery
 import com.vodovoz.app.util.FilterBuilderExtensions.buildFilterValueQuery
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class PaginatedProductsCatalogViewModel(
+@HiltViewModel
+class PaginatedProductsCatalogViewModel @Inject constructor(
     private val dataRepository: DataRepository
 ) : ViewModel() {
 

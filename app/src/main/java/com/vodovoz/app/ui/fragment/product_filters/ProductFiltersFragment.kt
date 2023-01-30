@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,18 +13,17 @@ import com.vodovoz.app.databinding.FragmentFilterListBinding
 import com.vodovoz.app.ui.adapter.ProductFiltersAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogFragment
 import com.vodovoz.app.ui.model.FilterPriceUI
 import com.vodovoz.app.ui.model.FilterUI
-import com.vodovoz.app.ui.view.Divider
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-
+@AndroidEntryPoint
 class ProductFiltersFragment : ViewStateBaseDialogFragment() {
 
     companion object {
@@ -32,7 +31,7 @@ class ProductFiltersFragment : ViewStateBaseDialogFragment() {
     }
 
     private lateinit var binding: FragmentFilterListBinding
-    private lateinit var viewModel: ProductFiltersViewModel
+    private val viewModel: ProductFiltersViewModel by viewModels()
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -47,15 +46,7 @@ class ProductFiltersFragment : ViewStateBaseDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
-        initViewModel()
         getArgs()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[ProductFiltersViewModel::class.java]
     }
 
     private fun getArgs() {

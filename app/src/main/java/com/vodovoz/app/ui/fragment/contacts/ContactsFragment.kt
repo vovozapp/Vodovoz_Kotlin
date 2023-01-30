@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -21,11 +22,13 @@ import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ContactsFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentContactsBinding
-    private lateinit var viewModel: ContactsViewModel
+    private val viewModel: ContactsViewModel by viewModels()
 
     private val phoneContactsAdapter = PhoneContactsAdapter(
         onPhoneSelect = { phoneUI ->
@@ -67,14 +70,6 @@ class ContactsFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[ContactsViewModel::class.java]
         viewModel.fetchContacts()
     }
 

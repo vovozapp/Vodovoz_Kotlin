@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -12,23 +13,17 @@ import com.vodovoz.app.databinding.BsAddAddressBinding
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
 import com.vodovoz.app.ui.base.VodovozApplication
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AddAddressBottomFragment : ViewStateBaseBottomFragment() {
 
     private lateinit var binding: BsAddAddressBinding
-    private lateinit var viewModel: AddAddressViewModel
+    private val viewModel: AddAddressViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
         getArgs()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[AddAddressViewModel::class.java]
     }
 
     private fun getArgs() {

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -20,12 +21,14 @@ import com.vodovoz.app.ui.diffUtils.PromotionDiffUtilCallback
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.ListOfPromotionFilterUi
 import com.vodovoz.app.ui.model.PromotionUI
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.io.Serializable
 
+@AndroidEntryPoint
 class AllPromotionsFragment : ViewStateBaseFragment() {
 
     companion object {
@@ -33,7 +36,7 @@ class AllPromotionsFragment : ViewStateBaseFragment() {
     }
 
     private lateinit var binding: FragmentAllPromotionsBinding
-    private lateinit var viewModel: AllPromotionsViewModel
+    private val viewModel: AllPromotionsViewModel by viewModels()
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -42,19 +45,11 @@ class AllPromotionsFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
         getArgs()
     }
 
     private fun getArgs() {
         viewModel.updateArgs(AllPromotionsFragmentArgs.fromBundle(requireArguments()).dataSource)
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[AllPromotionsViewModel::class.java]
     }
 
     override fun setContentView(

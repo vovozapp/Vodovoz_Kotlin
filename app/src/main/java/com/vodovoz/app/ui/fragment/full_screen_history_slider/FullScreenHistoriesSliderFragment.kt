@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -19,29 +20,23 @@ import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.Pa
 import com.vodovoz.app.ui.fragment.products_catalog.ProductsCatalogFragment
 import com.vodovoz.app.ui.interfaces.IOnChangeHistory
 import com.vodovoz.app.ui.interfaces.IOnInvokeAction
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FullScreenHistoriesSliderFragment : ViewStateBaseDialogFragment(),
     IOnChangeHistory, IOnInvokeAction
 {
 
     private lateinit var binding: FragmentFullscreenHistorySliderBinding
-    private lateinit var viewModel: FullScreenHistoriesSliderViewModel
+    private val viewModel: FullScreenHistoriesSliderViewModel by viewModels()
 
     private var startHistoryId: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialogWithoutStatusBar)
-        initViewModel()
-        getArgs()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[FullScreenHistoriesSliderViewModel::class.java]
         viewModel.updateData()
+        getArgs()
     }
 
     private fun getArgs() {

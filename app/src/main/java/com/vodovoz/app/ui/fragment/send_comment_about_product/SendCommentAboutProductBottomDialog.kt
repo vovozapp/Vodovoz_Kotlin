@@ -3,7 +3,7 @@ package com.vodovoz.app.ui.fragment.send_comment_about_product
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
@@ -11,25 +11,18 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.BsSendCommentBinding
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
-import com.vodovoz.app.ui.base.VodovozApplication
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SendCommentAboutProductBottomDialog : ViewStateBaseBottomFragment() {
 
     private lateinit var binding: BsSendCommentBinding
-    private lateinit var viewModel: SendCommentAboutProductViewModel
+    private val viewModel: SendCommentAboutProductViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        initViewModel()
         getArgs()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[SendCommentAboutProductViewModel::class.java]
     }
 
     private fun getArgs() {

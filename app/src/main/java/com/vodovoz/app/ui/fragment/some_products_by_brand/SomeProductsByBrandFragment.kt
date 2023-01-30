@@ -6,8 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,11 +15,11 @@ import com.vodovoz.app.databinding.FragmentPaginatedBrandProductListBinding
 import com.vodovoz.app.ui.adapter.LinearProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.fragment.order_details.OrderDetailsFragmentDirections
-import com.vodovoz.app.ui.view.Divider
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.subjects.PublishSubject
 
+@AndroidEntryPoint
 class SomeProductsByBrandFragment : ViewStateBaseFragment() {
 
     companion object {
@@ -43,7 +42,7 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
     private lateinit var onProductClickSubject: PublishSubject<Long>
 
     private lateinit var binding: FragmentPaginatedBrandProductListBinding
-    private lateinit var viewModel: SomeProductsByBrandViewModel
+    private val viewModel: SomeProductsByBrandViewModel by viewModels()
 
     private val linearProductAdapter: LinearProductsAdapter by lazy {
         LinearProductsAdapter(
@@ -67,7 +66,6 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
         getArgs()
     }
 
@@ -78,13 +76,6 @@ class SomeProductsByBrandFragment : ViewStateBaseFragment() {
                 brandId = args.getLong(BRAND_ID)
             )
         }
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[SomeProductsByBrandViewModel::class.java]
     }
 
     override fun setContentView(

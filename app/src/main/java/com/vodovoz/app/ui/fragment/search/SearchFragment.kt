@@ -13,7 +13,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -30,7 +30,6 @@ import com.vodovoz.app.ui.adapter.PagingProductsAdapter
 import com.vodovoz.app.ui.adapter.PagingProductsAdapter.ViewMode
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.base.loadStateAdapter.LoadStateAdapter
 import com.vodovoz.app.ui.decoration.CategoryTabsMarginDecoration
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
@@ -38,11 +37,11 @@ import com.vodovoz.app.ui.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
-import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
 import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.model.CategoryUI
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -52,7 +51,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
-
+@AndroidEntryPoint
 class SearchFragment : ViewStateBaseFragment() {
 
     companion object {
@@ -61,7 +60,7 @@ class SearchFragment : ViewStateBaseFragment() {
     }
 
     private lateinit var binding: FragmentSearchBinding
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel: SearchViewModel by viewModels()
 
     private val space8 by lazy { resources.getDimension(R.dimen.space_8) }
     private val compositeDisposable = CompositeDisposable()
@@ -107,16 +106,8 @@ class SearchFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
-        subscribeSubjects()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[SearchViewModel::class.java]
         viewModel.updateDefaultSearchData()
+        subscribeSubjects()
     }
 
     private fun subscribeSubjects() {

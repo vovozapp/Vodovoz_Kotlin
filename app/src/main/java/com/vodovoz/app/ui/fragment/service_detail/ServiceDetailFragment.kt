@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -16,32 +16,25 @@ import com.vodovoz.app.databinding.FragmentServiceDetailsBinding
 import com.vodovoz.app.ui.adapter.ServiceNamesAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val SERVICE_TYPE = "SERVICE_TYPE"
 
+@AndroidEntryPoint
 class ServiceDetailFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentServiceDetailsBinding
-    private lateinit var viewModel: ServiceDetailViewModel
+    private val viewModel: ServiceDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
         getArgs()
     }
 
     override fun update() {
         viewModel.fetchServices()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[ServiceDetailViewModel::class.java]
     }
 
     private fun getArgs() {

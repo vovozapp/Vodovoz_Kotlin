@@ -9,14 +9,17 @@ import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.mapper.OrderDetailsMapper.mapToUI
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.OrderDetailsUI
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class OrderDetailsViewModel(
+@HiltViewModel
+class OrderDetailsViewModel @Inject constructor(
     private val dataRepository: DataRepository
 ) : ViewModel() {
 

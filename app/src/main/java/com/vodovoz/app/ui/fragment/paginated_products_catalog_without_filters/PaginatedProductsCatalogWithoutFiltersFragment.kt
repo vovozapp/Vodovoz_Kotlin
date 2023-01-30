@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -24,7 +24,6 @@ import com.vodovoz.app.ui.adapter.PagingProductsAdapter
 import com.vodovoz.app.ui.adapter.PagingProductsAdapter.ViewMode
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.base.loadStateAdapter.LoadStateAdapter
 import com.vodovoz.app.ui.decoration.CategoryTabsMarginDecoration
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
@@ -32,6 +31,7 @@ import com.vodovoz.app.ui.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
 import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogFragmentDirections
 import com.vodovoz.app.ui.model.CategoryUI
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -40,7 +40,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.Serializable
 
-
+@AndroidEntryPoint
 class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
 
     companion object {
@@ -49,7 +49,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
     }
 
     private lateinit var binding: FragmentProductsWithoutFiltersBinding
-    private lateinit var viewModel: PaginatedProductsCatalogWithoutFiltersViewModel
+    private val viewModel: PaginatedProductsCatalogWithoutFiltersViewModel by viewModels()
 
     private var viewMode: ViewMode = ViewMode.LIST
 
@@ -115,16 +115,8 @@ class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
         getArgs()
         subscribeSubjects()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as VodovozApplication).viewModelFactory
-        )[PaginatedProductsCatalogWithoutFiltersViewModel::class.java]
     }
 
     private fun getArgs() {
