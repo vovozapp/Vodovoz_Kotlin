@@ -1,12 +1,9 @@
 package com.vodovoz.app.ui.fragment.catalog
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
-import com.vodovoz.app.ui.base.ViewState
+import com.vodovoz.app.ui.base.*
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -19,33 +16,44 @@ import javax.inject.Inject
 @HiltViewModel
 class CatalogViewModel @Inject constructor(
     private val dataRepository: DataRepository
-) : ViewModel() {
-
-    private val viewStateMLD = MutableLiveData<ViewState>()
-    private val categoryUIListMLD = MutableLiveData<List<CategoryUI>>()
-
-    val viewStateLD: LiveData<ViewState> = viewStateMLD
-    val categoryUIListLD: LiveData<List<CategoryUI>> = categoryUIListMLD
+) : PagingStateViewModel<CatalogViewModel.CatalogState>(CatalogState()) {
 
     private val compositeDisposable = CompositeDisposable()
 
-    fun updateData() {
+    fun firstLoad() {
+        if (!state.isFirstLoad) {
+            uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
+            updateData()
+        }
+    }
+
+    fun refresh() {
+        uiStateListener.value =
+            state.copy(loadingPage = true)
+        updateData()
+    }
+
+    private fun updateData() {
         dataRepository.fetchCatalog()
             .subscribeOn(Schedulers.io())
-            .doOnSubscribe { viewStateMLD.value = ViewState.Loading() }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onSuccess = { response ->
                     when(response) {
-                        is ResponseEntity.Hide -> viewStateMLD.value = ViewState.Hide()
-                        is ResponseEntity.Error -> viewStateMLD.value = ViewState.Error(response.errorMessage)
+                        is ResponseEntity.Hide -> {}
+                        is ResponseEntity.Error -> state.copy(error = response.errorMessage.stringToErrorState(), loadingPage = false)
                         is ResponseEntity.Success -> {
-                            categoryUIListMLD.value = response.data.mapToUI()
-                            viewStateMLD.value = ViewState.Success()
+                            uiStateListener.value = state.copy(
+                                loadingPage = false,
+                                data = state.data.copy(itemsList = response.data.mapToUI()),
+                                error = null
+                            )
                         }
                     }
                 },
-                onError = { throwable -> viewStateMLD.value = ViewState.Error(throwable.message!!)}
+                onError = { throwable -> uiStateListener.value =
+                    state.copy(error = throwable.toErrorState(), loadingPage = false)
+                }
             ).addTo(compositeDisposable)
     }
 
@@ -54,4 +62,7 @@ class CatalogViewModel @Inject constructor(
         compositeDisposable.dispose()
     }
 
+    data class CatalogState(
+        val itemsList: List<CategoryUI> = emptyList()
+    ) : State
 }

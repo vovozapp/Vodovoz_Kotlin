@@ -16,7 +16,7 @@
             android:id="@+id/image"
             android:layout_width="60dp"
             android:layout_height="50dp"
-            android:src="@drawable/png_cart"
+
             android:paddingTop="@dimen/space_8"
             android:paddingBottom="@dimen/space_8"
             android:paddingStart="13dp"
