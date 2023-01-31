@@ -2,11 +2,15 @@ package com.vodovoz.app.ui.fragment.home.viewholders.homeorders
 
 import com.vodovoz.app.R
 import com.vodovoz.app.ui.fragment.home.adapter.Item
+import com.vodovoz.app.ui.fragment.slider.order_slider.OrdersSliderConfig
 import com.vodovoz.app.ui.model.OrderUI
 
 data class HomeOrders(
     val id : Int,
-    val items: List<OrderUI>
+    val items: List<OrderUI>,
+    val orderSliderConfig: OrdersSliderConfig = OrdersSliderConfig(
+        containTitleContainer = true
+    )
 ) : Item {
 
     override fun getItemViewType(): Int {

@@ -2,12 +2,16 @@ package com.vodovoz.app.ui.fragment.home.viewholders.homeproducts
 
 import com.vodovoz.app.R
 import com.vodovoz.app.ui.fragment.home.adapter.Item
+import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.CategoryUI
 
 data class HomeProducts(
     val id : Int,
-    val items: List<CategoryDetailUI>
+    val items: List<CategoryDetailUI>,
+    val productsSliderConfig: ProductsSliderConfig = ProductsSliderConfig(
+        containShowAllButton = true
+    )
 ) : Item {
 
     override fun getItemViewType(): Int {

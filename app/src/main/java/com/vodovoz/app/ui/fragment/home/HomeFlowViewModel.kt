@@ -45,6 +45,7 @@ import com.vodovoz.app.ui.fragment.home.viewholders.homepopulars.HomePopulars
 import com.vodovoz.app.ui.fragment.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.ui.fragment.home.viewholders.homepromotions.HomePromotions
 import com.vodovoz.app.ui.fragment.home.viewholders.hometriplenav.HomeTripleNav
+import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -101,7 +102,7 @@ class HomeFlowViewModel @Inject constructor(
                 .onEach {
                     val response = it.parseAdvertisingBannersSliderResponse()
                     if (response is ResponseEntity.Success) {
-                        val item = PeriodItem(1, HomeBanners(1, response.data.mapToUI()))
+                        val item = PeriodItem(1, HomeBanners(1, response.data.mapToUI(), bannerRatio = 0.41))
                         uiStateListener.value = state.copy(
                             loadingPage = false,
                             data = state.data.copy(items = state.data.items + item),
@@ -208,7 +209,7 @@ class HomeFlowViewModel @Inject constructor(
                 .onEach {
                     val response = it.parseCategoryBannersSliderResponse()
                     if (response is ResponseEntity.Success) {
-                        val item = PeriodItem(5, HomeBanners(5, response.data.mapToUI()))
+                        val item = PeriodItem(5, HomeBanners(5, response.data.mapToUI(), bannerRatio = 0.5))
                         uiStateListener.value = state.copy(
                             loadingPage = false,
                             data = state.data.copy(items = state.data.items + item),
@@ -448,7 +449,9 @@ class HomeFlowViewModel @Inject constructor(
                     .onEach {
                         val response = it.parseViewedProductsSliderResponse()
                         if (response is ResponseEntity.Success) {
-                            val item = PeriodItem(14, HomeProducts(14, response.data.mapToUI()))
+                            val item = PeriodItem(14, HomeProducts(14, response.data.mapToUI(), ProductsSliderConfig(
+                                containShowAllButton = false
+                            )))
                             uiStateListener.value = state.copy(
                                 loadingPage = false,
                                 data = state.data.copy(items = state.data.items + item),
