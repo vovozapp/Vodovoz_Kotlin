@@ -2,6 +2,7 @@ package com.vodovoz.app.di
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.vodovoz.app.data.MainApi
 import com.vodovoz.app.data.config.ApiConfig
 import com.vodovoz.app.data.remote.MapKitApi
 import com.vodovoz.app.data.remote.VodovozApi
@@ -62,6 +63,17 @@ abstract class NetworkModule {
         }
 
         @Provides
+        @Named("main")
+        fun providesMainRetrofit(okHttpClient: OkHttpClient): Retrofit {
+            return Retrofit.Builder()
+                .baseUrl(ApiConfig.VODOVOZ_URL)
+                .addConverterFactory(MoshiConverterFactory.create())
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                .client(okHttpClient)
+                .build()
+        }
+
+        @Provides
         @Named("mapkit")
         fun providesMapKitRetrofit(okHttpClient: OkHttpClient): Retrofit {
             return Retrofit.Builder()
@@ -81,6 +93,9 @@ abstract class NetworkModule {
 
         @Provides
         fun provideApi(@Named("default") retrofit: Retrofit): VodovozApi = retrofit.create()
+
+        @Provides
+        fun provideMainApi(@Named("main") retrofit: Retrofit): MainApi = retrofit.create()
 
         @Provides
         fun provideMapKitApi(@Named("mapkit") retrofit: Retrofit): MapKitApi = retrofit.create()

@@ -9,6 +9,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -61,6 +63,7 @@ class HomeFragment : ViewStateBaseFragment(),
 
     private lateinit var binding: FragmentMainHomeBinding
     private val viewModel: HomeViewModel by activityViewModels()
+    private val flowViewModel: HomeFlowViewModel by activityViewModels()
 
     private val advertisingBannersSliderFragment: BannersSliderFragment by lazy {
         BannersSliderFragment.newInstance(bannerRatio = 0.41) }
@@ -104,6 +107,16 @@ class HomeFragment : ViewStateBaseFragment(),
         super.onCreate(savedInstanceState)
         getArgs()
         initCallbacks()
+        observeUiState()
+    }
+
+    private fun observeUiState() {
+        lifecycleScope.launchWhenStarted {
+            flowViewModel.observeUiState()
+                .collect { homeState ->
+                    debugLog { "${homeState.data.items.map { it.id }.sorted()}" }
+                }
+        }
     }
 
     private fun getArgs() {
