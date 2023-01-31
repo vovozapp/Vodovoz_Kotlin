@@ -19,10 +19,18 @@
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_main_home.xml" value="0.2672082086361693" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_ordering.xml" value="0.2672082086361693" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_product_comments.xml" value="0.2672082086361693" />
+        <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_section_additional_info.xml" value="0.2672082086361693" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_slider_banner.xml" value="0.2672082086361693" />
+        <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_slider_brand.xml" value="0.2672082086361693" />
+        <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_slider_comment.xml" value="0.2672082086361693" />
+        <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_slider_country.xml" value="0.2672082086361693" />
+        <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_slider_history.xml" value="0.2672082086361693" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_slider_order.xml" value="0.2672082086361693" />
+        <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_slider_popular.xml" value="0.2672082086361693" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_slider_product.xml" value="0.2672082086361693" />
+        <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_slider_promotion.xml" value="0.2672082086361693" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_splash.xml" value="0.2663531423685336" />
+        <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/fragment_triple_navigation_home.xml" value="0.2672082086361693" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/view_holder_brand_with_name.xml" value="0.2672082086361693" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/view_holder_catalog_category.xml" value="0.2672082086361693" />
         <entry key="..\:/Vodovoz/VodovozKotlin/app/src/main/res/layout/view_holder_product_grid.xml" value="0.335" />

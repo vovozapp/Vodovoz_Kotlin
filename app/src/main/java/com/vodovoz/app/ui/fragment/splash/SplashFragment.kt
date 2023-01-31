@@ -8,6 +8,7 @@ import com.vodovoz.app.ui.base.BaseFragment
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.fragment.home.HomeViewModel
 import com.vodovoz.app.ui.fragment.main.MainFragment
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

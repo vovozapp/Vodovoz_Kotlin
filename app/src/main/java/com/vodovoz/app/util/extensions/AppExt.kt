@@ -10,7 +10,7 @@ inline fun Fragment.addOnBackPressedCallback(crossinline callback: () -> Unit) {
         }
     }
     this.requireActivity().onBackPressedDispatcher.addCallback(
-        this.requireActivity(),
+        this.viewLifecycleOwner,
         onBackPressedCallback
     )
 }
