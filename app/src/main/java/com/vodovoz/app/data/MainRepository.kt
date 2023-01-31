@@ -1,9 +1,6 @@
 package com.vodovoz.app.data
 
 import com.vodovoz.app.BuildConfig
-import com.vodovoz.app.data.model.common.*
-import com.vodovoz.app.data.model.features.CountriesSliderBundleEntity
-import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import javax.inject.Inject
 

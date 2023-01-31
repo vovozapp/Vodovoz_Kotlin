@@ -60,24 +60,33 @@ class HomeFlowViewModel @Inject constructor(
     private val localDataSource: LocalDataSource
 ) : PagingStateViewModel<HomeFlowViewModel.HomeState>(HomeState.idle()) {
 
-    fun loadPage() {
+    private fun loadPage() {
+        fetchAdvertisingBannersSlider()
+        fetchHistoriesSlider()
+        fetchPopularSlider()
+        fetchDiscountsSlider()
+        fetchCategoryBannersSlider()
+        fetchTopSlider()
+        fetchOrdersSlider()
+        fetchNoveltiesSlider()
+        fetchPromotionsSlider()
+        fetchBottomSlider()
+        fetchBrandsSlider()
+        fetchCountriesSlider()
+        fetchViewedProductsSlider()
+        fetchCommentsSlider()
+    }
+
+    fun firstLoad() {
         if (!state.isFirstLoad) {
-            uiStateListener.value = state.copy(isFirstLoad = true)
-            fetchAdvertisingBannersSlider()
-            fetchHistoriesSlider()
-            fetchPopularSlider()
-            fetchDiscountsSlider()
-            fetchCategoryBannersSlider()
-            fetchTopSlider()
-            fetchOrdersSlider()
-            fetchNoveltiesSlider()
-            fetchPromotionsSlider()
-            fetchBottomSlider()
-            fetchBrandsSlider()
-            fetchCountriesSlider()
-            fetchViewedProductsSlider()
-            fetchCommentsSlider()
+            uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
+            loadPage()
         }
+    }
+
+    fun refresh() {
+        uiStateListener.value = state.copy(loadingPage = true)
+        loadPage()
     }
 
     private fun fetchAdvertisingBannersSlider() {
@@ -95,7 +104,7 @@ class HomeFlowViewModel @Inject constructor(
                         val item = PeriodItem(1, HomeBanners(1, response.data.mapToUI()))
                         uiStateListener.value = state.copy(
                             loadingPage = false,
-                            data = state.data.copy(items = (state.data.items + item).sortedBy { item.id }),
+                            data = state.data.copy(items = state.data.items + item),
                             error = null
                         )
                     }
@@ -120,7 +129,7 @@ class HomeFlowViewModel @Inject constructor(
                         val item = PeriodItem(2, HomeHistories(2, response.data.mapToUI()))
                         uiStateListener.value = state.copy(
                             loadingPage = false,
-                            data = state.data.copy(items = (state.data.items + item).sortedBy { item.id }),
+                            data = state.data.copy(items = state.data.items + item),
                             error = null
                         )
                     }
@@ -145,7 +154,7 @@ class HomeFlowViewModel @Inject constructor(
                         val item = PeriodItem(3, HomePopulars(3, response.data.mapToUI()))
                         uiStateListener.value = state.copy(
                             loadingPage = false,
-                            data = state.data.copy(items = (state.data.items + item).sortedBy { item.id }),
+                            data = state.data.copy(items = state.data.items + item),
                             error = null
                         )
                     }
@@ -170,7 +179,7 @@ class HomeFlowViewModel @Inject constructor(
                         val item = PeriodItem(4, HomeProducts(4, response.data.mapToUI()))
                         uiStateListener.value = state.copy(
                             loadingPage = false,
-                            data = state.data.copy(items = (state.data.items + item).sortedBy { item.id }),
+                            data = state.data.copy(items = state.data.items + item),
                             error = null
                         )
 
@@ -202,7 +211,7 @@ class HomeFlowViewModel @Inject constructor(
                         val item = PeriodItem(5, HomeBanners(5, response.data.mapToUI()))
                         uiStateListener.value = state.copy(
                             loadingPage = false,
-                            data = state.data.copy(items = (state.data.items + item).sortedBy { item.id }),
+                            data = state.data.copy(items = state.data.items + item),
                             error = null
                         )
                     }
@@ -228,7 +237,7 @@ class HomeFlowViewModel @Inject constructor(
                         val item = PeriodItem(6, HomeProducts(6, response.data.mapToUI()))
                         uiStateListener.value = state.copy(
                             loadingPage = false,
-                            data = state.data.copy(items = (state.data.items + item).sortedBy { item.id }),
+                            data = state.data.copy(items = state.data.items + item),
                             error = null
                         )
 
@@ -262,7 +271,7 @@ class HomeFlowViewModel @Inject constructor(
                             val item = PeriodItem(7, HomeOrders(7, response.data.mapToUI()))
                             uiStateListener.value = state.copy(
                                 loadingPage = false,
-                                data = state.data.copy(items = (state.data.items + item).sortedBy { item.id }),
+                                data = state.data.copy(items = state.data.items + item),
                                 error = null
                             )
                         }
@@ -288,7 +297,7 @@ class HomeFlowViewModel @Inject constructor(
                         val item = PeriodItem(9, HomeProducts(9, response.data.mapToUI()))
                         uiStateListener.value = state.copy(
                             loadingPage = false,
-                            data = state.data.copy(items = (state.data.items + item).sortedBy { item.id }),
+                            data = state.data.copy(items = state.data.items + item),
                             error = null
                         )
 
@@ -328,7 +337,7 @@ class HomeFlowViewModel @Inject constructor(
                         )
                         uiStateListener.value = state.copy(
                             loadingPage = false,
-                            data = state.data.copy(items = (state.data.items + item).sortedBy { item.id }),
+                            data = state.data.copy(items = state.data.items + item),
                             error = null
                         )
 
@@ -358,7 +367,7 @@ class HomeFlowViewModel @Inject constructor(
                         val item = PeriodItem(11, HomeProducts(11, response.data.mapToUI()))
                         uiStateListener.value = state.copy(
                             loadingPage = false,
-                            data = state.data.copy(items = (state.data.items + item).sortedBy { item.id }),
+                            data = state.data.copy(items = state.data.items + item),
                             error = null
                         )
 
@@ -390,7 +399,7 @@ class HomeFlowViewModel @Inject constructor(
                         val item = PeriodItem(12, HomeBrands(12, response.data.mapToUI()))
                         uiStateListener.value = state.copy(
                             loadingPage = false,
-                            data = state.data.copy(items = (state.data.items + item).sortedBy { item.id }),
+                            data = state.data.copy(items = state.data.items + item),
                             error = null
                         )
                     }
@@ -415,7 +424,7 @@ class HomeFlowViewModel @Inject constructor(
                         val item = PeriodItem(13, HomeCountries(13, response.data.mapToUI()))
                         uiStateListener.value = state.copy(
                             loadingPage = false,
-                            data = state.data.copy(items = (state.data.items + item).sortedBy { item.id }),
+                            data = state.data.copy(items = state.data.items + item),
                             error = null
                         )
                     }
@@ -442,7 +451,7 @@ class HomeFlowViewModel @Inject constructor(
                             val item = PeriodItem(14, HomeProducts(14, response.data.mapToUI()))
                             uiStateListener.value = state.copy(
                                 loadingPage = false,
-                                data = state.data.copy(items = (state.data.items + item).sortedBy { item.id }),
+                                data = state.data.copy(items = state.data.items + item),
                                 error = null
                             )
 
@@ -477,7 +486,7 @@ class HomeFlowViewModel @Inject constructor(
                         val item = PeriodItem(15, HomeComments(15, response.data.mapToUI()))
                         uiStateListener.value = state.copy(
                             loadingPage = false,
-                            data = state.data.copy(items = (state.data.items + item).sortedBy { item.id }),
+                            data = state.data.copy(items = state.data.items + item),
                             error = null
                         )
                     }
