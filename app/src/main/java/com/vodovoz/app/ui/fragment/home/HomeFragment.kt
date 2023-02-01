@@ -217,6 +217,13 @@ class HomeFragment : ViewStateBaseFragment(),
             override fun onShowAllFavoritesClick() {
                 findNavController().navigate(R.id.favoriteFragment)
             }
+
+            //POSITION_3
+            override fun onCategoryClick(id: Long?) {
+                id?.let {
+                    findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogFragment(id))
+                }
+            }
         }
     }
 

@@ -39,4 +39,7 @@ interface HomeMainClickListener {
     fun onOrdersHistoryClick()
     fun onShowAllFavoritesClick()
 
+    //POSITION_3
+    fun onCategoryClick(id: Long?)
+
 }
