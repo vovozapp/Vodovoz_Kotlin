@@ -159,6 +159,17 @@ class HomeFragment : ViewStateBaseFragment(),
             override fun onHowToOrderClick() {
                 findNavController().navigate(HomeFragmentDirections.actionToHowToOrderFragment())
             }
+
+            //POSITION_12
+            override fun onBrandClick(id: Long) {
+                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Brand(id)
+                ))
+            }
+
+            override fun onShowAllBrandsClick() {
+                findNavController().navigate(HomeFragmentDirections.actionToAllBrandsFragment())
+            }
         }
     }
 

@@ -15,4 +15,8 @@ interface HomeMainClickListener {
     fun onServicesClick()
     fun onContactsClick()
     fun onHowToOrderClick()
+
+    //POSITION_12
+    fun onBrandClick(id: Long)
+    fun onShowAllBrandsClick()
 }
