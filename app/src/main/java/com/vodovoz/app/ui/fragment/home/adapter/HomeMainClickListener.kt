@@ -19,4 +19,10 @@ interface HomeMainClickListener {
     //POSITION_12
     fun onBrandClick(id: Long)
     fun onShowAllBrandsClick()
+
+    //POSITION_15
+    fun onCommentsClick(id: Long?)
+    fun onSendCommentAboutShop()
+
+
 }

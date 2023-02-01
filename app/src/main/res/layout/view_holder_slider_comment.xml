@@ -41,6 +41,8 @@
             style="@style/TextViewSmallGray"
             android:layout_width="match_parent"
             android:layout_height="@dimen/comment_slider_text_height"
+            android:maxLines="3"
+            android:ellipsize="end"
             android:layout_marginTop="@dimen/space_8"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -170,6 +170,17 @@ class HomeFragment : ViewStateBaseFragment(),
             override fun onShowAllBrandsClick() {
                 findNavController().navigate(HomeFragmentDirections.actionToAllBrandsFragment())
             }
+
+            //POSITION_15
+            override fun onCommentsClick(id: Long?) {}
+
+            override fun onSendCommentAboutShop() {
+                if (flowViewModel.isLoginAlready()) {
+                    findNavController().navigate(HomeFragmentDirections.actionToSendCommentAboutShopBottomDialog())
+                } else {
+                    findNavController().navigate(R.id.profileFragment)
+                }
+            }
         }
     }
 

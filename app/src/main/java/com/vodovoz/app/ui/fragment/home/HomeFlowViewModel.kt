@@ -1,6 +1,7 @@
 package com.vodovoz.app.ui.fragment.home
 
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.LocalSyncExtensions.syncCartQuantity
 import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
 import com.vodovoz.app.data.MainRepository
@@ -56,7 +57,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeFlowViewModel @Inject constructor(
     private val repository: MainRepository,
-    private val localDataSource: LocalDataSource
+    private val localDataSource: LocalDataSource,
+    private val dataRepository: DataRepository
 ) : PagingStateViewModel<HomeFlowViewModel.HomeState>(HomeState.idle()) {
 
     private fun loadPage() {
@@ -748,6 +750,8 @@ class HomeFlowViewModel @Inject constructor(
                 .collect()
         }
     }
+
+    fun isLoginAlready() = dataRepository.isAlreadyLogin()
 
     data class PositionItem(
         val position: Int,

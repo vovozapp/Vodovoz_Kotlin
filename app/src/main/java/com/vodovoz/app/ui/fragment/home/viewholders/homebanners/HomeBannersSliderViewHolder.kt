@@ -28,7 +28,7 @@ class HomeBannersSliderViewHolder(
     private fun initBannerRecyclerView(ratio: Double, items: HomeBanners) {
         val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
         binding.vpBanners.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.vpBanners.adapter = HomeBannersInnerAdapter(getHomeBannersSliderViewHolder()).apply {
+        binding.vpBanners.adapter = HomeBannersInnerAdapter(getHomeBannersSliderClickListener()).apply {
             submitList(items.items)
         }
         binding.vpBanners.apply {
@@ -71,7 +71,7 @@ class HomeBannersSliderViewHolder(
         )
     }
 
-    private fun getHomeBannersSliderViewHolder() : HomeBannersSliderClickListener {
+    private fun getHomeBannersSliderClickListener() : HomeBannersSliderClickListener {
         return object : HomeBannersSliderClickListener {
             override fun onBannerClick(entity: ActionEntity?) {
                 clickListener.onBannerClick(entity)

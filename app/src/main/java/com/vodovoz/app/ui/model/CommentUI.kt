@@ -1,6 +1,6 @@
 package com.vodovoz.app.ui.model
 
-class CommentUI(
+data class CommentUI(
     val id: Long? = null,
     val text: String? = null,
     val author: String? = null,
