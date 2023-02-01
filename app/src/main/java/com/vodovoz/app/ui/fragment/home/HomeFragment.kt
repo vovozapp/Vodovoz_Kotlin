@@ -189,6 +189,11 @@ class HomeFragment : ViewStateBaseFragment(),
                 ))
             }
 
+            //POSITION_2
+            override fun onHistoryClick(id: Long) {
+                findNavController().navigate(HomeFragmentDirections.actionToFullScreenHistorySliderFragment(id))
+            }
+
         }
     }
 

@@ -26,4 +26,7 @@ interface HomeMainClickListener {
 
     //POSITION_13
     fun onCountryClick(id: Long)
+
+    //POSITION_2
+    fun onHistoryClick(id: Long)
 }
