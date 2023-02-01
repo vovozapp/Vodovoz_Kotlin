@@ -2,14 +2,8 @@ package com.vodovoz.app.ui.fragment.home.viewholders.homebottominfo
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SortedList
 import com.vodovoz.app.databinding.FragmentSectionAdditionalInfoBinding
-import com.vodovoz.app.databinding.FragmentSliderBannerBinding
 import com.vodovoz.app.ui.fragment.home.adapter.HomeMainClickListener
-import com.vodovoz.app.ui.fragment.home.adapter.Item
-import com.vodovoz.app.ui.model.BannerUI
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 
 class HomeBottomInfoViewHolder(
     view: View,
@@ -19,11 +13,16 @@ class HomeBottomInfoViewHolder(
     private val binding: FragmentSectionAdditionalInfoBinding = FragmentSectionAdditionalInfoBinding.bind(view)
 
     init {
-
+        binding.aboutApp.setOnClickListener { clickListener.onAboutAppClick() }
+        binding.aboutDelivery.setOnClickListener { clickListener.onAboutDeliveryClick() }
+        binding.aboutPay.setOnClickListener { clickListener.onAboutPayClick() }
+        binding.aboutShop.setOnClickListener { clickListener.onAboutShopClick() }
+        binding.services.setOnClickListener { clickListener.onServicesClick() }
+        binding.contacts.setOnClickListener { clickListener.onContactsClick() }
+        binding.howToOrder.setOnClickListener { clickListener.onHowToOrderClick() }
     }
 
     fun bind() {
 
     }
-
 }

@@ -15,6 +15,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
+import com.vodovoz.app.data.config.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentMainHomeBinding
 import com.vodovoz.app.ui.base.ViewState
@@ -116,8 +117,47 @@ class HomeFragment : ViewStateBaseFragment(),
     private fun getMainClickListener() : HomeMainClickListener {
         return object: HomeMainClickListener {
 
+            //POSITION_1
             override fun onBannerClick(actionEntity: ActionEntity?) {
                 actionEntity?.invoke(findNavController(), requireActivity())
+            }
+
+            //POSITION_16
+            override fun onAboutAppClick() {
+                findNavController().navigate(HomeFragmentDirections.actionToAboutAppDialogFragment())
+            }
+
+            override fun onAboutDeliveryClick() {
+                findNavController().navigate(HomeFragmentDirections.actionToWebViewFragment(
+                    ApiConfig.ABOUT_DELIVERY_URL,
+                    "О доставке"
+                ))
+            }
+
+            override fun onAboutPayClick() {
+                findNavController().navigate(HomeFragmentDirections.actionToWebViewFragment(
+                    ApiConfig.ABOUT_PAY_URL,
+                    "Об оплате"
+                ))
+            }
+
+            override fun onAboutShopClick() {
+                findNavController().navigate(HomeFragmentDirections.actionToWebViewFragment(
+                    ApiConfig.ABOUT_SHOP_URL,
+                    "О магазине"
+                ))
+            }
+
+            override fun onServicesClick() {
+                findNavController().navigate(HomeFragmentDirections.actionToAboutServicesDialogFragment())
+            }
+
+            override fun onContactsClick() {
+                findNavController().navigate(HomeFragmentDirections.actionToContactsFragment())
+            }
+
+            override fun onHowToOrderClick() {
+                findNavController().navigate(HomeFragmentDirections.actionToHowToOrderFragment())
             }
         }
     }
