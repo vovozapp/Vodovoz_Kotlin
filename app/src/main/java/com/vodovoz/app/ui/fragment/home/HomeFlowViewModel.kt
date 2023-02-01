@@ -29,7 +29,6 @@ import com.vodovoz.app.mapper.CountriesSliderBundleMapper.mapToUI
 import com.vodovoz.app.mapper.HistoryMapper.mapToUI
 import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.mapper.PromotionMapper.mapToUI
-import com.vodovoz.app.ui.base.PagingState.Companion.idle
 import com.vodovoz.app.ui.base.PagingStateViewModel
 import com.vodovoz.app.ui.base.State
 import com.vodovoz.app.ui.base.toErrorState
@@ -50,7 +49,6 @@ import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -96,17 +94,39 @@ class HomeFlowViewModel @Inject constructor(
                 .catch {
                     debugLog { "fetch adv banners error ${it.localizedMessage}" }
                     uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
+                        state.copy(
+                            error = it.toErrorState(),
+                            loadingPage = false,
+                            data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_1,
+                                    null
+                                )
+                            )
+                        )
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseAdvertisingBannersSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        val item = PeriodItem(1, HomeBanners(1, response.data.mapToUI(), bannerRatio = 0.41))
-                        uiStateListener.value = state.copy(
+                    uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val item = PositionItem(
+                            POSITION_1,
+                            HomeBanners(1, response.data.mapToUI(), bannerRatio = 0.41)
+                        )
+                        state.copy(
                             loadingPage = false,
                             data = state.data.copy(items = state.data.items + item),
                             error = null
+                        )
+                    } else {
+                        state.copy(
+                            loadingPage = false,
+                            data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_1,
+                                    null
+                                )
+                            )
                         )
                     }
                 }
@@ -121,17 +141,34 @@ class HomeFlowViewModel @Inject constructor(
                 .catch {
                     debugLog { "fetch histories error ${it.localizedMessage}" }
                     uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
+                        state.copy(
+                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_2,
+                                    null
+                                )
+                            )
+                        )
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseHistoriesSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        val item = PeriodItem(2, HomeHistories(2, response.data.mapToUI()))
-                        uiStateListener.value = state.copy(
+                    uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val item =
+                            PositionItem(POSITION_2, HomeHistories(2, response.data.mapToUI()))
+                        state.copy(
                             loadingPage = false,
                             data = state.data.copy(items = state.data.items + item),
                             error = null
+                        )
+                    } else {
+                        state.copy(
+                            loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_2,
+                                    null
+                                )
+                            )
                         )
                     }
                 }
@@ -146,17 +183,34 @@ class HomeFlowViewModel @Inject constructor(
                 .catch {
                     debugLog { "fetch populars error ${it.localizedMessage}" }
                     uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
+                        state.copy(
+                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_3,
+                                    null
+                                )
+                            )
+                        )
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parsePopularSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        val item = PeriodItem(3, HomePopulars(3, response.data.mapToUI()))
-                        uiStateListener.value = state.copy(
+                    uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val item =
+                            PositionItem(POSITION_3, HomePopulars(3, response.data.mapToUI()))
+                        state.copy(
                             loadingPage = false,
                             data = state.data.copy(items = state.data.items + item),
                             error = null
+                        )
+                    } else {
+                        state.copy(
+                            loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_3,
+                                    null
+                                )
+                            )
                         )
                     }
                 }
@@ -171,18 +225,21 @@ class HomeFlowViewModel @Inject constructor(
                 .catch {
                     debugLog { "fetch discount slider error ${it.localizedMessage}" }
                     uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
+                        state.copy(
+                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_4,
+                                    null
+                                )
+                            )
+                        )
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseDiscountSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        val item = PeriodItem(4, HomeProducts(4, response.data.mapToUI()))
-                        uiStateListener.value = state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
+                    uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val item =
+                            PositionItem(POSITION_4, HomeProducts(4, response.data.mapToUI()))
 
                         response.data.forEach { categoryDetailEntity ->
                             categoryDetailEntity.productEntityList.syncFavoriteProducts(
@@ -190,6 +247,21 @@ class HomeFlowViewModel @Inject constructor(
                             )
                             categoryDetailEntity.productEntityList.syncCartQuantity(localDataSource)
                         }
+
+                        state.copy(
+                            loadingPage = false,
+                            data = state.data.copy(items = state.data.items + item),
+                            error = null
+                        )
+                    } else {
+                        state.copy(
+                            loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_4,
+                                    null
+                                )
+                            )
+                        )
                     }
                 }
                 .flowOn(Dispatchers.Default)
@@ -203,17 +275,36 @@ class HomeFlowViewModel @Inject constructor(
                 .catch {
                     debugLog { "fetch category banners error ${it.localizedMessage}" }
                     uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
+                        state.copy(
+                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_5,
+                                    null
+                                )
+                            )
+                        )
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseCategoryBannersSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        val item = PeriodItem(5, HomeBanners(5, response.data.mapToUI(), bannerRatio = 0.5))
-                        uiStateListener.value = state.copy(
+                    uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val item = PositionItem(
+                            POSITION_5,
+                            HomeBanners(5, response.data.mapToUI(), bannerRatio = 0.5)
+                        )
+                        state.copy(
                             loadingPage = false,
                             data = state.data.copy(items = state.data.items + item),
                             error = null
+                        )
+                    } else {
+                        state.copy(
+                            loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_5,
+                                    null
+                                )
+                            )
                         )
                     }
                 }
@@ -228,19 +319,21 @@ class HomeFlowViewModel @Inject constructor(
                 .catch {
                     debugLog { "fetch top slider error ${it.localizedMessage}" }
                     uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
+                        state.copy(
+                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_6,
+                                    null
+                                )
+                            )
+                        )
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseTopSliderResponse()
-                    if (response is ResponseEntity.Success) {
-
-                        val item = PeriodItem(6, HomeProducts(6, response.data.mapToUI()))
-                        uiStateListener.value = state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
+                    uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val item =
+                            PositionItem(POSITION_6, HomeProducts(6, response.data.mapToUI()))
 
                         response.data.forEach { categoryDetailEntity ->
                             categoryDetailEntity.productEntityList.syncFavoriteProducts(
@@ -248,6 +341,21 @@ class HomeFlowViewModel @Inject constructor(
                             )
                             categoryDetailEntity.productEntityList.syncCartQuantity(localDataSource)
                         }
+
+                        state.copy(
+                            loadingPage = false,
+                            data = state.data.copy(items = state.data.items + item),
+                            error = null
+                        )
+                    } else {
+                        state.copy(
+                            loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_6,
+                                    null
+                                )
+                            )
+                        )
                     }
                 }
                 .flowOn(Dispatchers.Default)
@@ -263,17 +371,34 @@ class HomeFlowViewModel @Inject constructor(
                     .catch {
                         debugLog { "fetch orders slider error ${it.localizedMessage}" }
                         uiStateListener.value =
-                            state.copy(error = it.toErrorState(), loadingPage = false)
+                            state.copy(
+                                error = it.toErrorState(), loadingPage = false, data = state.data.copy(
+                                    items = state.data.items + PositionItem(
+                                        POSITION_7,
+                                        null
+                                    )
+                                )
+                            )
                     }
                     .flowOn(Dispatchers.IO)
                     .onEach {
                         val response = it.parseOrderSliderResponse()
-                        if (response is ResponseEntity.Success) {
-                            val item = PeriodItem(7, HomeOrders(7, response.data.mapToUI()))
-                            uiStateListener.value = state.copy(
+                        uiStateListener.value = if (response is ResponseEntity.Success) {
+                            val item =
+                                PositionItem(POSITION_7, HomeOrders(7, response.data.mapToUI()))
+                            state.copy(
                                 loadingPage = false,
                                 data = state.data.copy(items = state.data.items + item),
                                 error = null
+                            )
+                        } else {
+                            state.copy(
+                                loadingPage = false, data = state.data.copy(
+                                    items = state.data.items + PositionItem(
+                                        POSITION_7,
+                                        null
+                                    )
+                                )
                             )
                         }
                     }
@@ -289,18 +414,21 @@ class HomeFlowViewModel @Inject constructor(
                 .catch {
                     debugLog { "fetch novelties error ${it.localizedMessage}" }
                     uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
+                        state.copy(
+                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_9,
+                                    null
+                                )
+                            )
+                        )
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseNoveltiesSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        val item = PeriodItem(9, HomeProducts(9, response.data.mapToUI()))
-                        uiStateListener.value = state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
+                    uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val item =
+                            PositionItem(POSITION_9, HomeProducts(9, response.data.mapToUI()))
 
                         response.data.forEach { categoryDetailEntity ->
                             categoryDetailEntity.productEntityList.syncFavoriteProducts(
@@ -308,6 +436,21 @@ class HomeFlowViewModel @Inject constructor(
                             )
                             categoryDetailEntity.productEntityList.syncCartQuantity(localDataSource)
                         }
+
+                        state.copy(
+                            loadingPage = false,
+                            data = state.data.copy(items = state.data.items + item),
+                            error = null
+                        )
+                    } else {
+                        state.copy(
+                            loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_9,
+                                    null
+                                )
+                            )
+                        )
                     }
                 }
                 .flowOn(Dispatchers.Default)
@@ -321,14 +464,21 @@ class HomeFlowViewModel @Inject constructor(
                 .catch {
                     debugLog { "fetch promotions slider error ${it.localizedMessage}" }
                     uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
+                        state.copy(
+                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_10,
+                                    null
+                                )
+                            )
+                        )
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parsePromotionSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        val item = PeriodItem(
-                            10, HomePromotions(
+                    uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val item = PositionItem(
+                            POSITION_10, HomePromotions(
                                 10, PromotionsSliderBundleUI(
                                     title = "Акции",
                                     containShowAllButton = true,
@@ -336,16 +486,26 @@ class HomeFlowViewModel @Inject constructor(
                                 )
                             )
                         )
-                        uiStateListener.value = state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
 
                         response.data.forEach { promotionEntity ->
                             promotionEntity.productEntityList.syncFavoriteProducts(localDataSource)
                             promotionEntity.productEntityList.syncCartQuantity(localDataSource)
                         }
+
+                        state.copy(
+                            loadingPage = false,
+                            data = state.data.copy(items = state.data.items + item),
+                            error = null
+                        )
+                    } else {
+                        state.copy(
+                            loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_10,
+                                    null
+                                )
+                            )
+                        )
                     }
                 }
                 .flowOn(Dispatchers.Default)
@@ -359,18 +519,21 @@ class HomeFlowViewModel @Inject constructor(
                 .catch {
                     debugLog { "fetch bottom slider error ${it.localizedMessage}" }
                     uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
+                        state.copy(
+                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_11,
+                                    null
+                                )
+                            )
+                        )
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseBottomSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        val item = PeriodItem(11, HomeProducts(11, response.data.mapToUI()))
-                        uiStateListener.value = state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
+                    uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val item =
+                            PositionItem(POSITION_11, HomeProducts(11, response.data.mapToUI()))
 
                         response.data.forEach { categoryDetailEntity ->
                             categoryDetailEntity.productEntityList.syncFavoriteProducts(
@@ -378,6 +541,21 @@ class HomeFlowViewModel @Inject constructor(
                             )
                             categoryDetailEntity.productEntityList.syncCartQuantity(localDataSource)
                         }
+
+                        state.copy(
+                            loadingPage = false,
+                            data = state.data.copy(items = state.data.items + item),
+                            error = null
+                        )
+                    } else {
+                        state.copy(
+                            loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_11,
+                                    null
+                                )
+                            )
+                        )
                     }
                 }
                 .flowOn(Dispatchers.Default)
@@ -391,17 +569,34 @@ class HomeFlowViewModel @Inject constructor(
                 .catch {
                     debugLog { "fetch brands slider error ${it.localizedMessage}" }
                     uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
+                        state.copy(
+                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_12,
+                                    null
+                                )
+                            )
+                        )
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseBrandsSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        val item = PeriodItem(12, HomeBrands(12, response.data.mapToUI()))
-                        uiStateListener.value = state.copy(
+                    uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val item =
+                            PositionItem(POSITION_12, HomeBrands(12, response.data.mapToUI()))
+                        state.copy(
                             loadingPage = false,
                             data = state.data.copy(items = state.data.items + item),
                             error = null
+                        )
+                    } else {
+                        state.copy(
+                            loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_12,
+                                    null
+                                )
+                            )
                         )
                     }
                 }
@@ -416,17 +611,34 @@ class HomeFlowViewModel @Inject constructor(
                 .catch {
                     debugLog { "fetch countries slider error ${it.localizedMessage}" }
                     uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
+                        state.copy(
+                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_13,
+                                    null
+                                )
+                            )
+                        )
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseCountriesSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        val item = PeriodItem(13, HomeCountries(13, response.data.mapToUI()))
-                        uiStateListener.value = state.copy(
+                    uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val item =
+                            PositionItem(POSITION_13, HomeCountries(13, response.data.mapToUI()))
+                        state.copy(
                             loadingPage = false,
                             data = state.data.copy(items = state.data.items + item),
                             error = null
+                        )
+                    } else {
+                        state.copy(
+                            loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_13,
+                                    null
+                                )
+                            )
                         )
                     }
                 }
@@ -443,19 +655,25 @@ class HomeFlowViewModel @Inject constructor(
                     .catch {
                         debugLog { "fetch viewed products slider error ${it.localizedMessage}" }
                         uiStateListener.value =
-                            state.copy(error = it.toErrorState(), loadingPage = false)
+                            state.copy(
+                                error = it.toErrorState(), loadingPage = false, data = state.data.copy(
+                                    items = state.data.items + PositionItem(
+                                        POSITION_14,
+                                        null
+                                    )
+                                )
+                            )
                     }
                     .flowOn(Dispatchers.IO)
                     .onEach {
                         val response = it.parseViewedProductsSliderResponse()
-                        if (response is ResponseEntity.Success) {
-                            val item = PeriodItem(14, HomeProducts(14, response.data.mapToUI(), ProductsSliderConfig(
-                                containShowAllButton = false
-                            )))
-                            uiStateListener.value = state.copy(
-                                loadingPage = false,
-                                data = state.data.copy(items = state.data.items + item),
-                                error = null
+                        uiStateListener.value = if (response is ResponseEntity.Success) {
+                            val item = PositionItem(
+                                POSITION_14, HomeProducts(
+                                    14, response.data.mapToUI(), ProductsSliderConfig(
+                                        containShowAllButton = false
+                                    )
+                                )
                             )
 
                             response.data.forEach { categoryDetailEntity ->
@@ -466,6 +684,21 @@ class HomeFlowViewModel @Inject constructor(
                                     localDataSource
                                 )
                             }
+
+                            state.copy(
+                                loadingPage = false,
+                                data = state.data.copy(items = state.data.items + item),
+                                error = null
+                            )
+                        } else {
+                            state.copy(
+                                loadingPage = false, data = state.data.copy(
+                                    items = state.data.items + PositionItem(
+                                        POSITION_14,
+                                        null
+                                    )
+                                )
+                            )
                         }
                     }
                     .flowOn(Dispatchers.Default)
@@ -480,17 +713,34 @@ class HomeFlowViewModel @Inject constructor(
                 .catch {
                     debugLog { "fetch comments slider error ${it.localizedMessage}" }
                     uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
+                        state.copy(
+                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_15,
+                                    null
+                                )
+                            )
+                        )
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseCommentsSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        val item = PeriodItem(15, HomeComments(15, response.data.mapToUI()))
-                        uiStateListener.value = state.copy(
+                    uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val item =
+                            PositionItem(POSITION_15, HomeComments(15, response.data.mapToUI()))
+                        state.copy(
                             loadingPage = false,
                             data = state.data.copy(items = state.data.items + item),
                             error = null
+                        )
+                    } else {
+                        state.copy(
+                            loadingPage = false, data = state.data.copy(
+                                items = state.data.items + PositionItem(
+                                    POSITION_15,
+                                    null
+                                )
+                            )
                         )
                     }
                 }
@@ -499,24 +749,45 @@ class HomeFlowViewModel @Inject constructor(
         }
     }
 
-    data class PeriodItem(
-        val id: Int,
-        val item: Item
+    data class PositionItem(
+        val position: Int,
+        val item: Item?
     )
 
     data class HomeState(
-        val items: List<PeriodItem>
+        val items: List<PositionItem>
     ) : State {
 
         companion object {
             fun idle(): HomeState {
                 return HomeState(
                     listOf(
-                        PeriodItem(8, HomeTripleNav(8)),
-                        PeriodItem(16, HomeBottomInfo(16))
+                        PositionItem(POSITION_8, HomeTripleNav(8)),
+                        PositionItem(POSITION_16, HomeBottomInfo(16))
                     )
                 )
             }
         }
+    }
+
+    companion object {
+        const val POSITION_1 = 1
+        const val POSITION_2 = 2
+        const val POSITION_3 = 3
+        const val POSITION_4 = 4
+        const val POSITION_5 = 5
+        const val POSITION_6 = 6
+        const val POSITION_7 = 7
+        const val POSITION_8 = 8
+        const val POSITION_9 = 9
+        const val POSITION_10 = 10
+        const val POSITION_11 = 11
+        const val POSITION_12 = 12
+        const val POSITION_13 = 13
+        const val POSITION_14 = 14
+        const val POSITION_15 = 15
+        const val POSITION_16 = 16
+
+        const val POSITIONS_COUNT = 16
     }
 }

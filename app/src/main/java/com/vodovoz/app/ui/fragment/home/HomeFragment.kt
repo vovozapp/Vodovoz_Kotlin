@@ -22,6 +22,7 @@ import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragment
 import com.vodovoz.app.ui.fragment.catalog.CatalogFragmentDirections
+import com.vodovoz.app.ui.fragment.home.adapter.HomeMainClickListener
 import com.vodovoz.app.ui.fragment.home_bottom_info.BottomInfoFragment
 import com.vodovoz.app.ui.fragment.home_triple_navigation.TripleNavigationHomeFragment
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
@@ -103,18 +104,39 @@ class HomeFragment : ViewStateBaseFragment(),
     private val commentsSliderFragment: CommentsSliderFragment by lazy { CommentsSliderFragment() }
     private val bottomInfoFragment: BottomInfoFragment by lazy { BottomInfoFragment() }
 
+    private val homeController by lazy { HomeController(requireContext(), viewLifecycleOwner, flowViewModel, getMainClickListener()) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getArgs()
         initCallbacks()
-        observeUiState()
+        //observeUiState()
+    }
+
+    private fun getMainClickListener() : HomeMainClickListener {
+        return object: HomeMainClickListener {
+
+            override fun onBannerClick(actionEntity: ActionEntity?) {
+                actionEntity?.invoke(findNavController(), requireActivity())
+            }
+        }
     }
 
     private fun observeUiState() {
         lifecycleScope.launchWhenStarted {
             flowViewModel.observeUiState()
                 .collect { homeState ->
-                    debugLog { "${homeState.data.items.map { it.id }.sorted()}" }
+
+                    if (homeState.loadingPage) { onStateLoading() }
+
+                    if (homeState.data.items.size == HomeFlowViewModel.POSITIONS_COUNT) {
+                        onStateSuccess()
+                        val list =
+                            homeState.data.items.sortedBy { it.position }.mapNotNull { it.item }
+                        homeController.submitList(list)
+                    }
+
+                    debugLog { "${homeState.data.items.map { it.position }.sorted()}" }
                 }
         }
     }
