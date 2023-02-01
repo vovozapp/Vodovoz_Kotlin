@@ -33,4 +33,10 @@ interface HomeMainClickListener {
     //POSITION_7
     fun onOrderClick(id: Long?)
     fun onShowAllOrdersClick()
+
+    //POSITION_8
+    fun onLastPurchasesClick()
+    fun onOrdersHistoryClick()
+    fun onShowAllFavoritesClick()
+
 }

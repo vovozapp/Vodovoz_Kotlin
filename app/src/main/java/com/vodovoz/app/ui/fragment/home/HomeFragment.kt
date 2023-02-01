@@ -204,6 +204,19 @@ class HomeFragment : ViewStateBaseFragment(),
             override fun onShowAllOrdersClick() {
                 findNavController().navigate(HomeFragmentDirections.actionToAllOrdersFragment())
             }
+
+            //POSITION_8
+            override fun onLastPurchasesClick() {
+                findNavController().navigate(HomeFragmentDirections.actionToPastPurchasesFragment())
+            }
+
+            override fun onOrdersHistoryClick() {
+                findNavController().navigate(HomeFragmentDirections.actionToAllOrdersFragment())
+            }
+
+            override fun onShowAllFavoritesClick() {
+                findNavController().navigate(R.id.favoriteFragment)
+            }
         }
     }
 

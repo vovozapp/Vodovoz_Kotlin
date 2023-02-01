@@ -2,10 +2,8 @@ package com.vodovoz.app.ui.fragment.home.viewholders.hometriplenav
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.vodovoz.app.databinding.FragmentSliderProductBinding
 import com.vodovoz.app.databinding.FragmentTripleNavigationHomeBinding
 import com.vodovoz.app.ui.fragment.home.adapter.HomeMainClickListener
-import com.vodovoz.app.ui.model.CategoryDetailUI
 
 class HomeTripleNavViewHolder(
     view: View,
@@ -15,12 +13,12 @@ class HomeTripleNavViewHolder(
     private val binding: FragmentTripleNavigationHomeBinding = FragmentTripleNavigationHomeBinding.bind(view)
 
     init {
-
+        binding.lastPurchases.setOnClickListener { clickListener.onLastPurchasesClick() }
+        binding.favorite.setOnClickListener { clickListener.onShowAllFavoritesClick() }
+        binding.ordersHistory.setOnClickListener { clickListener.onOrdersHistoryClick() }
     }
 
     fun bind() {
 
     }
-
-
 }
