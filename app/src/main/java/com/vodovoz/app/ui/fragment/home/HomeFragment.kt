@@ -181,6 +181,14 @@ class HomeFragment : ViewStateBaseFragment(),
                     findNavController().navigate(R.id.profileFragment)
                 }
             }
+
+            //POSITION_13
+            override fun onCountryClick(id: Long) {
+                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Country(id)
+                ))
+            }
+
         }
     }
 

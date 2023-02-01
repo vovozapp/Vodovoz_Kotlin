@@ -24,5 +24,6 @@ interface HomeMainClickListener {
     fun onCommentsClick(id: Long?)
     fun onSendCommentAboutShop()
 
-
+    //POSITION_13
+    fun onCountryClick(id: Long)
 }
