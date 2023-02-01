@@ -194,6 +194,16 @@ class HomeFragment : ViewStateBaseFragment(),
                 findNavController().navigate(HomeFragmentDirections.actionToFullScreenHistorySliderFragment(id))
             }
 
+            //POSITION_7
+            override fun onOrderClick(id: Long?) {
+                id?.let {
+                    findNavController().navigate(HomeFragmentDirections.actionToOrderDetailsFragment(id))
+                }
+            }
+
+            override fun onShowAllOrdersClick() {
+                findNavController().navigate(HomeFragmentDirections.actionToAllOrdersFragment())
+            }
         }
     }
 

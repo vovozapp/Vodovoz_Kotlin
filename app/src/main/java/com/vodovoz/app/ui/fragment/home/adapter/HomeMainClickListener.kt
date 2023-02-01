@@ -29,4 +29,8 @@ interface HomeMainClickListener {
 
     //POSITION_2
     fun onHistoryClick(id: Long)
+
+    //POSITION_7
+    fun onOrderClick(id: Long?)
+    fun onShowAllOrdersClick()
 }

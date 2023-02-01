@@ -1,6 +1,6 @@
 package com.vodovoz.app.ui.model
 
-class OrderUI(
+data class OrderUI(
     val id: Long?,
     val price: Int?,
     val orderStatusUI: OrderStatusUI?,
