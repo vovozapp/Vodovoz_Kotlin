@@ -7,7 +7,7 @@ import com.vodovoz.app.ui.model.BannerUI
 data class HomeBanners(
     val id : Int,
     val items: List<BannerUI>,
-    val bannerRatio: Double? = null
+    val bannerRatio: Double
 ) : Item {
 
     override fun getItemViewType(): Int {
