@@ -224,6 +224,33 @@ class HomeFragment : ViewStateBaseFragment(),
                     findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogFragment(id))
                 }
             }
+
+            //POSITION_10
+            override fun onPromotionProductClick(id: Long) {
+                findNavController().navigate(HomeFragmentDirections.actionToProductDetailFragment(id))
+            }
+
+            override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
+                showPreOrderProductPopup(id, name, detailPicture)
+            }
+
+            override fun onChangeProductQuantity(id: Long, cartQuantity: Int) {
+                flowViewModel.changeCart(id, cartQuantity)
+            }
+
+            override fun onFavoriteClick(id: Long, isFavorite: Boolean) {
+                flowViewModel.changeFavoriteStatus(id, isFavorite)
+            }
+
+            override fun onPromotionClick(id: Long) {
+                findNavController().navigate(HomeFragmentDirections.actionToPromotionDetailFragment(id))
+            }
+
+            override fun onShowAllPromotionsClick() {
+                findNavController().navigate(HomeFragmentDirections.actionToAllPromotionsFragment(
+                    AllPromotionsFragment.DataSource.All()
+                ))
+            }
         }
     }
 

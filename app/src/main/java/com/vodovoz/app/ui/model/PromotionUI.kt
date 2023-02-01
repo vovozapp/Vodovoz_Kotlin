@@ -1,6 +1,6 @@
 package com.vodovoz.app.ui.model
 
-class PromotionUI(
+data class PromotionUI(
     val id: Long,
     val name: String,
     val detailPicture: String,

@@ -49,6 +49,10 @@ import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -752,6 +756,26 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     fun isLoginAlready() = dataRepository.isAlreadyLogin()
+
+    fun changeCart(productId: Long, quantity: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataRepository
+                .changeCart(
+                    productId = productId,
+                    quantity = quantity
+                )
+        }
+    }
+
+    fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when(isFavorite) {
+                true -> dataRepository.addToFavorite(productId)
+                false -> dataRepository.removeFromFavorite(productId = productId)
+
+            }
+        }
+    }
 
     data class PositionItem(
         val position: Int,
