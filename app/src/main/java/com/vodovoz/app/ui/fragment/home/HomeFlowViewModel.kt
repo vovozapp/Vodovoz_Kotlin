@@ -415,6 +415,15 @@ class HomeFlowViewModel @Inject constructor(
                     }
                     .flowOn(Dispatchers.Default)
                     .collect()
+            } else {
+                uiStateListener.value = state.copy(
+                    loadingPage = false, data = state.data.copy(
+                        items = state.data.items + PositionItem(
+                            POSITION_7,
+                            null
+                        )
+                    )
+                )
             }
         }
     }
@@ -714,6 +723,15 @@ class HomeFlowViewModel @Inject constructor(
                     }
                     .flowOn(Dispatchers.Default)
                     .collect()
+            } else {
+                uiStateListener.value = state.copy(
+                    loadingPage = false, data = state.data.copy(
+                        items = state.data.items + PositionItem(
+                            POSITION_14,
+                            null
+                        )
+                    )
+                )
             }
         }
     }

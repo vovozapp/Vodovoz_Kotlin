@@ -25,21 +25,24 @@ class SplashFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.firstLoad()
-        //flowViewModel.firstLoad()
+        //viewModel.firstLoad()
+        flowViewModel.firstLoad()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        observeViewModel()
-     //   observeFlowViewModel()
+        //observeViewModel()
+        observeFlowViewModel()
     }
 
     private fun observeFlowViewModel() {
         lifecycleScope.launchWhenStarted {
             flowViewModel.observeUiState()
                 .collect { state ->
-                    if (state.data.items.size == HomeFlowViewModel.POSITIONS_COUNT - 1) {
+                    debugLog {
+                        "${state.data.items.map { it.position }}"
+                    }
+                    if (state.data.items.size == HomeFlowViewModel.POSITIONS_COUNT) {
                         requireActivity().supportFragmentManager.beginTransaction()
                             .replace(R.id.fcvMainContainer, MainFragment())
                             .commit()

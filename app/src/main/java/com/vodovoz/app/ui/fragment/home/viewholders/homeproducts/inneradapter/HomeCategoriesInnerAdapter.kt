@@ -17,6 +17,6 @@ class HomeCategoriesInnerAdapter(
     }
 
     override fun onBindViewHolder(holder: HomeCategoriesInnerViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), position == currentList.size - 1)
     }
 }

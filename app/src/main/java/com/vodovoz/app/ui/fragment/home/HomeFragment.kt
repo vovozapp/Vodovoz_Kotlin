@@ -286,7 +286,7 @@ class HomeFragment : ViewStateBaseFragment(),
 
                     if (homeState.loadingPage) { onStateLoading() }
 
-                    if (homeState.data.items.size == HomeFlowViewModel.POSITIONS_COUNT - 1) {
+                    if (homeState.data.items.size == HomeFlowViewModel.POSITIONS_COUNT) {
                         onStateSuccess()
                         val list =
                             homeState.data.items.sortedBy { it.position }.mapNotNull { it.item }
@@ -470,7 +470,7 @@ class HomeFragment : ViewStateBaseFragment(),
             }
         }
 
-        binding.contentContainer.setScrollElevation(binding.appBar)
+       // binding.contentContainer.setScrollElevation(binding.appBar)
     }
 
     private fun observeViewModel() {
