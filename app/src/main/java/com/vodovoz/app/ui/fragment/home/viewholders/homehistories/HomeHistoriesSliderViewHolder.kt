@@ -24,21 +24,14 @@ class HomeHistoriesSliderViewHolder(
 ) : RecyclerView.ViewHolder(view) {
 
     private val binding: FragmentSliderHistoryBinding = FragmentSliderHistoryBinding.bind(view)
+    private val historiesSliderAdapter = HomeHistoriesInnerAdapter(getHomeHistoriesSliderClickListener())
 
-    fun bind(items: HomeHistories) {
-        initHistoriesRecyclerView(items)
-    }
-
-    private fun initHistoriesRecyclerView(items: HomeHistories) {
+    init {
         binding.rvHistories.layoutManager =
             LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
 
         val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
-        val historiesSliderAdapter = HomeHistoriesInnerAdapter(
-            clickListener = getHomeHistoriesSliderClickListener()
-        ).apply {
-            submitList(items.items)
-        }
+
         binding.rvHistories.adapter = historiesSliderAdapter
 
         binding.rvHistories.addMarginDecoration { rect, view, parent, state ->
@@ -48,6 +41,10 @@ class HomeHistoriesSliderViewHolder(
             rect.top = space / 2
             rect.bottom = space / 2
         }
+    }
+
+    fun bind(items: HomeHistories) {
+        historiesSliderAdapter.submitList(items.items)
     }
 
     private fun getHomeHistoriesSliderClickListener() : HomeHistoriesSliderClickListener {
