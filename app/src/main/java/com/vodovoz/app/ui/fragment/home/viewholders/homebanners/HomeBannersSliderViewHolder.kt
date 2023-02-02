@@ -20,17 +20,12 @@ class HomeBannersSliderViewHolder(
 ) : RecyclerView.ViewHolder(view) {
 
     private val binding: FragmentSliderBannerBinding = FragmentSliderBannerBinding.bind(view)
+    private val homeBannersAdapter = HomeBannersInnerAdapter(getHomeBannersSliderClickListener())
 
-    fun bind(items: HomeBanners) {
-        initBannerRecyclerView(items.bannerRatio, items)
-    }
-
-    private fun initBannerRecyclerView(ratio: Double, items: HomeBanners) {
+    init {
         val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
         binding.vpBanners.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.vpBanners.adapter = HomeBannersInnerAdapter(getHomeBannersSliderClickListener()).apply {
-            submitList(items.items)
-        }
+        binding.vpBanners.adapter = homeBannersAdapter
         binding.vpBanners.apply {
             clipToPadding = false   // allow full width shown with padding
             clipChildren = false    // allow left/right item is not clipped
@@ -48,7 +43,7 @@ class HomeBannersSliderViewHolder(
         binding.vpBanners.onRenderFinished { width, _ ->
             binding.vpBanners.layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                (width * ratio).toInt()
+                (width * 0.41).toInt()
             )
         }
 
@@ -69,6 +64,10 @@ class HomeBannersSliderViewHolder(
                 }
             }
         )
+    }
+
+    fun bind(items: HomeBanners) {
+        homeBannersAdapter.submitList(items.items)
     }
 
     private fun getHomeBannersSliderClickListener() : HomeBannersSliderClickListener {
