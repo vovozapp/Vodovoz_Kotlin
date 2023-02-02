@@ -40,12 +40,6 @@ class HomeBannersSliderViewHolder(
         val pageMarginPx = space/2
         val marginTransformer = MarginPageTransformer(pageMarginPx)
         binding.vpBanners.setPageTransformer(marginTransformer)
-        binding.vpBanners.onRenderFinished { width, _ ->
-            binding.vpBanners.layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                (width * 0.41).toInt()
-            )
-        }
 
         binding.vpBanners.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
@@ -68,6 +62,12 @@ class HomeBannersSliderViewHolder(
 
     fun bind(items: HomeBanners) {
         homeBannersAdapter.submitList(items.items)
+        binding.vpBanners.onRenderFinished { width, _ ->
+            binding.vpBanners.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                (width * items.bannerRatio).toInt()
+            )
+        }
     }
 
     private fun getHomeBannersSliderClickListener() : HomeBannersSliderClickListener {
