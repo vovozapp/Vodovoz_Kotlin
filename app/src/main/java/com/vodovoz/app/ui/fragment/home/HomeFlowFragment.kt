@@ -29,7 +29,7 @@ class HomeFlowFragment : BaseFragment() {
     override fun layout(): Int = R.layout.fragment_main_home_flow
     override fun update() { flowViewModel.refresh() }
 
-    private val binding: FragmentMainHomeFlowBinding by viewBinding(FragmentMainHomeFlowBinding::bind)
+    private val binding: FragmentMainHomeFlowBinding by viewBinding { FragmentMainHomeFlowBinding.bind(contentView) }
 
     private val flowViewModel: HomeFlowViewModel by activityViewModels()
 
@@ -45,6 +45,7 @@ class HomeFlowFragment : BaseFragment() {
 
         observeUiState()
         bindButtons()
+        homeController.bind(binding.homeRv, binding.refreshContainer)
     }
 
     private fun observeUiState() {
@@ -70,9 +71,7 @@ class HomeFlowFragment : BaseFragment() {
     }
 
     private fun bindButtons() {
-        binding.refreshContainer.setOnRefreshListener {
-            update()
-        }
+
         binding.searchContainer.clSearchContainer.setOnClickListener {
             findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment())
         }
@@ -98,21 +97,24 @@ class HomeFlowFragment : BaseFragment() {
             }
 
             override fun onAboutDeliveryClick() {
-                findNavController().navigate(HomeFragmentDirections.actionToWebViewFragment(
+                findNavController().navigate(
+                    HomeFragmentDirections.actionToWebViewFragment(
                     ApiConfig.ABOUT_DELIVERY_URL,
                     "О доставке"
                 ))
             }
 
             override fun onAboutPayClick() {
-                findNavController().navigate(HomeFragmentDirections.actionToWebViewFragment(
+                findNavController().navigate(
+                    HomeFragmentDirections.actionToWebViewFragment(
                     ApiConfig.ABOUT_PAY_URL,
                     "Об оплате"
                 ))
             }
 
             override fun onAboutShopClick() {
-                findNavController().navigate(HomeFragmentDirections.actionToWebViewFragment(
+                findNavController().navigate(
+                    HomeFragmentDirections.actionToWebViewFragment(
                     ApiConfig.ABOUT_SHOP_URL,
                     "О магазине"
                 ))
@@ -132,7 +134,8 @@ class HomeFlowFragment : BaseFragment() {
 
             //POSITION_12
             override fun onBrandClick(id: Long) {
-                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                findNavController().navigate(
+                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Brand(id)
                 ))
             }
@@ -154,7 +157,8 @@ class HomeFlowFragment : BaseFragment() {
 
             //POSITION_13
             override fun onCountryClick(id: Long) {
-                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                findNavController().navigate(
+                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Country(id)
                 ))
             }
@@ -217,32 +221,37 @@ class HomeFlowFragment : BaseFragment() {
             }
 
             override fun onShowAllPromotionsClick() {
-                findNavController().navigate(HomeFragmentDirections.actionToAllPromotionsFragment(
+                findNavController().navigate(
+                    HomeFragmentDirections.actionToAllPromotionsFragment(
                     AllPromotionsFragment.DataSource.All()
                 ))
             }
 
             //POSITION_4, POSITION_6, POSITION_9, POSITION_11, POSITION_14
             override fun showAllDiscountProducts(id: Long) {
-                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                findNavController().navigate(
+                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
                 ))
             }
 
             override fun showAllTopProducts(id: Long) {
-                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                findNavController().navigate(
+                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(id)
                 ))
             }
 
             override fun showAllNoveltiesProducts(id: Long) {
-                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                findNavController().navigate(
+                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
                 ))
             }
 
             override fun showAllBottomProducts(id: Long) {
-                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                findNavController().navigate(
+                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(id)
                 ))
             }

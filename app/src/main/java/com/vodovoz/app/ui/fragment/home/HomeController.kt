@@ -15,7 +15,7 @@ class HomeController(
     private val viewModel: HomeFlowViewModel,
     listener: HomeMainClickListener
 ) {
-    private val adapter = HomeMainAdapter(listener)
+    private val homeMainAdapter = HomeMainAdapter(listener)
 
     fun bind(recyclerView: RecyclerView, refresh: SwipeRefreshLayout) {
         initList(recyclerView)
@@ -23,12 +23,12 @@ class HomeController(
     }
 
     fun submitList(list: List<Item>) {
-        adapter.submitList(list)
+        homeMainAdapter.submitList(list)
     }
 
     private fun initList(recyclerView: RecyclerView) {
         with(recyclerView) {
-            adapter = adapter
+            adapter = homeMainAdapter
             layoutManager = LinearLayoutManager(context)
         }
     }
