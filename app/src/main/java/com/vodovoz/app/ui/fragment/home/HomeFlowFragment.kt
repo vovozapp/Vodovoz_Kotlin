@@ -38,12 +38,12 @@ class HomeFlowFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         flowViewModel.firstLoad()
+        observeUiState()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        observeUiState()
         bindButtons()
         homeController.bind(binding.homeRv, binding.refreshContainer)
     }
