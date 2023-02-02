@@ -16,15 +16,14 @@ class HomePopularCategoriesSliderViewHolder(
 ) : RecyclerView.ViewHolder(view) {
 
     private val binding: FragmentSliderPopularBinding = FragmentSliderPopularBinding.bind(view)
+    private val homePopularsAdapter = HomePopularsInnerAdapter(getHomePopularsSliderClickListener())
 
-    fun bind(items: HomePopulars) {
-        initPopularRecyclerView(items)
-    }
-
-    private fun initPopularRecyclerView(items: HomePopulars) {
+    init {
         binding.rvPopularCategories.layoutManager =
             LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+
         val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
+
         binding.rvPopularCategories.addMarginDecoration { rect, view, parent, state ->
             if (parent.getChildAdapterPosition(view) == 0) rect.left = space
             if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.right = space
@@ -32,9 +31,12 @@ class HomePopularCategoriesSliderViewHolder(
             rect.top = space / 2
             rect.bottom = space / 2
         }
-        binding.rvPopularCategories.adapter = HomePopularsInnerAdapter(getHomePopularsSliderClickListener()).apply {
-            submitList(items.items)
-        }
+
+        binding.rvPopularCategories.adapter = homePopularsAdapter
+    }
+
+    fun bind(items: HomePopulars) {
+        homePopularsAdapter.submitList(items.items)
     }
 
     private fun getHomePopularsSliderClickListener() : HomePopularCategoriesSliderClickListener {
@@ -44,4 +46,5 @@ class HomePopularCategoriesSliderViewHolder(
             }
         }
     }
+
 }

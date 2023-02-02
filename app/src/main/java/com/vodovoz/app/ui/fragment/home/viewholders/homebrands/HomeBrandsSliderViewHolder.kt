@@ -23,23 +23,14 @@ class HomeBrandsSliderViewHolder(
 ) : RecyclerView.ViewHolder(view) {
 
     private val binding: FragmentSliderBrandBinding = FragmentSliderBrandBinding.bind(view)
+    private val brandsSliderAdapter = HomeBrandsInnerAdapter(getHomeBrandsSliderClickListener())
 
     init {
-
-    }
-
-    fun bind(items: HomeBrands) {
-        initBrandsRecyclerView(items)
-    }
-
-    private fun initBrandsRecyclerView(items: HomeBrands) {
         binding.rvBrands.layoutManager =
             LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
 
         val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
-        val brandsSliderAdapter = HomeBrandsInnerAdapter(getHomeBrandsSliderClickListener()).apply {
-            submitList(items.items)
-        }
+
         binding.rvBrands.adapter = brandsSliderAdapter
 
         binding.rvBrands.addMarginDecoration { rect, view, parent, state ->
@@ -50,10 +41,13 @@ class HomeBrandsSliderViewHolder(
             rect.bottom = space / 2
         }
 
-        binding.tvShowAll.onRenderFinished { width, height ->  }
         binding.tvShowAll.setOnClickListener {
             clickListener.onShowAllBrandsClick()
         }
+    }
+
+    fun bind(items: HomeBrands) {
+        brandsSliderAdapter.submitList(items.items)
     }
 
     private fun getHomeBrandsSliderClickListener() : HomeBrandsSliderClickListener {
