@@ -50,4 +50,10 @@ interface HomeMainClickListener {
     fun onPromotionClick(id: Long)
     fun onShowAllPromotionsClick()
 
+    //POSITION_4, POSITION_6, POSITION_9, POSITION_11, POSITION_14
+    fun showAllDiscountProducts(id: Long)
+    fun showAllTopProducts(id: Long)
+    fun showAllNoveltiesProducts(id: Long)
+    fun showAllBottomProducts(id: Long)
+
 }

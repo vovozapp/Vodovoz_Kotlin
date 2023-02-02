@@ -39,7 +39,7 @@ class SplashFragment : BaseFragment() {
         lifecycleScope.launchWhenStarted {
             flowViewModel.observeUiState()
                 .collect { state ->
-                    if (state.data.items.size == HomeFlowViewModel.POSITIONS_COUNT) {
+                    if (state.data.items.size == HomeFlowViewModel.POSITIONS_COUNT - 1) {
                         requireActivity().supportFragmentManager.beginTransaction()
                             .replace(R.id.fcvMainContainer, MainFragment())
                             .commit()

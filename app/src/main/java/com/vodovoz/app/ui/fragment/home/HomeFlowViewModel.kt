@@ -43,6 +43,11 @@ import com.vodovoz.app.ui.fragment.home.viewholders.homehistories.HomeHistories
 import com.vodovoz.app.ui.fragment.home.viewholders.homeorders.HomeOrders
 import com.vodovoz.app.ui.fragment.home.viewholders.homepopulars.HomePopulars
 import com.vodovoz.app.ui.fragment.home.viewholders.homeproducts.HomeProducts
+import com.vodovoz.app.ui.fragment.home.viewholders.homeproducts.HomeProducts.Companion.BOTTOM_PROD
+import com.vodovoz.app.ui.fragment.home.viewholders.homeproducts.HomeProducts.Companion.DISCOUNT
+import com.vodovoz.app.ui.fragment.home.viewholders.homeproducts.HomeProducts.Companion.NOVELTIES
+import com.vodovoz.app.ui.fragment.home.viewholders.homeproducts.HomeProducts.Companion.TOP_PROD
+import com.vodovoz.app.ui.fragment.home.viewholders.homeproducts.HomeProducts.Companion.VIEWED
 import com.vodovoz.app.ui.fragment.home.viewholders.homepromotions.HomePromotions
 import com.vodovoz.app.ui.fragment.home.viewholders.hometriplenav.HomeTripleNav
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
@@ -245,7 +250,7 @@ class HomeFlowViewModel @Inject constructor(
                     val response = it.parseDiscountSliderResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val item =
-                            PositionItem(POSITION_4, HomeProducts(4, response.data.mapToUI()))
+                            PositionItem(POSITION_4, HomeProducts(4, response.data.mapToUI(), productsType = DISCOUNT))
 
                         response.data.forEach { categoryDetailEntity ->
                             categoryDetailEntity.productEntityList.syncFavoriteProducts(
@@ -339,7 +344,7 @@ class HomeFlowViewModel @Inject constructor(
                     val response = it.parseTopSliderResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val item =
-                            PositionItem(POSITION_6, HomeProducts(6, response.data.mapToUI()))
+                            PositionItem(POSITION_6, HomeProducts(6, response.data.mapToUI(), productsType = TOP_PROD))
 
                         response.data.forEach { categoryDetailEntity ->
                             categoryDetailEntity.productEntityList.syncFavoriteProducts(
@@ -434,7 +439,7 @@ class HomeFlowViewModel @Inject constructor(
                     val response = it.parseNoveltiesSliderResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val item =
-                            PositionItem(POSITION_9, HomeProducts(9, response.data.mapToUI()))
+                            PositionItem(POSITION_9, HomeProducts(9, response.data.mapToUI(), productsType = NOVELTIES))
 
                         response.data.forEach { categoryDetailEntity ->
                             categoryDetailEntity.productEntityList.syncFavoriteProducts(
@@ -539,7 +544,7 @@ class HomeFlowViewModel @Inject constructor(
                     val response = it.parseBottomSliderResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val item =
-                            PositionItem(POSITION_11, HomeProducts(11, response.data.mapToUI()))
+                            PositionItem(POSITION_11, HomeProducts(11, response.data.mapToUI(), productsType = BOTTOM_PROD))
 
                         response.data.forEach { categoryDetailEntity ->
                             categoryDetailEntity.productEntityList.syncFavoriteProducts(
@@ -678,7 +683,7 @@ class HomeFlowViewModel @Inject constructor(
                                 POSITION_14, HomeProducts(
                                     14, response.data.mapToUI(), ProductsSliderConfig(
                                         containShowAllButton = false
-                                    )
+                                    ), VIEWED
                                 )
                             )
 

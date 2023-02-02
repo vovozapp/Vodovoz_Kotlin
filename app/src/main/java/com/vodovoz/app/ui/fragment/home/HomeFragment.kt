@@ -251,6 +251,31 @@ class HomeFragment : ViewStateBaseFragment(),
                     AllPromotionsFragment.DataSource.All()
                 ))
             }
+
+            //POSITION_4, POSITION_6, POSITION_9, POSITION_11, POSITION_14
+            override fun showAllDiscountProducts(id: Long) {
+                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
+                ))
+            }
+
+            override fun showAllTopProducts(id: Long) {
+                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(id)
+                ))
+            }
+
+            override fun showAllNoveltiesProducts(id: Long) {
+                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
+                ))
+            }
+
+            override fun showAllBottomProducts(id: Long) {
+                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(id)
+                ))
+            }
         }
     }
 
@@ -261,7 +286,7 @@ class HomeFragment : ViewStateBaseFragment(),
 
                     if (homeState.loadingPage) { onStateLoading() }
 
-                    if (homeState.data.items.size == HomeFlowViewModel.POSITIONS_COUNT) {
+                    if (homeState.data.items.size == HomeFlowViewModel.POSITIONS_COUNT - 1) {
                         onStateSuccess()
                         val list =
                             homeState.data.items.sortedBy { it.position }.mapNotNull { it.item }
