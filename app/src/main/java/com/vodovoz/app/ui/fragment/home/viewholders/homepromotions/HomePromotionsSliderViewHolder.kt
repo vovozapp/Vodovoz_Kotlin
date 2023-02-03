@@ -16,21 +16,22 @@ class HomePromotionsSliderViewHolder(
 ) : RecyclerView.ViewHolder(view) {
 
     private val binding: FragmentSliderPromotionBinding = FragmentSliderPromotionBinding.bind(view)
+    private val homePromotionsAdapter = HomePromotionsInnerAdapter(getHomePromotionsSliderClickListener())
 
     init {
-        binding.tvShowAll.setOnClickListener {
-            clickListener.onShowAllPromotionsClick()
-        }
+        binding.tvShowAll.setOnClickListener { clickListener.onShowAllPromotionsClick() }
+
+        binding.vpPromotions.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+
+        binding.vpPromotions.adapter = homePromotionsAdapter
     }
 
     fun bind(items: HomePromotions) {
 
-        binding.vpPromotions.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.vpPromotions.adapter = HomePromotionsInnerAdapter(getHomePromotionsSliderClickListener()).apply {
-            submitList(items.items.promotionUIList)
-        }
-
         binding.tvName.text = items.items.title
+
+        homePromotionsAdapter.submitList(items.items.promotionUIList)
+
         when(items.items.containShowAllButton) {
             true -> binding.tvShowAll.visibility = View.VISIBLE
             false -> binding.tvShowAll.visibility = View.INVISIBLE
@@ -50,7 +51,6 @@ class HomePromotionsSliderViewHolder(
                 }
             }
         }
-
     }
 
     private fun getHomePromotionsSliderClickListener() : HomePromotionsSliderClickListener {

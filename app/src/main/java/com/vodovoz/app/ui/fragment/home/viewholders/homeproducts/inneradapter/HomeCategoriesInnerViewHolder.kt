@@ -18,30 +18,31 @@ class HomeCategoriesInnerViewHolder(
     private val binding: ViewHolderSliderProductCategoryBinding =
         ViewHolderSliderProductCategoryBinding.bind(view)
 
+    private val homeProductsAdapter = HomeProductsInnerAdapter(getHomeProductsInnerClickListener())
+
     private var isAddItemDecoration = false
 
     init {
-
-    }
-
-    fun bind(category: CategoryDetailUI, isLast: Boolean) {
-
         binding.rvProducts.layoutManager = LinearLayoutManager(
             itemView.context,
             LinearLayoutManager.HORIZONTAL,
             false
         )
-        binding.rvProducts.adapter = HomeProductsInnerAdapter(getHomeProductsInnerClickListener()).apply {
-            submitList(category.productUIList)
-        }
+
+        binding.rvProducts.adapter = homeProductsAdapter
+    }
+
+    fun bind(category: CategoryDetailUI, isLast: Boolean) {
+
+        homeProductsAdapter.submitList(category.productUIList)
 
         if (!isAddItemDecoration) {
             binding.rvProducts.addItemDecoration(
                 ProductSliderMarginDecoration(
-                space = itemView.context.resources.getDimension(R.dimen.space_16).toInt(),
-                itemCount = category.productUIList.size,
-                isLast = isLast
-            )
+                    space = itemView.context.resources.getDimension(R.dimen.space_16).toInt(),
+                    itemCount = category.productUIList.size,
+                    isLast = isLast
+                )
             )
             isAddItemDecoration = true
         }
@@ -66,4 +67,5 @@ class HomeCategoriesInnerViewHolder(
             }
         }
     }
+
 }

@@ -17,35 +17,20 @@ class HomePromotionsInnerViewHolder(
     private val clickListener: HomePromotionsSliderClickListener
 ) : RecyclerView.ViewHolder(view) {
 
-    private val binding: ViewHolderSliderPromotionBinding =
-        ViewHolderSliderPromotionBinding.bind(view)
+    private val binding: ViewHolderSliderPromotionBinding = ViewHolderSliderPromotionBinding.bind(view)
+    private val homePromotionProductAdapter = HomePromotionsProductInnerAdapter(getHomePromotionsProductInnerClickListener())
+    private val space = itemView.context.resources.getDimension(R.dimen.space_16).toInt()
 
     init {
         binding.root.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
             clickListener.onPromotionClick(item.id)
         }
-    }
 
-    fun bind(promotion: PromotionUI) {
-        binding.tvName.text = promotion.name
-        binding.tvTimeLeft.text = promotion.timeLeft
-        binding.tvCustomerCategory.text = promotion.customerCategory
-        binding.cwCustomerCategory.setCardBackgroundColor(Color.parseColor(promotion.statusColor))
-
-        Glide
-            .with(itemView.context)
-            .load(promotion.detailPicture)
-            .into(binding.imgImage)
-
-        initRv(promotion)
-    }
-
-    private fun initRv(promotion: PromotionUI) {
         binding.rvProducts.layoutManager =
             LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvProducts.setHasFixedSize(true)
-        val space = itemView.context.resources.getDimension(R.dimen.space_16).toInt()
+
         binding.rvProducts.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
@@ -63,9 +48,22 @@ class HomePromotionsInnerViewHolder(
                 }
             }
         )
-        binding.rvProducts.adapter = HomePromotionsProductInnerAdapter(getHomePromotionsProductInnerClickListener()).apply {
-            submitList(promotion.productUIList)
-        }
+
+        binding.rvProducts.adapter = homePromotionProductAdapter
+    }
+
+    fun bind(promotion: PromotionUI) {
+        binding.tvName.text = promotion.name
+        binding.tvTimeLeft.text = promotion.timeLeft
+        binding.tvCustomerCategory.text = promotion.customerCategory
+        binding.cwCustomerCategory.setCardBackgroundColor(Color.parseColor(promotion.statusColor))
+
+        Glide
+            .with(itemView.context)
+            .load(promotion.detailPicture)
+            .into(binding.imgImage)
+
+        homePromotionProductAdapter.submitList(promotion.productUIList)
     }
 
     private fun getItemByPosition(): PromotionUI? {

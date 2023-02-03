@@ -34,19 +34,37 @@ class HomeProductsSliderViewHolder(
 
     private val binding: FragmentSliderProductBinding = FragmentSliderProductBinding.bind(view)
     private val space: Int by lazy { itemView.resources.getDimension(R.dimen.space_16).toInt() }
+    private val homeCategoriesAdapter = HomeCategoriesInnerAdapter(getHomeCategoriesInnerClickListener())
 
     init {
+        binding.rvCategories.layoutManager =
+            LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
 
+        binding.rvCategories.adapter = homeCategoriesAdapter
+
+        binding.tlCategories.addOnTabSelectedListener(
+            object : TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    tab?.view?.findViewById<TextView>(R.id.name)?.setTextColor(
+                        ContextCompat.getColor(itemView.context,
+                            R.color.bluePrimary)
+                    )
+                }
+                override fun onTabUnselected(tab: TabLayout.Tab?) {
+                    tab?.view?.findViewById<TextView>(R.id.name)?.setTextColor(
+                        ContextCompat.getColor(itemView.context,
+                            R.color.blackTextLight)
+                    )
+                }
+                override fun onTabReselected(tab: TabLayout.Tab?) {}
+            }
+        )
     }
 
     fun bind(items: HomeProducts) {
-        initCategoryRecycler(items)
-        initTabLayout()
-        initShowAllProductsButtons(items)
-        updateCategoryTabs(items)
-    }
 
-    private fun initCategoryRecycler(items: HomeProducts) {
+        homeCategoriesAdapter.submitList(items.items)
+
         when(items.productsSliderConfig.largeTitle) {
             true -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 binding.tvName.setTextAppearance(R.style.TextViewHeaderBlackBold)
@@ -59,12 +77,11 @@ class HomeProductsSliderViewHolder(
                 binding.tvName.setTextAppearance(null, R.style.TextViewMediumBlackBold)
             }
         }
-        binding.rvCategories.layoutManager =
-            LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
-        binding.rvCategories.adapter = HomeCategoriesInnerAdapter(getHomeCategoriesInnerClickListener()).apply {
-            submitList(items.items)
-        }
+
+        initShowAllProductsButtons(items)
+        updateCategoryTabs(items)
     }
+
 
     private fun getHomeCategoriesInnerClickListener() : HomeCategoriesInnerClickListener {
         return object : HomeCategoriesInnerClickListener {
@@ -98,26 +115,6 @@ class HomeProductsSliderViewHolder(
                 }
             }
         }
-    }
-
-    private fun initTabLayout() {
-        binding.tlCategories.addOnTabSelectedListener(
-            object : TabLayout.OnTabSelectedListener {
-                override fun onTabSelected(tab: TabLayout.Tab?) {
-                    tab?.view?.findViewById<TextView>(R.id.name)?.setTextColor(
-                        ContextCompat.getColor(itemView.context,
-                            R.color.bluePrimary)
-                    )
-                }
-                override fun onTabUnselected(tab: TabLayout.Tab?) {
-                    tab?.view?.findViewById<TextView>(R.id.name)?.setTextColor(
-                        ContextCompat.getColor(itemView.context,
-                            R.color.blackTextLight)
-                    )
-                }
-                override fun onTabReselected(tab: TabLayout.Tab?) {}
-            }
-        )
     }
 
     private fun updateCategoryTabs(items: HomeProducts) {
