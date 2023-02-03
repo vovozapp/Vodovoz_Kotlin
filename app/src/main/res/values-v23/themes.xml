@@ -6,14 +6,13 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorAccent">@color/accentPrimary</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialog</item>
-        <item name="android:windowLightStatusBar">true</item>
         <item name="materialAlertDialogTheme">@style/AlertDialog</item>
         <item name="colorControlActivated">@color/accentPrimary</item>
         <item name="android:statusBarColor">@color/bluePrimary</item>
     </style>
 
     <style name="Theme.Vodovoz.DarkStatusBar" parent="Theme.Vodovoz">
-        <item name="android:windowLightStatusBar">false</item>
+
         <item name="colorPrimaryDark">@color/bluePrimary</item>
     </style>
 
@@ -25,7 +24,7 @@
         <item name="colorPrimaryDark">@color/white</item>
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowBackground">@android:color/white</item>
-        <item name="android:windowLightStatusBar">true</item>
+
     </style>
 
 </resources>
