@@ -59,7 +59,7 @@ class HomeFlowFragment : BaseFragment() {
                         hideLoader()
                     }
 
-                    if (homeState.data.items.size == HomeFlowViewModel.POSITIONS_COUNT) {
+                    if (homeState.data.items.size in (HomeFlowViewModel.POSITIONS_COUNT - 2..HomeFlowViewModel.POSITIONS_COUNT)) {
                         val list =
                             homeState.data.items.sortedBy { it.position }.mapNotNull { it.item }
                         homeController.submitList(list)
