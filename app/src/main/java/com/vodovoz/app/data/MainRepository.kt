@@ -4,6 +4,7 @@ import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
+import retrofit2.Response
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
@@ -120,7 +121,7 @@ class MainRepository @Inject constructor(
     }
 
     //Изменение колличества товаров в корзине
-    fun changeProductsQuantityInCart(productId: Long, quantity: Int): ResponseBody {
+    suspend fun changeProductsQuantityInCart(productId: Long, quantity: Int): ResponseBody {
         return api.fetchChangeProductsQuantityResponse(
             action = "guaty",
             productId = productId,
@@ -129,7 +130,7 @@ class MainRepository @Inject constructor(
     }
 
     //Добавить в избранное для авторизованного пользователя
-    fun addToFavorite(
+    suspend fun addToFavorite(
         productIdList: List<Long>,
         userId: Long
     ): ResponseBody {
@@ -146,7 +147,7 @@ class MainRepository @Inject constructor(
     }
 
     //Удалить из избранного для авторизованного пользователя
-    fun removeFromFavorite(
+    suspend fun removeFromFavorite(
         productId: Long,
         userId: Long
     ): ResponseBody {

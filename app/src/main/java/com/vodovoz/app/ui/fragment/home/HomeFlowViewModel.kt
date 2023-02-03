@@ -811,16 +811,13 @@ class HomeFlowViewModel @Inject constructor(
                 productId = productId,
                 quantity = quantity
             ))}
-                .catch { "add to cart error ${it.localizedMessage}" }
+                .catch { debugLog { "add to cart error ${it.localizedMessage}" } }
                 .flowOn(Dispatchers.IO)
                 .collect {
-                    val response = it.parseAddProductToCartResponse()
-                    if (response is ResponseEntity.Success) {
-                        localDataSource.changeProductQuantityInCart(
-                            productId = productId,
-                            quantity = quantity
-                        )
-                    }
+                    localDataSource.changeProductQuantityInCart(
+                        productId = productId,
+                        quantity = quantity
+                    )
                 }
         }
     }
@@ -831,16 +828,13 @@ class HomeFlowViewModel @Inject constructor(
                 productId = productId,
                 quantity = quantity
             ))}
-                .catch { "change cart error ${it.localizedMessage}" }
+                .catch { debugLog { "change cart error ${it.localizedMessage}" } }
                 .flowOn(Dispatchers.IO)
                 .collect {
-                    val response = it.parseChangeProductQuantityInCartResponse()
-                    if (response is ResponseEntity.Success) {
-                        localDataSource.changeProductQuantityInCart(
-                            productId = productId,
-                            quantity = quantity
-                        )
-                    }
+                    localDataSource.changeProductQuantityInCart(
+                        productId = productId,
+                        quantity = quantity
+                    )
                 }
         }
     }
@@ -869,17 +863,14 @@ class HomeFlowViewModel @Inject constructor(
                 }
                 true -> {
                     flow { emit(repository.addToFavorite(productIdList, userId!!)) }
-                        .catch { "add to fav error ${it.localizedMessage}" }
+                        .catch { debugLog { "add to fav error ${it.localizedMessage}" } }
                         .flowOn(Dispatchers.IO)
                         .collect {
-                            val response = it.parseAddToFavoriteResponse()
-                            if (response is ResponseEntity.Success) {
-                                localDataSource.changeFavoriteStatus(
-                                    pairList = mutableListOf<Pair<Long, Boolean>>().apply {
-                                        productIdList.forEach { add(Pair(it, true)) }
-                                    }.toList()
-                                )
-                            }
+                            localDataSource.changeFavoriteStatus(
+                                pairList = mutableListOf<Pair<Long, Boolean>>().apply {
+                                    productIdList.forEach { add(Pair(it, true)) }
+                                }.toList()
+                            )
                         }
                 }
             }
@@ -897,13 +888,10 @@ class HomeFlowViewModel @Inject constructor(
                 }
                 true -> {
                     flow { emit(repository.removeFromFavorite(productId, userId!!)) }
-                        .catch { "remove from fav error ${it.localizedMessage}" }
+                        .catch { debugLog { "remove from fav error ${it.localizedMessage}" } }
                         .flowOn(Dispatchers.IO)
                         .collect {
-                            val response = it.parseRemoveFromFavoriteResponse()
-                            if (response is ResponseEntity.Success) {
-                                localDataSource.changeFavoriteStatus(listOf(Pair(productId, false)))
-                            }
+                            localDataSource.changeFavoriteStatus(listOf(Pair(productId, false)))
                         }
                 }
             }

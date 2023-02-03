@@ -2,6 +2,7 @@ package com.vodovoz.app.data
 
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -117,7 +118,7 @@ interface MainApi {
     ): ResponseBody
 
     @GET("/newmobile/osnova/izbrannoe/adddel.php")
-    fun fetchChangeFavoriteResponse(
+    suspend fun fetchChangeFavoriteResponse(
         @Query("iblock") blockId: Long? = null,
         @Query("action") action: String? = null,
         @Query("id") productIdList: String? = null,
@@ -126,7 +127,7 @@ interface MainApi {
 
     //Добавление в корзину
     @GET("/newmobile/korzina/function/add/index.php")
-    fun fetchAddProductResponse(
+    suspend fun fetchAddProductResponse(
         @Query("action") action: String? = null,
         @Query("id") productId: Long? = null,
         @Query("quantity") quantity: Int? = null,
@@ -134,7 +135,7 @@ interface MainApi {
 
     //Изменение колличества товаров в корзине
     @GET("/newmobile/korzina/function/guaty/index.php")
-    fun fetchChangeProductsQuantityResponse(
+    suspend fun fetchChangeProductsQuantityResponse(
         @Query("action") action: String? = null,
         @Query("id") productId: Long? = null,
         @Query("quantity") quantity: Int? = null,
