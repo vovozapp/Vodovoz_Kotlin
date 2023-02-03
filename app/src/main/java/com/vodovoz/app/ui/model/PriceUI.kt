@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class PriceUI(
+data class PriceUI(
     val currentPrice: Int,
     val oldPrice: Int,
     val requiredAmount: Int

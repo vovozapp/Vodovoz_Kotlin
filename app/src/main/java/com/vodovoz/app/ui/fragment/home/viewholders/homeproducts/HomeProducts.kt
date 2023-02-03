@@ -8,9 +8,7 @@ import com.vodovoz.app.ui.model.CategoryDetailUI
 data class HomeProducts(
     val id : Int,
     val items: List<CategoryDetailUI>,
-    val productsSliderConfig: ProductsSliderConfig = ProductsSliderConfig(
-        containShowAllButton = true
-    ),
+    val productsSliderConfig: ProductsSliderConfig,
     val productsType: Int
 ) : Item {
 
