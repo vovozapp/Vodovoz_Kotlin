@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.ui.fragment.home.viewholders.homebanners.HomeBanners
+import com.vodovoz.app.ui.fragment.home.viewholders.homebanners.HomeBanners.Companion.BANNER_LARGE
+import com.vodovoz.app.ui.fragment.home.viewholders.homebanners.HomeBanners.Companion.BANNER_SMALL
 import com.vodovoz.app.ui.fragment.home.viewholders.homebanners.HomeBannersSliderViewHolder
 import com.vodovoz.app.ui.fragment.home.viewholders.homebottominfo.HomeBottomInfo
 import com.vodovoz.app.ui.fragment.home.viewholders.homebottominfo.HomeBottomInfoViewHolder
@@ -39,8 +41,11 @@ class HomeMainAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         return when (viewType) {
-            R.layout.fragment_slider_banner -> {
-                HomeBannersSliderViewHolder(getViewFromInflater(viewType, parent), clickListener)
+            BANNER_SMALL -> {
+                HomeBannersSliderViewHolder(getViewFromInflater(R.layout.fragment_slider_banner, parent), clickListener, parent.width, 0.41)
+            }
+            BANNER_LARGE -> {
+                HomeBannersSliderViewHolder(getViewFromInflater(R.layout.fragment_slider_banner, parent), clickListener, parent.width, 0.5)
             }
             R.layout.fragment_section_additional_info -> {
                 HomeBottomInfoViewHolder(getViewFromInflater(viewType, parent), clickListener)

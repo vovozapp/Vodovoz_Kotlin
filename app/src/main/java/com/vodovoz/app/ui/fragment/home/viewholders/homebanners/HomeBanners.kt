@@ -1,6 +1,5 @@
 package com.vodovoz.app.ui.fragment.home.viewholders.homebanners
 
-import com.vodovoz.app.R
 import com.vodovoz.app.ui.fragment.home.adapter.Item
 import com.vodovoz.app.ui.model.BannerUI
 
@@ -11,7 +10,11 @@ data class HomeBanners(
 ) : Item {
 
     override fun getItemViewType(): Int {
-        return R.layout.fragment_slider_banner
+        return if (bannerRatio == 0.41) {
+            BANNER_SMALL
+        } else {
+            BANNER_LARGE
+        }
     }
 
     override fun areItemsTheSame(item: Item): Boolean {
@@ -24,5 +27,10 @@ data class HomeBanners(
         if (item !is HomeBanners) return false
 
         return this == item
+    }
+
+    companion object {
+        const val BANNER_SMALL = 41
+        const val BANNER_LARGE = 50
     }
 }

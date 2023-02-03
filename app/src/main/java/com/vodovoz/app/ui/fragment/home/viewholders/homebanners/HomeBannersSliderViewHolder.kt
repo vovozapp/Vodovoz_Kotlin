@@ -16,7 +16,9 @@ import com.vodovoz.app.ui.fragment.home.viewholders.homebanners.inneradapter.Hom
 
 class HomeBannersSliderViewHolder(
     view: View,
-    private val clickListener: HomeMainClickListener
+    private val clickListener: HomeMainClickListener,
+    width: Int,
+    ratio: Double
 ) : RecyclerView.ViewHolder(view) {
 
     private val binding: FragmentSliderBannerBinding = FragmentSliderBannerBinding.bind(view)
@@ -58,16 +60,15 @@ class HomeBannersSliderViewHolder(
                 }
             }
         )
+
+        binding.vpBanners.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            (width * ratio).toInt()
+        )
     }
 
     fun bind(items: HomeBanners) {
         homeBannersAdapter.submitList(items.items)
-        binding.vpBanners.onRenderFinished { width, _ ->
-            binding.vpBanners.layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                (width * items.bannerRatio).toInt()
-            )
-        }
     }
 
     private fun getHomeBannersSliderClickListener() : HomeBannersSliderClickListener {
