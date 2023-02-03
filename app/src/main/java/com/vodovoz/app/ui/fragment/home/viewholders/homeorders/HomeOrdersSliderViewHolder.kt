@@ -16,17 +16,16 @@ class HomeOrdersSliderViewHolder(
 ) : RecyclerView.ViewHolder(view) {
 
     private val binding: FragmentSliderOrderBinding = FragmentSliderOrderBinding.bind(view)
+    private val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
+    private val homeOrdersAdapter = HomeOrdersInnerAdapter(getHomeOrdersSliderClickListener())
 
-    fun bind(items: HomeOrders) {
-        initOrderPager(items)
-    }
+    init {
+        binding.tvShowAll.setOnClickListener { clickListener.onShowAllOrdersClick() }
 
-    private fun initOrderPager(items: HomeOrders) {
-        val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
         binding.vpOrders.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.vpOrders.adapter = HomeOrdersInnerAdapter(getHomeOrdersSliderClickListener()).apply {
-            submitList(items.items)
-        }
+
+        binding.vpOrders.adapter = homeOrdersAdapter
+
         binding.vpOrders.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
@@ -44,13 +43,16 @@ class HomeOrdersSliderViewHolder(
                 }
             }
         )
+    }
+
+    fun bind(items: HomeOrders) {
+
+        homeOrdersAdapter.submitList(items.items)
 
         when(items.orderSliderConfig.containTitleContainer) {
             true -> binding.llTitleContainer.visibility = View.VISIBLE
             false -> binding.llTitleContainer.visibility = View.GONE
         }
-
-        binding.tvShowAll.setOnClickListener { clickListener.onShowAllOrdersClick() }
     }
 
     private fun getHomeOrdersSliderClickListener() : HomeOrdersSliderClickListener {
