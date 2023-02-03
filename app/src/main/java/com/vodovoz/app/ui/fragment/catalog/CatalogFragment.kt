@@ -2,6 +2,7 @@ package com.vodovoz.app.ui.fragment.catalog
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -23,7 +24,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 class CatalogFragment : BaseFragment() {
 
     private val binding: FragmentMainCatalogBinding by viewBinding { FragmentMainCatalogBinding.bind(contentView) }
-    private val viewModel: CatalogViewModel by viewModels()
+    private val viewModel: CatalogViewModel by activityViewModels()
 
     private val categoryClickSubject: PublishSubject<CategoryUI> = PublishSubject.create()
     private val mainCatalogAdapter = MainCatalogAdapter(
