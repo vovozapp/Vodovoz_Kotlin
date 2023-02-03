@@ -16,32 +16,26 @@ class HomeCommentsSliderViewHolder(
 ) : RecyclerView.ViewHolder(view) {
 
     private val binding: FragmentSliderCommentBinding = FragmentSliderCommentBinding.bind(view)
+    private val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
+    private val homeCommentsInnerAdapter = HomeCommentsInnerAdapter(getHomeCommentsSliderClickListener())
 
     init {
-
-    }
-
-    fun bind(items: HomeComments) {
-        initButtons()
-        initCommentsPager(items)
-    }
-
-    private fun initButtons() {
         binding.tvSendComment.setOnClickListener { clickListener.onSendCommentAboutShop() }
-    }
 
-    private fun initCommentsPager(items: HomeComments) {
-        binding.vpComments.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.vpComments.adapter = HomeCommentsInnerAdapter(getHomeCommentsSliderClickListener()).apply {
-            submitList(items.items)
-        }
-        val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
         binding.vpComments.addMarginDecoration {  rect, view, parent, state ->
             rect.left = space
             rect.right = space
             rect.bottom = space/2
             rect.top = space/2
         }
+
+        binding.vpComments.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+
+        binding.vpComments.adapter = homeCommentsInnerAdapter
+    }
+
+    fun bind(items: HomeComments) {
+        homeCommentsInnerAdapter.submitList(items.items)
     }
 
     private fun getHomeCommentsSliderClickListener() : HomeCommentsSliderClickListener {

@@ -21,7 +21,7 @@ class HomeCommentsInnerViewHolder(
 
     fun bind(comment: CommentUI) {
         binding.rbRating.rating = comment.rating?.toFloat() ?: 0f
-        binding.tvAuthor.text = comment.author ?: ""
+        binding.tvAuthor.text = if (comment.author == "null") "" else comment.author
         binding.tvComment.text = comment.text ?: ""
         binding.tvDate.text = comment.date ?: ""
     }
