@@ -10,11 +10,15 @@ import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.banner.AdvertisingBannersSliderResponseJsonParser.parseAdvertisingBannersSliderResponse
 import com.vodovoz.app.data.parser.response.banner.CategoryBannersSliderResponseJsonParser.parseCategoryBannersSliderResponse
 import com.vodovoz.app.data.parser.response.brand.BrandsSliderResponseJsonParser.parseBrandsSliderResponse
+import com.vodovoz.app.data.parser.response.cart.AddProductToCartResponseJsonParser.parseAddProductToCartResponse
+import com.vodovoz.app.data.parser.response.cart.ChangeProductQuantityInCartResponseJsonParser.parseChangeProductQuantityInCartResponse
 import com.vodovoz.app.data.parser.response.comment.CommentsSliderResponseJsonParser.parseCommentsSliderResponse
 import com.vodovoz.app.data.parser.response.country.CountrySliderResponseJsonParser.parseCountriesSliderResponse
 import com.vodovoz.app.data.parser.response.discount.DiscountSliderResponseParser.parseDiscountSliderResponse
 import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseBottomSliderResponse
 import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseTopSliderResponse
+import com.vodovoz.app.data.parser.response.favorite.AddToFavoriteResponseJsonParser.parseAddToFavoriteResponse
+import com.vodovoz.app.data.parser.response.favorite.RemoveFromFavoriteResponseJsonParser.parseRemoveFromFavoriteResponse
 import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonParser.parseHistoriesSliderResponse
 import com.vodovoz.app.data.parser.response.novelties.NoveltiesSliderResponseParser.parseNoveltiesSliderResponse
 import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
@@ -790,20 +794,118 @@ class HomeFlowViewModel @Inject constructor(
 
     fun changeCart(productId: Long, quantity: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            dataRepository
-                .changeCart(
-                    productId = productId,
-                    quantity = quantity
-                )
+
+            val cart = localDataSource.fetchCart()
+            val oldQuantity = cart[productId]
+
+            when(oldQuantity) {
+                null -> addToCart(productId, quantity)
+                else -> changeProductQuantityInCart(productId, quantity)
+            }
+        }
+    }
+
+    private fun addToCart(productId: Long, quantity: Int) {
+        viewModelScope.launch {
+            flow { emit(repository.addProductToCart(
+                productId = productId,
+                quantity = quantity
+            ))}
+                .catch { "add to cart error ${it.localizedMessage}" }
+                .flowOn(Dispatchers.IO)
+                .collect {
+                    val response = it.parseAddProductToCartResponse()
+                    if (response is ResponseEntity.Success) {
+                        localDataSource.changeProductQuantityInCart(
+                            productId = productId,
+                            quantity = quantity
+                        )
+                    }
+                }
+        }
+    }
+
+    private fun changeProductQuantityInCart(productId: Long, quantity: Int) {
+        viewModelScope.launch {
+            flow { emit(repository.changeProductsQuantityInCart(
+                productId = productId,
+                quantity = quantity
+            ))}
+                .catch { "change cart error ${it.localizedMessage}" }
+                .flowOn(Dispatchers.IO)
+                .collect {
+                    val response = it.parseChangeProductQuantityInCartResponse()
+                    if (response is ResponseEntity.Success) {
+                        localDataSource.changeProductQuantityInCart(
+                            productId = productId,
+                            quantity = quantity
+                        )
+                    }
+                }
         }
     }
 
     fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             when(isFavorite) {
-                true -> dataRepository.addToFavorite(productId)
-                false -> dataRepository.removeFromFavorite(productId = productId)
+                true -> addToFavorite(listOf(productId))
+                false -> removeFromFavorite(productId = productId)
+            }
+        }
+    }
 
+    private fun addToFavorite(productIdList: List<Long>) {
+        viewModelScope.launch {
+
+            val userId = localDataSource.fetchUserId()
+
+            when(isLoginAlready()) {
+                false -> {
+                    localDataSource.changeFavoriteStatus(
+                        pairList = mutableListOf<Pair<Long, Boolean>>().apply {
+                            productIdList.forEach { add(Pair(it, true)) }
+                        }.toList()
+                    )
+                }
+                true -> {
+                    flow { emit(repository.addToFavorite(productIdList, userId!!)) }
+                        .catch { "add to fav error ${it.localizedMessage}" }
+                        .flowOn(Dispatchers.IO)
+                        .collect {
+                            val response = it.parseAddToFavoriteResponse()
+                            if (response is ResponseEntity.Success) {
+                                localDataSource.changeFavoriteStatus(
+                                    pairList = mutableListOf<Pair<Long, Boolean>>().apply {
+                                        productIdList.forEach { add(Pair(it, true)) }
+                                    }.toList()
+                                )
+                            }
+                        }
+                }
+            }
+        }
+    }
+
+    private fun removeFromFavorite(productId: Long) {
+        viewModelScope.launch {
+
+            val userId = localDataSource.fetchUserId()
+
+            when(isLoginAlready()) {
+                false -> {
+                    localDataSource.changeFavoriteStatus(listOf(Pair(productId, false)))
+                }
+                true -> {
+                    flow { emit(repository.removeFromFavorite(productId, userId!!)) }
+                        .catch { "remove from fav error ${it.localizedMessage}" }
+                        .flowOn(Dispatchers.IO)
+                        .collect {
+                            val response = it.parseRemoveFromFavoriteResponse()
+                            if (response is ResponseEntity.Success) {
+                                localDataSource.changeFavoriteStatus(listOf(Pair(productId, false)))
+                            }
+                        }
+                }
             }
         }
     }

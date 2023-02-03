@@ -1,5 +1,6 @@
 package com.vodovoz.app.data
 
+import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -113,6 +114,30 @@ interface MainApi {
         @Query("userid") userId: Long? = null,
         @Query("text") comment: String? = null,
         @Query("rating") rating: Int? = null,
+    ): ResponseBody
+
+    @GET("/newmobile/osnova/izbrannoe/adddel.php")
+    fun fetchChangeFavoriteResponse(
+        @Query("iblock") blockId: Long? = null,
+        @Query("action") action: String? = null,
+        @Query("id") productIdList: String? = null,
+        @Query("userid") userId: Long? = null,
+    ): ResponseBody
+
+    //Добавление в корзину
+    @GET("/newmobile/korzina/function/add/index.php")
+    fun fetchAddProductResponse(
+        @Query("action") action: String? = null,
+        @Query("id") productId: Long? = null,
+        @Query("quantity") quantity: Int? = null,
+    ): ResponseBody
+
+    //Изменение колличества товаров в корзине
+    @GET("/newmobile/korzina/function/guaty/index.php")
+    fun fetchChangeProductsQuantityResponse(
+        @Query("action") action: String? = null,
+        @Query("id") productId: Long? = null,
+        @Query("quantity") quantity: Int? = null,
     ): ResponseBody
 
 }

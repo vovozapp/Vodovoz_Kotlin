@@ -1,6 +1,8 @@
 package com.vodovoz.app.data
 
 import com.vodovoz.app.BuildConfig
+import com.vodovoz.app.data.model.common.ResponseEntity
+import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import javax.inject.Inject
 
@@ -105,6 +107,54 @@ class MainRepository @Inject constructor(
         return api.fetchComments(
             action = "otzivy",
             limit = 10
+        )
+    }
+
+    //Добавление продукта в корзину
+    suspend fun addProductToCart(productId: Long, quantity: Int): ResponseBody {
+        return api.fetchAddProductResponse(
+            action = "add",
+            productId = productId,
+            quantity = quantity
+        )
+    }
+
+    //Изменение колличества товаров в корзине
+    fun changeProductsQuantityInCart(productId: Long, quantity: Int): ResponseBody {
+        return api.fetchChangeProductsQuantityResponse(
+            action = "guaty",
+            productId = productId,
+            quantity = quantity
+        )
+    }
+
+    //Добавить в избранное для авторизованного пользователя
+    fun addToFavorite(
+        productIdList: List<Long>,
+        userId: Long
+    ): ResponseBody {
+        return api.fetchChangeFavoriteResponse(
+            blockId = 12,
+            action = "add",
+            productIdList = StringBuilder().apply {
+                productIdList.forEach { productId ->
+                    append(productId).append(",")
+                }
+            }.toString(),
+            userId = userId
+        )
+    }
+
+    //Удалить из избранного для авторизованного пользователя
+    fun removeFromFavorite(
+        productId: Long,
+        userId: Long
+    ): ResponseBody {
+        return api.fetchChangeFavoriteResponse(
+            blockId = 12,
+            action = "del",
+            productIdList = productId.toString(),
+            userId = userId
         )
     }
 }

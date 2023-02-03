@@ -243,7 +243,7 @@ class HomeViewModel @Inject constructor(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
                 }
-            )
+            ).addTo(compositeDisposable)
     }
 
     private fun updateHistoriesSlider() {
@@ -333,7 +333,7 @@ class HomeViewModel @Inject constructor(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
                 }
-            )
+            ).addTo(compositeDisposable)
     }
 
     private fun updateDiscountProductsSlider() {
@@ -363,7 +363,7 @@ class HomeViewModel @Inject constructor(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
                 }
-            )
+            ).addTo(compositeDisposable)
     }
 
     private fun updateTopProductsSlider() {
@@ -393,7 +393,7 @@ class HomeViewModel @Inject constructor(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
                 }
-            )
+            ).addTo(compositeDisposable)
     }
 
     private fun updateOrdersSlider() {
@@ -453,7 +453,7 @@ class HomeViewModel @Inject constructor(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
                 }
-            )
+            ).addTo(compositeDisposable)
     }
 
     private fun updatePromotionsSlider() {
@@ -517,7 +517,7 @@ class HomeViewModel @Inject constructor(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
                 }
-            )
+            ).addTo(compositeDisposable)
     }
 
     private fun updateBrandsSlider() {
@@ -547,7 +547,7 @@ class HomeViewModel @Inject constructor(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
                 }
-            )
+            ).addTo(compositeDisposable)
     }
 
     private fun updateCountriesSlider() {
@@ -611,7 +611,7 @@ class HomeViewModel @Inject constructor(
                         ViewState.Error(throwable.message ?: "Неизвестная ошибка")
                     )
                 }
-            )
+            ).addTo(compositeDisposable)
     }
 
     private fun updateCommentsSlider() {
@@ -687,7 +687,7 @@ class HomeViewModel @Inject constructor(
                 onError = { throwable ->
                     errorMLD.value = throwable.message ?: "Неизвестная ошибка"
                 }
-            )
+            ).addTo(compositeDisposable)
     }
 
     fun isLoginAlready() = dataRepository.isAlreadyLogin()
