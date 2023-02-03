@@ -28,6 +28,6 @@ class HomeBannersInnerViewHolder(
     }
 
     private fun getItemByPosition(): BannerUI? {
-        return (bindingAdapter as? HomeBannersInnerAdapter)?.currentList?.get(bindingAdapterPosition)
+        return (bindingAdapter as? HomeBannersInnerAdapter)?.getItem(bindingAdapterPosition)
     }
 }
