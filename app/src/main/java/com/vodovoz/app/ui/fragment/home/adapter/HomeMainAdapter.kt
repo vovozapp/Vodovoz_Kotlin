@@ -52,7 +52,7 @@ class HomeMainAdapter(
                 HomeCommentsSliderViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
             R.layout.fragment_slider_country -> {
-                HomeCountriesSliderViewHolder(getViewFromInflater(viewType, parent), clickListener)
+                HomeCountriesSliderViewHolder(getViewFromInflater(viewType, parent), clickListener, parent.width)
             }
             R.layout.fragment_slider_history -> {
                 HomeHistoriesSliderViewHolder(getViewFromInflater(viewType, parent), clickListener)

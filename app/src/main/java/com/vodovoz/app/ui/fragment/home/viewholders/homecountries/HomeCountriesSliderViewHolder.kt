@@ -20,24 +20,21 @@ import com.vodovoz.app.ui.model.custom.CountriesSliderBundleUI
 
 class HomeCountriesSliderViewHolder(
     view: View,
-    private val clickListener: HomeMainClickListener
+    private val clickListener: HomeMainClickListener,
+    width: Int
 ) : RecyclerView.ViewHolder(view) {
 
     private val binding: FragmentSliderCountryBinding = FragmentSliderCountryBinding.bind(view)
+    private val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
+    private var countriesSliderAdapter: HomeCountriesInnerAdapter = HomeCountriesInnerAdapter(
+        clickListener = getHomeCountriesSliderClickListener(),
+        cardWidth = (width - (space * 4)) / 3
+    )
 
     init {
-
-    }
-
-    fun bind(items: HomeCountries) {
-        initCountriesRecyclerView(items)
-    }
-
-    private fun initCountriesRecyclerView(items: HomeCountries) {
         binding.rvCountries.layoutManager =
             LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
 
-        val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
         binding.rvCountries.addMarginDecoration { rect, view, parent, state ->
             if (parent.getChildAdapterPosition(view) == 0) {
                 rect.left = space
@@ -46,29 +43,27 @@ class HomeCountriesSliderViewHolder(
             rect.right = space
             rect.bottom = space
         }
-        binding.rvCountries.onRenderFinished { width, _ ->
-            val countriesSliderAdapter = HomeCountriesInnerAdapter(
-                clickListener = getHomeCountriesSliderClickListener(),
-                cardWidth = (width - (space * 4)) / 3
-            ).apply {
-                submitList(items.items.countryUIList)
-            }
-            binding.rvCountries.adapter = countriesSliderAdapter
 
-            binding.tvName.text = items.items.title
-            Glide.with(itemView.context)
-                .load(items.items.backgroundPicture)
-                .into(object : CustomTarget<Drawable?>() {
-                    override fun onResourceReady(
-                        resource: Drawable,
-                        transition: Transition<in Drawable?>?,
-                    ) {
-                        binding.root.background = resource
-                    }
+        binding.rvCountries.adapter = countriesSliderAdapter
+    }
 
-                    override fun onLoadCleared(placeholder: Drawable?) {}
-                })
-        }
+    fun bind(items: HomeCountries) {
+        binding.tvName.text = items.items.title
+
+        Glide.with(itemView.context)
+            .load(items.items.backgroundPicture)
+            .into(object : CustomTarget<Drawable?>() {
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable?>?,
+                ) {
+                    binding.root.background = resource
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {}
+            })
+
+        countriesSliderAdapter.submitList(items.items.countryUIList)
     }
 
     private fun getHomeCountriesSliderClickListener(): HomeCountriesSliderClickListener {
