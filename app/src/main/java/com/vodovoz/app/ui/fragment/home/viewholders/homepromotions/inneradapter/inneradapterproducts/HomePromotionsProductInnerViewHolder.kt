@@ -187,7 +187,7 @@ class HomePromotionsProductInnerViewHolder(
     }
 
     private fun getItemByPosition(): ProductUI? {
-        return (bindingAdapter as? HomePromotionsProductInnerAdapter)?.currentList?.get(bindingAdapterPosition)
+        return (bindingAdapter as? HomePromotionsProductInnerAdapter)?.getItem(bindingAdapterPosition)
     }
 
     private fun hideAmountController() {

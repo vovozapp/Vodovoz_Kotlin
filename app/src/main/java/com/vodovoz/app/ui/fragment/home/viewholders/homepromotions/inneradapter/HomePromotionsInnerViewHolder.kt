@@ -67,7 +67,7 @@ class HomePromotionsInnerViewHolder(
     }
 
     private fun getItemByPosition(): PromotionUI? {
-        return (bindingAdapter as? HomePromotionsInnerAdapter)?.currentList?.get(
+        return (bindingAdapter as? HomePromotionsInnerAdapter)?.getItem(
             bindingAdapterPosition
         )
     }
