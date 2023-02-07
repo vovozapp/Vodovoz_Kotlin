@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/clSearchContainer"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/_30sdp"
+    android:layout_height="@dimen/_33sdp"
     android:background="@drawable/bkg_rectangle_light_gray"
     android:gravity="center_vertical"
     android:orientation="horizontal">
@@ -19,7 +19,7 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/text_black"
+        app:tint="#889295"
         tools:ignore="ContentDescription" />
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -28,11 +28,13 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:textSize="@dimen/_12ssp"
+        android:fontFamily="@font/rotondac"
         android:background="@null"
         android:hint="@string/search_hint"
         android:inputType="text"
         android:padding="5dp"
-        android:textColorHint="@color/text_gray"
+        android:textColorHint="#889295"
         app:layout_constraintEnd_toStartOf="@+id/imgClear"
         app:layout_constraintStart_toEndOf="@+id/imgSearch" />
 
@@ -60,7 +62,7 @@
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toStartOf="@+id/imgQr"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/text_black"
+        app:tint="#889295"
         tools:ignore="ContentDescription" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -75,7 +77,7 @@
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/text_black"
+        app:tint="#889295"
         tools:ignore="ContentDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

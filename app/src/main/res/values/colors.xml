@@ -15,6 +15,7 @@
 
     <color name="dark_white">#EFF1F3</color>
     <color name="light_gray">#F2F2F2</color>
+    <color name="light_bg">#F5F5F5</color>
     <color name="transparent_white">#80FFFFFF</color>
     <color name="transparent_light_gray">#80EFF1F3</color>
 
