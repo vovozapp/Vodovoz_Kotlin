@@ -15,6 +15,7 @@ import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
 import com.vodovoz.app.ui.fragment.home.adapter.HomeMainClickListener
 import com.vodovoz.app.ui.fragment.home.viewholders.homebanners.inneradapter.HomeBannersInnerAdapter
 import com.vodovoz.app.ui.fragment.home.viewholders.homebanners.inneradapter.HomeBannersSliderClickListener
+import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.coroutines.CoroutineContext
@@ -29,6 +30,7 @@ class HomeBannersSliderViewHolder(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private val binding: FragmentSliderBannerBinding = FragmentSliderBannerBinding.bind(view)
     private val homeBannersAdapter = HomeBannersInnerAdapter(getHomeBannersSliderClickListener())
+    private var autoTimerTask: Timer? = null
 
     init {
         val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
@@ -75,7 +77,9 @@ class HomeBannersSliderViewHolder(
 
     fun bind(items: HomeBanners) {
         homeBannersAdapter.submitList(items.items)
-        binding.vpBanners.enableAutoScroll(items.items.size)
+        if (autoTimerTask == null) {
+            binding.vpBanners.enableAutoScroll(items.items.size)
+        }
     }
 
     private fun getHomeBannersSliderClickListener() : HomeBannersSliderClickListener {
@@ -87,21 +91,21 @@ class HomeBannersSliderViewHolder(
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    fun ViewPager2.enableAutoScroll(totalPages: Int): Timer {
-        val autoTimerTask = Timer()
+    fun ViewPager2.enableAutoScroll(totalPages: Int): Timer? {
+        autoTimerTask = Timer()
         var currentPageIndex = currentItem
-        autoTimerTask.schedule(object : TimerTask() {
+        autoTimerTask?.schedule(object : TimerTask() {
             override fun run() {
                 scope.launch {
                     currentItem = currentPageIndex++
                     if (currentPageIndex == totalPages) currentPageIndex = 0
                 }
             }
-        }, 0, 3000)
+        }, 0, 4000)
 
         // Stop auto paging when user touch the view
         getRecyclerView().setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) autoTimerTask.cancel()
+            if (event.action == MotionEvent.ACTION_DOWN) autoTimerTask?.cancel()
             false
         }
 
