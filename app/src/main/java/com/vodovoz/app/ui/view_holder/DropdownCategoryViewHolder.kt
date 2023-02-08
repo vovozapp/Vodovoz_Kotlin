@@ -12,6 +12,7 @@ import com.vodovoz.app.databinding.ViewHolderCatalogCategoryBinding
 import com.vodovoz.app.ui.adapter.MainCatalogAdapter
 import com.vodovoz.app.ui.extensions.CatalogTitleExtensions.setNameWithIndent
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.util.extensions.sp
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class DropdownCategoryViewHolder(
@@ -48,6 +49,12 @@ class DropdownCategoryViewHolder(
             else -> nestingPosition
         }
         binding.name.setNameWithIndent(categoryUI.name, nesting)
+
+        if (nestingPosition == 0) {
+            binding.name.textSize = 16f
+        } else {
+            binding.name.textSize = 14f
+        }
 
         categoryUI.detailPicture?.let {
             Glide

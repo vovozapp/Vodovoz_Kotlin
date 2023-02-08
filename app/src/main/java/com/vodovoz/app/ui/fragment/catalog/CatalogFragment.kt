@@ -58,9 +58,9 @@ class CatalogFragment : BaseFragment() {
         binding.categoryRecycler.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    binding.appBar.elevation =
+                    /*binding.appBar.elevation =
                         if (binding.categoryRecycler.canScrollVertically(-1)) 16f
-                        else 0f
+                        else 0f*/
                 }
             }
         )
