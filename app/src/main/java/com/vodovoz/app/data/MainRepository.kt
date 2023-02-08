@@ -2,7 +2,10 @@ package com.vodovoz.app.data
 
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.model.features.FavoriteProductsHeaderBundleEntity
+import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.rx3.rxSingle
 import okhttp3.ResponseBody
 import retrofit2.Response
 import javax.inject.Inject
@@ -158,4 +161,17 @@ class MainRepository @Inject constructor(
             userId = userId
         )
     }
+
+    //Основная информация об избранных продуктах
+    suspend fun fetchFavoriteProducts(
+        userId: Long?,
+        productIdListStr: String?
+    ): ResponseBody {
+        return api.fetchFavoriteResponse(
+            userId = userId,
+            productIdList = productIdListStr,
+            action = "nalichie"
+        )
+    }
+
 }

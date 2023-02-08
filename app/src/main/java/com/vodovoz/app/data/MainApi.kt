@@ -141,4 +141,15 @@ interface MainApi {
         @Query("quantity") quantity: Int? = null,
     ): ResponseBody
 
+    @GET("/newmobile/izbrannoe.php?")
+    suspend fun fetchFavoriteResponse(
+        @Query("id") productIdList: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("sort") sort: String? = null,
+        @Query("ascdesc") orientation: String? = null,
+        @Query("nav") page: Int? = null,
+        @Query("sect") categoryId: Long? = null,
+        @Query("action") action: String? = null,
+    ): ResponseBody
+
 }
