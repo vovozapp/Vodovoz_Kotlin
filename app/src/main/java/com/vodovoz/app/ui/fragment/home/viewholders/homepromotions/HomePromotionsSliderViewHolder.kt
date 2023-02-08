@@ -37,7 +37,7 @@ class HomePromotionsSliderViewHolder(
             false -> binding.tvShowAll.visibility = View.INVISIBLE
         }
 
-        if (items.items.promotionUIList.isNotEmpty()) {
+        /*if (items.items.promotionUIList.isNotEmpty()) {
             when (items.items.promotionUIList.first().productUIList.isEmpty()) {
                 true -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     binding.tvName.setTextAppearance(R.style.TextViewHeaderBlackBold)
@@ -50,7 +50,7 @@ class HomePromotionsSliderViewHolder(
                     binding.tvName.setTextAppearance(null, R.style.TextViewMediumBlackBold)
                 }
             }
-        }
+        }*/
     }
 
     private fun getHomePromotionsSliderClickListener() : HomePromotionsSliderClickListener {

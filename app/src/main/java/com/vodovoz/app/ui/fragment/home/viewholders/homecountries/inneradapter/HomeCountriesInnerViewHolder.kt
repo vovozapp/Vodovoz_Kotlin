@@ -9,14 +9,14 @@ import com.vodovoz.app.ui.model.CountryUI
 class HomeCountriesInnerViewHolder(
     view: View,
     private val clickListener: HomeCountriesSliderClickListener,
-    private val cardWidth: Int
+    private val cardWidth: Double
 ) : RecyclerView.ViewHolder(view) {
 
     private val binding: ViewHolderSliderCountryBinding = ViewHolderSliderCountryBinding.bind(view)
 
     init {
         binding.root.layoutParams = RecyclerView.LayoutParams(
-            cardWidth,
+            (cardWidth * 0.92).toInt(),
             (cardWidth * (2.5/3.0)).toInt()
         )
         binding.root.setOnClickListener {

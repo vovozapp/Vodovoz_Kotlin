@@ -8,7 +8,7 @@ import com.vodovoz.app.ui.model.CountryUI
 
 class HomeCountriesInnerAdapter(
     private val clickListener: HomeCountriesSliderClickListener,
-    private val cardWidth: Int
+    private val cardWidth: Double
 ) : ListAdapter<CountryUI, HomeCountriesInnerViewHolder>(HomeCountriesDiffUtilCallback()){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeCountriesInnerViewHolder {

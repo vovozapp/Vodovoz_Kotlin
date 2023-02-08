@@ -8,6 +8,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         style="@style/TextViewMediumBlackBold"
+        android:textSize="16sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/popular_categories_slider_title"
@@ -15,6 +16,7 @@
         android:paddingHorizontal="@dimen/space_16"/>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="-2dp"
         android:id="@+id/rvPopularCategories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

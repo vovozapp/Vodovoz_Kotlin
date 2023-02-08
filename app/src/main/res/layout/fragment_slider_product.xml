@@ -20,6 +20,7 @@
             style="@style/TextViewMediumBlackBold"
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:textSize="16sp"
             android:layout_height="wrap_content"
             android:paddingVertical="@dimen/space_8"
             android:paddingHorizontal="@dimen/space_16"
@@ -28,6 +29,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvShowAll"
             style="@style/TextViewSmallBlue"
+            android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -43,6 +45,7 @@
         android:layout_height="wrap_content"
         android:visibility="visible"
         app:tabMode="scrollable"
+        android:layout_marginTop="16dp"
         app:tabPaddingStart="0dp"
         app:tabPaddingEnd="0dp"
         app:tabPaddingBottom="0dp"

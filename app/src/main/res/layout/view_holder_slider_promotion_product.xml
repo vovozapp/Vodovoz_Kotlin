@@ -13,7 +13,7 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.35"
+        app:layout_constraintWidth_percent="0.40"
         tools:ignore="ContentDescription" />
 
     <LinearLayout
@@ -47,7 +47,7 @@
                     style="@style/TextViewSmallWhite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/space_8"
+                    android:paddingHorizontal="@dimen/space_4"
                     android:paddingVertical="@dimen/space_2"
                     tools:text="12%" />
 
@@ -66,7 +66,7 @@
                     style="@style/TextViewSmallWhite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/space_8"
+                    android:paddingHorizontal="@dimen/space_4"
                     android:paddingVertical="@dimen/space_2"
                     tools:text="Новинка" />
 
@@ -88,8 +88,9 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgFavoriteStatus"
         android:layout_width="@dimen/_16sdp"
+        android:layout_margin="4dp"
         android:layout_height="@dimen/_16sdp"
-        android:src="@drawable/png_ic_favorite"
+        android:src="@drawable/ic_favorite_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
@@ -137,6 +138,7 @@
                 android:id="@+id/tvCurrentPrice"
                 style="@style/TextViewMediumBlackBold"
                 android:layout_width="wrap_content"
+                android:textSize="16sp"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -149,6 +151,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:gravity="bottom"
+                android:textSize="16sp"
                 android:paddingStart="@dimen/space_4"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tvCurrentPrice"

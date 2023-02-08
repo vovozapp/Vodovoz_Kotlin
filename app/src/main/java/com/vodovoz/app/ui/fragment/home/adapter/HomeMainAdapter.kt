@@ -42,10 +42,10 @@ class HomeMainAdapter(
 
         return when (viewType) {
             BANNER_SMALL -> {
-                HomeBannersSliderViewHolder(getViewFromInflater(R.layout.fragment_slider_banner, parent), clickListener, parent.width, 0.41)
+                HomeBannersSliderViewHolder(getViewFromInflater(R.layout.fragment_slider_banner, parent), clickListener, parent.width, 0.48)
             }
             BANNER_LARGE -> {
-                HomeBannersSliderViewHolder(getViewFromInflater(R.layout.fragment_slider_banner, parent), clickListener, parent.width, 0.5)
+                HomeBannersSliderViewHolder(getViewFromInflater(R.layout.fragment_slider_banner, parent), clickListener, parent.width, 0.52)
             }
             R.layout.fragment_section_additional_info -> {
                 HomeBottomInfoViewHolder(getViewFromInflater(viewType, parent), clickListener)

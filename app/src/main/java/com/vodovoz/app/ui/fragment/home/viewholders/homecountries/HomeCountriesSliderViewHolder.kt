@@ -28,7 +28,7 @@ class HomeCountriesSliderViewHolder(
     private val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
     private var countriesSliderAdapter: HomeCountriesInnerAdapter = HomeCountriesInnerAdapter(
         clickListener = getHomeCountriesSliderClickListener(),
-        cardWidth = (width - (space * 4)) / 3
+        cardWidth = (width - (space * 4)) / 2.6
     )
 
     init {
@@ -40,8 +40,8 @@ class HomeCountriesSliderViewHolder(
                 rect.left = space
             }
             rect.top = space / 2
-            rect.right = space
-            rect.bottom = space
+            rect.right = space / 2
+            rect.bottom = (space * 1.2).toInt()
         }
 
         binding.rvCountries.adapter = countriesSliderAdapter

@@ -40,7 +40,7 @@ object TextBuilderExtensions {
                 false -> ""
             })
             .append(price)
-            .append(" Р")
+            .append(" ₽")
             .toString()
     }
 
@@ -48,14 +48,14 @@ object TextBuilderExtensions {
         this.text = StringBuilder()
             .append("от ")
             .append(price)
-            .append(" Р")
+            .append(" ₽")
             .toString()
     }
 
     fun TextView.setPricePerUnitText(price: Int) {
         this.text = StringBuilder()
             .append(price)
-            .append(" Р/кг")
+            .append(" ₽/кг")
             .toString()
     }
 

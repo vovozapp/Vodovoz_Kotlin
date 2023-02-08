@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -15,12 +16,14 @@
         android:paddingHorizontal="@dimen/space_16"
         android:paddingBottom="@dimen/space_6"
         android:paddingTop="@dimen/space_16"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Вода со всего мира"/>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="-2dp"
         android:id="@+id/rvCountries"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/rotonda_normal"
             android:padding="@dimen/space_8"
+            android:textSize="16sp"
             android:textColor="@color/blackTextPrimary"
             tools:text="Some section" />
 

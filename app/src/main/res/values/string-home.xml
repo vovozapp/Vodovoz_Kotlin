@@ -18,7 +18,7 @@
     <string name="histories_title">Истории</string>
 
     //Popular
-    <string name="popular_categories_slider_title">Популярное</string>
+    <string name="popular_categories_slider_title">Популярные разделы</string>
 
     //Promotions
     <string name="promotions_slider_title">Акции</string>

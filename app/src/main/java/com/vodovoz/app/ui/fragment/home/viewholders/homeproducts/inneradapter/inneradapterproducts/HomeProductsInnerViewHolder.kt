@@ -13,7 +13,6 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
-import com.vodovoz.app.ui.fragment.home.viewholders.homepromotions.inneradapter.inneradapterproducts.HomePromotionsProductInnerAdapter
 import com.vodovoz.app.ui.model.ProductUI
 
 class HomeProductsInnerViewHolder(
@@ -75,7 +74,7 @@ class HomeProductsInnerViewHolder(
             when(item.isFavorite) {
                 true -> {
                     item.isFavorite = false
-                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite))
+                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
                 }
                 false -> {
                     item.isFavorite = true
@@ -145,16 +144,16 @@ class HomeProductsInnerViewHolder(
 
         //Favorite
         when(productUI.isFavorite) {
-            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite))
+            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
             true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
         }
 
         //Status
         var isNotHaveStatuses = true
         when (productUI.status.isEmpty()) {
-            true -> binding.cwStatusContainer.visibility = View.GONE
+            true -> binding.rlStatusContainer.visibility = View.GONE
             false -> {
-                binding.cwStatusContainer.visibility = View.VISIBLE
+                binding.rlStatusContainer.visibility = View.VISIBLE
                 binding.tvStatus.text = productUI.status
                 binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(productUI.statusColor))
             }

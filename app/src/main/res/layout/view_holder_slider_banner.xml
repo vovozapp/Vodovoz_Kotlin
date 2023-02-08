@@ -6,12 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:cardElevation="@dimen/elevation_3"
+    android:layout_marginTop="@dimen/_6sdp"
     app:cardCornerRadius="@dimen/corner_5">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgPicture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+        android:scaleType="fitXY" />
 
 </androidx.cardview.widget.CardView>

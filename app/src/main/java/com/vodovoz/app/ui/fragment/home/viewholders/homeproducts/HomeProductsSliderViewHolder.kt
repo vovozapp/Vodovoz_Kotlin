@@ -65,7 +65,7 @@ class HomeProductsSliderViewHolder(
 
         homeCategoriesAdapter.submitList(items.items)
 
-        when(items.productsSliderConfig.largeTitle) {
+        /*when(items.productsSliderConfig.largeTitle) {
             true -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 binding.tvName.setTextAppearance(R.style.TextViewHeaderBlackBold)
             } else {
@@ -76,7 +76,7 @@ class HomeProductsSliderViewHolder(
             } else {
                 binding.tvName.setTextAppearance(null, R.style.TextViewMediumBlackBold)
             }
-        }
+        }*/
 
         initShowAllProductsButtons(items)
         updateCategoryTabs(items)
