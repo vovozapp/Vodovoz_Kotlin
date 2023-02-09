@@ -102,6 +102,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
+                        android:textSize="16sp"
                         android:paddingStart="@dimen/space_16"
                         android:paddingEnd="@dimen/space_16"
                         tools:text="Популярные бренды" />
@@ -141,7 +142,7 @@
                                 android:layout_height="25dp"
                                 android:layout_marginStart="16dp"
                                 android:src="@drawable/png_ic_categories"
-                                app:tint="@color/text_black"
+                                app:tint="#889295"
                                 tools:ignore="ContentDescription" />
 
                             <TextView
@@ -150,6 +151,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/space_8"
                                 android:layout_weight="1"
+                                android:textSize="16sp"
                                 android:maxLines="1"
                                 android:text="Категории" />
 
@@ -158,7 +160,7 @@
                                 android:layout_height="25dp"
                                 android:layout_marginStart="16dp"
                                 android:src="@drawable/ic_pointer_right"
-                                app:tint="@color/text_black"
+                                app:tint="#889295"
                                 tools:ignore="ContentDescription" />
 
                         </LinearLayout>

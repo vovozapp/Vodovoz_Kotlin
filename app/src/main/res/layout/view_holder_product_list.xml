@@ -59,6 +59,7 @@
             style="@style/TextViewSmallGray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="#889295"
             android:gravity="center"
             android:paddingTop="@dimen/space_2"
             tools:text="3 отзыва" />

@@ -150,6 +150,7 @@
             android:id="@+id/tvCommentAmount"
             style="@style/TextViewSmallGray"
             android:layout_width="0dp"
+            android:textColor="#889295"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:paddingStart="@dimen/space_4"
