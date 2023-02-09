@@ -18,10 +18,10 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgBack"
-            android:layout_width="@dimen/_50sdp"
+            android:layout_width="@dimen/_35sdp"
             android:layout_height="?attr/actionBarSize"
-            android:paddingStart="@dimen/space_16"
-            android:paddingEnd="@dimen/space_16"
+            android:paddingStart="@dimen/space_8"
+            android:paddingEnd="@dimen/space_8"
             android:src="@drawable/ic_arrow_left"
             app:tint="@color/text_black"/>
 

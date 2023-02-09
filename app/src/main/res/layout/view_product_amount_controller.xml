@@ -16,7 +16,7 @@
         android:background="@drawable/bkg_button_green_circle_normal"
         android:visibility="visible"
         android:src="@drawable/png_cart"
-        android:padding="@dimen/space_6"
+        android:padding="@dimen/space_8"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/circleAmount"
         app:layout_constraintTop_toTopOf="@+id/circleAmount"
@@ -78,7 +78,7 @@
         android:gravity="center"
         android:visibility="visible"
         android:textColor="@color/white"
-        android:textSize="14sp"
+        android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

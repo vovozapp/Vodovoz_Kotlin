@@ -84,7 +84,7 @@ class ProductGridViewHolder(
             when(productUI.isFavorite) {
                 true -> {
                     productUI.isFavorite = false
-                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite))
+                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
                 }
                 false -> {
                     productUI.isFavorite = true
@@ -170,7 +170,7 @@ class ProductGridViewHolder(
                 binding.tvOldPrice.visibility = View.VISIBLE
             }
             false -> {
-                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
+                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_new_black))
                 binding.tvOldPrice.visibility = View.GONE
             }
         }
@@ -192,7 +192,7 @@ class ProductGridViewHolder(
 
         //Favorite
         when(productUI.isFavorite) {
-            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite))
+            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
             true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
         }
 
