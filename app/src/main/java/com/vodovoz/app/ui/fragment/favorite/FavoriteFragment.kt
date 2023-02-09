@@ -93,7 +93,7 @@ class FavoriteFragment : ViewStateBaseFragment() {
         LinearLayoutManager(requireContext())
     }
     private val linearMarginDecoration: ListMarginDecoration by lazy {
-        ListMarginDecoration(space)
+        ListMarginDecoration((space*0.8).toInt())
     }
     private val linearDividerItemDecoration: DividerItemDecoration by lazy {
         DividerItemDecoration(requireContext(), linearLayoutManager.orientation)
@@ -213,7 +213,7 @@ class FavoriteFragment : ViewStateBaseFragment() {
         categoriesLinearLayoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.categoriesRecycler.layoutManager = categoriesLinearLayoutManager
         binding.categoriesRecycler.adapter = categoryTabsAdapter
-        binding.categoriesRecycler.addItemDecoration(CategoryTabsMarginDecoration(space))
+        binding.categoriesRecycler.addItemDecoration(CategoryTabsMarginDecoration(space/2))
         onCategoryClickSubject.subscribe { categoryId ->
             viewModel.updateCategoryId(categoryId)
         }
