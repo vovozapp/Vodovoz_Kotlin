@@ -42,6 +42,8 @@ class HomeBannersSliderViewHolder(
             offscreenPageLimit = 2  // make sure left/right item is rendered
         }
 
+        binding.dotsIndicator.attachTo(binding.vpBanners)
+
 // increase this offset to show more of left/right
         val offsetPx = space
         binding.vpBanners.setPadding(offsetPx, 0, offsetPx, 0)
