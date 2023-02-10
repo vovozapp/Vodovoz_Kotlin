@@ -250,7 +250,7 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
         binding.rvSearchWords.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvSearchWords.adapter = searchWordAdapter
-        binding.rvSearchWords.addItemDecoration(SearchMarginDecoration(space))
+        binding.rvSearchWords.addItemDecoration(SearchMarginDecoration(space/2))
     }
 
     private val amountControllerTimer = object: CountDownTimer(3000, 3000) {
@@ -397,7 +397,7 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
             when(viewModel.productDetailBundleUI.productDetailUI.isFavorite) {
                 true -> {
                     viewModel.productDetailBundleUI.productDetailUI.isFavorite = false
-                    binding.imgFavorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_ic_favorite))
+                    binding.imgFavorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_black))
                 }
                 false -> {
                     viewModel.productDetailBundleUI.productDetailUI.isFavorite = true
@@ -716,7 +716,7 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
 
         //Favorite
         when(productDetailBundle.productDetailUI.isFavorite) {
-            false -> binding.imgFavorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_ic_favorite))
+            false -> binding.imgFavorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_black))
             true -> binding.imgFavorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_ic_favorite_red))
         }
 

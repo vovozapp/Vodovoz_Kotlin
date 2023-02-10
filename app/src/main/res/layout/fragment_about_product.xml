@@ -10,6 +10,7 @@
     android:padding="16dp"
     android:lineSpacingMultiplier="1.5"
     android:paddingTop="@dimen/space_8"
+    android:textSize="16sp"
     android:paddingStart="@dimen/space_16"
     android:paddingEnd="@dimen/space_16"
     app:expandAction="...еще"

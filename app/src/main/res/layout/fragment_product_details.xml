@@ -29,8 +29,9 @@
                     android:id="@+id/vpPictures"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:layout_marginTop="10dp"
                     android:padding="10dp"
-                    app:layout_constraintWidth_percent="0.7"
+                    app:layout_constraintWidth_percent="0.78"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -59,17 +60,17 @@
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tlIndicators"
                     android:layout_width="0dp"
-                    android:layout_height="10dp"
+                    android:layout_height="15dp"
                     app:layout_constraintEnd_toEndOf="@+id/vpPictures"
                     app:layout_constraintStart_toStartOf="@+id/vpPictures"
                     app:layout_constraintTop_toBottomOf="@id/vpPictures"
-                    app:tabBackground="@drawable/selector_pager_indicator"
+                    app:tabBackground="@drawable/selector_pager_indicator_large"
                     app:tabGravity="center"
                     app:tabIndicatorHeight="0dp"
                     app:tabMode="fixed"
                     app:tabPadding="0dp"
-                    app:tabPaddingEnd="3dp"
-                    app:tabPaddingStart="3dp" />
+                    app:tabPaddingEnd="7dp"
+                    app:tabPaddingStart="7dp" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imgBack"
@@ -97,7 +98,7 @@
                     android:id="@+id/imgFavorite"
                     android:layout_width="@dimen/_18sdp"
                     android:layout_height="@dimen/_18sdp"
-                    android:src="@drawable/png_ic_favorite"
+                    android:src="@drawable/ic_favorite_black"
                     android:layout_margin="@dimen/space_16"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -168,6 +169,7 @@
                     style="@style/TextViewMediumBlackBold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="16sp"
                     android:layout_marginStart="@dimen/space_16"
                     android:layout_marginEnd="@dimen/space_16"
                     android:paddingTop="@dimen/space_2"
@@ -208,6 +210,7 @@
                                 android:layout_height="wrap_content"
                                 android:isIndicator="true"
                                 android:numStars="5"
+                                android:progressTint="@color/accentPrimary"
                                 android:stepSize="1"
                                 android:theme="@style/RatingBar" />
 
@@ -218,6 +221,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="bottom"
+                                android:textColor="@color/color_search"
                                 android:paddingStart="@dimen/space_4"
                                 android:singleLine="true"
                                 tools:ignore="RtlSymmetry"
@@ -235,6 +239,8 @@
                                 android:id="@+id/tvCurrentPrice"
                                 style="@style/TextViewLargeGrayBold"
                                 android:layout_width="wrap_content"
+                                android:textSize="20sp"
+                                android:textColor="@color/text_new_black"
                                 android:layout_height="wrap_content"
                                 android:gravity="start|bottom"
                                 tools:text="280 Р" />
@@ -330,19 +336,21 @@
                     android:layout_height="wrap_content"
                     android:translationZ="0dp"
                     app:tabMode="fixed"
-                    app:tabSelectedTextColor="@color/blackTextPrimary"
+                    app:tabIndicatorFullWidth="false"
+                    app:tabIndicatorHeight="2dp"
+                    app:tabSelectedTextColor="@color/black"
                     app:tabTextAppearance="@style/Tab"
-                    app:tabTextColor="@color/black">
+                    app:tabTextColor="@color/blackTextPrimary">
 
                     <com.google.android.material.tabs.TabItem
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Описание" />
+                        android:text="ОПИСАНИЕ" />
 
                     <com.google.android.material.tabs.TabItem
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Характеристики" />
+                        android:text="ХАРАКТЕРИСТИКИ" />
 
                 </com.google.android.material.tabs.TabLayout>
 
@@ -357,6 +365,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_gray_light"
                     android:layout_marginStart="@dimen/space_16"
+                    android:textSize="12sp"
                     android:layout_marginTop="@dimen/space_16"
                     android:layout_marginEnd="@dimen/space_16"
                     android:text="Потребительская информация" />
@@ -365,6 +374,8 @@
                     android:id="@+id/tvConsumerInfo"
                     style="@style/TextViewSmallGray"
                     android:textColor="@color/text_gray_light"
+                    android:textSize="10sp"
+                    android:lineSpacingExtra="1.4dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_16"
@@ -393,7 +404,7 @@
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:layout_marginStart="@dimen/space_16"
-                        android:padding="@dimen/space_16"
+                        android:padding="@dimen/space_6"
                         app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -416,6 +427,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
+                            android:textSize="18sp"
                             android:gravity="bottom"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/categoryImage"
@@ -428,7 +440,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="top"
-                            android:textColor="@color/text_gray_light"
+                            android:textColor="@color/color_search"
                             android:text="Категория"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/categoryImage"
@@ -445,7 +457,7 @@
                         app:layout_constraintBottom_toBottomOf="@+id/imgCategory"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/imgCategory"
-                        app:tint="@color/text_gray_light"
+                        app:tint="#BDBDBD"
                         tools:ignore="ContentDescription" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -488,6 +500,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
+                            android:textSize="18sp"
                             android:gravity="bottom"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/brandImage"
@@ -500,7 +513,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="top"
-                            android:textColor="@color/text_gray_light"
+                            android:textColor="@color/color_search"
                             android:text="Бренд"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/brandImage"
@@ -517,7 +530,7 @@
                         app:layout_constraintBottom_toBottomOf="@+id/imgBrand"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/imgBrand"
-                        app:tint="@color/text_gray_light"
+                        app:tint="#BDBDBD"
                         tools:ignore="ContentDescription" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -587,6 +600,7 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvSearchWords"
+                    android:layout_marginHorizontal="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -652,6 +666,7 @@
                     android:layout_marginStart="@dimen/space_16"
                     android:layout_marginTop="@dimen/space_16"
                     android:layout_marginEnd="@dimen/space_16"
+                    android:textSize="16sp"
                     android:gravity="bottom"
                     android:text="Нет отзывов"
                     android:visibility="gone" />
@@ -666,17 +681,18 @@
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_write_comment"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/writecomments"
                         app:tint="@color/bluePrimary"
                         tools:ignore="ContentDescription" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvSendComment"
-                        style="@style/TextViewNormalBlueBold"
+                        style="@style/TextViewNormalBlue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="16sp"
                         android:layout_marginStart="4dp"
                         android:text="Написать отзыв" />
 
@@ -709,6 +725,7 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.13"
             tools:ignore="ContentDescription" />
 
         <LinearLayout
@@ -725,6 +742,8 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvFloatingCurrentPrice"
                 style="@style/TextViewMediumBlackBold"
+                android:textSize="20sp"
+                android:textColor="@color/text_new_black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="500 Р" />
@@ -732,6 +751,8 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvFloatingOldPrice"
                 style="@style/TextViewNormalGrayBold"
+                android:textSize="20sp"
+                android:textColor="@color/text_new_black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="650 Р" />
@@ -749,8 +770,10 @@
 
         <RelativeLayout
             android:id="@+id/relativeLayout"
+            android:gravity="center_vertical"
             android:layout_width="@dimen/_100sdp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">

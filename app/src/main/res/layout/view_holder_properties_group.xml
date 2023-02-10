@@ -11,8 +11,10 @@
         android:id="@+id/tvName"
         style="@style/TextViewMediumBlackBold"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/field_height"
+        android:layout_height="@dimen/_30sdp"
+        android:textSize="16sp"
         android:gravity="center_vertical"
+        android:textAllCaps="true"
         android:paddingHorizontal="@dimen/space_16"
         android:background="@color/light_gray"
         tools:text="Основные"/>

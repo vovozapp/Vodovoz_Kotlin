@@ -27,7 +27,7 @@
         app:dotsCornerRadius="16dp"
         android:layout_marginBottom="10dp"
         android:layout_marginHorizontal="16dp"
-        app:dotsSize="5dp"
+        app:dotsSize="4.5dp"
         app:dotsWidthFactor="1"
         app:dotsSpacing="4dp"
         app:selectedDotColor="@color/white"
