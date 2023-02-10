@@ -221,7 +221,7 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
         binding.brandRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.brandRecycler.adapter = primaryProductFiltersAdapter
-        binding.brandRecycler.addItemDecoration(ProductsFiltersMarginDecoration(space))
+        binding.brandRecycler.addItemDecoration(ProductsFiltersMarginDecoration(space/2))
         onBrandClickSubject.subscribeBy { filterValue ->
             viewModel.addPrimaryFilterValue(filterValue)
         }

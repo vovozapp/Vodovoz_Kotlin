@@ -23,6 +23,7 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.util.extensions.debugLog
 
 class ProductGridViewHolder(
     private val binding: ViewHolderProductGridBinding,

@@ -108,6 +108,8 @@
                         tools:text="Популярные бренды" />
 
                     <androidx.recyclerview.widget.RecyclerView
+                        android:layout_marginHorizontal="8dp"
+                        android:layout_marginTop="4dp"
                         android:id="@+id/brandRecycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />

@@ -172,7 +172,6 @@
             android:layout_height="wrap_content"
             android:gravity="bottom"
             android:orientation="vertical"
-            android:layout_marginEnd="@dimen/_36sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -208,7 +207,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:paddingStart="@dimen/space_4"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:gravity="start|bottom"
                     tools:ignore="RtlSymmetry"
                     tools:text="300 Р" />

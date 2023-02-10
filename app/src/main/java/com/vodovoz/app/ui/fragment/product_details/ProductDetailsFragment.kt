@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -492,6 +493,7 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
     private fun fillView(productDetailBundleUI: ProductDetailBundleUI) {
         fillHeader(productDetailBundleUI)
         fillDetailPictureRecycler(productDetailBundleUI.productDetailUI.detailPictureList)
+        binding.tlIndicators.isVisible = productDetailBundleUI.productDetailUI.detailPictureList.size > 1
         fillAboutProduct(productDetailBundleUI.productDetailUI)
         fillCategoryAndBrandSection(productDetailBundleUI)
         fillCommentRecycler(productDetailBundleUI.commentUIList)

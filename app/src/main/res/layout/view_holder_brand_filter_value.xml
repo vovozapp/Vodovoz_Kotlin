@@ -16,8 +16,8 @@
         android:layout_height="match_parent"
         android:paddingTop="@dimen/space_8"
         android:paddingBottom="@dimen/space_8"
-        android:paddingStart="@dimen/space_12"
-        android:paddingEnd="@dimen/space_12"
+        android:paddingStart="@dimen/space_10"
+        android:paddingEnd="@dimen/space_10"
         android:gravity="center"
         tools:text="Some section" />
 
