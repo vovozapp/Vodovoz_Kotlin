@@ -41,6 +41,7 @@ import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -177,7 +178,7 @@ class SearchFragment : ViewStateBaseFragment() {
         categoriesLinearLayoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.categoriesRecycler.layoutManager = categoriesLinearLayoutManager
         binding.categoriesRecycler.adapter = categoryTabsAdapter
-        binding.categoriesRecycler.addItemDecoration(CategoryTabsMarginDecoration(space))
+        binding.categoriesRecycler.addItemDecoration(CategoryTabsMarginDecoration(space/2))
     }
 
     private fun initProductRecycler() {
@@ -400,8 +401,8 @@ class SearchFragment : ViewStateBaseFragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateHeader(categoryUI: CategoryUI) {
-        binding.tvCategoryName.text = categoryUI.name
-        binding.tvProductAmount.text = categoryUI.productAmount
+        binding.tvCategoryName.text = categoryUI.productAmount
+        //binding.tvProductAmount.text = categoryUI.productAmount
 
         when(categoryUI.categoryUIList.isNotEmpty()) {
             true -> {

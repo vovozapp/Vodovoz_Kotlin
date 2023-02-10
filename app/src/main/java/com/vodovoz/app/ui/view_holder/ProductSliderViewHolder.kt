@@ -77,7 +77,7 @@ class ProductSliderViewHolder(
             when(productUI.isFavorite) {
                 true -> {
                     productUI.isFavorite = false
-                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_ic_favorite))
+                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_black))
                 }
                 false -> {
                     productUI.isFavorite = true
@@ -173,7 +173,7 @@ class ProductSliderViewHolder(
 
         //Favorite
         when(productUI.isFavorite) {
-            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite))
+            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
             true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
         }
 

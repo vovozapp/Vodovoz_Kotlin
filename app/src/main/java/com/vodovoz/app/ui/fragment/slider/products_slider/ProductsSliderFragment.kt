@@ -107,7 +107,7 @@ class ProductsSliderFragment : BaseHiddenFragment() {
     }
 
     private fun initCategoryRecycler() {
-        when(config.largeTitle) {
+        /*when(config.largeTitle) {
             true -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 binding.tvName.setTextAppearance(R.style.TextViewHeaderBlackBold)
             } else {
@@ -118,7 +118,7 @@ class ProductsSliderFragment : BaseHiddenFragment() {
             } else {
                 binding.tvName.setTextAppearance(null, R.style.TextViewMediumBlackBold)
             }
-        }
+        }*/
         binding.rvCategories.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         categoriesAdapter = CategoriesAdapter(

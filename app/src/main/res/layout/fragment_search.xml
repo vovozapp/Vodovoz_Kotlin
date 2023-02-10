@@ -82,6 +82,7 @@
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tvCategoryName"
                             style="@style/TextViewLargeBlackBold"
+                            android:textSize="16sp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="bottom"
@@ -115,6 +116,7 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/categoriesRecycler"
+                    android:layout_marginHorizontal="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -143,7 +145,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvSort"
-                    style="@style/TextViewNormalBlack"
+                    style="@style/TextViewNormalBlackBold"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:drawableEnd="@drawable/ic_drop_down"
@@ -162,7 +164,7 @@
                     android:layout_height="@dimen/action_image_size_with_padding_8"
                     android:paddingHorizontal="@dimen/space_8"
                     android:paddingVertical="@dimen/space_10"
-                    android:src="@drawable/png_ic_categories"
+                    android:src="@drawable/filtericon"
                     app:tint="@color/text_black"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -190,6 +192,7 @@
         android:visibility="visible">
 
         <LinearLayout
+            android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -241,6 +244,7 @@
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:text="История"
+                        android:textSize="18sp"
                         android:paddingTop="@dimen/space_8"
                         android:paddingBottom="@dimen/space_8"
                         android:paddingStart="@dimen/space_16"
@@ -278,7 +282,8 @@
                     style="@style/TextViewHeaderBlackBold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Популярное"
+                    android:text="Популярные"
+                    android:textSize="18sp"
                     android:paddingTop="@dimen/space_8"
                     android:paddingBottom="@dimen/space_8"
                     android:paddingStart="@dimen/space_16"
