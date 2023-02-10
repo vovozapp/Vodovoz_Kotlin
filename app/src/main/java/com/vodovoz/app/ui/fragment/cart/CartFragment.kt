@@ -151,6 +151,7 @@ class CartFragment : ViewStateBaseFragment() {
 
     private fun initActionBar() {
         (requireActivity() as AppCompatActivity).setSupportActionBar(binding.incAppBar.tbToolbar)
+        binding.incAppBar.tbToolbar.overflowIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_more_actions)
         binding.incAppBar.tvTitle.text = requireContext().getString(R.string.cart_title)
     }
 

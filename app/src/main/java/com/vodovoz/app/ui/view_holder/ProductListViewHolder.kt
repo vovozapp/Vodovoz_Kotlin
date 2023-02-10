@@ -153,7 +153,7 @@ class ProductListViewHolder(
 
         //If left items = 0
         Log.d(LogSettings.DEVELOP_LOG, "LEFT ITEMS = ${productUI.leftItems}")
-        when(productUI.leftItems == 0) {
+        /*when(productUI.leftItems == 0) {
             true -> {
                 binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_gray_circle_normal)
                 binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_alert))
@@ -162,7 +162,9 @@ class ProductListViewHolder(
                 binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
                 binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_cart))
             }
-        }
+        }*/
+        binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
+        binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_cart))
 
         //Price per unit / or order quantity
         if (productUI.pricePerUnit != 0) {

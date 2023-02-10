@@ -126,6 +126,7 @@
                         style="@style/TextViewNormalBlackBold"
                         android:layout_height="@dimen/field_height"
                         android:paddingStart="@dimen/space_16"
+                        android:textSize="16sp"
                         android:paddingEnd="@dimen/space_16"
                         android:gravity="center_vertical"
                         android:text="Нет в наличии"/>
@@ -148,6 +149,7 @@
                         style="@style/TextViewNormalBlackBold"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/field_height"
+                        android:textSize="16sp"
                         android:fontFamily="@font/rotonda_normal"
                         android:gravity="center_vertical"
                         android:paddingHorizontal="@dimen/space_16"
@@ -162,7 +164,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/llReturnBottlesContainer"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="62dp"
                         android:orientation="horizontal"
                         android:background="@color/white">
 
@@ -177,7 +179,7 @@
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tvReturnBottles"
-                            style="@style/TextViewNormalGray"
+                            style="@style/TextViewNormalGrayBold"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -229,6 +231,7 @@
                         style="@style/TextViewNormalBlackBold"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/field_height"
+                        android:textSize="16sp"
                         android:paddingHorizontal="@dimen/space_16"
                         android:gravity="center_vertical"
                         android:text="Промокод" />
@@ -245,6 +248,7 @@
                             android:id="@+id/etCoupon"
                             style="@style/EditTextViewNormalGray"
                             android:layout_width="0dp"
+                            android:textColor="@color/text_new_black"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:hint="Введите промокод"
@@ -265,6 +269,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/field_height"
                         android:paddingHorizontal="@dimen/space_16"
+                        android:textSize="16sp"
                         android:gravity="center_vertical"
                         android:text="Стоимость без учета доставки" />
 
@@ -277,7 +282,7 @@
                         android:gravity="center_vertical">
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            style="@style/TextViewNormalBlack"
+                            style="@style/TextViewNormalBlackBold"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -286,7 +291,7 @@
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tvFullPrice"
-                            style="@style/TextViewMediumBlackBold"
+                            style="@style/TextViewHeaderBlackBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
@@ -303,7 +308,7 @@
                         android:gravity="center_vertical">
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            style="@style/TextViewNormalBlack"
+                            style="@style/TextViewNormalBlackBold"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -312,7 +317,7 @@
 
                         <TextView
                             android:id="@+id/tvDepositPrice"
-                            style="@style/TextViewMediumBlackBold"
+                            style="@style/TextViewHeaderBlackBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
@@ -329,7 +334,7 @@
                         android:gravity="center_vertical">
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            style="@style/TextViewNormalBlack"
+                            style="@style/TextViewNormalBlackBold"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -338,7 +343,7 @@
 
                         <TextView
                             android:id="@+id/tvDiscountPrice"
-                            style="@style/TextViewMediumBlackBold"
+                            style="@style/TextViewHeaderBlackBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
@@ -355,7 +360,7 @@
                         android:gravity="center_vertical">
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            style="@style/TextViewNormalBlack"
+                            style="@style/TextViewNormalBlackBold"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -364,7 +369,7 @@
 
                         <TextView
                             android:id="@+id/tvTotalPrice"
-                            style="@style/TextViewMediumBlackBold"
+                            style="@style/TextViewHeaderBlackBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
