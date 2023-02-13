@@ -96,7 +96,7 @@ class ProductDetailsFragment : ViewStateBaseFragment() {
         ProductsSliderFragment.newInstance(ProductsSliderConfig(
             containShowAllButton = false,
             largeTitle = true
-        ))
+        ), true)
     }
 
     private val byWithProductsSliderFragment: ProductsSliderFragment by lazy {

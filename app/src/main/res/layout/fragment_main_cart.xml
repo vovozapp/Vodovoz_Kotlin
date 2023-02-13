@@ -222,6 +222,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:paddingBottom="20dp"
                     android:id="@+id/llTotalContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -238,7 +239,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/field_height"
+                        android:layout_height="@dimen/_40sdp"
                         android:orientation="horizontal"
                         android:paddingHorizontal="@dimen/space_16"
                         android:background="@color/white"
@@ -249,6 +250,7 @@
                             style="@style/EditTextViewNormalGray"
                             android:layout_width="0dp"
                             android:textColor="@color/text_new_black"
+                            android:textColorHint="@color/color_search"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:hint="Введите промокод"
@@ -293,6 +295,7 @@
                             android:id="@+id/tvFullPrice"
                             style="@style/TextViewHeaderBlackBold"
                             android:layout_width="wrap_content"
+                            android:textSize="18sp"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
                             android:background="@color/white"/>
@@ -319,6 +322,7 @@
                             android:id="@+id/tvDepositPrice"
                             style="@style/TextViewHeaderBlackBold"
                             android:layout_width="wrap_content"
+                            android:textSize="18sp"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
                             android:background="@color/white"/>
@@ -344,6 +348,7 @@
                         <TextView
                             android:id="@+id/tvDiscountPrice"
                             style="@style/TextViewHeaderBlackBold"
+                            android:textSize="18sp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1135 Р"
@@ -372,6 +377,7 @@
                             style="@style/TextViewHeaderBlackBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="18sp"
                             android:text="1135 Р"
                             android:background="@color/white"/>
 
@@ -402,10 +408,11 @@
                 android:gravity="center">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="@dimen/_35sdp"
-                    android:layout_height="@dimen/_35sdp"
-                    android:src="@drawable/ic_pointer_top"
-                    app:tint="@color/green"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="12dp"
+                    android:src="@drawable/arrowpadarok"
+                    app:tint="#008236"
                     tools:ignore="ContentDescription" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -413,6 +420,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:textColor="#008236"
                     android:fontFamily="@font/rotonda_normal"
                     android:gravity="center"
                     android:text="Ваши подарки"
@@ -420,10 +429,11 @@
                     android:paddingEnd="@dimen/space_16"/>
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="@dimen/_35sdp"
-                    android:layout_height="@dimen/_35sdp"
-                    android:src="@drawable/ic_pointer_top"
-                    app:tint="@color/green"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="12dp"
+                    android:src="@drawable/arrowpadarok"
+                    app:tint="#008236"
                     tools:ignore="ContentDescription" />
 
             </LinearLayout>
@@ -433,6 +443,7 @@
                 style="@style/GreenButton"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_normal_height"
+                android:textSize="16sp"
                 android:layout_marginHorizontal="@dimen/space_16"
                 android:layout_marginTop="@dimen/space_8"
                 android:layout_marginBottom="@dimen/space_16"/>

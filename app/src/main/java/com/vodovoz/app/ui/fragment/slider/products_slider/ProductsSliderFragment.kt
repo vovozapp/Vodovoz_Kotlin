@@ -28,6 +28,7 @@ import com.vodovoz.app.ui.interfaces.IOnFavoriteClick
 import com.vodovoz.app.ui.interfaces.IOnProductClick
 import com.vodovoz.app.ui.interfaces.IOnShowAllProductsClick
 import com.vodovoz.app.ui.model.CategoryDetailUI
+import com.vodovoz.app.util.extensions.sp
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -38,15 +39,24 @@ class ProductsSliderFragment : BaseHiddenFragment() {
 
     companion object {
         private const val CONFIG = "CONFIG"
+        private const val RECOMMEND = "RECOMMEND"
         fun newInstance(
             productsSliderConfig: ProductsSliderConfig
         ) = ProductsSliderFragment().apply {
             arguments = bundleOf(Pair(CONFIG, productsSliderConfig))
         }
+
+        fun newInstance(
+            productsSliderConfig: ProductsSliderConfig,
+            recommend: Boolean
+        ) = ProductsSliderFragment().apply {
+            arguments = bundleOf(Pair(CONFIG, productsSliderConfig), RECOMMEND to recommend)
+        }
     }
 
     private lateinit var categoryDetailUIList: List<CategoryDetailUI>
     private lateinit var config: ProductsSliderConfig
+    private var recommend: Boolean = false
     private lateinit var iOnProductClick: IOnProductClick
     private lateinit var iOnShowAllProductsClick: IOnShowAllProductsClick
     private lateinit var iOnFavoriteClick: IOnFavoriteClick
@@ -74,6 +84,7 @@ class ProductsSliderFragment : BaseHiddenFragment() {
 
     private fun getArgs() {
         config = requireArguments().getParcelable(CONFIG)!!
+        recommend = requireArguments().getBoolean(RECOMMEND)
     }
 
     private fun subscribeSubjects() {
@@ -107,6 +118,10 @@ class ProductsSliderFragment : BaseHiddenFragment() {
     }
 
     private fun initCategoryRecycler() {
+        if (recommend) {
+            binding.tvName.textSize = requireContext().sp(6.5f)
+        }
+
         /*when(config.largeTitle) {
             true -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 binding.tvName.setTextAppearance(R.style.TextViewHeaderBlackBold)

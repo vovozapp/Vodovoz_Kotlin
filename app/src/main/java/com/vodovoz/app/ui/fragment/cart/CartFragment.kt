@@ -303,7 +303,7 @@ class CartFragment : ViewStateBaseFragment() {
         viewModel.discountPriceLD.observe(viewLifecycleOwner) { binding.tvDiscountPrice.setPriceText(it, true) }
         viewModel.totalPriceLD.observe(viewLifecycleOwner) {
             binding.tvTotalPrice.setPriceText(it)
-            binding.btnRegOrder.text = StringBuilder().append("Оформить заказ на ").append(it).append("Р").toString()
+            binding.btnRegOrder.text = StringBuilder().append("Оформить заказ на ").append(it).append(" ₽").toString()
         }
         viewModel.infoMessageLD.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
