@@ -230,8 +230,8 @@ class CartFragment : ViewStateBaseFragment() {
             binding.rvNotAvailableProductRecycler.addItemDecoration(Divider(it, space))
         }
         binding.rvNotAvailableProductRecycler.addMarginDecoration { rect, _, _, _ ->
-            rect.top = space
-            rect.bottom = space
+            rect.top = space/2
+            rect.bottom = space/2
             rect.right = space
         }
     }

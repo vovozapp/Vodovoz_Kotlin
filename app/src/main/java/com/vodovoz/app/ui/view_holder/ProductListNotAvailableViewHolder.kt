@@ -48,12 +48,15 @@ class ProductListNotAvailableViewHolder(
             binding.tvPricePerUnit.visibility = View.GONE
         }
 
+        var haveDiscount = false
+
         //Price
         when(productUI.priceList.size) {
             1 -> {
                 binding.tvPrice.setPriceText(productUI.priceList.first().currentPrice, itCanBeGift = true)
                 binding.tvOldPrice.setPriceText(productUI.priceList.first().oldPrice)
                 binding.tvPriceCondition.visibility = View.GONE
+                if (productUI.priceList.first().currentPrice < productUI.priceList.first().oldPrice || productUI.isGift) haveDiscount = true
             }
             else -> {
                 val minimalPrice = productUI.priceList.maxByOrNull { it.requiredAmount }!!
@@ -64,9 +67,20 @@ class ProductListNotAvailableViewHolder(
             }
         }
 
+        when(haveDiscount) {
+            true -> {
+                binding.tvPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
+                binding.tvOldPrice.visibility = View.VISIBLE
+            }
+            false -> {
+                binding.tvPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_new_black))
+                binding.tvOldPrice.visibility = View.GONE
+            }
+        }
+
         //Favorite
         when(productUI.isFavorite) {
-            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite))
+            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
             true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
         }
 
