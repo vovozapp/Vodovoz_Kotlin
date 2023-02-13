@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
@@ -44,7 +45,7 @@ class PromotionDetailsFragment : ViewStateBaseFragment() {
     private val bestForYouProductsSliderFragment: ProductsSliderFragment by lazy {
         ProductsSliderFragment.newInstance(ProductsSliderConfig(
             containShowAllButton = false
-        )) }
+        ), true) }
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -114,6 +115,10 @@ class PromotionDetailsFragment : ViewStateBaseFragment() {
         }
     }
 
+    private val linearDividerItemDecoration: DividerItemDecoration by lazy {
+        DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+    }
+
     private fun initPromotionProductRecycler() {
         binding.productRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.productRecycler.adapter = linearProductAdapter
@@ -121,6 +126,7 @@ class PromotionDetailsFragment : ViewStateBaseFragment() {
         binding.productRecycler.addItemDecoration(ListMarginDecoration(
             resources.getDimension(R.dimen.space_16).toInt()
         ))
+        binding.productRecycler.addItemDecoration(linearDividerItemDecoration)
     }
 
     private fun initBestForYouProductsSliderFragment() {

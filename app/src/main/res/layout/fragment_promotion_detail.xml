@@ -18,6 +18,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:layout_marginBottom="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -67,6 +68,7 @@
                             android:layout_height="match_parent"
                             android:fontFamily="@font/rotonda_normal"
                             android:gravity="center"
+                            android:textSize="12sp"
                             android:paddingStart="@dimen/space_8"
                             android:paddingEnd="@dimen/space_8"
                             android:textColor="@color/white"
@@ -81,7 +83,7 @@
                         android:layout_height="20dp"
                         android:layout_marginStart="@dimen/space_16"
                         android:layout_marginBottom="4dp"
-                        app:cardBackgroundColor="@color/text_gray"
+                        app:cardBackgroundColor="#999FA1"
                         app:cardCornerRadius="5dp"
                         app:cardElevation="3dp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -93,6 +95,7 @@
                             android:layout_height="match_parent"
                             android:fontFamily="@font/rotonda_normal"
                             android:gravity="center"
+                            android:textSize="12sp"
                             android:paddingStart="@dimen/space_8"
                             android:paddingEnd="@dimen/space_8"
                             android:textColor="@color/white"
@@ -110,16 +113,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_8"
                     android:paddingStart="@dimen/space_16"
+                    android:lineSpacingExtra="10sp"
                     android:paddingEnd="@dimen/space_16"
                     android:layout_marginBottom="@dimen/space_16"
-                    tools:text="Текст"/>
+                    tools:text="Текст ТекстТекстТекстТекстТекстТекстТекстТекстТекстТекстТекстТекстТекстТекстТекстТекстТекст"/>
 
                 <TextView
                     android:id="@+id/promotionProductsTitle"
                     style="@style/TextViewMediumBlackBold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Товары учавствующие в акции"
+                    android:layout_marginTop="16dp"
+                    android:textSize="20sp"
+                    android:text="Товары участвующие в акции:"
                     android:paddingStart="@dimen/space_16"
                     android:paddingEnd="@dimen/space_16"/>
 
