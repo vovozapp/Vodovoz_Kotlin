@@ -134,6 +134,7 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvNotAvailableProductRecycler"
                         android:layout_width="match_parent"
+                        tools:listitem="@layout/view_holder_product_list_not_available"
                         android:layout_height="wrap_content"
                         android:background="@color/white" />
 

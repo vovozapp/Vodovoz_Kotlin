@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -227,11 +228,11 @@ class CartFragment : ViewStateBaseFragment() {
         binding.rvNotAvailableProductRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.rvNotAvailableProductRecycler.adapter = notAvailableCartItemsAdapter
         ContextCompat.getDrawable(requireContext(), R.drawable.bkg_gray_divider)?.let {
-            binding.rvNotAvailableProductRecycler.addItemDecoration(Divider(it, space))
+            binding.rvNotAvailableProductRecycler.addItemDecoration(Divider(it, space/4))
         }
         binding.rvNotAvailableProductRecycler.addMarginDecoration { rect, _, _, _ ->
-            rect.top = space/2
-            rect.bottom = space/2
+            rect.top = space/4
+            rect.bottom = space/4
             rect.right = space
         }
     }
