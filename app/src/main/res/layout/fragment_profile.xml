@@ -23,13 +23,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/bluePrimary"
-                android:padding="@dimen/space_16">
+                android:paddingHorizontal="@dimen/space_16"
+                android:paddingTop="@dimen/space_16"
+                android:paddingBottom="20dp"
+                >
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:cardCornerRadius="100dp"
+                    app:cardBackgroundColor="#00FFFFFF"
+                    app:cardElevation="0dp"
                     app:layout_constraintDimensionRatio="w,1:1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -40,7 +45,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        tools:ignore="ContentDescription" />
+                        android:src="@drawable/circleimageprofile"
+                        tools:ignore="ContentDescription"
+                        app:tint="@color/white" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -68,7 +75,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="8dp"
                         android:fontFamily="@font/rotonda_normal"
                         android:text="Мои данные"
                         android:textColor="@color/white" />
@@ -91,7 +98,7 @@
                 android:id="@+id/ordersSliderFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="@dimen/space_8"
+
                 android:background="@color/light_gray"/>
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -103,6 +110,8 @@
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:gravity="center_vertical"
+                android:textSize="16sp"
+                app:drawableTint="#C2CBCE"
                 android:text="Адреса"
                 android:drawableTint="@color/text_gray"
                 tools:ignore="UseCompatTextViewDrawableXml" />
@@ -113,6 +122,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
+                android:textSize="16sp"
+                app:drawableTint="#C2CBCE"
                 android:gravity="center_vertical"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
@@ -121,13 +132,15 @@
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/TextViewNormalBlack"
+                style="@style/TextViewNormalBlackBold"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/field_height"
                 android:gravity="center_vertical"
                 android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
+                android:textSize="16sp"
+                android:textColor="#6A7480"
+                android:layout_height="@dimen/_40sdp"
                 android:text="Покупки"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
@@ -137,6 +150,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
+                android:textSize="16sp"
+                app:drawableTint="#C2CBCE"
                 android:gravity="center_vertical"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
@@ -150,6 +165,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
+                android:textSize="16sp"
+                app:drawableTint="#C2CBCE"
                 android:gravity="center_vertical"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
@@ -158,9 +175,11 @@
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/TextViewNormalBlack"
+                style="@style/TextViewNormalBlackBold"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/field_height"
+                android:textSize="16sp"
+                android:textColor="#6A7480"
+                android:layout_height="@dimen/_40sdp"
                 android:gravity="center_vertical"
                 android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
@@ -174,6 +193,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
+                android:textSize="16sp"
+                app:drawableTint="#C2CBCE"
                 android:gravity="center_vertical"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
@@ -187,6 +208,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
+                android:textSize="16sp"
+                app:drawableTint="#C2CBCE"
                 android:gravity="center_vertical"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
@@ -195,9 +218,11 @@
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/TextViewNormalBlack"
+                style="@style/TextViewNormalBlackBold"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/field_height"
+                android:textSize="16sp"
+                android:textColor="#6A7480"
+                android:layout_height="@dimen/_40sdp"
                 android:gravity="center_vertical"
                 android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
@@ -214,6 +239,8 @@
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:drawableEnd="@drawable/ic_pointer_right"
+                android:textSize="16sp"
+                app:drawableTint="#C2CBCE"
                 android:text="Анкета"
                 android:drawableTint="@color/text_gray"
                 tools:ignore="UseCompatTextViewDrawableXml" />
@@ -224,6 +251,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
+                android:textSize="16sp"
+                app:drawableTint="#C2CBCE"
                 android:gravity="center_vertical"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
@@ -232,9 +261,11 @@
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/TextViewNormalBlack"
+                style="@style/TextViewNormalBlackBold"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/field_height"
+                android:textSize="16sp"
+                android:textColor="#6A7480"
+                android:layout_height="@dimen/_40sdp"
                 android:gravity="center_vertical"
                 android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
@@ -250,14 +281,18 @@
                 android:gravity="center_vertical"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
+                android:textSize="16sp"
+                app:drawableTint="#C2CBCE"
                 android:text="Настройки уведомлений"
                 android:drawableTint="@color/text_gray"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/TextViewNormalBlack"
+                style="@style/TextViewNormalBlackBold"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/field_height"
+                android:textSize="16sp"
+                android:textColor="#6A7480"
+                android:layout_height="@dimen/_40sdp"
                 android:gravity="center_vertical"
                 android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
@@ -271,6 +306,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
+                android:textSize="16sp"
+                app:drawableTint="#C2CBCE"
                 android:gravity="center_vertical"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
@@ -284,6 +321,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
+                android:textSize="16sp"
+                app:drawableTint="#C2CBCE"
                 android:gravity="center_vertical"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
@@ -296,6 +335,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
+                android:textSize="16sp"
+                app:drawableTint="#C2CBCE"
                 android:gravity="center_vertical"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
@@ -304,14 +345,16 @@
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/TextViewNormalBlack"
+                style="@style/TextViewNormalBlackBold"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/field_height"
+                android:textSize="16sp"
+                android:textColor="#6A7480"
+                android:layout_height="@dimen/_40sdp"
                 android:gravity="center_vertical"
                 android:background="@color/dark_white"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
-                android:text="Приложения"
+                android:text="Приложение"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -320,6 +363,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
                 android:drawableEnd="@drawable/ic_pointer_right"
+                android:textSize="16sp"
+                app:drawableTint="#C2CBCE"
                 android:gravity="center_vertical"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
@@ -328,16 +373,37 @@
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextViewNormalBlackBold"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:background="@color/dark_white"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:layout_height="@dimen/_30sdp"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvLogout"
                 style="@style/TextViewNormalBlackBold"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
+                android:textSize="16sp"
                 android:textColor="@color/red"
                 android:gravity="center"
-                android:background="@color/dark_white"
+                android:background="@color/white"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:text="Выйти из аккаунта"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextViewNormalBlack"
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"
+            android:background="@color/dark_white"
+            android:paddingStart="@dimen/space_16"
+            android:paddingEnd="@dimen/space_16"
+            android:layout_height="@dimen/_30sdp"
+            tools:ignore="UseCompatTextViewDrawableXml" />
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/viewedProductsSliderFragment"

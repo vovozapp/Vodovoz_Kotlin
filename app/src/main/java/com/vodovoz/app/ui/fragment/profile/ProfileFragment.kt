@@ -61,7 +61,7 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
     private val viewedProductsSliderFragment: ProductsSliderFragment by lazy {
         ProductsSliderFragment.newInstance(ProductsSliderConfig(
             containShowAllButton = false
-        ))
+        ), true)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -260,7 +260,7 @@ class ProfileFragment : ViewStateBaseDialogFragment() {
     private fun fillUserData(userDataUI: UserDataUI) {
         Glide.with(requireContext())
             .load(userDataUI.avatar)
-            .placeholder(ContextCompat.getDrawable(requireContext(), R.drawable.png_default_avatar))
+            .placeholder(ContextCompat.getDrawable(requireContext(), R.drawable.circleimageprofile))
             .into(binding.avatar)
 
         binding.name.text = StringBuilder()
