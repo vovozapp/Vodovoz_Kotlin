@@ -7,9 +7,11 @@ import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.R
@@ -65,6 +67,11 @@ class AboutAppDialogFragment : Fragment() {
         binding.rvActions.addMarginDecoration { rect, view, parent, state ->
             if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.bottom = space
         }
+
+        val divider = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+        ContextCompat.getDrawable(requireContext(), R.drawable.bg_border_gray)
+            ?.let { divider.setDrawable(it) }
+        binding.rvActions.addItemDecoration(divider)
         binding.rvActions.adapter = aboutAppActionsAdapter
         aboutAppActionsAdapter.setupListeners { aboutAppAction ->
             when(aboutAppAction) {

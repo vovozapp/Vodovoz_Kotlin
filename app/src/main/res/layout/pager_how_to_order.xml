@@ -17,14 +17,14 @@
 
     <TextView
         android:id="@+id/stepTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/rotonda_normal"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="@color/blackTextDark"
-        android:paddingStart="64dp"
-        android:paddingEnd="64dp"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
         android:paddingTop="@dimen/space_16"
         android:paddingBottom="4dp"
         android:gravity="center"
@@ -32,13 +32,13 @@
 
     <TextView
         android:id="@+id/stepDetails"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/rotonda_normal"
         android:textSize="14sp"
         android:textColor="@color/blackTextPrimary"
-        android:paddingStart="64dp"
-        android:paddingEnd="64dp"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
         android:paddingTop="4dp"
         android:gravity="center"
         android:text="Положите товар в корзину чтобы его купить" />

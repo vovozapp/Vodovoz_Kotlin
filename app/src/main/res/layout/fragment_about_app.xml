@@ -19,8 +19,8 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cwAppImage"
-            android:layout_width="@dimen/_100sdp"
-            android:layout_height="@dimen/_100sdp"
+            android:layout_width="@dimen/_90sdp"
+            android:layout_height="@dimen/_90sdp"
             app:cardCornerRadius="@dimen/corner_10"
             app:cardElevation="0dp"
             app:layout_constraintBottom_toTopOf="@+id/rvActions"
@@ -42,7 +42,9 @@
             style="@style/TextViewNormalBlackBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_16"
             android:padding="@dimen/space_8"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="@+id/cwAppImage"
             app:layout_constraintStart_toStartOf="@+id/cwAppImage"
             app:layout_constraintTop_toBottomOf="@+id/cwAppImage"

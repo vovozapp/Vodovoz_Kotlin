@@ -1,10 +1,13 @@
 package com.vodovoz.app.ui.fragment.about_services
 
 import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -62,6 +65,7 @@ class AboutServicesDialogFragment : ViewStateBaseDialogFragment() {
 
     override fun update() { viewModel.updateData() }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun initView() {
         initAppBar()
         initServicesRecycler()
@@ -98,6 +102,7 @@ class AboutServicesDialogFragment : ViewStateBaseDialogFragment() {
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun observeViewModel() {
         viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
             when(state) {
@@ -109,7 +114,12 @@ class AboutServicesDialogFragment : ViewStateBaseDialogFragment() {
         }
 
         viewModel.aboutServicesBundleLD.observe(viewLifecycleOwner) { aboutServicesBundleUI ->
-            binding.tvDetails.text = HtmlCompat.fromHtml(aboutServicesBundleUI.detail!!, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+            binding.tvDetails.text =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Html.fromHtml(aboutServicesBundleUI.detail, Html.FROM_HTML_MODE_LEGACY)
+                } else {
+                    HtmlCompat.fromHtml(aboutServicesBundleUI.detail!!, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                }
             binding.incAppBar.tvTitle.text = aboutServicesBundleUI.title
 
             val diffUtil = ServiceDiffUtilCallback(

@@ -2,7 +2,7 @@
 <resources>
     //About App
     <string name="about_app_title">О приложении</string>
-    <string name="app_version_text">Версия %s</string>
+    <string name="app_version_text">Версия: %s</string>
     <string name="write_to_developers">Написать разработчикам</string>
     <string name="rate_app_text">Оценить приложение</string>
     <string name="share_app_text">Поделиться приложением</string>

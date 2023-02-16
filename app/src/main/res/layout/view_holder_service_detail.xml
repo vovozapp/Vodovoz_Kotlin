@@ -21,12 +21,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space_8"
+            android:textSize="16sp"
             tools:text="Название"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvDetails"
             style="@style/TextViewNormalGray"
             android:layout_width="match_parent"
+            android:textColor="@color/text_new_black"
+            android:lineSpacingExtra="3dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space_8"
             tools:text="Описание"/>
