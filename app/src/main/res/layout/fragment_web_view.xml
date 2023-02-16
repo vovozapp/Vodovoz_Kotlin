@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        app:elevation="0dp">
+        app:elevation="3dp">
 
         <include
             android:id="@+id/incAppBar"

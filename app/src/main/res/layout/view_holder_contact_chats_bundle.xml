@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="45dp"
     android:background="@color/white">
 
     <TextView
@@ -13,9 +13,9 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:fontFamily="@font/rotonda_normal"
-        android:padding="@dimen/space_16"
-        android:textColor="@color/blackTextPrimary"
-        android:textSize="16sp"
+        android:paddingHorizontal="@dimen/space_16"
+        android:textColor="@color/black"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/chatIconsRecycler"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,8 +26,8 @@
         android:id="@+id/chatIconsRecycler"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/name"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/name" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

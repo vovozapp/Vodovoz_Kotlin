@@ -6,21 +6,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <include
+        android:id="@+id/incAppBar"
+        layout="@layout/app_bar_default" />
+
+    <!--<com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        app:elevation="0dp">
+        app:elevation="3dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:contentInsetStart="-18dp"
             app:title="Связаться с нами"
             app:titleTextAppearance="@style/ToolbarTitle"/>
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>-->
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/contentContainer"
@@ -34,13 +39,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="45dp"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="@dimen/space_16"
                 android:fontFamily="@font/rotonda_normal"
@@ -48,10 +49,6 @@
                 android:textColor="@color/blackTextDark"
                 android:textSize="16sp"
                 android:text="Телефоны"/>
-
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/phonesRecycler"
@@ -61,7 +58,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="45dp"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="@dimen/space_16"
                 android:fontFamily="@font/rotonda_normal"
@@ -70,9 +67,6 @@
                 android:textSize="16sp"
                 android:text="Почты"/>
 
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/emailsRecycler"

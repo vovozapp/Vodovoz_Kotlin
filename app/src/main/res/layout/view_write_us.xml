@@ -2,12 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/light_gray">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="45dp"
         android:gravity="center_vertical"
         android:paddingHorizontal="@dimen/space_16"
         android:fontFamily="@font/rotonda_normal"
@@ -15,10 +16,6 @@
         android:textColor="@color/blackTextDark"
         android:textSize="16sp"
         android:text="Написать нам"/>
-
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/name"
@@ -28,15 +25,16 @@
         android:paddingHorizontal="@dimen/space_16"
         android:gravity="center_vertical"
         android:fontFamily="@font/rotonda_normal"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textColor="@color/blackTextPrimary"
         android:singleLine="true"
         android:hint="Имя*"/>
 
 
     <com.google.android.material.divider.MaterialDivider
+        app:dividerColor="@color/light_gray"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="0.5dp" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/phone"
@@ -46,15 +44,16 @@
         android:paddingHorizontal="@dimen/space_16"
         android:gravity="center_vertical"
         android:fontFamily="@font/rotonda_normal"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textColor="@color/blackTextPrimary"
         android:singleLine="true"
         android:hint="Телефон*"/>
 
 
     <com.google.android.material.divider.MaterialDivider
+        app:dividerColor="@color/light_gray"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="0.5dp" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/email"
@@ -64,26 +63,46 @@
         android:paddingHorizontal="@dimen/space_16"
         android:gravity="center_vertical"
         android:fontFamily="@font/rotonda_normal"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textColor="@color/blackTextPrimary"
         android:singleLine="true"
         android:hint="Email*"/>
 
     <com.google.android.material.divider.MaterialDivider
+        app:dividerColor="@color/light_gray"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="1dp" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/description"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="120dp"
         android:background="@color/white"
         android:paddingHorizontal="@dimen/space_16"
-        android:gravity="center_vertical"
+        android:gravity="top"
+        android:padding="@dimen/space_16"
         android:fontFamily="@font/rotonda_normal"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textColor="@color/blackTextPrimary"
         android:hint="Что вас интересует?*"/>
+
+    <com.google.android.material.divider.MaterialDivider
+        app:dividerColor="@color/light_gray"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/space_16"
+        android:background="@color/white"
+        android:paddingVertical="@dimen/space_16"
+        android:fontFamily="@font/rotonda_normal"
+        android:textSize="12sp"
+        android:textAlignment="textEnd"
+        android:textColor="@color/blackTextDark"
+        android:text="*-обязательно для заполнения "/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -97,7 +116,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/space_16"
             android:fontFamily="@font/rotonda_normal"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textColor="@color/blackTextDark"
             android:text="Я подтверждаю согласие на на обработку  персональных данных"/>
 
@@ -109,12 +128,13 @@
     </LinearLayout>
 
     <Button
+        android:layout_marginTop="@dimen/space_16"
         android:id="@+id/submit"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="40dp"
         android:background="@drawable/bkg_button_blue_rect_disabled"
-        android:layout_marginBottom="@dimen/space_16"
-        android:layout_marginHorizontal="@dimen/space_16"
+        android:layout_marginBottom="@dimen/space_24"
+        android:layout_marginHorizontal="40dp"
         android:text="Отправить"/>
 
 </LinearLayout>

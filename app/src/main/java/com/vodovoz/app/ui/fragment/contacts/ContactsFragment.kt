@@ -8,12 +8,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.vodovoz.app.R
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.databinding.FragmentContactsBinding
 import com.vodovoz.app.ui.adapter.EmailContactsAdapter
@@ -95,26 +97,27 @@ class ContactsFragment : ViewStateBaseFragment() {
     }
 
     private fun initActionBar() {
-        (requireActivity() as AppCompatActivity).let { appCompatActivity ->
-            appCompatActivity.setSupportActionBar(binding.toolbar)
-            appCompatActivity.supportActionBar?.setDisplayShowHomeEnabled(true)
-            appCompatActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        }
-        binding.toolbar.setNavigationOnClickListener {
+        binding.incAppBar.imgBack.setOnClickListener {
             findNavController().popBackStack()
         }
-        binding.contentContainer.setScrollElevation(binding.appBar)
+        binding.incAppBar.tvTitle.text = "Связаться с нами"
     }
 
     private fun initPhonesRecycler() {
         binding.phonesRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.phonesRecycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        val divider = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+        ContextCompat.getDrawable(requireContext(), R.drawable.bg_border_gray)
+            ?.let { divider.setDrawable(it) }
+        binding.phonesRecycler.addItemDecoration(divider)
         binding.phonesRecycler.adapter = phoneContactsAdapter
     }
 
     private fun initEmailsRecycler() {
         binding.emailsRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.emailsRecycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        val divider = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+        ContextCompat.getDrawable(requireContext(), R.drawable.bg_border_gray)
+            ?.let { divider.setDrawable(it) }
+        binding.emailsRecycler.addItemDecoration(divider)
         binding.emailsRecycler.adapter = emailContactsAdapter
     }
 
