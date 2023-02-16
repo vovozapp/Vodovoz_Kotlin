@@ -5,6 +5,7 @@
     android:id="@+id/tvTitle"
     style="@style/TextViewMediumBlackBold"
     android:layout_marginHorizontal="@dimen/space_16"
+    android:textSize="16sp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="@string/personal_addresses_title"/>

@@ -121,9 +121,9 @@ class AddressVH(
         binding.tvAdditionalInfo.text = StringBuilder()
             .append("Под:")
             .append(addressUI.entrance)
-            .append(" Этаж:")
+            .append(", Этаж:")
             .append(addressUI.floor)
-            .append(" Кв:")
+            .append(", Кв:")
             .append(addressUI.flat)
             .toString()
     }

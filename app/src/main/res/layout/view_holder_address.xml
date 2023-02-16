@@ -9,8 +9,10 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvAddress"
+        android:layout_marginTop="@dimen/space_16"
         style="@style/TextViewNormalBlack"
         android:layout_width="0dp"
+        android:textSize="16sp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/space_16"
         android:fontFamily="@font/rotonda_normal"
@@ -34,14 +36,15 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgEdit"
-        android:layout_width="@dimen/_20sdp"
-        android:layout_height="@dimen/_20sdp"
+        android:layout_width="@dimen/_30sdp"
+        android:padding="4dp"
+        android:layout_height="@dimen/_30sdp"
         android:src="@drawable/png_edit_old"
         android:layout_marginEnd="@dimen/space_16"
         app:layout_constraintBottom_toBottomOf="@+id/tvAdditionalInfo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvAddress"
-        app:tint="@color/text_gray"
+        app:tint="@color/color_search"
         tools:ignore="ContentDescription" />
 
     <com.google.android.material.divider.MaterialDivider
