@@ -37,11 +37,18 @@
     </style>
 
     <style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="hintTextColor">@drawable/selector_input_layout_box_stroke</item>
-        <item name="boxStrokeColor">@drawable/selector_input_layout_box_stroke</item>
-        <item name="startIconTint">@drawable/selector_input_layout_box_stroke</item>
+        <item name="hintTextColor">@drawable/selector_input_layout_box_stroke_new</item>
+        <item name="boxStrokeColor">@drawable/selector_input_layout_box_stroke_new</item>
+        <item name="startIconTint">@drawable/selector_input_layout_box_stroke_new</item>
         <item name="boxCornerRadiusTopStart">5dp</item>
         <item name="boxCornerRadiusTopEnd">5dp</item>
+    </style>
+
+    <style name="TextInputAddress" parent="TextInputLayout">
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
     </style>
 
     <style name="TextField">

@@ -8,14 +8,14 @@
     <string name="new_address_title">Новый адрес</string>
     <string name="locality_hint_text">Город</string>
     <string name="street_hint_text">Улица</string>
-    <string name="house_hint_text">Дом</string>
+    <string name="house_hint_text">Дом/к/стр</string>
     <string name="entrance_hint_text">Подъезд</string>
     <string name="floor_hint_text">Этаж</string>
     <string name="flat_hint_text">Квартира</string>
     <string name="office_hint_text">Офис</string>
     <string name="personal_house_delivery_text">Доставка в частный дом</string>
     <string name="company_office_delivery_text">Доставка в офис</string>
-    <string name="courier_comment_hint_text">Комментарий курьеру</string>
+    <string name="courier_comment_hint_text">Примечание для курьера</string>
     <string name="submit_address_btn_text">Подтвердить</string>
 
 </resources>

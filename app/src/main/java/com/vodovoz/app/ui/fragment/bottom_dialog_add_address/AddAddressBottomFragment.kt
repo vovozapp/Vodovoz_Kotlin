@@ -5,14 +5,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomsheet.BottomSheetBehavior.*
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.data.config.AddressConfig
 import com.vodovoz.app.databinding.BsAddAddressBinding
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -45,6 +45,14 @@ class AddAddressBottomFragment : ViewStateBaseBottomFragment() {
         initButtons()
         initFields()
         observeViewModel()
+        initBottom()
+    }
+
+    private fun initBottom() {
+        dialog?.let {
+            val behavior = (it as BottomSheetDialog).behavior
+            behavior.peekHeight = (resources.displayMetrics.heightPixels/1.4).toInt()
+        }
     }
 
     private fun initSwitchGroup() {
@@ -72,6 +80,11 @@ class AddAddressBottomFragment : ViewStateBaseBottomFragment() {
                     false -> AddressConfig.OFFICE_ADDRESS_TYPE
                 }
             )
+        }
+
+        binding.cancel.setOnClickListener {
+            val behavior = (dialog as BottomSheetDialog).behavior
+            behavior.state = STATE_HIDDEN
         }
     }
 
@@ -105,7 +118,7 @@ class AddAddressBottomFragment : ViewStateBaseBottomFragment() {
             binding.etLocality.setText(address.locality ?: "")
             binding.etStreet.setText(address.street ?: "")
             binding.etHouse.setText(address.house ?: "")
-            binding.tvFullAddress.text = address.fullAddress ?: ""
+         //   binding.tvFullAddress.text = address.fullAddress ?: ""
         }
 
         viewModel.localityLD.observe(viewLifecycleOwner) { error ->
