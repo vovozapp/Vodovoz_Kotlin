@@ -34,8 +34,8 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:elevation="0dp"
+        android:background="@android:color/white"
+        app:elevation="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -52,21 +52,21 @@
             android:paddingStart="10dp"
             android:paddingEnd="@dimen/space_8"
             android:gravity="center_vertical"
-            android:background="@drawable/bkg_search_address">
+            >
 
             <ImageView
                 android:id="@+id/searchImage"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:src="@drawable/png_map_marker"
-                tools:ignore="ContentDescription" />
+                android:src="@drawable/ic_search"
+                tools:ignore="ContentDescription"
+                app:tint="@color/color_search" />
 
             <EditText
                 android:id="@+id/searchEdit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/rotonda_normal"
-                android:hint="Введите адрес"
                 android:textColor="@color/blackTextDark"
                 android:textColorHint="@color/blackTextPrimary"
                 android:paddingStart="@dimen/space_16"

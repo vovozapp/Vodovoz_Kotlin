@@ -3,6 +3,7 @@ package com.vodovoz.app.ui.fragment.bottom_dialog_add_address
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -51,7 +52,7 @@ class AddAddressBottomFragment : ViewStateBaseBottomFragment() {
     private fun initBottom() {
         dialog?.let {
             val behavior = (it as BottomSheetDialog).behavior
-            behavior.peekHeight = (resources.displayMetrics.heightPixels/1.4).toInt()
+            behavior.peekHeight = (resources.displayMetrics.heightPixels/1.3).toInt()
         }
     }
 
@@ -118,7 +119,8 @@ class AddAddressBottomFragment : ViewStateBaseBottomFragment() {
             binding.etLocality.setText(address.locality ?: "")
             binding.etStreet.setText(address.street ?: "")
             binding.etHouse.setText(address.house ?: "")
-         //   binding.tvFullAddress.text = address.fullAddress ?: ""
+            binding.tvFullAddress.isVisible = address.fullAddress.isNotBlank()
+            binding.tvFullAddress.text = address.fullAddress ?: ""
         }
 
         viewModel.localityLD.observe(viewLifecycleOwner) { error ->

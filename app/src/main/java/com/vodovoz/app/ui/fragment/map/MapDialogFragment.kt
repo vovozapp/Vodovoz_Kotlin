@@ -13,7 +13,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -24,7 +23,6 @@ import com.vodovoz.app.databinding.FragmentMapBinding
 import com.vodovoz.app.ui.adapter.AddressesResultAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.SimpleAddressDiffUtilCallback
 import com.vodovoz.app.ui.extensions.ColorExtensions.getColorWithAlpha
 import com.vodovoz.app.ui.model.DeliveryZoneUI
@@ -32,19 +30,15 @@ import com.vodovoz.app.util.LogSettings
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
-import com.yandex.mapkit.geometry.BoundingBox
-import com.yandex.mapkit.geometry.LinearRing
-import com.yandex.mapkit.geometry.Point
-import com.yandex.mapkit.geometry.Polygon
+import com.yandex.mapkit.geometry.*
 import com.yandex.mapkit.layers.ObjectEvent
 import com.yandex.mapkit.location.Location
 import com.yandex.mapkit.location.LocationListener
 import com.yandex.mapkit.location.LocationStatus
-import com.yandex.mapkit.map.CameraPosition
-import com.yandex.mapkit.map.InputListener
+import com.yandex.mapkit.map.*
 import com.yandex.mapkit.map.Map
-import com.yandex.mapkit.map.PlacemarkMapObject
 import com.yandex.mapkit.search.*
+import com.yandex.mapkit.search.Session.SearchListener
 import com.yandex.mapkit.user_location.UserLocationLayer
 import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
@@ -60,8 +54,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 class MapDialogFragment : ViewStateBaseFragment(),
     InputListener,
     UserLocationObjectListener,
-    SuggestSession.SuggestListener
-{
+    SuggestSession.SuggestListener {
 
     private lateinit var binding: FragmentMapBinding
     private val viewModel: MapViewModel by viewModels()
@@ -78,16 +71,18 @@ class MapDialogFragment : ViewStateBaseFragment(),
     private val boxSize = 0.2
     private val boundingBox = BoundingBox(
         Point(center.latitude - boxSize, center.longitude - boxSize),
-        Point(center.latitude + boxSize, center.longitude + boxSize))
+        Point(center.latitude + boxSize, center.longitude + boxSize)
+    )
     private val searchOptions = SuggestOptions().setSuggestTypes(
         SuggestType.GEO.value or
-        SuggestType.BIZ.value or
-        SuggestType.TRANSIT.value
+                SuggestType.BIZ.value or
+                SuggestType.TRANSIT.value
     )
 
     private val compositeDisposable = CompositeDisposable()
     private val onAddressClickSubject: PublishSubject<Pair<String, Point>> = PublishSubject.create()
-    private val addressesAdapter = AddressesResultAdapter(onAddressClickSubject = onAddressClickSubject)
+    private val addressesAdapter =
+        AddressesResultAdapter(onAddressClickSubject = onAddressClickSubject)
 
     private var isEditOldAddressMode = false
 
@@ -109,13 +104,31 @@ class MapDialogFragment : ViewStateBaseFragment(),
     private fun subscribeSubjects() {
         onAddressClickSubject.subscribeBy { pair ->
             binding.searchEdit.setText(pair.first)
-            viewModel.fetchAddressByGeocode(
-                pair.second.latitude,
-                pair.second.longitude
+
+            searchManager.submit(
+                pair.first,
+                VisibleRegionUtils.toPolygon(binding.mapView.map.visibleRegion),
+                SearchOptions(),
+                object : SearchListener {
+                    override fun onSearchResponse(p0: Response) {
+
+                        val point = Point(
+                            p0.collection.children[0].obj?.geometry?.get(0)?.point?.latitude!!,
+                            p0.collection.children[0].obj?.geometry?.get(0)?.point?.longitude!!
+                        )
+
+                        viewModel.fetchAddressByGeocode(point.latitude, point.longitude)
+                        moveCamera(point)
+                        placeMark(point, R.drawable.png_map_marker)
+                        hideSearchResultRecyclerView()
+                    }
+
+                    override fun onSearchError(p0: Error) {
+
+                    }
+                }
             )
-            moveCamera(pair.second)
-            placeMark(pair.second, R.drawable.png_map_marker)
-            hideSearchResultRecyclerView()
+
         }.addTo(compositeDisposable)
     }
 
@@ -129,6 +142,7 @@ class MapDialogFragment : ViewStateBaseFragment(),
         super.onStart()
         MapKitFactory.getInstance().onStart()
         binding.mapView.onStart()
+        moveCamera(center)
     }
 
     override fun setContentView(
@@ -141,7 +155,9 @@ class MapDialogFragment : ViewStateBaseFragment(),
     ).apply { binding = this }.root
 
 
-    override fun update() { viewModel.updateData() }
+    override fun update() {
+        viewModel.updateData()
+    }
 
     override fun initView() {
         initMap()
@@ -152,7 +168,12 @@ class MapDialogFragment : ViewStateBaseFragment(),
     private fun initAddressesRecycler() {
         binding.addressesRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.addressesRecycler.adapter = addressesAdapter
-        binding.addressesRecycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        binding.addressesRecycler.addItemDecoration(
+            DividerItemDecoration(
+                requireContext(),
+                DividerItemDecoration.VERTICAL
+            )
+        )
     }
 
     private fun initMap() {
@@ -165,7 +186,11 @@ class MapDialogFragment : ViewStateBaseFragment(),
 
         mapKit.createLocationManager().requestSingleUpdate(object : LocationListener {
             override fun onLocationUpdated(p0: Location) {
-                Toast.makeText(requireContext(), "${p0.getPosition().latitude} ${p0.getPosition().longitude}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "${p0.getPosition().latitude} ${p0.getPosition().longitude}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
             override fun onLocationStatusUpdated(p0: LocationStatus) {
@@ -197,12 +222,17 @@ class MapDialogFragment : ViewStateBaseFragment(),
             if (isFocus) showSearchResultRecyclerView()
         }
         binding.searchImage.setOnClickListener {
-            sequenceOf(Toast.makeText(requireContext(), isShowSearchResult.toString(), Toast.LENGTH_SHORT))
+            sequenceOf(
+                Toast.makeText(
+                    requireContext(),
+                    isShowSearchResult.toString(),
+                    Toast.LENGTH_SHORT
+                )
+            )
             if (isShowSearchResult) {
                 binding.searchEdit.text = null
                 hideSearchResultRecyclerView()
-            }
-            else {
+            } else {
                 showSearchResultRecyclerView()
             }
         }
@@ -216,13 +246,23 @@ class MapDialogFragment : ViewStateBaseFragment(),
 
     private fun showSearchResultRecyclerView() {
         isShowSearchResult = true
-        binding.appBarLayout.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        binding.appBarLayout.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.white
+            )
+        )
         binding.addAddress.visibility = View.INVISIBLE
         binding.addressesRecycler.visibility = View.VISIBLE
-        binding.searchImage.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_left))
+        binding.searchImage.setImageDrawable(
+            ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.ic_arrow_left
+            )
+        )
         binding.searchEdit.focusSearch(View.FOCUS_UP)
         binding.searchContainer.elevation = 0f
-        binding.searchContainer.setBackgroundResource(R.drawable.bkg_search_address)
+        //binding.searchContainer.setBackgroundResource(R.drawable.bkg_search_address)
     }
 
     private fun searchAddresses(query: String) {
@@ -231,20 +271,31 @@ class MapDialogFragment : ViewStateBaseFragment(),
 
     private fun hideSearchResultRecyclerView() {
         isShowSearchResult = false
-        binding.appBarLayout.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.transparent))
+        binding.appBarLayout.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                android.R.color.white
+            )
+        )
         binding.addAddress.visibility = View.VISIBLE
         binding.addressesRecycler.visibility = View.INVISIBLE
-        binding.searchImage.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_map_marker))
+        binding.searchImage.setImageDrawable(
+            ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.ic_search
+            )
+        )
         binding.searchEdit.clearFocus()
         binding.searchContainer.elevation = resources.getDimension(R.dimen.elevation_3)
-        binding.searchContainer.setBackgroundResource(R.drawable.bkg_search_address)
+        // binding.searchContainer.setBackgroundResource(R.drawable.bkg_search_address)
         val view = requireActivity().currentFocus
         if (view != null) {
-            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+            val imm =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
             imm!!.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeViewModel()
@@ -252,8 +303,9 @@ class MapDialogFragment : ViewStateBaseFragment(),
 
     private fun observeViewModel() {
         viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
-            Toast.makeText(requireContext(), "${state::class.simpleName}", Toast.LENGTH_SHORT).show()
-            when(state) {
+            Toast.makeText(requireContext(), "${state::class.simpleName}", Toast.LENGTH_SHORT)
+                .show()
+            when (state) {
                 is ViewState.Hide -> onStateHide()
                 is ViewState.Error -> onStateError(state.errorMessage)
                 is ViewState.Loading -> onStateLoading()
@@ -323,12 +375,17 @@ class MapDialogFragment : ViewStateBaseFragment(),
     }
 
     override fun onObjectAdded(userLocationView: UserLocationView) {
-        Log.d(LogSettings.DEVELOP_LOG, "${userLocationView.arrow.geometry.latitude} : ${userLocationView.arrow.geometry.longitude}")
+        Log.d(
+            LogSettings.DEVELOP_LOG,
+            "${userLocationView.arrow.geometry.latitude} : ${userLocationView.arrow.geometry.longitude}"
+        )
         binding.mapView.map.move(
-            CameraPosition(Point(
-                userLocationView.arrow.geometry.longitude,
-                userLocationView.arrow.geometry.latitude
-            ), 16f, 0f, 0f),
+            CameraPosition(
+                Point(
+                    userLocationView.arrow.geometry.longitude,
+                    userLocationView.arrow.geometry.latitude
+                ), 16f, 0f, 0f
+            ),
             Animation(Animation.Type.SMOOTH, 1f),
             null
         )
@@ -347,13 +404,15 @@ class MapDialogFragment : ViewStateBaseFragment(),
         for (item in itemList) {
             if (item.uri?.contains("geo") == true) {
                 val coordinates = item.uri?.split("&")?.first()?.split("=")?.get(1)?.split("%2C")
-                addressList.add(Pair(
-                    item.displayText.toString(),
-                    Point(
-                        coordinates?.last()?.toDouble() ?: 0.0,
-                        coordinates?.first()?.toDouble() ?: 0.0
+                addressList.add(
+                    Pair(
+                        item.displayText.toString(),
+                        Point(
+                            coordinates?.last()?.toDoubleOrNull() ?: 0.0,
+                            coordinates?.first()?.toDoubleOrNull() ?: 0.0
+                        )
                     )
-                ))
+                )
             }
         }
         updateAddressesRecycler(addressList)
