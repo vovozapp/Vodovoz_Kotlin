@@ -53,7 +53,6 @@ class OrdersHistoryFragment : ViewStateBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         subscribeSubjects()
     }
 
@@ -70,21 +69,6 @@ class OrdersHistoryFragment : ViewStateBaseFragment() {
         updateSubject.subscribeBy {
 
         }.addTo(compositeDisposable)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.orders_history_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            R.id.filters -> {
-                findNavController().navigate(OrdersHistoryFragmentDirections.actionToOrdersFiltersDialog(
-                    viewModel.ordersFiltersBundleUI
-                ))
-            }
-        }
-        return false
     }
 
     override fun setContentView(
@@ -118,19 +102,19 @@ class OrdersHistoryFragment : ViewStateBaseFragment() {
     }
 
     private fun initActionBar() {
-        (requireActivity() as AppCompatActivity).let { appCompatActivity ->
-            appCompatActivity.setSupportActionBar(binding.tbToolbar)
-            appCompatActivity.supportActionBar?.setDisplayShowHomeEnabled(true)
-            appCompatActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        }
-        binding.tbToolbar.setNavigationOnClickListener {
+        binding.bar.imgBack.setOnClickListener {
             findNavController().popBackStack()
+        }
+
+        binding.bar.filter.setOnClickListener {
+            findNavController().navigate(OrdersHistoryFragmentDirections.actionToOrdersFiltersDialog(
+                viewModel.ordersFiltersBundleUI
+            ))
         }
     }
 
     private fun initOrdersRecycler() {
         val space = resources.getDimension(R.dimen.space_16).toInt()
-        binding.rvOrders.setScrollElevation(binding.apAppBar)
         binding.rvOrders.layoutManager = LinearLayoutManager(requireContext())
         binding.rvOrders.adapter = pagingOrdersAdapter.withLoadStateHeaderAndFooter(
             header = LoadStateAdapter(updateSubject),

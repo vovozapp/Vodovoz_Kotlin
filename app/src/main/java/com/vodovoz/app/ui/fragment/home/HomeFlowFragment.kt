@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -189,7 +190,10 @@ class HomeFlowFragment : BaseFragment() {
             }
 
             override fun onShowAllFavoritesClick() {
-                findNavController().navigate(R.id.favoriteFragment)
+                val navHostFragment =
+                    (childFragmentManager.findFragmentById(R.id.fgvContainer)) as NavHostFragment
+                val navController = navHostFragment.navController
+                navController.navigate(R.id.favoriteFragment)
             }
 
             //POSITION_3

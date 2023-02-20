@@ -2,8 +2,8 @@
 <resources>
     //History
     <string name="orders_history_title">История заказов</string>
-    <string name="empty_history_title">Ничего не найдено</string>
-    <string name="empty_history_subtitle">Попробуйте изменить параметры фильтров</string>
+    <string name="empty_history_title">Вы не совершили ещё ни одного заказа</string>
+    <string name="empty_history_subtitle">История заказов показывает всю информацию по заказам. Совершите свой первый заказ, нажав в корзине на кнопку Оформить заказ!</string>
 
     //Card Slider
     <string name="more_details_about_order_btn_text">Подробнее</string>
