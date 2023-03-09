@@ -1,22 +1,25 @@
 package com.vodovoz.app.ui.fragment.home.viewholders.homebrands.inneradapter
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ListAdapter
 import com.vodovoz.app.R
-import com.vodovoz.app.ui.model.BrandUI
+import com.vodovoz.app.ui.base.content.itemadapter.Item
+import com.vodovoz.app.ui.base.content.itemadapter.ItemAdapter
+import com.vodovoz.app.ui.base.content.itemadapter.ItemViewHolder
 
 class HomeBrandsInnerAdapter(
     private val clickListener: HomeBrandsSliderClickListener
-) : ListAdapter<BrandUI, HomeBrandsInnerViewHolder>(HomeBrandsInnerDiffUtilCallback()){
+) : ItemAdapter(){
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeBrandsInnerViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.view_holder_slider_brand, parent, false)
-        return HomeBrandsInnerViewHolder(view, clickListener)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
+
+        return when(viewType) {
+            R.layout.view_holder_slider_brand -> {
+                HomeBrandsInnerViewHolder(getViewFromInflater(viewType, parent), clickListener)
+            }
+            else -> {
+                throw IllegalArgumentException("Adapter item viewType not found")
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: HomeBrandsInnerViewHolder, position: Int) {
-        holder.bind(getItem(position))
-    }
 }

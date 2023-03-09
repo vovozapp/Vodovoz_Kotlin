@@ -1,14 +1,14 @@
 package com.vodovoz.app.ui.fragment.home.viewholders.homecomments.inneradapter
 
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderSliderCommentBinding
+import com.vodovoz.app.ui.base.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.model.CommentUI
 
 class HomeCommentsInnerViewHolder(
     view: View,
     private val clickListener: HomeCommentsSliderClickListener
-) : RecyclerView.ViewHolder(view) {
+) : ItemViewHolder<CommentUI>(view) {
 
     private val binding: ViewHolderSliderCommentBinding = ViewHolderSliderCommentBinding.bind(view)
 
@@ -19,14 +19,15 @@ class HomeCommentsInnerViewHolder(
         }
     }
 
-    fun bind(comment: CommentUI) {
-        binding.rbRating.rating = comment.rating?.toFloat() ?: 0f
-        binding.tvAuthor.text = if (comment.author == "null") "" else comment.author
-        binding.tvComment.text = comment.text ?: ""
-        binding.tvDate.text = comment.date ?: ""
+    override fun bind(item: CommentUI) {
+        super.bind(item)
+        binding.rbRating.rating = item.rating?.toFloat() ?: 0f
+        binding.tvAuthor.text = if (item.author == "null") "" else item.author
+        binding.tvComment.text = item.text ?: ""
+        binding.tvDate.text = item.date ?: ""
     }
 
     private fun getItemByPosition(): CommentUI? {
-        return (bindingAdapter as? HomeCommentsInnerAdapter)?.currentList?.get(bindingAdapterPosition)
+        return (bindingAdapter as? HomeCommentsInnerAdapter)?.getItem(bindingAdapterPosition) as? CommentUI
     }
 }

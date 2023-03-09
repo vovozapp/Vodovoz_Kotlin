@@ -1,15 +1,15 @@
 package com.vodovoz.app.ui.fragment.home.viewholders.homebrands.inneradapter
 
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vodovoz.app.databinding.ViewHolderSliderBrandBinding
+import com.vodovoz.app.ui.base.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.model.BrandUI
 
 class HomeBrandsInnerViewHolder(
     view: View,
     private val clickListener: HomeBrandsSliderClickListener
-) : RecyclerView.ViewHolder(view) {
+) : ItemViewHolder<BrandUI>(view) {
 
     private val binding: ViewHolderSliderBrandBinding = ViewHolderSliderBrandBinding.bind(view)
 
@@ -20,14 +20,15 @@ class HomeBrandsInnerViewHolder(
         }
     }
 
-    fun bind(banner: BrandUI) {
+    override fun bind(item: BrandUI) {
+        super.bind(item)
         Glide
             .with(itemView.context)
-            .load(banner.detailPicture)
+            .load(item.detailPicture)
             .into(binding.imgPicture)
     }
 
     private fun getItemByPosition(): BrandUI? {
-        return (bindingAdapter as? HomeBrandsInnerAdapter)?.currentList?.get(bindingAdapterPosition)
+        return (bindingAdapter as? HomeBrandsInnerAdapter)?.getItem(bindingAdapterPosition) as? BrandUI
     }
 }

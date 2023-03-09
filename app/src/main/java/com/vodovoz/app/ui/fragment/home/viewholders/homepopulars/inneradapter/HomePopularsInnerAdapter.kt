@@ -1,22 +1,25 @@
 package com.vodovoz.app.ui.fragment.home.viewholders.homepopulars.inneradapter
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ListAdapter
 import com.vodovoz.app.R
-import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.ui.base.content.itemadapter.Item
+import com.vodovoz.app.ui.base.content.itemadapter.ItemAdapter
+import com.vodovoz.app.ui.base.content.itemadapter.ItemViewHolder
 
 class HomePopularsInnerAdapter(
     private val clickListener: HomePopularCategoriesSliderClickListener
-) : ListAdapter<CategoryUI, HomePopularsInnerViewHolder>(HomePopularsDiffUtilCallback()){
+) : ItemAdapter() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomePopularsInnerViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.view_holder_slider_popular_category, parent, false)
-        return HomePopularsInnerViewHolder(view, clickListener)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
+
+        return when(viewType) {
+            R.layout.view_holder_slider_popular_category -> {
+                HomePopularsInnerViewHolder(getViewFromInflater(viewType, parent), clickListener)
+            }
+            else -> {
+                throw IllegalArgumentException("Adapter item viewType not found")
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: HomePopularsInnerViewHolder, position: Int) {
-        holder.bind(getItem(position))
-    }
 }

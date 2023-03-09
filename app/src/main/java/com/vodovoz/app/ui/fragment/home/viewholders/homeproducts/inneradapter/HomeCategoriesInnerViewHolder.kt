@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderSliderProductCategoryBinding
+import com.vodovoz.app.ui.base.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.decoration.ProductSliderMarginDecoration
 import com.vodovoz.app.ui.fragment.home.viewholders.homeproducts.inneradapter.inneradapterproducts.HomeProductsInnerAdapter
 import com.vodovoz.app.ui.fragment.home.viewholders.homeproducts.inneradapter.inneradapterproducts.HomeProductsInnerClickListener

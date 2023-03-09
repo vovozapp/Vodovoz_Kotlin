@@ -1,14 +1,14 @@
 package com.vodovoz.app.ui.fragment.home.viewholders.homepopulars.inneradapter
 
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderSliderPopularCategoryBinding
+import com.vodovoz.app.ui.base.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.model.CategoryUI
 
 class HomePopularsInnerViewHolder(
     view: View,
     private val clickListener: HomePopularCategoriesSliderClickListener
-) : RecyclerView.ViewHolder(view) {
+) : ItemViewHolder<CategoryUI>(view) {
 
     private val binding: ViewHolderSliderPopularCategoryBinding = ViewHolderSliderPopularCategoryBinding.bind(view)
 
@@ -19,11 +19,12 @@ class HomePopularsInnerViewHolder(
         }
     }
 
-    fun bind(category: CategoryUI) {
-        binding.tvName.text = category.name
+    override fun bind(item: CategoryUI) {
+        super.bind(item)
+        binding.tvName.text = item.name
     }
 
     private fun getItemByPosition(): CategoryUI? {
-        return (bindingAdapter as? HomePopularsInnerAdapter)?.currentList?.get(bindingAdapterPosition)
+        return (bindingAdapter as? HomePopularsInnerAdapter)?.getItem(bindingAdapterPosition) as? CategoryUI
     }
 }

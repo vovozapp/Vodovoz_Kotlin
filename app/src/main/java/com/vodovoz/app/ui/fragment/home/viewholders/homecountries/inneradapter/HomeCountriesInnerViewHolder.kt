@@ -4,13 +4,14 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vodovoz.app.databinding.ViewHolderSliderCountryBinding
+import com.vodovoz.app.ui.base.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.model.CountryUI
 
 class HomeCountriesInnerViewHolder(
     view: View,
     private val clickListener: HomeCountriesSliderClickListener,
     private val cardWidth: Double
-) : RecyclerView.ViewHolder(view) {
+) : ItemViewHolder<CountryUI>(view) {
 
     private val binding: ViewHolderSliderCountryBinding = ViewHolderSliderCountryBinding.bind(view)
 
@@ -25,16 +26,17 @@ class HomeCountriesInnerViewHolder(
         }
     }
 
-    fun bind(country: CountryUI) {
-        binding.tvName.text = country.name
+    override fun bind(item: CountryUI) {
+        super.bind(item)
+        binding.tvName.text = item.name
 
         Glide
             .with(itemView.context)
-            .load(country.detailPicture)
+            .load(item.detailPicture)
             .into(binding.imgFlag)
     }
 
     private fun getItemByPosition(): CountryUI? {
-        return (bindingAdapter as? HomeCountriesInnerAdapter)?.currentList?.get(bindingAdapterPosition)
+        return (bindingAdapter as? HomeCountriesInnerAdapter)?.getItem(bindingAdapterPosition) as? CountryUI
     }
 }
