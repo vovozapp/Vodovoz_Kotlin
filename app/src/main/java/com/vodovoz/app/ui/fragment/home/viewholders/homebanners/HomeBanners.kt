@@ -1,6 +1,6 @@
 package com.vodovoz.app.ui.fragment.home.viewholders.homebanners
 
-import com.vodovoz.app.ui.fragment.home.adapter.Item
+import com.vodovoz.app.ui.base.content.itemadapter.Item
 import com.vodovoz.app.ui.model.BannerUI
 
 data class HomeBanners(

@@ -4,7 +4,7 @@ import androidx.fragment.app.activityViewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentMainFavoriteFlowBinding
-import com.vodovoz.app.ui.base.BaseFragment
+import com.vodovoz.app.ui.base.content.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

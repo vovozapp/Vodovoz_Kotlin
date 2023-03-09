@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vodovoz.app.ui.fragment.home.adapter.HomeMainAdapter
 import com.vodovoz.app.ui.fragment.home.adapter.HomeMainClickListener
-import com.vodovoz.app.ui.fragment.home.adapter.Item
+import com.vodovoz.app.ui.base.content.itemadapter.Item
 
 class HomeController(
     private val context: Context,

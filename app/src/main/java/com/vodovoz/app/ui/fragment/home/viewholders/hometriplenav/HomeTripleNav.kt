@@ -1,7 +1,7 @@
 package com.vodovoz.app.ui.fragment.home.viewholders.hometriplenav
 
 import com.vodovoz.app.R
-import com.vodovoz.app.ui.fragment.home.adapter.Item
+import com.vodovoz.app.ui.base.content.itemadapter.Item
 
 data class HomeTripleNav(
     val id : Int

@@ -1,7 +1,7 @@
 package com.vodovoz.app.ui.fragment.home.viewholders.homepromotions
 
 import com.vodovoz.app.R
-import com.vodovoz.app.ui.fragment.home.adapter.Item
+import com.vodovoz.app.ui.base.content.itemadapter.Item
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 
 data class HomePromotions(

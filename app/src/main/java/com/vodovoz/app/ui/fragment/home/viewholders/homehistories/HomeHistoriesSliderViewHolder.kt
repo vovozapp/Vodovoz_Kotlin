@@ -2,26 +2,18 @@ package com.vodovoz.app.ui.fragment.home.viewholders.homehistories
 
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
-import com.vodovoz.app.data.model.common.ActionEntity
-import com.vodovoz.app.databinding.FragmentSliderBannerBinding
 import com.vodovoz.app.databinding.FragmentSliderHistoryBinding
-import com.vodovoz.app.ui.adapter.HistoriesSliderAdapter
+import com.vodovoz.app.ui.base.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.fragment.home.adapter.HomeMainClickListener
-import com.vodovoz.app.ui.fragment.home.viewholders.homebanners.inneradapter.HomeBannersSliderClickListener
 import com.vodovoz.app.ui.fragment.home.viewholders.homehistories.inneradapter.HomeHistoriesInnerAdapter
 import com.vodovoz.app.ui.fragment.home.viewholders.homehistories.inneradapter.HomeHistoriesSliderClickListener
-import com.vodovoz.app.ui.model.BannerUI
-import com.vodovoz.app.ui.model.HistoryUI
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 
 class HomeHistoriesSliderViewHolder(
     view: View,
     private val clickListener: HomeMainClickListener
-) : RecyclerView.ViewHolder(view) {
+) : ItemViewHolder<HomeHistories>(view) {
 
     private val binding: FragmentSliderHistoryBinding = FragmentSliderHistoryBinding.bind(view)
     private val historiesSliderAdapter = HomeHistoriesInnerAdapter(getHomeHistoriesSliderClickListener())
@@ -43,8 +35,9 @@ class HomeHistoriesSliderViewHolder(
         }
     }
 
-    fun bind(items: HomeHistories) {
-        historiesSliderAdapter.submitList(items.items)
+    override fun bind(item: HomeHistories) {
+        super.bind(item)
+        historiesSliderAdapter.submitList(item.items)
     }
 
     private fun getHomeHistoriesSliderClickListener() : HomeHistoriesSliderClickListener {

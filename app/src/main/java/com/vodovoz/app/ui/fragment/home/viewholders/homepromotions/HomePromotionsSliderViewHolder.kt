@@ -1,11 +1,9 @@
 package com.vodovoz.app.ui.fragment.home.viewholders.homepromotions
 
-import android.os.Build
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentSliderPromotionBinding
+import com.vodovoz.app.ui.base.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.fragment.home.adapter.HomeMainClickListener
 import com.vodovoz.app.ui.fragment.home.viewholders.homepromotions.inneradapter.HomePromotionsInnerAdapter
 import com.vodovoz.app.ui.fragment.home.viewholders.homepromotions.inneradapter.HomePromotionsSliderClickListener
@@ -13,7 +11,7 @@ import com.vodovoz.app.ui.fragment.home.viewholders.homepromotions.inneradapter.
 class HomePromotionsSliderViewHolder(
     view: View,
     private val clickListener: HomeMainClickListener
-) : RecyclerView.ViewHolder(view) {
+) : ItemViewHolder<HomePromotions>(view) {
 
     private val binding: FragmentSliderPromotionBinding = FragmentSliderPromotionBinding.bind(view)
     private val homePromotionsAdapter = HomePromotionsInnerAdapter(getHomePromotionsSliderClickListener())
@@ -26,13 +24,14 @@ class HomePromotionsSliderViewHolder(
         binding.vpPromotions.adapter = homePromotionsAdapter
     }
 
-    fun bind(items: HomePromotions) {
+    override fun bind(item: HomePromotions) {
+        super.bind(item)
 
-        binding.tvName.text = items.items.title
+        binding.tvName.text = item.items.title
 
-        homePromotionsAdapter.submitList(items.items.promotionUIList)
+        homePromotionsAdapter.submitList(item.items.promotionUIList)
 
-        when(items.items.containShowAllButton) {
+        when(item.items.containShowAllButton) {
             true -> binding.tvShowAll.visibility = View.VISIBLE
             false -> binding.tvShowAll.visibility = View.INVISIBLE
         }

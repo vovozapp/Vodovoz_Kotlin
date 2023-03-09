@@ -3,7 +3,10 @@ package com.vodovoz.app.ui.fragment.catalog
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
-import com.vodovoz.app.ui.base.*
+import com.vodovoz.app.ui.base.content.PagingStateViewModel
+import com.vodovoz.app.ui.base.content.State
+import com.vodovoz.app.ui.base.content.stringToErrorState
+import com.vodovoz.app.ui.base.content.toErrorState
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers

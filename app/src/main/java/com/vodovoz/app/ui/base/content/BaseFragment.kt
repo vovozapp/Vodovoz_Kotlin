@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.base
+package com.vodovoz.app.ui.base.content
 
 import android.os.Bundle
 import android.view.LayoutInflater

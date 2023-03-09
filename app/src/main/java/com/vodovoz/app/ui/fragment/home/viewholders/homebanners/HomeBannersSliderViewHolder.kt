@@ -11,21 +11,19 @@ import androidx.viewpager2.widget.ViewPager2
 import com.vodovoz.app.R
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentSliderBannerBinding
-import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
+import com.vodovoz.app.ui.base.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.fragment.home.adapter.HomeMainClickListener
 import com.vodovoz.app.ui.fragment.home.viewholders.homebanners.inneradapter.HomeBannersInnerAdapter
 import com.vodovoz.app.ui.fragment.home.viewholders.homebanners.inneradapter.HomeBannersSliderClickListener
-import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.*
 import java.util.*
-import kotlin.coroutines.CoroutineContext
 
 class HomeBannersSliderViewHolder(
     view: View,
     private val clickListener: HomeMainClickListener,
     width: Int,
     ratio: Double
-) : RecyclerView.ViewHolder(view) {
+) : ItemViewHolder<HomeBanners>(view) {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private val binding: FragmentSliderBannerBinding = FragmentSliderBannerBinding.bind(view)
@@ -77,10 +75,11 @@ class HomeBannersSliderViewHolder(
         )
     }
 
-    fun bind(items: HomeBanners) {
-        homeBannersAdapter.submitList(items.items)
+    override fun bind(item: HomeBanners) {
+        super.bind(item)
+        homeBannersAdapter.submitList(item.items)
         if (autoTimerTask == null) {
-            binding.vpBanners.enableAutoScroll(items.items.size)
+            binding.vpBanners.enableAutoScroll(item.items.size)
         }
     }
 

@@ -2,9 +2,9 @@ package com.vodovoz.app.ui.fragment.home.viewholders.homepopulars
 
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentSliderPopularBinding
+import com.vodovoz.app.ui.base.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.fragment.home.adapter.HomeMainClickListener
 import com.vodovoz.app.ui.fragment.home.viewholders.homepopulars.inneradapter.HomePopularCategoriesSliderClickListener
@@ -13,7 +13,7 @@ import com.vodovoz.app.ui.fragment.home.viewholders.homepopulars.inneradapter.Ho
 class HomePopularCategoriesSliderViewHolder(
     view: View,
     private val clickListener: HomeMainClickListener
-) : RecyclerView.ViewHolder(view) {
+) : ItemViewHolder<HomePopulars>(view) {
 
     private val binding: FragmentSliderPopularBinding = FragmentSliderPopularBinding.bind(view)
     private val homePopularsAdapter = HomePopularsInnerAdapter(getHomePopularsSliderClickListener())
@@ -35,8 +35,9 @@ class HomePopularCategoriesSliderViewHolder(
         binding.rvPopularCategories.adapter = homePopularsAdapter
     }
 
-    fun bind(items: HomePopulars) {
-        homePopularsAdapter.submitList(items.items)
+    override fun bind(item: HomePopulars) {
+        super.bind(item)
+        homePopularsAdapter.submitList(item.items)
     }
 
     private fun getHomePopularsSliderClickListener() : HomePopularCategoriesSliderClickListener {

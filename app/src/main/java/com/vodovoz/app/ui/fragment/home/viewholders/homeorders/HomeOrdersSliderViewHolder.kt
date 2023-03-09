@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentSliderOrderBinding
+import com.vodovoz.app.ui.base.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.fragment.home.adapter.HomeMainClickListener
 import com.vodovoz.app.ui.fragment.home.viewholders.homeorders.inneradapter.HomeOrdersInnerAdapter
 import com.vodovoz.app.ui.fragment.home.viewholders.homeorders.inneradapter.HomeOrdersSliderClickListener
@@ -13,7 +14,7 @@ import com.vodovoz.app.ui.fragment.home.viewholders.homeorders.inneradapter.Home
 class HomeOrdersSliderViewHolder(
     view: View,
     private val clickListener: HomeMainClickListener
-) : RecyclerView.ViewHolder(view) {
+) : ItemViewHolder<HomeOrders>(view) {
 
     private val binding: FragmentSliderOrderBinding = FragmentSliderOrderBinding.bind(view)
     private val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
@@ -45,11 +46,12 @@ class HomeOrdersSliderViewHolder(
         )
     }
 
-    fun bind(items: HomeOrders) {
+    override fun bind(item: HomeOrders) {
+        super.bind(item)
 
-        homeOrdersAdapter.submitList(items.items)
+        homeOrdersAdapter.submitList(item.items)
 
-        when(items.orderSliderConfig.containTitleContainer) {
+        when(item.orderSliderConfig.containTitleContainer) {
             true -> binding.llTitleContainer.visibility = View.VISIBLE
             false -> binding.llTitleContainer.visibility = View.GONE
         }

@@ -1,36 +1,29 @@
 package com.vodovoz.app.ui.fragment.home.viewholders.homeproducts
 
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ahmadhamwi.tabsync.TabbedListMediator
 import com.google.android.material.tabs.TabLayout
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentSliderProductBinding
 import com.vodovoz.app.databinding.ViewCustomTabBinding
-import com.vodovoz.app.ui.adapter.CategoriesAdapter
+import com.vodovoz.app.ui.base.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.fragment.home.adapter.HomeMainClickListener
 import com.vodovoz.app.ui.fragment.home.viewholders.homeproducts.HomeProducts.Companion.BOTTOM_PROD
 import com.vodovoz.app.ui.fragment.home.viewholders.homeproducts.HomeProducts.Companion.DISCOUNT
 import com.vodovoz.app.ui.fragment.home.viewholders.homeproducts.HomeProducts.Companion.NOVELTIES
 import com.vodovoz.app.ui.fragment.home.viewholders.homeproducts.HomeProducts.Companion.TOP_PROD
-import com.vodovoz.app.ui.fragment.home.viewholders.homeproducts.HomeProducts.Companion.VIEWED
 import com.vodovoz.app.ui.fragment.home.viewholders.homeproducts.inneradapter.HomeCategoriesInnerAdapter
 import com.vodovoz.app.ui.fragment.home.viewholders.homeproducts.inneradapter.HomeCategoriesInnerClickListener
-import com.vodovoz.app.ui.fragment.home.viewholders.homeproducts.inneradapter.inneradapterproducts.HomeProductsInnerClickListener
-import com.vodovoz.app.ui.model.CategoryDetailUI
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 
 class HomeProductsSliderViewHolder(
     view: View,
     private val clickListener: HomeMainClickListener
-) : RecyclerView.ViewHolder(view) {
+) : ItemViewHolder<HomeProducts>(view) {
 
     private val binding: FragmentSliderProductBinding = FragmentSliderProductBinding.bind(view)
     private val space: Int by lazy { itemView.resources.getDimension(R.dimen.space_16).toInt() }
@@ -61,9 +54,10 @@ class HomeProductsSliderViewHolder(
         )
     }
 
-    fun bind(items: HomeProducts) {
+    override fun bind(item: HomeProducts) {
+        super.bind(item)
 
-        homeCategoriesAdapter.submitList(items.items)
+        homeCategoriesAdapter.submitList(item.items)
 
         /*when(items.productsSliderConfig.largeTitle) {
             true -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -78,8 +72,8 @@ class HomeProductsSliderViewHolder(
             }
         }*/
 
-        initShowAllProductsButtons(items)
-        updateCategoryTabs(items)
+        initShowAllProductsButtons(item)
+        updateCategoryTabs(item)
     }
 
 

@@ -3,7 +3,6 @@ package com.vodovoz.app.ui.fragment.catalog
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,7 +11,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentMainCatalogBinding
 import com.vodovoz.app.ui.adapter.MainCatalogAdapter
-import com.vodovoz.app.ui.base.BaseFragment
+import com.vodovoz.app.ui.base.content.BaseFragment
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable

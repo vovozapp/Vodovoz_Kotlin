@@ -15,7 +15,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.data.config.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentMainHomeFlowBinding
-import com.vodovoz.app.ui.base.BaseFragment
+import com.vodovoz.app.ui.base.content.BaseFragment
 import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragment
 import com.vodovoz.app.ui.fragment.catalog.CatalogFragmentDirections
 import com.vodovoz.app.ui.fragment.home.adapter.HomeMainClickListener
