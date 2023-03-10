@@ -1,6 +1,8 @@
 package com.vodovoz.app.ui.model
 
 import android.os.Parcelable
+import com.vodovoz.app.R
+import com.vodovoz.app.ui.base.content.itemadapter.Item
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -24,5 +26,20 @@ data class ProductUI(
     val depositPrice: Int = 0,
     val detailPictureList: List<String> = listOf(),
     val replacementProductUIList: List<ProductUI> = listOf()
-) : Parcelable
+) : Parcelable, Item {
+
+    companion object {
+        const val PRODUCT_VIEW_TYPE = -500
+    }
+
+    override fun getItemViewType(): Int {
+        return PRODUCT_VIEW_TYPE
+    }
+
+    override fun areItemsTheSame(item: Item): Boolean {
+        if (item !is ProductUI) return false
+
+        return id == item.id
+    }
+}
 

@@ -5,10 +5,10 @@ import android.graphics.Paint
 import android.os.CountDownTimer
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderSliderProductBinding
+import com.vodovoz.app.ui.base.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
@@ -18,7 +18,7 @@ import com.vodovoz.app.ui.model.ProductUI
 class HomeProductsInnerViewHolder(
     view: View,
     private val clickListener: HomeProductsInnerClickListener
-) : RecyclerView.ViewHolder(view) {
+) : ItemViewHolder<ProductUI>(view) {
 
     private val binding: ViewHolderSliderProductBinding = ViewHolderSliderProductBinding.bind(view)
 
@@ -85,10 +85,11 @@ class HomeProductsInnerViewHolder(
         }
     }
 
-    fun bind(productUI: ProductUI) {
+    override fun bind(item: ProductUI) {
+        super.bind(item)
 
         //If left items = 0
-        when(productUI.leftItems == 0) {
+        when(item.leftItems == 0) {
             true -> {
                 binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_gray_circle_normal)
                 binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_alert))
@@ -100,24 +101,24 @@ class HomeProductsInnerViewHolder(
         }
 
         //Price per unit / or order quantity
-        when(productUI.pricePerUnit != 0) {
+        when(item.pricePerUnit != 0) {
             true -> {
                 binding.tvPricePerUnit.visibility = View.VISIBLE
-                binding.tvPricePerUnit.setPricePerUnitText(productUI.pricePerUnit)
+                binding.tvPricePerUnit.setPricePerUnitText(item.pricePerUnit)
             }
             false -> binding.tvPricePerUnit.visibility = View.GONE
         }
 
         //Price
         var haveDiscount = false
-        when(productUI.priceList.size) {
+        when(item.priceList.size) {
             1 -> {
-                binding.tvCurrentPrice.setPriceText(productUI.priceList.first().currentPrice)
-                binding.tvOldPrice.setPriceText(productUI.priceList.first().oldPrice)
-                if (productUI.priceList.first().currentPrice < productUI.priceList.first().oldPrice || productUI.isGift) haveDiscount = true
+                binding.tvCurrentPrice.setPriceText(item.priceList.first().currentPrice)
+                binding.tvOldPrice.setPriceText(item.priceList.first().oldPrice)
+                if (item.priceList.first().currentPrice < item.priceList.first().oldPrice || item.isGift) haveDiscount = true
             }
             else -> {
-                val minimalPrice = productUI.priceList.maxByOrNull { it.requiredAmount }!!
+                val minimalPrice = item.priceList.maxByOrNull { it.requiredAmount }!!
                 binding.tvCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice)
                 binding.tvPricePerUnit.visibility = View.GONE
             }
@@ -134,40 +135,40 @@ class HomeProductsInnerViewHolder(
         }
 
         //Cart amount
-        binding.amountController.circleAmount.text = productUI.cartQuantity.toString()
-        binding.amountController.amount.text = productUI.cartQuantity.toString()
+        binding.amountController.circleAmount.text = item.cartQuantity.toString()
+        binding.amountController.amount.text = item.cartQuantity.toString()
 
-        when (productUI.cartQuantity > 0) {
+        when (item.cartQuantity > 0) {
             true -> binding.amountController.circleAmount.visibility = View.VISIBLE
             false -> binding.amountController.circleAmount.visibility = View.GONE
         }
 
         //Favorite
-        when(productUI.isFavorite) {
+        when(item.isFavorite) {
             false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
             true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
         }
 
         //Status
         var isNotHaveStatuses = true
-        when (productUI.status.isEmpty()) {
+        when (item.status.isEmpty()) {
             true -> binding.rlStatusContainer.visibility = View.GONE
             false -> {
                 binding.rlStatusContainer.visibility = View.VISIBLE
-                binding.tvStatus.text = productUI.status
-                binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(productUI.statusColor))
+                binding.tvStatus.text = item.status
+                binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(item.statusColor))
             }
         }
 
         //DiscountPercent
-        when(productUI.priceList.size == 1 &&
-                productUI.priceList.first().currentPrice < productUI.priceList.first().oldPrice) {
+        when(item.priceList.size == 1 &&
+                item.priceList.first().currentPrice < item.priceList.first().oldPrice) {
             true -> {
                 isNotHaveStatuses = false
                 binding.cwDiscountContainer.visibility = View.VISIBLE
                 binding.tvDiscountPercent.setDiscountPercent(
-                    newPrice = productUI.priceList.first().currentPrice,
-                    oldPrice = productUI.priceList.first().oldPrice
+                    newPrice = item.priceList.first().currentPrice,
+                    oldPrice = item.priceList.first().oldPrice
                 )
             }
             false -> binding.cwDiscountContainer.visibility = View.GONE
@@ -181,12 +182,12 @@ class HomeProductsInnerViewHolder(
         //UpdatePictures
         Glide
             .with(itemView.context)
-            .load(productUI.detailPicture)
+            .load(item.detailPicture)
             .into(binding.imgPicture)
     }
 
     private fun getItemByPosition(): ProductUI? {
-        return (bindingAdapter as? HomeProductsInnerAdapter)?.getItem(bindingAdapterPosition)
+        return (bindingAdapter as? HomeProductsInnerAdapter)?.getItem(bindingAdapterPosition) as? ProductUI
     }
 
     private fun hideAmountController() {

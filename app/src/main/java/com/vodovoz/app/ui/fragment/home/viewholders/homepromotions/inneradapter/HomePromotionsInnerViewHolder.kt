@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderSliderPromotionBinding
+import com.vodovoz.app.ui.base.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.fragment.home.viewholders.homepromotions.inneradapter.inneradapterproducts.HomePromotionsProductInnerAdapter
 import com.vodovoz.app.ui.fragment.home.viewholders.homepromotions.inneradapter.inneradapterproducts.HomePromotionsProductInnerClickListener
 import com.vodovoz.app.ui.model.PromotionUI
@@ -15,7 +16,7 @@ import com.vodovoz.app.ui.model.PromotionUI
 class HomePromotionsInnerViewHolder(
     view: View,
     private val clickListener: HomePromotionsSliderClickListener
-) : RecyclerView.ViewHolder(view) {
+) : ItemViewHolder<PromotionUI>(view) {
 
     private val binding: ViewHolderSliderPromotionBinding = ViewHolderSliderPromotionBinding.bind(view)
     private val homePromotionProductAdapter = HomePromotionsProductInnerAdapter(getHomePromotionsProductInnerClickListener())
@@ -52,24 +53,23 @@ class HomePromotionsInnerViewHolder(
         binding.rvProducts.adapter = homePromotionProductAdapter
     }
 
-    fun bind(promotion: PromotionUI) {
-        binding.tvName.text = promotion.name
-        binding.tvTimeLeft.text = promotion.timeLeft
-        binding.tvCustomerCategory.text = promotion.customerCategory
-        binding.cwCustomerCategory.setCardBackgroundColor(Color.parseColor(promotion.statusColor))
+    override fun bind(item: PromotionUI) {
+        super.bind(item)
+        binding.tvName.text = item.name
+        binding.tvTimeLeft.text = item.timeLeft
+        binding.tvCustomerCategory.text = item.customerCategory
+        binding.cwCustomerCategory.setCardBackgroundColor(Color.parseColor(item.statusColor))
 
         Glide
             .with(itemView.context)
-            .load(promotion.detailPicture)
+            .load(item.detailPicture)
             .into(binding.imgImage)
 
-        homePromotionProductAdapter.submitList(promotion.productUIList)
+        homePromotionProductAdapter.submitList(item.productUIList)
     }
 
     private fun getItemByPosition(): PromotionUI? {
-        return (bindingAdapter as? HomePromotionsInnerAdapter)?.getItem(
-            bindingAdapterPosition
-        )
+        return (bindingAdapter as? HomePromotionsInnerAdapter)?.getItem(bindingAdapterPosition) as? PromotionUI
     }
 
     private fun getHomePromotionsProductInnerClickListener() : HomePromotionsProductInnerClickListener {
