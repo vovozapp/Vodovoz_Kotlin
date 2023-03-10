@@ -15,7 +15,7 @@ import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CatalogFragment : BaseFragment() {
+class CatalogFlowFragment : BaseFragment() {
 
     private val binding: FragmentMainCatalogBinding by viewBinding { FragmentMainCatalogBinding.bind(contentView) }
     private val viewModel: CatalogFlowViewModel by activityViewModels()

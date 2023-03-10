@@ -8,6 +8,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.ui.base.content.BaseFragment
 import com.vodovoz.app.ui.base.content.ErrorState
 import com.vodovoz.app.ui.base.ViewState
+import com.vodovoz.app.ui.fragment.catalog.CatalogFlowViewModel
 import com.vodovoz.app.ui.fragment.catalog.CatalogViewModel
 import com.vodovoz.app.ui.fragment.home.HomeFlowViewModel
 import com.vodovoz.app.ui.fragment.home.HomeViewModel
@@ -22,7 +23,7 @@ class SplashFragment : BaseFragment() {
 
     private val viewModel: HomeViewModel by activityViewModels()
     private val flowViewModel: HomeFlowViewModel by activityViewModels()
-    private val catalogViewModel: CatalogViewModel by activityViewModels()
+    private val catalogViewModel: CatalogFlowViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

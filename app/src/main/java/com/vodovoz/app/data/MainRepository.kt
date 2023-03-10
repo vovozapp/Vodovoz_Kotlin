@@ -174,4 +174,9 @@ class MainRepository @Inject constructor(
         )
     }
 
+    //Каталог
+    suspend fun fetchCatalogResponse(): ResponseBody {
+        return api.fetchCatalogResponse()
+    }
+
 }

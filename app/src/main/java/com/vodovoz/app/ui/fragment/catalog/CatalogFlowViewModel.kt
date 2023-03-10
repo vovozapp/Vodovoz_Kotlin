@@ -1,0 +1,73 @@
+package com.vodovoz.app.ui.fragment.catalog
+
+import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.data.MainRepository
+import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.response.catalog.CatalogResponseJsonParser.parseCatalogResponse
+import com.vodovoz.app.mapper.CategoryMapper.mapToUI
+import com.vodovoz.app.ui.base.content.PagingStateViewModel
+import com.vodovoz.app.ui.base.content.State
+import com.vodovoz.app.ui.base.content.stringToErrorState
+import com.vodovoz.app.ui.base.content.toErrorState
+import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.util.extensions.debugLog
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class CatalogFlowViewModel @Inject constructor(
+    private val mainRepository: MainRepository
+) : PagingStateViewModel<CatalogFlowViewModel.CatalogState>(CatalogState()) {
+
+    fun firstLoad() {
+        if (!state.isFirstLoad) {
+            uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
+            fetchCatalog()
+        }
+    }
+
+    fun refresh() {
+        uiStateListener.value =
+            state.copy(loadingPage = true)
+        fetchCatalog()
+    }
+
+    private fun fetchCatalog() {
+        viewModelScope.launch {
+            flow { emit(mainRepository.fetchCatalogResponse()) }
+                .catch {
+                    debugLog { "fetch catalog response error ${it.localizedMessage}" }
+
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
+                .flowOn(Dispatchers.IO)
+                .onEach {
+                    val response = it.parseCatalogResponse()
+
+                    when (response) {
+                        is ResponseEntity.Hide -> {}
+                        is ResponseEntity.Error -> state.copy(
+                            error = response.errorMessage.stringToErrorState(),
+                            loadingPage = false
+                        )
+                        is ResponseEntity.Success -> {
+                            uiStateListener.value = state.copy(
+                                loadingPage = false,
+                                data = state.data.copy(itemsList = response.data.mapToUI()),
+                                error = null
+                            )
+                        }
+                    }
+                }
+                .collect()
+        }
+    }
+
+    data class CatalogState(
+        val itemsList: List<CategoryUI> = emptyList()
+    ) : State
+}

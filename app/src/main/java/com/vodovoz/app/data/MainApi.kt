@@ -152,4 +152,8 @@ interface MainApi {
         @Query("action") action: String? = null,
     ): ResponseBody
 
+    //Каталог
+    @GET("/newmobile/razdel/category.php?iblock_id=12")
+    suspend fun fetchCatalogResponse(): ResponseBody
+
 }

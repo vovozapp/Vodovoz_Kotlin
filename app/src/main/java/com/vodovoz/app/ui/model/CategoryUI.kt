@@ -18,8 +18,12 @@ data class CategoryUI(
     var categoryUIList: List<CategoryUI> = listOf()
 ) : Parcelable, Item {
 
+    companion object {
+        const val CATEGORY_UI_VIEW_TYPE = -4400
+    }
+
     override fun getItemViewType(): Int {
-        return R.layout.view_holder_slider_popular_category
+        return CATEGORY_UI_VIEW_TYPE
     }
 
     override fun areItemsTheSame(item: Item): Boolean {
