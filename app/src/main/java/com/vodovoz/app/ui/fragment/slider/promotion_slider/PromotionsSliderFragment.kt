@@ -11,7 +11,6 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentSliderPromotionBinding
 import com.vodovoz.app.ui.adapter.PromotionsSliderAdapter
 import com.vodovoz.app.ui.base.BaseHiddenFragment
-import com.vodovoz.app.ui.fragment.home.HomeFragmentDirections
 import com.vodovoz.app.ui.interfaces.*
 import com.vodovoz.app.ui.model.PromotionUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI

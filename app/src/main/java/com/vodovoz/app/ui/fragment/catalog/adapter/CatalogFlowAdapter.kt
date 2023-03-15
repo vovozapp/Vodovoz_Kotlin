@@ -2,9 +2,9 @@ package com.vodovoz.app.ui.fragment.catalog.adapter
 
 import android.view.ViewGroup
 import com.vodovoz.app.R
-import com.vodovoz.app.ui.base.content.itemadapter.Item
-import com.vodovoz.app.ui.base.content.itemadapter.ItemAdapter
-import com.vodovoz.app.ui.base.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.common.content.itemadapter.ItemAdapter
+import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.model.CategoryUI.Companion.CATEGORY_UI_VIEW_TYPE
 
 class CatalogFlowAdapter(

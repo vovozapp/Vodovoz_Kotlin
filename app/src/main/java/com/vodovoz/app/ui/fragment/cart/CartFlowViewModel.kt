@@ -9,9 +9,9 @@ import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.cart.CartResponseJsonParser.parseCartResponse
 import com.vodovoz.app.data.parser.response.cart.ClearCartResponseJsonParser.parseClearCartResponse
 import com.vodovoz.app.mapper.CartBundleMapper.mapUoUI
-import com.vodovoz.app.ui.base.content.PagingStateViewModel
-import com.vodovoz.app.ui.base.content.State
-import com.vodovoz.app.ui.base.content.toErrorState
+import com.vodovoz.app.common.content.PagingStateViewModel
+import com.vodovoz.app.common.content.State
+import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.ui.model.custom.CartBundleUI
 import com.vodovoz.app.util.CalculatedPrices
 import com.vodovoz.app.util.calculatePrice

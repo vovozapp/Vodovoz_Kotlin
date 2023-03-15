@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.databinding.FragmentSectionAdditionalInfoBinding
-import com.vodovoz.app.ui.fragment.home.HomeFragmentDirections
+import com.vodovoz.app.feature.home.HomeFragmentDirections
 
 class BottomInfoFragment : Fragment() {
 

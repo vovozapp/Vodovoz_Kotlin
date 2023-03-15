@@ -19,7 +19,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentMainBinding
-import com.vodovoz.app.ui.fragment.home.HomeFragment
+import com.vodovoz.app.feature.home.HomeFragment
 
 class MainFragment : Fragment() {
 

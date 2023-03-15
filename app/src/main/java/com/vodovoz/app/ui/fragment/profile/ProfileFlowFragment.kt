@@ -1,7 +1,7 @@
 package com.vodovoz.app.ui.fragment.profile
 
 import com.vodovoz.app.R
-import com.vodovoz.app.ui.base.content.BaseFragment
+import com.vodovoz.app.common.content.BaseFragment
 
 class ProfileFlowFragment : BaseFragment() {
 

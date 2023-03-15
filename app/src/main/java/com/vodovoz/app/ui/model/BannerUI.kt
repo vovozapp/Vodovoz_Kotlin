@@ -3,8 +3,7 @@ package com.vodovoz.app.ui.model
 import android.os.Parcelable
 import com.vodovoz.app.R
 import com.vodovoz.app.data.model.common.ActionEntity
-import com.vodovoz.app.ui.base.content.itemadapter.Item
-import com.vodovoz.app.ui.fragment.home.viewholders.homebanners.HomeBanners
+import com.vodovoz.app.common.content.itemadapter.Item
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
