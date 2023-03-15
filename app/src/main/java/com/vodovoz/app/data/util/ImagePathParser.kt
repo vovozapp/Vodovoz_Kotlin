@@ -1,6 +1,6 @@
 package com.vodovoz.app.data.util
 
-import com.vodovoz.app.data.config.ApiConfig
+import com.vodovoz.app.core.network.ApiConfig
 
 object ImagePathParser {
 

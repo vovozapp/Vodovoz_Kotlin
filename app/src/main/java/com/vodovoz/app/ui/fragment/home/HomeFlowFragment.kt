@@ -12,7 +12,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
-import com.vodovoz.app.data.config.ApiConfig
+import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentMainHomeFlowBinding
 import com.vodovoz.app.ui.base.content.BaseFragment

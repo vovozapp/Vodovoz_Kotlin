@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.vodovoz.app.data.config.ApiConfig
+import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.databinding.FragmentSectionAdditionalInfoBinding
 import com.vodovoz.app.ui.fragment.home.HomeFragmentDirections
 

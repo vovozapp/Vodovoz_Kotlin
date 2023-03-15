@@ -1,4 +1,4 @@
-package com.vodovoz.app.di.interceptor
+package com.vodovoz.app.core.network.interceptor
 
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.util.LogSettings

@@ -1,4 +1,4 @@
-package com.vodovoz.app.data.config
+package com.vodovoz.app.core.network
 
 object ApiConfig {
     private const val VODOVOZ_PROTOCOL = "http://"

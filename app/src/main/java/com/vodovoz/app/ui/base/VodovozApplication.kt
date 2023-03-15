@@ -3,7 +3,7 @@ package com.vodovoz.app.ui.base
 import android.app.Application
 import android.util.Log
 import com.vodovoz.app.data.DataRepository
-import com.vodovoz.app.data.config.ApiConfig
+import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.local.LocalData
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.remote.MapKitApi

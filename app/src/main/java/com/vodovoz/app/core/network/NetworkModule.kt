@@ -1,12 +1,11 @@
-package com.vodovoz.app.di
+package com.vodovoz.app.core.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.vodovoz.app.data.MainApi
-import com.vodovoz.app.data.config.ApiConfig
 import com.vodovoz.app.data.remote.MapKitApi
 import com.vodovoz.app.data.remote.VodovozApi
-import com.vodovoz.app.di.interceptor.VodovozInterceptor
+import com.vodovoz.app.core.network.interceptor.VodovozInterceptor
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

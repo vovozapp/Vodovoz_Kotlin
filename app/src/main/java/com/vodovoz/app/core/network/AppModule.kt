@@ -1,4 +1,4 @@
-package com.vodovoz.app.di
+package com.vodovoz.app.core.network
 
 import com.vodovoz.app.data.local.LocalData
 import com.vodovoz.app.data.local.LocalDataSource
