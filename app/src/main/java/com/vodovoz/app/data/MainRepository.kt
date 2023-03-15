@@ -8,6 +8,8 @@ import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
 import okhttp3.ResponseBody
 import retrofit2.Response
+import retrofit2.http.GET
+import retrofit2.http.Query
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
@@ -177,6 +179,46 @@ class MainRepository @Inject constructor(
     //Каталог
     suspend fun fetchCatalogResponse(): ResponseBody {
         return api.fetchCatalogResponse()
+    }
+
+    /**
+     * Корзина
+     * **/
+
+    //Корзина
+    @GET("/newmobile/korzina/index.php")
+    suspend fun fetchCartResponse(
+        action: String? = null,
+        userId: Long? = null,
+        coupon: String? = null,
+        amount: Int? = null
+    ): ResponseBody {
+        return api.fetchCartResponse(
+            action = action,
+            userId = userId,
+            coupon = coupon,
+            amount = amount
+        )
+    }
+
+    //Добавление в корзину addProductToCart
+    //Изменение колличества товаров в корзине changeProductsQuantityInCart
+
+    //удаление из корзины
+    @GET("/newmobile/korzina/function/deletto/index.php")
+    suspend fun fetchDeleteProductResponse(
+        action: String? = null,
+        productId: Long? = null,
+    ): ResponseBody {
+        return api.fetchDeleteProductResponse(action = action, productId = productId)
+    }
+
+    //Очистить корзину
+    @GET("newmobile/korzina/function/delkorzina/index.php")
+    suspend fun fetchClearCartResponse(
+        action: String? = null,
+    ): ResponseBody {
+        return api.fetchClearCartResponse(action)
     }
 
 }

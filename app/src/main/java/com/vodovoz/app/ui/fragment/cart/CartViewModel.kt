@@ -92,10 +92,10 @@ class CartViewModel @Inject constructor(
             field = value
             availableProductListMLD.value = value
             val prices = calculatePrice(availableProductUIList)
-            full = prices.first
-            discount = prices.second
-            deposit = prices.third
-            total = prices.first + prices.third - prices.second
+            full = prices.fullPrice
+            discount = prices.discountPrice
+            deposit = prices.deposit
+            total = prices.fullPrice + prices.deposit - prices.discountPrice
         }
 
     var isTryToClearCart = false

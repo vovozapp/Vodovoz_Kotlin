@@ -444,10 +444,11 @@
                 style="@style/GreenButton"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_normal_height"
-                android:textSize="16sp"
                 android:layout_marginHorizontal="@dimen/space_16"
                 android:layout_marginTop="@dimen/space_8"
-                android:layout_marginBottom="@dimen/space_16"/>
+                android:layout_marginBottom="@dimen/space_16"
+                android:textSize="16sp"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
         </LinearLayout>
 

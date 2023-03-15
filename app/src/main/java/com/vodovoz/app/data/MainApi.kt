@@ -156,4 +156,34 @@ interface MainApi {
     @GET("/newmobile/razdel/category.php?iblock_id=12")
     suspend fun fetchCatalogResponse(): ResponseBody
 
+
+    /**
+     * Корзина
+     * **/
+
+    //Корзина
+    @GET("/newmobile/korzina/index.php")
+    suspend fun fetchCartResponse(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("coupon") coupon: String? = null,
+        @Query("quantity") amount: Int? = null,
+    ): ResponseBody
+
+    //Добавление в корзину fetchAddProductResponse
+    //Изменение колличества товаров в корзине fetchChangeProductsQuantityResponse
+
+    //Удаление из корзины
+    @GET("/newmobile/korzina/function/deletto/index.php")
+    suspend fun fetchDeleteProductResponse(
+        @Query("action") action: String? = null,
+        @Query("id") productId: Long? = null,
+    ): ResponseBody
+
+    //Очистить корзину
+    @GET("newmobile/korzina/function/delkorzina/index.php")
+    suspend fun fetchClearCartResponse(
+        @Query("action") action: String? = null,
+    ): ResponseBody
+
 }

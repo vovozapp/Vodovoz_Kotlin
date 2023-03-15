@@ -2,7 +2,7 @@ package com.vodovoz.app.util
 
 import com.vodovoz.app.ui.model.ProductUI
 
-fun calculatePrice(productUIList: List<ProductUI>): Triple<Int, Int, Int> {
+fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
     var fullPrice = 0
     var discountPrice = 0
     var deposit = 0
@@ -42,5 +42,13 @@ fun calculatePrice(productUIList: List<ProductUI>): Triple<Int, Int, Int> {
 
     deposit -= bottlesPrice
     if (deposit < 0) deposit = 0
-    return Triple(fullPrice, discountPrice, deposit)
+    val total = fullPrice + deposit - discountPrice
+    return CalculatedPrices(fullPrice, discountPrice, deposit, total)
 }
+
+data class CalculatedPrices(
+    val fullPrice: Int,
+    val discountPrice: Int,
+    val deposit: Int,
+    val total: Int
+)

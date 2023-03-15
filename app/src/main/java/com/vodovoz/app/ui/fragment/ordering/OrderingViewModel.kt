@@ -235,10 +235,10 @@ class OrderingViewModel @Inject constructor(
                                 when (isCartChange) {
                                     true -> {
                                         val prices = calculatePrice(data.mapUoUI().availableProductUIList)
-                                        full = prices.first
-                                        discount = prices.second
-                                        total = prices.first + prices.third - prices.second
-                                        deposit = prices.third
+                                        full = prices.fullPrice
+                                        discount = prices.discountPrice
+                                        total = prices.fullPrice + prices.deposit - prices.discountPrice
+                                        deposit = prices.deposit
                                         cartChangeMessageMLD.value = "Похоже, что некоторых продуктов из вашей корзины больше нет в наличии, поэтому мы убрали их из заказа."
                                     }
                                     else -> regOrder(deviceInfo)
