@@ -10,7 +10,6 @@ import javax.inject.Inject
 
 class LikeManager @Inject constructor(
     private val repository: LikeRepository,
-    private val likeLocal: LikeLocal,
     private val accountLocal: AccountLocal
 ) {
 
