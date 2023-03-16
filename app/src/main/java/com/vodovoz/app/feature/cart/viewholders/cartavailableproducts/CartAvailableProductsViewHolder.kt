@@ -27,7 +27,7 @@ class CartAvailableProductsViewHolder(
 
     init {
         binding.rvAvailableProductRecycler.layoutManager =
-            LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(itemView.context, LinearLayoutManager.VERTICAL, false)
 
         binding.rvAvailableProductRecycler.adapter = productsAdapter
 

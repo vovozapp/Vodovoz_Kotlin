@@ -26,7 +26,7 @@ class CartNotAvailableProductsViewHolder(
 
     init {
         binding.rvNotAvailableProductRecycler.layoutManager =
-            LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(itemView.context, LinearLayoutManager.VERTICAL, false)
 
         binding.rvNotAvailableProductRecycler.adapter = productsAdapter
 

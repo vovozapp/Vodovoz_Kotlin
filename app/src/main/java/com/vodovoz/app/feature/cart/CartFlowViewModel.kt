@@ -95,7 +95,9 @@ class CartFlowViewModel @Inject constructor(
                                     CART_NOT_AVAILABLE_PRODUCTS_ID, mappedData.notAvailableProductUIList),
                                 total = CartTotal(CART_TOTAL_ID, calculatePrice(mappedData.availableProductUIList)),
                                 bestForYouProducts = mappedData.bestForYouCategoryDetailUI
-                            )
+                            ),
+                            loadingPage = false,
+                            error = null
                         )
                     } else {
                         state.copy(loadingPage = false, error = ErrorState.Error())

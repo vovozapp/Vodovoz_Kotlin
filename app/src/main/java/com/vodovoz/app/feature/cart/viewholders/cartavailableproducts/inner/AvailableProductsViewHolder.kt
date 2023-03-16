@@ -37,7 +37,7 @@ class AvailableProductsViewHolder(
     }
 
     init {
-        TabLayoutMediator(binding.tlIndicators, binding.vpPictures) { _, _ -> }.attach()
+        //TabLayoutMediator(binding.tlIndicators, binding.vpPictures) { _, _ -> }.attach()
 
         binding.root.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener

@@ -139,14 +139,27 @@ class CartFlowFragment : BaseFragment() {
                         hideLoader()
                     }
 
-                    val availableItems = cartState.data.availableProducts?.items ?: emptyList()
+                    val availableItems = cartState.data.availableProducts?.items
 
-                    if (availableItems.isEmpty()) {
-                        binding.bottom.root.isVisible = false
-                        cartController.submitList(listOfNotNull(cartState.data.cartEmpty, cartState.data.bestForYouProducts))
-                    } else {
-                        binding.bottom.root.isVisible = true
-                        cartController.submitList(listOfNotNull(cartState.data.notAvailableProducts, cartState.data.availableProducts, cartState.data.total))
+                    if (availableItems != null) {
+                        if (availableItems.isEmpty()) {
+                            binding.bottom.root.isVisible = false
+                            cartController.submitList(
+                                listOfNotNull(
+                                    cartState.data.cartEmpty,
+                                    cartState.data.bestForYouProducts
+                                )
+                            )
+                        } else {
+                            binding.bottom.root.isVisible = true
+                            cartController.submitList(
+                                listOfNotNull(
+                                    cartState.data.notAvailableProducts,
+                                    cartState.data.availableProducts,
+                                    cartState.data.total
+                                )
+                            )
+                        }
                     }
                 }
         }
