@@ -5,6 +5,7 @@ import android.os.CountDownTimer
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DiffUtil
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
@@ -16,6 +17,7 @@ import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.Det
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowPagerAdapter
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.ui.adapter.DetailPicturePagerAdapter
+import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDepositPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setOrderQuantity
@@ -232,6 +234,16 @@ class AvailableProductsViewHolder(
 
         //UpdatePictures
         binding.tlIndicators.isVisible = item.detailPictureList.size != 1
+
+        val diffUtil = DetailPictureDiffUtilCallback(
+            oldList = detailPictureFlowPagerAdapter.detailPictureUrlList,
+            newList = item.detailPictureList
+        )
+
+        DiffUtil.calculateDiff(diffUtil).let { diffResult ->
+            detailPictureFlowPagerAdapter.detailPictureUrlList = item.detailPictureList
+            diffResult.dispatchUpdatesTo(detailPictureFlowPagerAdapter)
+        }
 
         //If is bottle
         if (item.isBottle) {

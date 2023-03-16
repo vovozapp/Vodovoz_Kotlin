@@ -37,6 +37,7 @@ class CartNotAvailableProductsViewHolder(
             rect.top = space/4
             rect.bottom = space/4
             rect.right = space
+            rect.left = space/2
         }
     }
 

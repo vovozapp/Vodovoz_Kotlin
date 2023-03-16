@@ -21,6 +21,7 @@
         style="@style/TextViewNormalBlackBold"
         android:layout_height="@dimen/field_height"
         android:paddingStart="@dimen/space_16"
+        android:background="@color/dark_white"
         android:textSize="16sp"
         android:paddingEnd="@dimen/space_16"
         android:gravity="center_vertical"
