@@ -6,13 +6,13 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderSliderProductCategoryBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.HomeProductsInnerAdapter
-import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.HomeProductsInnerClickListener
+import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.ui.decoration.ProductSliderMarginDecoration
 import com.vodovoz.app.ui.model.CategoryDetailUI
 
 class HomeCategoriesInnerViewHolder(
     view: View,
-    private val clickListener: HomeCategoriesInnerClickListener
+    private val clickListener: ProductsClickListener
 ) : ItemViewHolder<CategoryDetailUI>(view) {
 
     private val binding: ViewHolderSliderProductCategoryBinding =
@@ -49,10 +49,10 @@ class HomeCategoriesInnerViewHolder(
         }
     }
 
-    private fun getHomeProductsInnerClickListener() : HomeProductsInnerClickListener {
-        return object : HomeProductsInnerClickListener {
-            override fun onPromotionProductClick(id: Long) {
-                clickListener.onPromotionProductClick(id)
+    private fun getHomeProductsInnerClickListener() : ProductsClickListener {
+        return object : ProductsClickListener {
+            override fun onProductClick(id: Long) {
+                clickListener.onProductClick(id)
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {

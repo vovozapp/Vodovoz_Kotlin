@@ -8,7 +8,7 @@ import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.model.ProductUI.Companion.PRODUCT_VIEW_TYPE
 
 class HomeProductsInnerAdapter(
-    private val clickListener: HomeProductsInnerClickListener
+    private val clickListener: ProductsClickListener
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {

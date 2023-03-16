@@ -11,6 +11,7 @@ import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ViewHolderProductListBinding
 import com.vodovoz.app.feature.cart.adapter.CartMainAdapter
 import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
+import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDepositPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setOrderQuantity
@@ -20,7 +21,8 @@ import com.vodovoz.app.ui.model.ProductUI
 
 class AvailableProductsViewHolder(
     view: View,
-    val clickListener: CartMainClickListener
+    val clickListener: CartMainClickListener,
+    val productsClickListener: ProductsClickListener
 ) : ItemViewHolder<ProductUI>(view) {
 
     private val binding: ViewHolderProductListBinding = ViewHolderProductListBinding.bind(view)
@@ -29,7 +31,7 @@ class AvailableProductsViewHolder(
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
             val item = getItemByPosition() ?: return
-            clickListener.onChangeCartQuantity(item.id, item.cartQuantity)
+            productsClickListener.onChangeProductQuantity(item.id, item.cartQuantity)
             hideAmountController(item)
         }
     }
@@ -39,12 +41,12 @@ class AvailableProductsViewHolder(
 
         binding.root.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
-            clickListener.onProductClick(item.id)
+            productsClickListener.onProductClick(item.id)
         }
 
         binding.vpPictures.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
-            clickListener.onProductClick(item.id)
+            productsClickListener.onProductClick(item.id)
         }
 
         binding.amountController.add.setOnClickListener {
@@ -85,7 +87,7 @@ class AvailableProductsViewHolder(
                     binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
                 }
             }
-            clickListener.onChangeFavoriteStatus(item.id, item.isFavorite)
+            productsClickListener.onFavoriteClick(item.id, item.isFavorite)
         }
     }
 

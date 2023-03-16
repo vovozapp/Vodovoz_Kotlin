@@ -1,8 +1,8 @@
 package com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts
 
-interface HomeProductsInnerClickListener {
+interface ProductsClickListener {
 
-    fun onPromotionProductClick(id: Long)
+    fun onProductClick(id: Long)
     fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String)
     fun onChangeProductQuantity(id: Long, cartQuantity: Int)
     fun onFavoriteClick(id: Long, isFavorite: Boolean)

@@ -8,19 +8,21 @@ import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ItemCartNotAvailableProductsBinding
 import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
 import com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts.inner.NotAvailableProductsAdapter
+import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.view.Divider
 
 class CartNotAvailableProductsViewHolder(
     view: View,
-    val clickListener: CartMainClickListener
+    val clickListener: CartMainClickListener,
+    private val productsClickListener: ProductsClickListener
 ) : ItemViewHolder<CartNotAvailableProducts>(view) {
 
     private val binding: ItemCartNotAvailableProductsBinding = ItemCartNotAvailableProductsBinding.bind(view)
 
     private val space: Int by lazy { itemView.context.resources.getDimension(R.dimen.space_16).toInt() }
 
-    private val productsAdapter = NotAvailableProductsAdapter(clickListener)
+    private val productsAdapter = NotAvailableProductsAdapter(clickListener, productsClickListener)
 
     init {
         binding.rvNotAvailableProductRecycler.layoutManager =

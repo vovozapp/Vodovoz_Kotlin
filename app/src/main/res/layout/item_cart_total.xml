@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:paddingBottom="20dp"
+    android:id="@+id/llTotalContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/TextViewNormalBlackBold"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/field_height"
+        android:textSize="16sp"
+        android:paddingHorizontal="@dimen/space_16"
+        android:gravity="center_vertical"
+        android:text="Промокод" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/space_16"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etCoupon"
+            style="@style/EditTextViewNormalGray"
+            android:layout_width="0dp"
+            android:textColor="@color/text_new_black"
+            android:textColorHint="@color/color_search"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Введите промокод"
+            android:background="@null"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvApplyPromoCode"
+            style="@style/TextViewNormalBlue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Применить"
+            android:background="@null"/>
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/TextViewNormalBlackBold"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/field_height"
+        android:paddingHorizontal="@dimen/space_16"
+        android:textSize="16sp"
+        android:gravity="center_vertical"
+        android:text="Стоимость без учета доставки" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/field_height"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/space_16"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextViewNormalBlackBold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Стоимость товаров"
+            android:background="@color/white"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvFullPrice"
+            style="@style/TextViewHeaderBlackBold"
+            android:layout_width="wrap_content"
+            android:textSize="18sp"
+            android:layout_height="wrap_content"
+            android:text="1135 Р"
+            android:background="@color/white"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/field_height"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/space_16"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextViewNormalBlackBold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Залог"
+            android:background="@color/white"/>
+
+        <TextView
+            android:id="@+id/tvDepositPrice"
+            style="@style/TextViewHeaderBlackBold"
+            android:layout_width="wrap_content"
+            android:textSize="18sp"
+            android:layout_height="wrap_content"
+            android:text="1135 Р"
+            android:background="@color/white"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/field_height"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/space_16"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextViewNormalBlackBold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Скидка по акциям"
+            android:background="@color/white"/>
+
+        <TextView
+            android:id="@+id/tvDiscountPrice"
+            style="@style/TextViewHeaderBlackBold"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1135 Р"
+            android:background="@color/white"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/field_height"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/space_16"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextViewNormalBlackBold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Итого"
+            android:background="@color/white"/>
+
+        <TextView
+            android:id="@+id/tvTotalPrice"
+            style="@style/TextViewHeaderBlackBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="1135 Р"
+            android:background="@color/white"/>
+
+    </LinearLayout>
+
+</LinearLayout>

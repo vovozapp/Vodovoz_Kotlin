@@ -19,6 +19,7 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Compan
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.TOP_PROD
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.HomeCategoriesInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.HomeCategoriesInnerClickListener
+import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 
 class HomeProductsSliderViewHolder(
     view: View,
@@ -77,9 +78,9 @@ class HomeProductsSliderViewHolder(
     }
 
 
-    private fun getHomeCategoriesInnerClickListener() : HomeCategoriesInnerClickListener {
-        return object : HomeCategoriesInnerClickListener {
-            override fun onPromotionProductClick(id: Long) {
+    private fun getHomeCategoriesInnerClickListener() : ProductsClickListener {
+        return object : ProductsClickListener {
+            override fun onProductClick(id: Long) {
                 clickListener.onPromotionProductClick(id)
             }
 

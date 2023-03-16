@@ -17,7 +17,7 @@ import com.vodovoz.app.ui.model.ProductUI
 
 class HomeProductsInnerViewHolder(
     view: View,
-    private val clickListener: HomeProductsInnerClickListener
+    private val clickListener: ProductsClickListener
 ) : ItemViewHolder<ProductUI>(view) {
 
     private val binding: ViewHolderSliderProductBinding = ViewHolderSliderProductBinding.bind(view)
@@ -33,7 +33,7 @@ class HomeProductsInnerViewHolder(
         binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.root.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
-            clickListener.onPromotionProductClick(item.id)
+            clickListener.onProductClick(item.id)
         }
 
         binding.amountController.add.setOnClickListener {

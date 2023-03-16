@@ -10,6 +10,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ViewHolderProductListNotAvailableBinding
 import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
+import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDepositPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
@@ -19,7 +20,8 @@ import com.vodovoz.app.ui.model.ProductUI
 
 class NotAvailableProductsViewHolder(
     view: View,
-    val clickListener: CartMainClickListener
+    val clickListener: CartMainClickListener,
+    val productsClickListener: ProductsClickListener
 ) : ItemViewHolder<ProductUI>(view) {
 
     private val binding: ViewHolderProductListNotAvailableBinding = ViewHolderProductListNotAvailableBinding.bind(view)
@@ -30,7 +32,7 @@ class NotAvailableProductsViewHolder(
         }
         binding.root.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
-            clickListener.onProductClick(item.id)
+            productsClickListener.onProductClick(item.id)
         }
         binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 
