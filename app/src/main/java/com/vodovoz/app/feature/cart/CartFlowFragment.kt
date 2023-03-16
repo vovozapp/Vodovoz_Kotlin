@@ -146,8 +146,11 @@ class CartFlowFragment : BaseFragment() {
                     }
 
                     val availableItems = cartState.data.availableProducts?.items
+                    val notAvailableItems = cartState.data.notAvailableProducts?.items
 
-                    binding.bottom.btnRegOrder.text = StringBuilder().append("Оформить заказ на ").append(cartState.data.total?.prices?.total).append(" ₽").toString()
+                    if (cartState.data.total != null) {
+                        binding.bottom.btnRegOrder.text = StringBuilder().append("Оформить заказ на ").append(cartState.data.total.prices.total).append(" ₽").toString()
+                    }
 
                     if (availableItems != null) {
                         if (availableItems.isEmpty()) {
@@ -162,7 +165,7 @@ class CartFlowFragment : BaseFragment() {
                             binding.bottom.root.isVisible = true
                             cartController.submitList(
                                 listOfNotNull(
-                                    cartState.data.notAvailableProducts,
+                                    cartState.data.notAvailableProducts.takeIf { notAvailableItems.isNullOrEmpty().not() },
                                     cartState.data.availableProducts,
                                     cartState.data.total
                                 )
