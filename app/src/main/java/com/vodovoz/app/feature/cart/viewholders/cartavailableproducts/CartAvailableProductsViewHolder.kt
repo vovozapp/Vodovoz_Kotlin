@@ -8,6 +8,7 @@ import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ItemCartAvailableProductsBinding
 import com.vodovoz.app.feature.cart.adapter.CartMainAdapter
 import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
+import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.view.Divider
 
@@ -20,7 +21,7 @@ class CartAvailableProductsViewHolder(
 
     private val space: Int by lazy { itemView.context.resources.getDimension(R.dimen.space_16).toInt() }
 
-    private val productsAdapter = CartMainAdapter(clickListener)
+    private val productsAdapter = AvailableProductsAdapter(clickListener)
 
     init {
         binding.rvAvailableProductRecycler.layoutManager =

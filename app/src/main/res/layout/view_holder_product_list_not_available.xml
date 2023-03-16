@@ -88,8 +88,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgSwap"
-        android:layout_width="@dimen/_24sdp"
-        android:layout_height="@dimen/_24sdp"
+        android:layout_width="@dimen/_26sdp"
+        android:layout_height="@dimen/_26sdp"
         android:background="@drawable/bkg_button_orange_circle_normal"
         android:padding="@dimen/space_6"
         android:src="@drawable/ic_swap"
@@ -112,6 +112,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvPricePerUnit"
             style="@style/TextViewSmallGray"
+            android:textSize="12sp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"

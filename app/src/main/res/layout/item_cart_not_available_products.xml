@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/llNotAvailableProductsContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        style="@style/TextViewNormalBlackBold"
+        android:layout_height="@dimen/field_height"
+        android:paddingStart="@dimen/space_16"
+        android:textSize="16sp"
+        android:paddingEnd="@dimen/space_16"
+        android:gravity="center_vertical"
+        android:text="Нет в наличии"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvNotAvailableProductRecycler"
+        android:layout_width="match_parent"
+        tools:listitem="@layout/view_holder_product_list_not_available"
+        android:layout_height="wrap_content"
+        tools:itemCount="4"
+        android:background="@color/white" />
+
+</LinearLayout>

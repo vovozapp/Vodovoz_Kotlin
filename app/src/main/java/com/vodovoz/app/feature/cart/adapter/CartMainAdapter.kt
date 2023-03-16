@@ -6,7 +6,8 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.CartAvailableProductsViewHolder
-import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.CartProductsViewHolder
+import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsViewHolder
+import com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts.CartNotAvailableProductsViewHolder
 import com.vodovoz.app.ui.model.ProductUI
 
 class CartMainAdapter(
@@ -18,8 +19,8 @@ class CartMainAdapter(
             R.layout.item_cart_available_products -> {
                 CartAvailableProductsViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
-            ProductUI.PRODUCT_VIEW_TYPE -> {
-                CartProductsViewHolder(getViewFromInflater(viewType, parent), clickListener)
+            R.layout.item_cart_not_available_products -> {
+                CartNotAvailableProductsViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")

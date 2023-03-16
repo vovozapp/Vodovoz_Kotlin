@@ -18,7 +18,7 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
 
-class CartProductsViewHolder(
+class AvailableProductsViewHolder(
     view: View,
     val clickListener: CartMainClickListener
 ) : ItemViewHolder<ProductUI>(view) {
@@ -257,6 +257,6 @@ class CartProductsViewHolder(
     }
 
     private fun getItemByPosition(): ProductUI? {
-        return (bindingAdapter as? CartMainAdapter)?.getItem(bindingAdapterPosition) as? ProductUI
+        return (bindingAdapter as? AvailableProductsAdapter)?.getItem(bindingAdapterPosition) as? ProductUI
     }
 }
