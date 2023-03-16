@@ -6,6 +6,7 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.CartAvailableProductsViewHolder
+import com.vodovoz.app.feature.cart.viewholders.cartempty.CartEmptyViewHolder
 import com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts.CartNotAvailableProductsViewHolder
 import com.vodovoz.app.feature.cart.viewholders.carttotal.CartTotalViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.HomeCategoriesInnerViewHolder
@@ -29,6 +30,9 @@ class CartMainAdapter(
             }
             R.layout.view_holder_slider_product_category -> {
                 HomeCategoriesInnerViewHolder(getViewFromInflater(viewType, parent), productsClickListener)
+            }
+            R.layout.item_cart_empty -> {
+                CartEmptyViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")

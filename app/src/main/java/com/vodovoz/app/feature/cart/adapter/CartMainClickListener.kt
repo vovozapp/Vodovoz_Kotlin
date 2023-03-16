@@ -6,4 +6,6 @@ interface CartMainClickListener {
     fun onChooseBtnClick()
 
     fun onApplyPromoCodeClick(code: String)
+
+    fun onGoToCatalogClick()
 }
