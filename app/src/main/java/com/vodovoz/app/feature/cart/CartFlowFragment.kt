@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentMainCartFlowBinding
@@ -23,6 +24,7 @@ import com.vodovoz.app.ui.fragment.cart.CartFragmentDirections
 import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.ProductUI
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class CartFlowFragment : BaseFragment() {
@@ -48,16 +50,14 @@ class CartFlowFragment : BaseFragment() {
 
     private fun getCartMainClickListener(): CartMainClickListener {
         return object : CartMainClickListener {
-            override fun onSwapProduct(id: Long) {
-                /*viewModel.notAvailableProductUIList.find { it.id == productId }?.let {
-                    findNavController().navigate(
-                        CartFragmentDirections.actionToReplacementProductsSelectionBS(
-                            it.detailPicture,
-                            it.replacementProductUIList.toTypedArray(),
-                            it.id,
-                            it.name
-                        ))
-                }*/ //todo
+            override fun onSwapProduct(productUI: ProductUI) {
+                findNavController().navigate(
+                    CartFragmentDirections.actionToReplacementProductsSelectionBS(
+                        productUI.detailPicture,
+                        productUI.replacementProductUIList.toTypedArray(),
+                        productUI.id,
+                        productUI.name
+                    ))
             }
 
             override fun onChooseBtnClick() {
@@ -118,6 +118,7 @@ class CartFlowFragment : BaseFragment() {
         bindButtons()
         initActionBar()
         observeResultLiveData()
+        observeNavigates()
         cartController.bind(binding.mainRv)
     }
 
@@ -132,6 +133,8 @@ class CartFlowFragment : BaseFragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.observeUiState()
                 .collect { cartState ->
+
+                    if (cartState.data.infoMessage.isNotEmpty()) Snackbar.make(binding.root, cartState.data.infoMessage, Snackbar.LENGTH_LONG).show()
 
                     if (cartState.loadingPage) {
                         binding.bottom.root.isVisible = false
@@ -169,23 +172,51 @@ class CartFlowFragment : BaseFragment() {
         }
     }
 
+    private fun observeNavigates() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.observeNavigateToOrder()
+                .collect {
+                    if (it.prices != null) {
+                        findNavController().navigate(
+                            CartFragmentDirections.actionToOrderingFragment(
+                                it.prices.total,
+                                it.prices.discountPrice,
+                                it.prices.deposit,
+                                it.prices.fullPrice,
+                                it.cart,
+                                it.coupon
+                            )
+                        )
+                    }
+                }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.observeNavigateToGiftsBottom()
+                .collect {
+                    when (viewModel.isLoginAlready()) {
+                        true -> {
+                            findNavController().navigate(
+                                CartFragmentDirections.actionToGiftsBottomFragment(
+                                    it.toTypedArray()
+                                ))
+                        }
+                        false -> findNavController().navigate(CartFragmentDirections.actionToProfileFragment())
+                    }
+                }
+        }
+    }
+
     private fun bindButtons() {
         binding.bottom.llShowGifts.setOnClickListener {
-            /*when (viewModel.isLoginAlready()) {
-                true -> {
-                    findNavController().navigate(
-                        CartFragmentDirections.actionToGiftsBottomFragment(
-                            viewModel.getGiftList().toTypedArray()
-                        ))
-                }
-                false -> findNavController().navigate(CartFragmentDirections.actionToProfileFragment())
-            }*/ //todo
+            viewModel.navigateToGiftsBottomFragment()
         }
         binding.bottom.btnRegOrder.setOnClickListener {
             /*findNavController().navigate(
                 CartFragmentDirections.actionToOrderingFragment(
                     viewModel.total, viewModel.discount, viewModel.deposit, viewModel.full, viewModel.getCart(), viewModel.coupon
                 ))*/ //todo
+            viewModel.navigateToOrderFragment()
         }
     }
 

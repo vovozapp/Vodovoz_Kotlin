@@ -1,8 +1,10 @@
 package com.vodovoz.app.feature.cart.adapter
 
+import com.vodovoz.app.ui.model.ProductUI
+
 interface CartMainClickListener {
 
-    fun onSwapProduct(id: Long)
+    fun onSwapProduct(productUI: ProductUI)
     fun onChooseBtnClick()
 
     fun onApplyPromoCodeClick(code: String)

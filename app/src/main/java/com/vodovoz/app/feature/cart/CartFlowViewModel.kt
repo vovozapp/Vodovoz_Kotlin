@@ -36,6 +36,12 @@ class CartFlowViewModel @Inject constructor(
     private val dataRepository: DataRepository
 ) : PagingStateViewModel<CartFlowViewModel.CartState>(CartState()) {
 
+    private val navigateToOrderFlow = MutableSharedFlow<NavigateToOrder>()
+    fun observeNavigateToOrder() = navigateToOrderFlow.asSharedFlow()
+
+    private val navigateToGiftsBottomFlow = MutableSharedFlow<List<ProductUI>>()
+    fun observeNavigateToGiftsBottom() = navigateToGiftsBottomFlow.asSharedFlow()
+
     fun firstLoad() {
         if (!state.isFirstLoad) {
             uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
@@ -255,6 +261,32 @@ class CartFlowViewModel @Inject constructor(
         }
     }
 
+    fun navigateToOrderFragment() {
+        viewModelScope.launch {
+            navigateToOrderFlow.emit(
+                NavigateToOrder(
+                    prices = state.data.total?.prices,
+                    cart = getCart(),
+                    coupon = state.data.coupon
+                )
+            )
+        }
+    }
+
+    fun navigateToGiftsBottomFragment() {
+        viewModelScope.launch {
+            navigateToGiftsBottomFlow.emit(state.data.giftProductUIList)
+        }
+    }
+
+    private fun getCart(): String {
+        val cart = state.data.availableProducts?.items?.map { Pair(it.id, it.cartQuantity) }
+        val result = StringBuilder()
+        for (product in cart!!) {
+            result.append(product.first).append(":").append(product.second).append(",")
+        }
+        return result.toString()
+    }
 
     data class CartState(
         val coupon: String = "",
@@ -266,6 +298,12 @@ class CartFlowViewModel @Inject constructor(
         val bestForYouProducts: CategoryDetailUI? = null,
         val cartEmpty: CartEmpty = CartEmpty(CART_EMPTY_ID)
     ) : State
+
+    data class NavigateToOrder(
+        val prices: CalculatedPrices?,
+        val cart: String,
+        val coupon: String
+    )
 
     companion object {
         private const val CART_EMPTY_ID = -1

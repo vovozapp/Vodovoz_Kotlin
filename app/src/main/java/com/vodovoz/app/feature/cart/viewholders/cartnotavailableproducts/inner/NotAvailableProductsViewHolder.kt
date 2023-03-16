@@ -38,7 +38,7 @@ class NotAvailableProductsViewHolder(
 
         binding.imgSwap.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
-            clickListener.onSwapProduct(item.id)
+            clickListener.onSwapProduct(item)
         }
     }
 
