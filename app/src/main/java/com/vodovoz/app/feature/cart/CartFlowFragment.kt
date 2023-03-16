@@ -134,8 +134,10 @@ class CartFlowFragment : BaseFragment() {
                 .collect { cartState ->
 
                     if (cartState.loadingPage) {
+                        binding.bottom.root.isVisible = false
                         showLoader()
                     } else {
+                        binding.bottom.root.isVisible = true
                         hideLoader()
                     }
 
