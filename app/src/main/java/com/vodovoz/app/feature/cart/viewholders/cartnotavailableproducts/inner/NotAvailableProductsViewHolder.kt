@@ -45,6 +45,8 @@ class NotAvailableProductsViewHolder(
     override fun bind(item: ProductUI) {
         super.bind(item)
 
+        binding.tvName.text = item.name
+
         //Price per unit / or order quantity
         if (item.pricePerUnit != 0) {
             binding.tvPricePerUnit.visibility = View.VISIBLE

@@ -5,13 +5,17 @@ import android.os.CountDownTimer
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ViewHolderProductListBinding
 import com.vodovoz.app.feature.cart.adapter.CartMainAdapter
 import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
+import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowClickListener
+import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowPagerAdapter
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
+import com.vodovoz.app.ui.adapter.DetailPicturePagerAdapter
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDepositPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setOrderQuantity
@@ -36,8 +40,24 @@ class AvailableProductsViewHolder(
         }
     }
 
+    private val detailPictureFlowPagerAdapter = DetailPictureFlowPagerAdapter(
+        clickListener = object : DetailPictureFlowClickListener {
+            override fun onProductClick() {
+                val item = getItemByPosition() ?: return
+                productsClickListener.onProductClick(item.id)
+            }
+        }
+    )
+
     init {
-        //TabLayoutMediator(binding.tlIndicators, binding.vpPictures) { _, _ -> }.attach()
+        binding.vpPictures.setOnClickListener {
+            val item = getItemByPosition() ?: return@setOnClickListener
+            productsClickListener.onProductClick(item.id)
+        }
+        binding.vpPictures.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.vpPictures.adapter = detailPictureFlowPagerAdapter
+
+        TabLayoutMediator(binding.tlIndicators, binding.vpPictures) { _, _ -> }.attach()
 
         binding.root.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
