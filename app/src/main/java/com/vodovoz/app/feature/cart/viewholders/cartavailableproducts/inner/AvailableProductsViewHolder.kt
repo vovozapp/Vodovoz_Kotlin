@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner
 
 import android.graphics.Color
+import android.graphics.Paint
 import android.os.CountDownTimer
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -60,6 +61,8 @@ class AvailableProductsViewHolder(
         binding.vpPictures.adapter = detailPictureFlowPagerAdapter
 
         TabLayoutMediator(binding.tlIndicators, binding.vpPictures) { _, _ -> }.attach()
+
+        binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 
         binding.root.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener

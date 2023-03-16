@@ -142,6 +142,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvDepositPrice"
             style="@style/TextViewSmallGray"
+            android:textSize="11sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_8"

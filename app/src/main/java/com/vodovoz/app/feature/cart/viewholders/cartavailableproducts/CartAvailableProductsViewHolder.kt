@@ -47,11 +47,19 @@ class CartAvailableProductsViewHolder(
             rect.top = space
             rect.bottom = space
             rect.right = space
+            rect.left = space/2
         }
     }
 
     override fun bind(item: CartAvailableProducts) {
         super.bind(item)
+
+        binding.rlChooseBottleBtnContainer.visibility = View.GONE
+
+        when(item.showCheckForm || binding.cbReturnBottles.isChecked) {
+            true -> binding.llReturnBottlesContainer.visibility = View.VISIBLE
+            false -> binding.llReturnBottlesContainer.visibility = View.GONE
+        }
 
         productsAdapter.submitList(item.items)
 

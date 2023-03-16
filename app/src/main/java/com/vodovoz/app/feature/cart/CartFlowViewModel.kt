@@ -90,7 +90,12 @@ class CartFlowViewModel @Inject constructor(
                                 coupon = coupon ?: "",
                                 infoMessage = mappedData.infoMessage,
                                 giftProductUIList = mappedData.giftProductUIList,
-                                availableProducts = CartAvailableProducts(CART_AVAILABLE_PRODUCTS_ID, mappedData.availableProductUIList),
+                                availableProducts = CartAvailableProducts(
+                                    CART_AVAILABLE_PRODUCTS_ID,
+                                    mappedData.availableProductUIList,
+                                    showCheckForm = mappedData.availableProductUIList.any { it.depositPrice != 0 },
+                                    showReturnBottleBtn = false
+                                ),
                                 notAvailableProducts = CartNotAvailableProducts(
                                     CART_NOT_AVAILABLE_PRODUCTS_ID, mappedData.notAvailableProductUIList),
                                 total = CartTotal(CART_TOTAL_ID, calculatePrice(mappedData.availableProductUIList)),
