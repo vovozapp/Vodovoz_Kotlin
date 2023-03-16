@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.feature.cart.CartFlowViewModel
 import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.home.HomeViewModel
 import com.vodovoz.app.ui.base.ViewState
@@ -23,12 +24,14 @@ class SplashFragment : BaseFragment() {
     private val viewModel: HomeViewModel by activityViewModels()
     private val flowViewModel: HomeFlowViewModel by activityViewModels()
     private val catalogViewModel: CatalogFlowViewModel by activityViewModels()
+    private val cartFlowViewModel: CartFlowViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //viewModel.firstLoad()
         flowViewModel.firstLoad()
         catalogViewModel.firstLoad()
+        cartFlowViewModel.firstLoad()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

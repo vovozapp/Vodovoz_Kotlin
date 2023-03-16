@@ -138,6 +138,7 @@ class CartFlowViewModel @Inject constructor(
                     val response = it.parseClearCartResponse()
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(data = CartState(), false)
+                        fetchCart(state.data.coupon) //todo
                     } else {
                         uiStateListener.value = state.copy(loadingPage = false)
                     }
@@ -177,6 +178,7 @@ class CartFlowViewModel @Inject constructor(
                         productId = productId,
                         quantity = quantity
                     )
+                    fetchCart(state.data.coupon) //todo
                 }
         }
     }
@@ -198,6 +200,7 @@ class CartFlowViewModel @Inject constructor(
                         productId = productId,
                         quantity = quantity
                     )
+                    fetchCart(state.data.coupon) //todo
                 }
         }
     }
@@ -223,6 +226,7 @@ class CartFlowViewModel @Inject constructor(
                             productIdList.forEach { add(Pair(it, true)) }
                         }.toList()
                     )
+                    fetchCart(state.data.coupon) //todo
                 }
                 true -> {
                     flow { emit(repository.addToFavorite(productIdList, userId!!)) }
@@ -234,6 +238,7 @@ class CartFlowViewModel @Inject constructor(
                                     productIdList.forEach { add(Pair(it, true)) }
                                 }.toList()
                             )
+                            fetchCart(state.data.coupon) //todo
                         }
                 }
             }
@@ -255,6 +260,7 @@ class CartFlowViewModel @Inject constructor(
                         .flowOn(Dispatchers.IO)
                         .collect {
                             localDataSource.changeFavoriteStatus(listOf(Pair(productId, false)))
+                            fetchCart(state.data.coupon) //todo
                         }
                 }
             }
