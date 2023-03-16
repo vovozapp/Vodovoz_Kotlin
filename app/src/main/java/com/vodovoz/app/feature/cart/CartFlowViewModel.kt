@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.cart
 
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
 import com.vodovoz.app.data.MainRepository
@@ -12,6 +13,12 @@ import com.vodovoz.app.mapper.CartBundleMapper.mapUoUI
 import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.CartAvailableProducts
+import com.vodovoz.app.feature.cart.viewholders.cartempty.CartEmpty
+import com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts.CartNotAvailableProducts
+import com.vodovoz.app.feature.cart.viewholders.carttotal.CartTotal
+import com.vodovoz.app.ui.model.CategoryDetailUI
+import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.custom.CartBundleUI
 import com.vodovoz.app.util.CalculatedPrices
 import com.vodovoz.app.util.calculatePrice
@@ -43,14 +50,19 @@ class CartFlowViewModel @Inject constructor(
 
     fun fetchCart(coupon: String? = null) {
         viewModelScope.launch {
-            flow { emit(repository.fetchCartResponse(
-                action = "getbasket",
-                userId = localDataSource.fetchUserId(),
-                coupon = coupon
-            ))}
+            flow {
+                emit(
+                    repository.fetchCartResponse(
+                        action = "getbasket",
+                        userId = localDataSource.fetchUserId(),
+                        coupon = coupon
+                    )
+                )
+            }
                 .catch {
                     debugLog { "fetch cart error ${it.localizedMessage}" }
-                    uiStateListener.value = state.copy(error = it.toErrorState(), loadingPage = false)
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
@@ -64,14 +76,29 @@ class CartFlowViewModel @Inject constructor(
                                     quantity = productUI.cartQuantity
                                 )
                             }
-                            cartBundleEntity.availableProductEntityList.syncFavoriteProducts(localDataSource)
-                            cartBundleEntity.notAvailableProductEntityList.syncFavoriteProducts(localDataSource)
+                            cartBundleEntity.availableProductEntityList.syncFavoriteProducts(
+                                localDataSource
+                            )
+                            cartBundleEntity.notAvailableProductEntityList.syncFavoriteProducts(
+                                localDataSource
+                            )
                             localDataSource.fetchCart()
                         }
                         val mappedData = response.data.mapUoUI()
-                        state.copy(data = state.data.copy(items = mappedData, calculatedPrices = calculatePrice(mappedData.availableProductUIList), coupon = coupon.takeIf { mappedData.infoMessage.isEmpty() } ?: ""))
+                        state.copy(
+                            data = state.data.copy(
+                                coupon = coupon ?: "",
+                                infoMessage = mappedData.infoMessage,
+                                giftProductUIList = mappedData.giftProductUIList,
+                                availableProducts = CartAvailableProducts(CART_AVAILABLE_PRODUCTS_ID, mappedData.availableProductUIList),
+                                notAvailableProducts = CartNotAvailableProducts(
+                                    CART_NOT_AVAILABLE_PRODUCTS_ID, mappedData.notAvailableProductUIList),
+                                total = CartTotal(CART_TOTAL_ID, calculatePrice(mappedData.availableProductUIList)),
+                                bestForYouProducts = mappedData.bestForYouCategoryDetailUI
+                            )
+                        )
                     } else {
-                        state.copy(loadingPage = false, data = state.data.copy(items = null, calculatedPrices = null, coupon = ""))
+                        state.copy(loadingPage = false, error = ErrorState.Error())
                     }
                 }
                 .flowOn(Dispatchers.Default)
@@ -81,12 +108,17 @@ class CartFlowViewModel @Inject constructor(
 
     fun clearCart() {
         viewModelScope.launch {
-            flow { emit(repository.fetchClearCartResponse(
-                action = "delkorzina"
-            )) }
+            flow {
+                emit(
+                    repository.fetchClearCartResponse(
+                        action = "delkorzina"
+                    )
+                )
+            }
                 .catch {
                     debugLog { "clear cart error ${it.localizedMessage}" }
-                    uiStateListener.value = state.copy(error = it.toErrorState(), loadingPage = false)
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
                 }
                 .flowOn(Dispatchers.IO)
                 .collect {
@@ -108,7 +140,7 @@ class CartFlowViewModel @Inject constructor(
             val cart = localDataSource.fetchCart()
             val oldQuantity = cart[productId]
 
-            when(oldQuantity) {
+            when (oldQuantity) {
                 null -> addToCart(productId, quantity)
                 else -> changeProductQuantityInCart(productId, quantity)
             }
@@ -117,10 +149,14 @@ class CartFlowViewModel @Inject constructor(
 
     private fun addToCart(productId: Long, quantity: Int) {
         viewModelScope.launch {
-            flow { emit(repository.addProductToCart(
-                productId = productId,
-                quantity = quantity
-            ))}
+            flow {
+                emit(
+                    repository.addProductToCart(
+                        productId = productId,
+                        quantity = quantity
+                    )
+                )
+            }
                 .catch { debugLog { "add to cart error ${it.localizedMessage}" } }
                 .flowOn(Dispatchers.IO)
                 .collect {
@@ -134,10 +170,14 @@ class CartFlowViewModel @Inject constructor(
 
     private fun changeProductQuantityInCart(productId: Long, quantity: Int) {
         viewModelScope.launch {
-            flow { emit(repository.changeProductsQuantityInCart(
-                productId = productId,
-                quantity = quantity
-            ))}
+            flow {
+                emit(
+                    repository.changeProductsQuantityInCart(
+                        productId = productId,
+                        quantity = quantity
+                    )
+                )
+            }
                 .catch { debugLog { "change cart error ${it.localizedMessage}" } }
                 .flowOn(Dispatchers.IO)
                 .collect {
@@ -151,7 +191,7 @@ class CartFlowViewModel @Inject constructor(
 
     fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            when(isFavorite) {
+            when (isFavorite) {
                 true -> addToFavorite(listOf(productId))
                 false -> removeFromFavorite(productId = productId)
             }
@@ -163,7 +203,7 @@ class CartFlowViewModel @Inject constructor(
 
             val userId = localDataSource.fetchUserId()
 
-            when(isLoginAlready()) {
+            when (isLoginAlready()) {
                 false -> {
                     localDataSource.changeFavoriteStatus(
                         pairList = mutableListOf<Pair<Long, Boolean>>().apply {
@@ -192,7 +232,7 @@ class CartFlowViewModel @Inject constructor(
 
             val userId = localDataSource.fetchUserId()
 
-            when(isLoginAlready()) {
+            when (isLoginAlready()) {
                 false -> {
                     localDataSource.changeFavoriteStatus(listOf(Pair(productId, false)))
                 }
@@ -210,8 +250,20 @@ class CartFlowViewModel @Inject constructor(
 
 
     data class CartState(
-        val items: CartBundleUI? = null,
-        val calculatedPrices: CalculatedPrices? = null,
-        val coupon: String? = ""
+        val coupon: String = "",
+        val infoMessage: String = "",
+        val giftProductUIList: List<ProductUI> = emptyList(),
+        val availableProducts: CartAvailableProducts? = null,
+        val notAvailableProducts: CartNotAvailableProducts? = null,
+        val total: CartTotal? = null,
+        val bestForYouProducts: CategoryDetailUI? = null,
+        val cartEmpty: CartEmpty = CartEmpty(CART_EMPTY_ID)
     ) : State
+
+    companion object {
+        private const val CART_EMPTY_ID = -1
+        private const val CART_AVAILABLE_PRODUCTS_ID = 1
+        private const val CART_NOT_AVAILABLE_PRODUCTS_ID = 2
+        private const val CART_TOTAL_ID = 3
+    }
 }

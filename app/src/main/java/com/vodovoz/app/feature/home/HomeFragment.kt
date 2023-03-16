@@ -73,6 +73,8 @@ class HomeFragment : BaseFragment() {
                     }
 
                     debugLog { "${homeState.data.items.map { it.position }.sorted()}" }
+
+                    showError(homeState.error)
                 }
         }
     }
@@ -86,6 +88,9 @@ class HomeFragment : BaseFragment() {
             if (isFocusable) {
                 findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment())
             }
+        }
+        refresh.setOnClickListener {
+            flowViewModel.refresh()
         }
     }
 

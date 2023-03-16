@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,6 +17,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentMainCartFlowBinding
 import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
+import com.vodovoz.app.feature.cart.viewholders.cartempty.CartEmpty
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.ui.fragment.cart.CartFragmentDirections
 import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS
@@ -137,7 +139,15 @@ class CartFlowFragment : BaseFragment() {
                         hideLoader()
                     }
 
+                    val availableItems = cartState.data.availableProducts?.items ?: emptyList()
 
+                    if (availableItems.isEmpty()) {
+                        binding.bottom.root.isVisible = false
+                        cartController.submitList(listOfNotNull(cartState.data.cartEmpty, cartState.data.bestForYouProducts))
+                    } else {
+                        binding.bottom.root.isVisible = true
+                        cartController.submitList(listOfNotNull(cartState.data.notAvailableProducts, cartState.data.availableProducts, cartState.data.total))
+                    }
                 }
         }
     }
