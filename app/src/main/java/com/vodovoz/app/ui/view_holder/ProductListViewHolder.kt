@@ -58,14 +58,19 @@ class ProductListViewHolder(
 
         binding.amountController.add.setOnClickListener {
             if (productUI.isGift) return@setOnClickListener
-            if (productUI.leftItems == 0) {
-                onNotifyWhenBeAvailable(productUI.id, productUI.name, productUI.detailPicture)
-                return@setOnClickListener
+            if (!isCartItem) {
+                if (productUI.leftItems == 0) {
+                    onNotifyWhenBeAvailable(productUI.id, productUI.name, productUI.detailPicture)
+                    return@setOnClickListener
+                }
             }
-            if (productUI.cartQuantity == 0) {
+            /*if (productUI.cartQuantity == 0) {
                 productUI.cartQuantity++
                 updateCartQuantity()
-            }
+            }*/
+
+            productUI.cartQuantity++
+            updateCartQuantity()
             showAmountController()
         }
 

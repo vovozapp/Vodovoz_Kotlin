@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.cart
+package com.vodovoz.app.feature.cart
 
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.data.DataRepository

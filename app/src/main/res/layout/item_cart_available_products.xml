@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/llAvailableProductsContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        style="@style/TextViewNormalBlackBold"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/field_height"
+        android:textSize="16sp"
+        android:fontFamily="@font/rotonda_normal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/space_16"
+        android:text="Товары в корзине" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvAvailableProductRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/llReturnBottlesContainer"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:orientation="horizontal"
+        android:background="@color/white">
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/mdAboveReturnBottlesLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:dividerColor="@color/divider_gray_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvReturnBottles"
+            style="@style/TextViewNormalGrayBold"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/space_16"
+            android:text="Будете ли вы возвращать пустые бутылки?"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/cbReturnBottles"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbReturnBottles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlChooseBottleBtnContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnChooseBottle"
+            style="@style/BlueButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_small_height"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:layout_marginTop="@dimen/space_8"
+            android:layout_marginBottom="@dimen/space_16"
+            android:text="Выберите бренд бутыли" />
+
+    </RelativeLayout>
+
+</LinearLayout>

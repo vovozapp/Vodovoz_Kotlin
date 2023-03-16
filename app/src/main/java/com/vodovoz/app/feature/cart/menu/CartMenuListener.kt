@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.cart.menu
+package com.vodovoz.app.feature.cart.menu
 
 interface CartMenuListener {
 
