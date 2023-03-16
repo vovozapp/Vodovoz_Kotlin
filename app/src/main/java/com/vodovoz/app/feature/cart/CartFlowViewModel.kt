@@ -29,6 +29,18 @@ class CartFlowViewModel @Inject constructor(
     private val dataRepository: DataRepository
 ) : PagingStateViewModel<CartFlowViewModel.CartState>(CartState()) {
 
+    fun firstLoad() {
+        if (!state.isFirstLoad) {
+            uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
+            fetchCart()
+        }
+    }
+
+    fun refresh() {
+        uiStateListener.value = state.copy(loadingPage = true)
+        fetchCart()
+    }
+
     fun fetchCart(coupon: String? = null) {
         viewModelScope.launch {
             flow { emit(repository.fetchCartResponse(
