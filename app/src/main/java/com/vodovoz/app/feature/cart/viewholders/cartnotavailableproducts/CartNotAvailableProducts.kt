@@ -6,7 +6,8 @@ import com.vodovoz.app.ui.model.ProductUI
 
 data class CartNotAvailableProducts(
     val id: Int,
-    val items: List<ProductUI>
+    val items: List<ProductUI>,
+    val giftMessage: String? = null
 ) : Item {
 
     override fun getItemViewType(): Int {

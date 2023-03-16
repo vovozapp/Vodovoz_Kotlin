@@ -7,7 +7,6 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ItemCartNotAvailableProductsBinding
 import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
-import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
 import com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts.inner.NotAvailableProductsAdapter
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.view.Divider
@@ -41,6 +40,14 @@ class CartNotAvailableProductsViewHolder(
 
     override fun bind(item: CartNotAvailableProducts) {
         super.bind(item)
+
+        when(item.giftMessage) {
+            null -> binding.tvGiftMessage.visibility = View.GONE
+            else -> {
+                binding.tvGiftMessage.visibility = View.VISIBLE
+                binding.tvGiftMessage.text = item.giftMessage
+            }
+        }
 
         productsAdapter.submitList(item.items)
     }
