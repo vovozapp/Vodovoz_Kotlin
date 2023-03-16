@@ -143,6 +143,8 @@ class CartFlowFragment : BaseFragment() {
 
                     val availableItems = cartState.data.availableProducts?.items
 
+                    binding.bottom.btnRegOrder.text = StringBuilder().append("Оформить заказ на ").append(cartState.data.total?.prices?.total).append(" ₽").toString()
+
                     if (availableItems != null) {
                         if (availableItems.isEmpty()) {
                             binding.bottom.root.isVisible = false
