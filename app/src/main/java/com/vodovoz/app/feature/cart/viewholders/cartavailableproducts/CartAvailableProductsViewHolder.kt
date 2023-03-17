@@ -23,7 +23,7 @@ class CartAvailableProductsViewHolder(
 
     private val space: Int by lazy { itemView.context.resources.getDimension(R.dimen.space_16).toInt() }
 
-    private val productsAdapter = AvailableProductsAdapter(clickListener, productsClickListener)
+    private val productsAdapter = AvailableProductsAdapter(productsClickListener)
 
     init {
         binding.rvAvailableProductRecycler.layoutManager =

@@ -28,7 +28,6 @@ import com.vodovoz.app.ui.model.ProductUI
 
 class AvailableProductsViewHolder(
     view: View,
-    val clickListener: CartMainClickListener,
     val productsClickListener: ProductsClickListener
 ) : ItemViewHolder<ProductUI>(view) {
 

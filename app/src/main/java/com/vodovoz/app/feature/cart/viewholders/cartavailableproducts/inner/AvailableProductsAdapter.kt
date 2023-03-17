@@ -10,14 +10,13 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.innera
 import com.vodovoz.app.ui.model.ProductUI.Companion.PRODUCT_VIEW_TYPE
 
 class AvailableProductsAdapter(
-    private val clickListener: CartMainClickListener,
     private val productsClickListener: ProductsClickListener
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
         return when (viewType) {
             PRODUCT_VIEW_TYPE -> {
-                AvailableProductsViewHolder(getViewFromInflater(R.layout.view_holder_product_list, parent), clickListener, productsClickListener)
+                AvailableProductsViewHolder(getViewFromInflater(R.layout.view_holder_product_list, parent), productsClickListener)
             }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")
