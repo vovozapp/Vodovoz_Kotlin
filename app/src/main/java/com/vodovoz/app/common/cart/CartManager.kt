@@ -21,41 +21,37 @@ class CartManager @Inject constructor(
         updateCartListListener.value = update
     }
 
-    private val carts = ConcurrentHashMap<Long, CartMapState>()
-    private val cartsStateListener = MutableSharedFlow<Map<Long, CartMapState>>(replay = 1)
+    private val carts = ConcurrentHashMap<Long, Int>()
+    private val cartsStateListener = MutableSharedFlow<Map<Long, Int>>(replay = 1)
 
     fun observeCarts() = cartsStateListener.asSharedFlow().filter { it.isNotEmpty() }
 
-    suspend fun add(id: Long, count: Int, isInCart: Boolean, withUpdate: Boolean = true) {
+    suspend fun add(id: Long, oldCount: Int, newCount: Int, withUpdate: Boolean = true) {
         updateCartListState(withUpdate)
-        updateCarts(id, count, !isInCart)
+        val isInCart = oldCount == 0
+
+        updateCarts(id, newCount)
 
         kotlin.runCatching {
-            action(id, count, isInCart)
+            action(id, newCount, isInCart)
         }.onFailure {
-            updateCarts(id, count, isInCart)
+            updateCarts(id, newCount)
         }
     }
 
     private suspend fun action(id: Long, count: Int, isInCart: Boolean) {
         return if (isInCart) {
-            //repository.remove(id)
-            updateCarts(id, count, false)
+            repository.changeProductsQuantityInCart(id, count)
+            updateCarts(id, count)
         } else {
-            //repository.add(id)
-            updateCarts(id, count, true)
+            repository.addProductToCart(id, count)
+            updateCarts(id, count)
         }
     }
 
-    private suspend fun updateCarts(id: Long, count: Int, state: Boolean) {
-        carts[id] = CartMapState(count, state)
+    private suspend fun updateCarts(id: Long, count: Int) {
+        carts[id] = count
         cartsStateListener.emit(carts)
     }
-
-
-    data class CartMapState(
-        val count: Int,
-        val isInCart: Boolean
-    )
 
 }
