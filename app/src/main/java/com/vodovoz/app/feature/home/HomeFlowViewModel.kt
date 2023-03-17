@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.home
 
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.LocalSyncExtensions.syncCartQuantity
 import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
@@ -63,7 +64,8 @@ import javax.inject.Inject
 class HomeFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val localDataSource: LocalDataSource,
-    private val dataRepository: DataRepository
+    private val dataRepository: DataRepository,
+    private val cartManager: CartManager
 ) : PagingStateViewModel<HomeFlowViewModel.HomeState>(HomeState.idle()) {
 
     private fun loadPage() {
@@ -811,6 +813,7 @@ class HomeFlowViewModel @Inject constructor(
                         productId = productId,
                         quantity = quantity
                     )
+                    cartManager.updateCartListState(true)
                 }
         }
     }
@@ -828,6 +831,8 @@ class HomeFlowViewModel @Inject constructor(
                         productId = productId,
                         quantity = quantity
                     )
+                    debugLog { "spasibo home flow $cartManager" }
+                    cartManager.updateCartListState(true)
                 }
         }
     }

@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.cart
 
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
@@ -33,7 +34,8 @@ import javax.inject.Inject
 class CartFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val localDataSource: LocalDataSource,
-    private val dataRepository: DataRepository
+    private val dataRepository: DataRepository,
+    private val cartManager: CartManager
 ) : PagingStateViewModel<CartFlowViewModel.CartState>(CartState()) {
 
     private val navigateToOrderFlow = MutableSharedFlow<NavigateToOrder>()
@@ -41,6 +43,19 @@ class CartFlowViewModel @Inject constructor(
 
     private val navigateToGiftsBottomFlow = MutableSharedFlow<List<ProductUI>>()
     fun observeNavigateToGiftsBottom() = navigateToGiftsBottomFlow.asSharedFlow()
+
+    init {
+        viewModelScope.launch {
+            cartManager
+                .observeUpdateCartList()
+                .collect {
+                    if (it) {
+                        refresh()
+                        cartManager.updateCartListState(false)
+                    }
+                }
+        }
+    }
 
     fun firstLoad() {
         if (!state.isFirstLoad) {
