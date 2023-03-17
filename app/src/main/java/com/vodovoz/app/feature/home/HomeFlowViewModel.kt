@@ -831,7 +831,7 @@ class HomeFlowViewModel @Inject constructor(
                         productId = productId,
                         quantity = quantity
                     )
-                    debugLog { "spasibo home flow $cartManager" }
+
                     cartManager.updateCartListState(true)
                 }
         }
