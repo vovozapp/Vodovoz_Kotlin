@@ -5,6 +5,7 @@ import android.graphics.Paint
 import android.os.CountDownTimer
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderSliderProductBinding
@@ -198,6 +199,7 @@ class HomeProductsInnerViewHolder(
             }
             binding.amountController.add.visibility = View.VISIBLE
             binding.amountController.amountControllerDeployed.visibility = View.INVISIBLE
+            binding.llPricesContainer.visibility = View.VISIBLE
         }
     }
 
@@ -213,6 +215,7 @@ class HomeProductsInnerViewHolder(
     }
 
     private fun showAmountController() {
+        binding.llPricesContainer.visibility = View.INVISIBLE
         binding.amountController.circleAmount.visibility = View.INVISIBLE
         binding.amountController.add.visibility = View.INVISIBLE
         binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
