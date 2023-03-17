@@ -46,6 +46,16 @@ abstract class ItemAdapter : RecyclerView.Adapter<ItemViewHolder<out Item>>() {
         }
     }
 
+    override fun onViewAttachedToWindow(holder: ItemViewHolder<out Item>) {
+        super.onViewAttachedToWindow(holder)
+        holder.attach()
+    }
+
+    override fun onViewDetachedFromWindow(holder: ItemViewHolder<out Item>) {
+        super.onViewDetachedFromWindow(holder)
+        holder.detach()
+    }
+
     override fun getItemCount(): Int {
         return items.size
     }

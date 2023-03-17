@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahmadhamwi.tabsync.TabbedListMediator
 import com.google.android.material.tabs.TabLayout
 import com.vodovoz.app.R
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.databinding.FragmentSliderProductBinding
 import com.vodovoz.app.databinding.ViewCustomTabBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
@@ -21,15 +22,18 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.HomeCa
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.HomeCategoriesInnerClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.ui.interfaces.IOnChangeProductQuantity
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 
 class HomeProductsSliderViewHolder(
     view: View,
-    private val clickListener: HomeMainClickListener
+    private val clickListener: HomeMainClickListener,
+    private val cartManager: CartManager
 ) : ItemViewHolder<HomeProducts>(view) {
 
     private val binding: FragmentSliderProductBinding = FragmentSliderProductBinding.bind(view)
     private val space: Int by lazy { itemView.resources.getDimension(R.dimen.space_16).toInt() }
-    private val homeCategoriesAdapter = HomeCategoriesInnerAdapter(getHomeCategoriesInnerClickListener())
+    private val homeCategoriesAdapter = HomeCategoriesInnerAdapter(getHomeCategoriesInnerClickListener(), cartManager)
 
     init {
         binding.rvCategories.layoutManager =

@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.databinding.ViewHolderSliderProductBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
@@ -15,10 +16,15 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class HomeProductsInnerViewHolder(
     view: View,
-    private val clickListener: ProductsClickListener
+    private val clickListener: ProductsClickListener,
+    private val cartManager: CartManager
 ) : ItemViewHolder<ProductUI>(view) {
 
     private val binding: ViewHolderSliderProductBinding = ViewHolderSliderProductBinding.bind(view)
@@ -27,6 +33,24 @@ class HomeProductsInnerViewHolder(
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
             hideAmountController()
+        }
+    }
+
+    override fun attach() {
+        super.attach()
+
+        launch {
+            cartManager
+                .observeCarts()
+                .filter { it.containsKey(item?.id) }
+                .onEach {
+                    val item = item
+                    if (item != null) {
+                        item.cartQuantity = it[item.id] ?: item.cartQuantity
+                        updateCartQuantity()
+                    }
+                }
+                .collect()
         }
     }
 

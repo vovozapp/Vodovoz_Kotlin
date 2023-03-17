@@ -11,6 +11,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentMainHomeFlowBinding
@@ -22,6 +23,7 @@ import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.Pa
 import com.vodovoz.app.ui.fragment.products_catalog.ProductsCatalogFragment
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment() {
@@ -33,12 +35,16 @@ class HomeFragment : BaseFragment() {
 
     private val flowViewModel: HomeFlowViewModel by activityViewModels()
 
+    @Inject
+    lateinit var cartManager: CartManager
+
     private val homeController by lazy {
         com.vodovoz.app.feature.home.HomeController(
             requireContext(),
             viewLifecycleOwner,
             flowViewModel,
-            getMainClickListener()
+            getMainClickListener(),
+            cartManager
         )
     }
 

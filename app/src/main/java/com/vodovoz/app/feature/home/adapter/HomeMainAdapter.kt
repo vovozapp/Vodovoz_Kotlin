@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.home.adapter
 
 import android.view.ViewGroup
 import com.vodovoz.app.R
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
@@ -20,7 +21,8 @@ import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotionsSli
 import com.vodovoz.app.feature.home.viewholders.hometriplenav.HomeTripleNavViewHolder
 
 class HomeMainAdapter(
-    private val clickListener: HomeMainClickListener
+    private val clickListener: HomeMainClickListener,
+    private val cartManager: CartManager
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
@@ -54,7 +56,7 @@ class HomeMainAdapter(
                 HomePopularCategoriesSliderViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
             R.layout.fragment_slider_product -> {
-                HomeProductsSliderViewHolder(getViewFromInflater(viewType, parent), clickListener)
+                HomeProductsSliderViewHolder(getViewFromInflater(viewType, parent), clickListener, cartManager)
             }
             R.layout.fragment_slider_promotion -> {
                 HomePromotionsSliderViewHolder(getViewFromInflater(viewType, parent), clickListener)

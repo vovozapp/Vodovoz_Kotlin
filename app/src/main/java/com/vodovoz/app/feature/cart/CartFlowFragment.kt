@@ -16,6 +16,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentMainCartFlowBinding
 import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
@@ -26,6 +27,7 @@ import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelect
 import com.vodovoz.app.ui.model.ProductUI
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CartFlowFragment : BaseFragment() {
@@ -42,10 +44,14 @@ class CartFlowFragment : BaseFragment() {
     }
     private val viewModel: CartFlowViewModel by activityViewModels()
 
+    @Inject
+    lateinit var cartManager: CartManager
+
     private val cartController by lazy {
         CartController(
             getCartMainClickListener(),
-            getProductsClickListener()
+            getProductsClickListener(),
+            cartManager
         )
     }
 

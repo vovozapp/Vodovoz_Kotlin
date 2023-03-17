@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.databinding.ViewHolderSliderProductCategoryBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.HomeProductsInnerAdapter
@@ -12,13 +13,14 @@ import com.vodovoz.app.ui.model.CategoryDetailUI
 
 class HomeCategoriesInnerViewHolder(
     view: View,
-    private val clickListener: ProductsClickListener
+    private val clickListener: ProductsClickListener,
+    private val cartManager: CartManager
 ) : ItemViewHolder<CategoryDetailUI>(view) {
 
     private val binding: ViewHolderSliderProductCategoryBinding =
         ViewHolderSliderProductCategoryBinding.bind(view)
 
-    private val homeProductsAdapter = HomeProductsInnerAdapter(getHomeProductsInnerClickListener())
+    private val homeProductsAdapter = HomeProductsInnerAdapter(getHomeProductsInnerClickListener(), cartManager)
 
     private var isAddItemDecoration = false
 

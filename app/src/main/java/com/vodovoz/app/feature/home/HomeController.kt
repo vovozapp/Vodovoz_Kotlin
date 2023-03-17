@@ -5,6 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.feature.home.adapter.HomeMainAdapter
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
@@ -13,9 +14,10 @@ class HomeController(
     private val context: Context,
     lifecycleOwner: LifecycleOwner,
     private val viewModel: com.vodovoz.app.feature.home.HomeFlowViewModel,
-    listener: HomeMainClickListener
+    listener: HomeMainClickListener,
+    cartManager: CartManager
 ) {
-    private val homeMainAdapter = HomeMainAdapter(listener)
+    private val homeMainAdapter = HomeMainAdapter(listener, cartManager)
 
     fun bind(recyclerView: RecyclerView, refresh: SwipeRefreshLayout) {
         initList(recyclerView)

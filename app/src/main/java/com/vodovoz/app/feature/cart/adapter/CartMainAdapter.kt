@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.cart.adapter
 
 import android.view.ViewGroup
 import com.vodovoz.app.R
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
@@ -14,7 +15,8 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.innera
 
 class CartMainAdapter(
     private val clickListener: CartMainClickListener,
-    private val productsClickListener: ProductsClickListener
+    private val productsClickListener: ProductsClickListener,
+    private val cartManager: CartManager
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
@@ -29,7 +31,7 @@ class CartMainAdapter(
                 CartTotalViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
             R.layout.view_holder_slider_product_category -> {
-                HomeCategoriesInnerViewHolder(getViewFromInflater(viewType, parent), productsClickListener)
+                HomeCategoriesInnerViewHolder(getViewFromInflater(viewType, parent), productsClickListener, cartManager)
             }
             R.layout.item_cart_empty -> {
                 CartEmptyViewHolder(getViewFromInflater(viewType, parent), clickListener)
