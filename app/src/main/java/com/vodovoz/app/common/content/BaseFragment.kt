@@ -62,9 +62,11 @@ abstract class BaseFragment : Fragment() {
 
     protected fun showError(error: ErrorState?) {
         if (error != null) {
+            refresh.isEnabled = true
             viewBinding.errorContainer.isVisible = true
             viewBinding.errorMessage.text = error.message
         } else {
+            refresh.isEnabled = false
             viewBinding.errorContainer.isVisible = false
         }
     }
