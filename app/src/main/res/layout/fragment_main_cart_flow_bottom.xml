@@ -51,7 +51,7 @@
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnRegOrder"
+        android:id="@+id/btnRegOrderFlow"
         style="@style/GreenButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_normal_height"

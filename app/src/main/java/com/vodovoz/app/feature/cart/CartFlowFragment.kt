@@ -110,11 +110,13 @@ class CartFlowFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         viewModel.firstLoad()
-        observeUiState()
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        observeUiState()
 
         bindButtons()
         initActionBar()
@@ -149,7 +151,7 @@ class CartFlowFragment : BaseFragment() {
                     val notAvailableItems = cartState.data.notAvailableProducts?.items
 
                     if (cartState.data.total != null) {
-                        binding.bottom.btnRegOrder.text = StringBuilder().append("Оформить заказ на ").append(cartState.data.total.prices.total).append(" ₽").toString()
+                        binding.bottom.btnRegOrderFlow.text = StringBuilder().append("Оформить заказ на ").append(cartState.data.total.prices.total).append(" ₽").toString()
                     }
 
                     if (availableItems != null) {
@@ -215,7 +217,7 @@ class CartFlowFragment : BaseFragment() {
         binding.bottom.llShowGifts.setOnClickListener {
             viewModel.navigateToGiftsBottomFragment()
         }
-        binding.bottom.btnRegOrder.setOnClickListener {
+        binding.bottom.btnRegOrderFlow.setOnClickListener {
             viewModel.navigateToOrderFragment()
         }
     }
