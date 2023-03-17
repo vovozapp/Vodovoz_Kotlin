@@ -207,12 +207,21 @@ class CartFlowFragment : BaseFragment() {
                 .collect {
                     when (viewModel.isLoginAlready()) {
                         true -> {
+                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.giftsBottomFragment) {
+                                findNavController().popBackStack()
+                            }
+
                             findNavController().navigate(
                                 CartFragmentDirections.actionToGiftsBottomFragment(
                                     it.toTypedArray()
                                 ))
                         }
-                        false -> findNavController().navigate(CartFragmentDirections.actionToProfileFragment())
+                        false -> {
+                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.giftsBottomFragment) {
+                                findNavController().popBackStack()
+                            }
+                            findNavController().navigate(CartFragmentDirections.actionToProfileFragment())
+                        }
                     }
                 }
         }
