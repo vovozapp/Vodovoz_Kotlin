@@ -27,20 +27,21 @@ class CartManager @Inject constructor(
     fun observeCarts() = cartsStateListener.asSharedFlow().filter { it.isNotEmpty() }
 
     suspend fun add(id: Long, oldCount: Int, newCount: Int, withUpdate: Boolean = true) {
-        updateCartListState(withUpdate)
+
         val isInCart = oldCount == 0
 
         updateCarts(id, newCount)
 
         kotlin.runCatching {
-            action(id, newCount, isInCart)
+            action(id = id, count = newCount, isInCart = isInCart)
+            updateCartListState(withUpdate)
         }.onFailure {
             updateCarts(id, newCount)
         }
     }
 
     private suspend fun action(id: Long, count: Int, isInCart: Boolean) {
-        return if (isInCart) {
+        return if (!isInCart) {
             repository.changeProductsQuantityInCart(id, count)
             updateCarts(id, count)
         } else {

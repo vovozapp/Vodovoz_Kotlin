@@ -164,10 +164,10 @@ class CartFlowViewModel @Inject constructor(
     fun isLoginAlready() = dataRepository.isAlreadyLogin()
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
-        /*viewModelScope.launch {
+        viewModelScope.launch {
             cartManager.add(id = productId, oldCount = oldQuan, newCount = quantity)
-        }*/
-        viewModelScope.launch(Dispatchers.IO) {
+        }
+        /*viewModelScope.launch(Dispatchers.IO) {
 
             val cart = localDataSource.fetchCart()
             val oldQuantity = cart[productId]
@@ -176,7 +176,7 @@ class CartFlowViewModel @Inject constructor(
                 null -> addToCart(productId, quantity)
                 else -> changeProductQuantityInCart(productId, quantity)
             }
-        }
+        }*/
     }
 
     private fun addToCart(productId: Long, quantity: Int) {
