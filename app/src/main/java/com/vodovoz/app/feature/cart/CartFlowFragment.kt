@@ -139,6 +139,11 @@ class CartFlowFragment : BaseFragment() {
 
                     if (cartState.data.infoMessage.isNotEmpty()) Snackbar.make(binding.root, cartState.data.infoMessage, Snackbar.LENGTH_LONG).show()
 
+                    when(cartState.data.giftProductUIList.isEmpty()) {
+                        true -> binding.bottom.llShowGifts.visibility = View.GONE
+                        false -> binding.bottom.llShowGifts.visibility = View.VISIBLE
+                    }
+
                     if (cartState.loadingPage) {
                         binding.bottom.root.isVisible = false
                         showLoader()
