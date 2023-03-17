@@ -68,6 +68,27 @@ class HomeFlowViewModel @Inject constructor(
     private val cartManager: CartManager
 ) : PagingStateViewModel<HomeFlowViewModel.HomeState>(HomeState.idle()) {
 
+    init {
+        viewModelScope.launch {
+            cartManager
+                .observeCarts()
+                .onEach {
+                    val items = state.data.items
+                    val itemsList = listOfNotNull(
+                        items[DISCOUNT - 1].takeIf { it.item != null }?.item as? HomeProducts,
+                        items[TOP_PROD - 1].takeIf { it.item != null }?.item as? HomeProducts,
+                        items[NOVELTIES - 1].takeIf { it.item != null }?.item as? HomeProducts,
+                        items[BOTTOM_PROD - 1].takeIf { it.item != null }?.item as? HomeProducts,
+                        items[VIEWED - 1].takeIf { it.item != null }?.item as? HomeProducts,
+                        items[10 - 1].takeIf { it.item != null }?.item as? HomePromotions,
+                        items[7-1].takeIf { it.item != null }?.item as? HomeOrders
+                    )
+                }
+                .flowOn(Dispatchers.Default)
+                .collect()
+        }
+    }
+
     private fun loadPage() {
         fetchAdvertisingBannersSlider()
         fetchHistoriesSlider()
@@ -248,9 +269,15 @@ class HomeFlowViewModel @Inject constructor(
                     val response = it.parseDiscountSliderResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val item =
-                            PositionItem(POSITION_4, HomeProducts(4, response.data.mapToUI(), productsType = DISCOUNT, productsSliderConfig = ProductsSliderConfig(
-                                containShowAllButton = true
-                            ))
+                            PositionItem(
+                                POSITION_4, HomeProducts(
+                                    4,
+                                    response.data.mapToUI(),
+                                    productsType = DISCOUNT,
+                                    productsSliderConfig = ProductsSliderConfig(
+                                        containShowAllButton = true
+                                    )
+                                )
                             )
 
                         response.data.forEach { categoryDetailEntity ->
@@ -345,9 +372,16 @@ class HomeFlowViewModel @Inject constructor(
                     val response = it.parseTopSliderResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val item =
-                            PositionItem(POSITION_6, HomeProducts(6, response.data.mapToUI(), productsType = TOP_PROD, productsSliderConfig = ProductsSliderConfig(
-                                containShowAllButton = true
-                            )))
+                            PositionItem(
+                                POSITION_6, HomeProducts(
+                                    6,
+                                    response.data.mapToUI(),
+                                    productsType = TOP_PROD,
+                                    productsSliderConfig = ProductsSliderConfig(
+                                        containShowAllButton = true
+                                    )
+                                )
+                            )
 
                         response.data.forEach { categoryDetailEntity ->
                             categoryDetailEntity.productEntityList.syncFavoriteProducts(
@@ -386,7 +420,9 @@ class HomeFlowViewModel @Inject constructor(
                         debugLog { "fetch orders slider error ${it.localizedMessage}" }
                         uiStateListener.value =
                             state.copy(
-                                error = it.toErrorState(), loadingPage = false, data = state.data.copy(
+                                error = it.toErrorState(),
+                                loadingPage = false,
+                                data = state.data.copy(
                                     items = state.data.items + PositionItem(
                                         POSITION_7,
                                         null
@@ -451,9 +487,16 @@ class HomeFlowViewModel @Inject constructor(
                     val response = it.parseNoveltiesSliderResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val item =
-                            PositionItem(POSITION_9, HomeProducts(9, response.data.mapToUI(), productsType = NOVELTIES, productsSliderConfig = ProductsSliderConfig(
-                                containShowAllButton = true
-                            )))
+                            PositionItem(
+                                POSITION_9, HomeProducts(
+                                    9,
+                                    response.data.mapToUI(),
+                                    productsType = NOVELTIES,
+                                    productsSliderConfig = ProductsSliderConfig(
+                                        containShowAllButton = true
+                                    )
+                                )
+                            )
 
                         response.data.forEach { categoryDetailEntity ->
                             categoryDetailEntity.productEntityList.syncFavoriteProducts(
@@ -558,9 +601,16 @@ class HomeFlowViewModel @Inject constructor(
                     val response = it.parseBottomSliderResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val item =
-                            PositionItem(POSITION_11, HomeProducts(11, response.data.mapToUI(), productsType = BOTTOM_PROD, productsSliderConfig = ProductsSliderConfig(
-                                containShowAllButton = true
-                            )))
+                            PositionItem(
+                                POSITION_11, HomeProducts(
+                                    11,
+                                    response.data.mapToUI(),
+                                    productsType = BOTTOM_PROD,
+                                    productsSliderConfig = ProductsSliderConfig(
+                                        containShowAllButton = true
+                                    )
+                                )
+                            )
 
                         response.data.forEach { categoryDetailEntity ->
                             categoryDetailEntity.productEntityList.syncFavoriteProducts(
@@ -683,7 +733,9 @@ class HomeFlowViewModel @Inject constructor(
                         debugLog { "fetch viewed products slider error ${it.localizedMessage}" }
                         uiStateListener.value =
                             state.copy(
-                                error = it.toErrorState(), loadingPage = false, data = state.data.copy(
+                                error = it.toErrorState(),
+                                loadingPage = false,
+                                data = state.data.copy(
                                     items = state.data.items + PositionItem(
                                         POSITION_14,
                                         null
@@ -787,8 +839,12 @@ class HomeFlowViewModel @Inject constructor(
 
     fun isLoginAlready() = dataRepository.isAlreadyLogin()
 
-    fun changeCart(productId: Long, quantity: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+    fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
+        viewModelScope.launch {
+            cartManager.add(id = productId, oldCount = oldQuan, newCount = quantity)
+        }
+
+        /*viewModelScope.launch(Dispatchers.IO) {
 
             val cart = localDataSource.fetchCart()
             val oldQuantity = cart[productId]
@@ -797,15 +853,19 @@ class HomeFlowViewModel @Inject constructor(
                 null -> addToCart(productId, quantity)
                 else -> changeProductQuantityInCart(productId, quantity)
             }
-        }
+        }*/
     }
 
     private fun addToCart(productId: Long, quantity: Int) {
         viewModelScope.launch {
-            flow { emit(repository.addProductToCart(
-                productId = productId,
-                quantity = quantity
-            ))}
+            flow {
+                emit(
+                    repository.addProductToCart(
+                        productId = productId,
+                        quantity = quantity
+                    )
+                )
+            }
                 .catch { debugLog { "add to cart error ${it.localizedMessage}" } }
                 .flowOn(Dispatchers.IO)
                 .collect {
@@ -820,10 +880,14 @@ class HomeFlowViewModel @Inject constructor(
 
     private fun changeProductQuantityInCart(productId: Long, quantity: Int) {
         viewModelScope.launch {
-            flow { emit(repository.changeProductsQuantityInCart(
-                productId = productId,
-                quantity = quantity
-            ))}
+            flow {
+                emit(
+                    repository.changeProductsQuantityInCart(
+                        productId = productId,
+                        quantity = quantity
+                    )
+                )
+            }
                 .catch { debugLog { "change cart error ${it.localizedMessage}" } }
                 .flowOn(Dispatchers.IO)
                 .collect {
@@ -839,7 +903,7 @@ class HomeFlowViewModel @Inject constructor(
 
     fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            when(isFavorite) {
+            when (isFavorite) {
                 true -> addToFavorite(listOf(productId))
                 false -> removeFromFavorite(productId = productId)
             }
@@ -851,7 +915,7 @@ class HomeFlowViewModel @Inject constructor(
 
             val userId = localDataSource.fetchUserId()
 
-            when(isLoginAlready()) {
+            when (isLoginAlready()) {
                 false -> {
                     localDataSource.changeFavoriteStatus(
                         pairList = mutableListOf<Pair<Long, Boolean>>().apply {
@@ -880,7 +944,7 @@ class HomeFlowViewModel @Inject constructor(
 
             val userId = localDataSource.fetchUserId()
 
-            when(isLoginAlready()) {
+            when (isLoginAlready()) {
                 false -> {
                     localDataSource.changeFavoriteStatus(listOf(Pair(productId, false)))
                 }

@@ -37,7 +37,7 @@ class AvailableProductsViewHolder(
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
             val item = getItemByPosition() ?: return
-            productsClickListener.onChangeProductQuantity(item.id, item.cartQuantity)
+            productsClickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
             hideAmountController(item)
         }
     }
@@ -77,6 +77,7 @@ class AvailableProductsViewHolder(
             val item = getItemByPosition() ?: return@setOnClickListener
             if (item.isGift) return@setOnClickListener
 
+            item.oldQuantity = item.cartQuantity
             item.cartQuantity++
             updateCartQuantity(item)
             showAmountController()
@@ -84,6 +85,7 @@ class AvailableProductsViewHolder(
 
         binding.amountController.reduceAmount.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
+            item.oldQuantity = item.cartQuantity
             item.cartQuantity--
             if (item.cartQuantity < 0) item.cartQuantity = 0
             amountControllerTimer.cancel()
@@ -93,6 +95,7 @@ class AvailableProductsViewHolder(
 
         binding.amountController.increaseAmount.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
+            item.oldQuantity = item.cartQuantity
             item.cartQuantity++
             amountControllerTimer.cancel()
             amountControllerTimer.start()

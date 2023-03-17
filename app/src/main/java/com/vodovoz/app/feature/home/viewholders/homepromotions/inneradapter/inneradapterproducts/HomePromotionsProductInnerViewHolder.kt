@@ -43,8 +43,9 @@ class HomePromotionsProductInnerViewHolder(
                 return@setOnClickListener
             }
             if (item.cartQuantity == 0) {
+                item.oldQuantity = item.cartQuantity
                 item.cartQuantity++
-                clickListener.onChangeProductQuantity(item.id, item.cartQuantity)
+                clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
                 updateCartQuantity()
             }
             showAmountController()
@@ -52,20 +53,22 @@ class HomePromotionsProductInnerViewHolder(
 
         binding.amountController.reduceAmount.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
+            item.oldQuantity = item.cartQuantity
             item.cartQuantity--
             if (item.cartQuantity < 0) item.cartQuantity = 0
             amountControllerTimer.cancel()
             amountControllerTimer.start()
-            clickListener.onChangeProductQuantity(item.id, item.cartQuantity)
+            clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
             updateCartQuantity()
         }
 
         binding.amountController.increaseAmount.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
+            item.oldQuantity = item.cartQuantity
             item.cartQuantity++
             amountControllerTimer.cancel()
             amountControllerTimer.start()
-            clickListener.onChangeProductQuantity(item.id, item.cartQuantity)
+            clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
             updateCartQuantity()
         }
 

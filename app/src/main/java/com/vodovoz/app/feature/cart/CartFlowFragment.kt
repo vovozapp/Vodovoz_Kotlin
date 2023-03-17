@@ -95,8 +95,8 @@ class CartFlowFragment : BaseFragment() {
                 }
             }
 
-            override fun onChangeProductQuantity(id: Long, cartQuantity: Int) {
-                viewModel.changeCart(id, cartQuantity)
+            override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
+                viewModel.changeCart(id, cartQuantity, oldQuantity)
             }
 
             override fun onFavoriteClick(id: Long, isFavorite: Boolean) {
@@ -263,8 +263,9 @@ class CartFlowFragment : BaseFragment() {
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<ProductUI>(GIFT_ID)
             ?.observe(viewLifecycleOwner) { gift ->
+                val oldQ = gift.cartQuantity
                 gift.cartQuantity++
-                viewModel.changeCart(gift.id, gift.cartQuantity)
+                viewModel.changeCart(gift.id, gift.cartQuantity, oldQ)
             }
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<Long>(ReplacementProductsSelectionBS.SELECTED_PRODUCT_ID)

@@ -20,6 +20,7 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Compan
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.HomeCategoriesInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.HomeCategoriesInnerClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
+import com.vodovoz.app.ui.interfaces.IOnChangeProductQuantity
 
 class HomeProductsSliderViewHolder(
     view: View,
@@ -88,8 +89,8 @@ class HomeProductsSliderViewHolder(
                 clickListener.onNotifyWhenBeAvailable(id, name, detailPicture)
             }
 
-            override fun onChangeProductQuantity(id: Long, cartQuantity: Int) {
-                clickListener.onChangeProductQuantity(id, cartQuantity)
+            override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
+                clickListener.onChangeProductQuantity(id, cartQuantity, oldQuantity)
             }
 
             override fun onFavoriteClick(id: Long, isFavorite: Boolean) {

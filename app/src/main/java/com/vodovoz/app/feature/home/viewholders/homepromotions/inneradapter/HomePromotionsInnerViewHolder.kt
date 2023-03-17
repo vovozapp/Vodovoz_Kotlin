@@ -82,8 +82,8 @@ class HomePromotionsInnerViewHolder(
                 clickListener.onNotifyWhenBeAvailable(id, name, detailPicture)
             }
 
-            override fun onChangeProductQuantity(id: Long, cartQuantity: Int) {
-                clickListener.onChangeProductQuantity(id, cartQuantity)
+            override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
+                clickListener.onChangeProductQuantity(id, cartQuantity, oldQuantity)
             }
 
             override fun onFavoriteClick(id: Long, isFavorite: Boolean) {

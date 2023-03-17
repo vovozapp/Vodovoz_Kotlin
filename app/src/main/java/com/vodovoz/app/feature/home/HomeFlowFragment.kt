@@ -219,8 +219,8 @@ class HomeFlowFragment : BaseFragment() {
                 showPreOrderProductPopup(id, name, detailPicture)
             }
 
-            override fun onChangeProductQuantity(id: Long, cartQuantity: Int) {
-                flowViewModel.changeCart(id, cartQuantity)
+            override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
+                flowViewModel.changeCart(id, cartQuantity, oldQuantity)
             }
 
             override fun onFavoriteClick(id: Long, isFavorite: Boolean) {

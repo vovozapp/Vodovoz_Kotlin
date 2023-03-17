@@ -25,7 +25,8 @@ data class ProductUI(
     var orderQuantity: Int = 0,
     val depositPrice: Int = 0,
     val detailPictureList: List<String> = listOf(),
-    val replacementProductUIList: List<ProductUI> = listOf()
+    val replacementProductUIList: List<ProductUI> = listOf(),
+    var oldQuantity: Int = 0
 ) : Parcelable, Item {
 
     companion object {
