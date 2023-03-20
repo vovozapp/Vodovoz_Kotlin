@@ -106,6 +106,7 @@ class CartFlowViewModel @Inject constructor(
                             localDataSource.fetchCart()
                         }
                         val mappedData = response.data.mapUoUI()
+                        cartManager.syncCart(mappedData.availableProductUIList)
                         state.copy(
                             data = state.data.copy(
                                 coupon = coupon ?: "",

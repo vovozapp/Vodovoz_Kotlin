@@ -2,6 +2,8 @@ package com.vodovoz.app.common.cart
 
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
+import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.flow.*
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
@@ -38,6 +40,18 @@ class CartManager @Inject constructor(
         }.onFailure {
             updateCarts(id, newCount)
         }
+    }
+
+    fun clearCart() {
+
+    }
+
+    suspend fun syncCart(list: List<ProductUI>) {
+        list.forEach {
+            carts[it.id] = it.cartQuantity
+        }
+        debugLog { "spasibo $carts" }
+        cartsStateListener.emit(carts)
     }
 
     private suspend fun action(id: Long, count: Int, isInCart: Boolean) {

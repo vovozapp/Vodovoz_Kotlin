@@ -47,7 +47,7 @@ class HomeProductsInnerViewHolder(
                     val item = item
                     if (item != null) {
                         item.cartQuantity = it[item.id] ?: item.cartQuantity
-                        updateCartQuantity()
+                        updateCartQuantity(item)
                     }
                 }
                 .collect()
@@ -71,7 +71,7 @@ class HomeProductsInnerViewHolder(
                 item.oldQuantity = item.cartQuantity
                 item.cartQuantity++
                 clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
-                updateCartQuantity()
+                updateCartQuantity(item)
             }
             showAmountController()
         }
@@ -84,7 +84,7 @@ class HomeProductsInnerViewHolder(
             amountControllerTimer.cancel()
             amountControllerTimer.start()
             clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
-            updateCartQuantity()
+            updateCartQuantity(item)
         }
 
         binding.amountController.increaseAmount.setOnClickListener {
@@ -94,7 +94,7 @@ class HomeProductsInnerViewHolder(
             amountControllerTimer.cancel()
             amountControllerTimer.start()
             clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
-            updateCartQuantity()
+            updateCartQuantity(item)
         }
 
         binding.imgFavoriteStatus.setOnClickListener {
@@ -163,13 +163,7 @@ class HomeProductsInnerViewHolder(
         }
 
         //Cart amount
-        binding.amountController.circleAmount.text = item.cartQuantity.toString()
-        binding.amountController.amount.text = item.cartQuantity.toString()
-
-        when (item.cartQuantity > 0) {
-            true -> binding.amountController.circleAmount.visibility = View.VISIBLE
-            false -> binding.amountController.circleAmount.visibility = View.GONE
-        }
+        updateCartQuantity(item)
 
         //Favorite
         when(item.isFavorite) {
@@ -230,15 +224,20 @@ class HomeProductsInnerViewHolder(
         }
     }
 
-    private fun updateCartQuantity() {
-        val product = getItemByPosition()
-        product?.let {
-            if (product.cartQuantity < 0) {
-                product.cartQuantity = 0
-            }
-            binding.amountController.amount.text = product.cartQuantity.toString()
-            binding.amountController.circleAmount.text = product.cartQuantity.toString()
+    private fun updateCartQuantity(item: ProductUI) {
+        if (item.cartQuantity < 0) {
+            item.cartQuantity = 0
         }
+
+        if (item.cartQuantity <= 0) {
+            binding.amountController.circleAmount.visibility = View.GONE
+        } else {
+            binding.amountController.circleAmount.visibility = View.VISIBLE
+        }
+
+
+        binding.amountController.amount.text = item.cartQuantity.toString()
+        binding.amountController.circleAmount.text = item.cartQuantity.toString()
     }
 
     private fun showAmountController() {

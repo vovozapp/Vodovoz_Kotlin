@@ -68,27 +68,6 @@ class HomeFlowViewModel @Inject constructor(
     private val cartManager: CartManager
 ) : PagingStateViewModel<HomeFlowViewModel.HomeState>(HomeState.idle()) {
 
-    init {
-        viewModelScope.launch {
-            cartManager
-                .observeCarts()
-                .onEach {
-                    val items = state.data.items
-                    val itemsList = listOfNotNull(
-                        items[DISCOUNT - 1].takeIf { it.item != null }?.item as? HomeProducts,
-                        items[TOP_PROD - 1].takeIf { it.item != null }?.item as? HomeProducts,
-                        items[NOVELTIES - 1].takeIf { it.item != null }?.item as? HomeProducts,
-                        items[BOTTOM_PROD - 1].takeIf { it.item != null }?.item as? HomeProducts,
-                        items[VIEWED - 1].takeIf { it.item != null }?.item as? HomeProducts,
-                        items[10 - 1].takeIf { it.item != null }?.item as? HomePromotions,
-                        items[7-1].takeIf { it.item != null }?.item as? HomeOrders
-                    )
-                }
-                .flowOn(Dispatchers.Default)
-                .collect()
-        }
-    }
-
     private fun loadPage() {
         fetchAdvertisingBannersSlider()
         fetchHistoriesSlider()
