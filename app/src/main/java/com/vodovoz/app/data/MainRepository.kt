@@ -186,7 +186,6 @@ class MainRepository @Inject constructor(
      * **/
 
     //Корзина
-    @GET("/newmobile/korzina/index.php")
     suspend fun fetchCartResponse(
         action: String? = null,
         userId: Long? = null,
@@ -205,7 +204,6 @@ class MainRepository @Inject constructor(
     //Изменение колличества товаров в корзине changeProductsQuantityInCart
 
     //удаление из корзины
-    @GET("/newmobile/korzina/function/deletto/index.php")
     suspend fun fetchDeleteProductResponse(
         action: String? = null,
         productId: Long? = null,
@@ -214,11 +212,22 @@ class MainRepository @Inject constructor(
     }
 
     //Очистить корзину
-    @GET("newmobile/korzina/function/delkorzina/index.php")
     suspend fun fetchClearCartResponse(
         action: String? = null,
     ): ResponseBody {
         return api.fetchClearCartResponse(action)
+    }
+
+    /**
+     * Продукт
+     */
+
+    //Продукт
+    suspend fun fetchProductResponse(
+        blockId: Int = 1,
+        productId: Long
+    ): ResponseBody {
+        return api.fetchProductResponse(blockId, productId)
     }
 
 }

@@ -186,4 +186,15 @@ interface MainApi {
         @Query("action") action: String? = null,
     ): ResponseBody
 
+    /**
+     * Продукт
+     */
+
+    //Продукт
+    @GET("/newmobile/details/index_new.php")
+    fun fetchProductResponse(
+        @Query("iblock_id") blockId: Int,
+        @Query("detail") productId: Long,
+    ): ResponseBody
+
 }
