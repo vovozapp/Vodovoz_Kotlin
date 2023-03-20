@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/searchWordContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/space_8"
+    android:layout_marginBottom="@dimen/space_8"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/space_8"
+    android:paddingBottom="@dimen/space_8"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/TextViewHeaderBlackBold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ищут по запросам"
+        android:paddingVertical="@dimen/space_8"
+        android:paddingHorizontal="@dimen/space_16"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSearchWords"
+        android:layout_marginHorizontal="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

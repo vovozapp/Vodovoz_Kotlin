@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--new-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/TextViewHeaderBlackBold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Возможно, вам понравится"
+        android:paddingVertical="@dimen/space_8"
+        android:paddingHorizontal="@dimen/space_16"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvProducts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvNextPage"
+        style="@style/TextViewNormalBlue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Показать еще"
+        android:paddingVertical="@dimen/space_16"
+        android:gravity="center"/>
+
+</LinearLayout>

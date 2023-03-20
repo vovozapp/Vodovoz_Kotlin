@@ -7,6 +7,7 @@ import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.LocalSyncExtensions.syncCartQuantity
 import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
@@ -30,7 +31,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
     private val dataRepository: DataRepository,
     private val mainRepository: MainRepository,
     private val localDataSource: LocalDataSource,
-    private val cartManager: CartManager
+    private val cartManager: CartManager,
+    private val likeManager: LikeManager
 ) : ViewModel() {
 
     private val uiStateListener = MutableStateFlow(ProductDetailsState())
@@ -53,15 +55,15 @@ class ProductDetailsFlowViewModel @Inject constructor(
                     val response = it.parseProductDetailsResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
 
-                        response.data.let {
-                            it.productDetailEntity.syncCartQuantity(localDataSource)
-                            it.productDetailEntity.syncFavoriteStatus(localDataSource)
-                            it.buyWithProductEntityList.syncCartQuantity(localDataSource)
-                            it.buyWithProductEntityList.syncFavoriteProducts(localDataSource)
-                            it.maybeLikeProductEntityList.syncCartQuantity(localDataSource)
-                            it.maybeLikeProductEntityList.syncFavoriteProducts(localDataSource)
-                            it.recommendProductEntityList.syncCartQuantity(localDataSource)
-                            it.recommendProductEntityList.syncFavoriteProducts(localDataSource)
+                        response.data.let { entity ->
+                            entity.productDetailEntity.syncCartQuantity(localDataSource)
+                            entity.productDetailEntity.syncFavoriteStatus(localDataSource)
+                            entity.buyWithProductEntityList.syncCartQuantity(localDataSource)
+                            entity.buyWithProductEntityList.syncFavoriteProducts(localDataSource)
+                            entity.maybeLikeProductEntityList.syncCartQuantity(localDataSource)
+                            entity.maybeLikeProductEntityList.syncFavoriteProducts(localDataSource)
+                            entity.recommendProductEntityList.syncCartQuantity(localDataSource)
+                            entity.recommendProductEntityList.syncFavoriteProducts(localDataSource)
                         }
 
                         val mappedData = response.data.mapToUI()
@@ -95,6 +97,11 @@ class ProductDetailsFlowViewModel @Inject constructor(
         }
     }
 
+    fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
+        viewModelScope.launch {
+            likeManager.like(productId, !isFavorite)
+        }
+    }
 
     data class ProductDetailsState(
         val productDetailUI: ProductDetailUI? = null,
