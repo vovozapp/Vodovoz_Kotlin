@@ -1,7 +1,6 @@
 package com.vodovoz.app.common.like
 
-import com.vodovoz.app.common.account.data.AccountLocal
-import com.vodovoz.app.common.like.data.LikeLocal
+import com.vodovoz.app.data.local.LocalDataSource
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.filter
@@ -10,7 +9,7 @@ import javax.inject.Inject
 
 class LikeManager @Inject constructor(
     private val repository: LikeRepository,
-    private val accountLocal: AccountLocal
+    private val localDataSource: LocalDataSource
 ) {
 
     private val likes = ConcurrentHashMap<Long, Boolean>()
@@ -21,7 +20,7 @@ class LikeManager @Inject constructor(
     suspend fun like(id: Long, isFavorite: Boolean) {
         updateLikes(id, !isFavorite)
 
-        val userId = accountLocal.fetchUserId()
+        val userId = localDataSource.fetchUserId()
 
         if (userId != null) {
             runCatching {
