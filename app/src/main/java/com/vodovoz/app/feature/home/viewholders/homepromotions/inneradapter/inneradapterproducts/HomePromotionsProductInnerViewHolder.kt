@@ -7,6 +7,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.databinding.ViewHolderSliderPromotionProductBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
@@ -14,10 +15,16 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class HomePromotionsProductInnerViewHolder(
     view: View,
-    private val clickListener: HomePromotionsProductInnerClickListener
+    private val clickListener: HomePromotionsProductInnerClickListener,
+    private val cartManager: CartManager
 ) : ItemViewHolder<ProductUI>(view){
 
     private val binding: ViewHolderSliderPromotionProductBinding = ViewHolderSliderPromotionProductBinding.bind(view)
@@ -26,6 +33,26 @@ class HomePromotionsProductInnerViewHolder(
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
             hideAmountController()
+        }
+    }
+
+    override fun attach() {
+        super.attach()
+
+        launch {
+            cartManager
+                .observeCarts()
+                .filter{
+                    it.containsKey(item?.id ?: 0)
+                }
+                .onEach {
+                    val item = item
+                    if (item != null) {
+                        item.cartQuantity = it[item.id] ?: item.cartQuantity
+                        updateCartQuantity(item)
+                    }
+                }
+                .collect()
         }
     }
 
@@ -46,7 +73,7 @@ class HomePromotionsProductInnerViewHolder(
                 item.oldQuantity = item.cartQuantity
                 item.cartQuantity++
                 clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
-                updateCartQuantity()
+                updateCartQuantity(item)
             }
             showAmountController()
         }
@@ -59,7 +86,7 @@ class HomePromotionsProductInnerViewHolder(
             amountControllerTimer.cancel()
             amountControllerTimer.start()
             clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
-            updateCartQuantity()
+            updateCartQuantity(item)
         }
 
         binding.amountController.increaseAmount.setOnClickListener {
@@ -69,7 +96,7 @@ class HomePromotionsProductInnerViewHolder(
             amountControllerTimer.cancel()
             amountControllerTimer.start()
             clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
-            updateCartQuantity()
+            updateCartQuantity(item)
         }
 
         binding.imgFavoriteStatus.setOnClickListener {
@@ -139,13 +166,7 @@ class HomePromotionsProductInnerViewHolder(
         }
 
         //Cart amount
-        binding.amountController.circleAmount.text = item.cartQuantity.toString()
-        binding.amountController.amount.text = item.cartQuantity.toString()
-
-        when (item.cartQuantity > 0) {
-            true -> binding.amountController.circleAmount.visibility = View.VISIBLE
-            false -> binding.amountController.circleAmount.visibility = View.GONE
-        }
+        updateCartQuantity(item)
 
         //Favorite
         when(item.isFavorite) {
@@ -205,15 +226,20 @@ class HomePromotionsProductInnerViewHolder(
         }
     }
 
-    private fun updateCartQuantity() {
-        val product = getItemByPosition()
-        product?.let {
-            if (product.cartQuantity < 0) {
-                product.cartQuantity = 0
-            }
-            binding.amountController.amount.text = product.cartQuantity.toString()
-            binding.amountController.circleAmount.text = product.cartQuantity.toString()
+    private fun updateCartQuantity(item: ProductUI) {
+        if (item.cartQuantity < 0) {
+            item.cartQuantity = 0
         }
+
+        if (item.cartQuantity <= 0) {
+            binding.amountController.circleAmount.visibility = View.GONE
+        } else {
+            binding.amountController.circleAmount.visibility = View.VISIBLE
+        }
+
+
+        binding.amountController.amount.text = item.cartQuantity.toString()
+        binding.amountController.circleAmount.text = item.cartQuantity.toString()
     }
 
     private fun showAmountController() {

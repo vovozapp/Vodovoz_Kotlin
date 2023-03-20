@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.home.viewholders.homepromotions
 
 import android.view.View
 import androidx.viewpager2.widget.ViewPager2
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.databinding.FragmentSliderPromotionBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
@@ -10,11 +11,12 @@ import com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter.Home
 
 class HomePromotionsSliderViewHolder(
     view: View,
-    private val clickListener: HomeMainClickListener
+    private val clickListener: HomeMainClickListener,
+    private val cartManager: CartManager
 ) : ItemViewHolder<HomePromotions>(view) {
 
     private val binding: FragmentSliderPromotionBinding = FragmentSliderPromotionBinding.bind(view)
-    private val homePromotionsAdapter = HomePromotionsInnerAdapter(getHomePromotionsSliderClickListener())
+    private val homePromotionsAdapter = HomePromotionsInnerAdapter(getHomePromotionsSliderClickListener(), cartManager)
 
     init {
         binding.tvShowAll.setOnClickListener { clickListener.onShowAllPromotionsClick() }

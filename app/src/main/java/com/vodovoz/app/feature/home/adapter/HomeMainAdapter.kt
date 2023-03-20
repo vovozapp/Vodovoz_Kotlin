@@ -59,7 +59,7 @@ class HomeMainAdapter(
                 HomeProductsSliderViewHolder(getViewFromInflater(viewType, parent), clickListener, cartManager)
             }
             R.layout.fragment_slider_promotion -> {
-                HomePromotionsSliderViewHolder(getViewFromInflater(viewType, parent), clickListener)
+                HomePromotionsSliderViewHolder(getViewFromInflater(viewType, parent), clickListener, cartManager)
             }
             R.layout.fragment_triple_navigation_home -> {
                 HomeTripleNavViewHolder(getViewFromInflater(viewType, parent), clickListener)

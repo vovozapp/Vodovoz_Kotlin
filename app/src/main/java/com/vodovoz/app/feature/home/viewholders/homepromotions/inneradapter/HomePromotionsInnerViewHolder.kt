@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.databinding.ViewHolderSliderPromotionBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter.inneradapterproducts.HomePromotionsProductInnerAdapter
@@ -15,11 +16,13 @@ import com.vodovoz.app.ui.model.PromotionUI
 
 class HomePromotionsInnerViewHolder(
     view: View,
-    private val clickListener: HomePromotionsSliderClickListener
+    private val clickListener: HomePromotionsSliderClickListener,
+    private val cartManager: CartManager
 ) : ItemViewHolder<PromotionUI>(view) {
 
     private val binding: ViewHolderSliderPromotionBinding = ViewHolderSliderPromotionBinding.bind(view)
-    private val homePromotionProductAdapter = HomePromotionsProductInnerAdapter(getHomePromotionsProductInnerClickListener())
+    private val homePromotionProductAdapter = HomePromotionsProductInnerAdapter(getHomePromotionsProductInnerClickListener(), cartManager)
+
     private val space = itemView.context.resources.getDimension(R.dimen.space_16).toInt()
 
     init {

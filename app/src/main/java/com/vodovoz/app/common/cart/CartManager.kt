@@ -34,7 +34,7 @@ class CartManager @Inject constructor(
 
         updateCarts(id, newCount)
 
-        kotlin.runCatching {
+        runCatching {
             action(id = id, count = newCount, isInCart = isInCart)
             updateCartListState(withUpdate)
         }.onFailure {
@@ -50,7 +50,6 @@ class CartManager @Inject constructor(
         list.forEach {
             carts[it.id] = it.cartQuantity
         }
-        debugLog { "spasibo $carts" }
         cartsStateListener.emit(carts)
     }
 
