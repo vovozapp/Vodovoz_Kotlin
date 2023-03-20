@@ -19,6 +19,7 @@ class ProductDetailsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
         return when (viewType) {
 
+
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")
             }
