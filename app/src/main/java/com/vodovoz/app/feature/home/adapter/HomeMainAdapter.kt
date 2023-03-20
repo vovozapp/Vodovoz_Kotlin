@@ -6,6 +6,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners.Companion.BANNER_LARGE
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners.Companion.BANNER_SMALL
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBannersSliderViewHolder
@@ -22,7 +23,8 @@ import com.vodovoz.app.feature.home.viewholders.hometriplenav.HomeTripleNavViewH
 
 class HomeMainAdapter(
     private val clickListener: HomeMainClickListener,
-    private val cartManager: CartManager
+    private val cartManager: CartManager,
+    private val likeManager: LikeManager
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
@@ -56,10 +58,10 @@ class HomeMainAdapter(
                 HomePopularCategoriesSliderViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
             R.layout.fragment_slider_product -> {
-                HomeProductsSliderViewHolder(getViewFromInflater(viewType, parent), clickListener, cartManager)
+                HomeProductsSliderViewHolder(getViewFromInflater(viewType, parent), clickListener, cartManager, likeManager)
             }
             R.layout.fragment_slider_promotion -> {
-                HomePromotionsSliderViewHolder(getViewFromInflater(viewType, parent), clickListener, cartManager)
+                HomePromotionsSliderViewHolder(getViewFromInflater(viewType, parent), clickListener, cartManager, likeManager)
             }
             R.layout.fragment_triple_navigation_home -> {
                 HomeTripleNavViewHolder(getViewFromInflater(viewType, parent), clickListener)

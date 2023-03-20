@@ -8,6 +8,7 @@ import androidx.core.view.updateLayoutParams
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.ViewHolderProductListNotAvailableBinding
 import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
@@ -17,11 +18,16 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class NotAvailableProductsViewHolder(
     view: View,
     val clickListener: CartMainClickListener,
-    val productsClickListener: ProductsClickListener
+    val productsClickListener: ProductsClickListener,
+    val likeManager: LikeManager
 ) : ItemViewHolder<ProductUI>(view) {
 
     private val binding: ViewHolderProductListNotAvailableBinding = ViewHolderProductListNotAvailableBinding.bind(view)
@@ -39,6 +45,23 @@ class NotAvailableProductsViewHolder(
         binding.imgSwap.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
             clickListener.onSwapProduct(item)
+        }
+    }
+
+    override fun attach() {
+        super.attach()
+        launch {
+            likeManager
+                .observeLikes()
+                .filter{ it.containsKey(item?.id ?: 0) }
+                .onEach {
+                    val item = item
+                    if (item != null) {
+                        item.isFavorite = it[item.id] ?: item.isFavorite
+                        bindFav(item)
+                    }
+                }
+                .collect()
         }
     }
 
@@ -86,10 +109,7 @@ class NotAvailableProductsViewHolder(
         }
 
         //Favorite
-        when(item.isFavorite) {
-            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
-            true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
-        }
+        bindFav(item)
 
         //If have deposit
         when(item.depositPrice != 0) {
@@ -104,6 +124,13 @@ class NotAvailableProductsViewHolder(
             .with(itemView.context)
             .load(item.detailPicture)
             .into(binding.imgPicture)
+    }
+
+    private fun bindFav(item: ProductUI) {
+        when(item.isFavorite) {
+            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
+            true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
+        }
     }
 
     private fun getItemByPosition(): ProductUI? {

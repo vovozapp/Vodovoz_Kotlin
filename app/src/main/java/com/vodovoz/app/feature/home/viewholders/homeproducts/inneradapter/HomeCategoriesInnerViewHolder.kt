@@ -6,6 +6,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.databinding.ViewHolderSliderProductCategoryBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.HomeProductsInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.ui.decoration.ProductSliderMarginDecoration
@@ -14,13 +15,14 @@ import com.vodovoz.app.ui.model.CategoryDetailUI
 class HomeCategoriesInnerViewHolder(
     view: View,
     private val clickListener: ProductsClickListener,
-    private val cartManager: CartManager
+    private val cartManager: CartManager,
+    private val likeManager: LikeManager
 ) : ItemViewHolder<CategoryDetailUI>(view) {
 
     private val binding: ViewHolderSliderProductCategoryBinding =
         ViewHolderSliderProductCategoryBinding.bind(view)
 
-    private val homeProductsAdapter = HomeProductsInnerAdapter(getHomeProductsInnerClickListener(), cartManager)
+    private val homeProductsAdapter = HomeProductsInnerAdapter(getHomeProductsInnerClickListener(), cartManager, likeManager)
 
     private var isAddItemDecoration = false
 

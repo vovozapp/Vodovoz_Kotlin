@@ -11,6 +11,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.ViewHolderProductListBinding
 import com.vodovoz.app.feature.cart.adapter.CartMainAdapter
 import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
@@ -25,10 +26,16 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setOrderQuantity
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.util.extensions.debugLog
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class AvailableProductsViewHolder(
     view: View,
-    val productsClickListener: ProductsClickListener
+    val productsClickListener: ProductsClickListener,
+    private val likeManager: LikeManager
 ) : ItemViewHolder<ProductUI>(view) {
 
     private val binding: ViewHolderProductListBinding = ViewHolderProductListBinding.bind(view)
@@ -50,6 +57,24 @@ class AvailableProductsViewHolder(
             }
         }
     )
+
+    override fun attach() {
+        super.attach()
+
+        launch {
+            likeManager
+                .observeLikes()
+                .filter{ it.containsKey(item?.id ?: 0) }
+                .onEach {
+                    val item = item
+                    if (item != null) {
+                        item.isFavorite = it[item.id] ?: item.isFavorite
+                        bindFav(item)
+                    }
+                }
+                .collect()
+        }
+    }
 
     init {
         binding.vpPictures.setOnClickListener {
@@ -195,10 +220,7 @@ class AvailableProductsViewHolder(
             }
         }
 
-        when(item.isFavorite) {
-            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
-            true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
-        }
+        bindFav(item)
 
         var isNotHaveStatuses = true
         when (item.status.isEmpty()) {
@@ -270,6 +292,13 @@ class AvailableProductsViewHolder(
             binding.rlAmountControllerContainer.visibility = View.INVISIBLE
         }
 
+    }
+
+    private fun bindFav(item: ProductUI) {
+        when(item.isFavorite) {
+            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
+            true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
+        }
     }
 
     private fun showAmountController() {

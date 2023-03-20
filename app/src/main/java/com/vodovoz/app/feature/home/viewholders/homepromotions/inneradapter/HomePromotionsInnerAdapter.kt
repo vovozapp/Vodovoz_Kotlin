@@ -6,17 +6,19 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.common.like.LikeManager
 
 class HomePromotionsInnerAdapter(
     private val clickListener: HomePromotionsSliderClickListener,
-    private val cartManager: CartManager
+    private val cartManager: CartManager,
+    private val likeManager: LikeManager
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
 
         return when(viewType) {
             R.layout.view_holder_slider_promotion -> {
-                HomePromotionsInnerViewHolder(getViewFromInflater(viewType, parent), clickListener, cartManager)
+                HomePromotionsInnerViewHolder(getViewFromInflater(viewType, parent), clickListener, cartManager, likeManager)
             }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")

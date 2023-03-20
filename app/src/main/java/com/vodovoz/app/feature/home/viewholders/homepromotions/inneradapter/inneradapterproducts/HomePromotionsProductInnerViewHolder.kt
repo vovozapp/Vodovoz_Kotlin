@@ -10,6 +10,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.databinding.ViewHolderSliderPromotionProductBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
@@ -24,7 +25,8 @@ import kotlinx.coroutines.launch
 class HomePromotionsProductInnerViewHolder(
     view: View,
     private val clickListener: HomePromotionsProductInnerClickListener,
-    private val cartManager: CartManager
+    private val cartManager: CartManager,
+    private val likeManager: LikeManager
 ) : ItemViewHolder<ProductUI>(view){
 
     private val binding: ViewHolderSliderPromotionProductBinding = ViewHolderSliderPromotionProductBinding.bind(view)
@@ -42,14 +44,26 @@ class HomePromotionsProductInnerViewHolder(
         launch {
             cartManager
                 .observeCarts()
-                .filter{
-                    it.containsKey(item?.id ?: 0)
-                }
+                .filter{ it.containsKey(item?.id ?: 0) }
                 .onEach {
                     val item = item
                     if (item != null) {
                         item.cartQuantity = it[item.id] ?: item.cartQuantity
                         updateCartQuantity(item)
+                    }
+                }
+                .collect()
+        }
+
+        launch {
+            likeManager
+                .observeLikes()
+                .filter{ it.containsKey(item?.id ?: 0) }
+                .onEach {
+                    val item = item
+                    if (item != null) {
+                        item.isFavorite = it[item.id] ?: item.isFavorite
+                        bindFav(item)
                     }
                 }
                 .collect()
@@ -169,10 +183,7 @@ class HomePromotionsProductInnerViewHolder(
         updateCartQuantity(item)
 
         //Favorite
-        when(item.isFavorite) {
-            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
-            true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
-        }
+        bindFav(item)
 
         //Status
         var isNotHaveStatuses = true
@@ -209,6 +220,13 @@ class HomePromotionsProductInnerViewHolder(
             .with(itemView.context)
             .load(item.detailPicture)
             .into(binding.imgPicture)
+    }
+
+    private fun bindFav(item: ProductUI) {
+        when(item.isFavorite) {
+            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
+            true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
+        }
     }
 
     private fun getItemByPosition(): ProductUI? {

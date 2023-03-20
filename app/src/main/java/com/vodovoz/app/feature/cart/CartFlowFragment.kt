@@ -18,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.FragmentMainCartFlowBinding
 import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
 import com.vodovoz.app.feature.cart.viewholders.cartempty.CartEmpty
@@ -47,11 +48,15 @@ class CartFlowFragment : BaseFragment() {
     @Inject
     lateinit var cartManager: CartManager
 
+    @Inject
+    lateinit var likeManager: LikeManager
+
     private val cartController by lazy {
         CartController(
             getCartMainClickListener(),
             getProductsClickListener(),
-            cartManager
+            cartManager,
+            likeManager
         )
     }
 

@@ -35,6 +35,7 @@ import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
 import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfo
 import com.vodovoz.app.feature.home.viewholders.homebrands.HomeBrands
@@ -65,7 +66,8 @@ class HomeFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val localDataSource: LocalDataSource,
     private val dataRepository: DataRepository,
-    private val cartManager: CartManager
+    private val cartManager: CartManager,
+    private val likeManager: LikeManager
 ) : PagingStateViewModel<HomeFlowViewModel.HomeState>(HomeState.idle()) {
 
     private fun loadPage() {
@@ -822,120 +824,11 @@ class HomeFlowViewModel @Inject constructor(
         viewModelScope.launch {
             cartManager.add(id = productId, oldCount = oldQuan, newCount = quantity)
         }
-
-        /*viewModelScope.launch(Dispatchers.IO) {
-
-            val cart = localDataSource.fetchCart()
-            val oldQuantity = cart[productId]
-
-            when(oldQuantity) {
-                null -> addToCart(productId, quantity)
-                else -> changeProductQuantityInCart(productId, quantity)
-            }
-        }*/
-    }
-
-    private fun addToCart(productId: Long, quantity: Int) {
-        viewModelScope.launch {
-            flow {
-                emit(
-                    repository.addProductToCart(
-                        productId = productId,
-                        quantity = quantity
-                    )
-                )
-            }
-                .catch { debugLog { "add to cart error ${it.localizedMessage}" } }
-                .flowOn(Dispatchers.IO)
-                .collect {
-                    localDataSource.changeProductQuantityInCart(
-                        productId = productId,
-                        quantity = quantity
-                    )
-                    cartManager.updateCartListState(true)
-                }
-        }
-    }
-
-    private fun changeProductQuantityInCart(productId: Long, quantity: Int) {
-        viewModelScope.launch {
-            flow {
-                emit(
-                    repository.changeProductsQuantityInCart(
-                        productId = productId,
-                        quantity = quantity
-                    )
-                )
-            }
-                .catch { debugLog { "change cart error ${it.localizedMessage}" } }
-                .flowOn(Dispatchers.IO)
-                .collect {
-                    localDataSource.changeProductQuantityInCart(
-                        productId = productId,
-                        quantity = quantity
-                    )
-
-                    cartManager.updateCartListState(true)
-                }
-        }
     }
 
     fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            when (isFavorite) {
-                true -> addToFavorite(listOf(productId))
-                false -> removeFromFavorite(productId = productId)
-            }
-        }
-    }
-
-    private fun addToFavorite(productIdList: List<Long>) {
         viewModelScope.launch {
-
-            val userId = localDataSource.fetchUserId()
-
-            when (isLoginAlready()) {
-                false -> {
-                    localDataSource.changeFavoriteStatus(
-                        pairList = mutableListOf<Pair<Long, Boolean>>().apply {
-                            productIdList.forEach { add(Pair(it, true)) }
-                        }.toList()
-                    )
-                }
-                true -> {
-                    flow { emit(repository.addToFavorite(productIdList, userId!!)) }
-                        .catch { debugLog { "add to fav error ${it.localizedMessage}" } }
-                        .flowOn(Dispatchers.IO)
-                        .collect {
-                            localDataSource.changeFavoriteStatus(
-                                pairList = mutableListOf<Pair<Long, Boolean>>().apply {
-                                    productIdList.forEach { add(Pair(it, true)) }
-                                }.toList()
-                            )
-                        }
-                }
-            }
-        }
-    }
-
-    private fun removeFromFavorite(productId: Long) {
-        viewModelScope.launch {
-
-            val userId = localDataSource.fetchUserId()
-
-            when (isLoginAlready()) {
-                false -> {
-                    localDataSource.changeFavoriteStatus(listOf(Pair(productId, false)))
-                }
-                true -> {
-                    flow { emit(repository.removeFromFavorite(productId, userId!!)) }
-                        .catch { debugLog { "remove from fav error ${it.localizedMessage}" } }
-                        .flowOn(Dispatchers.IO)
-                        .collect {
-                            localDataSource.changeFavoriteStatus(listOf(Pair(productId, false)))
-                        }
-                }
-            }
+            likeManager.like(productId, !isFavorite)
         }
     }
 

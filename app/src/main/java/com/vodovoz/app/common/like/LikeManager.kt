@@ -1,12 +1,15 @@
 package com.vodovoz.app.common.like
 
 import com.vodovoz.app.data.local.LocalDataSource
+import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.filter
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class LikeManager @Inject constructor(
     private val repository: LikeRepository,
     private val localDataSource: LocalDataSource

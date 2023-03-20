@@ -16,6 +16,7 @@ import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentMainHomeFlowBinding
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragment
 import com.vodovoz.app.ui.fragment.catalog.CatalogFragmentDirections
@@ -38,13 +39,17 @@ class HomeFragment : BaseFragment() {
     @Inject
     lateinit var cartManager: CartManager
 
+    @Inject
+    lateinit var likeManager: LikeManager
+
     private val homeController by lazy {
         com.vodovoz.app.feature.home.HomeController(
             requireContext(),
             viewLifecycleOwner,
             flowViewModel,
             getMainClickListener(),
-            cartManager
+            cartManager,
+            likeManager
         )
     }
 

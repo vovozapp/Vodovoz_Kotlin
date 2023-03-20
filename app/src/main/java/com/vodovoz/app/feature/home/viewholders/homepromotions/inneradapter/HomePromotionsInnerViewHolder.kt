@@ -10,6 +10,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.databinding.ViewHolderSliderPromotionBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter.inneradapterproducts.HomePromotionsProductInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter.inneradapterproducts.HomePromotionsProductInnerClickListener
 import com.vodovoz.app.ui.model.PromotionUI
@@ -17,11 +18,12 @@ import com.vodovoz.app.ui.model.PromotionUI
 class HomePromotionsInnerViewHolder(
     view: View,
     private val clickListener: HomePromotionsSliderClickListener,
-    private val cartManager: CartManager
+    private val cartManager: CartManager,
+    private val likeManager: LikeManager
 ) : ItemViewHolder<PromotionUI>(view) {
 
     private val binding: ViewHolderSliderPromotionBinding = ViewHolderSliderPromotionBinding.bind(view)
-    private val homePromotionProductAdapter = HomePromotionsProductInnerAdapter(getHomePromotionsProductInnerClickListener(), cartManager)
+    private val homePromotionProductAdapter = HomePromotionsProductInnerAdapter(getHomePromotionsProductInnerClickListener(), cartManager, likeManager)
 
     private val space = itemView.context.resources.getDimension(R.dimen.space_16).toInt()
 
