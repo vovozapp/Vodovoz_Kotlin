@@ -42,18 +42,4 @@ interface HomeMainClickListener {
     //POSITION_3
     fun onCategoryClick(id: Long?)
 
-    //POSITION_10
-    fun onPromotionProductClick(id: Long)
-    fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String)
-    fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int)
-    fun onFavoriteClick(id: Long, isFavorite: Boolean)
-    fun onPromotionClick(id: Long)
-    fun onShowAllPromotionsClick()
-
-    //POSITION_4, POSITION_6, POSITION_9, POSITION_11, POSITION_14
-    fun showAllDiscountProducts(id: Long)
-    fun showAllTopProducts(id: Long)
-    fun showAllNoveltiesProducts(id: Long)
-    fun showAllBottomProducts(id: Long)
-
 }

@@ -10,7 +10,9 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.FragmentProductDetailsBinding
+import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
+import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentArgs
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,10 +35,12 @@ class ProductDetailsFlowFragment : BaseFragment() {
 
     private val productDetailsController by lazy {
         ProductDetailsController(
-            getProductDetailsClickListener(),
-            getProductsClickListener(),
-            cartManager,
-            likeManager
+            listener = getProductDetailsClickListener(),
+            productsClickListener = getProductsClickListener(),
+            productsShowAllListener = getProductsShowClickListener(),
+            promotionsClickListener = getPromotionsClickListener(),
+            cartManager = cartManager,
+            likeManager = likeManager
         )
     }
 
@@ -86,6 +90,40 @@ class ProductDetailsFlowFragment : BaseFragment() {
             }
 
             override fun onFavoriteClick(id: Long, isFavorite: Boolean) {
+                TODO("Not yet implemented")
+            }
+
+        }
+    }
+
+    private fun getProductsShowClickListener() : ProductsShowAllListener {
+        return object : ProductsShowAllListener {
+            override fun showAllDiscountProducts(id: Long) {
+                TODO("Not yet implemented")
+            }
+
+            override fun showAllTopProducts(id: Long) {
+                TODO("Not yet implemented")
+            }
+
+            override fun showAllNoveltiesProducts(id: Long) {
+                TODO("Not yet implemented")
+            }
+
+            override fun showAllBottomProducts(id: Long) {
+                TODO("Not yet implemented")
+            }
+
+        }
+    }
+
+    private fun getPromotionsClickListener() : PromotionsClickListener {
+        return object : PromotionsClickListener {
+            override fun onPromotionClick(id: Long) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onShowAllPromotionsClick() {
                 TODO("Not yet implemented")
             }
 

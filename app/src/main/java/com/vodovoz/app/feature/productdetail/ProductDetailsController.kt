@@ -7,17 +7,28 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.cart.adapter.CartMainAdapter
 import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
+import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
+import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsAdapter
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
 
 class ProductDetailsController(
     listener: ProductDetailsClickListener,
     productsClickListener: ProductsClickListener,
-    private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    productsShowAllListener: ProductsShowAllListener,
+    promotionsClickListener: PromotionsClickListener,
+    cartManager: CartManager,
+    likeManager: LikeManager
 ) {
-    private val productDetailsAdapter = ProductDetailsAdapter(listener, productsClickListener, cartManager, likeManager)
+    private val productDetailsAdapter = ProductDetailsAdapter(
+        clickListener = listener,
+        productsClickListener = productsClickListener,
+        productsShowAllListener = productsShowAllListener,
+        promotionsClickListener = promotionsClickListener,
+        cartManager = cartManager,
+        likeManager = likeManager
+    )
 
     fun bind(recyclerView: RecyclerView) {
         initList(recyclerView)

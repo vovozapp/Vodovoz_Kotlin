@@ -14,15 +14,15 @@ import com.vodovoz.app.ui.model.CategoryDetailUI
 
 class HomeCategoriesInnerViewHolder(
     view: View,
-    private val clickListener: ProductsClickListener,
-    private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    clickListener: ProductsClickListener,
+    cartManager: CartManager,
+    likeManager: LikeManager
 ) : ItemViewHolder<CategoryDetailUI>(view) {
 
     private val binding: ViewHolderSliderProductCategoryBinding =
         ViewHolderSliderProductCategoryBinding.bind(view)
 
-    private val homeProductsAdapter = HomeProductsInnerAdapter(getHomeProductsInnerClickListener(), cartManager, likeManager)
+    private val homeProductsAdapter = HomeProductsInnerAdapter(clickListener, cartManager, likeManager)
 
     private var isAddItemDecoration = false
 
@@ -52,25 +52,4 @@ class HomeCategoriesInnerViewHolder(
             isAddItemDecoration = true
         }
     }
-
-    private fun getHomeProductsInnerClickListener() : ProductsClickListener {
-        return object : ProductsClickListener {
-            override fun onProductClick(id: Long) {
-                clickListener.onProductClick(id)
-            }
-
-            override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-                clickListener.onNotifyWhenBeAvailable(id, name, detailPicture)
-            }
-
-            override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
-                clickListener.onChangeProductQuantity(id, cartQuantity, oldQuantity)
-            }
-
-            override fun onFavoriteClick(id: Long, isFavorite: Boolean) {
-                clickListener.onFavoriteClick(id, isFavorite)
-            }
-        }
-    }
-
 }

@@ -18,13 +18,19 @@ import com.vodovoz.app.feature.home.viewholders.homehistories.HomeHistoriesSlide
 import com.vodovoz.app.feature.home.viewholders.homeorders.HomeOrdersSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homepopulars.HomePopularCategoriesSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProductsSliderViewHolder
+import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
+import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotionsSliderViewHolder
+import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.home.viewholders.hometriplenav.HomeTripleNavViewHolder
 
 class HomeMainAdapter(
     private val clickListener: HomeMainClickListener,
     private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    private val likeManager: LikeManager,
+    private val productsShowAllListener: ProductsShowAllListener,
+    private val productsClickListener: ProductsClickListener,
+    private val promotionsClickListener: PromotionsClickListener
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
@@ -58,10 +64,10 @@ class HomeMainAdapter(
                 HomePopularCategoriesSliderViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
             R.layout.fragment_slider_product -> {
-                HomeProductsSliderViewHolder(getViewFromInflater(viewType, parent), clickListener, cartManager, likeManager)
+                HomeProductsSliderViewHolder(getViewFromInflater(viewType, parent), productsShowAllListener, productsClickListener, cartManager, likeManager)
             }
             R.layout.fragment_slider_promotion -> {
-                HomePromotionsSliderViewHolder(getViewFromInflater(viewType, parent), clickListener, cartManager, likeManager)
+                HomePromotionsSliderViewHolder(getViewFromInflater(viewType, parent), cartManager, likeManager, promotionsClickListener, productsClickListener)
             }
             R.layout.fragment_triple_navigation_home -> {
                 HomeTripleNavViewHolder(getViewFromInflater(viewType, parent), clickListener)

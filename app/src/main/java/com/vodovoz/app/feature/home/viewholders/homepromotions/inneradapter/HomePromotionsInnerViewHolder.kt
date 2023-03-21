@@ -11,26 +11,29 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.databinding.ViewHolderSliderPromotionBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
+import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter.inneradapterproducts.HomePromotionsProductInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter.inneradapterproducts.HomePromotionsProductInnerClickListener
 import com.vodovoz.app.ui.model.PromotionUI
 
 class HomePromotionsInnerViewHolder(
     view: View,
-    private val clickListener: HomePromotionsSliderClickListener,
-    private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    clickListener: ProductsClickListener,
+    private val promotionsClickListener: PromotionsClickListener,
+    cartManager: CartManager,
+    likeManager: LikeManager
 ) : ItemViewHolder<PromotionUI>(view) {
 
     private val binding: ViewHolderSliderPromotionBinding = ViewHolderSliderPromotionBinding.bind(view)
-    private val homePromotionProductAdapter = HomePromotionsProductInnerAdapter(getHomePromotionsProductInnerClickListener(), cartManager, likeManager)
+    private val homePromotionProductAdapter = HomePromotionsProductInnerAdapter(clickListener, cartManager, likeManager)
 
     private val space = itemView.context.resources.getDimension(R.dimen.space_16).toInt()
 
     init {
         binding.root.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
-            clickListener.onPromotionClick(item.id)
+            promotionsClickListener.onPromotionClick(item.id)
         }
 
         binding.rvProducts.layoutManager =
@@ -75,25 +78,5 @@ class HomePromotionsInnerViewHolder(
 
     private fun getItemByPosition(): PromotionUI? {
         return (bindingAdapter as? HomePromotionsInnerAdapter)?.getItem(bindingAdapterPosition) as? PromotionUI
-    }
-
-    private fun getHomePromotionsProductInnerClickListener() : HomePromotionsProductInnerClickListener {
-        return object : HomePromotionsProductInnerClickListener {
-            override fun onPromotionProductClick(id: Long) {
-                clickListener.onPromotionProductClick(id)
-            }
-
-            override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-                clickListener.onNotifyWhenBeAvailable(id, name, detailPicture)
-            }
-
-            override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
-                clickListener.onChangeProductQuantity(id, cartQuantity, oldQuantity)
-            }
-
-            override fun onFavoriteClick(id: Long, isFavorite: Boolean) {
-                clickListener.onFavoriteClick(id, isFavorite)
-            }
-        }
     }
 }

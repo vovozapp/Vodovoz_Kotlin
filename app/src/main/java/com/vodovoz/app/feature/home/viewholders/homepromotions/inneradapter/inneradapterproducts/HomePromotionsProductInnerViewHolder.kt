@@ -11,6 +11,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.databinding.ViewHolderSliderPromotionProductBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
@@ -24,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class HomePromotionsProductInnerViewHolder(
     view: View,
-    private val clickListener: HomePromotionsProductInnerClickListener,
+    private val clickListener: ProductsClickListener,
     private val cartManager: CartManager,
     private val likeManager: LikeManager
 ) : ItemViewHolder<ProductUI>(view){
@@ -74,7 +75,7 @@ class HomePromotionsProductInnerViewHolder(
         binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.root.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
-            clickListener.onPromotionProductClick(item.id)
+            clickListener.onProductClick(item.id)
         }
 
         binding.amountController.add.setOnClickListener {

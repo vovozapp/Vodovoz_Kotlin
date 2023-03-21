@@ -28,14 +28,15 @@ import kotlinx.coroutines.launch
 
 class HomeProductsSliderViewHolder(
     view: View,
-    private val clickListener: HomeMainClickListener,
-    private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    private val productsShowAllListener: ProductsShowAllListener,
+    productsClickListener: ProductsClickListener,
+    cartManager: CartManager,
+    likeManager: LikeManager
 ) : ItemViewHolder<HomeProducts>(view) {
 
     private val binding: FragmentSliderProductBinding = FragmentSliderProductBinding.bind(view)
     private val space: Int by lazy { itemView.resources.getDimension(R.dimen.space_16).toInt() }
-    private val homeCategoriesAdapter = HomeCategoriesInnerAdapter(getHomeCategoriesInnerClickListener(), cartManager, likeManager)
+    private val homeCategoriesAdapter = HomeCategoriesInnerAdapter(productsClickListener, cartManager, likeManager)
 
     init {
         binding.rvCategories.layoutManager =
@@ -84,35 +85,14 @@ class HomeProductsSliderViewHolder(
         updateCategoryTabs(item)
     }
 
-
-    private fun getHomeCategoriesInnerClickListener() : ProductsClickListener {
-        return object : ProductsClickListener {
-            override fun onProductClick(id: Long) {
-                clickListener.onPromotionProductClick(id)
-            }
-
-            override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-                clickListener.onNotifyWhenBeAvailable(id, name, detailPicture)
-            }
-
-            override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
-                clickListener.onChangeProductQuantity(id, cartQuantity, oldQuantity)
-            }
-
-            override fun onFavoriteClick(id: Long, isFavorite: Boolean) {
-                clickListener.onFavoriteClick(id, isFavorite)
-            }
-        }
-    }
-
     private fun initShowAllProductsButtons(items: HomeProducts) {
         binding.tvShowAll.setOnClickListener {
             items.items.first().id?.let { categoryId ->
                 when(items.productsType) {
-                    DISCOUNT -> clickListener.showAllDiscountProducts(categoryId)
-                    TOP_PROD -> clickListener.showAllTopProducts(categoryId)
-                    NOVELTIES -> clickListener.showAllNoveltiesProducts(categoryId)
-                    BOTTOM_PROD -> clickListener.showAllBottomProducts(categoryId)
+                    DISCOUNT -> productsShowAllListener.showAllDiscountProducts(categoryId)
+                    TOP_PROD -> productsShowAllListener.showAllTopProducts(categoryId)
+                    NOVELTIES -> productsShowAllListener.showAllNoveltiesProducts(categoryId)
+                    BOTTOM_PROD -> productsShowAllListener.showAllBottomProducts(categoryId)
                     else -> {}
                 }
             }

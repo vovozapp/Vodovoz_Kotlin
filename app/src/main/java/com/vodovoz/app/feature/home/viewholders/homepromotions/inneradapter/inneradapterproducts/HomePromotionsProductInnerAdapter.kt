@@ -7,10 +7,11 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.ui.model.ProductUI
 
 class HomePromotionsProductInnerAdapter(
-    private val clickListener: HomePromotionsProductInnerClickListener,
+    private val clickListener: ProductsClickListener,
     private val cartManager: CartManager,
     private val likeManager: LikeManager
 ) : ItemAdapter() {

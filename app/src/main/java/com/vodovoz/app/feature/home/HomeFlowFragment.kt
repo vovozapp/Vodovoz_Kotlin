@@ -19,6 +19,9 @@ import com.vodovoz.app.databinding.FragmentMainHomeFlowBinding
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
+import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
+import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
+import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragment
 import com.vodovoz.app.ui.fragment.catalog.CatalogFragmentDirections
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
@@ -44,13 +47,14 @@ class HomeFlowFragment : BaseFragment() {
     lateinit var likeManager: LikeManager
 
     private val homeController by lazy {
-        com.vodovoz.app.feature.home.HomeController(
-            requireContext(),
-            viewLifecycleOwner,
-            flowViewModel,
-            getMainClickListener(),
-            cartManager,
-            likeManager
+        HomeController(
+            viewModel = flowViewModel,
+            cartManager = cartManager,
+            likeManager = likeManager,
+            listener = getMainClickListener(),
+            productsShowAllListener = getProductsShowClickListener(),
+            productsClickListener = getProductsClickListener(),
+            promotionsClickListener = getPromotionsClickListener()
         )
     }
 
@@ -97,6 +101,73 @@ class HomeFlowFragment : BaseFragment() {
         binding.searchContainer.etSearch.setOnFocusChangeListener { _, isFocusable ->
             if (isFocusable) {
                 findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment())
+            }
+        }
+    }
+
+    private fun getProductsClickListener() : ProductsClickListener {
+        return object : ProductsClickListener {
+            override fun onProductClick(id: Long) {
+                findNavController().navigate(HomeFragmentDirections.actionToProductDetailFragment(id))
+            }
+
+            override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
+                showPreOrderProductPopup(id, name, detailPicture)
+            }
+
+            override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
+                flowViewModel.changeCart(id, cartQuantity, oldQuantity)
+            }
+
+            override fun onFavoriteClick(id: Long, isFavorite: Boolean) {
+                flowViewModel.changeFavoriteStatus(id, isFavorite)
+            }
+
+        }
+    }
+    private fun getProductsShowClickListener() : ProductsShowAllListener {
+        return object : ProductsShowAllListener {
+            override fun showAllDiscountProducts(id: Long) {
+                findNavController().navigate(
+                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
+                    ))
+            }
+
+            override fun showAllTopProducts(id: Long) {
+                findNavController().navigate(
+                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(id)
+                    ))
+            }
+
+            override fun showAllNoveltiesProducts(id: Long) {
+                findNavController().navigate(
+                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
+                    ))
+            }
+
+            override fun showAllBottomProducts(id: Long) {
+                findNavController().navigate(
+                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(id)
+                    ))
+            }
+        }
+    }
+
+    private fun getPromotionsClickListener() : PromotionsClickListener {
+        return object : PromotionsClickListener {
+            override fun onPromotionClick(id: Long) {
+                findNavController().navigate(HomeFragmentDirections.actionToPromotionDetailFragment(id))
+            }
+
+            override fun onShowAllPromotionsClick() {
+                findNavController().navigate(
+                    HomeFragmentDirections.actionToAllPromotionsFragment(
+                        AllPromotionsFragment.DataSource.All()
+                    ))
             }
         }
     }
@@ -219,63 +290,6 @@ class HomeFlowFragment : BaseFragment() {
                 id?.let {
                     findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogFragment(id))
                 }
-            }
-
-            //POSITION_10
-            override fun onPromotionProductClick(id: Long) {
-                findNavController().navigate(HomeFragmentDirections.actionToProductDetailFragment(id))
-            }
-
-            override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-                showPreOrderProductPopup(id, name, detailPicture)
-            }
-
-            override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
-                flowViewModel.changeCart(id, cartQuantity, oldQuantity)
-            }
-
-            override fun onFavoriteClick(id: Long, isFavorite: Boolean) {
-                flowViewModel.changeFavoriteStatus(id, isFavorite)
-            }
-
-            override fun onPromotionClick(id: Long) {
-                findNavController().navigate(HomeFragmentDirections.actionToPromotionDetailFragment(id))
-            }
-
-            override fun onShowAllPromotionsClick() {
-                findNavController().navigate(
-                    HomeFragmentDirections.actionToAllPromotionsFragment(
-                    AllPromotionsFragment.DataSource.All()
-                ))
-            }
-
-            //POSITION_4, POSITION_6, POSITION_9, POSITION_11, POSITION_14
-            override fun showAllDiscountProducts(id: Long) {
-                findNavController().navigate(
-                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
-                ))
-            }
-
-            override fun showAllTopProducts(id: Long) {
-                findNavController().navigate(
-                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(id)
-                ))
-            }
-
-            override fun showAllNoveltiesProducts(id: Long) {
-                findNavController().navigate(
-                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
-                ))
-            }
-
-            override fun showAllBottomProducts(id: Long) {
-                findNavController().navigate(
-                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(id)
-                ))
             }
         }
     }

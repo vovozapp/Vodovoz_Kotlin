@@ -7,21 +7,23 @@ import com.vodovoz.app.databinding.FragmentSliderPromotionBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
+import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter.HomePromotionsInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter.HomePromotionsSliderClickListener
 
 class HomePromotionsSliderViewHolder(
     view: View,
-    private val clickListener: HomeMainClickListener,
-    private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    cartManager: CartManager,
+    likeManager: LikeManager,
+    private val promotionsClickListener: PromotionsClickListener,
+    productsClickListener: ProductsClickListener
 ) : ItemViewHolder<HomePromotions>(view) {
 
     private val binding: FragmentSliderPromotionBinding = FragmentSliderPromotionBinding.bind(view)
-    private val homePromotionsAdapter = HomePromotionsInnerAdapter(getHomePromotionsSliderClickListener(), cartManager, likeManager)
+    private val homePromotionsAdapter = HomePromotionsInnerAdapter(productsClickListener, promotionsClickListener, cartManager, likeManager)
 
     init {
-        binding.tvShowAll.setOnClickListener { clickListener.onShowAllPromotionsClick() }
+        binding.tvShowAll.setOnClickListener { promotionsClickListener.onShowAllPromotionsClick() }
 
         binding.vpPromotions.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
@@ -55,29 +57,4 @@ class HomePromotionsSliderViewHolder(
             }
         }*/
     }
-
-    private fun getHomePromotionsSliderClickListener() : HomePromotionsSliderClickListener {
-        return object : HomePromotionsSliderClickListener {
-            override fun onPromotionProductClick(id: Long) {
-                clickListener.onPromotionProductClick(id)
-            }
-
-            override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-                clickListener.onNotifyWhenBeAvailable(id, name, detailPicture)
-            }
-
-            override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
-                clickListener.onChangeProductQuantity(id, cartQuantity, oldQuantity)
-            }
-
-            override fun onFavoriteClick(id: Long, isFavorite: Boolean) {
-                clickListener.onFavoriteClick(id, isFavorite)
-            }
-
-            override fun onPromotionClick(id: Long) {
-                clickListener.onPromotionClick(id)
-            }
-        }
-    }
-
 }
