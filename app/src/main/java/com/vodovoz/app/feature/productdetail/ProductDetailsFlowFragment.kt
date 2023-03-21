@@ -1,11 +1,17 @@
 package com.vodovoz.app.feature.productdetail
 
+import android.content.Intent
+import android.graphics.Paint
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
@@ -15,8 +21,14 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllList
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentArgs
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
+import com.vodovoz.app.ui.model.CategoryDetailUI
+import com.vodovoz.app.ui.model.ProductDetailUI
+import com.vodovoz.app.ui.model.ProductUI
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -73,7 +85,74 @@ class ProductDetailsFlowFragment : BaseFragment() {
 
     private fun getProductDetailsClickListener(): ProductDetailsClickListener {
         return object : ProductDetailsClickListener {
+            override fun share(intent: Intent) {
+                startActivity(intent)
+            }
 
+            override fun backPress() {
+                findNavController().popBackStack()
+            }
+
+            override fun setScrollListener(height: Int) {
+                binding.nsvContent.setOnScrollChangeListener(
+                    NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+                        if (scrollY > height) {
+                            binding.floatingAmountControllerContainer.visibility = View.VISIBLE
+                        } else {
+                            binding.floatingAmountControllerContainer.visibility = View.INVISIBLE
+                        }
+                    }
+                )
+            }
+
+            override fun navigateToReplacement(
+                detailPicture: String,
+                products: Array<ProductUI>,
+                id: Long,
+                name: String
+            ) {
+                ProductDetailsFragmentDirections.actionToReplacementProductsSelectionBS(
+                    detailPicture, products, id, name
+                )
+            }
+
+            override fun showFabBasket() {
+                binding.floatingAmountController.add.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
+                binding.floatingAmountController.add.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_cart))
+            }
+
+            override fun showFabBell() {
+                binding.floatingAmountController.add.setBackgroundResource(R.drawable.bkg_button_gray_circle_normal)
+                binding.floatingAmountController.add.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_alert))
+            }
+
+            override fun showFabReplace() {
+                binding.floatingAmountController.add.setBackgroundResource(R.drawable.bkg_button_orange_circle_normal)
+                binding.floatingAmountController.add.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_swap))
+            }
+
+            override fun showFabPriceCond(boolean: Boolean, item: ProductDetailUI) {
+                if (boolean) {
+                    val minimalPrice = item.priceUIList.maxByOrNull { it.requiredAmount }!!
+                    binding.tvFloatingCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice)
+                    binding.tvFloatingPriceCondition.setPriceCondition(minimalPrice.requiredAmount)
+                    binding.tvFloatingPriceCondition.visibility = View.VISIBLE
+                } else {
+                    binding.tvFloatingCurrentPrice.setPriceText(item.priceUIList.first().currentPrice)
+                    binding.tvFloatingOldPrice.setPriceText(item.priceUIList.first().oldPrice)
+                    binding.tvFloatingPriceCondition.visibility = View.GONE
+                }
+            }
+
+            override fun showFabOldPrice(boolean: Boolean) {
+                if (boolean) {
+                    binding.tvFloatingCurrentPrice.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                    binding.tvFloatingOldPrice.visibility = View.VISIBLE
+                } else {
+                    binding.tvFloatingCurrentPrice.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+                    binding.tvFloatingOldPrice.visibility = View.GONE
+                }
+            }
         }
     }
 
@@ -116,6 +195,27 @@ class ProductDetailsFlowFragment : BaseFragment() {
                 findNavController().navigate(ProductDetailsFragmentDirections.actionToPromotionDetailFragment(id))
             }
             override fun onShowAllPromotionsClick() {}
+        }
+    }
+
+    private fun bindFab(productDetailUI: ProductDetailUI) {
+        Glide.with(requireContext())
+            .load(productDetailUI.detailPictureList.first())
+            .into(binding.miniDetailImage)
+
+        binding.tvFloatingOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+
+        //Cart amount
+        binding.floatingAmountController.circleAmount.text = productDetailUI.cartQuantity.toString()
+        binding.floatingAmountController.amount.text = productDetailUI.cartQuantity.toString()
+
+        when (productDetailUI.cartQuantity > 0) {
+            true -> {
+                binding.floatingAmountController.circleAmount.visibility = View.VISIBLE
+            }
+            false -> {
+                binding.floatingAmountController.circleAmount.visibility = View.GONE
+            }
         }
     }
 }
