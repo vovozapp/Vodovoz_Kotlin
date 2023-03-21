@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
@@ -15,6 +16,7 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.innera
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentArgs
+import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -78,19 +80,22 @@ class ProductDetailsFlowFragment : BaseFragment() {
     private fun getProductsClickListener(): ProductsClickListener {
         return object : ProductsClickListener {
             override fun onProductClick(id: Long) {
-                TODO("Not yet implemented")
+                findNavController().navigate(ProductDetailsFragmentDirections.actionToSelf(id))
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-                TODO("Not yet implemented")
+                when(viewModel.isLoginAlready()) {
+                    true -> findNavController().navigate(ProductDetailsFragmentDirections.actionToPreOrderBS(id, name, detailPicture))
+                    false -> findNavController().navigate(ProductDetailsFragmentDirections.actionToProfileFragment())
+                }
             }
 
             override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
-                TODO("Not yet implemented")
+                viewModel.changeCart(id, cartQuantity, oldQuantity)
             }
 
             override fun onFavoriteClick(id: Long, isFavorite: Boolean) {
-                TODO("Not yet implemented")
+                viewModel.changeFavoriteStatus(id, isFavorite)
             }
 
         }
@@ -98,35 +103,19 @@ class ProductDetailsFlowFragment : BaseFragment() {
 
     private fun getProductsShowClickListener() : ProductsShowAllListener {
         return object : ProductsShowAllListener {
-            override fun showAllDiscountProducts(id: Long) {
-                TODO("Not yet implemented")
-            }
-
-            override fun showAllTopProducts(id: Long) {
-                TODO("Not yet implemented")
-            }
-
-            override fun showAllNoveltiesProducts(id: Long) {
-                TODO("Not yet implemented")
-            }
-
-            override fun showAllBottomProducts(id: Long) {
-                TODO("Not yet implemented")
-            }
-
+            override fun showAllDiscountProducts(id: Long) {}
+            override fun showAllTopProducts(id: Long) {}
+            override fun showAllNoveltiesProducts(id: Long) {}
+            override fun showAllBottomProducts(id: Long) {}
         }
     }
 
     private fun getPromotionsClickListener() : PromotionsClickListener {
         return object : PromotionsClickListener {
             override fun onPromotionClick(id: Long) {
-                TODO("Not yet implemented")
+                findNavController().navigate(ProductDetailsFragmentDirections.actionToPromotionDetailFragment(id))
             }
-
-            override fun onShowAllPromotionsClick() {
-                TODO("Not yet implemented")
-            }
-
+            override fun onShowAllPromotionsClick() {}
         }
     }
 }

@@ -91,6 +91,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
         }
     }
 
+    fun isLoginAlready() = localDataSource.isAlreadyLogin()
+
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
         viewModelScope.launch {
             cartManager.add(id = productId, oldCount = oldQuan, newCount = quantity)
