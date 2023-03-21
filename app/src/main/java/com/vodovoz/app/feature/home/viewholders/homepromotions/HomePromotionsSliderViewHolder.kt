@@ -6,10 +6,8 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.databinding.FragmentSliderPromotionBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter.HomePromotionsInnerAdapter
-import com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter.HomePromotionsSliderClickListener
 
 class HomePromotionsSliderViewHolder(
     view: View,
@@ -41,20 +39,5 @@ class HomePromotionsSliderViewHolder(
             true -> binding.tvShowAll.visibility = View.VISIBLE
             false -> binding.tvShowAll.visibility = View.INVISIBLE
         }
-
-        /*if (items.items.promotionUIList.isNotEmpty()) {
-            when (items.items.promotionUIList.first().productUIList.isEmpty()) {
-                true -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    binding.tvName.setTextAppearance(R.style.TextViewHeaderBlackBold)
-                } else {
-                    binding.tvName.setTextAppearance(null, R.style.TextViewHeaderBlackBold)
-                }
-                false -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    binding.tvName.setTextAppearance(R.style.TextViewMediumBlackBold)
-                } else {
-                    binding.tvName.setTextAppearance(null, R.style.TextViewMediumBlackBold)
-                }
-            }
-        }*/
     }
 }

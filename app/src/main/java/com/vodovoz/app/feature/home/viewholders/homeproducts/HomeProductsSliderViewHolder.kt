@@ -14,17 +14,12 @@ import com.vodovoz.app.databinding.FragmentSliderProductBinding
 import com.vodovoz.app.databinding.ViewCustomTabBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.BOTTOM_PROD
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.DISCOUNT
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.NOVELTIES
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.TOP_PROD
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.HomeCategoriesInnerAdapter
-import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.HomeCategoriesInnerClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
-import com.vodovoz.app.ui.interfaces.IOnChangeProductQuantity
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.launch
 
 class HomeProductsSliderViewHolder(
     view: View,
@@ -67,19 +62,6 @@ class HomeProductsSliderViewHolder(
         super.bind(item)
 
         homeCategoriesAdapter.submitList(item.items)
-
-        /*when(items.productsSliderConfig.largeTitle) {
-            true -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                binding.tvName.setTextAppearance(R.style.TextViewHeaderBlackBold)
-            } else {
-                binding.tvName.setTextAppearance(null, R.style.TextViewHeaderBlackBold)
-            }
-            false -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                binding.tvName.setTextAppearance(R.style.TextViewMediumBlackBold)
-            } else {
-                binding.tvName.setTextAppearance(null, R.style.TextViewMediumBlackBold)
-            }
-        }*/
 
         initShowAllProductsButtons(item)
         updateCategoryTabs(item)
