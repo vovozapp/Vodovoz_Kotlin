@@ -91,7 +91,8 @@ class ProductDetailsFlowFragment : BaseFragment() {
                     productDetailsController.submitList(
                         listOfNotNull(
                             detailState.detailHeader,
-                            detailState.detailPrices.takeIf { it?.priceUiList?.size != 1 }
+                            detailState.detailPrices.takeIf { it?.priceUiList?.size != 1 },
+                            detailState.detailServices.takeIf { it?.items?.size != 0 }
                         )
                     )
 

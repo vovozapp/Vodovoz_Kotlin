@@ -2,9 +2,11 @@ package com.vodovoz.app.feature.productdetail.viewholders.detailservices
 
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.ui.model.ServiceUI
 
 data class DetailServices(
-    val id: Int
+    val id: Int,
+    val items: List<ServiceUI>
 ) : Item {
 
     override fun getItemViewType(): Int {

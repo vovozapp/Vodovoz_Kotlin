@@ -1,42 +1,26 @@
 package com.vodovoz.app.ui.model
 
-import android.os.Parcel
 import android.os.Parcelable
+import com.vodovoz.app.R
+import com.vodovoz.app.common.content.itemadapter.Item
+import kotlinx.parcelize.Parcelize
 
-class ServiceUI(
+@Parcelize
+data class ServiceUI(
     val name: String,
     val detail: String? = null,
     val price: String? = null,
     val detailPicture: String? = null,
     val type: String
-): Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readString()!!,
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString()!!) {
+): Parcelable, Item {
+
+    override fun getItemViewType(): Int {
+        return R.layout.view_holder_service
     }
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(name)
-        parcel.writeString(detail)
-        parcel.writeString(price)
-        parcel.writeString(detailPicture)
-        parcel.writeString(type)
-    }
+    override fun areItemsTheSame(item: Item): Boolean {
+        if (item !is ServiceUI) return false
 
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<ServiceUI> {
-        override fun createFromParcel(parcel: Parcel): ServiceUI {
-            return ServiceUI(parcel)
-        }
-
-        override fun newArray(size: Int): Array<ServiceUI?> {
-            return arrayOfNulls(size)
-        }
+        return this == item
     }
 }
