@@ -2,9 +2,11 @@ package com.vodovoz.app.feature.productdetail.viewholders.detailprices
 
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.ui.model.PriceUI
 
 data class DetailPrices(
-    val id: Int
+    val id: Int,
+    val priceUiList: List<PriceUI>
 ) : Item {
 
     override fun getItemViewType(): Int {

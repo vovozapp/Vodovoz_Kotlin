@@ -42,7 +42,7 @@ class ProductDetailsAdapter(
 
             //Prices
             R.layout.fragment_product_details_prices -> {
-                DetailPricesViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager)
+                DetailPricesViewHolder(getViewFromInflater(viewType, parent))
             }
 
             //Services

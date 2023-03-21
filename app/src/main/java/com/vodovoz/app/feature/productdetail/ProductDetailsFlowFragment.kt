@@ -89,8 +89,13 @@ class ProductDetailsFlowFragment : BaseFragment() {
                         hideLoader()
                     }
                     productDetailsController.submitList(
-                        listOfNotNull(detailState.detailHeader)
+                        listOfNotNull(
+                            detailState.detailHeader,
+                            detailState.detailPrices
+                        )
                     )
+
+                    showError(detailState.error)
                 }
         }
     }
