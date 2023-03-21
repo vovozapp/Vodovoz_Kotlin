@@ -29,6 +29,11 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
 import com.vodovoz.app.ui.model.ProductDetailUI
+import com.vodovoz.app.ui.model.ProductUI
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class DetailHeaderViewHolder(
     view: View,
@@ -59,6 +64,35 @@ class DetailHeaderViewHolder(
     }
 
     init {
+
+        launch {
+            likeManager
+                .observeLikes()
+                .filter{ it.containsKey(item?.productDetailUI?.id ?: 0) }
+                .onEach {
+                    val item = item?.productDetailUI
+                    if (item != null) {
+                        item.isFavorite = it[item.id] ?: item.isFavorite
+                        bindFav(item)
+                    }
+                }
+                .collect()
+        }
+
+        launch {
+            cartManager
+                .observeCarts()
+                .filter { it.containsKey(item?.productDetailUI?.id) }
+                .onEach {
+                    val item = item?.productDetailUI
+                    if (item != null) {
+                        item.cartQuantity = it[item.id] ?: item.cartQuantity
+                        updateCartQuantity(item)
+                    }
+                }
+                .collect()
+        }
+
         binding.imgBack.setOnClickListener { clickListener.backPress() }
         binding.vpPictures.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.vpPictures.adapter = detailPictureFlowPagerAdapter
@@ -104,10 +138,6 @@ class DetailHeaderViewHolder(
         binding.amountController.increaseAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
             increaseAmount(item)
-        }
-
-        binding.clHeader.onRenderFinished { _, height ->
-            clickListener.setScrollListener(height)
         }
     }
 
@@ -164,7 +194,6 @@ class DetailHeaderViewHolder(
         var haveDiscount = false
         when(item.productDetailUI.priceUIList.size) {
             1 -> {
-                clickListener.showFabPriceCond(false, item.productDetailUI)
                 binding.tvCurrentPrice.setPriceText(item.productDetailUI.priceUIList.first().currentPrice)
                 binding.tvOldPrice.setPriceText(item.productDetailUI.priceUIList.first().oldPrice)
                 binding.tvPriceCondition.visibility = View.GONE
@@ -172,7 +201,6 @@ class DetailHeaderViewHolder(
                     item.productDetailUI.priceUIList.first().oldPrice) haveDiscount = true
             }
             else -> {
-                clickListener.showFabPriceCond(true, item.productDetailUI)
                 val minimalPrice = item.productDetailUI.priceUIList.maxByOrNull { it.requiredAmount }!!
                 binding.tvCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice)
                 binding.tvPriceCondition.setPriceCondition(minimalPrice.requiredAmount)
@@ -182,12 +210,10 @@ class DetailHeaderViewHolder(
         }
         when(haveDiscount) {
             true -> {
-                clickListener.showFabOldPrice(true)
                 binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
                 binding.tvOldPrice.visibility = View.VISIBLE
             }
             false -> {
-                clickListener.showFabOldPrice(false)
                 binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
                 binding.tvOldPrice.visibility = View.GONE
             }
@@ -219,10 +245,7 @@ class DetailHeaderViewHolder(
         }
 
         //Favorite
-        when(item.productDetailUI.isFavorite) {
-            false -> binding.imgFavorite.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
-            true -> binding.imgFavorite.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
-        }
+        bindFav(item.productDetailUI)
 
         //Status
         var isNotHaveStatuses = true
@@ -265,6 +288,13 @@ class DetailHeaderViewHolder(
             diffResult.dispatchUpdatesTo(detailPictureFlowPagerAdapter)
         }
 
+    }
+
+    private fun bindFav(item: ProductDetailUI) {
+        when(item.isFavorite) {
+            false -> binding.imgFavorite.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
+            true -> binding.imgFavorite.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
+        }
     }
 
     private fun showAmountController() {

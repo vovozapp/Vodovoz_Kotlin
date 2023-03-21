@@ -17,10 +17,12 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.FragmentProductDetailsBinding
+import com.vodovoz.app.databinding.FragmentProductDetailsFlowBinding
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
+import com.vodovoz.app.feature.productdetail.viewholders.detailheader.DetailHeader
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
@@ -35,9 +37,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ProductDetailsFlowFragment : BaseFragment() {
 
-    override fun layout(): Int = R.layout.fragment_product_details
+    override fun layout(): Int = R.layout.fragment_product_details_flow
 
-    private val binding: FragmentProductDetailsBinding by viewBinding { FragmentProductDetailsBinding.bind(contentView) }
+    private val binding: FragmentProductDetailsFlowBinding by viewBinding { FragmentProductDetailsFlowBinding.bind(contentView) }
 
     private val viewModel: ProductDetailsFlowViewModel by viewModels()
 
@@ -72,6 +74,8 @@ class ProductDetailsFlowFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         observeState()
+
+        productDetailsController.bind(binding.mainRv, binding.floatingAmountControllerContainer)
     }
 
     private fun observeState() {
@@ -79,6 +83,14 @@ class ProductDetailsFlowFragment : BaseFragment() {
             viewModel.observeUiState()
                 .collect { detailState ->
 
+                    if (detailState.loadingPage) {
+                        showLoader()
+                    } else {
+                        hideLoader()
+                    }
+                    productDetailsController.submitList(
+                        listOfNotNull(detailState.detailHeader)
+                    )
                 }
         }
     }
@@ -91,18 +103,6 @@ class ProductDetailsFlowFragment : BaseFragment() {
 
             override fun backPress() {
                 findNavController().popBackStack()
-            }
-
-            override fun setScrollListener(height: Int) {
-                binding.nsvContent.setOnScrollChangeListener(
-                    NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-                        if (scrollY > height) {
-                            binding.floatingAmountControllerContainer.visibility = View.VISIBLE
-                        } else {
-                            binding.floatingAmountControllerContainer.visibility = View.INVISIBLE
-                        }
-                    }
-                )
             }
 
             override fun navigateToReplacement(
@@ -129,29 +129,6 @@ class ProductDetailsFlowFragment : BaseFragment() {
             override fun showFabReplace() {
                 binding.floatingAmountController.add.setBackgroundResource(R.drawable.bkg_button_orange_circle_normal)
                 binding.floatingAmountController.add.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_swap))
-            }
-
-            override fun showFabPriceCond(boolean: Boolean, item: ProductDetailUI) {
-                if (boolean) {
-                    val minimalPrice = item.priceUIList.maxByOrNull { it.requiredAmount }!!
-                    binding.tvFloatingCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice)
-                    binding.tvFloatingPriceCondition.setPriceCondition(minimalPrice.requiredAmount)
-                    binding.tvFloatingPriceCondition.visibility = View.VISIBLE
-                } else {
-                    binding.tvFloatingCurrentPrice.setPriceText(item.priceUIList.first().currentPrice)
-                    binding.tvFloatingOldPrice.setPriceText(item.priceUIList.first().oldPrice)
-                    binding.tvFloatingPriceCondition.visibility = View.GONE
-                }
-            }
-
-            override fun showFabOldPrice(boolean: Boolean) {
-                if (boolean) {
-                    binding.tvFloatingCurrentPrice.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-                    binding.tvFloatingOldPrice.visibility = View.VISIBLE
-                } else {
-                    binding.tvFloatingCurrentPrice.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
-                    binding.tvFloatingOldPrice.visibility = View.GONE
-                }
             }
         }
     }
@@ -195,27 +172,6 @@ class ProductDetailsFlowFragment : BaseFragment() {
                 findNavController().navigate(ProductDetailsFragmentDirections.actionToPromotionDetailFragment(id))
             }
             override fun onShowAllPromotionsClick() {}
-        }
-    }
-
-    private fun bindFab(productDetailUI: ProductDetailUI) {
-        Glide.with(requireContext())
-            .load(productDetailUI.detailPictureList.first())
-            .into(binding.miniDetailImage)
-
-        binding.tvFloatingOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-
-        //Cart amount
-        binding.floatingAmountController.circleAmount.text = productDetailUI.cartQuantity.toString()
-        binding.floatingAmountController.amount.text = productDetailUI.cartQuantity.toString()
-
-        when (productDetailUI.cartQuantity > 0) {
-            true -> {
-                binding.floatingAmountController.circleAmount.visibility = View.VISIBLE
-            }
-            false -> {
-                binding.floatingAmountController.circleAmount.visibility = View.GONE
-            }
         }
     }
 }

@@ -9,7 +9,6 @@ interface ProductDetailsClickListener {
     //Header
     fun share(intent: Intent)
     fun backPress()
-    fun setScrollListener(height: Int)
     fun navigateToReplacement(detailPicture: String, products: Array<ProductUI>, id: Long, name: String)
 
 
@@ -17,6 +16,4 @@ interface ProductDetailsClickListener {
     fun showFabBell()
     fun showFabReplace()
 
-    fun showFabPriceCond(boolean: Boolean, item: ProductDetailUI)
-    fun showFabOldPrice(boolean: Boolean)
 }

@@ -1,7 +1,11 @@
 package com.vodovoz.app.feature.productdetail
 
+import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
@@ -30,18 +34,29 @@ class ProductDetailsController(
         likeManager = likeManager
     )
 
-    fun bind(recyclerView: RecyclerView) {
-        initList(recyclerView)
+    fun bind(recyclerView: RecyclerView, fab: ConstraintLayout) {
+        initList(recyclerView, fab)
     }
 
     fun submitList(list: List<Item>) {
         productDetailsAdapter.submitList(list)
     }
 
-    private fun initList(recyclerView: RecyclerView) {
+    private fun initList(recyclerView: RecyclerView, fab: ConstraintLayout) {
         with(recyclerView) {
             adapter = productDetailsAdapter
             layoutManager = LinearLayoutManager(context)
+            addOnScrollListener(object : OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    if (dy > 300) {
+                        fab.visibility = View.VISIBLE
+                    } else {
+                        fab.visibility = View.INVISIBLE
+                    }
+                }
+            })
         }
     }
 
