@@ -58,7 +58,11 @@ class DetailHeaderViewHolder(
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
             val item = item?.productDetailUI ?: return
-            productsClickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
+            productsClickListener.onChangeProductQuantity(
+                id = item.id,
+                cartQuantity = item.cartQuantity,
+                oldQuantity = item.oldQuantity
+            )
             hideAmountController(item)
         }
     }
@@ -314,6 +318,7 @@ class DetailHeaderViewHolder(
 
     private fun reduceAmount(item: DetailHeader) {
         with(item.productDetailUI) {
+            item.productDetailUI.oldQuantity = item.productDetailUI.cartQuantity
             cartQuantity--
             if (cartQuantity < 0) cartQuantity = 0
             amountControllerTimer.cancel()
@@ -323,6 +328,7 @@ class DetailHeaderViewHolder(
     }
 
     private fun increaseAmount(item: DetailHeader) {
+        item.productDetailUI.oldQuantity = item.productDetailUI.cartQuantity
         item.productDetailUI.cartQuantity++
         amountControllerTimer.cancel()
         amountControllerTimer.start()
@@ -343,6 +349,7 @@ class DetailHeaderViewHolder(
             }
         } else {
             if (item.productDetailUI.cartQuantity == 0) {
+                item.productDetailUI.oldQuantity = item.productDetailUI.cartQuantity
                 item.productDetailUI.cartQuantity++
                 updateCartQuantity(item.productDetailUI)
             }

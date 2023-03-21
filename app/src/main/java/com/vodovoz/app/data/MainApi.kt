@@ -192,7 +192,7 @@ interface MainApi {
 
     //Продукт
     @GET("/newmobile/details/index_new.php")
-    fun fetchProductResponse(
+    suspend fun fetchProductResponse(
         @Query("iblock_id") blockId: Int,
         @Query("detail") productId: Long,
     ): ResponseBody
