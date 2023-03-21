@@ -47,7 +47,7 @@ class ProductDetailsAdapter(
 
             //Services
             R.layout.fragment_product_details_services -> {
-                DetailServicesViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager)
+                DetailServicesViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
 
             //Tabs
