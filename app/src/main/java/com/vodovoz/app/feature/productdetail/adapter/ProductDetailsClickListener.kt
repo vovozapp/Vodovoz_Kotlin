@@ -18,4 +18,6 @@ interface ProductDetailsClickListener {
 
     fun showProductsByCategory(id: Long)
     fun showProductsByBrand(id: Long)
+
+    fun onNextPageClick()
 }
