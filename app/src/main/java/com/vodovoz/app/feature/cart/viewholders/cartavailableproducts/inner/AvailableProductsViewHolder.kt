@@ -28,9 +28,7 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class AvailableProductsViewHolder(
@@ -64,29 +62,25 @@ class AvailableProductsViewHolder(
         super.attach()
 
         launch {
+            val item = item ?: return@launch
             likeManager
                 .observeLikes()
-                .filter{ it.containsKey(item?.id ?: 0) }
+                .filter{ it.containsKey(item.id) }
                 .onEach {
-                    val item = item
-                    if (item != null) {
-                        item.isFavorite = it[item.id] ?: item.isFavorite
-                        bindFav(item)
-                    }
+                    item.isFavorite = it[item.id] ?: item.isFavorite
+                    bindFav(item)
                 }
                 .collect()
         }
 
         launch {
+            val item = item ?: return@launch
             cartManager
                 .observeCarts()
-                .filter { it.containsKey(item?.id ?: 0) }
+                .filter { it.containsKey(item.id) }
                 .onEach {
-                    val item = item
-                    if (item != null) {
-                        item.cartQuantity = it[item.id] ?: item.cartQuantity
-                        updateCartQuantity(item)
-                    }
+                    item.cartQuantity = it[item.id] ?: item.cartQuantity
+                    updateCartQuantity(item)
                 }
                 .collect()
         }

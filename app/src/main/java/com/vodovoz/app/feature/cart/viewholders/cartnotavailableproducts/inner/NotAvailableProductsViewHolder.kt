@@ -21,6 +21,7 @@ import com.vodovoz.app.ui.model.ProductUI
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 
 class NotAvailableProductsViewHolder(
@@ -53,7 +54,8 @@ class NotAvailableProductsViewHolder(
         launch {
             likeManager
                 .observeLikes()
-                .filter{ it.containsKey(item?.id ?: 0) }
+                .takeWhile { item != null }
+                .filter{ it.containsKey(item?.id) }
                 .onEach {
                     val item = item
                     if (item != null) {

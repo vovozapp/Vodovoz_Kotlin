@@ -33,6 +33,7 @@ import com.vodovoz.app.ui.model.ProductUI
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 
 class DetailHeaderViewHolder(
@@ -70,29 +71,25 @@ class DetailHeaderViewHolder(
     init {
 
         launch {
+            val item = item?.productDetailUI ?: return@launch
             likeManager
                 .observeLikes()
-                .filter{ it.containsKey(item?.productDetailUI?.id ?: 0) }
+                .filter{ it.containsKey(item.id) }
                 .onEach {
-                    val item = item?.productDetailUI
-                    if (item != null) {
-                        item.isFavorite = it[item.id] ?: item.isFavorite
-                        bindFav(item)
-                    }
+                    item.isFavorite = it[item.id] ?: item.isFavorite
+                    bindFav(item)
                 }
                 .collect()
         }
 
         launch {
+            val item = item?.productDetailUI ?: return@launch
             cartManager
                 .observeCarts()
-                .filter { it.containsKey(item?.productDetailUI?.id) }
+                .filter { it.containsKey(item.id) }
                 .onEach {
-                    val item = item?.productDetailUI
-                    if (item != null) {
-                        item.cartQuantity = it[item.id] ?: item.cartQuantity
-                        updateCartQuantity(item)
-                    }
+                    item.cartQuantity = it[item.id] ?: item.cartQuantity
+                    updateCartQuantity(item)
                 }
                 .collect()
         }
