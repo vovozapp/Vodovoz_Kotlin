@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.productdetail
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
@@ -23,7 +24,8 @@ class ProductDetailsController(
     productsShowAllListener: ProductsShowAllListener,
     promotionsClickListener: PromotionsClickListener,
     cartManager: CartManager,
-    likeManager: LikeManager
+    likeManager: LikeManager,
+    fragment: Fragment
 ) {
     private val productDetailsAdapter = ProductDetailsAdapter(
         clickListener = listener,
@@ -31,7 +33,8 @@ class ProductDetailsController(
         productsShowAllListener = productsShowAllListener,
         promotionsClickListener = promotionsClickListener,
         cartManager = cartManager,
-        likeManager = likeManager
+        likeManager = likeManager,
+        fragment = fragment
     )
 
     fun bind(recyclerView: RecyclerView, fab: ConstraintLayout) {

@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.productdetail.adapter
 
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
@@ -29,7 +30,8 @@ class ProductDetailsAdapter(
     private val productsShowAllListener: ProductsShowAllListener,
     private val promotionsClickListener: PromotionsClickListener,
     private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    private val likeManager: LikeManager,
+    private val fragment: Fragment
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
@@ -52,7 +54,7 @@ class ProductDetailsAdapter(
 
             //Tabs
             R.layout.fragment_product_details_tabs -> {
-                DetailTabsViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager)
+                DetailTabsViewHolder(getViewFromInflater(viewType, parent), fragment)
             }
 
             //Category and Brand

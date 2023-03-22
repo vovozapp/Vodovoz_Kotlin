@@ -7,6 +7,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.FragmentProductDetailsTabsBinding
+import com.vodovoz.app.util.extensions.debugLog
 
 class DetailTabsViewHolder(
     view: View,
@@ -15,17 +16,10 @@ class DetailTabsViewHolder(
 
     private val binding: FragmentProductDetailsTabsBinding = FragmentProductDetailsTabsBinding.bind(view)
 
-    init {
-        initViewPager()
-    }
-
     override fun bind(item: DetailTabs) {
         super.bind(item)
         binding.tvConsumerInfo.text = item.productDetailUI.consumerInfo
-    }
 
-    private fun initViewPager() {
-        val item = item ?: return
         val adapter = DetailTabsViewPagerAdapter(fragment, item.productDetailUI)
         binding.viewPager.adapter = adapter
         binding.aboutTabs.setupWithViewPager(binding.viewPager, listOf("ОПИСАНИЕ", "ХАРАКТЕРИСТИКИ"))
