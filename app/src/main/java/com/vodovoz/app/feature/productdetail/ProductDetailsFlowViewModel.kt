@@ -19,6 +19,7 @@ import com.vodovoz.app.data.parser.response.paginatedProducts.SomeProductsByBran
 import com.vodovoz.app.data.parser.response.product.ProductDetailsResponseJsonParser.parseProductDetailsResponse
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.DISCOUNT
+import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
 import com.vodovoz.app.feature.productdetail.viewholders.detailbrandproductlist.DetailBrandList
 import com.vodovoz.app.feature.productdetail.viewholders.detailcatandbrand.DetailCatAndBrand
 import com.vodovoz.app.feature.productdetail.viewholders.detailheader.DetailHeader
@@ -30,6 +31,7 @@ import com.vodovoz.app.mapper.ProductDetailBundleMapper.mapToUI
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.*
+import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -108,6 +110,14 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                     productUIList = mappedData.recommendProductUIList
                                 )),
                                 productsType = DISCOUNT
+                            ),
+                            detailPromotions = HomePromotions(
+                                8,
+                                PromotionsSliderBundleUI(
+                                    "Товар учавствующий в акции",
+                                    containShowAllButton = false,
+                                    promotionUIList = mappedData.promotionUIList
+                                )
                             ),
                             error = null,
                             loadingPage = false
@@ -204,6 +214,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val detailCatAndBrand: DetailCatAndBrand? = null,
         val detailBrandList: DetailBrandList? = null,
         val detailRecommendsProducts: HomeProducts? = null,
+        val detailPromotions: HomePromotions? = null,
         val error: ErrorState? = null,
         val loadingPage: Boolean = false,
         val pageIndex: Int = 1,
