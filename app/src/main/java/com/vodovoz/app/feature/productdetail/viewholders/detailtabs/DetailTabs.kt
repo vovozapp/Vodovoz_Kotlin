@@ -2,9 +2,11 @@ package com.vodovoz.app.feature.productdetail.viewholders.detailtabs
 
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.ui.model.ProductDetailUI
 
 data class DetailTabs(
-    val id: Int
+    val id: Int,
+    val productDetailUI: ProductDetailUI
 ) : Item {
 
     override fun getItemViewType(): Int {

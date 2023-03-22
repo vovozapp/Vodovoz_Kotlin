@@ -19,6 +19,7 @@ import com.vodovoz.app.data.parser.response.product.ProductDetailsResponseJsonPa
 import com.vodovoz.app.feature.productdetail.viewholders.detailheader.DetailHeader
 import com.vodovoz.app.feature.productdetail.viewholders.detailprices.DetailPrices
 import com.vodovoz.app.feature.productdetail.viewholders.detailservices.DetailServices
+import com.vodovoz.app.feature.productdetail.viewholders.detailtabs.DetailTabs
 import com.vodovoz.app.mapper.ProductDetailBundleMapper.mapToUI
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.*
@@ -85,6 +86,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
                             detailHeader = DetailHeader(1, mappedData.productDetailUI, mappedData.replacementProductsCategoryDetail),
                             detailPrices = DetailPrices(2, mappedData.productDetailUI.priceUIList),
                             detailServices = DetailServices(3, mappedData.serviceUIList),
+                            detailTabs = DetailTabs(4, mappedData.productDetailUI),
                             error = null,
                             loadingPage = false
                         )
@@ -125,6 +127,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val detailHeader: DetailHeader? = null,
         val detailPrices: DetailPrices? = null,
         val detailServices: DetailServices? = null,
+        val detailTabs: DetailTabs? = null,
         val error: ErrorState? = null,
         val loadingPage: Boolean = false
     ) : State

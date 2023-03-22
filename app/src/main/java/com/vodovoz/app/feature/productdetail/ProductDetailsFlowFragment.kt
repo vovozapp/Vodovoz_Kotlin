@@ -92,7 +92,8 @@ class ProductDetailsFlowFragment : BaseFragment() {
                         listOfNotNull(
                             detailState.detailHeader,
                             detailState.detailPrices.takeIf { it?.priceUiList?.size != 1 },
-                            detailState.detailServices.takeIf { it?.items?.size != 0 }
+                            detailState.detailServices.takeIf { it?.items?.size != 0 },
+                            detailState.detailTabs
                         )
                     )
 
