@@ -26,6 +26,7 @@ import com.vodovoz.app.feature.productdetail.viewholders.detailheader.DetailHead
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
+import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentArgs
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
 import com.vodovoz.app.ui.model.CategoryDetailUI
@@ -94,7 +95,8 @@ class ProductDetailsFlowFragment : BaseFragment() {
                             detailState.detailHeader,
                             detailState.detailPrices.takeIf { it?.priceUiList?.size != 1 },
                             detailState.detailServices.takeIf { it?.items?.size != 0 },
-                            detailState.detailTabs
+                            detailState.detailTabs,
+                            detailState.detailCatAndBrand
                         )
                     )
 
@@ -137,6 +139,20 @@ class ProductDetailsFlowFragment : BaseFragment() {
             override fun showFabReplace() {
                 binding.floatingAmountController.add.setBackgroundResource(R.drawable.bkg_button_orange_circle_normal)
                 binding.floatingAmountController.add.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_swap))
+            }
+
+            override fun showProductsByCategory(id: Long) {
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToPaginatedProductsCatalogFragment(id)
+                )
+            }
+
+            override fun showProductsByBrand(id: Long) {
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Brand(id)
+                    )
+                )
             }
         }
     }

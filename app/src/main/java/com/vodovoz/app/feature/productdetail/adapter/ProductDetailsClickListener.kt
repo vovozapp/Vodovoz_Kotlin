@@ -16,4 +16,6 @@ interface ProductDetailsClickListener {
     fun showFabBell()
     fun showFabReplace()
 
+    fun showProductsByCategory(id: Long)
+    fun showProductsByBrand(id: Long)
 }

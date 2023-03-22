@@ -59,7 +59,7 @@ class ProductDetailsAdapter(
 
             //Category and Brand
             R.layout.fragment_product_details_cat_and_brand -> {
-                DetailCatAndBrandViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager)
+                DetailCatAndBrandViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
 
             //Brand Products List
