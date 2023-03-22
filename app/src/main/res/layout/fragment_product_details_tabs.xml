@@ -33,10 +33,47 @@
 
     </com.google.android.material.tabs.TabLayout>
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager"
+    <com.vodovoz.app.ui.base.ExpandableTextView
+        style="@style/TextViewMediumBlack"
+        android:id="@+id/tvAboutProduct"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:lineSpacingMultiplier="1.5"
+        android:paddingTop="@dimen/space_8"
+        android:textSize="16sp"
+        android:paddingStart="@dimen/space_16"
+        android:paddingEnd="@dimen/space_16"
+        app:expandAction="...еще"
+        app:limitedMaxLines="6"
+        android:visibility="visible"
+        app:expandActionColor="@color/bluePrimary"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/properties"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/propertiesGroupRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/allProperties"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_16"
+            android:layout_marginTop="@dimen/space_16"
+            android:layout_marginEnd="@dimen/space_16"
+            android:fontFamily="@font/rotonda_normal"
+            android:textSize="16sp"
+            android:text="Все характеристики"
+            android:textColor="@color/bluePrimary" />
+
+    </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatTextView
         style="@style/TextViewSmallBlack"
