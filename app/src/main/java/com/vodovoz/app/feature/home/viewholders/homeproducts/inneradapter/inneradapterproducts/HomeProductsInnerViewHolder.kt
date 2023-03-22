@@ -45,7 +45,7 @@ class HomeProductsInnerViewHolder(
         launch {
             cartManager
                 .observeCarts()
-                .filter { it.containsKey(item?.id) }
+                .filter { it.containsKey(item?.id ?: 0) }
                 .onEach {
                     val item = item
                     if (item != null) {
