@@ -16,9 +16,9 @@ import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
 class DetailBrandListViewHolder(
     view: View,
     val clickListener: ProductDetailsClickListener,
-    private val productsClickListener: ProductsClickListener,
-    private val likeManager: LikeManager,
-    private val cartManager: CartManager
+    productsClickListener: ProductsClickListener,
+    likeManager: LikeManager,
+    cartManager: CartManager
 ) : ItemViewHolder<DetailBrandList>(view) {
 
 
@@ -55,5 +55,11 @@ class DetailBrandListViewHolder(
         super.bind(item)
 
         productsAdapter.submitList(item.productUiList)
+
+        if (item.pageAmount == 1) {
+            binding.nextPage.visibility = View.GONE
+        } else {
+            binding.nextPage.visibility = View.VISIBLE
+        }
     }
 }

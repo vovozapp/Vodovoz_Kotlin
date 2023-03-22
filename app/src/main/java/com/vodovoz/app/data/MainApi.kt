@@ -197,4 +197,13 @@ interface MainApi {
         @Query("detail") productId: Long,
     ): ResponseBody
 
+    //Продукты выбранного бренда
+    @GET("/newmobile/details/brandtovar.php")
+    suspend fun fetchProductsByBrandResponse(
+        @Query("iblock_id") blockId: Int,
+        @Query("productid") productId: Long,
+        @Query("id") brandId: Long,
+        @Query("nav") page: Int,
+    ): ResponseBody
+
 }

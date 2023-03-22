@@ -230,4 +230,15 @@ class MainRepository @Inject constructor(
         return api.fetchProductResponse(blockId, productId)
     }
 
+    //Продукты выбранного бренда
+    @GET("/newmobile/details/brandtovar.php")
+    suspend fun fetchProductsByBrandResponse(
+        blockId: Int = 12,
+        productId: Long,
+        brandId: Long,
+        page: Int
+    ): ResponseBody {
+        return api.fetchProductsByBrandResponse(blockId, productId, brandId, page)
+    }
+
 }
