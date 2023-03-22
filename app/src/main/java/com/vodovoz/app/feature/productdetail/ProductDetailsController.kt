@@ -56,7 +56,7 @@ class ProductDetailsController(
                     if (dy > 300) {
                         fab.visibility = View.VISIBLE
                     } else {
-                        fab.visibility = View.INVISIBLE
+                        fab.visibility = View.GONE
                     }
                 }
             })
