@@ -30,8 +30,7 @@ class ProductDetailsAdapter(
     private val productsShowAllListener: ProductsShowAllListener,
     private val promotionsClickListener: PromotionsClickListener,
     private val cartManager: CartManager,
-    private val likeManager: LikeManager,
-    private val fragment: Fragment
+    private val likeManager: LikeManager
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
@@ -54,7 +53,7 @@ class ProductDetailsAdapter(
 
             //Tabs
             R.layout.fragment_product_details_tabs -> {
-                DetailTabsViewHolder(getViewFromInflater(viewType, parent), fragment)
+                DetailTabsViewHolder(getViewFromInflater(viewType, parent))
             }
 
             //Category and Brand

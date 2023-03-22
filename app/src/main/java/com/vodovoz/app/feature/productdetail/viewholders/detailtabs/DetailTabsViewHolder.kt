@@ -12,8 +12,7 @@ import com.vodovoz.app.databinding.FragmentProductDetailsTabsBinding
 import com.vodovoz.app.ui.adapter.ProductPropertyGroupsAdapter
 
 class DetailTabsViewHolder(
-    view: View,
-    val fragment: Fragment
+    view: View
 ) : ItemViewHolder<DetailTabs>(view) {
 
     private val binding: FragmentProductDetailsTabsBinding = FragmentProductDetailsTabsBinding.bind(view)

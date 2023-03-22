@@ -58,7 +58,7 @@ class ProductDetailsFlowFragment : BaseFragment() {
             promotionsClickListener = getPromotionsClickListener(),
             cartManager = cartManager,
             likeManager = likeManager,
-            this
+            requireContext()
         )
     }
 

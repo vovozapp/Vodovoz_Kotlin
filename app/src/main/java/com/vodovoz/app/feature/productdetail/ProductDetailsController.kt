@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.productdetail
 
+import android.content.Context
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -29,7 +30,7 @@ class ProductDetailsController(
     promotionsClickListener: PromotionsClickListener,
     cartManager: CartManager,
     likeManager: LikeManager,
-    val fragment: Fragment
+    val context: Context
 ) {
     private val productDetailsAdapter = ProductDetailsAdapter(
         clickListener = listener,
@@ -37,8 +38,7 @@ class ProductDetailsController(
         productsShowAllListener = productsShowAllListener,
         promotionsClickListener = promotionsClickListener,
         cartManager = cartManager,
-        likeManager = likeManager,
-        fragment = fragment
+        likeManager = likeManager
     )
 
     fun bind(recyclerView: RecyclerView, fab: ConstraintLayout) {
@@ -55,11 +55,11 @@ class ProductDetailsController(
             layoutManager = LinearLayoutManager(context)
 
             val divider = MaterialDividerItemDecoration(
-                fragment.requireContext(),
+                context,
                 MaterialDividerItemDecoration.VERTICAL
             )
             divider.dividerThickness = 24
-            divider.dividerColor = ContextCompat.getColor(fragment.requireContext(), R.color.light_gray)
+            divider.dividerColor = ContextCompat.getColor(context, R.color.light_gray)
             recyclerView.addItemDecoration(divider)
 
             addOnScrollListener(object : OnScrollListener() {
