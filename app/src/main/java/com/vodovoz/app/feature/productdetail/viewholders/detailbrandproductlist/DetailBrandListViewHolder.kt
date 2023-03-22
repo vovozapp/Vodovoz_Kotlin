@@ -26,7 +26,7 @@ class DetailBrandListViewHolder(
 
     private val space: Int by lazy { itemView.context.resources.getDimension(R.dimen.space_16).toInt() }
 
-    private val productsAdapter = AvailableProductsAdapter(productsClickListener, likeManager)
+    private val productsAdapter = AvailableProductsAdapter(productsClickListener, likeManager, cartManager)
 
     init {
         binding.nextPage.setOnClickListener { clickListener.onNextPageClick() }

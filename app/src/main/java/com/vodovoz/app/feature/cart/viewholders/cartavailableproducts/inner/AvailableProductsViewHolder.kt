@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.ViewHolderProductListBinding
@@ -35,7 +36,8 @@ import kotlinx.coroutines.launch
 class AvailableProductsViewHolder(
     view: View,
     val productsClickListener: ProductsClickListener,
-    private val likeManager: LikeManager
+    private val likeManager: LikeManager,
+    private val cartManager: CartManager
 ) : ItemViewHolder<ProductUI>(view) {
 
     private val binding: ViewHolderProductListBinding = ViewHolderProductListBinding.bind(view)
@@ -70,6 +72,20 @@ class AvailableProductsViewHolder(
                     if (item != null) {
                         item.isFavorite = it[item.id] ?: item.isFavorite
                         bindFav(item)
+                    }
+                }
+                .collect()
+        }
+
+        launch {
+            cartManager
+                .observeCarts()
+                .filter { it.containsKey(item?.id) }
+                .onEach {
+                    val item = item
+                    if (item != null) {
+                        item.cartQuantity = it[item.id] ?: item.cartQuantity
+                        updateCartQuantity(item)
                     }
                 }
                 .collect()

@@ -4,6 +4,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.ItemCartAvailableProductsBinding
@@ -18,14 +19,15 @@ class CartAvailableProductsViewHolder(
     view: View,
     val clickListener: CartMainClickListener,
     productsClickListener: ProductsClickListener,
-    private val likeManager: LikeManager
+    private val likeManager: LikeManager,
+    private val cartManager: CartManager
 ) : ItemViewHolder<CartAvailableProducts>(view) {
 
     private val binding: ItemCartAvailableProductsBinding = ItemCartAvailableProductsBinding.bind(view)
 
     private val space: Int by lazy { itemView.context.resources.getDimension(R.dimen.space_16).toInt() }
 
-    private val productsAdapter = AvailableProductsAdapter(productsClickListener, likeManager)
+    private val productsAdapter = AvailableProductsAdapter(productsClickListener, likeManager, cartManager)
 
     init {
         binding.rvAvailableProductRecycler.layoutManager =

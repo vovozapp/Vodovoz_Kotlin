@@ -154,6 +154,10 @@ class ProductDetailsFlowFragment : BaseFragment() {
                     )
                 )
             }
+
+            override fun onNextPageClick() {
+                TODO("Not yet implemented")
+            }
         }
     }
 

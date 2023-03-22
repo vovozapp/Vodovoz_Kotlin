@@ -24,7 +24,7 @@ class CartMainAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
         return when (viewType) {
             R.layout.item_cart_available_products -> {
-                CartAvailableProductsViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager)
+                CartAvailableProductsViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager)
             }
             R.layout.item_cart_not_available_products -> {
                 CartNotAvailableProductsViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager)
