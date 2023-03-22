@@ -97,7 +97,8 @@ class ProductDetailsFlowFragment : BaseFragment() {
                             detailState.detailServices.takeIf { it?.items?.size != 0 },
                             detailState.detailTabs,
                             detailState.detailCatAndBrand,
-                            detailState.detailBrandList.takeIf { it?.productUiList?.size != 0 }
+                            detailState.detailBrandList.takeIf { it?.productUiList?.size != 0 },
+                            detailState.detailRecommendsProducts
                         )
                     )
 
