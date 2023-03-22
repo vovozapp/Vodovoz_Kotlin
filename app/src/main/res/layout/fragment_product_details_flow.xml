@@ -31,7 +31,7 @@
         android:paddingBottom="@dimen/space_8"
         android:paddingStart="@dimen/space_8"
         android:paddingEnd="@dimen/space_8"
-        android:visibility="invisible">
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/miniDetailImage"
