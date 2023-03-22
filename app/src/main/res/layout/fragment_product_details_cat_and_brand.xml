@@ -2,15 +2,16 @@
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginTop="@dimen/space_8"
+    android:paddingTop="@dimen/space_8"
     android:layout_marginBottom="@dimen/space_8"
-    android:background="@color/white"
+    android:background="@color/light_gray"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clCategoryContainer"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -88,6 +89,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clBrandContainer"
         android:layout_width="match_parent"
+        android:background="@color/white"
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatImageView
