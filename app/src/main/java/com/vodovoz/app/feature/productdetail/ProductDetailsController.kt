@@ -2,11 +2,14 @@ package com.vodovoz.app.feature.productdetail
 
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+import com.google.android.material.divider.MaterialDividerItemDecoration
+import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
@@ -17,6 +20,7 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.innera
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsAdapter
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
+import com.vodovoz.app.ui.view.Divider
 
 class ProductDetailsController(
     listener: ProductDetailsClickListener,
@@ -25,7 +29,7 @@ class ProductDetailsController(
     promotionsClickListener: PromotionsClickListener,
     cartManager: CartManager,
     likeManager: LikeManager,
-    fragment: Fragment
+    val fragment: Fragment
 ) {
     private val productDetailsAdapter = ProductDetailsAdapter(
         clickListener = listener,
@@ -49,6 +53,15 @@ class ProductDetailsController(
         with(recyclerView) {
             adapter = productDetailsAdapter
             layoutManager = LinearLayoutManager(context)
+
+            val divider = MaterialDividerItemDecoration(
+                fragment.requireContext(),
+                MaterialDividerItemDecoration.VERTICAL
+            )
+            divider.dividerThickness = 24
+            divider.dividerColor = ContextCompat.getColor(fragment.requireContext(), R.color.light_gray)
+            recyclerView.addItemDecoration(divider)
+
             addOnScrollListener(object : OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
