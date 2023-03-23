@@ -94,7 +94,7 @@ class ProductDetailsFlowFragment : BaseFragment() {
                             detailState.detailMaybeLikeProducts.takeIf { it.productUiList.isNotEmpty() },
                             detailState.detailSearchWord.takeIf { it?.searchWordList?.size != 0 },
                             detailState.detailBuyWith.takeIf { it?.items?.first()?.productUIList?.size != 0 },
-                            detailState.detailComments.takeIf { it?.commentUIList?.size != 0 }
+                            detailState.detailComments
                         )
                     )
 
@@ -122,6 +122,14 @@ class ProductDetailsFlowFragment : BaseFragment() {
                 ProductDetailsFragmentDirections.actionToReplacementProductsSelectionBS(
                     detailPicture, products, id, name
                 )
+            }
+
+            override fun onTvCommentAmount(productId: Long) {
+                findNavController().navigate(ProductDetailsFragmentDirections.actionToAllCommentsByProductDialogFragment(productId))
+            }
+
+            override fun onYouTubeClick(videoCode: String) {
+                findNavController().navigate(ProductDetailsFragmentDirections.actionToYouTubeVideoFragmentDialog(videoCode))
             }
 
             override fun showFabBasket() {
@@ -163,6 +171,18 @@ class ProductDetailsFlowFragment : BaseFragment() {
 
             override fun onQueryClick(query: String) {
                 findNavController().navigate(ProductDetailsFragmentDirections.actionToSearchFragment(query))
+            }
+
+            override fun onSendComment(id: Long) {
+                if (viewModel.isLoginAlready()) {
+                    findNavController().navigate(ProductDetailsFragmentDirections.actionToSendCommentAboutProductFragment(id))
+                } else {
+                    findNavController().navigate(R.id.profileFragment)
+                }
+            }
+
+            override fun onShowAllComments(id: Long) {
+                findNavController().navigate(ProductDetailsFragmentDirections.actionToAllCommentsByProductDialogFragment(id))
             }
         }
     }

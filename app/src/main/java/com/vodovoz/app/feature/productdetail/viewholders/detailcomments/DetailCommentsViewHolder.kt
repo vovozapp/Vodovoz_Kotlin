@@ -25,12 +25,22 @@ class DetailCommentsViewHolder(
 
     init {
         binding.commentRecycler.layoutManager =
-            LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(itemView.context, LinearLayoutManager.VERTICAL, false)
 
         binding.commentRecycler.adapter = adapter
 
         binding.commentRecycler.addItemDecoration(DividerItemDecoration(itemView.context, DividerItemDecoration.VERTICAL))
         binding.commentRecycler.addItemDecoration(CommentMarginDecoration(space))
+
+        binding.tvShowAllComment.setOnClickListener {
+            val item = item ?:return@setOnClickListener
+            clickListener.onShowAllComments(item.productId)
+        }
+
+        binding.tvSendComment.setOnClickListener {
+            val item = item ?:return@setOnClickListener
+            clickListener.onSendComment(item.productId)
+        }
     }
 
     override fun bind(item: DetailComments) {
@@ -41,6 +51,14 @@ class DetailCommentsViewHolder(
             .append(item.commentUIList.size)
             .append(")")
             .toString()
+
+        if (item.commentUIList.isEmpty()) {
+            binding.llCommentsTitleContainer.visibility = View.GONE
+            binding.noCommentsTitle.visibility = View.VISIBLE
+        } else {
+            binding.llCommentsTitleContainer.visibility = View.VISIBLE
+            binding.noCommentsTitle.visibility = View.GONE
+        }
 
         adapter.submitList(item.commentUIList)
     }

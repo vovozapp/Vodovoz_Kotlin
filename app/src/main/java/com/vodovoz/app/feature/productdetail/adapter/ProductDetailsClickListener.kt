@@ -9,6 +9,8 @@ interface ProductDetailsClickListener {
     fun share(intent: Intent)
     fun backPress()
     fun navigateToReplacement(detailPicture: String, products: Array<ProductUI>, id: Long, name: String)
+    fun onTvCommentAmount(productId: Long)
+    fun onYouTubeClick(videoCode: String)
 
 
     fun showFabBasket()
@@ -22,4 +24,8 @@ interface ProductDetailsClickListener {
     fun onNextPageMaybeLikeClick()
 
     fun onQueryClick(query: String)
+
+    fun onSendComment(id: Long)
+    fun onShowAllComments(id: Long)
+
 }

@@ -6,7 +6,8 @@ import com.vodovoz.app.ui.model.CommentUI
 
 data class DetailComments(
     val id: Int,
-    val commentUIList: List<CommentUI>
+    val commentUIList: List<CommentUI>,
+    val productId: Long
 ) : Item {
 
     override fun getItemViewType(): Int {

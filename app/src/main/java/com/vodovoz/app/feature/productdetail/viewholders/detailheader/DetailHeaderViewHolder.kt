@@ -140,6 +140,21 @@ class DetailHeaderViewHolder(
             val item = item ?: return@setOnClickListener
             increaseAmount(item)
         }
+
+        binding.tvCommentAmount.setOnClickListener {
+            val item = item ?: return@setOnClickListener
+            if (item.productDetailUI.commentsAmount != 0) {
+                clickListener.onTvCommentAmount(item.productDetailUI.id)
+            }
+        }
+
+        binding.cwPlayVideo.setOnClickListener {
+            val item = item ?: return@setOnClickListener
+            val videoCode = item.productDetailUI.youtubeVideoCode
+            if (videoCode.isNotEmpty()) {
+                clickListener.onYouTubeClick(videoCode)
+            }
+        }
     }
 
     @SuppressLint("Range")
