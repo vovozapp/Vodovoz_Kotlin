@@ -84,7 +84,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
                         val mappedData = response.data.mapToUI()
 
                         if (mappedData.productDetailUI.brandUI != null) {
-                            fetchBrandProducts(mappedData.productDetailUI.id, mappedData.productDetailUI.brandUI.id, state.detailBrandList.pageIndex)
+                            fetchBrandProducts(mappedData.productDetailUI.id, mappedData.productDetailUI.brandUI.id)
                         }
 
                         state.copy(
@@ -133,9 +133,9 @@ class ProductDetailsFlowViewModel @Inject constructor(
         }
     }
 
-    private fun fetchBrandProducts(productId: Long, brandId: Long, page: Int) {
+    private fun fetchBrandProducts(productId: Long, brandId: Long) {
         viewModelScope.launch {
-            flow { emit(mainRepository.fetchProductsByBrandResponse(productId = productId, brandId = brandId, page = page)) }
+            flow { emit(mainRepository.fetchProductsByBrandResponse(productId = productId, brandId = brandId, page = state.detailBrandList.pageIndex)) }
                 .catch { debugLog { "fetch brands error ${it.localizedMessage}" } }
                 .flowOn(Dispatchers.IO)
                 .onEach {
@@ -144,15 +144,22 @@ class ProductDetailsFlowViewModel @Inject constructor(
                         uiStateListener.value = state.copy(
                             detailBrandList = state.detailBrandList.copy(
                                 productUiList = response.data.mapToUI().productUIList,
-                                pageAmount = response.data.pageAmount
+                                pageAmount = if (!state.detailBrandList.loadMore) {
+                                    response.data.pageAmount
+                                } else {
+                                    if (state.detailBrandList.pageIndex == state.detailBrandList.pageAmount) {
+                                        1
+                                    } else {
+                                        state.detailBrandList.pageAmount
+                                    }
+                                }
                             ),
                             error = null,
                             loadingPage = false
                         )
                     } else {
                         uiStateListener.value = state.copy(
-                            loadingPage = false,
-                            detailBrandList = DetailBrandList(6)
+                            loadingPage = false
                         )
                     }
                 }
@@ -172,15 +179,22 @@ class ProductDetailsFlowViewModel @Inject constructor(
                         uiStateListener.value = state.copy(
                             detailMaybeLikeProducts = state.detailMaybeLikeProducts.copy(
                                 productUiList = response.data.mapToUI().productUIList.map { pr -> pr.copy(linear = false) },
-                                pageAmount = response.data.pageAmount
+                                pageAmount = if (!state.detailMaybeLikeProducts.loadMore) {
+                                    response.data.pageAmount
+                                } else {
+                                    if (state.detailMaybeLikeProducts.pageIndex == state.detailMaybeLikeProducts.pageAmount) {
+                                        1
+                                    } else {
+                                        state.detailMaybeLikeProducts.pageAmount
+                                    }
+                                }
                             ),
                             error = null,
                             loadingPage = false
                         )
                     } else {
                         uiStateListener.value = state.copy(
-                            loadingPage = false,
-                            detailMaybeLikeProducts = DetailMaybeLike(9)
+                            loadingPage = false
                         )
                     }
                 }
@@ -197,7 +211,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
             )
         } else {
             uiStateListener.value = state.copy(
-                detailMaybeLikeProducts = state.detailMaybeLikeProducts.copy(pageIndex = newPage)
+                detailMaybeLikeProducts = state.detailMaybeLikeProducts.copy(pageIndex = newPage, loadMore = true)
             )
             fetchMaybeLikeProducts()
         }
@@ -208,15 +222,15 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val productId = state.productDetailUI?.id
         if (brandId != null && productId != null) {
             val newPage = state.detailBrandList.pageIndex + 1
-            uiStateListener.value = if (newPage > state.detailBrandList.pageAmount) {
-                state.copy(
+            if (newPage > state.detailBrandList.pageAmount) {
+                uiStateListener.value = state.copy(
                     detailBrandList = state.detailBrandList.copy(pageAmount = 1, pageIndex = 1)
                 )
             } else {
-                fetchBrandProducts(productId, brandId, newPage)
-                state.copy(
-                    detailBrandList = state.detailBrandList.copy(pageIndex = newPage)
+                uiStateListener.value =  state.copy(
+                    detailBrandList = state.detailBrandList.copy(pageIndex = newPage, loadMore = true)
                 )
+                fetchBrandProducts(productId, brandId)
             }
         }
     }

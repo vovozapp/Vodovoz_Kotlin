@@ -8,7 +8,8 @@ data class DetailMaybeLike(
     val id: Int,
     val productUiList: List<ProductUI> = emptyList(),
     val pageAmount: Int = 1,
-    val pageIndex: Int = 1
+    val pageIndex: Int = 1,
+    val loadMore: Boolean = false
 ) : Item {
 
     override fun getItemViewType(): Int {
