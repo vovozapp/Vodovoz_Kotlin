@@ -64,7 +64,7 @@ class DetailMaybeViewHolder(
     override fun bind(item: DetailMaybeLike) {
         super.bind(item)
 
-        productsAdapter.submitList(item.productUiList)
+        productsAdapter.submitList(item.productUiList, "")
 
         if (item.pageAmount == 1) {
             binding.tvNextPage.visibility = View.GONE

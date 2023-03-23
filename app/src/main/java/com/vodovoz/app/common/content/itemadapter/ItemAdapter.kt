@@ -26,6 +26,12 @@ abstract class ItemAdapter : RecyclerView.Adapter<ItemViewHolder<out Item>>() {
         this.items.addAll(items)
     }
 
+    fun submitList(items: List<Item>, i: String) {
+        this.items.clear()
+        this.items.addAll(items)
+        notifyDataSetChanged()
+    }
+
     abstract override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item>
 
     override fun onBindViewHolder(holder: ItemViewHolder<out Item>, position: Int) {

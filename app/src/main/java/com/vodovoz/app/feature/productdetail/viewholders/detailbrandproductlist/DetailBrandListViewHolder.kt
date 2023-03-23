@@ -54,7 +54,7 @@ class DetailBrandListViewHolder(
     override fun bind(item: DetailBrandList) {
         super.bind(item)
 
-        productsAdapter.submitList(item.productUiList)
+        productsAdapter.submitList(item.productUiList, "")
 
         if (item.pageAmount == 1) {
             binding.nextPage.visibility = View.GONE
