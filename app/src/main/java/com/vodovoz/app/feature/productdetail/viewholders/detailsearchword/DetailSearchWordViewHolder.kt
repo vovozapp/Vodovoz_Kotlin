@@ -1,7 +1,9 @@
 package com.vodovoz.app.feature.productdetail.viewholders.detailsearchword
 
+import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
@@ -27,7 +29,21 @@ class DetailSearchWordViewHolder(
         binding.rvSearchWords.layoutManager =
             LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvSearchWords.adapter = adapter
-        binding.rvSearchWords.addItemDecoration(SearchMarginDecoration(space/2))
+        binding.rvSearchWords.addItemDecoration(
+            object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                with(outRect) {
+                    top = space/2
+                    bottom = space
+                    left = space/2
+                }
+            }
+        })
     }
 
     override fun bind(item: DetailSearchWord) {
