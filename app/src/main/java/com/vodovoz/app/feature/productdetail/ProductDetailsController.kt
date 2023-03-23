@@ -66,11 +66,13 @@ class ProductDetailsController(
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
 
-                  /*  if (dy > 300) {
+                    if (dy > 10) {
                         fab.visibility = View.VISIBLE
-                    } else {
+                    }
+
+                    if (dy < 0) {
                         fab.visibility = View.GONE
-                    }*/
+                    }
                 }
             })
         }
