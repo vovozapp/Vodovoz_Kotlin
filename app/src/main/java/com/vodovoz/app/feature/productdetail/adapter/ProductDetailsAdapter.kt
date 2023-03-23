@@ -88,7 +88,7 @@ class ProductDetailsAdapter(
 
             //Comments
             R.layout.fragment_product_details_comments -> {
-                DetailCommentsViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager)
+                DetailCommentsViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
 
             else -> {

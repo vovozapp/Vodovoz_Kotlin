@@ -13,12 +13,16 @@ data class CommentUI(
 ) : Item {
 
     override fun getItemViewType(): Int {
-        return R.layout.view_holder_slider_comment
+        return COMMENT_VIEW_TYPE
     }
 
     override fun areItemsTheSame(item: Item): Boolean {
         if (item !is CommentUI) return false
 
         return id == item.id
+    }
+
+    companion object {
+        const val COMMENT_VIEW_TYPE = -555
     }
 }
