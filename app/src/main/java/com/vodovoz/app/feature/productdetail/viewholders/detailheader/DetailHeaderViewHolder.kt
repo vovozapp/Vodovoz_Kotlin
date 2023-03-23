@@ -27,13 +27,10 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
-import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
 import com.vodovoz.app.ui.model.ProductDetailUI
-import com.vodovoz.app.ui.model.ProductUI
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 
 class DetailHeaderViewHolder(
@@ -48,9 +45,17 @@ class DetailHeaderViewHolder(
 
     private val detailPictureFlowPagerAdapter = DetailPictureFlowPagerAdapter(
         clickListener = object : DetailPictureFlowClickListener {
-            override fun onProductClick() {
+
+            override fun onDetailPictureClick() {
                 val item = item?.productDetailUI ?: return
-                productsClickListener.onProductClick(item.id)
+                clickListener.onDetailPictureClick(
+                    binding.vpPictures.currentItem,
+                    item.detailPictureList.toTypedArray()
+                )
+            }
+
+            override fun onProductClick() {
+
             }
         }
     )

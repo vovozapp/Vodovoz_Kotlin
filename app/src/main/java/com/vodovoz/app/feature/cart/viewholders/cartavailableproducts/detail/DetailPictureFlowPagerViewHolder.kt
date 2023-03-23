@@ -16,7 +16,7 @@ class DetailPictureFlowPagerViewHolder(
 
     init {
         binding.imgPicture.setOnClickListener {
-            clickListener.onProductClick()
+            clickListener.onDetailPictureClick()
         }
     }
 

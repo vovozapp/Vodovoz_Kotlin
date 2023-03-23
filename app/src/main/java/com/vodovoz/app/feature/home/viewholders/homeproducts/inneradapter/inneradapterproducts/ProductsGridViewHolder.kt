@@ -48,6 +48,10 @@ class ProductsGridViewHolder(
 
     private val detailPictureFlowPagerAdapter = DetailPictureFlowPagerAdapter(
         clickListener = object : DetailPictureFlowClickListener {
+            override fun onDetailPictureClick() {
+
+            }
+
             override fun onProductClick() {
                 val item = getItemByPosition() ?: return
                 productsClickListener.onProductClick(item.id)

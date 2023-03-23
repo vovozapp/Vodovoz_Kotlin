@@ -132,6 +132,13 @@ class ProductDetailsFlowFragment : BaseFragment() {
                 findNavController().navigate(ProductDetailsFragmentDirections.actionToYouTubeVideoFragmentDialog(videoCode))
             }
 
+            override fun onDetailPictureClick(currentItem: Int, detailPictureList: Array<String>) {
+                findNavController().navigate(ProductDetailsFragmentDirections.actionToFullScreenDetailPicturesSliderFragment(
+                    currentItem,
+                    detailPictureList
+                ))
+            }
+
             override fun showFabBasket() {
                 binding.floatingAmountController.add.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
                 binding.floatingAmountController.add.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_cart))
