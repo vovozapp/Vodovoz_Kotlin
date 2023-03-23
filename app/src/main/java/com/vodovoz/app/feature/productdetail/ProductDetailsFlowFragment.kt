@@ -20,6 +20,7 @@ import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentArgs
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
+import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.ProductUI
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -65,6 +66,7 @@ class ProductDetailsFlowFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         observeState()
+        observeResultLiveData()
 
         productDetailsController.bind(binding.mainRv, binding.floatingAmountControllerContainer)
     }
@@ -91,7 +93,8 @@ class ProductDetailsFlowFragment : BaseFragment() {
                             detailState.detailPromotions.takeIf { it?.items?.promotionUIList?.size != 0 },
                             detailState.detailMaybeLikeProducts.takeIf { it.productUiList.isNotEmpty() },
                             detailState.detailSearchWord.takeIf { it?.searchWordList?.size != 0 },
-                            detailState.detailBuyWith.takeIf { it?.items?.first()?.productUIList?.size != 0 }
+                            detailState.detailBuyWith.takeIf { it?.items?.first()?.productUIList?.size != 0 },
+                            detailState.detailComments.takeIf { it?.commentUIList?.size != 0 }
                         )
                     )
 
@@ -204,5 +207,16 @@ class ProductDetailsFlowFragment : BaseFragment() {
             }
             override fun onShowAllPromotionsClick() {}
         }
+    }
+
+    private fun observeResultLiveData() {
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Long>(ReplacementProductsSelectionBS.SELECTED_PRODUCT_ID)
+            ?.observe(viewLifecycleOwner) { productId ->
+                if (findNavController().currentDestination?.id == R.id.replacementProductsSelectionBS) {
+                    findNavController().popBackStack()
+                    findNavController().navigate(ProductDetailsFragmentDirections.actionToSelf(productId))
+                }
+            }
     }
 }

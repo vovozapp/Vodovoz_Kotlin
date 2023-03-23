@@ -2,9 +2,11 @@ package com.vodovoz.app.feature.productdetail.viewholders.detailcomments
 
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.ui.model.CommentUI
 
 data class DetailComments(
-    val id: Int
+    val id: Int,
+    val commentUIList: List<CommentUI>
 ) : Item {
 
     override fun getItemViewType(): Int {

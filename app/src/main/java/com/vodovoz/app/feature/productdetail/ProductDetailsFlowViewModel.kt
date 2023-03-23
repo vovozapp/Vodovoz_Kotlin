@@ -22,6 +22,7 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Compan
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
 import com.vodovoz.app.feature.productdetail.viewholders.detailbrandproductlist.DetailBrandList
 import com.vodovoz.app.feature.productdetail.viewholders.detailcatandbrand.DetailCatAndBrand
+import com.vodovoz.app.feature.productdetail.viewholders.detailcomments.DetailComments
 import com.vodovoz.app.feature.productdetail.viewholders.detailheader.DetailHeader
 import com.vodovoz.app.feature.productdetail.viewholders.detailprices.DetailPrices
 import com.vodovoz.app.feature.productdetail.viewholders.detailproductmaybelike.DetailMaybeLike
@@ -159,6 +160,10 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                     )
                                 ),
                                 productsType = DISCOUNT
+                            ),
+                            detailComments = DetailComments(
+                                12,
+                                commentUIList = mappedData.commentUIList
                             ),
                             error = null,
                             loadingPage = false
@@ -331,6 +336,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val detailPromotions: HomePromotions? = null,
         val detailSearchWord: DetailSearchWord? = null,
         val detailBuyWith: HomeProducts? = null,
+        val detailComments: DetailComments? = null,
         val error: ErrorState? = null,
         val loadingPage: Boolean = false
     ) : State
