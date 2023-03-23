@@ -23,6 +23,9 @@ import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirecti
 import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.ProductUI
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -58,6 +61,7 @@ class ProductDetailsFlowFragment : BaseFragment() {
             val productId = ProductDetailsFragmentArgs.fromBundle(requireArguments()).productId
             if (productId != 0L) {
                 viewModel.fetchProductDetail(productId)
+                observeCartState(productId)
             }
         }
     }
@@ -69,6 +73,25 @@ class ProductDetailsFlowFragment : BaseFragment() {
         observeResultLiveData()
 
         productDetailsController.bind(binding.mainRv, binding.floatingAmountControllerContainer)
+    }
+
+    private fun observeCartState(productId: Long) {
+        lifecycleScope.launchWhenStarted {
+            cartManager
+                .observeCarts()
+                .filter { it.containsKey(productId) }
+                .onEach {
+                    val cartQuantity = it[productId] ?: return@onEach
+                    updateFabQuantity(cartQuantity)
+                }
+                .collect()
+        }
+    }
+
+    private fun updateFabQuantity(cartQuantity: Int?) {
+        if (cartQuantity == null) return
+        binding.floatingAmountController.amount.text = cartQuantity.toString()
+        binding.floatingAmountController.circleAmount.text = cartQuantity.toString()
     }
 
     private fun observeState() {
@@ -97,6 +120,8 @@ class ProductDetailsFlowFragment : BaseFragment() {
                             detailState.detailComments
                         )
                     )
+
+                    updateFabQuantity(detailState.productDetailUI?.cartQuantity)
 
                     showError(detailState.error)
                 }
