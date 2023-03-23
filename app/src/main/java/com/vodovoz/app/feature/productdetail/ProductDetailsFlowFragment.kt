@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.productdetail
 
 import android.content.Intent
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -8,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
@@ -277,6 +279,12 @@ class ProductDetailsFlowFragment : BaseFragment() {
 
     private fun bindFab(productDetailUI: ProductDetailUI?) {
         if (productDetailUI == null) return
+
+        binding.tvFloatingOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+
+        Glide.with(requireContext())
+            .load(productDetailUI.detailPictureList.first())
+            .into(binding.miniDetailImage)
 
         var haveDiscount = false
         when(productDetailUI.priceUIList.size) {
