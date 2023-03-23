@@ -231,7 +231,6 @@ class MainRepository @Inject constructor(
     }
 
     //Продукты выбранного бренда
-    @GET("/newmobile/details/brandtovar.php")
     suspend fun fetchProductsByBrandResponse(
         blockId: Int = 12,
         productId: Long,
@@ -239,6 +238,13 @@ class MainRepository @Inject constructor(
         page: Int
     ): ResponseBody {
         return api.fetchProductsByBrandResponse(blockId, productId, brandId, page)
+    }
+
+    //Продукты могут понравиться
+    suspend fun fetchMaybeLikeProductsResponse(
+        page : Int
+    ): ResponseBody {
+        return api.fetchNovelties(action = "details", page = page)
     }
 
 }

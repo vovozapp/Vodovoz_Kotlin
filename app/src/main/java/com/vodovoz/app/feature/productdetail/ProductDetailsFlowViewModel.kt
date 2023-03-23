@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.ErrorState
-import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
@@ -15,6 +14,7 @@ import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteStatus
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.response.paginatedProducts.MaybeLikeProductsResponseJsonParser.parseMaybeLikeProductsResponse
 import com.vodovoz.app.data.parser.response.paginatedProducts.SomeProductsByBrandResponseJsonParser.parseSomeProductsByBrandResponse
 import com.vodovoz.app.data.parser.response.product.ProductDetailsResponseJsonParser.parseProductDetailsResponse
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
@@ -24,11 +24,11 @@ import com.vodovoz.app.feature.productdetail.viewholders.detailbrandproductlist.
 import com.vodovoz.app.feature.productdetail.viewholders.detailcatandbrand.DetailCatAndBrand
 import com.vodovoz.app.feature.productdetail.viewholders.detailheader.DetailHeader
 import com.vodovoz.app.feature.productdetail.viewholders.detailprices.DetailPrices
+import com.vodovoz.app.feature.productdetail.viewholders.detailproductmaybelike.DetailMaybeLike
 import com.vodovoz.app.feature.productdetail.viewholders.detailservices.DetailServices
 import com.vodovoz.app.feature.productdetail.viewholders.detailtabs.DetailTabs
 import com.vodovoz.app.mapper.PaginatedProductListMapper.mapToUI
 import com.vodovoz.app.mapper.ProductDetailBundleMapper.mapToUI
-import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.*
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
@@ -68,6 +68,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
                     val response = it.parseProductDetailsResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
 
+                        fetchMaybeLikeProducts()
+
                         response.data.let { entity ->
                             entity.productDetailEntity.syncCartQuantity(localDataSource)
                             entity.productDetailEntity.syncFavoriteStatus(localDataSource)
@@ -82,7 +84,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
                         val mappedData = response.data.mapToUI()
 
                         if (mappedData.productDetailUI.brandUI != null) {
-                            fetchBrandProducts(mappedData.productDetailUI.id, mappedData.productDetailUI.brandUI.id, state.pageIndex)
+                            fetchBrandProducts(mappedData.productDetailUI.id, mappedData.productDetailUI.brandUI.id, state.detailBrandList.pageIndex)
                         }
 
                         state.copy(
@@ -140,16 +142,17 @@ class ProductDetailsFlowViewModel @Inject constructor(
                     val response = it.parseSomeProductsByBrandResponse()
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(
-                            detailBrandList = DetailBrandList(6, response.data.mapToUI().productUIList, response.data.pageAmount),
+                            detailBrandList = state.detailBrandList.copy(
+                                productUiList = response.data.mapToUI().productUIList,
+                                pageAmount = response.data.pageAmount
+                            ),
                             error = null,
-                            loadingPage = false,
-                            pageAmount = response.data.pageAmount
+                            loadingPage = false
                         )
                     } else {
                         uiStateListener.value = state.copy(
                             loadingPage = false,
-                            pageIndex = 1,
-                            pageAmount = 1
+                            detailBrandList = DetailBrandList(6)
                         )
                     }
                 }
@@ -158,25 +161,61 @@ class ProductDetailsFlowViewModel @Inject constructor(
         }
     }
 
-    fun nextPage() {
+    private fun fetchMaybeLikeProducts() {
+        viewModelScope.launch {
+            flow { emit(mainRepository.fetchMaybeLikeProductsResponse(page = state.detailMaybeLikeProducts.pageIndex)) }
+                .catch { debugLog { "fetch maybe like products error ${it.localizedMessage}" } }
+                .flowOn(Dispatchers.IO)
+                .onEach {
+                    val response = it.parseMaybeLikeProductsResponse()
+                    if (response is ResponseEntity.Success) {
+                        uiStateListener.value = state.copy(
+                            detailMaybeLikeProducts = state.detailMaybeLikeProducts.copy(
+                                productUiList = response.data.mapToUI().productUIList.map { pr -> pr.copy(linear = false) },
+                                pageAmount = response.data.pageAmount
+                            ),
+                            error = null,
+                            loadingPage = false
+                        )
+                    } else {
+                        uiStateListener.value = state.copy(
+                            loadingPage = false,
+                            detailMaybeLikeProducts = DetailMaybeLike(9)
+                        )
+                    }
+                }
+                .flowOn(Dispatchers.Default)
+                .collect()
+        }
+    }
+
+    fun nextPageMaybeLikeProducts() {
+        val newPage = state.detailMaybeLikeProducts.pageIndex + 1
+        if (newPage > state.detailMaybeLikeProducts.pageAmount) {
+            uiStateListener.value = state.copy(
+                detailMaybeLikeProducts = state.detailMaybeLikeProducts.copy(pageAmount = 1, pageIndex = 1)
+            )
+        } else {
+            uiStateListener.value = state.copy(
+                detailMaybeLikeProducts = state.detailMaybeLikeProducts.copy(pageIndex = newPage)
+            )
+            fetchMaybeLikeProducts()
+        }
+    }
+
+    fun nextPageBrandProducts() {
         val brandId = state.productDetailUI?.brandUI?.id
         val productId = state.productDetailUI?.id
         if (brandId != null && productId != null) {
-            val newPage = state.pageIndex + 1
-            uiStateListener.value = if (newPage > state.pageAmount) {
+            val newPage = state.detailBrandList.pageIndex + 1
+            uiStateListener.value = if (newPage > state.detailBrandList.pageAmount) {
                 state.copy(
-                    pageIndex = 1,
-                    pageAmount = 1,
-                    detailBrandList = state.detailBrandList?.copy(pageAmount = 1)
+                    detailBrandList = state.detailBrandList.copy(pageAmount = 1, pageIndex = 1)
                 )
             } else {
-                fetchBrandProducts(
-                    productId,
-                    brandId,
-                    newPage
-                )
+                fetchBrandProducts(productId, brandId, newPage)
                 state.copy(
-                    pageIndex = newPage
+                    detailBrandList = state.detailBrandList.copy(pageIndex = newPage)
                 )
             }
         }
@@ -212,12 +251,11 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val detailServices: DetailServices? = null,
         val detailTabs: DetailTabs? = null,
         val detailCatAndBrand: DetailCatAndBrand? = null,
-        val detailBrandList: DetailBrandList? = null,
+        val detailBrandList: DetailBrandList = DetailBrandList(6),
+        val detailMaybeLikeProducts: DetailMaybeLike = DetailMaybeLike(9),
         val detailRecommendsProducts: HomeProducts? = null,
         val detailPromotions: HomePromotions? = null,
         val error: ErrorState? = null,
-        val loadingPage: Boolean = false,
-        val pageIndex: Int = 1,
-        val pageAmount: Int = 1
+        val loadingPage: Boolean = false
     ) : State
 }

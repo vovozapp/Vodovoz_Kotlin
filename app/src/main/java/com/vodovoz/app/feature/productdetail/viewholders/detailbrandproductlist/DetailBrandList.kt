@@ -6,8 +6,9 @@ import com.vodovoz.app.ui.model.ProductUI
 
 data class DetailBrandList(
     val id: Int,
-    val productUiList: List<ProductUI>,
-    val pageAmount: Int = 1
+    val productUiList: List<ProductUI> = emptyList(),
+    val pageAmount: Int = 1,
+    val pageIndex: Int = 1
 ) : Item {
 
     override fun getItemViewType(): Int {

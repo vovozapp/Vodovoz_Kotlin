@@ -25,7 +25,7 @@ class AvailableProductsAdapter(
                 AvailableProductsViewHolder(getViewFromInflater(R.layout.view_holder_product_list, parent), productsClickListener, likeManager, cartManager)
             }
             PRODUCT_VIEW_TYPE_GRID -> {
-                ProductsGridViewHolder(getViewFromInflater(R.layout.view_holder_product_list, parent), productsClickListener, likeManager, cartManager)
+                ProductsGridViewHolder(getViewFromInflater(R.layout.view_holder_product_grid, parent), productsClickListener, likeManager, cartManager)
             }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")

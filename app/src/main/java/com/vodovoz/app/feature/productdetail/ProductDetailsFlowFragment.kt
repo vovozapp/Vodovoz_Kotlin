@@ -1,36 +1,25 @@
 package com.vodovoz.app.feature.productdetail
 
 import android.content.Intent
-import android.graphics.Paint
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.databinding.FragmentProductDetailsBinding
 import com.vodovoz.app.databinding.FragmentProductDetailsFlowBinding
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
-import com.vodovoz.app.feature.productdetail.viewholders.detailheader.DetailHeader
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentArgs
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
-import com.vodovoz.app.ui.model.CategoryDetailUI
-import com.vodovoz.app.ui.model.ProductDetailUI
 import com.vodovoz.app.ui.model.ProductUI
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -97,9 +86,10 @@ class ProductDetailsFlowFragment : BaseFragment() {
                             detailState.detailServices.takeIf { it?.items?.size != 0 },
                             detailState.detailTabs,
                             detailState.detailCatAndBrand,
-                            detailState.detailBrandList.takeIf { it?.productUiList?.size != 0 },
+                            detailState.detailBrandList.takeIf { it.productUiList.isNotEmpty() },
                             detailState.detailRecommendsProducts.takeIf { it?.items?.first()?.productUIList?.size != 0 },
-                            detailState.detailPromotions.takeIf { it?.items?.promotionUIList?.size != 0 }
+                            detailState.detailPromotions.takeIf { it?.items?.promotionUIList?.size != 0 },
+                            detailState.detailMaybeLikeProducts.takeIf { it.productUiList.isNotEmpty() }
                         )
                     )
 
@@ -158,12 +148,12 @@ class ProductDetailsFlowFragment : BaseFragment() {
                 )
             }
 
-            override fun onNextPageClick() {
-                viewModel.nextPage()
+            override fun onNextPageBrandProductsClick() {
+                viewModel.nextPageBrandProducts()
             }
 
             override fun onNextPageMaybeLikeClick() {
-                TODO("Not yet implemented")
+                viewModel.nextPageMaybeLikeProducts()
             }
         }
     }

@@ -1,7 +1,6 @@
 package com.vodovoz.app.feature.productdetail.adapter
 
 import android.content.Intent
-import com.vodovoz.app.ui.model.ProductDetailUI
 import com.vodovoz.app.ui.model.ProductUI
 
 interface ProductDetailsClickListener {
@@ -19,6 +18,6 @@ interface ProductDetailsClickListener {
     fun showProductsByCategory(id: Long)
     fun showProductsByBrand(id: Long)
 
-    fun onNextPageClick()
+    fun onNextPageBrandProductsClick()
     fun onNextPageMaybeLikeClick()
 }
