@@ -17,10 +17,14 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllList
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentArgs
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
 import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS
+import com.vodovoz.app.ui.model.ProductDetailUI
 import com.vodovoz.app.ui.model.ProductUI
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -88,12 +92,6 @@ class ProductDetailsFlowFragment : BaseFragment() {
         }
     }
 
-    private fun updateFabQuantity(cartQuantity: Int?) {
-        if (cartQuantity == null) return
-        binding.floatingAmountController.amount.text = cartQuantity.toString()
-        binding.floatingAmountController.circleAmount.text = cartQuantity.toString()
-    }
-
     private fun observeState() {
         lifecycleScope.launchWhenStarted {
             viewModel.observeUiState()
@@ -121,7 +119,7 @@ class ProductDetailsFlowFragment : BaseFragment() {
                         )
                     )
 
-                    updateFabQuantity(detailState.productDetailUI?.cartQuantity)
+                    bindFab(detailState.productDetailUI)
 
                     showError(detailState.error)
                 }
@@ -270,5 +268,55 @@ class ProductDetailsFlowFragment : BaseFragment() {
                     findNavController().navigate(ProductDetailsFragmentDirections.actionToSelf(productId))
                 }
             }
+    }
+
+    private fun updateFabQuantity(cartQuantity: Int) {
+        binding.floatingAmountController.amount.text = cartQuantity.toString()
+        binding.floatingAmountController.circleAmount.text = cartQuantity.toString()
+    }
+
+    private fun bindFab(productDetailUI: ProductDetailUI?) {
+        if (productDetailUI == null) return
+
+        var haveDiscount = false
+        when(productDetailUI.priceUIList.size) {
+            1 -> {
+                binding.tvFloatingCurrentPrice.setPriceText(productDetailUI.priceUIList.first().currentPrice)
+                binding.tvFloatingOldPrice.setPriceText(productDetailUI.priceUIList.first().oldPrice)
+                binding.tvFloatingPriceCondition.visibility = View.GONE
+                if (productDetailUI.priceUIList.first().currentPrice <
+                    productDetailUI.priceUIList.first().oldPrice) haveDiscount = true
+            }
+            else -> {
+                val minimalPrice = productDetailUI.priceUIList.maxByOrNull { it.requiredAmount }!!
+                binding.tvFloatingCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice)
+                binding.tvFloatingPriceCondition.setPriceCondition(minimalPrice.requiredAmount)
+                binding.tvFloatingPriceCondition.visibility = View.VISIBLE
+            }
+        }
+        when(haveDiscount) {
+            true -> {
+                binding.tvFloatingCurrentPrice.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                binding.tvFloatingOldPrice.visibility = View.VISIBLE
+            }
+            false -> {
+                binding.tvFloatingCurrentPrice.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+                binding.tvFloatingOldPrice.visibility = View.GONE
+            }
+        }
+
+        //Cart amount
+        binding.floatingAmountController.circleAmount.text = productDetailUI.cartQuantity.toString()
+        binding.floatingAmountController.amount.text = productDetailUI.cartQuantity.toString()
+
+
+        when (productDetailUI.cartQuantity > 0) {
+            true -> {
+                binding.floatingAmountController.circleAmount.visibility = View.VISIBLE
+            }
+            false -> {
+                binding.floatingAmountController.circleAmount.visibility = View.GONE
+            }
+        }
     }
 }
