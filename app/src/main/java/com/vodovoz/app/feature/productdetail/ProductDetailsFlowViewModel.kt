@@ -25,6 +25,8 @@ import com.vodovoz.app.feature.productdetail.viewholders.detailcatandbrand.Detai
 import com.vodovoz.app.feature.productdetail.viewholders.detailheader.DetailHeader
 import com.vodovoz.app.feature.productdetail.viewholders.detailprices.DetailPrices
 import com.vodovoz.app.feature.productdetail.viewholders.detailproductmaybelike.DetailMaybeLike
+import com.vodovoz.app.feature.productdetail.viewholders.detailsearchword.DetailSearchWord
+import com.vodovoz.app.feature.productdetail.viewholders.detailsearchword.inner.SearchWordItem
 import com.vodovoz.app.feature.productdetail.viewholders.detailservices.DetailServices
 import com.vodovoz.app.feature.productdetail.viewholders.detailtabs.DetailTabs
 import com.vodovoz.app.mapper.PaginatedProductListMapper.mapToUI
@@ -120,6 +122,12 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                     containShowAllButton = false,
                                     promotionUIList = mappedData.promotionUIList
                                 )
+                            ),
+                            detailSearchWord = DetailSearchWord(
+                                10,
+                                searchWordList = mappedData.searchWordList.map {
+                                    SearchWordItem(it)
+                                }
                             ),
                             error = null,
                             loadingPage = false
@@ -269,6 +277,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val detailMaybeLikeProducts: DetailMaybeLike = DetailMaybeLike(9),
         val detailRecommendsProducts: HomeProducts? = null,
         val detailPromotions: HomePromotions? = null,
+        val detailSearchWord: DetailSearchWord? = null,
         val error: ErrorState? = null,
         val loadingPage: Boolean = false
     ) : State

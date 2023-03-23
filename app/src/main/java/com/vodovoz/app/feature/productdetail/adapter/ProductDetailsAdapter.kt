@@ -83,7 +83,7 @@ class ProductDetailsAdapter(
 
             //Search Word
             R.layout.fragment_product_details_search_word -> {
-                DetailSearchWordViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager)
+                DetailSearchWordViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
 
             //Comments

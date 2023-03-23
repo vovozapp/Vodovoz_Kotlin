@@ -20,4 +20,6 @@ interface ProductDetailsClickListener {
 
     fun onNextPageBrandProductsClick()
     fun onNextPageMaybeLikeClick()
+
+    fun onQueryClick(query: String)
 }

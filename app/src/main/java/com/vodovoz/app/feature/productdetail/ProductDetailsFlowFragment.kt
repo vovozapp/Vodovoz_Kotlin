@@ -89,7 +89,8 @@ class ProductDetailsFlowFragment : BaseFragment() {
                             detailState.detailBrandList.takeIf { it.productUiList.isNotEmpty() },
                             detailState.detailRecommendsProducts.takeIf { it?.items?.first()?.productUIList?.size != 0 },
                             detailState.detailPromotions.takeIf { it?.items?.promotionUIList?.size != 0 },
-                            detailState.detailMaybeLikeProducts.takeIf { it.productUiList.isNotEmpty() }
+                            detailState.detailMaybeLikeProducts.takeIf { it.productUiList.isNotEmpty() },
+                            detailState.detailSearchWord.takeIf { it?.searchWordList?.size != 0 }
                         )
                     )
 
@@ -154,6 +155,10 @@ class ProductDetailsFlowFragment : BaseFragment() {
 
             override fun onNextPageMaybeLikeClick() {
                 viewModel.nextPageMaybeLikeProducts()
+            }
+
+            override fun onQueryClick(query: String) {
+                findNavController().navigate(ProductDetailsFragmentDirections.actionToSearchFragment(query))
             }
         }
     }
