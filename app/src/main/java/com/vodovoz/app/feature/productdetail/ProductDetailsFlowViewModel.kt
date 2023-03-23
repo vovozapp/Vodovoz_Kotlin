@@ -95,15 +95,6 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
                         state.copy(
                             productDetailUI = mappedData.productDetailUI,
-                            serviceUIList = mappedData.serviceUIList,
-                            categoryUI = mappedData.categoryUI,
-                            commentUIList = mappedData.commentUIList,
-                            searchWordList = mappedData.searchWordList,
-                            maybeLikeProductUIList = mappedData.maybeLikeProductUIList,
-                            promotionUIList = mappedData.promotionUIList,
-                            recommendProductUIList = mappedData.recommendProductUIList,
-                            buyWithProductUIList = mappedData.buyWithProductUIList,
-                            replacementProductsCategoryDetail = mappedData.replacementProductsCategoryDetail,
                             detailHeader = DetailHeader(
                                 1,
                                 mappedData.productDetailUI,
@@ -317,15 +308,6 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
     data class ProductDetailsState(
         val productDetailUI: ProductDetailUI? = null,
-        val serviceUIList: List<ServiceUI> = emptyList(),
-        val categoryUI: CategoryUI? = null,
-        val commentUIList: List<CommentUI> = emptyList(),
-        val searchWordList: List<String> = emptyList(),
-        val maybeLikeProductUIList: List<ProductUI> = emptyList(),
-        val promotionUIList: List<PromotionUI> = emptyList(),
-        val recommendProductUIList: List<ProductUI> = emptyList(),
-        val buyWithProductUIList: List<ProductUI> = emptyList(),
-        val replacementProductsCategoryDetail: CategoryDetailUI? = null,
         val detailHeader: DetailHeader? = null,
         val detailPrices: DetailPrices? = null,
         val detailServices: DetailServices? = null,
