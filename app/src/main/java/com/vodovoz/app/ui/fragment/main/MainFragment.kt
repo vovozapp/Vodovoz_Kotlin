@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavOptions
@@ -18,10 +19,18 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vodovoz.app.R
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentMainBinding
 import com.vodovoz.app.feature.home.HomeFragment
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainFragment : Fragment() {
+
+    @Inject
+    lateinit var tabManager: TabManager
 
     private lateinit var binding: FragmentMainBinding
 
@@ -44,6 +53,18 @@ class MainFragment : Fragment() {
         val navController = navHostFragment.navController
 
         binding.nvNavigation.setSetupWithNavController(navController)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        lifecycleScope.launchWhenStarted {
+            tabManager
+                .observeTabState()
+                .collect {
+                    binding.nvNavigation.selectedItemId = it
+                }
+        }
     }
 
     override fun onStart() {

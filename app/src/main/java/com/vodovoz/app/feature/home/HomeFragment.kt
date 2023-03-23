@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
@@ -18,6 +19,7 @@ import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentMainHomeFlowBinding
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
@@ -45,6 +47,9 @@ class HomeFragment : BaseFragment() {
 
     @Inject
     lateinit var likeManager: LikeManager
+
+    @Inject
+    lateinit var tabManager: TabManager
 
     private val homeController by lazy {
         HomeController(
@@ -279,10 +284,7 @@ class HomeFragment : BaseFragment() {
             }
 
             override fun onShowAllFavoritesClick() {
-                val navHostFragment =
-                    (childFragmentManager.findFragmentById(R.id.fgvContainer)) as NavHostFragment
-                val navController = navHostFragment.navController
-                navController.navigate(R.id.favoriteFragment)
+                tabManager.selectTab(R.id.favoriteFragment)
             }
 
             //POSITION_3
