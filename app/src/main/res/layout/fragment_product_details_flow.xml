@@ -88,7 +88,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/miniDetailImage"
-            app:layout_constraintTop_toBottomOf="linear"
+            app:layout_constraintTop_toBottomOf="@id/linear"
             android:gravity="start"
             android:visibility="visible"
             tools:text="При условии покупки от 10 шт" />
