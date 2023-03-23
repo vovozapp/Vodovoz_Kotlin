@@ -20,4 +20,5 @@ interface ProductDetailsClickListener {
     fun showProductsByBrand(id: Long)
 
     fun onNextPageClick()
+    fun onNextPageMaybeLikeClick()
 }

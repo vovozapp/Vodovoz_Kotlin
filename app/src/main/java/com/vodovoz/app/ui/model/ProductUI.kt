@@ -26,15 +26,17 @@ data class ProductUI(
     val depositPrice: Int = 0,
     val detailPictureList: List<String> = listOf(),
     val replacementProductUIList: List<ProductUI> = listOf(),
-    var oldQuantity: Int = 0
+    var oldQuantity: Int = 0,
+    var linear: Boolean = true
 ) : Parcelable, Item {
 
     companion object {
         const val PRODUCT_VIEW_TYPE = -500
+        const val PRODUCT_VIEW_TYPE_GRID = -600
     }
 
     override fun getItemViewType(): Int {
-        return PRODUCT_VIEW_TYPE
+        return if (linear) PRODUCT_VIEW_TYPE else PRODUCT_VIEW_TYPE_GRID
     }
 
     override fun areItemsTheSame(item: Item): Boolean {

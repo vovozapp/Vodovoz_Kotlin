@@ -161,6 +161,10 @@ class ProductDetailsFlowFragment : BaseFragment() {
             override fun onNextPageClick() {
                 viewModel.nextPage()
             }
+
+            override fun onNextPageMaybeLikeClick() {
+                TODO("Not yet implemented")
+            }
         }
     }
 
