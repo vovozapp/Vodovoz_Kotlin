@@ -86,7 +86,10 @@ class ProductDetailsFlowViewModel @Inject constructor(
                         val mappedData = response.data.mapToUI()
 
                         if (mappedData.productDetailUI.brandUI != null) {
-                            fetchBrandProducts(mappedData.productDetailUI.id, mappedData.productDetailUI.brandUI.id)
+                            fetchBrandProducts(
+                                mappedData.productDetailUI.id,
+                                mappedData.productDetailUI.brandUI.id
+                            )
                         }
 
                         state.copy(
@@ -100,19 +103,32 @@ class ProductDetailsFlowViewModel @Inject constructor(
                             recommendProductUIList = mappedData.recommendProductUIList,
                             buyWithProductUIList = mappedData.buyWithProductUIList,
                             replacementProductsCategoryDetail = mappedData.replacementProductsCategoryDetail,
-                            detailHeader = DetailHeader(1, mappedData.productDetailUI, mappedData.replacementProductsCategoryDetail),
+                            detailHeader = DetailHeader(
+                                1,
+                                mappedData.productDetailUI,
+                                mappedData.replacementProductsCategoryDetail
+                            ),
                             detailPrices = DetailPrices(2, mappedData.productDetailUI.priceUIList),
                             detailServices = DetailServices(3, mappedData.serviceUIList),
                             detailTabs = DetailTabs(4, mappedData.productDetailUI),
-                            detailCatAndBrand = DetailCatAndBrand(5, mappedData.categoryUI, mappedData.productDetailUI.brandUI),
+                            detailCatAndBrand = DetailCatAndBrand(
+                                5,
+                                mappedData.categoryUI,
+                                mappedData.productDetailUI.brandUI
+                            ),
                             detailRecommendsProducts = HomeProducts(
                                 7,
-                                productsSliderConfig = ProductsSliderConfig(containShowAllButton = false, largeTitle = true),
-                                items = listOf(CategoryDetailUI(
-                                    name = "Рекомендуем также",
-                                    productAmount = mappedData.recommendProductUIList.size,
-                                    productUIList = mappedData.recommendProductUIList
-                                )),
+                                productsSliderConfig = ProductsSliderConfig(
+                                    containShowAllButton = false,
+                                    largeTitle = true
+                                ),
+                                items = listOf(
+                                    CategoryDetailUI(
+                                        name = "Рекомендуем также",
+                                        productAmount = mappedData.recommendProductUIList.size,
+                                        productUIList = mappedData.recommendProductUIList
+                                    )
+                                ),
                                 productsType = DISCOUNT
                             ),
                             detailPromotions = HomePromotions(
@@ -129,6 +145,21 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                     SearchWordItem(it)
                                 }
                             ),
+                            detailBuyWith = HomeProducts(
+                                11,
+                                productsSliderConfig = ProductsSliderConfig(
+                                    containShowAllButton = false,
+                                    largeTitle = true
+                                ),
+                                items = listOf(
+                                    CategoryDetailUI(
+                                        name = "С этим товаром покупают",
+                                        productAmount = mappedData.buyWithProductUIList.size,
+                                        productUIList = mappedData.buyWithProductUIList
+                                    )
+                                ),
+                                productsType = DISCOUNT
+                            ),
                             error = null,
                             loadingPage = false
                         )
@@ -143,7 +174,15 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
     private fun fetchBrandProducts(productId: Long, brandId: Long) {
         viewModelScope.launch {
-            flow { emit(mainRepository.fetchProductsByBrandResponse(productId = productId, brandId = brandId, page = state.detailBrandList.pageIndex)) }
+            flow {
+                emit(
+                    mainRepository.fetchProductsByBrandResponse(
+                        productId = productId,
+                        brandId = brandId,
+                        page = state.detailBrandList.pageIndex
+                    )
+                )
+            }
                 .catch { debugLog { "fetch brands error ${it.localizedMessage}" } }
                 .flowOn(Dispatchers.IO)
                 .onEach {
@@ -186,7 +225,11 @@ class ProductDetailsFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(
                             detailMaybeLikeProducts = state.detailMaybeLikeProducts.copy(
-                                productUiList = response.data.mapToUI().productUIList.map { pr -> pr.copy(linear = false) },
+                                productUiList = response.data.mapToUI().productUIList.map { pr ->
+                                    pr.copy(
+                                        linear = false
+                                    )
+                                },
                                 pageAmount = if (!state.detailMaybeLikeProducts.loadMore) {
                                     response.data.pageAmount
                                 } else {
@@ -215,11 +258,17 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val newPage = state.detailMaybeLikeProducts.pageIndex + 1
         if (newPage > state.detailMaybeLikeProducts.pageAmount) {
             uiStateListener.value = state.copy(
-                detailMaybeLikeProducts = state.detailMaybeLikeProducts.copy(pageAmount = 1, pageIndex = 1)
+                detailMaybeLikeProducts = state.detailMaybeLikeProducts.copy(
+                    pageAmount = 1,
+                    pageIndex = 1
+                )
             )
         } else {
             uiStateListener.value = state.copy(
-                detailMaybeLikeProducts = state.detailMaybeLikeProducts.copy(pageIndex = newPage, loadMore = true)
+                detailMaybeLikeProducts = state.detailMaybeLikeProducts.copy(
+                    pageIndex = newPage,
+                    loadMore = true
+                )
             )
             fetchMaybeLikeProducts()
         }
@@ -235,8 +284,11 @@ class ProductDetailsFlowViewModel @Inject constructor(
                     detailBrandList = state.detailBrandList.copy(pageAmount = 1, pageIndex = 1)
                 )
             } else {
-                uiStateListener.value =  state.copy(
-                    detailBrandList = state.detailBrandList.copy(pageIndex = newPage, loadMore = true)
+                uiStateListener.value = state.copy(
+                    detailBrandList = state.detailBrandList.copy(
+                        pageIndex = newPage,
+                        loadMore = true
+                    )
                 )
                 fetchBrandProducts(productId, brandId)
             }
@@ -278,6 +330,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val detailRecommendsProducts: HomeProducts? = null,
         val detailPromotions: HomePromotions? = null,
         val detailSearchWord: DetailSearchWord? = null,
+        val detailBuyWith: HomeProducts? = null,
         val error: ErrorState? = null,
         val loadingPage: Boolean = false
     ) : State

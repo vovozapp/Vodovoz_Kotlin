@@ -90,7 +90,8 @@ class ProductDetailsFlowFragment : BaseFragment() {
                             detailState.detailRecommendsProducts.takeIf { it?.items?.first()?.productUIList?.size != 0 },
                             detailState.detailPromotions.takeIf { it?.items?.promotionUIList?.size != 0 },
                             detailState.detailMaybeLikeProducts.takeIf { it.productUiList.isNotEmpty() },
-                            detailState.detailSearchWord.takeIf { it?.searchWordList?.size != 0 }
+                            detailState.detailSearchWord.takeIf { it?.searchWordList?.size != 0 },
+                            detailState.detailBuyWith.takeIf { it?.items?.first()?.productUIList?.size != 0 }
                         )
                     )
 
