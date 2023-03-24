@@ -83,7 +83,8 @@ class FavoriteFlowViewModel @Inject constructor(
                 add(
                     0, CategoryUI(
                         id = -1,
-                        name = "Все"
+                        name = "Все",
+                        isSelected = true
                     )
                 )
             }

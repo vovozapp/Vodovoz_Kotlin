@@ -73,6 +73,21 @@ class FavoriteFlowFragment : BaseFragment() {
             showContainer(false)
         }
 
+        val categoryUiList = state.favoriteCategory?.categoryUIList ?: emptyList()
+
+        when(categoryUiList.isNotEmpty()) {
+            true -> {
+                binding.categoriesRecycler.visibility = View.VISIBLE
+                binding.imgCategories.visibility = View.VISIBLE
+            }
+            else -> {
+                binding.imgCategories.visibility = View.GONE
+                binding.categoriesRecycler.visibility = View.GONE
+            }
+        }
+
+        categoryTabsController.submitList(categoryUiList)
+
         binding.tvCategoryName.text = state.favoriteCategory?.name
         binding.tvProductAmount.text = state.favoriteCategory?.productAmount.toString()
         binding.availableTitle.text = state.availableTitle
