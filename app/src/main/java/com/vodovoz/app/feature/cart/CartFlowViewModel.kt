@@ -108,7 +108,8 @@ class CartFlowViewModel @Inject constructor(
                             localDataSource.fetchCart()
                         }
                         val mappedData = response.data.mapUoUI()
-                        cartManager.syncCart(mappedData.availableProductUIList)
+                        val calculatedPrices = calculatePrice(mappedData.availableProductUIList)
+                        cartManager.syncCart(mappedData.availableProductUIList, calculatedPrices.total)
                         state.copy(
                             data = state.data.copy(
                                 coupon = coupon ?: "",
@@ -122,7 +123,7 @@ class CartFlowViewModel @Inject constructor(
                                 ),
                                 notAvailableProducts = CartNotAvailableProducts(
                                     CART_NOT_AVAILABLE_PRODUCTS_ID, mappedData.notAvailableProductUIList),
-                                total = CartTotal(CART_TOTAL_ID, calculatePrice(mappedData.availableProductUIList)),
+                                total = CartTotal(CART_TOTAL_ID, calculatedPrices),
                                 bestForYouProducts = mappedData.bestForYouCategoryDetailUI
                             ),
                             loadingPage = false,
@@ -156,6 +157,7 @@ class CartFlowViewModel @Inject constructor(
                     val response = it.parseClearCartResponse()
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(data = CartState(), false)
+                        cartManager.clearCart()
                         fetchCart(state.data.coupon) //todo
                     } else {
                         uiStateListener.value = state.copy(loadingPage = false)

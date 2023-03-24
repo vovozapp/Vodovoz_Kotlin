@@ -2,6 +2,7 @@ package com.vodovoz.app.ui.fragment.main
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -63,6 +65,21 @@ class MainFragment : Fragment() {
                 .observeTabState()
                 .collect {
                     binding.nvNavigation.selectedItemId = it
+                }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            tabManager
+                .observeBottomNavCartState()
+                .collect {state ->
+                    if (state == null) {
+                        binding.circleAmount.isVisible = false
+                        binding.nvNavigation.menu.getItem(2).title = "Корзина"
+                    } else {
+                        binding.circleAmount.text = state.count.toString()
+                        binding.circleAmount.isVisible = true
+                        binding.nvNavigation.menu.getItem(2).title = state.total.toString() + " ₽"
+                    }
                 }
         }
     }

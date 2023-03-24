@@ -23,6 +23,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 
+    <TextView
+        android:translationZ="@dimen/_10sdp"
+        android:id="@+id/circleAmount"
+        android:layout_width="@dimen/_16sdp"
+        android:layout_height="@dimen/_16sdp"
+        android:background="@drawable/bkg_number"
+        android:fontFamily="@font/rotonda_normal"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:layout_marginStart="@dimen/space_24"
+        android:textSize="13sp"
+        app:layout_constraintTop_toTopOf="@id/nvNavigation"
+        app:layout_constraintEnd_toEndOf="@id/nvNavigation"
+        app:layout_constraintStart_toStartOf="@id/nvNavigation"/>
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fgvContainer"
         android:name="androidx.navigation.fragment.NavHostFragment"

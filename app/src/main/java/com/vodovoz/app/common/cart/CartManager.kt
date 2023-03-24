@@ -1,5 +1,6 @@
 package com.vodovoz.app.common.cart
 
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.ui.model.ProductUI
@@ -13,6 +14,7 @@ import javax.inject.Singleton
 class CartManager @Inject constructor(
     private val repository: MainRepository,
     private val localDataSource: LocalDataSource,
+    private val tabManager: TabManager
 ) {
 
     private val updateCartListListener = MutableStateFlow(false)
@@ -42,14 +44,20 @@ class CartManager @Inject constructor(
         }
     }
 
-    fun clearCart() {
-
+    suspend fun clearCart() {
+        carts.clear()
+        cartsStateListener.emit(carts)
+        tabManager.clearBottomNavCartState()
     }
 
-    suspend fun syncCart(list: List<ProductUI>) {
+    suspend fun syncCart(list: List<ProductUI>, total: Int) {
         list.forEach {
             carts[it.id] = it.cartQuantity
         }
+        tabManager.saveBottomNavCartState(
+            carts.values.sum(),
+            total
+        )
         cartsStateListener.emit(carts)
     }
 
