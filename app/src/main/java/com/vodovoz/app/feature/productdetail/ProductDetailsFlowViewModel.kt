@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.productdetail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.cart.CartManager
@@ -44,6 +45,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductDetailsFlowViewModel @Inject constructor(
+    private val savedState: SavedStateHandle,
     private val dataRepository: DataRepository,
     private val mainRepository: MainRepository,
     private val localDataSource: LocalDataSource,
@@ -55,12 +57,29 @@ class ProductDetailsFlowViewModel @Inject constructor(
     private val state
         get() = uiStateListener.value
 
+    private val productId = savedState.get<Long>("productId")
+
     fun observeUiState() = uiStateListener.asStateFlow()
 
-    fun fetchProductDetail(productId: Long) {
+    private val updateFabListener = MutableSharedFlow<Int>()
+    fun observeUpdateFab() = updateFabListener.asSharedFlow()
+
+    init {
+        viewModelScope.launch {
+            cartManager
+                .observeCarts()
+                .filter { it.containsKey(productId) }
+                .collect {
+                    val cartQuantity = it[productId] ?: return@collect
+                    updateFabListener.emit(cartQuantity)
+                }
+        }
+    }
+
+    fun fetchProductDetail() {
         viewModelScope.launch {
             uiStateListener.value = state.copy(loadingPage = true)
-            flow { emit(mainRepository.fetchProductResponse(productId = productId)) }
+            flow { emit(mainRepository.fetchProductResponse(productId = productId ?: return@flow)) }
                 .catch {
                     debugLog { "fetch detail error ${it.localizedMessage}" }
                     uiStateListener.value =
@@ -155,7 +174,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
                             detailComments = DetailComments(
                                 12,
                                 commentUIList = mappedData.commentUIList,
-                                productId = productId
+                                productId = mappedData.productDetailUI.id
                             ),
                             error = null,
                             loadingPage = false

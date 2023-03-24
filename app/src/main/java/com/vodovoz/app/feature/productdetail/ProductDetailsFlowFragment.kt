@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
@@ -28,6 +29,7 @@ import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirecti
 import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.ProductDetailUI
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
@@ -49,6 +51,8 @@ class ProductDetailsFlowFragment : BaseFragment() {
     @Inject
     lateinit var likeManager: LikeManager
 
+    val args: ProductDetailsFragmentArgs by navArgs()
+
     private val productDetailsController by lazy {
         ProductDetailsController(
             listener = getProductDetailsClickListener(),
@@ -63,12 +67,8 @@ class ProductDetailsFlowFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments != null && savedInstanceState == null) {
-            val productId = ProductDetailsFragmentArgs.fromBundle(requireArguments()).productId
-            if (productId != 0L) {
-                viewModel.fetchProductDetail(productId)
-                observeCartState(productId)
-            }
+        if (savedInstanceState == null) {
+            viewModel.fetchProductDetail()
         }
     }
 
@@ -77,20 +77,18 @@ class ProductDetailsFlowFragment : BaseFragment() {
 
         observeState()
         observeResultLiveData()
+        observeFabCartState()
 
         productDetailsController.bind(binding.mainRv, binding.floatingAmountControllerContainer)
     }
 
-    private fun observeCartState(productId: Long) {
+    private fun observeFabCartState() {
         lifecycleScope.launchWhenStarted {
-            cartManager
-                .observeCarts()
-                .filter { it.containsKey(productId) }
-                .onEach {
-                    val cartQuantity = it[productId] ?: return@onEach
-                    updateFabQuantity(cartQuantity)
+            viewModel
+                .observeUpdateFab()
+                .collect{
+                    updateFabQuantity(it)
                 }
-                .collect()
         }
     }
 
@@ -275,6 +273,14 @@ class ProductDetailsFlowFragment : BaseFragment() {
     private fun updateFabQuantity(cartQuantity: Int) {
         binding.floatingAmountController.amount.text = cartQuantity.toString()
         binding.floatingAmountController.circleAmount.text = cartQuantity.toString()
+        when (cartQuantity > 0) {
+            true -> {
+                binding.floatingAmountController.circleAmount.visibility = View.VISIBLE
+            }
+            false -> {
+                binding.floatingAmountController.circleAmount.visibility = View.GONE
+            }
+        }
     }
 
     private fun bindFab(productDetailUI: ProductDetailUI?) {
@@ -314,17 +320,6 @@ class ProductDetailsFlowFragment : BaseFragment() {
         }
 
         //Cart amount
-        binding.floatingAmountController.circleAmount.text = productDetailUI.cartQuantity.toString()
-        binding.floatingAmountController.amount.text = productDetailUI.cartQuantity.toString()
-
-
-        when (productDetailUI.cartQuantity > 0) {
-            true -> {
-                binding.floatingAmountController.circleAmount.visibility = View.VISIBLE
-            }
-            false -> {
-                binding.floatingAmountController.circleAmount.visibility = View.GONE
-            }
-        }
+        updateFabQuantity(productDetailUI.cartQuantity)
     }
 }
