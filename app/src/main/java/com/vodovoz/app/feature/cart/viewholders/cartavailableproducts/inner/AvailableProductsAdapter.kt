@@ -7,9 +7,8 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
-import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
-import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsGridViewHolder
+import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
+import com.vodovoz.app.feature.productlist.viewholders.ProductsGridViewHolder
 import com.vodovoz.app.ui.model.ProductUI.Companion.PRODUCT_VIEW_TYPE
 import com.vodovoz.app.ui.model.ProductUI.Companion.PRODUCT_VIEW_TYPE_GRID
 

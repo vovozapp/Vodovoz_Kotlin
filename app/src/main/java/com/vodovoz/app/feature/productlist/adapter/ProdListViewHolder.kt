@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts
+package com.vodovoz.app.feature.productlist.adapter
 
 import android.graphics.Color
 import android.graphics.Paint

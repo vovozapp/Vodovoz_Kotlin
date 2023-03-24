@@ -5,16 +5,10 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
-import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
-import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.FragmentProductDetailsSearchWordBinding
-import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
-import com.vodovoz.app.feature.productdetail.viewholders.detailcomments.DetailComments
 import com.vodovoz.app.feature.productdetail.viewholders.detailsearchword.inner.SearchWordsFlowAdapter
-import com.vodovoz.app.feature.productdetail.viewholders.detailservices.inner.ServicesFlowAdapter
-import com.vodovoz.app.ui.decoration.SearchMarginDecoration
 
 class DetailSearchWordViewHolder(
     view: View,

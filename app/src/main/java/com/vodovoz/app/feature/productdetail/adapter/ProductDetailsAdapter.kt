@@ -1,7 +1,6 @@
 package com.vodovoz.app.feature.productdetail.adapter
 
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
@@ -10,14 +9,13 @@ import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProductsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
-import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
+import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotionsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productdetail.viewholders.detailbrandproductlist.DetailBrandListViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailcatandbrand.DetailCatAndBrandViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailcomments.DetailCommentsViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailheader.DetailHeaderViewHolder
-import com.vodovoz.app.feature.productdetail.viewholders.detailprices.DetailPrices
 import com.vodovoz.app.feature.productdetail.viewholders.detailprices.DetailPricesViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailproductmaybelike.DetailMaybeViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailsearchword.DetailSearchWordViewHolder

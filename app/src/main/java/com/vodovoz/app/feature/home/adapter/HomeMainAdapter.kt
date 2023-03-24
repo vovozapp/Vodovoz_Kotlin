@@ -19,7 +19,7 @@ import com.vodovoz.app.feature.home.viewholders.homeorders.HomeOrdersSliderViewH
 import com.vodovoz.app.feature.home.viewholders.homepopulars.HomePopularCategoriesSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProductsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
-import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
+import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotionsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.home.viewholders.hometriplenav.HomeTripleNavViewHolder

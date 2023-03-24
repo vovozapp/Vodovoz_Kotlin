@@ -12,7 +12,7 @@ import com.vodovoz.app.feature.cart.viewholders.cartempty.CartEmptyViewHolder
 import com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts.CartNotAvailableProductsViewHolder
 import com.vodovoz.app.feature.cart.viewholders.carttotal.CartTotalViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.HomeCategoriesInnerViewHolder
-import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
+import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 
 class CartMainAdapter(
     private val clickListener: CartMainClickListener,

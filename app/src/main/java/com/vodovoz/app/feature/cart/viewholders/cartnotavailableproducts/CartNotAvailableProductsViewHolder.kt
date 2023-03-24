@@ -9,7 +9,7 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.ItemCartNotAvailableProductsBinding
 import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
 import com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts.inner.NotAvailableProductsAdapter
-import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
+import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.view.Divider
 

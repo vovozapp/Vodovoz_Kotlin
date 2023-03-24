@@ -8,7 +8,7 @@ import com.vodovoz.app.databinding.ViewHolderSliderProductCategoryBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.HomeProductsInnerAdapter
-import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
+import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.decoration.ProductSliderMarginDecoration
 import com.vodovoz.app.ui.model.CategoryDetailUI
 

@@ -3,19 +3,15 @@ package com.vodovoz.app.feature.productdetail.viewholders.detailproductmaybelike
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.databinding.FragmentProductDetailsBrandProductListBinding
 import com.vodovoz.app.databinding.FragmentProductDetailsMaybeLikeProductListBinding
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
-import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
+import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
-import com.vodovoz.app.feature.productdetail.viewholders.detailbrandproductlist.DetailBrandList
-import com.vodovoz.app.feature.productdetail.viewholders.detailcomments.DetailComments
 
 class DetailMaybeViewHolder(
     view: View,

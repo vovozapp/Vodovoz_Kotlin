@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts
+package com.vodovoz.app.feature.productlist.viewholders
 
 import android.graphics.Color
 import android.graphics.Paint
@@ -17,6 +17,7 @@ import com.vodovoz.app.databinding.ViewHolderProductGridBinding
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowClickListener
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowPagerAdapter
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
+import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setLimitedText
