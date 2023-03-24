@@ -13,11 +13,6 @@ interface ProductDetailsClickListener {
     fun onYouTubeClick(videoCode: String)
     fun onDetailPictureClick(currentItem: Int, detailPictureList: Array<String>)
 
-
-    fun showFabBasket()
-    fun showFabBell()
-    fun showFabReplace()
-
     fun showProductsByCategory(id: Long)
     fun showProductsByBrand(id: Long)
 

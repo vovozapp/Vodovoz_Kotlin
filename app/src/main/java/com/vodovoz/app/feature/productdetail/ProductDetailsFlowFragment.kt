@@ -20,6 +20,7 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllList
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
+import com.vodovoz.app.feature.productdetail.viewholders.detailheader.DetailHeader
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
@@ -64,6 +65,8 @@ class ProductDetailsFlowFragment : BaseFragment() {
             requireContext()
         )
     }
+
+    private val productDetailFavController by lazy { ProductDetailFabController(requireContext()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,7 +122,16 @@ class ProductDetailsFlowFragment : BaseFragment() {
                         )
                     )
 
-                    bindFab(detailState.productDetailUI)
+                    productDetailFavController.bindFab(
+                        header = detailState.detailHeader,
+                        addIv = binding.floatingAmountController.add,
+                        oldPriceTv = binding.tvFloatingOldPrice,
+                        miniDetailIv = binding.miniDetailImage,
+                        currentPriceTv = binding.tvFloatingCurrentPrice,
+                        conditionTv = binding.tvFloatingPriceCondition
+                    )
+
+                    updateFabQuantity(detailState.productDetailUI?.cartQuantity)
 
                     showError(detailState.error)
                 }
@@ -160,21 +172,6 @@ class ProductDetailsFlowFragment : BaseFragment() {
                     currentItem,
                     detailPictureList
                 ))
-            }
-
-            override fun showFabBasket() {
-                binding.floatingAmountController.add.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
-                binding.floatingAmountController.add.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_cart))
-            }
-
-            override fun showFabBell() {
-                binding.floatingAmountController.add.setBackgroundResource(R.drawable.bkg_button_gray_circle_normal)
-                binding.floatingAmountController.add.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_alert))
-            }
-
-            override fun showFabReplace() {
-                binding.floatingAmountController.add.setBackgroundResource(R.drawable.bkg_button_orange_circle_normal)
-                binding.floatingAmountController.add.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_swap))
             }
 
             override fun showProductsByCategory(id: Long) {
@@ -270,7 +267,9 @@ class ProductDetailsFlowFragment : BaseFragment() {
             }
     }
 
-    private fun updateFabQuantity(cartQuantity: Int) {
+    private fun updateFabQuantity(cartQuantity: Int?) {
+        if (cartQuantity == null) return
+
         binding.floatingAmountController.amount.text = cartQuantity.toString()
         binding.floatingAmountController.circleAmount.text = cartQuantity.toString()
         when (cartQuantity > 0) {
@@ -281,45 +280,5 @@ class ProductDetailsFlowFragment : BaseFragment() {
                 binding.floatingAmountController.circleAmount.visibility = View.GONE
             }
         }
-    }
-
-    private fun bindFab(productDetailUI: ProductDetailUI?) {
-        if (productDetailUI == null) return
-
-        binding.tvFloatingOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-
-        Glide.with(requireContext())
-            .load(productDetailUI.detailPictureList.first())
-            .into(binding.miniDetailImage)
-
-        var haveDiscount = false
-        when(productDetailUI.priceUIList.size) {
-            1 -> {
-                binding.tvFloatingCurrentPrice.setPriceText(productDetailUI.priceUIList.first().currentPrice)
-                binding.tvFloatingOldPrice.setPriceText(productDetailUI.priceUIList.first().oldPrice)
-                binding.tvFloatingPriceCondition.visibility = View.GONE
-                if (productDetailUI.priceUIList.first().currentPrice <
-                    productDetailUI.priceUIList.first().oldPrice) haveDiscount = true
-            }
-            else -> {
-                val minimalPrice = productDetailUI.priceUIList.maxByOrNull { it.requiredAmount }!!
-                binding.tvFloatingCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice)
-                binding.tvFloatingPriceCondition.setPriceCondition(minimalPrice.requiredAmount)
-                binding.tvFloatingPriceCondition.visibility = View.VISIBLE
-            }
-        }
-        when(haveDiscount) {
-            true -> {
-                binding.tvFloatingCurrentPrice.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-                binding.tvFloatingOldPrice.visibility = View.VISIBLE
-            }
-            false -> {
-                binding.tvFloatingCurrentPrice.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
-                binding.tvFloatingOldPrice.visibility = View.GONE
-            }
-        }
-
-        //Cart amount
-        updateFabQuantity(productDetailUI.cartQuantity)
     }
 }

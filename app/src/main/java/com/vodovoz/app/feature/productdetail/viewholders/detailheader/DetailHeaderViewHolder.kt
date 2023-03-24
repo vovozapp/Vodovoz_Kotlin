@@ -183,12 +183,10 @@ class DetailHeaderViewHolder(
             true -> {
                 when(item.replacementProductsCategoryDetail?.productUIList?.isEmpty()) {
                     true -> {
-                        clickListener.showFabBell()
                         binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_gray_circle_normal)
                         binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_alert))
                     }
                     false -> {
-                        clickListener.showFabReplace()
                         binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_orange_circle_normal)
                         binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_swap))
                     }
@@ -196,7 +194,6 @@ class DetailHeaderViewHolder(
                 }
             }
             false -> {
-                clickListener.showFabBasket()
                 binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
                 binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_cart))
             }
