@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.catalog.adapter
+package com.vodovoz.app.feature.catalog.adapter
 
 import android.view.View
 import androidx.core.content.ContextCompat

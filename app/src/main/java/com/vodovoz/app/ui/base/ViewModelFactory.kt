@@ -12,7 +12,7 @@ import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsViewModel
 import com.vodovoz.app.ui.fragment.bottles.AllBottlesViewModel
 import com.vodovoz.app.ui.fragment.bottom_dialog_add_address.AddAddressViewModel
 import com.vodovoz.app.ui.fragment.cart.CartViewModel
-import com.vodovoz.app.ui.fragment.catalog.CatalogViewModel
+import com.vodovoz.app.feature.catalog.CatalogViewModel
 import com.vodovoz.app.ui.fragment.concrete_filter.ConcreteFilterViewModel
 import com.vodovoz.app.ui.fragment.contacts.ContactsViewModel
 import com.vodovoz.app.ui.fragment.discount_card.DiscountCardViewModel

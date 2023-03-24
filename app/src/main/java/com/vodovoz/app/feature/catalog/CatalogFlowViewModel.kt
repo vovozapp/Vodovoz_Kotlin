@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.catalog
+package com.vodovoz.app.feature.catalog
 
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.data.MainRepository

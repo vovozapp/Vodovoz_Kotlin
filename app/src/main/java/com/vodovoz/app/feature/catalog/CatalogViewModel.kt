@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.catalog
+package com.vodovoz.app.feature.catalog
 
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
