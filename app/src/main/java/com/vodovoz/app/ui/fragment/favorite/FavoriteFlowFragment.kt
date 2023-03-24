@@ -11,6 +11,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.databinding.FragmentMainFavoriteFlowBinding
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.databinding.FragmentMainFavoriteBinding
 import com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter.CategoryTabsFlowController
 import com.vodovoz.app.ui.model.CategoryUI
@@ -20,10 +21,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FavoriteFlowFragment : BaseFragment() {
 
-    override fun layout(): Int = R.layout.fragment_main_favorite_flow
+    override fun layout(): Int = R.layout.fragment_main_favorite
 
-    private val binding: FragmentMainFavoriteFlowBinding by viewBinding {
-        FragmentMainFavoriteFlowBinding.bind(
+    private val binding: FragmentMainFavoriteBinding by viewBinding {
+        FragmentMainFavoriteBinding.bind(
             contentView
         )
     }
