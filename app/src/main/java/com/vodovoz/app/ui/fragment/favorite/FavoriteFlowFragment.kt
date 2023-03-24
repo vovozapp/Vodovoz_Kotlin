@@ -2,18 +2,22 @@ package com.vodovoz.app.ui.fragment.favorite
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.databinding.FragmentMainFavoriteFlowBinding
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentMainFavoriteBinding
 import com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter.CategoryTabsFlowController
+import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -48,7 +52,9 @@ class FavoriteFlowFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         observeUiState()
+        observeResultLiveData()
         categoryTabsController.bind(binding.categoriesRecycler, space)
     }
 
@@ -94,6 +100,32 @@ class FavoriteFlowFragment : BaseFragment() {
         binding.notAvailableTitle.text = state.notAvailableTitle
         binding.availableContainer.isVisible = state.availableTitle != null || state.notAvailableTitle != null
 
+        binding.imgViewMode.setOnClickListener {
+
+        }
+        binding.tvSort.setOnClickListener { showBottomSortSettings(state.sortType) }
+        binding.imgCategories.setOnClickListener {
+            val category = state.favoriteCategory ?: return@setOnClickListener
+            val id = state.favoriteCategory.id ?: return@setOnClickListener
+            showMiniCatalog(category, id)
+        }
+
+        binding.availableButton.setOnClickListener {
+            binding.availableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.availableButton.elevation = resources.getDimension(R.dimen.elevation_1)
+            binding.notAvailableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
+            binding.notAvailableButton.elevation = 0f
+            viewModel.updateByIsAvailable(true)
+        }
+
+        binding.notAvailableButton.setOnClickListener {
+            binding.notAvailableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.notAvailableButton.elevation = resources.getDimension(R.dimen.elevation_1)
+            binding.availableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
+            binding.availableButton.elevation = 0f
+            viewModel.updateByIsAvailable(false)
+        }
+
     }
 
     private fun showContainer(bool: Boolean) {
@@ -107,6 +139,29 @@ class FavoriteFlowFragment : BaseFragment() {
                 viewModel.onTabClick(id)
             }
         }
+    }
+
+    private fun showMiniCatalog(categoryUI: CategoryUI, id: Long) = findNavController().navigate(
+        FavoriteFragmentDirections.actionToMiniCatalogBottomFragment(
+            categoryUI.categoryUIList.toTypedArray(),
+            id
+        )
+    )
+
+    private fun showBottomSortSettings(sortType: SortType) = findNavController().navigate(
+        FavoriteFragmentDirections.actionToSortProductsSettingsBottomFragment(sortType.name)
+    )
+
+    private fun observeResultLiveData() {
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Long>(PaginatedProductsCatalogWithoutFiltersFragment.CATEGORY_ID)?.observe(viewLifecycleOwner) { categoryId ->
+                viewModel.updateByCategory(categoryId)
+            }
+
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<String>(PaginatedProductsCatalogWithoutFiltersFragment.SORT_TYPE)?.observe(viewLifecycleOwner) { sortType ->
+                viewModel.updateBySortType(SortType.valueOf(sortType))
+            }
     }
 
 }

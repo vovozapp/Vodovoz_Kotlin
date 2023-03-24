@@ -11,6 +11,7 @@ import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
 import com.vodovoz.app.mapper.FavoriteProductsHeaderBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryDetailUI
@@ -118,10 +119,23 @@ class FavoriteFlowViewModel @Inject constructor(
         }
     }
 
+    fun updateByIsAvailable(bool: Boolean) {
+
+    }
+
+    fun updateByCategory(categoryId: Long?) {
+
+    }
+
+    fun updateBySortType(sortType: SortType) {
+
+    }
+
     data class FavoriteState(
         val favoriteCategory: CategoryUI? = null,
         val bestForYouCategoryDetailUI: CategoryDetailUI? = null,
         val availableTitle: String? = null,
-        val notAvailableTitle: String? = null
+        val notAvailableTitle: String? = null,
+        val sortType: SortType = SortType.NO_SORT
     ) : State
 }
