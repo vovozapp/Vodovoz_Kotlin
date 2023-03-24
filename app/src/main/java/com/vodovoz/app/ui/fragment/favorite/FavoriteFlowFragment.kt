@@ -13,6 +13,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter.CategoryTabsFlowController
+import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -55,19 +56,28 @@ class FavoriteFlowFragment : BaseFragment() {
             viewModel.observeUiState()
                 .collect { state ->
 
-                    if (state.data.favoriteCategory != null) {
-                        showContainer(true)
-                    }
+                    bindHeader(state.data)
 
-                    if (state.data.bestForYouCategoryDetailUI != null) {
-                        showContainer(false)
-                    }
-
-                    binding.availableTitle.text = state.data.availableTitle
-                    binding.notAvailableTitle.text = state.data.notAvailableTitle
-                    binding.availableContainer.isVisible = state.data.availableTitle != null || state.data.notAvailableTitle != null
                 }
         }
+    }
+
+    private fun bindHeader(state: FavoriteFlowViewModel.FavoriteState) {
+
+        if (state.favoriteCategory != null) {
+            showContainer(true)
+        }
+
+        if (state.bestForYouCategoryDetailUI != null) {
+            showContainer(false)
+        }
+
+        binding.tvCategoryName.text = state.favoriteCategory?.name
+        binding.tvProductAmount.text = state.favoriteCategory?.productAmount.toString()
+        binding.availableTitle.text = state.availableTitle
+        binding.notAvailableTitle.text = state.notAvailableTitle
+        binding.availableContainer.isVisible = state.availableTitle != null || state.notAvailableTitle != null
+
     }
 
     private fun showContainer(bool: Boolean) {
