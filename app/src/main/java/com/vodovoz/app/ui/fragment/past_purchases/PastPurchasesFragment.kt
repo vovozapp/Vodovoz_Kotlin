@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -23,13 +22,11 @@ import com.vodovoz.app.ui.adapter.CategoryTabsAdapter
 import com.vodovoz.app.ui.adapter.PagingProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.base.loadStateAdapter.LoadStateAdapter
 import com.vodovoz.app.ui.decoration.CategoryTabsMarginDecoration
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
-import com.vodovoz.app.ui.fragment.favorite.FavoriteFragmentDirections
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
@@ -194,7 +191,7 @@ class PastPurchasesFragment : ViewStateBaseFragment() {
 
     private fun initBestForYouProductsSlider() {
         childFragmentManager.beginTransaction().replace(
-            R.id.bestForYouProductSliderFragment,
+            R.id.bestForYouRv,
             bestForYouProductsSliderFragment
         ).commit()
 

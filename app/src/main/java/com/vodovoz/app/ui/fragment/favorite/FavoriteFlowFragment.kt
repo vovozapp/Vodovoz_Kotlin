@@ -15,9 +15,16 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentMainFavoriteBinding
+import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
+import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.DISCOUNT
+import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
+import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
+import com.vodovoz.app.ui.fragment.cart.CartFragmentDirections
+import com.vodovoz.app.ui.fragment.favorite.bestforyouadapter.BestForYouController
 import com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter.CategoryTabsFlowController
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
+import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -25,10 +32,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FavoriteFlowFragment : BaseFragment() {
 
-    override fun layout(): Int = R.layout.fragment_main_favorite
+    override fun layout(): Int = R.layout.fragment_main_favorite_flow
 
-    private val binding: FragmentMainFavoriteBinding by viewBinding {
-        FragmentMainFavoriteBinding.bind(
+    private val binding: FragmentMainFavoriteFlowBinding by viewBinding {
+        FragmentMainFavoriteFlowBinding.bind(
             contentView
         )
     }
@@ -44,6 +51,7 @@ class FavoriteFlowFragment : BaseFragment() {
     private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
 
     private val categoryTabsController = CategoryTabsFlowController(categoryTabsClickListener())
+    private val bestForYouController = BestForYouController(cartManager, likeManager, getProductsShowClickListener(), getProductsClickListener())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +64,7 @@ class FavoriteFlowFragment : BaseFragment() {
         observeUiState()
         observeResultLiveData()
         categoryTabsController.bind(binding.categoriesRecycler, space)
+        bestForYouController.bind(binding.bestForYouRv)
     }
 
     private fun observeUiState() {
@@ -76,6 +85,16 @@ class FavoriteFlowFragment : BaseFragment() {
         }
 
         if (state.bestForYouCategoryDetailUI != null) {
+            val homeProducts = HomeProducts(
+                1,
+                listOf(state.bestForYouCategoryDetailUI),
+                ProductsSliderConfig(
+                    containShowAllButton = false,
+                    largeTitle = true
+                ),
+                DISCOUNT
+            )
+            bestForYouController.submitList(listOf(homeProducts))
             showContainer(false)
         }
 
@@ -162,6 +181,45 @@ class FavoriteFlowFragment : BaseFragment() {
             ?.getLiveData<String>(PaginatedProductsCatalogWithoutFiltersFragment.SORT_TYPE)?.observe(viewLifecycleOwner) { sortType ->
                 viewModel.updateBySortType(SortType.valueOf(sortType))
             }
+    }
+
+    private fun getProductsClickListener(): ProductsClickListener {
+        return object : ProductsClickListener {
+            override fun onProductClick(id: Long) {
+                findNavController().navigate(FavoriteFragmentDirections.actionToProductDetailFragment(id))
+            }
+
+            override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
+                when (viewModel.isLoginAlready()) {
+                    true -> findNavController().navigate(
+                        FavoriteFragmentDirections.actionToPreOrderBS(
+                            id,
+                            name,
+                            detailPicture
+                        )
+                    )
+                    false -> findNavController().navigate(FavoriteFragmentDirections.actionToProfileFragment())
+                }
+            }
+
+            override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
+                viewModel.changeCart(id, cartQuantity, oldQuantity)
+            }
+
+            override fun onFavoriteClick(id: Long, isFavorite: Boolean) {
+                viewModel.changeFavoriteStatus(id, isFavorite)
+            }
+
+        }
+    }
+
+    private fun getProductsShowClickListener() : ProductsShowAllListener {
+        return object : ProductsShowAllListener {
+            override fun showAllDiscountProducts(id: Long) {}
+            override fun showAllTopProducts(id: Long) {}
+            override fun showAllNoveltiesProducts(id: Long) {}
+            override fun showAllBottomProducts(id: Long) {}
+        }
     }
 
 }

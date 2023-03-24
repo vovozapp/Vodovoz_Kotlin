@@ -78,8 +78,8 @@
 
                 </LinearLayout>
 
-                <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/bestForYouProductSliderFragment"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/bestForYouRv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_8"
@@ -117,6 +117,7 @@
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="-4dp"
             android:background="@color/white"
             android:layout_below="@id/searchToolbar">
 
@@ -136,10 +137,9 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:paddingVertical="@dimen/space_4"
                         android:visibility="visible">
 
                         <LinearLayout
@@ -157,7 +157,9 @@
                                 android:id="@+id/tvCategoryName"
                                 style="@style/TextViewLargeBlackBold"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="0dp"
+                                android:textSize="20sp"
+                                android:layout_weight="1"
                                 android:gravity="bottom"
                                 android:maxLines="1"
                                 tools:text="Прошлые покупки" />
@@ -166,8 +168,11 @@
                                 android:id="@+id/tvProductAmount"
                                 style="@style/TextViewNormalGray"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:textColor="#889295"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
                                 android:maxLines="1"
+                                android:textSize="14sp"
                                 tools:layout_editor_absoluteX="16dp"
                                 tools:text="452 товара" />
 
@@ -177,6 +182,7 @@
                             android:id="@+id/imgShare"
                             android:layout_width="@dimen/_18sdp"
                             android:layout_height="@dimen/_18sdp"
+                            android:visibility="gone"
                             android:src="@drawable/png_share"
                             android:layout_marginEnd="@dimen/space_16"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -188,9 +194,10 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <RelativeLayout
+                        android:layout_marginTop="-8dp"
                         android:id="@+id/availableContainer"
                         android:layout_width="match_parent"
-                        android:layout_height="?attr/actionBarSize">
+                        android:layout_height="60dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -207,9 +214,10 @@
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:layout_marginStart="3dp"
-                                android:layout_marginTop="3dp"
-                                android:layout_marginBottom="3dp"
+                                app:cardCornerRadius="5dp"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginBottom="2dp"
                                 android:layout_marginEnd="1.5dp">
 
                                 <TextView
@@ -218,7 +226,7 @@
                                     android:layout_height="match_parent"
                                     android:fontFamily="@font/rotonda_normal"
                                     android:textColor="@color/blackTextDark"
-                                    android:textSize="14sp"
+                                    android:textSize="12sp"
                                     android:gravity="center"
                                     tools:text="В наличии (3)"/>
 
@@ -229,10 +237,11 @@
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
+                                app:cardCornerRadius="5dp"
                                 android:layout_marginStart="1.5dp"
-                                android:layout_marginTop="3dp"
-                                android:layout_marginBottom="3dp"
-                                android:layout_marginEnd="3dp"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginBottom="2dp"
+                                android:layout_marginEnd="2dp"
                                 app:cardElevation="0dp"
                                 app:cardBackgroundColor="@color/light_gray">
 
@@ -241,8 +250,8 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:fontFamily="@font/rotonda_normal"
-                                    android:textColor="@color/blackTextDark"
-                                    android:textSize="14sp"
+                                    android:textColor="#889295"
+                                    android:textSize="12sp"
                                     android:gravity="center"
                                     tools:text="Нет в наличии (3)"/>
 
@@ -253,6 +262,9 @@
                     </RelativeLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
+                        android:layout_marginTop="-2dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="4dp"
                         android:id="@+id/categoriesRecycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
@@ -282,7 +294,7 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvSort"
-                        style="@style/TextViewNormalBlack"
+                        style="@style/TextViewNormalBlackBold"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:drawableEnd="@drawable/ic_drop_down"
@@ -301,7 +313,8 @@
                         android:layout_height="@dimen/action_image_size_with_padding_8"
                         android:paddingHorizontal="@dimen/space_8"
                         android:paddingVertical="@dimen/space_10"
-                        android:src="@drawable/png_ic_categories"
+                        android:src="@drawable/filtericon"
+                        android:layout_marginEnd="@dimen/space_8"
                         app:tint="@color/text_black"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -314,6 +327,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/productRecycler"
+                android:layout_marginTop="-10dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
