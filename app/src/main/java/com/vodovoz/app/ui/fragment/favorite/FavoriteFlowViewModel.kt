@@ -31,8 +31,19 @@ class FavoriteFlowViewModel @Inject constructor(
     private val likeManager: LikeManager
 ) : PagingStateViewModel<FavoriteFlowViewModel.FavoriteState>(FavoriteState()){
 
+    fun firstLoad() {
+        if (!state.isFirstLoad) {
+            uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
+            fetchFavoriteProductsHeader()
+        }
+    }
 
-    fun fetchFavoriteProductsHeader() {
+    fun refresh() {
+        uiStateListener.value = state.copy(loadingPage = true)
+        fetchFavoriteProductsHeader()
+    }
+
+    private fun fetchFavoriteProductsHeader() {
         val userId = localDataSource.fetchUserId()
 
         viewModelScope.launch {
