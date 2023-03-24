@@ -1,16 +1,13 @@
 package com.vodovoz.app.feature.productdetail
 
 import android.content.Intent
-import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
@@ -20,21 +17,12 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllList
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
-import com.vodovoz.app.feature.productdetail.viewholders.detailheader.DetailHeader
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentArgs
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
 import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS
-import com.vodovoz.app.ui.model.ProductDetailUI
 import com.vodovoz.app.ui.model.ProductUI
-import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -66,7 +54,15 @@ class ProductDetailsFlowFragment : BaseFragment() {
         )
     }
 
-    private val productDetailFavController by lazy { ProductDetailFabController(requireContext()) }
+    private val productDetailFabController by lazy {
+        ProductDetailFabController(
+            context = requireContext(),
+            amountTv = binding.floatingAmountController.amount,
+            circleAmountTv = binding.floatingAmountController.circleAmount,
+            viewModel = viewModel,
+            navController = findNavController()
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,7 +86,7 @@ class ProductDetailsFlowFragment : BaseFragment() {
             viewModel
                 .observeUpdateFab()
                 .collect{
-                    updateFabQuantity(it)
+                    productDetailFabController.updateFabQuantity(it)
                 }
         }
     }
@@ -122,7 +118,7 @@ class ProductDetailsFlowFragment : BaseFragment() {
                         )
                     )
 
-                    productDetailFavController.bindFab(
+                    productDetailFabController.bindFab(
                         header = detailState.detailHeader,
                         addIv = binding.floatingAmountController.add,
                         oldPriceTv = binding.tvFloatingOldPrice,
@@ -130,8 +126,6 @@ class ProductDetailsFlowFragment : BaseFragment() {
                         currentPriceTv = binding.tvFloatingCurrentPrice,
                         conditionTv = binding.tvFloatingPriceCondition
                     )
-
-                    updateFabQuantity(detailState.productDetailUI?.cartQuantity)
 
                     showError(detailState.error)
                 }
@@ -265,20 +259,5 @@ class ProductDetailsFlowFragment : BaseFragment() {
                     findNavController().navigate(ProductDetailsFragmentDirections.actionToSelf(productId))
                 }
             }
-    }
-
-    private fun updateFabQuantity(cartQuantity: Int?) {
-        if (cartQuantity == null) return
-
-        binding.floatingAmountController.amount.text = cartQuantity.toString()
-        binding.floatingAmountController.circleAmount.text = cartQuantity.toString()
-        when (cartQuantity > 0) {
-            true -> {
-                binding.floatingAmountController.circleAmount.visibility = View.VISIBLE
-            }
-            false -> {
-                binding.floatingAmountController.circleAmount.visibility = View.GONE
-            }
-        }
     }
 }
