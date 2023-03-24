@@ -28,6 +28,7 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductDetailUI
+import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
@@ -88,11 +89,13 @@ class DetailHeaderViewHolder(
         }
 
         launch {
+            debugLog { "spasibo before before ${item?.productDetailUI}" }
             val item = item?.productDetailUI ?: return@launch
             cartManager
                 .observeCarts()
                 .filter { it.containsKey(item.id) }
                 .onEach {
+                    debugLog { "spasibo after ${it[item.id]}" }
                     item.cartQuantity = it[item.id] ?: item.cartQuantity
                     updateCartQuantity(item)
                 }
@@ -379,6 +382,15 @@ class DetailHeaderViewHolder(
             }
             binding.amountController.amount.text = cartQuantity.toString()
             binding.amountController.circleAmount.text = cartQuantity.toString()
+
+            when (cartQuantity > 0) {
+                true -> {
+                    binding.amountController.circleAmount.visibility = View.VISIBLE
+                }
+                false -> {
+                    binding.amountController.circleAmount.visibility = View.GONE
+                }
+            }
         }
     }
 
