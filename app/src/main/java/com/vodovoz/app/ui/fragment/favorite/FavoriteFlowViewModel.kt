@@ -13,7 +13,6 @@ import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
 import com.vodovoz.app.mapper.FavoriteProductsHeaderBundleMapper.mapToUI
-import com.vodovoz.app.ui.fragment.favorite.viewholders.header.FavoriteHeader
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -50,13 +49,10 @@ class FavoriteFlowViewModel @Inject constructor(
                         val data = response.data.mapToUI()
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
-                                header = FavoriteHeader(
-                                    id = 1,
-                                    favoriteCategory = checkSelectedFilter(data.favoriteCategoryUI),
-                                    bestForYouCategoryDetailUI = data.bestForYouCategoryDetailUI,
-                                    availableTitle = data.availableTitle,
-                                    notAvailableTitle = data.notAvailableTitle
-                                )
+                                favoriteCategory = checkSelectedFilter(data.favoriteCategoryUI),
+                                bestForYouCategoryDetailUI = data.bestForYouCategoryDetailUI,
+                                availableTitle = data.availableTitle,
+                                notAvailableTitle = data.notAvailableTitle
                             )
                         )
                     } else {
@@ -99,6 +95,9 @@ class FavoriteFlowViewModel @Inject constructor(
     }
 
     data class FavoriteState(
-        val header: FavoriteHeader? = null
+        val favoriteCategory: CategoryUI? = null,
+        val bestForYouCategoryDetailUI: CategoryDetailUI? = null,
+        val availableTitle: String? = null,
+        val notAvailableTitle: String? = null
     ) : State
 }
