@@ -60,7 +60,11 @@ class ProductDetailsFlowFragment : BaseFragment() {
             amountTv = binding.floatingAmountController.amount,
             circleAmountTv = binding.floatingAmountController.circleAmount,
             viewModel = viewModel,
-            navController = findNavController()
+            navController = findNavController(),
+            addIv = binding.floatingAmountController.add,
+            reduceIv = binding.floatingAmountController.reduceAmount,
+            increaseIv = binding.floatingAmountController.increaseAmount,
+            amountDeployed = binding.floatingAmountController.amountControllerDeployed
         )
     }
 
@@ -120,7 +124,6 @@ class ProductDetailsFlowFragment : BaseFragment() {
 
                     productDetailFabController.bindFab(
                         header = detailState.detailHeader,
-                        addIv = binding.floatingAmountController.add,
                         oldPriceTv = binding.tvFloatingOldPrice,
                         miniDetailIv = binding.miniDetailImage,
                         currentPriceTv = binding.tvFloatingCurrentPrice,
@@ -259,5 +262,10 @@ class ProductDetailsFlowFragment : BaseFragment() {
                     findNavController().navigate(ProductDetailsFragmentDirections.actionToSelf(productId))
                 }
             }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        productDetailFabController.stopTimer()
     }
 }

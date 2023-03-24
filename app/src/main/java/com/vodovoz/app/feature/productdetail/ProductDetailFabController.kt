@@ -5,6 +5,7 @@ import android.graphics.Paint
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
@@ -26,18 +27,47 @@ class ProductDetailFabController(
     private val amountTv: TextView,
     private val circleAmountTv: TextView,
     private val viewModel: ProductDetailsFlowViewModel,
-    private val navController: NavController
+    private val navController: NavController,
+    private val addIv: AppCompatImageView,
+    private val reduceIv: ImageView,
+    private val increaseIv: ImageView,
+    private val amountDeployed: LinearLayout
 ) {
+
+    private var timer: CountDownTimer? = null
+
+    private fun startTimer(header: DetailHeader, oldQuantity: Int) {
+        timer?.cancel()
+        timer = object: CountDownTimer(3000, 3000) {
+            override fun onTick(millisUntilFinished: Long) {}
+            override fun onFinish() {
+                viewModel.changeCart(
+                    productId = header.productDetailUI.id,
+                    quantity = header.productDetailUI.cartQuantity,
+                    oldQuan = oldQuantity
+                )
+                hideAmountController(header)
+            }
+        }
+        timer?.start()
+    }
+
+    fun stopTimer() {
+        timer?.cancel()
+    }
 
     fun bindFab(
         header: DetailHeader?,
-        addIv: AppCompatImageView,
         oldPriceTv: AppCompatTextView,
         miniDetailIv: ImageView,
         currentPriceTv: AppCompatTextView,
         conditionTv: AppCompatTextView
     ) {
         if (header == null) return
+
+        addIv.setOnClickListener { add(header) }
+        reduceIv.setOnClickListener { reduce(header) }
+        increaseIv.setOnClickListener { increase(header) }
 
         //If left items = 0
         when (header.productDetailUI.leftItems == 0) {
@@ -121,5 +151,59 @@ class ProductDetailFabController(
                 circleAmountTv.visibility = View.GONE
             }
         }
+    }
+
+    private fun add(header: DetailHeader) {
+        val oldQ = header.productDetailUI.cartQuantity
+        if (header.productDetailUI.leftItems == 0) {
+            header.replacementProductsCategoryDetail?.let {
+                if (it.productUIList.isNotEmpty()) {
+                    navController.navigate(ProductDetailsFragmentDirections.actionToReplacementProductsSelectionBS(
+                        header.productDetailUI.detailPictureList.first(),
+                        it.productUIList.toTypedArray(),
+                        header.productDetailUI.id,
+                        header.productDetailUI.name
+                    ))
+                }
+            }
+        } else {
+            if (header.productDetailUI.cartQuantity == 0) {
+                header.productDetailUI.cartQuantity++
+                updateFabQuantity(header.productDetailUI.cartQuantity)
+            }
+            showAmountController(header, oldQ)
+        }
+    }
+
+    private fun increase(header: DetailHeader) {
+        val oldQ = header.productDetailUI.cartQuantity
+        header.productDetailUI.cartQuantity++
+        startTimer(header, oldQ)
+        updateFabQuantity(header.productDetailUI.cartQuantity)
+    }
+
+    private fun reduce(header: DetailHeader) {
+        with(header) {
+            val oldQ = productDetailUI.cartQuantity
+            productDetailUI.cartQuantity--
+            if (productDetailUI.cartQuantity < 0) productDetailUI.cartQuantity = 0
+            startTimer(header, oldQ)
+            updateFabQuantity(productDetailUI.cartQuantity)
+        }
+    }
+
+    private fun showAmountController(header: DetailHeader, oldQ: Int) {
+        circleAmountTv.visibility = View.GONE
+        addIv.visibility = View.GONE
+        amountDeployed.visibility = View.VISIBLE
+        startTimer(header, oldQ)
+    }
+
+    private fun hideAmountController(header: DetailHeader) {
+        if (header.productDetailUI.cartQuantity > 0) {
+            circleAmountTv.visibility = View.VISIBLE
+        }
+        addIv.visibility = View.VISIBLE
+        amountDeployed.visibility = View.GONE
     }
 }
