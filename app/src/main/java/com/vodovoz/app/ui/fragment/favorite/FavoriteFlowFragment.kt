@@ -63,6 +63,7 @@ class FavoriteFlowFragment : BaseFragment() {
 
         observeUiState()
         observeResultLiveData()
+        initSearch()
         categoryTabsController.bind(binding.categoriesRecycler, space)
         bestForYouController.bind(binding.bestForYouRv)
     }
@@ -219,6 +220,17 @@ class FavoriteFlowFragment : BaseFragment() {
             override fun showAllTopProducts(id: Long) {}
             override fun showAllNoveltiesProducts(id: Long) {}
             override fun showAllBottomProducts(id: Long) {}
+        }
+    }
+
+    private fun initSearch() {
+        binding.searchContainer.clSearchContainer.setOnClickListener {
+            findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment())
+        }
+        binding.searchContainer.etSearch.setOnFocusChangeListener { _, isFocusable ->
+            if (isFocusable) {
+                findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment())
+            }
         }
     }
 
