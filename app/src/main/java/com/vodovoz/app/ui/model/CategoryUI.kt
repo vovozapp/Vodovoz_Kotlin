@@ -15,7 +15,8 @@ data class CategoryUI(
     var isOpen: Boolean = false,
     val primaryFilterName: String? = null,
     var primaryFilterValueList: List<FilterValueUI> = listOf(),
-    var categoryUIList: List<CategoryUI> = listOf()
+    var categoryUIList: List<CategoryUI> = listOf(),
+    var isSelected: Boolean = false
 ) : Parcelable, Item {
 
     companion object {

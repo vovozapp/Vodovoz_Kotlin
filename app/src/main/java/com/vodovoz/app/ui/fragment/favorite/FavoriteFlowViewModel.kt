@@ -91,6 +91,18 @@ class FavoriteFlowViewModel @Inject constructor(
         return categoryUI
     }
 
+    fun onTabClick(id: Long) {
+        val categoryUI = state.data.favoriteCategory ?: return
+
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                favoriteCategory = categoryUI.copy(
+                    categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == id) }
+                )
+            )
+        )
+    }
+
     fun isLoginAlready() = dataRepository.isAlreadyLogin()
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {

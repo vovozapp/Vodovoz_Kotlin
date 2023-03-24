@@ -11,6 +11,8 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.databinding.FragmentMainFavoriteFlowBinding
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
+import com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter.CategoryTabsFlowController
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -33,6 +35,10 @@ class FavoriteFlowFragment : BaseFragment() {
     @Inject
     lateinit var likeManager: LikeManager
 
+    private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
+
+    private val categoryTabsController = CategoryTabsFlowController(categoryTabsClickListener())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.firstLoad()
@@ -41,6 +47,7 @@ class FavoriteFlowFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeUiState()
+        categoryTabsController.bind(binding.categoriesRecycler, space)
     }
 
     private fun observeUiState() {
@@ -66,6 +73,14 @@ class FavoriteFlowFragment : BaseFragment() {
     private fun showContainer(bool: Boolean) {
         binding.emptyFavoriteContainer.isVisible = !bool
         binding.favoriteContainer.isVisible = bool
+    }
+
+    private fun categoryTabsClickListener() : CategoryTabsFlowClickListener {
+        return object : CategoryTabsFlowClickListener {
+            override fun onTabClick(id: Long) {
+                viewModel.onTabClick(id)
+            }
+        }
     }
 
 }
