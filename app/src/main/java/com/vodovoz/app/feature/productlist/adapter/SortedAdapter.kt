@@ -6,6 +6,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressViewHolder
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.productlist.viewholders.ProductsGridViewHolder
 import com.vodovoz.app.ui.model.ProductUI
@@ -23,6 +24,9 @@ class SortedAdapter(
             }
             ProductUI.PRODUCT_VIEW_TYPE_GRID -> {
                 ProductsGridViewHolder(getViewFromInflater(R.layout.view_holder_product_grid, parent), productsClickListener, likeManager, cartManager)
+            }
+            R.layout.item_progress -> {
+                BottomProgressViewHolder(getViewFromInflater(viewType, parent))
             }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")
