@@ -12,6 +12,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.databinding.FragmentMainFavoriteFlowBinding
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
@@ -108,7 +109,9 @@ class FavoriteFlowFragment : BaseFragment() {
                         favoritesController.submitList(data.itemsList)
                     }
 
-                    showError(state.error)
+                    if (state.error !is ErrorState.Empty) {
+                        showError(state.error)
+                    }
 
                 }
         }
