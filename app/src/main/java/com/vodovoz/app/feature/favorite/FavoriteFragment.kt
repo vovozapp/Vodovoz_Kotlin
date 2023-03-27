@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.favorite
+package com.vodovoz.app.feature.favorite
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -37,9 +37,9 @@ import com.vodovoz.app.ui.decoration.CategoryTabsMarginDecoration
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
-import com.vodovoz.app.ui.fragment.favorite.bestforyouadapter.BestForYouController
-import com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
-import com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter.CategoryTabsFlowController
+import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
+import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
+import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig

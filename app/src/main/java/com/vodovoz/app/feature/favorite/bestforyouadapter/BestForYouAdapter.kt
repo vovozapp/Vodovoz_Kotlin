@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.favorite.bestforyouadapter
+package com.vodovoz.app.feature.favorite.bestforyouadapter
 
 import android.view.ViewGroup
 import com.vodovoz.app.R

@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.favorite
+package com.vodovoz.app.feature.favorite
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

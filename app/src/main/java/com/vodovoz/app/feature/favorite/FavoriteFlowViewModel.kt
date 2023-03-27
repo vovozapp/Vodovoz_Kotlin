@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.favorite
+package com.vodovoz.app.feature.favorite
 
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.cart.CartManager
@@ -131,7 +131,11 @@ class FavoriteFlowViewModel @Inject constructor(
 
     fun changeLayoutManager() {
         val manager = if (state.data.layoutManager == LINEAR) GRID else LINEAR
-        uiStateListener.value = state.copy(data = state.data.copy(layoutManager = manager, itemsList = FavoritesMapper.mapFavoritesListByManager(manager, state.data.itemsList.filterIsInstance<ProductUI>())))
+        uiStateListener.value = state.copy(data = state.data.copy(layoutManager = manager, itemsList = FavoritesMapper.mapFavoritesListByManager(
+            manager,
+            state.data.itemsList.filterIsInstance<ProductUI>()
+        )
+        ))
         changeLayoutManager.value = manager
     }
 
@@ -165,7 +169,10 @@ class FavoriteFlowViewModel @Inject constructor(
                     val response = it.parseFavoriteProductsResponse()
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
-                        val mappedFeed = FavoritesMapper.mapFavoritesListByManager(state.data.layoutManager, data)
+                        val mappedFeed = FavoritesMapper.mapFavoritesListByManager(
+                            state.data.layoutManager,
+                            data
+                        )
 
                         uiStateListener.value = if (data.isEmpty() && !state.loadMore) {
                             state.copy(

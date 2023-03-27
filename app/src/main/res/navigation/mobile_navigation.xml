@@ -317,7 +317,7 @@
         android:label="RegisterFragment" />
     <fragment
         android:id="@+id/favoriteFragment"
-        android:name="com.vodovoz.app.ui.fragment.favorite.FavoriteFragment"
+        android:name="com.vodovoz.app.feature.favorite.FavoriteFragment"
         android:label="FavoriteFragment" >
         <action
             android:id="@+id/action_to_sortProductsSettingsBottomFragment"

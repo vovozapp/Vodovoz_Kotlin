@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.favorite
+package com.vodovoz.app.feature.favorite
 
 import android.content.Context
 import androidx.appcompat.widget.AppCompatImageView
@@ -16,7 +16,7 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlist.adapter.SortedAdapter
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.decoration.ListMarginDecoration
-import com.vodovoz.app.ui.fragment.favorite.FavoriteFlowViewModel.Companion.LINEAR
+import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel.Companion.LINEAR
 
 class FavoritesListController(
     private val viewModel: FavoriteFlowViewModel,

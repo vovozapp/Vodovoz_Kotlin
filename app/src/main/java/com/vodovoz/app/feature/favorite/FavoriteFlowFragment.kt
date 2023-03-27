@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.favorite
+package com.vodovoz.app.feature.favorite
 
 import android.os.Bundle
 import android.view.View
@@ -19,11 +19,11 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Compan
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.adapter.PagingProductsAdapter
-import com.vodovoz.app.ui.fragment.favorite.FavoriteFlowViewModel.Companion.GRID
-import com.vodovoz.app.ui.fragment.favorite.FavoriteFlowViewModel.Companion.LINEAR
-import com.vodovoz.app.ui.fragment.favorite.bestforyouadapter.BestForYouController
-import com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
-import com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter.CategoryTabsFlowController
+import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel.Companion.GRID
+import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel.Companion.LINEAR
+import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
+import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
+import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryUI

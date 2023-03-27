@@ -16,7 +16,7 @@ import com.vodovoz.app.feature.catalog.CatalogViewModel
 import com.vodovoz.app.ui.fragment.concrete_filter.ConcreteFilterViewModel
 import com.vodovoz.app.ui.fragment.contacts.ContactsViewModel
 import com.vodovoz.app.ui.fragment.discount_card.DiscountCardViewModel
-import com.vodovoz.app.ui.fragment.favorite.FavoriteViewModel
+import com.vodovoz.app.feature.favorite.FavoriteViewModel
 import com.vodovoz.app.ui.fragment.full_screen_history_slider.FullScreenHistoriesSliderViewModel
 import com.vodovoz.app.ui.fragment.login.LoginViewModel
 import com.vodovoz.app.ui.fragment.map.MapViewModel

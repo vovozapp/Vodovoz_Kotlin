@@ -1,7 +1,7 @@
-package com.vodovoz.app.ui.fragment.favorite
+package com.vodovoz.app.feature.favorite
 
-import com.vodovoz.app.ui.fragment.favorite.FavoriteFlowViewModel.Companion.GRID
-import com.vodovoz.app.ui.fragment.favorite.FavoriteFlowViewModel.Companion.LINEAR
+import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel.Companion.GRID
+import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel.Companion.LINEAR
 import com.vodovoz.app.ui.model.ProductUI
 
 object FavoritesMapper {

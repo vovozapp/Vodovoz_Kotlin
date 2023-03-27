@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter
+package com.vodovoz.app.feature.favorite.categorytabsdadapter
 
 import android.view.View
 import androidx.core.content.ContextCompat
