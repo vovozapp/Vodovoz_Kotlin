@@ -28,6 +28,7 @@ import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.Pa
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -52,7 +53,7 @@ class FavoriteFlowFragment : BaseFragment() {
     private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
 
     private val categoryTabsController = CategoryTabsFlowController(categoryTabsClickListener())
-    private val bestForYouController = BestForYouController(cartManager, likeManager, getProductsShowClickListener(), getProductsClickListener())
+    private val bestForYouController by lazy { BestForYouController(cartManager, likeManager, getProductsShowClickListener(), getProductsClickListener()) }
     private val favoritesController by lazy {
         FavoritesListController(viewModel, cartManager, likeManager, getProductsClickListener(), requireContext())
     }
@@ -66,12 +67,24 @@ class FavoriteFlowFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        observeUiState()
-        observeResultLiveData()
-        initSearch()
         categoryTabsController.bind(binding.categoriesRecycler, space)
         bestForYouController.bind(binding.bestForYouRv)
         favoritesController.bind(binding.productRecycler, binding.refreshEmptyFavoriteContainer)
+
+        observeUiState()
+        observeResultLiveData()
+        initSearch()
+        observeChangeLayoutManager()
+    }
+
+    private fun observeChangeLayoutManager() {
+        lifecycleScope.launchWhenStarted {
+            viewModel
+                .observeChangeLayoutManager()
+                .collect {
+                    favoritesController.changeLayoutManager(it, binding.productRecycler, binding.imgViewMode)
+                }
+        }
     }
 
     private fun observeUiState() {
@@ -86,8 +99,6 @@ class FavoriteFlowFragment : BaseFragment() {
                     } else {
                         hideLoader()
                     }
-
-                    favoritesController.changeLayoutManager(state.data.layoutManager, binding.productRecycler, binding.imgViewMode)
 
                     val data = state.data
                     if (state.bottomItem != null) {

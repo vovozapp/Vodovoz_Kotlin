@@ -53,7 +53,7 @@ class FavoritesListController(
         with(recyclerView) {
             adapter = favoritesAdapter
             layoutManager = GridLayoutManager(context, 1)
-            updateDecorationsByManager(recyclerView, LINEAR)
+
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
@@ -72,11 +72,11 @@ class FavoritesListController(
     fun changeLayoutManager(manager: String, recyclerView: RecyclerView, imageViewMode: AppCompatImageView) {
         when (manager) {
             FavoriteFlowViewModel.LINEAR -> {
-                imageViewMode.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_table))
+                imageViewMode.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_list))
                 changeToLinearLayoutManager(recyclerView)
             }
             FavoriteFlowViewModel.GRID -> {
-                imageViewMode.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_list))
+                imageViewMode.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_table))
                 changeToGridLayoutManager(recyclerView)
             }
         }

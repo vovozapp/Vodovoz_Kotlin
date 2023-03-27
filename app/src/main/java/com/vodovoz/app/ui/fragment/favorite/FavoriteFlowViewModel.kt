@@ -37,6 +37,9 @@ class FavoriteFlowViewModel @Inject constructor(
     private val likeManager: LikeManager
 ) : PagingStateViewModel<FavoriteFlowViewModel.FavoriteState>(FavoriteState()){
 
+    private val changeLayoutManager = MutableStateFlow(LINEAR)
+    fun observeChangeLayoutManager() = changeLayoutManager.asStateFlow()
+
     fun firstLoad() {
         if (!state.isFirstLoad) {
             uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
@@ -104,6 +107,7 @@ class FavoriteFlowViewModel @Inject constructor(
     fun changeLayoutManager() {
         val manager = if (state.data.layoutManager == LINEAR) GRID else LINEAR
         uiStateListener.value = state.copy(data = state.data.copy(layoutManager = manager))
+        changeLayoutManager.value = manager
     }
 
     private fun fetchFavoriteProductsSorted() {
