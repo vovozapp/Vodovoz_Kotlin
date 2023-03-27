@@ -124,7 +124,7 @@ class FavoriteFragment : BaseFragment() {
                     }
 
                     val data = state.data
-                    if (state.bottomItem != null && state.data.layoutManager == FavoriteFlowViewModel.LINEAR) {
+                    if (state.bottomItem != null && state.data.layoutManager == FavoriteFlowViewModel.LINEAR && state.page != 2) {
                         favoritesController.submitList(data.itemsList + state.bottomItem)
                     } else {
                         favoritesController.submitList(data.itemsList)

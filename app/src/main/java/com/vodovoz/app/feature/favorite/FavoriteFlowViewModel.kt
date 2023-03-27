@@ -55,9 +55,9 @@ class FavoriteFlowViewModel @Inject constructor(
                     }
 
                     uiStateListener.value = if (items.isEmpty()) {
-                        state.copy(error = ErrorState.Empty(), data = state.data.copy(itemsList = items))
+                        state.copy(error = ErrorState.Empty(), data = state.data.copy(itemsList = items), loadingPage = false)
                     } else {
-                        state.copy(data = state.data.copy(itemsList = items))
+                        state.copy(data = state.data.copy(itemsList = items), loadingPage = false)
                     }
                 }
                 .flowOn(Dispatchers.Default)
