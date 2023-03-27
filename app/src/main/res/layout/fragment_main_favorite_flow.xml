@@ -327,7 +327,6 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/productRecycler"
-                android:layout_marginTop="-10dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
