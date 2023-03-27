@@ -8,6 +8,7 @@ import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressViewHolder
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.feature.productlist.viewholders.ProdListViewHolder
 import com.vodovoz.app.feature.productlist.viewholders.ProductsGridViewHolder
 import com.vodovoz.app.ui.model.ProductUI
 

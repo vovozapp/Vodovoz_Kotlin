@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.productlist.adapter
+package com.vodovoz.app.feature.productlist.viewholders
 
 import android.graphics.Color
 import android.graphics.Paint
@@ -16,7 +16,8 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.ViewHolderProductListBinding
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowClickListener
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowPagerAdapter
-import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
+import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
+import com.vodovoz.app.feature.productlist.adapter.SortedAdapter
 import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDepositPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
