@@ -102,7 +102,7 @@ class FavoriteFlowFragment : BaseFragment() {
                     }
 
                     val data = state.data
-                    if (state.bottomItem != null) {
+                    if (state.bottomItem != null && state.data.layoutManager == LINEAR) {
                         favoritesController.submitList(data.itemsList + state.bottomItem)
                     } else {
                         favoritesController.submitList(data.itemsList)
@@ -138,7 +138,11 @@ class FavoriteFlowFragment : BaseFragment() {
 
         val categoryUiList = state.favoriteCategory?.categoryUIList ?: emptyList()
 
-        bindTabsVisibility(categoryUiList.isNotEmpty())
+        if (state.isAvailable) {
+            bindTabsVisibility(categoryUiList.isNotEmpty())
+        } else {
+            bindTabsVisibility(false)
+        }
 
         categoryTabsController.submitList(categoryUiList)
 
@@ -160,7 +164,6 @@ class FavoriteFlowFragment : BaseFragment() {
             binding.availableButton.elevation = resources.getDimension(R.dimen.elevation_1)
             binding.notAvailableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
             binding.notAvailableButton.elevation = 0f
-            bindTabsVisibility(vis = true)
             viewModel.updateByIsAvailable(true)
         }
 
@@ -169,7 +172,6 @@ class FavoriteFlowFragment : BaseFragment() {
             binding.notAvailableButton.elevation = resources.getDimension(R.dimen.elevation_1)
             binding.availableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
             binding.availableButton.elevation = 0f
-            bindTabsVisibility(vis = false)
             viewModel.updateByIsAvailable(false)
         }
 
