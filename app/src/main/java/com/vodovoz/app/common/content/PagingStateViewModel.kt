@@ -1,6 +1,7 @@
 package com.vodovoz.app.common.content
 
 import androidx.lifecycle.ViewModel
+import com.vodovoz.app.common.content.itemadapter.Item
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -23,7 +24,9 @@ data class PagingState<S>(
     val data: S,
     val loadingPage: Boolean,
     val isFirstLoad: Boolean,
-    val error: ErrorState?
+    val error: ErrorState?,
+    val loadMore: Boolean,
+    val bottomItem: Item? = null
 ) {
     companion object {
         fun <S> idle(idleState: S): PagingState<S> {
@@ -31,7 +34,8 @@ data class PagingState<S>(
                 data = idleState,
                 loadingPage = false,
                 isFirstLoad = false,
-                error = null
+                error = null,
+                false
             )
         }
     }

@@ -176,6 +176,31 @@ class MainRepository @Inject constructor(
         )
     }
 
+    //Основная информация об избранных продуктах
+    suspend fun fetchFavoriteProductsSorted(
+        userId: Long?,
+        productIdListStr: String,
+        categoryId: Long?,
+        sort: String?,
+        orientation: String?,
+        page: Int?,
+        isAvailable: Boolean?,
+    ): ResponseBody {
+        return api.fetchFavoriteResponse(
+            userId = userId,
+            productIdList = productIdListStr,
+            categoryId = categoryId,
+            sort = sort,
+            orientation = orientation,
+            action = when(isAvailable) {
+                true -> "nalichie"
+                false -> "netnalichi"
+                else -> null
+            },
+            page = page
+        )
+    }
+
     //Каталог
     suspend fun fetchCatalogResponse(): ResponseBody {
         return api.fetchCatalogResponse()

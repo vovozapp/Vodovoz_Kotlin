@@ -18,6 +18,9 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.DISCOUNT
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
+import com.vodovoz.app.ui.adapter.PagingProductsAdapter
+import com.vodovoz.app.ui.fragment.favorite.FavoriteFlowViewModel.Companion.GRID
+import com.vodovoz.app.ui.fragment.favorite.FavoriteFlowViewModel.Companion.LINEAR
 import com.vodovoz.app.ui.fragment.favorite.bestforyouadapter.BestForYouController
 import com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter.CategoryTabsFlowController
@@ -50,10 +53,14 @@ class FavoriteFlowFragment : BaseFragment() {
 
     private val categoryTabsController = CategoryTabsFlowController(categoryTabsClickListener())
     private val bestForYouController = BestForYouController(cartManager, likeManager, getProductsShowClickListener(), getProductsClickListener())
+    private val favoritesController by lazy {
+        FavoritesListController(viewModel, cartManager, likeManager, getProductsClickListener(), requireContext())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.firstLoad()
+        viewModel.firstLoadSorted()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,6 +71,7 @@ class FavoriteFlowFragment : BaseFragment() {
         initSearch()
         categoryTabsController.bind(binding.categoriesRecycler, space)
         bestForYouController.bind(binding.bestForYouRv)
+        favoritesController.bind(binding.productRecycler, binding.refreshEmptyFavoriteContainer)
     }
 
     private fun observeUiState() {
@@ -73,11 +81,30 @@ class FavoriteFlowFragment : BaseFragment() {
 
                     bindHeader(state.data)
 
+                    if (state.loadingPage) {
+                        showLoader()
+                    } else {
+                        hideLoader()
+                    }
+
+                    favoritesController.changeLayoutManager(state.data.layoutManager, binding.productRecycler, binding.imgViewMode)
+
+                    val data = state.data
+                    if (state.bottomItem != null) {
+                        favoritesController.submitList(data.itemsList + state.bottomItem)
+                    } else {
+                        favoritesController.submitList(data.itemsList)
+                    }
+
+                    showError(state.error)
+
                 }
         }
     }
 
     private fun bindHeader(state: FavoriteFlowViewModel.FavoriteState) {
+
+        binding.imgViewMode.setOnClickListener { viewModel.changeLayoutManager() }
 
         if (state.favoriteCategory != null) {
             showContainer(true)
