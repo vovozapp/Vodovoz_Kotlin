@@ -40,6 +40,31 @@ class FavoriteFlowViewModel @Inject constructor(
     private val changeLayoutManager = MutableStateFlow(LINEAR)
     fun observeChangeLayoutManager() = changeLayoutManager.asStateFlow()
 
+    init {
+        viewModelScope.launch {
+            likeManager
+                .observeLikes()
+                .onEach {
+                    var items = state.data.itemsList.filterIsInstance<ProductUI>()
+                    it.entries.forEach { entry ->
+                        if (!entry.value) {
+                            items = items.filterNot { it.id == entry.key }
+                        } else {
+                            if (!items.any { it.id == entry.key }) refreshSorted()
+                        }
+                    }
+
+                    uiStateListener.value = if (items.isEmpty()) {
+                        state.copy(error = ErrorState.Empty(), data = state.data.copy(itemsList = items))
+                    } else {
+                        state.copy(data = state.data.copy(itemsList = items))
+                    }
+                }
+                .flowOn(Dispatchers.Default)
+                .collect()
+        }
+    }
+
     fun firstLoad() {
         if (!state.isFirstLoad) {
             uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
