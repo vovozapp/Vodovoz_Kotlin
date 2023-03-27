@@ -55,7 +55,7 @@ class MiniCatalogBottomFragment : BottomSheetDialogFragment() {
         binding.rvCategories.adapter = miniCatalogAdapter
         miniCatalogAdapter.categoryUIList = MiniCatalogBottomFragmentArgs.fromBundle(requireArguments()).categoryList.toList()
         miniCatalogAdapter.selectedCategoryId = MiniCatalogBottomFragmentArgs.fromBundle(requireArguments()).categoryId
-        Toast.makeText(requireContext(), miniCatalogAdapter.categoryUIList.size.toString(), Toast.LENGTH_SHORT).show()
+
         miniCatalogAdapter.notifyDataSetChanged()
         binding.rvCategories.addMarginDecoration { rect, view, parent, state ->
             if (parent.getChildAdapterPosition(view) == 0) rect.top = space16

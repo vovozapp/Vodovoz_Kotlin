@@ -56,8 +56,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvCategories"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/btnChoose"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -70,7 +70,8 @@
             android:layout_alignBottom="@+id/rvCategories"
             android:layout_margin="@dimen/space_16"
             android:text="@string/choose_category_btn_text"
-            app:layout_constraintBottom_toBottomOf="@+id/rvCategories"
+            app:layout_constraintTop_toBottomOf="@id/rvCategories"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
