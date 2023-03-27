@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -78,6 +79,18 @@ class MainFragment : Fragment() {
                     } else {
                         binding.circleAmount.text = state.count.toString()
                         binding.circleAmount.isVisible = true
+                        binding.circleAmount
+                            .animate()
+                            .scaleX(1.4f)
+                            .scaleY(1.4f)
+                            .setDuration(500)
+                            .setInterpolator(AccelerateInterpolator())
+                            .withEndAction {
+                                binding.circleAmount.animate()
+                                    .scaleX(1f)
+                                    .scaleY(1f)
+                            }
+                            .start()
                         binding.nvNavigation.menu.getItem(2).title = state.total.toString() + " ₽"
                     }
                 }
