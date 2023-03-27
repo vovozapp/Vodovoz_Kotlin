@@ -18,6 +18,7 @@ import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.Det
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowPagerAdapter
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
+import com.vodovoz.app.feature.productlist.adapter.SortedAdapter
 import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setLimitedText
@@ -304,6 +305,6 @@ class ProductsGridViewHolder(
     }
 
     private fun getItemByPosition(): ProductUI? {
-        return (bindingAdapter as? AvailableProductsAdapter)?.getItem(bindingAdapterPosition) as? ProductUI
+        return (bindingAdapter as? SortedAdapter)?.getItem(bindingAdapterPosition) as? ProductUI
     }
 }

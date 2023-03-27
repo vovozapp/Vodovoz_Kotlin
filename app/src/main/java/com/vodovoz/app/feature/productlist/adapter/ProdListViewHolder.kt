@@ -341,6 +341,6 @@ class ProdListViewHolder(
     }
 
     private fun getItemByPosition(): ProductUI? {
-        return (bindingAdapter as? AvailableProductsAdapter)?.getItem(bindingAdapterPosition) as? ProductUI
+        return (bindingAdapter as? SortedAdapter)?.getItem(bindingAdapterPosition) as? ProductUI
     }
 }
