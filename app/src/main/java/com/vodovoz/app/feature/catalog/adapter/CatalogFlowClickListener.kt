@@ -4,5 +4,5 @@ import com.vodovoz.app.ui.model.CategoryUI
 
 interface CatalogFlowClickListener {
 
-    fun onCategoryClick(category: CategoryUI)
+    fun onCategoryClick(categoryId: Long)
 }
