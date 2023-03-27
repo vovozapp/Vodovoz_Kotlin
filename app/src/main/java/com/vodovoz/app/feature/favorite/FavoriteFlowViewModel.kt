@@ -45,20 +45,7 @@ class FavoriteFlowViewModel @Inject constructor(
             likeManager
                 .observeLikes()
                 .onEach {
-                    var items = state.data.itemsList.filterIsInstance<ProductUI>()
-                    it.entries.forEach { entry ->
-                        if (!entry.value) {
-                            items = items.filterNot { it.id == entry.key }
-                        } else {
-                            if (!items.any { it.id == entry.key }) refreshSorted()
-                        }
-                    }
-
-                    uiStateListener.value = if (items.isEmpty()) {
-                        state.copy(error = ErrorState.Empty(), data = state.data.copy(itemsList = items), loadingPage = false)
-                    } else {
-                        state.copy(data = state.data.copy(itemsList = items), loadingPage = false)
-                    }
+                    if (!state.loadingPage) refreshSorted()
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
@@ -118,7 +105,8 @@ class FavoriteFlowViewModel @Inject constructor(
     }
 
     fun refreshSorted() {
-        uiStateListener.value = state.copy(loadingPage = true, page = 1)
+        uiStateListener.value = state.copy(loadingPage = true, page = 1, loadMore = false)
+        fetchFavoriteProductsHeader()
         fetchFavoriteProductsSorted()
     }
 
