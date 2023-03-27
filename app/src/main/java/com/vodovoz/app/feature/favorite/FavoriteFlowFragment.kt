@@ -158,7 +158,7 @@ class FavoriteFlowFragment : BaseFragment() {
         binding.tvSort.setOnClickListener { showBottomSortSettings(state.sortType) }
         binding.imgCategories.setOnClickListener {
             val category = state.favoriteCategory ?: return@setOnClickListener
-            val id = state.favoriteCategory.id ?: return@setOnClickListener
+            val id = state.selectedCategoryId ?: return@setOnClickListener
             showMiniCatalog(category, id)
         }
 
