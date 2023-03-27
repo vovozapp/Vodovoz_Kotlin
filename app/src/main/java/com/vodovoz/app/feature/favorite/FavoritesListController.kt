@@ -40,8 +40,9 @@ class FavoritesListController(
         DividerItemDecoration(context, VERTICAL)
     }
 
-    fun bind(recyclerView: RecyclerView, refresh: SwipeRefreshLayout) {
+    fun bind(recyclerView: RecyclerView, refresh: SwipeRefreshLayout?) {
         initList(recyclerView)
+        if (refresh == null) return
         bindRefresh(refresh)
     }
 
