@@ -138,16 +138,7 @@ class FavoriteFlowFragment : BaseFragment() {
 
         val categoryUiList = state.favoriteCategory?.categoryUIList ?: emptyList()
 
-        when(categoryUiList.isNotEmpty()) {
-            true -> {
-                binding.categoriesRecycler.visibility = View.VISIBLE
-                binding.imgCategories.visibility = View.VISIBLE
-            }
-            else -> {
-                binding.imgCategories.visibility = View.GONE
-                binding.categoriesRecycler.visibility = View.GONE
-            }
-        }
+        bindTabsVisibility(categoryUiList.isNotEmpty())
 
         categoryTabsController.submitList(categoryUiList)
 
@@ -169,6 +160,7 @@ class FavoriteFlowFragment : BaseFragment() {
             binding.availableButton.elevation = resources.getDimension(R.dimen.elevation_1)
             binding.notAvailableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
             binding.notAvailableButton.elevation = 0f
+            bindTabsVisibility(vis = true)
             viewModel.updateByIsAvailable(true)
         }
 
@@ -177,9 +169,23 @@ class FavoriteFlowFragment : BaseFragment() {
             binding.notAvailableButton.elevation = resources.getDimension(R.dimen.elevation_1)
             binding.availableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
             binding.availableButton.elevation = 0f
+            bindTabsVisibility(vis = false)
             viewModel.updateByIsAvailable(false)
         }
 
+    }
+
+    private fun bindTabsVisibility(vis: Boolean) {
+        when(vis) {
+            true -> {
+                binding.categoriesRecycler.visibility = View.VISIBLE
+                binding.imgCategories.visibility = View.VISIBLE
+            }
+            else -> {
+                binding.imgCategories.visibility = View.GONE
+                binding.categoriesRecycler.visibility = View.GONE
+            }
+        }
     }
 
     private fun showContainer(bool: Boolean) {
