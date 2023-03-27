@@ -106,7 +106,7 @@ class FavoriteFlowViewModel @Inject constructor(
 
     fun changeLayoutManager() {
         val manager = if (state.data.layoutManager == LINEAR) GRID else LINEAR
-        uiStateListener.value = state.copy(data = state.data.copy(layoutManager = manager))
+        uiStateListener.value = state.copy(data = state.data.copy(layoutManager = manager, itemsList = FavoritesMapper.mapFavoritesListByManager(manager, state.data.itemsList.filterIsInstance<ProductUI>())))
         changeLayoutManager.value = manager
     }
 
