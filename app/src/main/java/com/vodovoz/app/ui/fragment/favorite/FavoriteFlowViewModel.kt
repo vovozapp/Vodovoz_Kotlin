@@ -195,22 +195,6 @@ class FavoriteFlowViewModel @Inject constructor(
         return categoryUI
     }
 
-    fun onTabClick(id: Long) {
-        val categoryUI = state.data.favoriteCategory ?: return
-
-        uiStateListener.value = state.copy(
-            data = state.data.copy(
-                favoriteCategory = categoryUI.copy(
-                    categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == id) }
-                ),
-                selectedCategoryId = id
-            ),
-            page = 1,
-            loadMore = false
-        )
-        fetchFavoriteProductsSorted()
-    }
-
     fun isLoginAlready() = dataRepository.isAlreadyLogin()
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
@@ -227,19 +211,56 @@ class FavoriteFlowViewModel @Inject constructor(
 
     fun updateByIsAvailable(bool: Boolean) {
         if (state.data.isAvailable == bool) return
-        uiStateListener.value = state.copy(data = state.data.copy(isAvailable = bool), page = 1, loadMore = false)
+        uiStateListener.value = state.copy(data = state.data.copy(isAvailable = bool), page = 1, loadMore = false, loadingPage = true)
+        fetchFavoriteProductsSorted()
+    }
+
+    fun onTabClick(id: Long) {
+        val categoryUI = state.data.favoriteCategory ?: return
+
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                favoriteCategory = categoryUI.copy(
+                    categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == id) }
+                ),
+                selectedCategoryId = id,
+                sortType = SortType.NO_SORT
+            ),
+            page = 1,
+            loadMore = false
+        )
         fetchFavoriteProductsSorted()
     }
 
     fun updateByCategory(categoryId: Long?) {
         if (state.data.selectedCategoryId == categoryId) return
-        uiStateListener.value = state.copy(data = state.data.copy(selectedCategoryId = categoryId ?: -1), page = 1, loadMore = false)
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                selectedCategoryId = categoryId ?: -1,
+                sortType = SortType.NO_SORT,
+            ),
+            page = 1,
+            loadMore = false,
+            loadingPage = true
+        )
         fetchFavoriteProductsSorted()
     }
 
     fun updateBySortType(sortType: SortType) {
         if (state.data.sortType == sortType) return
-        uiStateListener.value = state.copy(data = state.data.copy(sortType = sortType), page = 1, loadMore = false)
+        val categoryUI = state.data.favoriteCategory
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                sortType = sortType,
+                selectedCategoryId = -1,
+                favoriteCategory = categoryUI?.copy(
+                    categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == -1L) }
+                )
+            ),
+            page = 1,
+            loadMore = false,
+            loadingPage = true
+        )
         fetchFavoriteProductsSorted()
     }
 

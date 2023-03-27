@@ -27,6 +27,7 @@ import com.vodovoz.app.ui.fragment.favorite.categorytabsdadapter.CategoryTabsFlo
 import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
@@ -156,9 +157,6 @@ class FavoriteFlowFragment : BaseFragment() {
         binding.notAvailableTitle.text = state.notAvailableTitle
         binding.availableContainer.isVisible = state.availableTitle != null || state.notAvailableTitle != null
 
-        binding.imgViewMode.setOnClickListener {
-
-        }
         binding.tvSort.setOnClickListener { showBottomSortSettings(state.sortType) }
         binding.imgCategories.setOnClickListener {
             val category = state.favoriteCategory ?: return@setOnClickListener
@@ -211,7 +209,7 @@ class FavoriteFlowFragment : BaseFragment() {
     private fun observeResultLiveData() {
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<Long>(PaginatedProductsCatalogWithoutFiltersFragment.CATEGORY_ID)?.observe(viewLifecycleOwner) { categoryId ->
-                viewModel.updateByCategory(categoryId)
+                viewModel.onTabClick(categoryId)
             }
 
         findNavController().currentBackStackEntry?.savedStateHandle
