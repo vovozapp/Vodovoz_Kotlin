@@ -35,6 +35,7 @@ class SplashFragment : BaseFragment() {
         catalogViewModel.firstLoad()
         cartFlowViewModel.firstLoad()
         favoriteViewModel.firstLoad()
+        favoriteViewModel.firstLoadSorted()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
