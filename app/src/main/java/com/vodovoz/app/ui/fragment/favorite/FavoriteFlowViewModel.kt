@@ -204,8 +204,11 @@ class FavoriteFlowViewModel @Inject constructor(
                     categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == id) }
                 ),
                 selectedCategoryId = id
-            )
+            ),
+            page = 1,
+            loadMore = false
         )
+        fetchFavoriteProductsSorted()
     }
 
     fun isLoginAlready() = dataRepository.isAlreadyLogin()
