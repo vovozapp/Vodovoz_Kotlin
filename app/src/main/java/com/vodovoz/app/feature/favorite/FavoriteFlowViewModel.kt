@@ -84,8 +84,9 @@ class FavoriteFlowViewModel @Inject constructor(
                                 favoriteCategory = checkSelectedFilter(data.favoriteCategoryUI),
                                 bestForYouCategoryDetailUI = data.bestForYouCategoryDetailUI,
                                 availableTitle = data.availableTitle,
-                                notAvailableTitle = data.notAvailableTitle
-                            )
+                                notAvailableTitle = data.notAvailableTitle,
+                            ),
+                            loadingPage = false
                         )
                     } else {
                         uiStateListener.value =
@@ -105,7 +106,7 @@ class FavoriteFlowViewModel @Inject constructor(
     }
 
     fun refreshSorted() {
-        uiStateListener.value = state.copy(loadingPage = true, page = 1, loadMore = false)
+        uiStateListener.value = state.copy(loadingPage = true, page = 1, loadMore = false, bottomItem = null)
         fetchFavoriteProductsHeader()
         fetchFavoriteProductsSorted()
     }

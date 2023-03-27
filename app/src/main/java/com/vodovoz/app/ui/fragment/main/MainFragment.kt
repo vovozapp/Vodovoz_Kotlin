@@ -73,7 +73,7 @@ class MainFragment : Fragment() {
             tabManager
                 .observeBottomNavCartState()
                 .collect {state ->
-                    if (state == null) {
+                    if (state == null || state.count == 0) {
                         binding.circleAmount.isVisible = false
                         binding.nvNavigation.menu.getItem(2).title = "Корзина"
                     } else {
