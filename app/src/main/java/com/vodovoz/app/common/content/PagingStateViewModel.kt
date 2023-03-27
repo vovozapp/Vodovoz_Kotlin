@@ -26,7 +26,8 @@ data class PagingState<S>(
     val isFirstLoad: Boolean,
     val error: ErrorState?,
     val loadMore: Boolean,
-    val bottomItem: Item? = null
+    val bottomItem: Item? = null,
+    val page: Int? = 1,
 ) {
     companion object {
         fun <S> idle(idleState: S): PagingState<S> {

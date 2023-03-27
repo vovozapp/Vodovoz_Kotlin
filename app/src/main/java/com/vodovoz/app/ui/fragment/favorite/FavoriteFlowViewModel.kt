@@ -6,6 +6,7 @@ import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.data.DataRepository
@@ -89,12 +90,15 @@ class FavoriteFlowViewModel @Inject constructor(
     }
 
     fun refreshSorted() {
-        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(page = 1))
+        uiStateListener.value = state.copy(loadingPage = true, page = 1)
         fetchFavoriteProductsSorted()
     }
 
     fun loadMoreSorted() {
-
+        if (state.bottomItem == null && state.page != null) {
+            uiStateListener.value = state.copy(loadMore = true, bottomItem = BottomProgressItem())
+            fetchFavoriteProductsSorted()
+        }
     }
 
     fun changeLayoutManager() {
@@ -117,7 +121,7 @@ class FavoriteFlowViewModel @Inject constructor(
                         sort = state.data.sortType.value,
                         orientation = state.data.sortType.orientation,
                         isAvailable = state.data.isAvailable,
-                        page = state.data.page,
+                        page = state.page,
                         productIdListStr = ""
                     )
                 )
@@ -132,12 +136,37 @@ class FavoriteFlowViewModel @Inject constructor(
                     val response = it.parseFavoriteProductsResponse()
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
+                        val mappedFeed = FavoritesMapper.mapFavoritesListByManager(state.data.layoutManager, data)
 
+                        uiStateListener.value = if (data.isEmpty() && !state.loadMore) {
+                            state.copy(
+                                error = ErrorState.Empty(),
+                                loadingPage = false,
+                                loadMore = false,
+                                bottomItem = null,
+                                page = 1
+                            )
+                        } else {
 
+                            val itemsList =  if (state.loadMore) {
+                                state.data.itemsList + mappedFeed
+                            } else {
+                                mappedFeed
+                            }
+
+                            state.copy(
+                                page = if (mappedFeed.isEmpty()) null else state.page?.plus(1),
+                                loadingPage = false,
+                                data = state.data.copy(itemsList = itemsList),
+                                error = null,
+                                loadMore = false,
+                                bottomItem = null
+                            )
+                        }
 
                     } else {
                         uiStateListener.value =
-                            state.copy(loadingPage = false, error = ErrorState.Error())
+                            state.copy(loadingPage = false, error = ErrorState.Error(), page = 1, loadMore = false)
                     }
                 }
                 .flowOn(Dispatchers.Default)
@@ -191,19 +220,19 @@ class FavoriteFlowViewModel @Inject constructor(
 
     fun updateByIsAvailable(bool: Boolean) {
         if (state.data.isAvailable == bool) return
-        uiStateListener.value = state.copy(data = state.data.copy(isAvailable = bool, page = 1, loadMoreSorted = false))
+        uiStateListener.value = state.copy(data = state.data.copy(isAvailable = bool), page = 1, loadMore = false)
         fetchFavoriteProductsSorted()
     }
 
     fun updateByCategory(categoryId: Long?) {
         if (state.data.selectedCategoryId == categoryId) return
-        uiStateListener.value = state.copy(data = state.data.copy(selectedCategoryId = categoryId ?: -1, page = 1, loadMoreSorted = false))
+        uiStateListener.value = state.copy(data = state.data.copy(selectedCategoryId = categoryId ?: -1), page = 1, loadMore = false)
         fetchFavoriteProductsSorted()
     }
 
     fun updateBySortType(sortType: SortType) {
         if (state.data.sortType == sortType) return
-        uiStateListener.value = state.copy(data = state.data.copy(sortType = sortType, page = 1, loadMoreSorted = false))
+        uiStateListener.value = state.copy(data = state.data.copy(sortType = sortType), page = 1, loadMore = false)
         fetchFavoriteProductsSorted()
     }
 
@@ -214,10 +243,8 @@ class FavoriteFlowViewModel @Inject constructor(
         val notAvailableTitle: String? = null,
         val sortType: SortType = SortType.NO_SORT,
         val isAvailable: Boolean = true,
-        val page: Int = 1,
-        val isFirstLoadSorted: Boolean = false,
-        val loadMoreSorted: Boolean = false,
         val selectedCategoryId: Long = -1,
+        val isFirstLoadSorted: Boolean = false,
         val itemsList: List<Item> = emptyList(),
         val layoutManager: String = LINEAR
     ) : State
