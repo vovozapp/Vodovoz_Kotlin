@@ -152,7 +152,7 @@ class ProductsListFlowFragment : BaseFragment() {
 
         debugLog { "spasibo cat ui list size ${state.categoryHeader.categoryUIList.size}" }
 
-        binding.categoryContainer.isVisible = state.categoryHeader.categoryUIList.size > 1
+        binding.changeCategoryContainer.isVisible = state.categoryHeader.categoryUIList.size > 1
 
         binding.categoryContainer.setOnClickListener {
             val id = state.categoryHeader.id ?: return@setOnClickListener
