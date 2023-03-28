@@ -17,6 +17,7 @@ import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogFragment
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -46,6 +47,7 @@ class SingleRootCatalogBottomFragment : ViewStateBaseBottomFragment() {
     }
 
     private fun getArgs() {
+        debugLog { "spasibo ${SingleRootCatalogBottomFragmentArgs.fromBundle(requireArguments()).categoryId}" }
         viewModel.selectedCategoryId = SingleRootCatalogBottomFragmentArgs.fromBundle(requireArguments()).categoryId
         viewModel.fetchCategory()
     }

@@ -45,14 +45,14 @@ class ProductsListFlowViewModel @Inject constructor(
     private val likeManager: LikeManager
 ) : PagingStateViewModel<ProductsListFlowViewModel.ProductsListState>(ProductsListState()) {
 
-    private var categoryId = savedState.get<Long>("categoryId")
+    private var categoryId = savedState.get<Long>("categoryId") ?: 0
 
     private val changeLayoutManager = MutableStateFlow(LINEAR)
     fun observeChangeLayoutManager() = changeLayoutManager.asStateFlow()
 
     private fun fetchCategoryHeader() {
         viewModelScope.launch {
-            flow { emit(repository.fetchCategoryHeader(categoryId ?: return@flow)) }
+            flow { emit(repository.fetchCategoryHeader(categoryId)) }
                 .catch {
                     debugLog { "fetch category header error ${it.localizedMessage}" }
                     uiStateListener.value =
@@ -63,9 +63,12 @@ class ProductsListFlowViewModel @Inject constructor(
                     val response = it.parseCategoryHeaderResponse()
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
+
+                        debugLog { "spasibo catId $categoryId new ${data.id}" }
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
-                                categoryHeader = data
+                                categoryHeader = data,
+                                categoryId = categoryId
                             ),
                             loadingPage = false
                         )
@@ -217,7 +220,8 @@ class ProductsListFlowViewModel @Inject constructor(
         uiStateListener.value = state.copy(
             data = state.data.copy(
                 filterBundle = FiltersBundleUI(),
-                filtersAmount = fetchFiltersAmount(FiltersBundleUI())
+                filtersAmount = fetchFiltersAmount(FiltersBundleUI()),
+                categoryId = categoryId
             ),
             page = 1,
             loadMore = false,
@@ -282,7 +286,8 @@ class ProductsListFlowViewModel @Inject constructor(
             ),
             page = 1,
             loadMore = false,
-            loadingPage = true
+            loadingPage = true,
+            bottomItem = null
         )
         fetchProductsByCategory()
     }
@@ -301,6 +306,7 @@ class ProductsListFlowViewModel @Inject constructor(
     }
 
     data class ProductsListState(
+        val categoryId: Long = 0,
         val categoryHeader: CategoryUI? = null,
         val filterBundle: FiltersBundleUI = FiltersBundleUI(),
         val filtersAmount: Int = 0,

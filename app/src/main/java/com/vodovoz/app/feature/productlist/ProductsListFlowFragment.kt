@@ -147,15 +147,16 @@ class ProductsListFlowFragment : BaseFragment() {
         binding.tvSort.setOnClickListener { showBottomSortSettings(state.sortType) }
         binding.imgFilters.setOnClickListener {
             val filterBundle = state.filterBundle
-            val id = state.categoryHeader.id ?: return@setOnClickListener
-            debugLog { "spasibo filter bundle $filterBundle, id $id" }
+            val id = state.categoryId
+            if (id == 0L) return@setOnClickListener
             showAllFiltersFragment(filterBundle, id)
         }
 
         binding.changeCategoryContainer.isVisible = state.categoryHeader.categoryUIList.size > 1
 
         binding.categoryContainer.setOnClickListener {
-            val id = state.categoryHeader.id ?: return@setOnClickListener
+            val id = state.categoryId
+            if (id == 0L) return@setOnClickListener
             showSingleRootCatalogCatalog(id)
         }
         binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
