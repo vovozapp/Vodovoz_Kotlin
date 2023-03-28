@@ -83,7 +83,7 @@ class MainFragment : Fragment() {
                             .animate()
                             .scaleX(1.4f)
                             .scaleY(1.4f)
-                            .setDuration(500)
+                            .setDuration(300)
                             .setInterpolator(AccelerateInterpolator())
                             .withEndAction {
                                 binding.circleAmount.animate()
