@@ -153,7 +153,7 @@ class ProductsListFlowFragment : BaseFragment() {
             showAllFiltersFragment(filterBundle, id)
         }
 
-        binding.changeCategoryContainer.isVisible = state.categoryHeader.categoryUIList.size > 1
+        binding.changeCategoryContainer.isVisible = state.showCatagoryContainer
 
         binding.categoryContainer.setOnClickListener {
             val id = state.categoryId
@@ -182,11 +182,9 @@ class ProductsListFlowFragment : BaseFragment() {
         when(brandList.isNotEmpty()) {
             true -> {
                 binding.brandTabsContainer.visibility = View.VISIBLE
-                binding.changeCategoryContainer.visibility = View.GONE
             }
             else -> {
                 binding.brandTabsContainer.visibility = View.GONE
-                binding.changeCategoryContainer.visibility = View.VISIBLE
             }
         }
         brandController.submitList(brandList)

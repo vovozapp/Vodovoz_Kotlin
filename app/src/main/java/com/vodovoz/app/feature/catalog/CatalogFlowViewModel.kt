@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.catalog
 
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.catalog.CatalogManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.catalog.CatalogResponseJsonParser.parseCatalogResponse
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CatalogFlowViewModel @Inject constructor(
-    private val mainRepository: MainRepository
+    private val mainRepository: MainRepository,
+    private val catalogManager: CatalogManager
 ) : PagingStateViewModel<CatalogFlowViewModel.CatalogState>(CatalogState()) {
 
     fun firstLoad() {
@@ -55,11 +57,13 @@ class CatalogFlowViewModel @Inject constructor(
                             loadingPage = false
                         )
                         is ResponseEntity.Success -> {
+                            val catalog = response.data.mapToUI()
                             uiStateListener.value = state.copy(
                                 loadingPage = false,
-                                data = state.data.copy(itemsList = response.data.mapToUI()),
+                                data = state.data.copy(itemsList = catalog),
                                 error = null
                             )
+                            catalogManager.saveCatalog(catalog)
                         }
                     }
                 }

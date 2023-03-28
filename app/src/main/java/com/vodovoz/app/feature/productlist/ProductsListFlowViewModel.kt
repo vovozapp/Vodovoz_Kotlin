@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.productlist
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.cart.CartManager
+import com.vodovoz.app.common.catalog.CatalogManager
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
@@ -42,7 +43,8 @@ class ProductsListFlowViewModel @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val dataRepository: DataRepository,
     private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    private val likeManager: LikeManager,
+    private val catalogManager: CatalogManager
 ) : PagingStateViewModel<ProductsListFlowViewModel.ProductsListState>(ProductsListState()) {
 
     private var categoryId = savedState.get<Long>("categoryId") ?: 0
@@ -64,11 +66,11 @@ class ProductsListFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
 
-                        debugLog { "spasibo catId $categoryId new ${data.id}" }
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
                                 categoryHeader = data,
-                                categoryId = categoryId
+                                categoryId = categoryId,
+                                showCatagoryContainer = catalogManager.hasRootItems(categoryId)
                             ),
                             loadingPage = false
                         )
@@ -313,7 +315,8 @@ class ProductsListFlowViewModel @Inject constructor(
         val sortType: SortType = SortType.NO_SORT,
         val isFirstLoadSorted: Boolean = false,
         val itemsList: List<Item> = emptyList(),
-        val layoutManager: String = LINEAR
+        val layoutManager: String = LINEAR,
+        val showCatagoryContainer: Boolean = false
     ) : State
 
     companion object {
