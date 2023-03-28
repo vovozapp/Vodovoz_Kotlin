@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,9 +17,21 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
+import com.vodovoz.app.common.cart.CartManager
+import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentProductsBinding
+import com.vodovoz.app.databinding.FragmentProductsFlowBinding
+import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
+import com.vodovoz.app.feature.productlist.ProductsListFlowController
+import com.vodovoz.app.feature.productlist.ProductsListFlowViewModel
+import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
+import com.vodovoz.app.feature.productlist.brand.BrandFlowClickListener
+import com.vodovoz.app.feature.productlist.brand.BrandFlowController
 import com.vodovoz.app.ui.adapter.PagingProductsAdapter
 import com.vodovoz.app.ui.adapter.PagingProductsAdapter.ViewMode
 import com.vodovoz.app.ui.adapter.PrimaryProductFiltersAdapter
@@ -39,9 +52,10 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
+class PaginatedProductsCatalogFragment : BaseFragment() {
 
     companion object {
         const val CATEGORY_ID = "CATEGORY_ID"
@@ -49,140 +63,55 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
         const val FILTER_BUNDLE = "FILTER_BUNDLE"
     }
 
-    private lateinit var binding: FragmentProductsBinding
-    private val viewModel: PaginatedProductsCatalogViewModel by viewModels()
+    override fun layout(): Int = R.layout.fragment_products_flow
 
-    private val compositeDisposable = CompositeDisposable()
+    private val binding: FragmentProductsFlowBinding by viewBinding {
+        FragmentProductsFlowBinding.bind(
+            contentView
+        )
+    }
 
-    private var viewMode: ViewMode = ViewMode.LIST
-    private val onUpdateSubject: PublishSubject<Boolean> = PublishSubject.create()
-    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
-    private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
-    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
-    private val onBrandClickSubject: PublishSubject<FilterValueUI> = PublishSubject.create()
+    private val viewModel: ProductsListFlowViewModel by viewModels()
 
-    private var productAdapter: PagingProductsAdapter = PagingProductsAdapter(
-        onProductClick = {
-            findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToProductDetailFragment(it))
-        },
-        onChangeFavoriteStatus = { productId, status ->
-            viewModel.changeFavoriteStatus(productId, status)
-        },
-        onChangeCartQuantity = { productId, quantity ->
-            viewModel.changeCart(productId, quantity)
-        },
-        onNotAvailableMore = {},
-        onNotifyWhenBeAvailable = { id, name, picture ->
-            findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToPreOrderBS(
-                id, name, picture
-            ))
-        },
-        productDiffItemCallback = ProductDiffItemCallback(),
-        viewMode = viewMode
-    )
+    @Inject
+    lateinit var cartManager: CartManager
 
-    private val primaryProductFiltersAdapter = PrimaryProductFiltersAdapter(onBrandClickSubject)
-
-    //Grid
-    private lateinit var gridLayoutManager: GridLayoutManager
-    private lateinit var linearLayoutManager: LinearLayoutManager
+    @Inject
+    lateinit var likeManager: LikeManager
 
     private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
-    private val linearMarginDecoration: RecyclerView.ItemDecoration by lazy {
-        object  : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State
-            ) {
-                with(outRect) {
-                    top = space/2
-                    bottom = space/2
-                    right = space
-                }
-            }
-        }
-    }
-    private val linearDividerItemDecoration: DividerItemDecoration by lazy {
-        DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
-    }
-    private val gridMarginDecoration: RecyclerView.ItemDecoration by lazy {
-        object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State
-            ) {
-                with(outRect) {
-                    if (parent.getChildAdapterPosition(view) % 2 == 0) {
-                        left = space
-                        right = space/2
-                    } else {
-                        left = space/2
-                        right = space
-                    }
-                    top = space/2
-                    bottom = space/2
-                }
-            }
-        }
+
+    private val brandController = BrandFlowController(brandClickListener())
+    private val productsListFlowController by lazy {
+        ProductsListFlowController(viewModel, cartManager, likeManager, getProductsClickListener(), requireContext())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-        getArgs()
-        subscribeSubjects()
+        viewModel.firstLoad()
+        viewModel.firstLoadSorted()
     }
 
-    private fun subscribeSubjects() {
-        onProductClickSubject.subscribeBy { productId ->
-            findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToProductDetailFragment(productId))
-        }.addTo(compositeDisposable)
-        onFavoriteClickSubject.subscribeBy { pair ->
-            viewModel.changeFavoriteStatus(pair.first, pair.second)
-        }.addTo(compositeDisposable)
-        onChangeProductQuantitySubject.subscribeBy { pair ->
-            viewModel.changeCart(pair.first, pair.second)
-        }.addTo(compositeDisposable)
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    private fun getArgs() {
-        viewModel.updateArgs(PaginatedProductsCatalogFragmentArgs.fromBundle(requireArguments()).categoryId)
-    }
+        brandController.bind(binding.brandRecycler, space)
+        productsListFlowController.bind(binding.productRecycler, null)
 
-    override fun setContentView(
-        inflater: LayoutInflater,
-        container: ViewGroup
-    ) = FragmentProductsBinding.inflate(
-        inflater,
-        container,
-        false
-    ).apply { binding = this }.root
-
-    override fun update() { viewModel.updateCategoryHeader() }
-
-    override fun initView() {
-        initLayoutManagers()
-        initProductsRecycler()
-        initBackButton()
+        observeUiState()
         observeResultLiveData()
-        initHeader()
+        observeChangeLayoutManager()
+        initBackButton()
         initSearch()
-        initPrimaryFiltersRecycler()
-        observeViewModel()
     }
 
-    private fun initLayoutManagers() {
-        linearLayoutManager = LinearLayoutManager(requireContext())
-        gridLayoutManager = GridLayoutManager(requireContext(), 2).apply {
-            spanSizeLookup =  object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    return if (position == productAdapter.itemCount && productAdapter.itemCount > 0) 2
-                    else 1
-                }
+    private fun initSearch() {
+        binding.incAppBar.incSearch.clSearchContainer.setOnClickListener {
+            findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
+        }
+        binding.incAppBar.incSearch.etSearch.setOnFocusChangeListener { _, isFocusable ->
+            if (isFocusable) {
+                findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
             }
         }
     }
@@ -198,94 +127,125 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
         )
     }
 
-    private fun initHeader() {
-        binding.imgViewMode.setOnClickListener { changeViewMode() }
-        binding.tvSort.setOnClickListener { showBottomSortSettings() }
-        binding.imgFilters.setOnClickListener { showAllFiltersFragment() }
-        binding.categoryContainer.setOnClickListener { showSingleRootCatalogCatalog() }
+    private fun observeChangeLayoutManager() {
+        lifecycleScope.launchWhenStarted {
+            viewModel
+                .observeChangeLayoutManager()
+                .collect {
+                    productsListFlowController.changeLayoutManager(it, binding.productRecycler, binding.imgViewMode)
+                }
+        }
+    }
+
+    private fun observeUiState() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.observeUiState()
+                .collect { state ->
+
+                    bindHeader(state.data)
+
+                    if (state.loadingPage) {
+                        showLoader()
+                    } else {
+                        hideLoader()
+                        binding.sortContainer.isVisible = true
+                        binding.imgShare.isVisible = true
+                    }
+
+                    val data = state.data
+                    if (state.bottomItem != null && state.data.layoutManager == FavoriteFlowViewModel.LINEAR) {
+                        productsListFlowController.submitList(data.itemsList + state.bottomItem)
+                    } else {
+                        productsListFlowController.submitList(data.itemsList)
+                    }
+
+                    if (state.error !is ErrorState.Empty) {
+                        showError(state.error)
+                    }
+                }
+        }
+    }
+
+    private fun bindHeader(state: ProductsListFlowViewModel.ProductsListState) {
+
+        if (state.categoryHeader == null) return
+
+        binding.imgViewMode.setOnClickListener { viewModel.changeLayoutManager() }
+        binding.tvSort.setOnClickListener { showBottomSortSettings(state.sortType) }
+        binding.imgFilters.setOnClickListener {
+            val filterBundle = state.filterBundle
+            val id = state.categoryId
+            if (id == 0L) return@setOnClickListener
+            showAllFiltersFragment(filterBundle, id)
+        }
+
+        binding.changeCategoryContainer.isVisible = state.showCatagoryContainer
+
+        binding.categoryContainer.setOnClickListener {
+            val id = state.categoryId
+            if (id == 0L) return@setOnClickListener
+            showSingleRootCatalogCatalog(id)
+        }
         binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
-    }
 
-    private fun initSearch() {
-        binding.incAppBar.incSearch.clSearchContainer.setOnClickListener {
-            findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
-        }
-        binding.incAppBar.incSearch.etSearch.setOnFocusChangeListener { _, isFocusable ->
-            if (isFocusable) {
-                findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
-            }
-        }
-    }
+        binding.tvSort.text = state.sortType.sortName
 
-    private fun initPrimaryFiltersRecycler() {
-        binding.brandRecycler.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.brandRecycler.adapter = primaryProductFiltersAdapter
-        binding.brandRecycler.addItemDecoration(ProductsFiltersMarginDecoration(space/2))
-        onBrandClickSubject.subscribeBy { filterValue ->
-            viewModel.addPrimaryFilterValue(filterValue)
-        }
-    }
-
-    private fun changeViewMode() {
-        var firstVisiblePosition = -1
-        var lastVisiblePosition = -1
-
-        when (viewMode) {
-            ViewMode.GRID -> {
-                viewMode = ViewMode.LIST
-                firstVisiblePosition = gridLayoutManager.findFirstVisibleItemPosition()
-                lastVisiblePosition = gridLayoutManager.findLastVisibleItemPosition()
-            }
-            ViewMode.LIST -> {
-                viewMode = ViewMode.GRID
-                firstVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition()
-                lastVisiblePosition = linearLayoutManager.findLastVisibleItemPosition()
+        when(state.filtersAmount) {
+            0 -> binding.tvFiltersAmount.visibility = View.INVISIBLE
+            else -> {
+                binding.tvFiltersAmount.text = state.filtersAmount.toString()
+                binding.tvFiltersAmount.visibility = View.VISIBLE
             }
         }
 
-        productAdapter.viewMode = viewMode
-        initProductsRecycler()
 
-        for (position in firstVisiblePosition..lastVisiblePosition) {
-            productAdapter.notifyItemChanged(position)
-        }
+        binding.tvCategoryName.text = state.categoryHeader.name
+        binding.tvProductAmount.text = state.categoryHeader.productAmount.toString()
+        binding.additionalName.text = state.categoryHeader.primaryFilterName
 
-        linearLayoutManager.scrollToPositionWithOffset(firstVisiblePosition, 0)
-        gridLayoutManager.scrollToPositionWithOffset(firstVisiblePosition, 0)
-    }
+        val brandList = state.categoryHeader.primaryFilterValueList
 
-    private fun initProductsRecycler() {
-        binding.productRecycler.setScrollElevation(binding.appBar)
-        when (viewMode) {
-            ViewMode.LIST -> {
-                viewMode = ViewMode.LIST
-                binding.imgViewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_list))
-                binding.productRecycler.layoutManager = linearLayoutManager
-                binding.productRecycler.removeItemDecoration(gridMarginDecoration)
-                binding.productRecycler.addItemDecoration(linearMarginDecoration)
-                binding.productRecycler.addItemDecoration(linearDividerItemDecoration)
+        when(brandList.isNotEmpty()) {
+            true -> {
+                binding.brandTabsContainer.visibility = View.VISIBLE
             }
-            ViewMode.GRID -> {
-                viewMode = ViewMode.GRID
-                binding.imgViewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_table))
-                binding.productRecycler.layoutManager = gridLayoutManager
-                binding.productRecycler.removeItemDecoration(linearMarginDecoration)
-                binding.productRecycler.removeItemDecoration(linearDividerItemDecoration)
-                binding.productRecycler.addItemDecoration(gridMarginDecoration)
+            else -> {
+                binding.brandTabsContainer.visibility = View.GONE
             }
         }
+        brandController.submitList(brandList)
     }
+
+    private fun brandClickListener() : BrandFlowClickListener {
+        return object : BrandFlowClickListener {
+            override fun onBrandClick(filterValue: FilterValueUI) {
+                viewModel.addPrimaryFilterValue(filterValue)
+            }
+
+        }
+    }
+
+    private fun showAllFiltersFragment(filterBundle: FiltersBundleUI, id: Long) = findNavController().navigate(
+        PaginatedProductsCatalogFragmentDirections.actionToProductFiltersFragment(filterBundle, id)
+    )
+
+    private fun showSingleRootCatalogCatalog(id: Long) = findNavController().navigate(
+        PaginatedProductsCatalogFragmentDirections.actionToSingleRootCatalogBottomFragment(id)
+    )
+
+    private fun showBottomSortSettings(sortType: SortType) = findNavController().navigate(
+        PaginatedProductsCatalogFragmentDirections.actionToSortProductsSettingsBottomFragment(sortType.name)
+    )
 
     private fun observeResultLiveData() {
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<Long>(CATEGORY_ID)?.observe(viewLifecycleOwner) { categoryId ->
-                viewModel.updateArgs(categoryId)
+                viewModel.updateByCat(categoryId)
             }
 
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<String>(SORT_TYPE)?.observe(viewLifecycleOwner) { sortType ->
-                viewModel.updateSortType(SortType.valueOf(sortType))
+                viewModel.updateBySortType(SortType.valueOf(sortType))
             }
 
         findNavController().currentBackStackEntry?.savedStateHandle
@@ -294,115 +254,31 @@ class PaginatedProductsCatalogFragment : ViewStateBaseFragment() {
             }
     }
 
-    private fun observeViewModel() {
-        viewModel.sortTypeLD.observe(viewLifecycleOwner) { sortType ->
-            binding.tvSort.text = sortType.sortName
-        }
-
-        viewModel.filtersAmountLD.observe(viewLifecycleOwner) { amount ->
-            when(amount) {
-                0 -> binding.tvFiltersAmount.visibility = View.INVISIBLE
-                else -> {
-                    binding.tvFiltersAmount.text = amount.toString()
-                    binding.tvFiltersAmount.visibility = View.VISIBLE
-                }
+    private fun getProductsClickListener(): ProductsClickListener {
+        return object : ProductsClickListener {
+            override fun onProductClick(id: Long) {
+                findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToProductDetailFragment(id))
             }
-        }
 
-        viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
-            when(state) {
-                is ViewState.Hide -> onStateHide()
-                is ViewState.Loading -> onStateLoading()
-                is ViewState.Error -> onStateError(state.errorMessage)
-                is ViewState.Success -> {}
+            override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
+                findNavController().navigate(
+                    PaginatedProductsCatalogFragmentDirections.actionToPreOrderBS(
+                        id,
+                        name,
+                        detailPicture
+                    )
+                )
             }
-        }
 
-        viewModel.categoryUILD.observe(viewLifecycleOwner) { categoryUI ->
-            updateHeader(categoryUI)
-            updatePager()
+            override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
+                viewModel.changeCart(id, cartQuantity, oldQuantity)
+            }
+
+            override fun onFavoriteClick(id: Long, isFavorite: Boolean) {
+                viewModel.changeFavoriteStatus(id, isFavorite)
+            }
+
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun updateHeader(categoryUI: CategoryUI) {
-        binding.tvCategoryName.text = categoryUI.name
-        binding.tvProductAmount.text = categoryUI.productAmount.toString()
-        binding.additionalName.text = categoryUI.primaryFilterName
-
-        when(categoryUI.primaryFilterValueList.isNotEmpty()) {
-            true -> {
-                binding.brandTabsContainer.visibility = View.VISIBLE
-                binding.changeCategoryContainer.visibility = View.GONE
-            }
-            else -> {
-                binding.brandTabsContainer.visibility = View.GONE
-                binding.changeCategoryContainer.visibility = View.VISIBLE
-            }
-        }
-
-        primaryProductFiltersAdapter.brandFilterValueList = categoryUI.primaryFilterValueList
-        primaryProductFiltersAdapter.notifyDataSetChanged()
-    }
-
-    private fun updatePager() {
-        productAdapter = PagingProductsAdapter(
-            onProductClick = {
-                findNavController().navigate(ProfileFragmentDirections.actionToProductDetailFragment(it))
-            },
-            onChangeFavoriteStatus = { productId, status ->
-                viewModel.changeFavoriteStatus(productId, status)
-            },
-            onChangeCartQuantity = { productId, quantity ->
-                viewModel.changeCart(productId, quantity)
-            },
-            onNotAvailableMore = {},
-            onNotifyWhenBeAvailable = { id, name, picture ->
-                findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToPreOrderBS(
-                    id, name, picture
-                ))
-            },
-            productDiffItemCallback = ProductDiffItemCallback(),
-            viewMode = viewMode
-        )
-
-        productAdapter.addLoadStateListener { state ->
-            when (state.refresh) {
-                is LoadState.Loading -> {}
-                is LoadState.Error -> onStateError("Ошибка сети")
-                is LoadState.NotLoading -> onStateSuccess()
-            }
-        }
-
-        binding.productRecycler.adapter = productAdapter.withLoadStateHeaderAndFooter(
-            header = LoadStateAdapter(onUpdateSubject),
-            footer = LoadStateAdapter(onUpdateSubject)
-        )
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.updateProductList().collectLatest { productList ->
-                productAdapter.submitData(productList)
-            }
-        }
-    }
-
-    private fun showBottomSortSettings() = findNavController().navigate(
-        PaginatedProductsCatalogFragmentDirections.actionToSortProductsSettingsBottomFragment(viewModel.sortType.name)
-    )
-
-    private fun showAllFiltersFragment() = findNavController().navigate(
-        PaginatedProductsCatalogFragmentDirections.actionToProductFiltersFragment(
-            viewModel.filterBundle,
-            viewModel.categoryId
-        )
-    )
-
-    private fun showSingleRootCatalogCatalog() = findNavController().navigate(
-        PaginatedProductsCatalogFragmentDirections.actionToSingleRootCatalogBottomFragment(viewModel.categoryId)
-    )
-
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.dispose()
-    }
 }

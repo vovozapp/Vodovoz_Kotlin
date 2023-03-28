@@ -116,13 +116,13 @@ class ProductsListFlowFragment : BaseFragment() {
                 .collect { state ->
 
                     bindHeader(state.data)
-                    binding.sortContainer.isVisible = !state.loadingPage
-                    binding.imgShare.isVisible = !state.loadingPage
 
                     if (state.loadingPage) {
                         showLoader()
                     } else {
                         hideLoader()
+                        binding.sortContainer.isVisible = true
+                        binding.imgShare.isVisible = true
                     }
 
                     val data = state.data
