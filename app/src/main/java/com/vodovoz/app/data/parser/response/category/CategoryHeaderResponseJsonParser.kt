@@ -7,6 +7,7 @@ import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.Objects.isNull
 
 object CategoryHeaderResponseJsonParser {
 
@@ -35,7 +36,11 @@ object CategoryHeaderResponseJsonParser {
                         productAmount = responseJson.getString("tovarvsego"),
                         name = responseJson.getString("titlerazdel"),
                         primaryFilterName = primaryFilterName,
-                        primaryFilterValueList = primaryFilterValueList
+                        primaryFilterValueList = primaryFilterValueList,
+                        shareUrl = when(isNull("detail_page_url")) {
+                            true -> ""
+                            false -> responseJson.getString("detail_page_url")
+                        }
                     )
                 )
             }
