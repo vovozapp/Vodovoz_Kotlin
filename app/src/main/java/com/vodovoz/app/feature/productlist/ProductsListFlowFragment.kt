@@ -148,6 +148,7 @@ class ProductsListFlowFragment : BaseFragment() {
         binding.imgFilters.setOnClickListener {
             val filterBundle = state.filterBundle
             val id = state.categoryHeader.id ?: return@setOnClickListener
+            debugLog { "spasibo filter bundle $filterBundle, id $id" }
             showAllFiltersFragment(filterBundle, id)
         }
 
@@ -207,7 +208,7 @@ class ProductsListFlowFragment : BaseFragment() {
     )
 
     private fun showBottomSortSettings(sortType: SortType) = findNavController().navigate(
-        FavoriteFragmentDirections.actionToSortProductsSettingsBottomFragment(sortType.name)
+        PaginatedProductsCatalogFragmentDirections.actionToSortProductsSettingsBottomFragment(sortType.sortName)
     )
 
     private fun observeResultLiveData() {
@@ -230,20 +231,17 @@ class ProductsListFlowFragment : BaseFragment() {
     private fun getProductsClickListener(): ProductsClickListener {
         return object : ProductsClickListener {
             override fun onProductClick(id: Long) {
-                findNavController().navigate(FavoriteFragmentDirections.actionToProductDetailFragment(id))
+                findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToProductDetailFragment(id))
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-                when (viewModel.isLoginAlready()) {
-                    true -> findNavController().navigate(
-                        FavoriteFragmentDirections.actionToPreOrderBS(
-                            id,
-                            name,
-                            detailPicture
-                        )
+                findNavController().navigate(
+                    PaginatedProductsCatalogFragmentDirections.actionToPreOrderBS(
+                        id,
+                        name,
+                        detailPicture
                     )
-                    false -> findNavController().navigate(FavoriteFragmentDirections.actionToProfileFragment())
-                }
+                )
             }
 
             override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
