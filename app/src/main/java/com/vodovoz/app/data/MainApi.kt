@@ -141,6 +141,10 @@ interface MainApi {
         @Query("quantity") quantity: Int? = null,
     ): ResponseBody
 
+    /**
+     * Избранное
+     */
+
     @GET("/newmobile/izbrannoe.php?")
     suspend fun fetchFavoriteResponse(
         @Query("id") productIdList: String? = null,
@@ -152,9 +156,27 @@ interface MainApi {
         @Query("action") action: String? = null,
     ): ResponseBody
 
+    /**
+     * Каталог
+     */
+
     //Каталог
     @GET("/newmobile/razdel/category.php?iblock_id=12")
     suspend fun fetchCatalogResponse(): ResponseBody
+
+    //Категория
+    @GET("/newmobile/razdel/index.php")
+    suspend fun fetchCategoryResponse(
+        @Query("iblock_id") blockId: Int? = null,
+        @Query("sectionid") categoryId: Long? = null,
+        @Query("sort") sort: String? = null,
+        @Query("ascdesc") orientation: String? = null,
+        @Query("nav") page: Int? = null,
+        @Query("filter") filter: String? = null,
+        @Query("filtervalue") filterValue: String? = null,
+        @Query("price_from") priceFrom: Int? = null,
+        @Query("price_to") priceTo: Int? = null,
+    ): ResponseBody
 
 
     /**

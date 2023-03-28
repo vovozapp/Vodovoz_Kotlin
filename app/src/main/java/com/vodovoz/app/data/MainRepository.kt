@@ -1,8 +1,10 @@
 package com.vodovoz.app.data
 
 import com.vodovoz.app.BuildConfig
+import com.vodovoz.app.data.model.common.CategoryEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.features.FavoriteProductsHeaderBundleEntity
+import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
@@ -192,7 +194,7 @@ class MainRepository @Inject constructor(
             categoryId = categoryId,
             sort = sort,
             orientation = orientation,
-            action = when(isAvailable) {
+            action = when (isAvailable) {
                 true -> "nalichie"
                 false -> "netnalichi"
                 else -> null
@@ -267,9 +269,43 @@ class MainRepository @Inject constructor(
 
     //Продукты могут понравиться
     suspend fun fetchMaybeLikeProductsResponse(
-        page : Int
+        page: Int
     ): ResponseBody {
         return api.fetchNovelties(action = "details", page = page)
+    }
+
+    //Главная информация о категории
+    suspend fun fetchCategoryHeader(
+        categoryId: Long
+    ): ResponseBody {
+        return api.fetchCategoryResponse(
+            blockId = 1,
+            categoryId = categoryId
+        )
+    }
+
+    //Постраничная загрузка продуктов для выбранной категории
+    suspend fun fetchProductsByCategory(
+        categoryId: Long,
+        sort: String,
+        orientation: String,
+        filter: String,
+        filterValue: String,
+        priceFrom: Int,
+        priceTo: Int,
+        page: Int?
+    ): ResponseBody {
+        return api.fetchCategoryResponse(
+            blockId = 1,
+            categoryId = categoryId,
+            page = page,
+            sort = sort,
+            orientation = orientation,
+            filter = filter,
+            filterValue = filterValue,
+            priceFrom = priceFrom,
+            priceTo = priceTo
+        )
     }
 
 }

@@ -1,38 +1,25 @@
 package com.vodovoz.app.ui.model
 
-import android.os.Parcel
 import android.os.Parcelable
+import com.vodovoz.app.R
+import com.vodovoz.app.common.content.itemadapter.Item
+import kotlinx.parcelize.Parcelize
 
-class FilterValueUI(
+@Parcelize
+data class FilterValueUI(
     val id: String? = null,
     val value: String,
     var isSelected: Boolean = false
-) : Parcelable {
+) : Parcelable, Item {
 
-    constructor(parcel: Parcel) : this(
-        parcel.readString(),
-        parcel.readString()!!,
-        parcel.readByte() != 0.toByte()) {
+    override fun getItemViewType(): Int {
+        return R.layout.view_holder_brand_filter_value
     }
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(id)
-        parcel.writeString(value)
-        parcel.writeByte(if (isSelected) 1 else 0)
-    }
+    override fun areItemsTheSame(item: Item): Boolean {
+        if (item !is FilterValueUI) return false
 
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<FilterValueUI> {
-        override fun createFromParcel(parcel: Parcel): FilterValueUI {
-            return FilterValueUI(parcel)
-        }
-
-        override fun newArray(size: Int): Array<FilterValueUI?> {
-            return arrayOfNulls(size)
-        }
+        return id == item.id
     }
 
 }
