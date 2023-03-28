@@ -218,7 +218,10 @@ class ProductsListFlowViewModel @Inject constructor(
             data = state.data.copy(
                 filterBundle = FiltersBundleUI(),
                 filtersAmount = fetchFiltersAmount(FiltersBundleUI())
-            )
+            ),
+            page = 1,
+            loadMore = false,
+            loadingPage = true
         )
         fetchCategoryHeader()
         fetchProductsByCategory()
@@ -247,7 +250,10 @@ class ProductsListFlowViewModel @Inject constructor(
             data = state.data.copy(
                 filterBundle = filterBundle,
                 filtersAmount = fetchFiltersAmount(filterBundle)
-            )
+            ),
+            page = 1,
+            loadMore = false,
+            loadingPage = true
         )
         fetchCategoryHeader()
         fetchProductsByCategory()
@@ -273,7 +279,10 @@ class ProductsListFlowViewModel @Inject constructor(
                 categoryHeader = categoryUI.copy(
                     primaryFilterValueList = categoryUI.primaryFilterValueList.map { it.copy(isSelected = it.id == filterValue.id) }
                 )
-            )
+            ),
+            page = 1,
+            loadMore = false,
+            loadingPage = true
         )
         fetchProductsByCategory()
     }
