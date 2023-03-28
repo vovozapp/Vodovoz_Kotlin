@@ -16,22 +16,6 @@
         android:visibility="invisible"
         tools:context=".ui.fragment.cart.CartFragment">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBarSimple"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:elevation="0dp">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbarSimple"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:titleTextAppearance="@style/ToolbarTitle"
-                app:title="Прошлые покупки"/>
-
-        </com.google.android.material.appbar.AppBarLayout>
-
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/refreshEmptyFavoriteContainer"
             android:layout_width="match_parent"
