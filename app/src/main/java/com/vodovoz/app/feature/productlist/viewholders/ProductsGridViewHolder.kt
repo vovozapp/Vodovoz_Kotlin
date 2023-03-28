@@ -114,6 +114,10 @@ class ProductsGridViewHolder(
         binding.amountController.add.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
             if (item.isGift) return@setOnClickListener
+            if (item.leftItems == 0) {
+                productsClickListener.onNotifyWhenBeAvailable(item.id, item.name, item.detailPicture)
+                return@setOnClickListener
+            }
 
             item.oldQuantity = item.cartQuantity
             item.cartQuantity++
