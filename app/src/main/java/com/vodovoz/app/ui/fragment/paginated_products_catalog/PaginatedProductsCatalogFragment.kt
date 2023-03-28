@@ -1,6 +1,7 @@
 package com.vodovoz.app.ui.fragment.paginated_products_catalog
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -149,8 +150,9 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
                     } else {
                         hideLoader()
                         binding.sortContainer.isVisible = true
-                        binding.imgShare.isVisible = true
                     }
+
+                    bindShare(state.data.categoryHeader)
 
                     val data = state.data
                     if (state.bottomItem != null && state.data.layoutManager == FavoriteFlowViewModel.LINEAR) {
@@ -162,7 +164,28 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
                     if (state.error !is ErrorState.Empty) {
                         showError(state.error)
                     }
+
                 }
+        }
+    }
+
+    private fun bindShare(categoryUI: CategoryUI?) {
+        if (categoryUI == null) return
+
+        if (categoryUI.shareUrl.isNotEmpty()) {
+            binding.imgShare.isVisible = true
+            binding.imgShare.setOnClickListener {
+                val intent = Intent.createChooser(
+                    Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, categoryUI.shareUrl)
+                    },
+                    "Shearing Option"
+                )
+                startActivity(intent)
+            }
+        } else {
+            binding.imgShare.isVisible = false
         }
     }
 

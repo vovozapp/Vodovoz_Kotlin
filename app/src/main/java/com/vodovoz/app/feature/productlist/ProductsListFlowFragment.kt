@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.productlist
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
@@ -21,6 +22,7 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlist.brand.BrandFlowClickListener
 import com.vodovoz.app.feature.productlist.brand.BrandFlowController
 import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogFragmentDirections
+import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.FilterValueUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -122,8 +124,9 @@ class ProductsListFlowFragment : BaseFragment() {
                     } else {
                         hideLoader()
                         binding.sortContainer.isVisible = true
-                        binding.imgShare.isVisible = true
                     }
+
+                    bindShare(state.data.categoryHeader)
 
                     val data = state.data
                     if (state.bottomItem != null && state.data.layoutManager == FavoriteFlowViewModel.LINEAR) {
@@ -137,6 +140,26 @@ class ProductsListFlowFragment : BaseFragment() {
                     }
 
                 }
+        }
+    }
+
+    private fun bindShare(categoryUI: CategoryUI?) {
+        if (categoryUI == null) return
+
+        if (categoryUI.shareUrl.isNotEmpty()) {
+            binding.imgShare.isVisible = true
+            binding.imgShare.setOnClickListener {
+                val intent = Intent.createChooser(
+                    Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, categoryUI.shareUrl)
+                    },
+                    "Shearing Option"
+                )
+                startActivity(intent)
+            }
+        } else {
+            binding.imgShare.isVisible = false
         }
     }
 
