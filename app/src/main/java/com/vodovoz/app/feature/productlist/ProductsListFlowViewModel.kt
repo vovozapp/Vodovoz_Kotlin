@@ -174,6 +174,7 @@ class ProductsListFlowViewModel @Inject constructor(
     fun refreshSorted() {
         uiStateListener.value =
             state.copy(loadingPage = true, page = 1, loadMore = false, bottomItem = null)
+        fetchCategoryHeader()
         fetchProductsByCategory()
     }
 
@@ -220,6 +221,7 @@ class ProductsListFlowViewModel @Inject constructor(
             )
         )
         fetchCategoryHeader()
+        fetchProductsByCategory()
     }
 
     fun updateBySortType(sortType: SortType) {
@@ -248,6 +250,7 @@ class ProductsListFlowViewModel @Inject constructor(
             )
         )
         fetchCategoryHeader()
+        fetchProductsByCategory()
     }
 
     fun addPrimaryFilterValue(filterValue: FilterValueUI) {
@@ -267,6 +270,7 @@ class ProductsListFlowViewModel @Inject constructor(
             )
         )
         fetchCategoryHeader()
+        fetchProductsByCategory()
     }
 
     private fun fetchFiltersAmount(filterBundle: FiltersBundleUI): Int {

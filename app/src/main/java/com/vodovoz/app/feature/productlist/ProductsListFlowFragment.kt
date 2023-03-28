@@ -3,9 +3,7 @@ package com.vodovoz.app.feature.productlist
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,26 +14,16 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.data.model.common.SortType
-import com.vodovoz.app.databinding.FragmentMainFavoriteFlowBinding
 import com.vodovoz.app.databinding.FragmentProductsFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFragmentDirections
-import com.vodovoz.app.feature.favorite.FavoritesListController
-import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
-import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
-import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
-import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlist.brand.BrandFlowClickListener
 import com.vodovoz.app.feature.productlist.brand.BrandFlowController
-import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogFragment
 import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogFragmentDirections
-import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
-import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
-import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.FilterValueUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -152,15 +140,22 @@ class ProductsListFlowFragment : BaseFragment() {
 
     private fun bindHeader(state: ProductsListFlowViewModel.ProductsListState) {
 
+        if (state.categoryHeader == null) return
+
         binding.imgViewMode.setOnClickListener { viewModel.changeLayoutManager() }
         binding.tvSort.setOnClickListener { showBottomSortSettings(state.sortType) }
         binding.imgFilters.setOnClickListener {
             val filterBundle = state.filterBundle
-            val id = state.categoryHeader?.id ?: return@setOnClickListener
+            val id = state.categoryHeader.id ?: return@setOnClickListener
             showAllFiltersFragment(filterBundle, id)
         }
+
+        debugLog { "spasibo cat ui list size ${state.categoryHeader.categoryUIList.size}" }
+
+        binding.categoryContainer.isVisible = state.categoryHeader.categoryUIList.size > 1
+
         binding.categoryContainer.setOnClickListener {
-            val id = state.categoryHeader?.id ?: return@setOnClickListener
+            val id = state.categoryHeader.id ?: return@setOnClickListener
             showSingleRootCatalogCatalog(id)
         }
         binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
@@ -176,11 +171,11 @@ class ProductsListFlowFragment : BaseFragment() {
         }
 
 
-        binding.tvCategoryName.text = state.categoryHeader?.name
-        binding.tvProductAmount.text = state.categoryHeader?.productAmount.toString()
-        binding.additionalName.text = state.categoryHeader?.primaryFilterName
+        binding.tvCategoryName.text = state.categoryHeader.name
+        binding.tvProductAmount.text = state.categoryHeader.productAmount.toString()
+        binding.additionalName.text = state.categoryHeader.primaryFilterName
 
-        val brandList = state.categoryHeader?.primaryFilterValueList ?: emptyList()
+        val brandList = state.categoryHeader.primaryFilterValueList
 
         when(brandList.isNotEmpty()) {
             true -> {
