@@ -208,7 +208,7 @@ class ProductsListFlowFragment : BaseFragment() {
     )
 
     private fun showBottomSortSettings(sortType: SortType) = findNavController().navigate(
-        PaginatedProductsCatalogFragmentDirections.actionToSortProductsSettingsBottomFragment(sortType.sortName)
+        PaginatedProductsCatalogFragmentDirections.actionToSortProductsSettingsBottomFragment(sortType.name)
     )
 
     private fun observeResultLiveData() {
