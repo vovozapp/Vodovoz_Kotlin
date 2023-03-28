@@ -254,6 +254,9 @@ class ProductsListFlowViewModel @Inject constructor(
     }
 
     fun addPrimaryFilterValue(filterValue: FilterValueUI) {
+
+        val categoryUI = state.data.categoryHeader ?: return
+
         val bundle = state.data.filterBundle
         bundle.filterUIList.removeAll { it.code == FiltersConfig.BRAND_FILTER_CODE }
         bundle.filterUIList.add(
@@ -266,7 +269,10 @@ class ProductsListFlowViewModel @Inject constructor(
         uiStateListener.value = state.copy(
             data = state.data.copy(
                 filterBundle = bundle,
-                filtersAmount = fetchFiltersAmount(bundle)
+                filtersAmount = fetchFiltersAmount(bundle),
+                categoryHeader = categoryUI.copy(
+                    primaryFilterValueList = categoryUI.primaryFilterValueList.map { it.copy(isSelected = it.id == filterValue.id) }
+                )
             )
         )
         fetchCategoryHeader()
