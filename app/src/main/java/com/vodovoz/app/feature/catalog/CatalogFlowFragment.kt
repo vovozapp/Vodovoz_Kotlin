@@ -79,8 +79,8 @@ class CatalogFlowFragment : BaseFragment() {
 
     private fun getCatalogFlowClickListener() : CatalogFlowClickListener {
         return object : CatalogFlowClickListener {
-            override fun onCategoryClick(category: CategoryUI) {
-                findNavController().navigate(CatalogFragmentDirections.actionToPaginatedProductsCatalogFragment(category.id!!))
+            override fun onCategoryClick(categoryId: Long) {
+                findNavController().navigate(CatalogFragmentDirections.actionToPaginatedProductsCatalogFragment(categoryId))
             }
         }
     }
