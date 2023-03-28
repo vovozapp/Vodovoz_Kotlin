@@ -116,6 +116,7 @@ class ProductsListFlowFragment : BaseFragment() {
                 .collect { state ->
 
                     bindHeader(state.data)
+                    binding.sortContainer.isVisible = !state.loadingPage
 
                     if (state.loadingPage) {
                         showLoader()
