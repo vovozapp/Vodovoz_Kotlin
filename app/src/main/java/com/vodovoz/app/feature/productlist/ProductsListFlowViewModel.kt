@@ -275,7 +275,6 @@ class ProductsListFlowViewModel @Inject constructor(
                 )
             )
         )
-        fetchCategoryHeader()
         fetchProductsByCategory()
     }
 

@@ -150,8 +150,6 @@ class ProductsListFlowFragment : BaseFragment() {
             showAllFiltersFragment(filterBundle, id)
         }
 
-        debugLog { "spasibo cat ui list size ${state.categoryHeader.categoryUIList.size}" }
-
         binding.changeCategoryContainer.isVisible = state.categoryHeader.categoryUIList.size > 1
 
         binding.categoryContainer.setOnClickListener {
