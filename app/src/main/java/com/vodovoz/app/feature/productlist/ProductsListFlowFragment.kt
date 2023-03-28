@@ -117,6 +117,7 @@ class ProductsListFlowFragment : BaseFragment() {
 
                     bindHeader(state.data)
                     binding.sortContainer.isVisible = !state.loadingPage
+                    binding.imgShare.isVisible = !state.loadingPage
 
                     if (state.loadingPage) {
                         showLoader()

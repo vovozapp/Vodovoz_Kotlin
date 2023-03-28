@@ -76,6 +76,7 @@
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/imgShare"
                         android:layout_width="@dimen/_18sdp"
+                        android:visibility="gone"
                         android:layout_height="@dimen/_18sdp"
                         android:src="@drawable/png_share"
                         android:layout_marginEnd="@dimen/space_16"
