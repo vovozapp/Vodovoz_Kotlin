@@ -150,6 +150,7 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
                     } else {
                         hideLoader()
                         binding.sortContainer.isVisible = true
+                        binding.appBar.elevation = 4F
                     }
 
                     bindShare(state.data.categoryHeader)
