@@ -20,6 +20,7 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentProductsFlowBinding
 import com.vodovoz.app.databinding.FragmentProductsWithoutFiltersBinding
+import com.vodovoz.app.databinding.FragmentProductsWithoutFiltersFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.DISCOUNT
@@ -57,10 +58,10 @@ class ProductsListNoFilterFlowFragment : BaseFragment() {
         const val SORT_TYPE = "SORT_TYPE"
     }
 
-    override fun layout(): Int = R.layout.fragment_products_without_filters
+    override fun layout(): Int = R.layout.fragment_products_without_filters_flow
 
-    private val binding: FragmentProductsWithoutFiltersBinding by viewBinding {
-        FragmentProductsWithoutFiltersBinding.bind(
+    private val binding: FragmentProductsWithoutFiltersFlowBinding by viewBinding {
+        FragmentProductsWithoutFiltersFlowBinding.bind(
             contentView
         )
     }
@@ -207,6 +208,20 @@ class ProductsListNoFilterFlowFragment : BaseFragment() {
 
         if (state.categoryHeader == null) return
 
+        val categoryUIList = state.categoryHeader.categoryUIList
+
+        when (categoryUIList.isNotEmpty()) {
+            true -> {
+                binding.categoriesRecycler.visibility = View.VISIBLE
+                binding.imgCategories.visibility = View.VISIBLE
+            }
+            else -> {
+                binding.imgCategories.visibility = View.GONE
+                binding.categoriesRecycler.visibility = View.GONE
+            }
+        }
+        categoryTabsController.submitList(categoryUIList)
+
         binding.imgViewMode.setOnClickListener { viewModel.changeLayoutManager() }
         binding.tvSort.setOnClickListener { showBottomSortSettings(state.sortType) }
         binding.imgCategories.setOnClickListener {
@@ -223,19 +238,6 @@ class ProductsListNoFilterFlowFragment : BaseFragment() {
         binding.tvCategoryName.text = state.categoryHeader.name
         binding.tvProductAmount.text = state.categoryHeader.productAmount.toString()
 
-        val categoryUIList = state.categoryHeader.categoryUIList
-
-        when (categoryUIList.isNotEmpty()) {
-            true -> {
-                binding.categoriesRecycler.visibility = View.VISIBLE
-                binding.imgCategories.visibility = View.VISIBLE
-            }
-            else -> {
-                binding.imgCategories.visibility = View.GONE
-                binding.categoriesRecycler.visibility = View.GONE
-            }
-        }
-        categoryTabsController.submitList(categoryUIList)
     }
 
     private fun showBottomSortSettings(sortType: SortType) = findNavController().navigate(
