@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.search
+package com.vodovoz.app.feature.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

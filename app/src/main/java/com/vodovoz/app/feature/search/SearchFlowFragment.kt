@@ -32,9 +32,6 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
-import com.vodovoz.app.ui.fragment.search.SearchFragment
-import com.vodovoz.app.ui.fragment.search.SearchFragmentArgs
-import com.vodovoz.app.ui.fragment.search.SearchFragmentDirections
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,7 +39,6 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import kotlinx.coroutines.flow.collect
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

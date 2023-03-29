@@ -602,7 +602,7 @@
         android:label="SendCommentAboutShopBottomDialog" />
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.vodovoz.app.ui.fragment.search.SearchFragment"
+        android:name="com.vodovoz.app.feature.search.SearchFragment"
         android:label="SearchFragment" >
         <action
             android:id="@+id/action_to_sortProductsSettingsBottomFragment"

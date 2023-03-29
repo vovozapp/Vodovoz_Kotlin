@@ -36,7 +36,7 @@ import com.vodovoz.app.ui.fragment.questionnaires.QuestionnairesViewModel
 import com.vodovoz.app.ui.fragment.register.RegisterViewModel
 import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionViewModel
 import com.vodovoz.app.ui.fragment.saved_addresses.SavedAddressesViewModel
-import com.vodovoz.app.ui.fragment.search.SearchViewModel
+import com.vodovoz.app.feature.search.SearchViewModel
 import com.vodovoz.app.ui.fragment.send_comment_about_product.SendCommentAboutProductViewModel
 import com.vodovoz.app.ui.fragment.send_comment_about_shop.SendCommentAboutShopViewModel
 import com.vodovoz.app.ui.fragment.service_detail.ServiceDetailViewModel

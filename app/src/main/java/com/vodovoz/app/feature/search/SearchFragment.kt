@@ -1,27 +1,18 @@
-package com.vodovoz.app.ui.fragment.search
+package com.vodovoz.app.feature.search
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.KeyEvent
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.chip.Chip
 import com.vodovoz.app.R
@@ -30,7 +21,6 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.data.model.common.SortType
-import com.vodovoz.app.databinding.FragmentSearchBinding
 import com.vodovoz.app.databinding.FragmentSearchFlowBinding
 import com.vodovoz.app.databinding.ViewSimpleTextChipBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
@@ -41,33 +31,14 @@ import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowCon
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.feature.search.SearchFlowController
-import com.vodovoz.app.feature.search.SearchFlowViewModel
-import com.vodovoz.app.ui.adapter.CategoryTabsAdapter
-import com.vodovoz.app.ui.adapter.PagingProductsAdapter
-import com.vodovoz.app.ui.adapter.PagingProductsAdapter.ViewMode
-import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.loadStateAdapter.LoadStateAdapter
-import com.vodovoz.app.ui.decoration.CategoryTabsMarginDecoration
-import com.vodovoz.app.ui.decoration.GridMarginDecoration
-import com.vodovoz.app.ui.decoration.ListMarginDecoration
-import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
-import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
-import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
-import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
 import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -396,12 +367,12 @@ class SearchFragment : BaseFragment() {
 
     private fun observeResultLiveData() {
         findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<Long>(SearchFragment.CATEGORY_ID)?.observe(viewLifecycleOwner) { categoryId ->
+            ?.getLiveData<Long>(CATEGORY_ID)?.observe(viewLifecycleOwner) { categoryId ->
                 viewModel.onTabClick(categoryId)
             }
 
         findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<String>(SearchFragment.SORT_TYPE)?.observe(viewLifecycleOwner) { sortType ->
+            ?.getLiveData<String>(SORT_TYPE)?.observe(viewLifecycleOwner) { sortType ->
                 viewModel.updateBySortType(SortType.valueOf(sortType))
             }
     }
