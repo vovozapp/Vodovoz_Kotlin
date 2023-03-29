@@ -14,7 +14,7 @@ import com.vodovoz.app.ui.adapter.ProductFiltersAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
-import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogFragment
+import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragment
 import com.vodovoz.app.ui.model.FilterPriceUI
 import com.vodovoz.app.ui.model.FilterUI
 import dagger.hilt.android.AndroidEntryPoint

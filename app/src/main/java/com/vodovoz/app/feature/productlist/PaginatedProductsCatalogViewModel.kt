@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.paginated_products_catalog
+package com.vodovoz.app.feature.productlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

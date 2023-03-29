@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentProductsWithoutFiltersBinding
+import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragmentDirections
 import com.vodovoz.app.ui.adapter.CategoryTabsAdapter
 import com.vodovoz.app.ui.adapter.PagingProductsAdapter
 import com.vodovoz.app.ui.adapter.PagingProductsAdapter.ViewMode
@@ -29,7 +30,6 @@ import com.vodovoz.app.ui.decoration.CategoryTabsMarginDecoration
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
-import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogFragmentDirections
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable

@@ -12,7 +12,7 @@ import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.BsSelectionProductsSortingBinding
 import com.vodovoz.app.ui.adapter.ProductsSortingAdapter
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
-import com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogFragment
+import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragment
 
 class SortProductsSettingsBottomFragment : BottomSheetDialogFragment() {
 
@@ -59,7 +59,8 @@ class SortProductsSettingsBottomFragment : BottomSheetDialogFragment() {
             if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.bottom = space
         }
         productsSortingAdapter.setupListeners { sortType ->
-            findNavController().previousBackStackEntry?.savedStateHandle?.set(PaginatedProductsCatalogFragment.SORT_TYPE, sortType.name)
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                PaginatedProductsCatalogFragment.SORT_TYPE, sortType.name)
             dismiss()
         }
         productsSortingAdapter.updateData(

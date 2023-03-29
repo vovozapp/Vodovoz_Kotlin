@@ -121,7 +121,7 @@
     </fragment>
     <fragment
         android:id="@+id/paginatedProductsCatalogFragment"
-        android:name="com.vodovoz.app.ui.fragment.paginated_products_catalog.PaginatedProductsCatalogFragment"
+        android:name="com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragment"
         android:label="PaginatedProductsCatalogFragment">
         <argument
             android:name="categoryId"
