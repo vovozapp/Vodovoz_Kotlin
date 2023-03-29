@@ -106,7 +106,7 @@ class FavoriteFlowViewModel @Inject constructor(
     }
 
     fun refreshSorted() {
-        uiStateListener.value = state.copy(loadingPage = true, page = 1, loadMore = false, bottomItem = null)
+        uiStateListener.value = state.copy(loadingPage = true, page = 1, loadMore = false, bottomItem = null, data = state.data.copy(selectedCategoryId = -1))
         fetchFavoriteProductsHeader()
         fetchFavoriteProductsSorted()
     }
