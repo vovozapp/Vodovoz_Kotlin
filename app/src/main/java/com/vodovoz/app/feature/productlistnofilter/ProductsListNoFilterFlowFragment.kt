@@ -46,10 +46,16 @@ import com.vodovoz.app.ui.model.custom.FiltersBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import java.io.Serializable
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProductsListNoFilterFlowFragment : BaseFragment() {
+
+    companion object {
+        const val CATEGORY_ID = "CATEGORY_ID"
+        const val SORT_TYPE = "SORT_TYPE"
+    }
 
     override fun layout(): Int = R.layout.fragment_products_without_filters
 
@@ -289,6 +295,14 @@ class ProductsListNoFilterFlowFragment : BaseFragment() {
             }
 
         }
+    }
+
+    sealed class DataSource : Serializable {
+        class Brand(val brandId: Long) : DataSource()
+        class Country(val countryId: Long) : DataSource()
+        class Discount: DataSource()
+        class Novelties : DataSource()
+        class Slider(val categoryId: Long) : DataSource()
     }
 
 }
