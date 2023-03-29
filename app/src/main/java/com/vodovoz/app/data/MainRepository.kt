@@ -308,4 +308,44 @@ class MainRepository @Inject constructor(
         )
     }
 
+    /**
+     * Поиск
+     */
+
+    suspend fun fetchSearchDefaultData() : ResponseBody {
+        return api.fetchSearchResponse(action = "glav")
+    }
+
+    suspend fun fetchProductsByQueryHeader(query: String) : ResponseBody {
+        return api.fetchSearchResponse(
+            action = "search",
+            query = query,
+            limit = 10,
+            page = 1
+        )
+    }
+
+    suspend fun fetchProductsByQuery(
+        query: String,
+        categoryId: Long?,
+        sort: String,
+        orientation: String,
+        page: Int?
+    ) : ResponseBody {
+        return api.fetchSearchResponse(
+            query = query,
+            categoryId = categoryId,
+            sort = sort,
+            orientation = orientation,
+            page = page
+        )
+    }
+
+    suspend fun fetchMatchesQueries(query: String) : ResponseBody {
+        return api.fetchMatchesQueries(
+            action = "glav",
+            query = query
+        )
+    }
+
 }

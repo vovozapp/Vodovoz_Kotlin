@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/incAppBar"
+        layout="@layout/app_bar_search_open" />
+
+    <LinearLayout
+        android:id="@+id/emptyResultContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@id/incAppBar"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <TextView
+            style="@style/TextViewMediumBlackBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:text="Ничего не найдено" />
+
+        <TextView
+            style="@style/TextViewNormalGray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:text="Попробуйте изменить параметры фильтров" />
+
+
+
+    </LinearLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/productsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="invisible"
+        android:layout_below="@id/incAppBar">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:elevation="0dp">
+
+            <LinearLayout
+                android:id="@+id/hiddenHeaderContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_scrollFlags="enterAlways|scroll">
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/space_4"
+                    android:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="@dimen/space_16"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgShare"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvCategoryName"
+                            style="@style/TextViewLargeBlackBold"
+                            android:textSize="16sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="bottom"
+                            android:maxLines="1"
+                            tools:text="Прошлые покупки" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvProductAmount"
+                            style="@style/TextViewNormalGray"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            tools:layout_editor_absoluteX="16dp"
+                            tools:text="452 товара" />
+
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imgShare"
+                        android:layout_width="@dimen/_18sdp"
+                        android:layout_height="@dimen/_18sdp"
+                        android:src="@drawable/png_share"
+                        android:layout_marginEnd="@dimen/space_16"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/text_black"
+                        tools:ignore="ContentDescription" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/categoriesRecycler"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/sortContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgViewMode"
+                    android:layout_width="@dimen/action_image_size_with_padding_8"
+                    android:layout_height="@dimen/action_image_size_with_padding_8"
+                    android:paddingHorizontal="@dimen/space_8"
+                    android:paddingVertical="@dimen/space_10"
+                    android:src="@drawable/png_table"
+                    android:layout_marginStart="@dimen/space_8"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/text_black"
+                    tools:ignore="ContentDescription" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvSort"
+                    style="@style/TextViewNormalBlackBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/ic_drop_down"
+                    android:gravity="center"
+                    android:text="Выбрать сортировку"
+                    android:drawableTint="@color/text_black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/imgCategories"
+                    app:layout_constraintStart_toEndOf="@+id/imgViewMode"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="UseCompatTextViewDrawableXml" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgCategories"
+                    android:layout_width="@dimen/action_image_size_with_padding_8"
+                    android:layout_height="@dimen/action_image_size_with_padding_8"
+                    android:paddingHorizontal="@dimen/space_8"
+                    android:paddingVertical="@dimen/space_10"
+                    android:src="@drawable/filtericon"
+                    app:tint="@color/text_black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/productRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/searchDataContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/incAppBar"
+        android:background="@color/white"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/matchesQueriesContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda_normal"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:text="Подходящие запросы"
+                    android:textColor="@color/blackTextDark"
+                    android:paddingTop="@dimen/space_8"
+                    android:paddingBottom="@dimen/space_8"
+                    android:paddingStart="@dimen/space_16"
+                    android:paddingEnd="@dimen/space_16" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/matchesQueriesChipGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/space_16"
+                    android:paddingEnd="@dimen/space_16"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/historyQueryContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <TextView
+                        style="@style/TextViewHeaderBlackBold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="История"
+                        android:textSize="18sp"
+                        android:paddingTop="@dimen/space_8"
+                        android:paddingBottom="@dimen/space_8"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16" />
+
+                    <TextView
+                        android:id="@+id/clearSearchHistory"
+                        style="@style/TextViewNormalBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/space_8"
+                        android:paddingBottom="@dimen/space_8"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingEnd="@dimen/space_16"
+                        android:text="Очистить" />
+
+                </LinearLayout>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/historyQueryChipGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/space_16"
+                    android:paddingEnd="@dimen/space_16"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/popularQueryContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextViewHeaderBlackBold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Популярные"
+                    android:textSize="18sp"
+                    android:paddingTop="@dimen/space_8"
+                    android:paddingBottom="@dimen/space_8"
+                    android:paddingStart="@dimen/space_16"
+                    android:paddingEnd="@dimen/space_16" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/popularQueryChipGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/space_16"
+                    android:paddingEnd="@dimen/space_16"/>
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/bestForYouRv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</RelativeLayout>

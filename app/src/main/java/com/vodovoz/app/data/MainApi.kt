@@ -228,4 +228,25 @@ interface MainApi {
         @Query("nav") page: Int,
     ): ResponseBody
 
+    /**
+     * Поиск
+     */
+
+    @GET("/newmobile/searching/index.php")
+    suspend fun fetchSearchResponse(
+        @Query("action") action: String? = null,
+        @Query("search") query: String? = null,
+        @Query("limit") limit: Int? = null,
+        @Query("sort") sort: String? = null,
+        @Query("ascdesc") orientation: String? = null,
+        @Query("nav") page: Int? = null,
+        @Query("sect") categoryId: Long? = null,
+    ): ResponseBody
+
+    @GET("/newmobile/searching/minipoisk.php")
+    suspend fun fetchMatchesQueries(
+        @Query("action") action: String? = null,
+        @Query("search") query: String? = null,
+    ): ResponseBody
+
 }
