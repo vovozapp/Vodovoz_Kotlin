@@ -186,7 +186,7 @@ class SearchFlowFragment : BaseFragment() {
                     bindShare(state.data.categoryHeader)
 
                     val data = state.data
-                    if (state.bottomItem != null && state.data.layoutManager == FavoriteFlowViewModel.LINEAR) {
+                    if (state.bottomItem != null && state.data.layoutManager == FavoriteFlowViewModel.LINEAR && state.page != 2) {
                         productsController.submitList(data.itemsList + state.bottomItem)
                     } else {
                         productsController.submitList(data.itemsList)
@@ -201,6 +201,12 @@ class SearchFlowFragment : BaseFragment() {
     }
 
     private fun bindHeader(state: SearchFlowViewModel.SearchState) {
+
+        val categoryUiList = state.categoryHeader?.categoryUIList ?: emptyList()
+        bindTabsVisibility(categoryUiList.isNotEmpty())
+        categoryTabsController.submitList(categoryUiList)
+
+        binding.tvCategoryName.text = state.categoryHeader?.productAmount
 
         binding.imgViewMode.setOnClickListener { viewModel.changeLayoutManager() }
         binding.tvSort.setOnClickListener { showBottomSortSettings(state.sortType) }
@@ -229,12 +235,6 @@ class SearchFlowFragment : BaseFragment() {
             bestForYouController.submitList(listOf(homeProducts))
             showContainer(false)
         }
-
-        val categoryUiList = state.categoryHeader?.categoryUIList ?: emptyList()
-        bindTabsVisibility(categoryUiList.isNotEmpty())
-        categoryTabsController.submitList(categoryUiList)
-
-        binding.tvCategoryName.text = state.categoryHeader?.productAmount
 
         if (state.historyQuery.isEmpty()) {
             binding.historyQueryContainer.visibility = View.GONE

@@ -16,7 +16,7 @@ class CategoryTabsFlowController(
     }
 
     fun submitList(list: List<Item>) {
-        tabsAdapter.submitList(list)
+        tabsAdapter.submitList(list, "")
     }
 
     private fun initList(recyclerView: RecyclerView, space: Int) {

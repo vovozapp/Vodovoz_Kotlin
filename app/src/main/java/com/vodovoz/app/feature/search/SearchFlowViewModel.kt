@@ -60,7 +60,7 @@ class SearchFlowViewModel @Inject constructor(
     }
 
     fun updateQuery(query: String) {
-        uiStateListener.value = state.copy(data = state.data.copy(query = query), loadingPage = true)
+        uiStateListener.value = state.copy(data = state.data.copy(query = query, selectedCategoryId = -1, categoryHeader = null), loadingPage = true, page = 1, loadMore = false)
         fetchHeader()
         fetchProductsByQuery()
     }
@@ -213,6 +213,7 @@ class SearchFlowViewModel @Inject constructor(
                             } else {
                                 mappedFeed
                             }
+                            debugLog { "spasibo vm $itemsList" }
 
                             state.copy(
                                 page = if (mappedFeed.isEmpty()) null else state.page?.plus(1),
@@ -312,7 +313,8 @@ class SearchFlowViewModel @Inject constructor(
                 sortType = SortType.NO_SORT
             ),
             page = 1,
-            loadMore = false
+            loadMore = false,
+            loadingPage = true
         )
         fetchProductsByQuery()
     }
