@@ -1,22 +1,13 @@
-package com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters
+package com.vodovoz.app.feature.productlistnofilter
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
@@ -24,33 +15,13 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.data.model.common.SortType
-import com.vodovoz.app.databinding.FragmentProductsWithoutFiltersBinding
 import com.vodovoz.app.databinding.FragmentProductsWithoutFiltersFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
-import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragmentDirections
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.feature.productlistnofilter.ProductsListNoFilterFlowController
-import com.vodovoz.app.feature.productlistnofilter.ProductsListNoFilterFlowViewModel
-import com.vodovoz.app.ui.adapter.CategoryTabsAdapter
-import com.vodovoz.app.ui.adapter.PagingProductsAdapter
-import com.vodovoz.app.ui.adapter.PagingProductsAdapter.ViewMode
-import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.loadStateAdapter.LoadStateAdapter
-import com.vodovoz.app.ui.decoration.CategoryTabsMarginDecoration
-import com.vodovoz.app.ui.decoration.GridMarginDecoration
-import com.vodovoz.app.ui.decoration.ListMarginDecoration
-import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import java.io.Serializable
 import javax.inject.Inject
 
@@ -259,13 +230,13 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
 
     private fun observeResultLiveData() {
         findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<Long>(PaginatedProductsCatalogWithoutFiltersFragment.CATEGORY_ID)
+            ?.getLiveData<Long>(CATEGORY_ID)
             ?.observe(viewLifecycleOwner) { categoryId ->
                 viewModel.updateByCat(categoryId)
             }
 
         findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<String>(PaginatedProductsCatalogWithoutFiltersFragment.SORT_TYPE)
+            ?.getLiveData<String>(SORT_TYPE)
             ?.observe(viewLifecycleOwner) { sortType ->
                 viewModel.updateBySortType(SortType.valueOf(sortType))
                 binding.tvSort.text = SortType.valueOf(sortType).sortName

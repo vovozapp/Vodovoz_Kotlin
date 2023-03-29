@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -14,7 +13,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.BsCatalogMiniBinding
 import com.vodovoz.app.ui.adapter.MiniCatalogAdapter
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
-import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
+import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class MiniCatalogBottomFragment : BottomSheetDialogFragment() {

@@ -17,7 +17,7 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllList
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
-import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
+import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentArgs
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
 import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS

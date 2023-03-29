@@ -24,7 +24,7 @@ import com.vodovoz.app.ui.fragment.order_details.OrderDetailsViewModel
 import com.vodovoz.app.ui.fragment.ordering.OrderingViewModel
 import com.vodovoz.app.ui.fragment.orders_history.OrdersHistoryViewModel
 import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogViewModel
-import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersViewModel
+import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersViewModel
 import com.vodovoz.app.ui.fragment.past_purchases.PastPurchasesViewModel
 import com.vodovoz.app.ui.fragment.pre_order.PreOrderViewModel
 import com.vodovoz.app.ui.fragment.product_details.ProductDetailsViewModel

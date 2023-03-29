@@ -27,7 +27,7 @@ import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsNoveltiesR
 import com.vodovoz.app.feature.favorite.FavoritesMapper
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
-import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment.DataSource
+import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment.DataSource
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog

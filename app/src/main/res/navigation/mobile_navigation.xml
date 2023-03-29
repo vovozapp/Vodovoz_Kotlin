@@ -241,11 +241,11 @@
     </dialog>
     <fragment
         android:id="@+id/paginatedProductsCatalogWithoutFiltersFragment"
-        android:name="com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment"
+        android:name="com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment"
         android:label="PaginatedProductsCatalogWithoutFiltersFragment">
         <argument
             android:name="dataSource"
-            app:argType="com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment$DataSource" />
+            app:argType="com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment$DataSource" />
         <action
             android:id="@+id/action_to_miniCatalogBottomFragment"
             app:destination="@id/miniCatalogBottomFragment" />

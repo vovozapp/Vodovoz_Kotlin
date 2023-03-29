@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters
+package com.vodovoz.app.feature.productlistnofilter
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,7 +12,7 @@ import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment.DataSource
+import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment.DataSource
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers

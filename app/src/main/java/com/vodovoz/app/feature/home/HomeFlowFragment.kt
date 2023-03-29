@@ -23,8 +23,8 @@ import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
+import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragment
-import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.products_catalog.ProductsCatalogFragment
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint

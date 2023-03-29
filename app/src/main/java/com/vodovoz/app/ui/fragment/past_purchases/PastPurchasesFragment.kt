@@ -27,7 +27,7 @@ import com.vodovoz.app.ui.decoration.CategoryTabsMarginDecoration
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.decoration.ListMarginDecoration
 import com.vodovoz.app.ui.diffUtils.ProductDiffItemCallback
-import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
+import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment

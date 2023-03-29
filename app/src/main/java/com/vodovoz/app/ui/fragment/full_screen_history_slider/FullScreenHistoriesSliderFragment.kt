@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
@@ -14,9 +13,8 @@ import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentFullscreenHistorySliderBinding
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragment
-import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
+import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.products_catalog.ProductsCatalogFragment
 import com.vodovoz.app.ui.interfaces.IOnChangeHistory
 import com.vodovoz.app.ui.interfaces.IOnInvokeAction

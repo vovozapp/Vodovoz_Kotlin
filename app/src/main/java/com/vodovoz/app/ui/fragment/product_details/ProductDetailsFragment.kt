@@ -20,7 +20,7 @@ import com.vodovoz.app.feature.productdetail.ProductDetailFabController
 import com.vodovoz.app.feature.productdetail.ProductDetailsController
 import com.vodovoz.app.feature.productdetail.ProductDetailsFlowViewModel
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
-import com.vodovoz.app.ui.fragment.paginated_products_catalog_without_filters.PaginatedProductsCatalogWithoutFiltersFragment
+import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.*
 import dagger.hilt.android.AndroidEntryPoint
