@@ -350,4 +350,132 @@ class MainRepository @Inject constructor(
         )
     }
 
+    /**
+     * Продукты без фильтра
+     */
+
+    suspend fun fetchBrandHeader(
+        brandId: Long
+    ) : ResponseBody {
+        return api.fetchBrandResponse(
+            action = "detail",
+            brandId = brandId.toString()
+        )
+    }
+
+    suspend fun fetchProductsByBrand(
+        brandId: Long?,
+        code: String?,
+        categoryId: Long?,
+        sort: String?,
+        orientation: String?,
+        page: Int?
+    ) : ResponseBody {
+        return api.fetchBrandResponse(
+            action = "detail",
+            brandId = brandId.toString(),
+            code = code,
+            categoryId = categoryId,
+            orientation = orientation,
+            sort = sort,
+            page = page
+        )
+    }
+
+    suspend fun fetchCountryHeader(
+        countryId: Long
+    ) : ResponseBody {
+        return api.fetchCountryResponse(
+            action = "details",
+            countryId = countryId
+        )
+    }
+
+    suspend fun fetchProductsByCountry(
+        countryId: Long,
+        sort: String?,
+        orientation: String?,
+        categoryId: Long?,
+        page: Int?,
+    ) : ResponseBody {
+        return api.fetchCountryResponse(
+            action = "details",
+            countryId = countryId,
+            sort = sort,
+            orientation = orientation,
+            page = page,
+            categoryId = categoryId
+        )
+    }
+
+    suspend fun fetchDiscountHeader() : ResponseBody {
+        return api.fetchNoveltiesResponse(
+            action = "specpredlosh",
+            page = 1
+        )
+    }
+
+    suspend fun fetchProductsByDiscount(
+        categoryId: Long?,
+        sort: String?,
+        orientation: String?,
+        page: Int?
+    ) : ResponseBody {
+        return api.fetchNoveltiesResponse(
+            action = "specpredlosh",
+            categoryId = categoryId,
+            sort = sort,
+            orientation = orientation,
+            page = page
+        )
+    }
+
+    suspend fun fetchNoveltiesHeader() : ResponseBody {
+        return api.fetchNoveltiesResponse(
+            action = "novinki",
+            page = 1
+        )
+    }
+
+    suspend fun fetchProductsByNovelties(
+        categoryId: Long?,
+        sort: String?,
+        orientation: String?,
+        page: Int?
+    ) : ResponseBody {
+        return api.fetchNoveltiesResponse(
+            action = "novinki",
+            categoryId = categoryId,
+            sort = sort,
+            orientation = orientation,
+            page = page
+        )
+    }
+
+    suspend fun fetchDoubleSliderHeader(
+        categoryId: Long
+    ) : ResponseBody {
+        return api.fetchDoubleSlider(
+            action = "details",
+            androidVersion = BuildConfig.VERSION_NAME,
+            categoryId = categoryId
+        )
+    }
+
+    suspend fun fetchProductsByDoubleSlider(
+        categoryId: Long?,
+        page: Int?,
+        sort: String?,
+        orientation: String?
+    ) : ResponseBody {
+        return api.fetchDoubleSlider(
+            action = "details",
+            androidVersion = BuildConfig.VERSION_NAME,
+            categoryId = categoryId,
+            sort = sort,
+            orientation = orientation,
+            page = page,
+        )
+    }
+
 }

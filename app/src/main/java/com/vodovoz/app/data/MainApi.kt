@@ -249,4 +249,55 @@ interface MainApi {
         @Query("search") query: String? = null,
     ): ResponseBody
 
+    /**
+     * Продукты без фильтра
+     */
+
+    //Бренды
+    @GET("/newmobile/brand.php") //
+    suspend fun fetchBrandResponse(
+        @Query("action") action: String? = null,
+        @Query("limit") limit: Int? = null,
+        @Query("id") brandId: String? = null,
+        @Query("idbrand") brandIdList: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("ascdesc") orientation: String? = null,
+        @Query("simvolkod") code: String? = null,
+        @Query("nav") page: Int? = null,
+        @Query("sect") categoryId: Long? = null,
+    ): ResponseBody
+
+    //Страны
+    @GET("/newmobile/glavnaya/strany.php")
+    suspend fun fetchCountryResponse(
+        @Query("action") action: String,
+        @Query("id") countryId: Long? = null,
+        @Query("sort") sort: String? = null,
+        @Query("ascdesc") orientation: String? = null,
+        @Query("nav") page: Int? = null,
+        @Query("sect") categoryId: Long? = null,
+    ): ResponseBody
+
+    //Новинки
+    @GET("/newmobile/glavnaya/novinki.php")
+    suspend fun fetchNoveltiesResponse(
+        @Query("new") action: String,
+        @Query("sort") sort: String? = null,
+        @Query("ascdesc") orientation: String? = null,
+        @Query("nav") page: Int? = null,
+        @Query("sect") categoryId: Long? = null,
+    ): ResponseBody
+
+    //Двойной слайдер
+    @GET("/newmobile/glavnaya/super_top.php")
+    suspend fun fetchDoubleSliderResponse(
+        @Query("action") action: String? = null,
+        @Query("new") arg: String? = null,
+        @Query("android") androidVersion: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("orientation") orientation: String? = null,
+        @Query("id") categoryId: Long? = null,
+        @Query("nav") page: Int? = null,
+    ): ResponseBody
+
 }
