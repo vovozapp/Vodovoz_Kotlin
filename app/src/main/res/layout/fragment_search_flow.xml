@@ -105,6 +105,7 @@
                         android:layout_width="@dimen/_18sdp"
                         android:layout_height="@dimen/_18sdp"
                         android:src="@drawable/png_share"
+                        android:visibility="gone"
                         android:layout_marginEnd="@dimen/space_16"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -127,6 +128,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:gravity="center_vertical">
 
                 <androidx.appcompat.widget.AppCompatImageView
