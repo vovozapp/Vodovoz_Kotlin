@@ -59,7 +59,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
             flow {
                 when (dataSource) {
                     is DataSource.Brand -> emit(repository.fetchBrandHeader(dataSource.brandId))
-                    is DataSource.Country -> emit(repository.fetchCategoryHeader(dataSource.countryId))
+                    is DataSource.Country -> emit(repository.fetchCountryHeader(dataSource.countryId))
                     is DataSource.Discount -> emit(repository.fetchDiscountHeader())
                     is DataSource.Novelties -> emit(repository.fetchNoveltiesHeader())
                     is DataSource.Slider -> emit(repository.fetchDoubleSliderHeader(dataSource.categoryId))
