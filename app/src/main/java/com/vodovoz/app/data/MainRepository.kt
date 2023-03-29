@@ -333,6 +333,8 @@ class MainRepository @Inject constructor(
         page: Int?
     ) : ResponseBody {
         return api.fetchSearchResponse(
+            action = "search",
+            limit = 10,
             query = query,
             categoryId = categoryId,
             sort = sort,

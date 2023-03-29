@@ -231,6 +231,7 @@ class SearchFlowViewModel @Inject constructor(
     }
 
     fun fetchMatchesQueries(query: String) {
+        if (query.isEmpty()) return
         viewModelScope.launch {
             flow { emit(repository.fetchMatchesQueries(query)) }
                 .catch {
