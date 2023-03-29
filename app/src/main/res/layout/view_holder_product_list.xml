@@ -164,6 +164,7 @@
     <RelativeLayout
         android:id="@+id/rlAmountControllerContainer"
         android:layout_width="@dimen/_100sdp"
+        android:translationZ="@dimen/space_16"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
