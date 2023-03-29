@@ -310,7 +310,7 @@ class SearchFlowViewModel @Inject constructor(
             page = 1,
             loadMore = false
         )
-        fetchHeader()
+        fetchProductsByQuery()
     }
 
     fun updateBySortType(sortType: SortType) {
