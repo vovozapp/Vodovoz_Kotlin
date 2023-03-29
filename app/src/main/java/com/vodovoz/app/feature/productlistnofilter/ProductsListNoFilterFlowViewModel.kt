@@ -288,15 +288,20 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
     }
 
     fun updateByCat(categoryId: Long) {
+        val categoryUI = state.data.categoryHeader ?: return
+
         uiStateListener.value = state.copy(
             data = state.data.copy(
-                categoryId = categoryId
+                categoryHeader = categoryUI.copy(
+                    categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == categoryId) }
+                ),
+                selectedCategoryId = categoryId,
+                sortType = SortType.NO_SORT
             ),
             page = 1,
             loadMore = false,
             loadingPage = true
         )
-        fetchHeaderByDataSource()
         fetchProductsByDataSource()
     }
 
