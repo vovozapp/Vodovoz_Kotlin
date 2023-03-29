@@ -91,8 +91,12 @@ class LocalData @Inject constructor(
     override fun addQueryToHistory(query: String) {
         if (query.isNotEmpty()) {
             val queryList = fetchSearchHistory().toMutableList()
-            queryList.add(query)
-            searchSettings.edit().putString(SEARCH_HISTORY, buildSearchHistoryStr(queryList)).apply()
+            val cont = queryList.find { it == query }
+            if (cont == null) {
+                queryList.add(query)
+                searchSettings.edit().putString(SEARCH_HISTORY, buildSearchHistoryStr(queryList))
+                    .apply()
+            }
         }
     }
 
