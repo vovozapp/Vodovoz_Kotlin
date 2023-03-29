@@ -133,6 +133,9 @@ class SearchFlowFragment : BaseFragment() {
         binding.incAppBar.incSearch.imgClear.setOnClickListener {
             binding.incAppBar.incSearch.etSearch.setText("")
             binding.incAppBar.incSearch.etSearch.requestFocus()
+            binding.searchDataContainer.visibility = View.VISIBLE
+            binding.productsContainer.visibility = View.INVISIBLE
+            viewModel.clearState()
         }
 
         binding.incAppBar.incSearch.etSearch.setOnEditorActionListener{ _, actionId, _ ->

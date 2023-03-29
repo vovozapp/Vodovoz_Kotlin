@@ -65,6 +65,10 @@ class SearchFlowViewModel @Inject constructor(
         fetchProductsByQuery()
     }
 
+    fun clearState() {
+        uiStateListener.value = state.copy(data = state.data.copy(query = "", categoryHeader = null, itemsList = emptyList(), matchesQuery = emptyList()))
+    }
+
     fun fetchDefaultSearchData() {
         uiStateListener.value = state.copy(data = state.data.copy(historyQuery = dataRepository.fetchSearchHistory()))
 
