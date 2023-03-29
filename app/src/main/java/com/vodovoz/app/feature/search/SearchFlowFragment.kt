@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -41,6 +42,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import kotlinx.coroutines.flow.collect
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -101,6 +103,18 @@ class SearchFlowFragment : BaseFragment() {
         observeChangeLayoutManager()
         initBackButton()
         initSearch()
+        observeNoMatchesToast()
+    }
+
+    private fun observeNoMatchesToast() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.observeNoMatchesToast()
+                .collect {
+                    if (it) {
+                        Toast.makeText(requireContext(), "Ничего не найдено", Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
     }
 
     private fun initSearch() {

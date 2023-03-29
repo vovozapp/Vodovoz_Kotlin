@@ -47,6 +47,9 @@ class SearchFlowViewModel @Inject constructor(
     private val changeLayoutManager = MutableStateFlow(LINEAR)
     fun observeChangeLayoutManager() = changeLayoutManager.asStateFlow()
 
+    private val noMatchesToastListener = MutableSharedFlow<Boolean>()
+    fun observeNoMatchesToast() = noMatchesToastListener.asSharedFlow()
+
     fun firstLoad() {
         if (!state.isFirstLoad) {
             uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
@@ -258,6 +261,15 @@ class SearchFlowViewModel @Inject constructor(
                         uiStateListener.value =
                             state.copy(loadingPage = false, error = ErrorState.Error())
                     }
+                }
+                .catch {
+                    uiStateListener.value = state.copy(
+                        data = state.data.copy(
+                            matchesQuery = emptyList()
+                        ),
+                        loadingPage = false
+                    )
+                    noMatchesToastListener.emit(true)
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
