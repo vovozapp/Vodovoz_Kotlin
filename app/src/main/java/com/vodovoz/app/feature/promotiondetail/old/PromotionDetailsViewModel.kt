@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.promotion_details
+package com.vodovoz.app.feature.promotiondetail.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

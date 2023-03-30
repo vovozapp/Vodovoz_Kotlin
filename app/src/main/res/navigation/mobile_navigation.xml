@@ -199,7 +199,7 @@
     </fragment>
     <fragment
         android:id="@+id/promotionDetailFragment"
-        android:name="com.vodovoz.app.ui.fragment.promotion_details.PromotionDetailsFragment"
+        android:name="com.vodovoz.app.feature.promotiondetail.PromotionDetailsFragment"
         android:label="PromotionDetailFragment" >
         <argument
             android:name="promotionId"

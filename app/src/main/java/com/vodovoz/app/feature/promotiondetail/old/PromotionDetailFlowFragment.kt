@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.promotiondetail
+package com.vodovoz.app.feature.promotiondetail.old
 
 import android.graphics.Color
 import android.os.Bundle
@@ -22,7 +22,9 @@ import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.ui.fragment.promotion_details.PromotionDetailsFragmentDirections
+import com.vodovoz.app.feature.promotiondetail.PromotionDetailFlowController
+import com.vodovoz.app.feature.promotiondetail.PromotionDetailFlowViewModel
+import com.vodovoz.app.feature.promotiondetail.PromotionDetailsFragmentDirections
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.PromotionDetailUI
 import dagger.hilt.android.AndroidEntryPoint

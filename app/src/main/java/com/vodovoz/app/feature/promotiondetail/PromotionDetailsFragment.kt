@@ -1,10 +1,8 @@
-package com.vodovoz.app.ui.fragment.promotion_details
+package com.vodovoz.app.feature.promotiondetail
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
@@ -12,43 +10,21 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
-import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.databinding.FragmentPromotionDetailBinding
 import com.vodovoz.app.databinding.FragmentPromotionDetailFlowBinding
 import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
-import com.vodovoz.app.feature.home.HomeFragmentDirections
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.ui.adapter.LinearProductsAdapter
-import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.decoration.ListMarginDecoration
-import com.vodovoz.app.ui.diffUtils.ProductDiffUtilCallback
-import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
-import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
-import com.vodovoz.app.feature.promotiondetail.PromotionDetailFlowController
-import com.vodovoz.app.feature.promotiondetail.PromotionDetailFlowViewModel
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
-import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderFragment
-import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.PromotionDetailUI
-import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
 
 @AndroidEntryPoint
