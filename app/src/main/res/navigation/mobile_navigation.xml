@@ -216,11 +216,11 @@
     </fragment>
     <fragment
         android:id="@+id/allPromotionsFragment"
-        android:name="com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragment"
+        android:name="com.vodovoz.app.feature.all.promotions.AllPromotionsFragment"
         android:label="AllPromotionsFragment" >
         <argument
             android:name="dataSource"
-            app:argType="com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragment$DataSource" />
+            app:argType="com.vodovoz.app.feature.all.promotions.AllPromotionsFragment$DataSource" />
         <action
             android:id="@+id/action_to_promotionFiltersBottomFragment"
             app:destination="@id/promotionFiltersBottomFragment" />

@@ -8,7 +8,7 @@ import com.vodovoz.app.ui.fragment.about_app.AboutAppDialogViewModel
 import com.vodovoz.app.ui.fragment.about_services.AboutServicesViewModel
 import com.vodovoz.app.ui.fragment.all_brands.AllBrandsViewModel
 import com.vodovoz.app.ui.fragment.all_comments_by_product.AllCommentsByProductViewModel
-import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsViewModel
+import com.vodovoz.app.feature.all.promotions.old.AllPromotionsViewModel
 import com.vodovoz.app.ui.fragment.bottles.AllBottlesViewModel
 import com.vodovoz.app.ui.fragment.bottom_dialog_add_address.AddAddressViewModel
 import com.vodovoz.app.feature.cart.old.CartViewModel

@@ -1,10 +1,11 @@
-package com.vodovoz.app.ui.fragment.all_promotions
+package com.vodovoz.app.feature.all.promotions.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.mapper.AllPromotionBundleMapper.mapToUI
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.PromotionFilterUI

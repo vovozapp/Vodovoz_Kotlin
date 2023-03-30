@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.all.promotions
+package com.vodovoz.app.feature.all.promotions.old
 
 import android.os.Bundle
 import android.view.View
@@ -12,8 +12,9 @@ import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.databinding.FragmentAllPromotionsBinding
 import com.vodovoz.app.feature.all.AllAdapterController
 import com.vodovoz.app.feature.all.AllClickListener
-import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragment
-import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragmentDirections
+import com.vodovoz.app.feature.all.promotions.AllPromotionsFlowViewModel
+import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
+import com.vodovoz.app.feature.all.promotions.AllPromotionsFragmentDirections
 import com.vodovoz.app.ui.model.ListOfPromotionFilterUi
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.Serializable

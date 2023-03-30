@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vodovoz.app.databinding.BsSelectionPromotionFiltersBinding
 import com.vodovoz.app.ui.adapter.PromotionsFiltersAdapter
-import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragment
+import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject

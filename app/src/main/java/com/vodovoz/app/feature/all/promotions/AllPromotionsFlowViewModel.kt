@@ -2,24 +2,16 @@ package com.vodovoz.app.feature.all.promotions
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
-import com.vodovoz.app.common.content.itemadapter.Item
-import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.content.toErrorState
-import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.banner.ProductsByBannerResponseJsonParser.parseProductsByBannerResponse
 import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonParser.parseAllPromotionsResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionsByBannerResponseJsonParser.parsePromotionsByBannerResponse
-import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.mapper.AllPromotionBundleMapper.mapToUI
-import com.vodovoz.app.mapper.ProductMapper.mapToUI
-import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragment
 import com.vodovoz.app.ui.model.PromotionFilterUI
 import com.vodovoz.app.ui.model.custom.AllPromotionBundleUI
 import com.vodovoz.app.util.extensions.debugLog
