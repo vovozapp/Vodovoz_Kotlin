@@ -89,13 +89,11 @@ class DetailHeaderViewHolder(
         }
 
         launch {
-            debugLog { "spasibo before before ${item?.productDetailUI}" }
             val item = item?.productDetailUI ?: return@launch
             cartManager
                 .observeCarts()
                 .filter { it.containsKey(item.id) }
                 .onEach {
-                    debugLog { "spasibo after ${it[item.id]}" }
                     item.cartQuantity = it[item.id] ?: item.cartQuantity
                     updateCartQuantity(item)
                 }
@@ -354,16 +352,25 @@ class DetailHeaderViewHolder(
 
     private fun add(item: DetailHeader) {
         if (item.productDetailUI.leftItems == 0) {
-            item.replacementProductsCategoryDetail?.let {
-                if (it.productUIList.isNotEmpty()) {
+            when(item.replacementProductsCategoryDetail?.productUIList?.isEmpty()) {
+                true -> {
+                    debugLog { "spasibo nav to notif" }
+                    productsClickListener.onNotifyWhenBeAvailable(item.productDetailUI.id, item.productDetailUI.name, item.productDetailUI.detailPictureList.first())
+                }
+                false -> {
+                    debugLog { "spasibo nav to replace" }
                     clickListener.navigateToReplacement(
                         item.productDetailUI.detailPictureList.first(),
-                        it.productUIList.toTypedArray(),
+                        item.replacementProductsCategoryDetail.productUIList.toTypedArray(),
                         item.productDetailUI.id,
                         item.productDetailUI.name
                     )
                 }
+                else -> {
+                    debugLog { "spasibo else" }
+                }
             }
+
         } else {
             if (item.productDetailUI.cartQuantity == 0) {
                 item.productDetailUI.oldQuantity = item.productDetailUI.cartQuantity
