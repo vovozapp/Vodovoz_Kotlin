@@ -1,12 +1,10 @@
 package com.vodovoz.app.data
 
 import com.vodovoz.app.BuildConfig
-import com.vodovoz.app.data.model.common.CategoryEntity
-import com.vodovoz.app.data.model.common.ProductEntity
-import com.vodovoz.app.data.model.common.PromotionDetailEntity
-import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
 import com.vodovoz.app.data.model.features.FavoriteProductsHeaderBundleEntity
+import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.parseAllBrandsResponse
 import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
 import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonParser.parseAllPromotionsResponse
@@ -518,4 +516,18 @@ class MainRepository @Inject constructor(
         action = "detailaction",
         categoryId = categoryId
     )
+
+    //Все бренды
+    suspend fun fetchAllBrands(
+        brandIdList: List<Long>
+    ): ResponseBody =
+        api.fetchBrandResponse(
+            action = "brand",
+            brandIdList = StringBuilder().apply {
+                brandIdList.forEach { brandId ->
+                    append(brandId)
+                    append(",")
+                }
+            }.toString()
+        )
 }

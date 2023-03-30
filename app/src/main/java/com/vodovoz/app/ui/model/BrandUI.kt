@@ -10,12 +10,16 @@ data class BrandUI(
 ) : Item {
 
     override fun getItemViewType(): Int {
-        return R.layout.view_holder_slider_brand
+        return BRAND_UI_VIEW_TYPE
     }
 
     override fun areItemsTheSame(item: Item): Boolean {
         if (item !is BrandUI) return false
 
         return id == item.id
+    }
+
+    companion object {
+        const val BRAND_UI_VIEW_TYPE = -155252
     }
 }
