@@ -39,6 +39,7 @@ interface VodovozApi {
     fun fetchMainSliderResponse(
         @Query("action") action: String? = null,
         @Query("id") categoryId: Long? = null,
+        @Query("baner") baner: String? = "uzkiy"
     ): Single<ResponseBody>
 
     //Слайдер категорий
