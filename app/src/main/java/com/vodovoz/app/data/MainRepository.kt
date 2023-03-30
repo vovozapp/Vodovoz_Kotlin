@@ -2,6 +2,7 @@ package com.vodovoz.app.data
 
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.data.model.common.CategoryEntity
+import com.vodovoz.app.data.model.common.ProductEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.features.FavoriteProductsHeaderBundleEntity
 import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
@@ -477,5 +478,15 @@ class MainRepository @Inject constructor(
             page = page,
         )
     }
+
+    /**
+     * only products
+     */
+
+    //Продукты по баннеру
+    suspend fun fetchProductsByBanner(categoryId: Long): ResponseBody = api.fetchMainSliderResponse(
+        action = "detailtovar",
+        categoryId = categoryId
+    )
 
 }

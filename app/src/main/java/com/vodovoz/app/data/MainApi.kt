@@ -300,4 +300,16 @@ interface MainApi {
         @Query("nav") page: Int? = null,
     ): ResponseBody
 
+    /**
+     * only products
+     */
+
+    //Рекламный слайдер
+    @GET("/newmobile/glavnaya/slayders/index.php")
+    suspend fun fetchMainSliderResponse(
+        @Query("action") action: String? = null,
+        @Query("id") categoryId: Long? = null,
+        @Query("baner") baner: String? = "uzkiy"
+    ): ResponseBody
+
 }

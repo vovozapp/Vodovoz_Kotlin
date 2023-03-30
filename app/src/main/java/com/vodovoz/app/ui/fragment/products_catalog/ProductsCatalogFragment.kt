@@ -97,7 +97,7 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
     }
 
     private fun initAppBar() {
-        binding.back.setOnClickListener {
+        binding.imgBack.setOnClickListener {
             findNavController().popBackStack()
         }
     }
@@ -127,10 +127,10 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
     }
 
     private fun initSearch() {
-        binding.searchContainer.clSearchContainer.setOnClickListener {
+        binding.incSearch.clSearchContainer.setOnClickListener {
             findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment())
         }
-        binding.searchContainer.etSearch.setOnFocusChangeListener { _, isFocusable ->
+        binding.incSearch.etSearch.setOnFocusChangeListener { _, isFocusable ->
             if (isFocusable) {
                 findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment())
             }
