@@ -33,6 +33,9 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvTitle"
                 style="@style/ToolbarTitle"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="@dimen/_14ssp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:text="@string/plug"/>

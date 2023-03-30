@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -100,6 +101,7 @@ class PromotionDetailFlowFragment : BaseFragment() {
                         hideLoader()
                         binding.timeLeftContainer.isVisible = true
                         binding.customerCategoryCard.isVisible = true
+                        binding.rootView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_white))
                     }
 
                     bindHeader(state.data.items)
@@ -123,6 +125,8 @@ class PromotionDetailFlowFragment : BaseFragment() {
                             binding.productRecycler.visibility = View.GONE
                         }
                         else -> {
+                            binding.promotionProductsTitle.visibility = View.VISIBLE
+                            binding.productRecycler.visibility = View.VISIBLE
                             productsController.submitList(state.data.items.promotionCategoryDetailUI.productUIList)
                         }
                     }
