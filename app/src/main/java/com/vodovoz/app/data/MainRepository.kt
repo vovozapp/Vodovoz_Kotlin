@@ -5,10 +5,13 @@ import com.vodovoz.app.data.model.common.CategoryEntity
 import com.vodovoz.app.data.model.common.ProductEntity
 import com.vodovoz.app.data.model.common.PromotionDetailEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
 import com.vodovoz.app.data.model.features.FavoriteProductsHeaderBundleEntity
 import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
+import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonParser.parseAllPromotionsResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
+import com.vodovoz.app.data.parser.response.promotion.PromotionsByBannerResponseJsonParser.parsePromotionsByBannerResponse
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
 import okhttp3.ResponseBody
@@ -498,4 +501,21 @@ class MainRepository @Inject constructor(
     suspend fun fetchPromotionDetails(promotionId: Long): ResponseBody =
         api.fetchPromotionResponse(action = "detail", promotionId = promotionId)
 
+    /**
+     * all promotions
+     */
+
+    //Информация о всех акциях
+    suspend fun fetchAllPromotions(
+        filterId: Long
+    ): ResponseBody = api.fetchPromotionResponse(
+        action = "akcii",
+        filterId = filterId
+    )
+
+    //Акции по баннеру
+    suspend fun fetchPromotionsByBanner(categoryId: Long): ResponseBody = api.fetchMainSliderResponse(
+        action = "detailaction",
+        categoryId = categoryId
+    )
 }
