@@ -1,6 +1,5 @@
 package com.vodovoz.app.ui.model
 
-import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
 
 data class PromotionUI(
@@ -14,12 +13,16 @@ data class PromotionUI(
 ) : Item {
 
     override fun getItemViewType(): Int {
-        return R.layout.view_holder_slider_promotion
+        return PROMOTION_UI_VIEW_TYPE
     }
 
     override fun areItemsTheSame(item: Item): Boolean {
         if (item !is PromotionUI) return false
 
         return id == item.id
+    }
+
+    companion object {
+        const val PROMOTION_UI_VIEW_TYPE = -41414
     }
 }
