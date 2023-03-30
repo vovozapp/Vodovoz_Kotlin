@@ -9,7 +9,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.feature.cart.CartFlowViewModel
 import com.vodovoz.app.feature.home.HomeFlowViewModel
-import com.vodovoz.app.feature.home.HomeViewModel
+import com.vodovoz.app.feature.home.old.HomeViewModel
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.feature.catalog.CatalogFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel

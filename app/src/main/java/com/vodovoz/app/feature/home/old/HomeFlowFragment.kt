@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.home
+package com.vodovoz.app.feature.home.old
 
 import android.content.Intent
 import android.net.Uri
@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -20,6 +19,9 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
+import com.vodovoz.app.feature.home.HomeController
+import com.vodovoz.app.feature.home.HomeFlowViewModel
+import com.vodovoz.app.feature.home.HomeFragmentDirections
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener

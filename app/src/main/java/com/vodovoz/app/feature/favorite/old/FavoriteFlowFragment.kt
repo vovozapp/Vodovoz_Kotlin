@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.favorite
+package com.vodovoz.app.feature.favorite.old
 
 import android.os.Bundle
 import android.view.View
@@ -15,11 +15,14 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.data.model.common.SortType
+import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.DISCOUNT
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel.Companion.LINEAR
+import com.vodovoz.app.feature.favorite.FavoriteFragmentDirections
+import com.vodovoz.app.feature.favorite.FavoritesListController
 import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController

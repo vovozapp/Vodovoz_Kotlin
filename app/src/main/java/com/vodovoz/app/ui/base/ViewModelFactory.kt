@@ -3,7 +3,7 @@ package com.vodovoz.app.ui.base
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.vodovoz.app.data.DataRepository
-import com.vodovoz.app.feature.home.HomeViewModel
+import com.vodovoz.app.feature.home.old.HomeViewModel
 import com.vodovoz.app.ui.fragment.about_app.AboutAppDialogViewModel
 import com.vodovoz.app.ui.fragment.about_services.AboutServicesViewModel
 import com.vodovoz.app.ui.fragment.all_brands.AllBrandsViewModel
@@ -16,7 +16,7 @@ import com.vodovoz.app.feature.catalog.CatalogViewModel
 import com.vodovoz.app.ui.fragment.concrete_filter.ConcreteFilterViewModel
 import com.vodovoz.app.ui.fragment.contacts.ContactsViewModel
 import com.vodovoz.app.ui.fragment.discount_card.DiscountCardViewModel
-import com.vodovoz.app.feature.favorite.FavoriteViewModel
+import com.vodovoz.app.feature.favorite.old.FavoriteViewModel
 import com.vodovoz.app.ui.fragment.full_screen_history_slider.FullScreenHistoriesSliderViewModel
 import com.vodovoz.app.ui.fragment.login.LoginViewModel
 import com.vodovoz.app.ui.fragment.map.MapViewModel
