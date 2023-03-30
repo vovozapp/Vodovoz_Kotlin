@@ -164,6 +164,7 @@ class AvailableProductsViewHolder(
 
         binding.tvName.text = item.name
         binding.rbRating.rating = item.rating.toFloat()
+        binding.llRatingContainer.visibility = View.VISIBLE
 
         binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
         binding.amountController.add.setImageDrawable(
@@ -219,8 +220,6 @@ class AvailableProductsViewHolder(
             true -> binding.amountController.circleAmount.visibility = View.VISIBLE
             false -> binding.amountController.circleAmount.visibility = View.GONE
         }
-
-        binding.llRatingContainer.visibility = View.GONE
 
         when (item.commentAmount.isEmpty()) {
             true -> binding.tvCommentAmount.visibility = View.GONE

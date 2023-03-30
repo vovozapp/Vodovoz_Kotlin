@@ -171,6 +171,7 @@ class ProdListViewHolder(
 
         binding.tvName.text = item.name
         binding.rbRating.rating = item.rating.toFloat()
+        binding.llRatingContainer.visibility = View.GONE
 
         //If left items = 0
         when(item.leftItems == 0) {
@@ -230,8 +231,6 @@ class ProdListViewHolder(
             true -> binding.amountController.circleAmount.visibility = View.VISIBLE
             false -> binding.amountController.circleAmount.visibility = View.GONE
         }
-
-        binding.llRatingContainer.visibility = View.GONE
 
         when (item.commentAmount.isEmpty()) {
             true -> binding.tvCommentAmount.visibility = View.GONE
