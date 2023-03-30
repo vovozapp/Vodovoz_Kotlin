@@ -155,7 +155,7 @@
     </dialog>
     <fragment
         android:id="@+id/productDetailFragment"
-        android:name="com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragment"
+        android:name="com.vodovoz.app.feature.productdetail.ProductDetailsFragment"
         android:label="ProductDetailFragment" >
         <argument
             android:name="productId"

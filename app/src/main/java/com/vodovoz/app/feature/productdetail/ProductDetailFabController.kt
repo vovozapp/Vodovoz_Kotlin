@@ -20,7 +20,7 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
-import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
+
 
 class ProductDetailFabController(
     private val context: Context,

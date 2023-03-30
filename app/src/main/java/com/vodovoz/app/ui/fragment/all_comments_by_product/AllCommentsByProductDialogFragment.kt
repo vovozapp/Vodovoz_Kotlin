@@ -13,12 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentProductCommentsBinding
+import com.vodovoz.app.feature.productdetail.ProductDetailsFragmentDirections
 import com.vodovoz.app.ui.adapter.PagingCommentsAdapter
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
 import com.vodovoz.app.ui.base.loadStateAdapter.LoadStateAdapter
 import com.vodovoz.app.ui.diffUtils.CommentDiffItemCallback
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
-import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
+
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo

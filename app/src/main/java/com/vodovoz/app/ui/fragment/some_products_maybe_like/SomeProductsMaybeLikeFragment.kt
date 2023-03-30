@@ -13,11 +13,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentPaginatedMaybeLikeProductListBinding
+import com.vodovoz.app.feature.productdetail.ProductDetailsFragmentDirections
 import com.vodovoz.app.ui.adapter.GridProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.base.VodovozApplication
-import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
+
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo

@@ -21,7 +21,7 @@ import com.vodovoz.app.databinding.ViewCustomTabBinding
 import com.vodovoz.app.ui.adapter.CategoriesAdapter
 import com.vodovoz.app.ui.base.BaseHiddenFragment
 import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
-import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
+
 import com.vodovoz.app.ui.interfaces.IOnChangeProductQuantity
 import com.vodovoz.app.ui.interfaces.IOnFavoriteClick
 import com.vodovoz.app.ui.interfaces.IOnProductClick

@@ -15,10 +15,11 @@ import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.databinding.FragmentProfileBinding
+import com.vodovoz.app.feature.productdetail.ProductDetailsFragmentDirections
 import com.vodovoz.app.ui.adapter.GridProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
-import com.vodovoz.app.ui.fragment.product_details.ProductDetailsFragmentDirections
+
 import com.vodovoz.app.ui.fragment.slider.order_slider.OrdersSliderConfig
 import com.vodovoz.app.ui.fragment.slider.order_slider.OrdersSliderFragment
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig

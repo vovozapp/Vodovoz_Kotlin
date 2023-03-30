@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.product_details
+package com.vodovoz.app.feature.productdetail
 
 import android.content.Intent
 import android.os.Bundle
@@ -16,9 +16,6 @@ import com.vodovoz.app.databinding.FragmentProductDetailsFlowBinding
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
-import com.vodovoz.app.feature.productdetail.ProductDetailFabController
-import com.vodovoz.app.feature.productdetail.ProductDetailsController
-import com.vodovoz.app.feature.productdetail.ProductDetailsFlowViewModel
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS
