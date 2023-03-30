@@ -18,6 +18,7 @@ import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentMainHomeFlowBinding
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
@@ -45,6 +46,9 @@ class HomeFlowFragment : BaseFragment() {
 
     @Inject
     lateinit var likeManager: LikeManager
+
+    @Inject
+    lateinit var tabManager: TabManager
 
     private val homeController by lazy {
         HomeController(
@@ -189,25 +193,25 @@ class HomeFlowFragment : BaseFragment() {
             override fun onAboutDeliveryClick() {
                 findNavController().navigate(
                     HomeFragmentDirections.actionToWebViewFragment(
-                    ApiConfig.ABOUT_DELIVERY_URL,
-                    "О доставке"
-                ))
+                        ApiConfig.ABOUT_DELIVERY_URL,
+                        "О доставке"
+                    ))
             }
 
             override fun onAboutPayClick() {
                 findNavController().navigate(
                     HomeFragmentDirections.actionToWebViewFragment(
-                    ApiConfig.ABOUT_PAY_URL,
-                    "Об оплате"
-                ))
+                        ApiConfig.ABOUT_PAY_URL,
+                        "Об оплате"
+                    ))
             }
 
             override fun onAboutShopClick() {
                 findNavController().navigate(
                     HomeFragmentDirections.actionToWebViewFragment(
-                    ApiConfig.ABOUT_SHOP_URL,
-                    "О магазине"
-                ))
+                        ApiConfig.ABOUT_SHOP_URL,
+                        "О магазине"
+                    ))
             }
 
             override fun onServicesClick() {
@@ -226,8 +230,8 @@ class HomeFlowFragment : BaseFragment() {
             override fun onBrandClick(id: Long) {
                 findNavController().navigate(
                     HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Brand(id)
-                ))
+                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Brand(id)
+                    ))
             }
 
             override fun onShowAllBrandsClick() {
@@ -249,8 +253,8 @@ class HomeFlowFragment : BaseFragment() {
             override fun onCountryClick(id: Long) {
                 findNavController().navigate(
                     HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Country(id)
-                ))
+                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Country(id)
+                    ))
             }
 
             //POSITION_2
@@ -279,10 +283,7 @@ class HomeFlowFragment : BaseFragment() {
             }
 
             override fun onShowAllFavoritesClick() {
-                val navHostFragment =
-                    (childFragmentManager.findFragmentById(R.id.fgvContainer)) as NavHostFragment
-                val navController = navHostFragment.navController
-                navController.navigate(R.id.favoriteFragment)
+                tabManager.selectTab(R.id.favoriteFragment)
             }
 
             //POSITION_3

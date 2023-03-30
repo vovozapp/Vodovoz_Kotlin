@@ -150,8 +150,10 @@ class ProductDetailsFlowFragment : BaseFragment() {
                 id: Long,
                 name: String
             ) {
-                ProductDetailsFragmentDirections.actionToReplacementProductsSelectionBS(
-                    detailPicture, products, id, name
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToReplacementProductsSelectionBS(
+                        detailPicture, products, id, name
+                    )
                 )
             }
 
