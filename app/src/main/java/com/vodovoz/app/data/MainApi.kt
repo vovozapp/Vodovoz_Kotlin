@@ -312,4 +312,18 @@ interface MainApi {
         @Query("baner") baner: String? = "uzkiy"
     ): ResponseBody
 
+    /**
+     * promo details
+     */
+
+    //Акции
+    @GET("/newmobile/glavnaya/akcii.php")
+    suspend fun fetchPromotionResponse(
+        @Query("action") action: String? = null,
+        @Query("razdelid") filterId: Long? = null,
+        @Query("id") promotionId: Long? = null,
+        @Query("platforma") platform: String? = null,
+        @Query("limit") limit: Int? = null,
+    ): ResponseBody
+
 }

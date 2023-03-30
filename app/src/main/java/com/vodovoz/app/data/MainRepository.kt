@@ -3,10 +3,12 @@ package com.vodovoz.app.data
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.data.model.common.CategoryEntity
 import com.vodovoz.app.data.model.common.ProductEntity
+import com.vodovoz.app.data.model.common.PromotionDetailEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.features.FavoriteProductsHeaderBundleEntity
 import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
+import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
 import okhttp3.ResponseBody
@@ -488,5 +490,12 @@ class MainRepository @Inject constructor(
         action = "detailtovar",
         categoryId = categoryId
     )
+
+    /**
+     * promo details
+     */
+
+    suspend fun fetchPromotionDetails(promotionId: Long): ResponseBody =
+        api.fetchPromotionResponse(action = "detail", promotionId = promotionId)
 
 }
