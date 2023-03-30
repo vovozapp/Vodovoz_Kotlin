@@ -288,11 +288,11 @@
     </fragment>
     <fragment
         android:id="@+id/productsCatalogFragment"
-        android:name="com.vodovoz.app.ui.fragment.products_catalog.ProductsCatalogFragment"
+        android:name="com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment"
         android:label="ProductsCatalogFragment">
         <argument
             android:name="dataSource"
-            app:argType="com.vodovoz.app.ui.fragment.products_catalog.ProductsCatalogFragment$DataSource" />
+            app:argType="com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment$DataSource" />
         <action
             android:id="@+id/action_to_productDetailFragment"
             app:destination="@id/productDetailFragment" />

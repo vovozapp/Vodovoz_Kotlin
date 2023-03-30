@@ -15,7 +15,7 @@ import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
 import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
-import com.vodovoz.app.ui.fragment.products_catalog.ProductsCatalogFragment
+import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.ui.interfaces.IOnChangeHistory
 import com.vodovoz.app.ui.interfaces.IOnInvokeAction
 import dagger.hilt.android.AndroidEntryPoint

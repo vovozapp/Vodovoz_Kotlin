@@ -28,7 +28,7 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsFragment
-import com.vodovoz.app.ui.fragment.products_catalog.ProductsCatalogFragment
+import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

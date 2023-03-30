@@ -14,7 +14,6 @@ import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.FragmentFixAmountProductsBinding
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.ui.fragment.products_catalog.ProductsCatalogFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.Serializable
 import javax.inject.Inject

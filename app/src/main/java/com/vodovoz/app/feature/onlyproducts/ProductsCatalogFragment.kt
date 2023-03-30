@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.products_catalog
+package com.vodovoz.app.feature.onlyproducts
 
 import android.annotation.SuppressLint
 import android.graphics.Rect
@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,7 +16,6 @@ import com.vodovoz.app.databinding.FragmentFixAmountProductsBinding
 import com.vodovoz.app.ui.adapter.LinearProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable

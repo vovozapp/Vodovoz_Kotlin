@@ -15,7 +15,6 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.banner.ProductsByBannerResponseJsonParser.parseProductsByBannerResponse
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
-import com.vodovoz.app.ui.fragment.products_catalog.ProductsCatalogFragment
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
