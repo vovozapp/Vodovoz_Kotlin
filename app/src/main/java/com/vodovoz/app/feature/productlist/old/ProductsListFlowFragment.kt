@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.productlist
+package com.vodovoz.app.feature.productlist.old
 
 import android.content.Intent
 import android.os.Bundle
@@ -17,14 +17,15 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentProductsFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
-import com.vodovoz.app.feature.favorite.FavoriteFragmentDirections
+import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragmentDirections
+import com.vodovoz.app.feature.productlist.ProductsListFlowController
+import com.vodovoz.app.feature.productlist.ProductsListFlowViewModel
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlist.brand.BrandFlowClickListener
 import com.vodovoz.app.feature.productlist.brand.BrandFlowController
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.FilterValueUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
-import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

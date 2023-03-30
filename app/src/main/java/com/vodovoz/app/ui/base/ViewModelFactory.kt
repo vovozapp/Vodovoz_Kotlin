@@ -11,8 +11,8 @@ import com.vodovoz.app.ui.fragment.all_comments_by_product.AllCommentsByProductV
 import com.vodovoz.app.ui.fragment.all_promotions.AllPromotionsViewModel
 import com.vodovoz.app.ui.fragment.bottles.AllBottlesViewModel
 import com.vodovoz.app.ui.fragment.bottom_dialog_add_address.AddAddressViewModel
-import com.vodovoz.app.feature.cart.CartViewModel
-import com.vodovoz.app.feature.catalog.CatalogViewModel
+import com.vodovoz.app.feature.cart.old.CartViewModel
+import com.vodovoz.app.feature.catalog.old.CatalogViewModel
 import com.vodovoz.app.ui.fragment.concrete_filter.ConcreteFilterViewModel
 import com.vodovoz.app.ui.fragment.contacts.ContactsViewModel
 import com.vodovoz.app.ui.fragment.discount_card.DiscountCardViewModel
@@ -23,11 +23,11 @@ import com.vodovoz.app.ui.fragment.map.MapViewModel
 import com.vodovoz.app.ui.fragment.order_details.OrderDetailsViewModel
 import com.vodovoz.app.ui.fragment.ordering.OrderingViewModel
 import com.vodovoz.app.ui.fragment.orders_history.OrdersHistoryViewModel
-import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogViewModel
-import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersViewModel
+import com.vodovoz.app.feature.productlist.old.PaginatedProductsCatalogViewModel
+import com.vodovoz.app.feature.productlistnofilter.old.PaginatedProductsCatalogWithoutFiltersViewModel
 import com.vodovoz.app.ui.fragment.past_purchases.PastPurchasesViewModel
 import com.vodovoz.app.ui.fragment.pre_order.PreOrderViewModel
-import com.vodovoz.app.feature.productdetail.ProductDetailsViewModel
+import com.vodovoz.app.feature.productdetail.old.ProductDetailsViewModel
 import com.vodovoz.app.ui.fragment.product_filters.ProductFiltersViewModel
 import com.vodovoz.app.ui.fragment.products_catalog.ProductsCatalogViewModel
 import com.vodovoz.app.ui.fragment.profile.ProfileViewModel
@@ -36,7 +36,7 @@ import com.vodovoz.app.ui.fragment.questionnaires.QuestionnairesViewModel
 import com.vodovoz.app.ui.fragment.register.RegisterViewModel
 import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionViewModel
 import com.vodovoz.app.ui.fragment.saved_addresses.SavedAddressesViewModel
-import com.vodovoz.app.feature.search.SearchViewModel
+import com.vodovoz.app.feature.search.old.SearchViewModel
 import com.vodovoz.app.ui.fragment.send_comment_about_product.SendCommentAboutProductViewModel
 import com.vodovoz.app.ui.fragment.send_comment_about_shop.SendCommentAboutShopViewModel
 import com.vodovoz.app.ui.fragment.service_detail.ServiceDetailViewModel

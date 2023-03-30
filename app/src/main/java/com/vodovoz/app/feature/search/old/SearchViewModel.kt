@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.search
+package com.vodovoz.app.feature.search.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

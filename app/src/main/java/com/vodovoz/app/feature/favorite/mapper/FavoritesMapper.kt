@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.favorite
+package com.vodovoz.app.feature.favorite.mapper
 
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel.Companion.GRID
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel.Companion.LINEAR

@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.productdetail
+package com.vodovoz.app.feature.productdetail.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

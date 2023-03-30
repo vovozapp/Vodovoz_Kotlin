@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.catalog
+package com.vodovoz.app.feature.catalog.old
 
 import android.os.Bundle
 import androidx.fragment.app.activityViewModels
@@ -9,9 +9,10 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentMainCatalogBinding
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.feature.catalog.CatalogFlowViewModel
+import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
 import com.vodovoz.app.feature.catalog.adapter.CatalogFlowAdapter
 import com.vodovoz.app.feature.catalog.adapter.CatalogFlowClickListener
-import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

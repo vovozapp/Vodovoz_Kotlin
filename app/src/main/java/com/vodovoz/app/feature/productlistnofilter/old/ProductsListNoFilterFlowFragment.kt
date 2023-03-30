@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.productlistnofilter
+package com.vodovoz.app.feature.productlistnofilter.old
 
 import android.content.Intent
 import android.os.Bundle
@@ -20,6 +20,10 @@ import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
+import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
+import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragmentDirections
+import com.vodovoz.app.feature.productlistnofilter.ProductsListNoFilterFlowController
+import com.vodovoz.app.feature.productlistnofilter.ProductsListNoFilterFlowViewModel
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.Serializable
