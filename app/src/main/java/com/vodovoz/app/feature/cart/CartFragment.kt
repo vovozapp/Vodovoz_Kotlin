@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.cart
+package com.vodovoz.app.feature.cart
 
 import android.os.Bundle
 import android.view.*
@@ -16,8 +16,6 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.FragmentMainCartFlowBinding
-import com.vodovoz.app.feature.cart.CartController
-import com.vodovoz.app.feature.cart.CartFlowViewModel
 import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS

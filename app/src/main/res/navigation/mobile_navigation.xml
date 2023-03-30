@@ -91,7 +91,7 @@
     </fragment>
     <fragment
         android:id="@+id/cartFragment"
-        android:name="com.vodovoz.app.ui.fragment.cart.CartFragment"
+        android:name="com.vodovoz.app.feature.cart.CartFragment"
         android:label="fragment_cart"
         tools:layout="@layout/fragment_main_cart" >
         <action

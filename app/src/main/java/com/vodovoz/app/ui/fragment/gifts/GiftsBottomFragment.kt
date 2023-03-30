@@ -16,7 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.BsSelectionGiftsBinding
 import com.vodovoz.app.ui.adapter.GiftsAdapter
-import com.vodovoz.app.ui.fragment.cart.CartFragment
+import com.vodovoz.app.feature.cart.CartFragment
 import com.vodovoz.app.ui.model.ProductUI
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy

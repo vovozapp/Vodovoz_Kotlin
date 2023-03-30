@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_white"
-    tools:context=".ui.fragment.cart.CartFragment">
+    tools:context=".feature.cart.CartFragment">
 
     <include
         android:id="@+id/incAppBar"
