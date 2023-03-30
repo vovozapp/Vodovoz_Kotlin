@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -97,6 +98,8 @@ class PromotionDetailFlowFragment : BaseFragment() {
                         showLoader()
                     } else {
                         hideLoader()
+                        binding.timeLeftContainer.isVisible = true
+                        binding.customerCategoryCard.isVisible = true
                     }
 
                     bindHeader(state.data.items)
