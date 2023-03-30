@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.onlyproducts
+package com.vodovoz.app.feature.onlyproducts.old
 
 import android.os.Bundle
 import android.view.View
@@ -13,6 +13,9 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.FragmentFixAmountProductsBinding
+import com.vodovoz.app.feature.onlyproducts.OnlyProductsController
+import com.vodovoz.app.feature.onlyproducts.OnlyProductsViewModel
+import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragmentDirections
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.Serializable

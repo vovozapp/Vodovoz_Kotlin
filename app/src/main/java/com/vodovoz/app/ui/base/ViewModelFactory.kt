@@ -29,7 +29,7 @@ import com.vodovoz.app.ui.fragment.past_purchases.PastPurchasesViewModel
 import com.vodovoz.app.ui.fragment.pre_order.PreOrderViewModel
 import com.vodovoz.app.feature.productdetail.old.ProductDetailsViewModel
 import com.vodovoz.app.ui.fragment.product_filters.ProductFiltersViewModel
-import com.vodovoz.app.feature.onlyproducts.ProductsCatalogViewModel
+import com.vodovoz.app.feature.onlyproducts.old.ProductsCatalogViewModel
 import com.vodovoz.app.ui.fragment.profile.ProfileViewModel
 import com.vodovoz.app.ui.fragment.promotion_details.PromotionDetailsViewModel
 import com.vodovoz.app.ui.fragment.questionnaires.QuestionnairesViewModel
