@@ -64,16 +64,15 @@ class AllPromotionsFlowFragment : BaseFragment() {
     }
 
     private fun initBackButton(state: AllPromotionsFlowViewModel.AllPromotionsState) {
-        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
-        binding.incAppBar.tvDropDownTitle.setOnClickListener {
+        initToolbarDropDown(state.selectedFilterUi.name) {
             val newList = ListOfPromotionFilterUi().apply {
                 addAll(state.promotionFilterUIList)
             }
             findNavController().navigate(
                 AllPromotionsFragmentDirections.actionToPromotionFiltersBottomFragment(
-                state.selectedFilterUi.id,
-                newList
-            ))
+                    state.selectedFilterUi.id,
+                    newList
+                ))
         }
     }
 
@@ -89,8 +88,6 @@ class AllPromotionsFlowFragment : BaseFragment() {
                     }
 
                     initBackButton(state.data)
-
-                    binding.incAppBar.tvDropDownTitle.text = state.data.selectedFilterUi.name
 
                     if (state.data.allPromotionBundleUI != null) {
                         allAdapterController.submitList(state.data.allPromotionBundleUI.promotionUIList)
