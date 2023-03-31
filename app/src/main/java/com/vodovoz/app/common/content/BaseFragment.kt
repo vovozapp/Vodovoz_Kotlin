@@ -34,9 +34,6 @@ abstract class BaseFragment : Fragment() {
         get() = viewBinding.progressBg
 
 
-    val searchContainer: RelativeLayout
-        get() = viewBinding.searchContainer
-
     val refresh: ImageView
         get() = viewBinding.error.refreshIv
 
@@ -93,13 +90,13 @@ abstract class BaseFragment : Fragment() {
 
     protected fun initSearchToolbar(onContainerClick: () -> Unit, bindEt: () -> Unit) {
         viewBinding.appbarLayout.isVisible = true
-        searchContainer.isVisible = true
+        viewBinding.searchAppBar.isVisible = true
 
-        viewBinding.clSearchContainer.setOnClickListener {
+        viewBinding.searchContainer.clSearchContainer.setOnClickListener {
             onContainerClick.invoke()
         }
 
-        viewBinding.etSearch.setOnFocusChangeListener { _, isFocusable ->
+        viewBinding.searchContainer.etSearch.setOnFocusChangeListener { _, isFocusable ->
             if (isFocusable) {
                 bindEt.invoke()
             }

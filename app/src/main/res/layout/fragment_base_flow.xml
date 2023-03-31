@@ -30,96 +30,19 @@
         tools:visibility="visible">
 
         <RelativeLayout
+            android:id="@+id/searchAppBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:id="@+id/searchContainer"
             android:visibility="gone"
             tools:visibility="visible"
             android:paddingHorizontal="@dimen/space_16"
             android:paddingVertical="@dimen/space_8">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clSearchContainer"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_33sdp"
-                android:background="@drawable/bkg_rectangle_light_gray"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imgSearch"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:padding="@dimen/space_6"
-                    android:src="@drawable/png_search"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/color_search"
-                    tools:ignore="ContentDescription" />
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/etSearch"
-                    style="@style/TextViewNormalGray"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textSize="@dimen/_12ssp"
-                    android:fontFamily="@font/rotondac"
-                    android:background="@null"
-                    android:hint="@string/search_hint"
-                    android:inputType="text"
-                    android:padding="5dp"
-                    android:textColorHint="#889295"
-                    app:layout_constraintEnd_toStartOf="@+id/imgClear"
-                    app:layout_constraintStart_toEndOf="@+id/imgSearch" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imgClear"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:padding="@dimen/space_6"
-                    android:src="@drawable/ic_close_circle"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintEnd_toStartOf="@+id/imgMicro"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/text_new_black"
-                    tools:ignore="ContentDescription" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imgMicro"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:padding="@dimen/space_6"
-                    android:src="@drawable/png_micro"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="w,1:1"
-                    app:layout_constraintEnd_toStartOf="@+id/imgQr"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="#889295"
-                    tools:ignore="ContentDescription" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imgQr"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:paddingVertical="@dimen/space_6"
-                    android:src="@drawable/png_qr"
-                    android:paddingEnd="@dimen/space_8"
-                    android:paddingStart="@dimen/space_2"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="w,1:1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="#889295"
-                    tools:ignore="ContentDescription" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <include
+                android:id="@+id/searchContainer"
+                layout="@layout/view_search"/>
 
         </RelativeLayout>
 
