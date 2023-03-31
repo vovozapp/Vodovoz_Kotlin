@@ -29,7 +29,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/searchAppBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,13 +38,25 @@
             android:visibility="gone"
             tools:visibility="visible"
             android:paddingHorizontal="@dimen/space_16"
-            android:paddingVertical="@dimen/space_8">
+            android:paddingVertical="@dimen/space_8"
+            >
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imgBack"
+                android:visibility="gone"
+                android:layout_width="@dimen/_35sdp"
+                android:layout_height="@dimen/_33sdp"
+                android:layout_marginStart="-8dp"
+                android:paddingStart="@dimen/space_8"
+                android:paddingEnd="@dimen/space_8"
+                android:src="@drawable/ic_arrow_left"
+                app:tint="@color/text_black"/>
 
             <include
                 android:id="@+id/searchContainer"
                 layout="@layout/view_search"/>
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <include
             android:visibility="gone"

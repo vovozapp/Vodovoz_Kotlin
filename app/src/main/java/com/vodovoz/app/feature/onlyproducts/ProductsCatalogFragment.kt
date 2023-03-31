@@ -20,6 +20,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.FragmentFixAmountProductsBinding
+import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.adapter.LinearProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
@@ -79,14 +80,11 @@ class ProductsCatalogFragment : BaseFragment() {
     }
 
     private fun initSearch() {
-        binding.incSearch.clSearchContainer.setOnClickListener {
-            findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment())
-        }
-        binding.incSearch.etSearch.setOnFocusChangeListener { _, isFocusable ->
-            if (isFocusable) {
-                findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment())
-            }
-        }
+        initSearchToolbar(
+            { findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment()) },
+            { findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment()) },
+            true
+        )
     }
 
     private fun initBackButton() {
@@ -98,10 +96,6 @@ class ProductsCatalogFragment : BaseFragment() {
                 }
             }
         )
-
-        binding.imgBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
     }
 
     private fun observeUiState() {

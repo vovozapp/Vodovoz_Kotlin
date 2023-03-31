@@ -68,14 +68,11 @@ class OnlyProductsFragment : BaseFragment() {
     }
 
     private fun initSearch() {
-        binding.incSearch.clSearchContainer.setOnClickListener {
-            findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment())
-        }
-        binding.incSearch.etSearch.setOnFocusChangeListener { _, isFocusable ->
-            if (isFocusable) {
-                findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment())
-            }
-        }
+        initSearchToolbar(
+            { findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment()) },
+            { findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment()) },
+            true
+        )
     }
 
     private fun initBackButton() {
@@ -87,10 +84,6 @@ class OnlyProductsFragment : BaseFragment() {
                 }
             }
         )
-
-        binding.imgBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
     }
 
     private fun observeUiState() {

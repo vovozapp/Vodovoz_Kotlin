@@ -90,9 +90,11 @@ abstract class BaseFragment : Fragment() {
         _viewBinding = null
     }
 
-    protected fun initSearchToolbar(onContainerClick: () -> Unit, bindEt: () -> Unit) {
+    protected fun initSearchToolbar(onContainerClick: () -> Unit, bindEt: () -> Unit, showBackBtn: Boolean = false) {
         viewBinding.appbarLayout.isVisible = true
         viewBinding.searchAppBar.isVisible = true
+        viewBinding.imgBack.setOnClickListener { findNavController().popBackStack() }
+        viewBinding.imgBack.isVisible = showBackBtn
 
         viewBinding.searchContainer.clSearchContainer.setOnClickListener {
             onContainerClick.invoke()
