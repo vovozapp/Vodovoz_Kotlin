@@ -72,6 +72,9 @@ class FavoriteFragment : BaseFragment() {
         observeResultLiveData()
         initSearch()
         observeChangeLayoutManager()
+        bindErrorRefresh {
+            viewModel.refreshSorted()
+        }
     }
 
     private fun observeChangeLayoutManager() {

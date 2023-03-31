@@ -87,7 +87,8 @@ class FavoriteFlowViewModel @Inject constructor(
                                 availableTitle = data.availableTitle,
                                 notAvailableTitle = data.notAvailableTitle,
                             ),
-                            loadingPage = false
+                            loadingPage = false,
+                            error = null
                         )
                     } else {
                         uiStateListener.value =
