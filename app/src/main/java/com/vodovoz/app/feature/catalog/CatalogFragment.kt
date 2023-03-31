@@ -37,10 +37,15 @@ class CatalogFragment : BaseFragment() {
         initCategoryRecycler()
         observeViewModel()
         initSearch()
+        bindErrorRefresh { viewModel.refresh() }
+        bindSwipeRefresh()
     }
 
-    override fun update() {
-        viewModel.refresh()
+    private fun bindSwipeRefresh() {
+        binding.refreshContainer.setOnRefreshListener {
+            viewModel.refresh()
+            binding.refreshContainer.isRefreshing = false
+        }
     }
 
     private fun initCategoryRecycler() {
