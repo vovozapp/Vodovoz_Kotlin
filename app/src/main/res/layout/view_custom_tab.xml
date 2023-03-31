@@ -20,7 +20,7 @@
             android:fontFamily="@font/rotonda_normal"
             android:padding="@dimen/space_8"
             android:textSize="16sp"
-            android:textColor="@color/blackTextPrimary"
+            android:textColor="@color/blackTextDark"
             tools:text="Some section" />
 
     </androidx.cardview.widget.CardView>

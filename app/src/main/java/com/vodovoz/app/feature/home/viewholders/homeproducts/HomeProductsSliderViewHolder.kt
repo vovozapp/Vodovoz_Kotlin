@@ -50,7 +50,7 @@ class HomeProductsSliderViewHolder(
                 override fun onTabUnselected(tab: TabLayout.Tab?) {
                     tab?.view?.findViewById<TextView>(R.id.name)?.setTextColor(
                         ContextCompat.getColor(itemView.context,
-                            R.color.blackTextLight)
+                            R.color.text_black)
                     )
                 }
                 override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -109,14 +109,14 @@ class HomeProductsSliderViewHolder(
                         when (index) {
                             0 -> {
                                 marginStart = space
-                                marginEnd = space/2
+                                marginEnd = space/4
                             }
                             items.items.indices.last -> {
                                 marginEnd = space
                                 marginStart = space/2
                             }
                             else -> {
-                                marginEnd = space/2
+                                marginEnd = space/4
                                 marginStart = space/2
                             }
                         }
