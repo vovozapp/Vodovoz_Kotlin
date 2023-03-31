@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:visibility="visible"
     android:visibility="gone">
@@ -12,30 +13,54 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/icon"
         app:shapeAppearanceOverlay="@style/RoundedImage"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
         android:src="@drawable/png_logo"
-        android:alpha="0.7"
         />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/messageTv"
-        style="@style/TextViewNormalGray"
+        style="@style/TextViewHeaderBlack"
         android:gravity="center"
-        android:textColor="@color/gray"
-        android:textSize="18sp"
+        android:textColor="#434343"
+        android:textStyle="bold"
+        android:textSize="16sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:orientation="vertical"
         tools:text="Проблемы с интернетом" />
 
-    <ImageView
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/descTv"
+        style="@style/TextViewNormalGray"
+        android:gravity="center"
+        android:textColor="#434343"
+        android:textSize="14sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        tools:text="Проверьте соединение с сетью и обновите страницу" />
+
+    <!--<ImageView
         android:id="@+id/refreshIv"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:src="@drawable/ic_refresh"
-        app:tint="@color/bluePrimary" />
+        app:tint="@color/bluePrimary" />-->
+
+    <TextView
+        android:id="@+id/refreshTv"
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:background="@drawable/bkg_button_blue_rect_disabled"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:translationZ="1dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/update_label" />
 </LinearLayout>

@@ -47,11 +47,12 @@ data class PagingState<S>(
 sealed class ErrorState(
     @DrawableRes
     val iconDrawable: Int = R.drawable.png_logo,
-    val message: String
+    val message: String,
+    val description: String
 ) {
-    data class Error(val messageInfo: String = "Ошибка загрузки. Пропробуйте снова.") : ErrorState(message = messageInfo)
-    data class NetworkError(val messageInfo: String = "Проблемы с интернетом. Попробуйте снова.") : ErrorState(message = messageInfo, iconDrawable = R.drawable.png_logo)
-    data class Empty(val messageInfo: String = "Список пуст.", val icon: Int = R.drawable.png_logo) : ErrorState(message = messageInfo, iconDrawable = icon)
+    data class Error(val messageInfo: String = "Ошибка загрузки.", val desc: String = "Пропробуйте снова.") : ErrorState(message = messageInfo, description = desc)
+    data class NetworkError(val messageInfo: String = "Проблемы с интернетом.", val desc: String = "Проверьте соединение с сетью и обновите страницу") : ErrorState(message = messageInfo, iconDrawable = R.drawable.ic_no_connection, description = desc)
+    data class Empty(val messageInfo: String = "Список пуст.", val icon: Int = R.drawable.png_logo, val desc: String = "") : ErrorState(message = messageInfo, iconDrawable = icon, description = desc)
 }
 
 fun Throwable.toErrorState(): ErrorState {

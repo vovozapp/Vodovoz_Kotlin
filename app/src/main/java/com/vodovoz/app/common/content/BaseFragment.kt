@@ -36,8 +36,8 @@ abstract class BaseFragment : Fragment() {
         get() = viewBinding.progressBg
 
 
-    val refresh: ImageView
-        get() = viewBinding.error.refreshIv
+    val refresh: TextView
+        get() = viewBinding.error.refreshTv
 
     protected abstract fun layout(): Int
     protected open fun update() {}
@@ -78,10 +78,15 @@ abstract class BaseFragment : Fragment() {
             with(viewBinding.error) {
                 root.isVisible = true
                 messageTv.text = error.message
+                descTv.text = error.description
                 icon.setImageDrawable(ContextCompat.getDrawable(requireContext(), error.iconDrawable))
             }
+            viewBinding.appbarLayout.isEnabled = false
+
         } else {
             viewBinding.error.root.isVisible = false
+
+            viewBinding.appbarLayout.isEnabled = true
         }
     }
 
