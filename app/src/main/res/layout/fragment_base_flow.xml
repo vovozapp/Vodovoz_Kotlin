@@ -52,6 +52,12 @@
             android:id="@+id/appBarDropDown"
             layout="@layout/app_bar_drop_down" />
 
+        <include
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:id="@+id/appBarDef"
+            layout="@layout/app_bar_search" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/fragment_base_error_flow" android:id="@+id/error"/>
