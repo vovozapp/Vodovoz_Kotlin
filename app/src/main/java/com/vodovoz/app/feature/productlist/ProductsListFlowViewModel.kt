@@ -69,7 +69,8 @@ class ProductsListFlowViewModel @Inject constructor(
                                 categoryId = categoryId,
                                 showCatagoryContainer = catalogManager.hasRootItems(categoryId)
                             ),
-                            loadingPage = false
+                            loadingPage = false,
+                            error = null
                         )
                     } else {
                         uiStateListener.value =

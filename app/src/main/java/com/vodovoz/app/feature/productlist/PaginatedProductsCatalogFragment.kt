@@ -76,6 +76,10 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
         observeChangeLayoutManager()
         initBackButton()
         initSearch()
+
+        bindErrorRefresh {
+            viewModel.refreshSorted()
+        }
     }
 
     private fun initSearch() {
@@ -131,9 +135,7 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
                         productsListFlowController.submitList(data.itemsList)
                     }
 
-                    if (state.error !is ErrorState.Empty) {
-                        showError(state.error)
-                    }
+                    showError(state.error)
 
                 }
         }
