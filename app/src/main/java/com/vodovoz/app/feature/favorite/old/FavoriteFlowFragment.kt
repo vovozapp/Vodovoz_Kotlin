@@ -268,14 +268,10 @@ class FavoriteFlowFragment : BaseFragment() {
     }
 
     private fun initSearch() {
-        binding.searchContainer.clSearchContainer.setOnClickListener {
-            findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment())
-        }
-        binding.searchContainer.etSearch.setOnFocusChangeListener { _, isFocusable ->
-            if (isFocusable) {
-                findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment())
-            }
-        }
+        initSearchToolbar(
+            { findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment()) },
+            { findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment()) }
+        )
     }
 
 }
