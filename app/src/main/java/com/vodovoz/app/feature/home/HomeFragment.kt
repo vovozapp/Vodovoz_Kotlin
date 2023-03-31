@@ -81,6 +81,8 @@ class HomeFragment : BaseFragment() {
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) }
         )
+        bindErrorRefresh { flowViewModel.refresh() }
+
     }
 
     private fun observeUiState() {
@@ -100,7 +102,8 @@ class HomeFragment : BaseFragment() {
                         homeController.submitList(list)
                     }
 
-                    debugLog { "${homeState.data.items.map { it.position }.sorted()}" }
+                    showError(homeState.error)
+
                 }
         }
     }
