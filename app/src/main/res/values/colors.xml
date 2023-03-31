@@ -18,6 +18,7 @@
     <color name="light_bg">#F5F5F5</color>
     <color name="transparent_white">#80FFFFFF</color>
     <color name="transparent_light_gray">#80EFF1F3</color>
+    <color name="color_transparent">#00000000</color>
 
     <color name="orange">#FF8D00</color>
     <color name="green">#7CBA00</color>

@@ -1,6 +1,8 @@
 package com.vodovoz.app.common.content
 
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
+import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -42,15 +44,14 @@ data class PagingState<S>(
     }
 }
 
-sealed class ErrorState {
-    abstract val message: String
-
-    data class Error(override val message: String = "Ошибка загрузки. Пропробуйте снова.") : ErrorState()
-    data class NetworkError(
-        override val message: String = "Проблемы с интернетом. Попробуйте снова."
-    ) : ErrorState()
-
-    data class Empty(override val message: String = "Список пуст.") : ErrorState()
+sealed class ErrorState(
+    @DrawableRes
+    val iconDrawable: Int = R.drawable.png_logo,
+    val message: String
+) {
+    data class Error(val messageInfo: String = "Ошибка загрузки. Пропробуйте снова.") : ErrorState(message = messageInfo)
+    data class NetworkError(val messageInfo: String = "Проблемы с интернетом. Попробуйте снова.") : ErrorState(message = messageInfo, iconDrawable = R.drawable.png_logo)
+    data class Empty(val messageInfo: String = "Список пуст.", val icon: Int = R.drawable.png_logo) : ErrorState(message = messageInfo, iconDrawable = icon)
 }
 
 fun Throwable.toErrorState(): ErrorState {

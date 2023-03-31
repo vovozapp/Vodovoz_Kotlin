@@ -4,15 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
+import com.vodovoz.app.databinding.FragmentBaseFlowBinding
 import com.vodovoz.app.databinding.FragmentBasePageBinding
 
 abstract class BaseFragment : Fragment() {
 
-    private var _viewBinding: FragmentBasePageBinding? = null
+    private var _viewBinding: FragmentBaseFlowBinding? = null
     private val viewBinding
         get() = _viewBinding!!
 
@@ -20,10 +25,14 @@ abstract class BaseFragment : Fragment() {
         get() = requireView().findViewById(R.id.container_base)
 
     private val loader: View
-        get() = viewBinding.loadingContainer
+        get() = viewBinding.containerProgress
 
-    val refresh: TextView
-        get() = viewBinding.update
+    private val progressBg: View
+        get() = viewBinding.progressBg
+
+
+    val refresh: ImageView
+        get() = viewBinding.error.refreshIv
 
     protected abstract fun layout(): Int
     protected open fun update() {}
@@ -34,7 +43,7 @@ abstract class BaseFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _viewBinding = FragmentBasePageBinding.inflate(inflater, container, false)
+        _viewBinding = FragmentBaseFlowBinding.inflate(inflater, container, false)
 
         viewBinding.containerBase.runCatching {
             layoutResource = layout()
@@ -49,7 +58,6 @@ abstract class BaseFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        initUpdateButton()
     }
 
     protected fun showLoader() {
@@ -62,24 +70,13 @@ abstract class BaseFragment : Fragment() {
 
     protected fun showError(error: ErrorState?) {
         if (error != null) {
-            refresh.isEnabled = true
-            viewBinding.errorContainer.isVisible = true
-            viewBinding.errorMessage.text = error.message
+            with(viewBinding.error) {
+                root.isVisible = true
+                messageTv.text = error.message
+                icon.setImageDrawable(ContextCompat.getDrawable(requireContext(), error.iconDrawable))
+            }
         } else {
-            refresh.isEnabled = false
-            viewBinding.errorContainer.isVisible = false
-        }
-    }
-
-    protected fun hideError() {
-        hideLoader()
-        contentView.isVisible = true
-        viewBinding.errorContainer.isVisible = false
-    }
-
-    protected fun initUpdateButton() {
-        viewBinding.update.setOnClickListener {
-            update()
+            viewBinding.error.root.isVisible = false
         }
     }
 
@@ -87,4 +84,34 @@ abstract class BaseFragment : Fragment() {
         super.onDestroyView()
         _viewBinding = null
     }
+
+    protected fun bindToolbar(showNavIcon: Boolean, title: String, showLogo: Boolean = false, transparentBg: Boolean = false) {
+        viewBinding.appbarLayout.isVisible = true
+
+        /*toolbar.navigationIcon = if (showNavIcon) {
+            view?.context?.drawable(R.drawable.ic_arrow_back)
+        } else {
+            null
+        }
+
+        toolbar.logo = if (showLogo) {
+            view?.context?.drawable(R.drawable.ic_logo_new)
+        } else {
+            null
+        }
+
+        toolbar.setBackgroundColor(if (transparentBg) {
+            requireContext().getColor(R.color.color_transparent)
+        } else {
+            requireContext().getColor(R.color.carrot8)
+        })
+
+        if (title.isNotBlank()) toolbar.title = title
+        toolbar.setNavigationOnClickListener { navigateUp() }*/
+    }
+
+    protected fun navigateTo(resId: Int, args: Bundle? = null, navOptions: NavOptions? = null) =
+        findNavController().navigate(resId, args, navOptions)
+
+    protected fun navigateUp() = findNavController().navigateUp()
 }
