@@ -79,8 +79,17 @@ class ProductDetailsFragment : BaseFragment() {
         observeState()
         observeResultLiveData()
         observeFabCartState()
+        bindErrorRefresh { viewModel.fetchProductDetail() }
+        bindSwipeRefresh()
 
         productDetailsController.bind(binding.mainRv, binding.floatingAmountControllerContainer)
+    }
+
+    private fun bindSwipeRefresh() {
+        binding.refreshContainer.setOnRefreshListener {
+            viewModel.fetchProductDetail()
+            binding.refreshContainer.isRefreshing = false
+        }
     }
 
     private fun observeFabCartState() {
