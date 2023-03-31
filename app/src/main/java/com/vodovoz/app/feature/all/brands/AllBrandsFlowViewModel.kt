@@ -26,12 +26,14 @@ class AllBrandsFlowViewModel @Inject constructor(
     private val dataRepository: DataRepository,
 ) : PagingStateViewModel<AllBrandsFlowViewModel.AllBrandsState>(AllBrandsState()) {
 
-    private var dataSource = savedState.get<List<Long>>("brandIdList")
+    private var dataSource = savedState.get<LongArray>("brandIdList")
 
     private fun fetchAllBrands() {
         viewModelScope.launch {
-            val dataSource = dataSource ?: return@launch
-            flow { emit(repository.fetchAllBrands(dataSource)) }
+
+            val list = dataSource?.toList() ?: emptyList()
+
+            flow { emit(repository.fetchAllBrands(list)) }
                 .catch {
                     debugLog { "fetch all brands error ${it.localizedMessage}" }
                     uiStateListener.value =
@@ -81,7 +83,11 @@ class AllBrandsFlowViewModel @Inject constructor(
     }
 
     fun filterByQuery(query: String) {
-        val newList = state.data.items.filter { it.name.contains(query) }
+        val newList = if (query.isNotBlank()) {
+            state.data.items.filter { it.name.contains(query) }
+        } else {
+            state.data.items
+        }
         uiStateListener.value = state.copy(
             data = state.data.copy(
                 filteredItems = newList

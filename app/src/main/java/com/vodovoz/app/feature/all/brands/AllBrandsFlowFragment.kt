@@ -65,7 +65,11 @@ class AllBrandsFlowFragment : BaseFragment() {
             binding.incAppBar.llTitleContainer.visibility = View.GONE
             binding.incAppBar.llSearchContainer.visibility = View.VISIBLE
         }
-        binding.incAppBar.imgClear.setOnClickListener { binding.incAppBar.etSearch.setText("") }
+        binding.incAppBar.imgClear.setOnClickListener {
+            binding.incAppBar.etSearch.setText("")
+            binding.incAppBar.llTitleContainer.visibility = View.VISIBLE
+            binding.incAppBar.llSearchContainer.visibility = View.GONE
+        }
         binding.incAppBar.etSearch.doAfterTextChanged { query ->
             when(query.toString().isEmpty()) {
                 true -> binding.incAppBar.imgClear.visibility = View.GONE
@@ -108,6 +112,15 @@ class AllBrandsFlowFragment : BaseFragment() {
                     )
                 )
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (binding.incAppBar.etSearch.text.isNullOrBlank().not()) {
+            binding.incAppBar.llTitleContainer.visibility = View.GONE
+            binding.incAppBar.llSearchContainer.visibility = View.VISIBLE
         }
     }
 
