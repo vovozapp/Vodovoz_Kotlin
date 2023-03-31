@@ -51,7 +51,7 @@ class PopupNewsBottomFragment : BottomSheetDialogFragment() {
 
     private fun initView() {
         binding.incHeader.tvTitle.text = popupNewsUI.name
-        binding.tvDetails.text = popupNewsUI.name
+        binding.tvDetails.text = popupNewsUI.detailText
         binding.btnShowDetails.text = popupNewsUI.actionEntity?.action
         binding.incHeader.imgClose.setOnClickListener { dismiss() }
         Glide.with(requireContext())
@@ -62,6 +62,7 @@ class PopupNewsBottomFragment : BottomSheetDialogFragment() {
             popupNewsUI.actionEntity?.let { action ->
                 iOnInvokeAction.invokeAction(action)
             }
+            dismiss()
         }
     }
 

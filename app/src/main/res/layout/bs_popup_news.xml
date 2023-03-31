@@ -27,17 +27,19 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvDetails"
-        style="@style/TextViewNormalBlack"
+        style="@style/TextViewMediumBlack"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:paddingHorizontal="@dimen/space_16"
+        android:maxLines="2"
+        android:ellipsize="end"
         android:layout_marginTop="@dimen/space_16"
         app:layout_constraintTop_toBottomOf="@+id/imgBanner"
         tools:text="@string/plug"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnShowDetails"
-        style="@style/GreenButton"
+        style="@style/BlueButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_normal_height"
         android:layout_marginHorizontal="@dimen/space_16"
