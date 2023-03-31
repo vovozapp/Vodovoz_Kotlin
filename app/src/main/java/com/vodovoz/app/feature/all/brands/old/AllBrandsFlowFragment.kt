@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.all.brands
+package com.vodovoz.app.feature.all.brands.old
 
 import android.os.Bundle
 import android.view.View
@@ -13,8 +13,9 @@ import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.databinding.FragmentAllBrandsBinding
 import com.vodovoz.app.feature.all.AllAdapterController
 import com.vodovoz.app.feature.all.AllClickListener
+import com.vodovoz.app.feature.all.brands.AllBrandsFlowViewModel
+import com.vodovoz.app.feature.all.brands.AllBrandsFragmentDirections
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
-import com.vodovoz.app.ui.fragment.all_brands.AllBrandsFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -275,7 +275,7 @@
     </dialog>
     <fragment
         android:id="@+id/allBrandsFragment"
-        android:name="com.vodovoz.app.ui.fragment.all_brands.AllBrandsFragment"
+        android:name="com.vodovoz.app.feature.all.brands.AllBrandsFragment"
         android:label="AllBrandsFragment" >
         <argument
             android:name="brandIdList"

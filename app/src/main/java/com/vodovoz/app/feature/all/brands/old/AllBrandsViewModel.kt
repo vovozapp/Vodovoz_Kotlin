@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.all_brands
+package com.vodovoz.app.feature.all.brands.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

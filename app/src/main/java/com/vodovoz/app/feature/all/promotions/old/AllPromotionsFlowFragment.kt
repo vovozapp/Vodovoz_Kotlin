@@ -111,6 +111,10 @@ class AllPromotionsFlowFragment : BaseFragment() {
                     AllPromotionsFragmentDirections.actionToPromotionDetailFragment(id)
                 )
             }
+
+            override fun onBrandClick(id: Long) {
+
+            }
         }
     }
 
