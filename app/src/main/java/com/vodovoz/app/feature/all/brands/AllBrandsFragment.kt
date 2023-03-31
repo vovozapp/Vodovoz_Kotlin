@@ -6,6 +6,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
@@ -43,6 +44,8 @@ class AllBrandsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         allAdapterController.bind(binding.rvBrands)
+        bindErrorRefresh { viewModel.refreshSorted() }
+        bindSwipeRefresh()
 
         observeUiState()
         initAppBar()
@@ -67,9 +70,7 @@ class AllBrandsFragment : BaseFragment() {
 
                     allAdapterController.submitList(state.data.filteredItems)
 
-                    if (state.error !is ErrorState.Empty) {
-                        showError(state.error)
-                    }
+                    showError(state.error)
 
                 }
         }
@@ -86,6 +87,13 @@ class AllBrandsFragment : BaseFragment() {
                     )
                 )
             }
+        }
+    }
+
+    private fun bindSwipeRefresh() {
+        binding.refreshContainer.setOnRefreshListener {
+            viewModel.refreshSorted()
+            binding.refreshContainer.isRefreshing = false
         }
     }
 

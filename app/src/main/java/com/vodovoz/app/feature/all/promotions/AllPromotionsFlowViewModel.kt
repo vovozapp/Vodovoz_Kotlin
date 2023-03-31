@@ -60,7 +60,8 @@ class AllPromotionsFlowViewModel @Inject constructor(
                                 },
                                 allPromotionBundleUI = data
                             ),
-                            loadingPage = false
+                            loadingPage = false,
+                            error = null
                         )
 
                     } else {

@@ -47,6 +47,8 @@ class AllPromotionsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         allAdapterController.bind(binding.rvPromotions)
+        bindErrorRefresh { viewModel.refreshSorted() }
+        bindSwipeRefresh()
 
         observeUiState()
 
@@ -90,9 +92,7 @@ class AllPromotionsFragment : BaseFragment() {
                         allAdapterController.submitList(state.data.allPromotionBundleUI.promotionUIList)
                     }
 
-                    if (state.error !is ErrorState.Empty) {
-                        showError(state.error)
-                    }
+                    showError(state.error)
 
                 }
         }
@@ -109,6 +109,13 @@ class AllPromotionsFragment : BaseFragment() {
             override fun onBrandClick(id: Long) {
 
             }
+        }
+    }
+
+    private fun bindSwipeRefresh() {
+        binding.refreshContainer.setOnRefreshListener {
+            viewModel.refreshSorted()
+            binding.refreshContainer.isRefreshing = false
         }
     }
 

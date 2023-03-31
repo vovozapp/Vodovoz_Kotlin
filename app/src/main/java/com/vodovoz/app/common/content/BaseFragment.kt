@@ -90,6 +90,12 @@ abstract class BaseFragment : Fragment() {
         }
     }
 
+    protected fun bindErrorRefresh(onRefresh: () -> Unit) {
+        refresh.setOnClickListener {
+            onRefresh.invoke()
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _viewBinding = null

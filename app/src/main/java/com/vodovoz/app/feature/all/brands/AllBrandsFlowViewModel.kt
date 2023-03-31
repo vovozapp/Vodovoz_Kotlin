@@ -50,7 +50,8 @@ class AllBrandsFlowViewModel @Inject constructor(
                                 items = data,
                                 filteredItems = data
                             ),
-                            loadingPage = false
+                            loadingPage = false,
+                            error = null
                         )
 
                     } else {
