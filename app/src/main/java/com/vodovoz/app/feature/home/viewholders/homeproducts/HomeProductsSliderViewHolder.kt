@@ -33,6 +33,8 @@ class HomeProductsSliderViewHolder(
     private val space: Int by lazy { itemView.resources.getDimension(R.dimen.space_16).toInt() }
     private val homeCategoriesAdapter = HomeCategoriesInnerAdapter(productsClickListener, cartManager, likeManager)
 
+    private var isAdded = false
+
     init {
         binding.rvCategories.layoutManager =
             LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
@@ -64,6 +66,7 @@ class HomeProductsSliderViewHolder(
         homeCategoriesAdapter.submitList(item.items)
 
         initShowAllProductsButtons(item)
+        binding.tlCategories.removeAllTabs()
         updateCategoryTabs(item)
     }
 
