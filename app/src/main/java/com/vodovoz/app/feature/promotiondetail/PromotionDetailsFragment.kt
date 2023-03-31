@@ -72,6 +72,9 @@ class PromotionDetailsFragment : BaseFragment() {
 
         observeUiState()
         initBackButton()
+        bindErrorRefresh {
+            viewModel.refreshSorted()
+        }
     }
 
     private fun initBackButton() {
@@ -126,9 +129,7 @@ class PromotionDetailsFragment : BaseFragment() {
                         }
                     }
 
-                    if (state.error !is ErrorState.Empty) {
-                        showError(state.error)
-                    }
+                    showError(state.error)
 
                 }
         }

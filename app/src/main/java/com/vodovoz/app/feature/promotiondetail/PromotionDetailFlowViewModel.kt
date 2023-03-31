@@ -55,7 +55,8 @@ class PromotionDetailFlowViewModel @Inject constructor(
                             data = state.data.copy(
                                 items = data
                             ),
-                            loadingPage = false
+                            loadingPage = false,
+                            error = null
                         )
 
                     } else {
