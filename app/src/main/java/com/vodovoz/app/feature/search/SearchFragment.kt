@@ -207,9 +207,7 @@ class SearchFragment : BaseFragment() {
                         productsController.submitList(data.itemsList)
                     }
 
-                    if (state.error !is ErrorState.Empty) {
-                        showError(state.error)
-                    }
+                    showError(state.error)
 
                 }
         }
