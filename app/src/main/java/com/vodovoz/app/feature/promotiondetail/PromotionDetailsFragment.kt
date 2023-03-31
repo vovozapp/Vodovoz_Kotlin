@@ -83,10 +83,6 @@ class PromotionDetailsFragment : BaseFragment() {
                 }
             }
         )
-
-        binding.incAppBar.imgBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
     }
 
     private fun observeUiState() {
@@ -141,7 +137,7 @@ class PromotionDetailsFragment : BaseFragment() {
     private fun bindHeader(promotionDetailUI: PromotionDetailUI?) {
         if (promotionDetailUI == null) return
 
-        binding.incAppBar.tvTitle.text = promotionDetailUI.name
+        initToolbar(titleText = promotionDetailUI.name)
         binding.customerCategoryCard.setCardBackgroundColor(Color.parseColor(promotionDetailUI.statusColor))
         binding.customerCategory.text = promotionDetailUI.status
         binding.timeLeft.text = promotionDetailUI.timeLeft

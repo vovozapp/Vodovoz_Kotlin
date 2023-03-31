@@ -19,6 +19,7 @@ import com.vodovoz.app.databinding.FragmentProductsWithoutFiltersFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
+import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragmentDirections
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
@@ -90,16 +91,11 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
     }
 
     private fun initSearch() {
-        binding.incAppBar.incSearch.clSearchContainer.setOnClickListener {
-            findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToSearchFragment())
-        }
-        binding.incAppBar.incSearch.etSearch.setOnFocusChangeListener { _, isFocusable ->
-            if (isFocusable) {
-                findNavController().navigate(
-                    PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToSearchFragment()
-                )
-            }
-        }
+        initSearchToolbar(
+            { findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToSearchFragment()) },
+            { findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToSearchFragment()) },
+            true
+        )
     }
 
     private fun initBackButton() {
@@ -204,9 +200,6 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
             val id = state.selectedCategoryId ?: return@setOnClickListener
             showMiniCatalog(category, id)
         }
-
-
-        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
 
         binding.tvSort.text = state.sortType.sortName
 

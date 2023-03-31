@@ -9,10 +9,6 @@
     android:id="@+id/rootView"
     >
 
-    <include
-        android:id="@+id/incAppBar"
-        layout="@layout/app_bar_default" />
-
     <androidx.core.widget.NestedScrollView
         android:id="@+id/contentContainer"
         android:layout_width="match_parent"

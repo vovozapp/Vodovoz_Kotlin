@@ -17,6 +17,7 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentProductsFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
+import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragmentDirections
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlist.brand.BrandFlowClickListener
 import com.vodovoz.app.feature.productlist.brand.BrandFlowController
@@ -78,14 +79,11 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
     }
 
     private fun initSearch() {
-        binding.incAppBar.incSearch.clSearchContainer.setOnClickListener {
-            findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
-        }
-        binding.incAppBar.incSearch.etSearch.setOnFocusChangeListener { _, isFocusable ->
-            if (isFocusable) {
-                findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
-            }
-        }
+        initSearchToolbar(
+            { findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment()) },
+            { findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment()) },
+            true
+        )
     }
 
     private fun initBackButton() {
@@ -181,7 +179,6 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
             if (id == 0L) return@setOnClickListener
             showSingleRootCatalogCatalog(id)
         }
-        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
 
         binding.tvSort.text = state.sortType.sortName
 

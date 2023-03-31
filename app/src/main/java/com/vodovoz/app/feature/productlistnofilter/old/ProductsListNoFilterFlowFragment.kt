@@ -94,16 +94,11 @@ class ProductsListNoFilterFlowFragment : BaseFragment() {
     }
 
     private fun initSearch() {
-        binding.incAppBar.incSearch.clSearchContainer.setOnClickListener {
-            findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToSearchFragment())
-        }
-        binding.incAppBar.incSearch.etSearch.setOnFocusChangeListener { _, isFocusable ->
-            if (isFocusable) {
-                findNavController().navigate(
-                    PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToSearchFragment()
-                )
-            }
-        }
+        initSearchToolbar(
+            { findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToSearchFragment()) },
+            { findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToSearchFragment()) },
+            true
+        )
     }
 
     private fun initBackButton() {
@@ -208,9 +203,6 @@ class ProductsListNoFilterFlowFragment : BaseFragment() {
             val id = state.selectedCategoryId ?: return@setOnClickListener
             showMiniCatalog(category, id)
         }
-
-
-        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
 
         binding.tvSort.text = state.sortType.sortName
 

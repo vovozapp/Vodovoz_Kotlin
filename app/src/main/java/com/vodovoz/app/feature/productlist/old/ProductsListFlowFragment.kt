@@ -81,14 +81,11 @@ class ProductsListFlowFragment : BaseFragment() {
     }
 
     private fun initSearch() {
-        binding.incAppBar.incSearch.clSearchContainer.setOnClickListener {
-            findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
-        }
-        binding.incAppBar.incSearch.etSearch.setOnFocusChangeListener { _, isFocusable ->
-            if (isFocusable) {
-                findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
-            }
-        }
+        initSearchToolbar(
+            { findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment()) },
+            { findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment()) },
+            true
+        )
     }
 
     private fun initBackButton() {
@@ -184,7 +181,6 @@ class ProductsListFlowFragment : BaseFragment() {
             if (id == 0L) return@setOnClickListener
             showSingleRootCatalogCatalog(id)
         }
-        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
 
         binding.tvSort.text = state.sortType.sortName
 
