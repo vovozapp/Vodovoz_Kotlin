@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -90,8 +91,10 @@ class HomeFragment : BaseFragment() {
                 .collect { homeState ->
 
                     if (homeState.data.items.mapNotNull { it.item }.size < 12) {
+                        binding.homeRv.isVisible = false
                         showLoaderWithBg(true)
                     } else {
+                        binding.homeRv.isVisible = true
                         binding.homeRv.scrollToPosition(0)
                         showLoaderWithBg(false)
                     }
