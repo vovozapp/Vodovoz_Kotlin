@@ -73,8 +73,11 @@ class HomeFlowFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        bindButtons()
         homeController.bind(binding.homeRv, binding.refreshContainer)
+        initSearchToolbar(
+            { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
+            { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) }
+        )
     }
 
     private fun observeUiState() {
@@ -96,18 +99,6 @@ class HomeFlowFragment : BaseFragment() {
 
                     debugLog { "${homeState.data.items.map { it.position }.sorted()}" }
                 }
-        }
-    }
-
-    private fun bindButtons() {
-
-        binding.searchContainer.clSearchContainer.setOnClickListener {
-            findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment())
-        }
-        binding.searchContainer.etSearch.setOnFocusChangeListener { _, isFocusable ->
-            if (isFocusable) {
-                findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment())
-            }
         }
     }
 

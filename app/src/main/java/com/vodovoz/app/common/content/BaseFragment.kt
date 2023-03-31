@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -14,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentBaseFlowBinding
 import com.vodovoz.app.databinding.FragmentBasePageBinding
+import com.vodovoz.app.databinding.ViewSearchBinding
 
 abstract class BaseFragment : Fragment() {
 
@@ -30,6 +33,9 @@ abstract class BaseFragment : Fragment() {
     private val progressBg: View
         get() = viewBinding.progressBg
 
+
+    val searchContainer: RelativeLayout
+        get() = viewBinding.searchContainer
 
     val refresh: ImageView
         get() = viewBinding.error.refreshIv
@@ -83,6 +89,21 @@ abstract class BaseFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _viewBinding = null
+    }
+
+    protected fun initSearchToolbar(onContainerClick: () -> Unit, bindEt: () -> Unit) {
+        viewBinding.appbarLayout.isVisible = true
+        searchContainer.isVisible = true
+
+        viewBinding.clSearchContainer.setOnClickListener {
+            onContainerClick.invoke()
+        }
+
+        viewBinding.etSearch.setOnFocusChangeListener { _, isFocusable ->
+            if (isFocusable) {
+                bindEt.invoke()
+            }
+        }
     }
 
     protected fun bindToolbar(showNavIcon: Boolean, title: String, showLogo: Boolean = false, transparentBg: Boolean = false) {
