@@ -27,6 +27,8 @@ import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickLi
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
+import com.vodovoz.app.ui.fragment.popup_news.PopupNewsBottomFragment
+import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -97,6 +99,10 @@ class HomeFragment : BaseFragment() {
                         binding.homeRv.isVisible = true
                         binding.homeRv.scrollToPosition(0)
                         showLoaderWithBg(false)
+                    }
+
+                    if (homeState.data.news != null && !homeState.data.hasShow) {
+                        showPopUpNews(homeState.data.news)
                     }
 
                     if (homeState.data.items.size in (HomeFlowViewModel.POSITIONS_COUNT - 2..HomeFlowViewModel.POSITIONS_COUNT)) {
@@ -378,5 +384,15 @@ class HomeFragment : BaseFragment() {
             )
             false -> findNavController().navigate(HomeFragmentDirections.actionToProfileFragment())
         }
+    }
+
+    private fun showPopUpNews(data: PopupNewsUI) {
+        val dialog = PopupNewsBottomFragment.newInstance(
+            data,
+            iOnInvokeAction = { action -> action.invoke() }
+        )
+
+        dialog.show(childFragmentManager, dialog::class.simpleName)
+        flowViewModel.hasShown()
     }
 }

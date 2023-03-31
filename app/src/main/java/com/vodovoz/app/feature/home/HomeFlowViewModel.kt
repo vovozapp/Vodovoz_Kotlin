@@ -36,6 +36,7 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
 import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfo
 import com.vodovoz.app.feature.home.viewholders.homebrands.HomeBrands
@@ -52,10 +53,16 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Compan
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.VIEWED
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
 import com.vodovoz.app.feature.home.viewholders.hometriplenav.HomeTripleNav
+import com.vodovoz.app.mapper.PopupNewsMapper.mapToUI
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
+import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -85,6 +92,7 @@ class HomeFlowViewModel @Inject constructor(
         fetchCountriesSlider()
         fetchViewedProductsSlider()
         fetchCommentsSlider()
+        updatePopupNews()
     }
 
     fun firstLoad() {
@@ -833,6 +841,33 @@ class HomeFlowViewModel @Inject constructor(
         }
     }
 
+    private fun updatePopupNews() {
+        viewModelScope.launch {
+            flow { emit(repository.fetchPopupNews(localDataSource.fetchUserId()))  }
+                .catch { debugLog { "fetch popup news error ${it.localizedMessage}" } }
+                .flowOn(Dispatchers.IO)
+                .onEach {
+                    val response = it.parsePopupNewsResponse()
+                    uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
+                        state.copy(
+                            loadingPage = false,
+                            error = null,
+                            data = state.data.copy(
+                                news = data
+                            )
+                        )
+                    } else {
+                        state.copy(
+                            loadingPage = false
+                        )
+                    }
+                }
+                .flowOn(Dispatchers.Default)
+                .collect()
+        }
+    }
+
     fun isLoginAlready() = dataRepository.isAlreadyLogin()
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
@@ -847,13 +882,23 @@ class HomeFlowViewModel @Inject constructor(
         }
     }
 
+    fun hasShown() {
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                hasShow = true
+            )
+        )
+    }
+
     data class PositionItem(
         val position: Int,
         val item: Item?
     )
 
     data class HomeState(
-        val items: List<PositionItem>
+        val items: List<PositionItem>,
+        val news: PopupNewsUI? = null,
+        val hasShow: Boolean = false
     ) : State {
 
         companion object {

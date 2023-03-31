@@ -326,4 +326,15 @@ interface MainApi {
         @Query("limit") limit: Int? = null,
     ): ResponseBody
 
+    /**
+     * news
+     */
+
+    @GET("newmobile/glavnaya/okno.php")
+    suspend fun fetchNewsResponse(
+        @Query("action") action: String? = null,
+        @Query("id") userId: Long? = null,
+        @Query("platform") platform: String? = null,
+    ): ResponseBody
+
 }
