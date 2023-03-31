@@ -20,6 +20,7 @@ import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -127,6 +128,15 @@ class CartFragment : BaseFragment() {
         observeResultLiveData()
         observeNavigates()
         cartController.bind(binding.mainRv)
+        bindErrorRefresh { viewModel.refresh() }
+        bindSwipeRefresh()
+    }
+
+    private fun bindSwipeRefresh() {
+        binding.refreshContainer.setOnRefreshListener {
+            viewModel.refresh()
+            binding.refreshContainer.isRefreshing = false
+        }
     }
 
     private fun initActionBar() {
@@ -138,6 +148,16 @@ class CartFragment : BaseFragment() {
             viewModel.observeUiState()
                 .collect { cartState ->
 
+                    if (cartState.error != null) {
+                        binding.bottom.root.isVisible = false
+                        binding.mainRv.isVisible = false
+                    } else {
+                        binding.bottom.root.isVisible = true
+                        binding.mainRv.isVisible = true
+                    }
+
+                    showError(cartState.error)
+
                     if (cartState.data.infoMessage.isNotEmpty()) Snackbar.make(binding.root, cartState.data.infoMessage, Snackbar.LENGTH_LONG).show()
 
                     when(cartState.data.giftProductUIList.isEmpty()) {
@@ -146,10 +166,8 @@ class CartFragment : BaseFragment() {
                     }
 
                     if (cartState.loadingPage) {
-                        binding.bottom.root.isVisible = false
                         showLoader()
                     } else {
-                        binding.bottom.root.isVisible = true
                         hideLoader()
                     }
 
