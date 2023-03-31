@@ -7,10 +7,6 @@
     android:background="@color/dark_white"
     tools:context=".feature.cart.CartFragment">
 
-    <include
-        android:id="@+id/incAppBar"
-        layout="@layout/app_bar_without_back" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mainRv"
         android:layout_width="match_parent"
@@ -19,7 +15,7 @@
         app:layout_constraintBottom_toTopOf="@id/bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/incAppBar" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <include
         android:id="@+id/bottom"
