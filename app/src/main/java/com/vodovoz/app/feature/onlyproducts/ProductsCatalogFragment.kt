@@ -72,8 +72,8 @@ class ProductsCatalogFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        onlyProductsController.bind(binding.productRecycler, null)
-
+        onlyProductsController.bind(binding.productRecycler, binding.refreshContainer)
+        bindErrorRefresh { viewModel.refreshSorted() }
         observeUiState()
         initBackButton()
         initSearch()
