@@ -80,6 +80,9 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
         observeChangeLayoutManager()
         initBackButton()
         initSearch()
+        bindErrorRefresh {
+            viewModel.refreshSorted()
+        }
     }
 
     private fun categoryTabsClickListener(): CategoryTabsFlowClickListener {
@@ -147,9 +150,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
                         productsListNoFilterFlowController.submitList(data.itemsList)
                     }
 
-                    if (state.error !is ErrorState.Empty) {
-                        showError(state.error)
-                    }
+                    showError(state.error)
 
                 }
         }

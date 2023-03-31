@@ -87,7 +87,8 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                                 categoryHeader = checkSelectedFilter(data),
                                 categoryId = data.id ?: -1,
                             ),
-                            loadingPage = false
+                            loadingPage = false,
+                            error = null
                         )
                     } else {
                         uiStateListener.value =
