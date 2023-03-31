@@ -10,32 +10,7 @@
         android:id="@+id/incAppBar"
         layout="@layout/app_bar_search_open" />
 
-    <LinearLayout
-        android:id="@+id/emptyResultContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_below="@id/incAppBar"
-        android:visibility="gone"
-        android:gravity="center">
 
-        <TextView
-            style="@style/TextViewMediumBlackBold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="4dp"
-            android:text="Ничего не найдено" />
-
-        <TextView
-            style="@style/TextViewNormalGray"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="4dp"
-            android:text="Попробуйте изменить параметры фильтров" />
-
-
-
-    </LinearLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/productsContainer"
@@ -309,5 +284,34 @@
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/emptyResultContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@id/incAppBar"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:background="@color/white"
+        android:gravity="center">
+
+        <TextView
+            style="@style/TextViewMediumBlackBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:text="Ничего не найдено" />
+
+        <TextView
+            style="@style/TextViewNormalGray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:text="Попробуйте изменить параметры фильтров" />
+
+
+
+    </LinearLayout>
 
 </RelativeLayout>

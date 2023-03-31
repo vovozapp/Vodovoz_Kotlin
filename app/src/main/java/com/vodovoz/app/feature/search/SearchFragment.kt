@@ -100,6 +100,9 @@ class SearchFragment : BaseFragment() {
         initBackButton()
         initSearch()
         observeNoMatchesToast()
+        bindErrorRefresh {
+            viewModel.refreshSorted()
+        }
     }
 
     private fun observeNoMatchesToast() {
@@ -107,7 +110,8 @@ class SearchFragment : BaseFragment() {
             viewModel.observeNoMatchesToast()
                 .collect {
                     if (it) {
-                        Toast.makeText(requireContext(), "Ничего не найдено", Toast.LENGTH_SHORT).show()
+                      //  Toast.makeText(requireContext(), "Ничего не найдено", Toast.LENGTH_SHORT).show()
+                        binding.emptyResultContainer.isVisible = true
                     }
                 }
         }
@@ -145,6 +149,7 @@ class SearchFragment : BaseFragment() {
             binding.incAppBar.incSearch.etSearch.requestFocus()
             binding.searchDataContainer.visibility = View.VISIBLE
             binding.productsContainer.visibility = View.INVISIBLE
+            binding.emptyResultContainer.isVisible = false
             viewModel.clearState()
         }
 
@@ -276,6 +281,7 @@ class SearchFragment : BaseFragment() {
             binding.matchesQueriesContainer.visibility = View.GONE
         } else {
             binding.matchesQueriesContainer.visibility = View.VISIBLE
+            binding.emptyResultContainer.isVisible = false
             binding.matchesQueriesChipGroup.removeAllViews()
             state.matchesQuery.forEach { query ->
                 binding.matchesQueriesChipGroup.addView(buildQueryChip(query))

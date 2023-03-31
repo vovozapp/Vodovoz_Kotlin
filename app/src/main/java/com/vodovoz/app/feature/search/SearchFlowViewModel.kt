@@ -123,7 +123,8 @@ class SearchFlowViewModel @Inject constructor(
                             data = state.data.copy(
                                 categoryHeader = checkSelectedFilter(data)
                             ),
-                            loadingPage = false
+                            loadingPage = false,
+                            error = null
                         )
                     } else {
                         uiStateListener.value =
@@ -213,7 +214,6 @@ class SearchFlowViewModel @Inject constructor(
                             } else {
                                 mappedFeed
                             }
-                            debugLog { "spasibo vm $itemsList" }
 
                             state.copy(
                                 page = if (mappedFeed.isEmpty()) null else state.page?.plus(1),
@@ -252,7 +252,8 @@ class SearchFlowViewModel @Inject constructor(
                             data = state.data.copy(
                                 matchesQuery = response.data
                             ),
-                            loadingPage = false
+                            loadingPage = false,
+                            error = null
                         )
                     } else {
                         uiStateListener.value =
