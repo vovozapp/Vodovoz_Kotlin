@@ -70,7 +70,6 @@ class HomeFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         flowViewModel.firstLoad()
-        observeUiState()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -82,7 +81,7 @@ class HomeFragment : BaseFragment() {
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) }
         )
         bindErrorRefresh { flowViewModel.refresh() }
-
+        observeUiState()
     }
 
     private fun observeUiState() {

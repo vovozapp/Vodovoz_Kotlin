@@ -22,7 +22,6 @@ class SplashFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_splash
 
-    private val viewModel: HomeViewModel by activityViewModels()
     private val flowViewModel: HomeFlowViewModel by activityViewModels()
     private val catalogViewModel: CatalogFlowViewModel by activityViewModels()
     private val cartFlowViewModel: CartFlowViewModel by activityViewModels()
@@ -30,7 +29,6 @@ class SplashFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //viewModel.firstLoad()
         flowViewModel.firstLoad()
         catalogViewModel.firstLoad()
         cartFlowViewModel.firstLoad()
@@ -40,7 +38,6 @@ class SplashFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //observeViewModel()
         observeFlowViewModel()
     }
 
@@ -60,21 +57,6 @@ class SplashFragment : BaseFragment() {
                         showError(state.error)
                     }
                 }
-        }
-    }
-
-    private fun observeViewModel() {
-        viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
-            when(state) {
-                is ViewState.Hide -> {}
-                is ViewState.Loading -> {}
-                is ViewState.Error -> {}
-                is ViewState.Success -> {
-                    requireActivity().supportFragmentManager.beginTransaction()
-                        .replace(R.id.fcvMainContainer, MainFragment())
-                        .commit()
-                }
-            }
         }
     }
 }
