@@ -73,6 +73,11 @@ abstract class BaseFragment : Fragment() {
         loader.isVisible = false
     }
 
+    protected fun showLoaderWithBg(boolean: Boolean) {
+        loader.isVisible = boolean
+        progressBg.isVisible = boolean
+    }
+
     protected fun showError(error: ErrorState?) {
         if (error != null) {
             with(viewBinding.error) {
@@ -82,7 +87,7 @@ abstract class BaseFragment : Fragment() {
                 icon.setImageDrawable(ContextCompat.getDrawable(requireContext(), error.iconDrawable))
             }
             viewBinding.appbarLayout.isEnabled = false
-
+            showLoaderWithBg(false)
         } else {
             viewBinding.error.root.isVisible = false
 

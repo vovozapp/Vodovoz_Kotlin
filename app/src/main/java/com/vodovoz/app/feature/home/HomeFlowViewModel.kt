@@ -95,11 +95,13 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     fun refresh() {
-        uiStateListener.value = state.copy(loadingPage = true)
+        uiStateListener.value =
+            state.copy(loadingPage = true, data = state.data.copy(items = HomeState.idle().items))
         loadPage()
     }
 
     private fun fetchAdvertisingBannersSlider() {
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.fetchAdvertisingBannersSlider()) }
                 .catch {
@@ -147,6 +149,7 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchHistoriesSlider() {
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.fetchHistoriesSlider()) }
                 .catch {
@@ -189,6 +192,7 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchPopularSlider() {
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.fetchPopularSlider()) }
                 .catch {
@@ -231,6 +235,7 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchDiscountsSlider() {
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.fetchDiscountsSlider()) }
                 .catch {
@@ -290,6 +295,7 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchCategoryBannersSlider() {
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.fetchCategoryBannersSlider()) }
                 .catch {
@@ -334,6 +340,7 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchTopSlider() {
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.fetchTopSlider()) }
                 .catch {
@@ -393,6 +400,7 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchOrdersSlider() {
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             val userId = localDataSource.fetchUserId()
             if (userId != null) {
@@ -449,6 +457,7 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchNoveltiesSlider() {
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.fetchNoveltiesSlider()) }
                 .catch {
@@ -508,6 +517,7 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchPromotionsSlider() {
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.fetchPromotionsSlider()) }
                 .catch {
@@ -563,6 +573,7 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchBottomSlider() {
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.fetchBottomSlider()) }
                 .catch {
@@ -622,6 +633,7 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchBrandsSlider() {
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.fetchBrandsSlider()) }
                 .catch {
@@ -664,6 +676,7 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchCountriesSlider() {
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.fetchCountriesSlider()) }
                 .catch {
@@ -706,6 +719,7 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchViewedProductsSlider() {
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             val userId = localDataSource.fetchUserId()
             if (userId != null) {
@@ -777,6 +791,7 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchCommentsSlider() {
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.fetchCommentsSlider()) }
                 .catch {

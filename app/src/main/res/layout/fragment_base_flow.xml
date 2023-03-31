@@ -15,7 +15,7 @@
 
     <View
         android:id="@+id/progressBg"
-        android:background="#99000000"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:visibility="gone"
         android:layout_height="match_parent"/>

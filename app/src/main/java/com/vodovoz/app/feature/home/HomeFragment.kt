@@ -89,10 +89,11 @@ class HomeFragment : BaseFragment() {
             flowViewModel.observeUiState()
                 .collect { homeState ->
 
-                    if (homeState.loadingPage) {
-                        showLoader()
+                    if (homeState.data.items.mapNotNull { it.item }.size < 12) {
+                        showLoaderWithBg(true)
                     } else {
-                        hideLoader()
+                        binding.homeRv.scrollToPosition(0)
+                        showLoaderWithBg(false)
                     }
 
                     if (homeState.data.items.size in (HomeFlowViewModel.POSITIONS_COUNT - 2..HomeFlowViewModel.POSITIONS_COUNT)) {
