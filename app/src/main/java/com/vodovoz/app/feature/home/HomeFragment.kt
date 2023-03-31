@@ -97,7 +97,6 @@ class HomeFragment : BaseFragment() {
                         showLoaderWithBg(true)
                     } else {
                         binding.homeRv.isVisible = true
-                        binding.homeRv.scrollToPosition(0)
                         showLoaderWithBg(false)
                     }
 
