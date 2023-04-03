@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
@@ -30,6 +31,10 @@ class ReplacementProductsSelectionBS : BaseBottomSheetFragment() {
         const val CHANGE_CART = "CHANGE_CART"
     }
 
+    override fun layout(): Int {
+        return R.layout.bs_replacement_products
+    }
+
     private val binding: BsReplacementProductsBinding by viewBinding { BsReplacementProductsBinding.bind(contentView) }
 
     private val viewModel: ReplacementFlowViewModel by viewModels()
@@ -40,8 +45,47 @@ class ReplacementProductsSelectionBS : BaseBottomSheetFragment() {
     @Inject
     lateinit var likeManager: LikeManager
 
-    private val productsAdapter by lazy {
-        AvailableProductsAdapter(getProductsClickListener(), likeManager, cartManager)
+    private val args: ReplacementProductsSelectionBSArgs by navArgs()
+
+    private val replacementController by lazy {
+        ReplacementController(cartManager, likeManager, getProductsClickListener(), requireContext())
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupHeader()
+
+        replacementController.bind(binding.rvProducts, args.productList.toList())
+
+        initDialog()
+    }
+
+    private fun setupHeader() {
+        binding.imgClose.setOnClickListener {
+            dismiss()
+        }
+        binding.imgAlert.setOnClickListener {
+            findNavController().navigate(ReplacementProductsSelectionBSDirections.actionToPreOrderBS(
+                args.productId,
+                args.productName,
+                args.notAvailableProductDetailPicture
+            ))
+        }
+        Glide.with(requireContext())
+            .load(args.notAvailableProductDetailPicture)
+            .into(binding.imgProduct)
+
+        binding.btnAllProducts.setOnClickListener {
+            //findNavController().navigate(CatalogFragmentDirections.actionToPaginatedProductsCatalogFragment())
+        }
+    }
+
+    private fun initDialog() {
+        dialog?.let {
+            val behavior = (dialog as BottomSheetDialog).behavior
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
     }
 
     private fun getProductsClickListener(): ProductsClickListener {
@@ -62,71 +106,6 @@ class ReplacementProductsSelectionBS : BaseBottomSheetFragment() {
             override fun onFavoriteClick(id: Long, isFavorite: Boolean) {
                 viewModel.changeFavoriteStatus(id, isFavorite)
             }
-
-        }
-    }
-
-    override fun layout(): Int {
-        return R.layout.bs_replacement_products
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setupHeader()
-        setupProductsRecycler()
-
-        val products = ReplacementProductsSelectionBSArgs.fromBundle(requireArguments()).productList.toList()
-        productsAdapter.submitList(products)
-
-        initDialog()
-    }
-
-    private fun setupHeader() {
-
-        val pic = ReplacementProductsSelectionBSArgs.fromBundle(requireArguments()).notAvailableProductDetailPicture
-
-        binding.imgClose.setOnClickListener { dismiss() }
-        binding.imgAlert.setOnClickListener {
-            findNavController().navigate(ReplacementProductsSelectionBSDirections.actionToPreOrderBS(
-                ReplacementProductsSelectionBSArgs.fromBundle(requireArguments()).productId,
-                ReplacementProductsSelectionBSArgs.fromBundle(requireArguments()).productName,
-                pic
-            ))
-        }
-        Glide.with(requireContext()).load(pic).into(binding.imgProduct)
-
-        binding.btnAllProducts.setOnClickListener {
-            //findNavController().navigate(CatalogFragmentDirections.actionToPaginatedProductsCatalogFragment())
-        }
-    }
-
-    private fun setupProductsRecycler() {
-        val space = resources.getDimension(R.dimen.space_16).toInt()
-
-        binding.rvProducts.layoutManager = LinearLayoutManager(requireContext())
-
-        ContextCompat.getDrawable(requireContext(), R.drawable.bkg_gray_divider)?.let {
-            binding.rvProducts.addItemDecoration(Divider(it, space))
-        }
-
-        binding.rvProducts.adapter = productsAdapter
-
-        val lastItemBottomSpace = resources.getDimension(R.dimen.last_item_bottom_normal_space).toInt()
-
-        binding.rvProducts.addMarginDecoration {  rect, view, parent, state ->
-            rect.top = space
-            rect.right = space
-            rect.bottom =
-                if (parent.getChildAdapterPosition(view) == state.itemCount - 1) lastItemBottomSpace
-                else space
-        }
-    }
-
-    private fun initDialog() {
-        dialog?.let {
-            val behavior = (dialog as BottomSheetDialog).behavior
-            behavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
 
