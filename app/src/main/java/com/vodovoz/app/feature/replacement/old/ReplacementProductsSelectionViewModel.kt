@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.replacement_product
+package com.vodovoz.app.feature.replacement.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

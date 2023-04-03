@@ -20,7 +20,7 @@ import com.vodovoz.app.feature.productdetail.*
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 
-import com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS
+import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.ProductUI
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

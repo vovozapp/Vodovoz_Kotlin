@@ -804,7 +804,7 @@
     </fragment>
     <dialog
         android:id="@+id/replacementProductsSelectionBS"
-        android:name="com.vodovoz.app.ui.fragment.replacement_product.ReplacementProductsSelectionBS"
+        android:name="com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS"
         android:label="ReplacementProductsSelectionBS" >
         <argument
             android:name="notAvailableProductDetailPicture"

@@ -1,21 +1,15 @@
-package com.vodovoz.app.ui.fragment.replacement_product
+package com.vodovoz.app.feature.replacement
 
-import android.content.DialogInterface
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
@@ -23,11 +17,7 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.BsReplacementProductsBinding
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.feature.replacement.ReplacementFlowViewModel
-import com.vodovoz.app.ui.adapter.LinearProductsAdapter
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
-import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.view.Divider
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -57,7 +47,8 @@ class ReplacementProductsSelectionBS : BaseBottomSheetFragment() {
     private fun getProductsClickListener(): ProductsClickListener {
         return object : ProductsClickListener {
             override fun onProductClick(id: Long) {
-                findNavController().previousBackStackEntry?.savedStateHandle?.set(SELECTED_PRODUCT_ID, id)
+                findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                    SELECTED_PRODUCT_ID, id)
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
