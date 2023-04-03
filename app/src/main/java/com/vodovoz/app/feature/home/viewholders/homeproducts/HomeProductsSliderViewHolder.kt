@@ -32,6 +32,11 @@ class HomeProductsSliderViewHolder(
     private val binding: FragmentSliderProductBinding = FragmentSliderProductBinding.bind(view)
     private val space: Int by lazy { itemView.resources.getDimension(R.dimen.space_16).toInt() }
     private val homeCategoriesAdapter = HomeCategoriesInnerAdapter(productsClickListener, cartManager, likeManager)
+    private val tab = TabbedListMediator(
+        binding.rvCategories,
+        binding.tlCategories,
+        listOf()
+    )
 
     private var isAdded = false
 
@@ -58,6 +63,11 @@ class HomeProductsSliderViewHolder(
                 override fun onTabReselected(tab: TabLayout.Tab?) {}
             }
         )
+    }
+
+    override fun detach() {
+        super.detach()
+        tab.detach()
     }
 
     override fun bind(item: HomeProducts) {
@@ -139,11 +149,6 @@ class HomeProductsSliderViewHolder(
                         binding.tlCategories.addTab(this)
                     }
                 }
-                val tab = TabbedListMediator(
-                    binding.rvCategories,
-                    binding.tlCategories,
-                    listOf()
-                )
                 tab.updateMediatorWithNewIndices(items.items.indices.toList())
                 if (!tab.isAttached()) tab.attach()
             }
