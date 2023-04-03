@@ -33,14 +33,15 @@ class CartManager @Inject constructor(
     suspend fun add(id: Long, oldCount: Int, newCount: Int, withUpdate: Boolean = true) {
 
         val isInCart = oldCount == 0
+        val plus = newCount > oldCount
 
         updateCarts(id, newCount)
 
         runCatching {
-            action(id = id, count = newCount, isInCart = isInCart)
+            action(id = id, count = newCount, isInCart = isInCart, plus)
             updateCartListState(withUpdate)
         }.onFailure {
-            tabManager.loadingAddToCart(false)
+            tabManager.loadingAddToCart(false, plus = true)
             updateCarts(id, newCount)
         }
     }
@@ -62,12 +63,13 @@ class CartManager @Inject constructor(
         cartsStateListener.emit(carts)
     }
 
-    private suspend fun action(id: Long, count: Int, isInCart: Boolean) {
+    private suspend fun action(id: Long, count: Int, isInCart: Boolean, plus: Boolean) {
         return if (!isInCart) {
+            tabManager.loadingAddToCart(true, plus = plus)
             repository.changeProductsQuantityInCart(id, count)
             updateCarts(id, count)
         } else {
-            tabManager.loadingAddToCart(true)
+            tabManager.loadingAddToCart(true, plus = true)
             repository.addProductToCart(id, count)
             updateCarts(id, count)
         }

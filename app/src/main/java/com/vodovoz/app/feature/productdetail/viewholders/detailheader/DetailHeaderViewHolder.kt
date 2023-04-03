@@ -61,7 +61,7 @@ class DetailHeaderViewHolder(
         }
     )
 
-    private val amountControllerTimer = object : CountDownTimer(3000, 3000) {
+    private val amountControllerTimer = object : CountDownTimer(1000, 1000) {
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
             val item = item?.productDetailUI ?: return
@@ -354,11 +354,9 @@ class DetailHeaderViewHolder(
         if (item.productDetailUI.leftItems == 0) {
             when(item.replacementProductsCategoryDetail?.productUIList?.isEmpty()) {
                 true -> {
-                    debugLog { "spasibo nav to notif" }
                     productsClickListener.onNotifyWhenBeAvailable(item.productDetailUI.id, item.productDetailUI.name, item.productDetailUI.detailPictureList.first())
                 }
                 false -> {
-                    debugLog { "spasibo nav to replace" }
                     clickListener.navigateToReplacement(
                         item.productDetailUI.detailPictureList.first(),
                         item.replacementProductsCategoryDetail.productUIList.toTypedArray(),
@@ -367,7 +365,7 @@ class DetailHeaderViewHolder(
                     )
                 }
                 else -> {
-                    debugLog { "spasibo else" }
+
                 }
             }
 

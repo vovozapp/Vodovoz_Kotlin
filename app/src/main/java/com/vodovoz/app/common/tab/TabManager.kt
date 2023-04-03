@@ -34,11 +34,21 @@ class TabManager @Inject constructor() {
         bottomNavCartStateListener.value = BottomNavCartState(count, total)
     }
 
-    fun loadingAddToCart(load: Boolean) {
+    fun loadingAddToCart(load: Boolean, plus: Boolean) {
         scope.launch {
             loadingAddToCartListener.emit(
                 if (load) {
-                    BottomNavCartState(bottomNavCartStateListener.value?.count?.plus(1) ?:0, -1)
+                    if (plus) {
+                        BottomNavCartState(
+                            bottomNavCartStateListener.value?.count?.plus(1) ?: 0,
+                            -1
+                        )
+                    } else {
+                        BottomNavCartState(
+                            bottomNavCartStateListener.value?.count?.minus(1) ?: 0,
+                            -1
+                        )
+                    }
                 } else {
                     BottomNavCartState(bottomNavCartStateListener.value?.count ?:0, -2)
                 }
