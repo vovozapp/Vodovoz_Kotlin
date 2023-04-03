@@ -13,8 +13,8 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/icon"
         app:shapeAppearanceOverlay="@style/RoundedImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_gravity="center"
         android:src="@drawable/png_logo"
         />
@@ -28,7 +28,8 @@
         android:textSize="16sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp"
         android:orientation="vertical"
         tools:text="Проблемы с интернетом" />
 
@@ -61,6 +62,6 @@
         android:textColor="@color/white"
         android:textSize="17sp"
         android:translationZ="1dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:text="@string/update_label" />
 </LinearLayout>
