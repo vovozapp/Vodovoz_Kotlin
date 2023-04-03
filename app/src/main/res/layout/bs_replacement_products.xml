@@ -42,6 +42,7 @@
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
             android:layout_gravity="end"
+            android:padding="2dp"
             android:src="@drawable/ic_bell"
             android:layout_marginEnd="@dimen/space_8"
             app:tint="@color/text_black"
@@ -82,7 +83,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvNotAvailable"
-                style="@style/TextViewNormalBlack"
+                style="@style/TextViewMediumBlack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/replacement_text"
