@@ -3,7 +3,7 @@ package com.vodovoz.app.ui.fragment.slider.order_slider
 import android.os.Parcel
 import android.os.Parcelable
 
-class OrdersSliderConfig(
+data class OrdersSliderConfig(
     val containTitleContainer: Boolean
 ) : Parcelable {
     constructor(parcel: Parcel) : this(parcel.readByte() != 0.toByte()) {
