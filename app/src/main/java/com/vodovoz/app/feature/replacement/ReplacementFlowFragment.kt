@@ -22,6 +22,7 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.BsReplacementProductsBinding
 import com.vodovoz.app.databinding.FragmentProductDetailsFlowBinding
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
+import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
 import com.vodovoz.app.feature.productdetail.ProductDetailsFragmentDirections
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.adapter.LinearProductsAdapter
@@ -52,7 +53,9 @@ class ReplacementFlowFragment : BaseBottomSheetFragment() {
     @Inject
     lateinit var likeManager: LikeManager
 
-    private val productsAdapter = AvailableProductsAdapter(getProductsClickListener(), likeManager, cartManager)
+    private val productsAdapter by lazy {
+        AvailableProductsAdapter(getProductsClickListener(), likeManager, cartManager)
+    }
 
     private fun getProductsClickListener(): ProductsClickListener {
         return object : ProductsClickListener {
@@ -104,6 +107,10 @@ class ReplacementFlowFragment : BaseBottomSheetFragment() {
             ))
         }
         Glide.with(requireContext()).load(pic).into(binding.imgProduct)
+
+        binding.btnAllProducts.setOnClickListener {
+            //findNavController().navigate(CatalogFragmentDirections.actionToPaginatedProductsCatalogFragment())
+        }
     }
 
     private fun setupProductsRecycler() {
