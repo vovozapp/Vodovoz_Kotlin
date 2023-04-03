@@ -40,6 +40,7 @@ class CartManager @Inject constructor(
             action(id = id, count = newCount, isInCart = isInCart)
             updateCartListState(withUpdate)
         }.onFailure {
+            tabManager.loadingAddToCart(false)
             updateCarts(id, newCount)
         }
     }
@@ -66,6 +67,7 @@ class CartManager @Inject constructor(
             repository.changeProductsQuantityInCart(id, count)
             updateCarts(id, count)
         } else {
+            tabManager.loadingAddToCart(true)
             repository.addProductToCart(id, count)
             updateCarts(id, count)
         }

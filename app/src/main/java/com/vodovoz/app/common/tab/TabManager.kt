@@ -21,6 +21,9 @@ class TabManager @Inject constructor() {
     private val bottomNavCartStateListener = MutableStateFlow<BottomNavCartState?>(null)
     fun observeBottomNavCartState() = bottomNavCartStateListener.asStateFlow()
 
+    private val loadingAddToCartListener = MutableSharedFlow<BottomNavCartState>()
+    fun observeAddToCartLoading() = loadingAddToCartListener.asSharedFlow()
+
     fun selectTab(id: Int) {
         scope.launch {
             tabStateListener.emit(id)
@@ -29,6 +32,18 @@ class TabManager @Inject constructor() {
 
     fun saveBottomNavCartState(count: Int, total: Int) {
         bottomNavCartStateListener.value = BottomNavCartState(count, total)
+    }
+
+    fun loadingAddToCart(load: Boolean) {
+        scope.launch {
+            loadingAddToCartListener.emit(
+                if (load) {
+                    BottomNavCartState(bottomNavCartStateListener.value?.count?.plus(1) ?:0, -1)
+                } else {
+                    BottomNavCartState(bottomNavCartStateListener.value?.count ?:0, -2)
+                }
+            )
+        }
     }
 
     fun clearBottomNavCartState() {
