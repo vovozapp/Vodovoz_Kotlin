@@ -337,4 +337,18 @@ interface MainApi {
         @Query("platform") platform: String? = null,
     ): ResponseBody
 
+    /**
+     * pre order
+     */
+
+    @GET("newmobile/osnova/predzakaz.php")
+    suspend fun fetchPreOrderResponse(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("fio") name: String? = null,
+        @Query("email") email: String? = null,
+        @Query("phone") phone: String? = null,
+        @Query("tovar") productId: Long? = null
+    ): ResponseBody
+
 }

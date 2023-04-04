@@ -8,6 +8,8 @@ import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.pa
 import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
 import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
+import com.vodovoz.app.data.parser.response.pre_order.PreOrderFormDataResponseJsonParser.parsePreOrderFormDataResponse
+import com.vodovoz.app.data.parser.response.pre_order.PreOrderProductResponseJsonParser.parsePreOrderProductResponse
 import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonParser.parseAllPromotionsResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionsByBannerResponseJsonParser.parsePromotionsByBannerResponse
@@ -538,4 +540,31 @@ class MainRepository @Inject constructor(
         userId = userId,
         platform = "android"
     )
+
+    /**
+     * pre order
+     */
+
+    suspend fun fetchPreOrderFormData(
+        userId: Long?
+    ): ResponseBody = api.fetchPreOrderResponse(
+        action = "predzakaz",
+        userId = userId
+    )
+
+    suspend fun preOrderProduct(
+        userId: Long?,
+        productId: Long?,
+        name: String?,
+        email: String?,
+        phone: String?
+    ): ResponseBody = api.fetchPreOrderResponse(
+        action = "otpravka",
+        userId = userId,
+        productId = productId,
+        email = email,
+        phone = phone,
+        name = name
+    )
+
 }

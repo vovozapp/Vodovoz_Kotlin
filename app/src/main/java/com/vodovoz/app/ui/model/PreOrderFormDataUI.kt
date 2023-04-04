@@ -1,6 +1,6 @@
 package com.vodovoz.app.ui.model
 
-class PreOrderFormDataUI(
+data class PreOrderFormDataUI(
     val name: String,
     val phone: String,
     val email: String
