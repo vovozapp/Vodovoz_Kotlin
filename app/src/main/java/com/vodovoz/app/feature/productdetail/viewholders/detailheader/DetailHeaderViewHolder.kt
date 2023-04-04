@@ -362,7 +362,8 @@ class DetailHeaderViewHolder(
                         item.productDetailUI.detailPictureList.first(),
                         item.replacementProductsCategoryDetail.productUIList.toTypedArray(),
                         item.productDetailUI.id,
-                        item.productDetailUI.name
+                        item.productDetailUI.name,
+                        item.categoryId
                     )
                 }
                 else -> {

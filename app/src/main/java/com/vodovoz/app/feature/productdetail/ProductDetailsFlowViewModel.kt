@@ -117,7 +117,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
                             detailHeader = DetailHeader(
                                 1,
                                 mappedData.productDetailUI,
-                                mappedData.replacementProductsCategoryDetail
+                                mappedData.replacementProductsCategoryDetail,
+                                mappedData.categoryUI.id
                             ),
                             detailPrices = DetailPrices(2, mappedData.productDetailUI.priceUIList),
                             detailServices = DetailServices(3, mappedData.serviceUIList),

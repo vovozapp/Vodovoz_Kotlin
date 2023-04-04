@@ -149,11 +149,12 @@ class ProductDetailsFlowFragment : BaseFragment() {
                 detailPicture: String,
                 products: Array<ProductUI>,
                 id: Long,
-                name: String
+                name: String,
+                categoryId: Long?
             ) {
                 findNavController().navigate(
                     ProductDetailsFragmentDirections.actionToReplacementProductsSelectionBS(
-                        detailPicture, products, id, name
+                        detailPicture, products, id, name, categoryId ?: -1L
                     )
                 )
             }

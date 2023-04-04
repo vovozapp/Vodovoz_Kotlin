@@ -815,12 +815,20 @@
         <action
             android:id="@+id/action_to_preOrderBS"
             app:destination="@id/preOrderBS" />
+        <action
+            android:id="@+id/action_to_paginatedProductsCatalogFragment"
+            app:destination="@id/paginatedProductsCatalogFragment" />
         <argument
             android:name="productId"
             app:argType="long" />
         <argument
             android:name="productName"
             app:argType="string" />
+        <argument
+            android:name="categoryId"
+            android:defaultValue="-1L"
+            app:argType="long"
+            />
     </dialog>
     <dialog
         android:id="@+id/preOrderBS"

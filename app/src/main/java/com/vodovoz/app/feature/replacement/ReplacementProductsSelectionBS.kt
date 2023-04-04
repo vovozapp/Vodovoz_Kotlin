@@ -77,7 +77,14 @@ class ReplacementProductsSelectionBS : BaseBottomSheetFragment() {
             .into(binding.imgProduct)
 
         binding.btnAllProducts.setOnClickListener {
-            //findNavController().navigate(CatalogFragmentDirections.actionToPaginatedProductsCatalogFragment())
+            val id = args.categoryId
+            if (id != -1L) {
+                findNavController().navigate(
+                    ReplacementProductsSelectionBSDirections.actionToPaginatedProductsCatalogFragment(
+                        id
+                    )
+                )
+            }
         }
     }
 

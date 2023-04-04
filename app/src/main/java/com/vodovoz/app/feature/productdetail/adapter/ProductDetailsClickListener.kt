@@ -8,7 +8,7 @@ interface ProductDetailsClickListener {
     //Header
     fun share(intent: Intent)
     fun backPress()
-    fun navigateToReplacement(detailPicture: String, products: Array<ProductUI>, id: Long, name: String)
+    fun navigateToReplacement(detailPicture: String, products: Array<ProductUI>, id: Long, name: String, categoryId: Long? = null)
     fun onTvCommentAmount(productId: Long)
     fun onYouTubeClick(videoCode: String)
     fun onDetailPictureClick(currentItem: Int, detailPictureList: Array<String>)

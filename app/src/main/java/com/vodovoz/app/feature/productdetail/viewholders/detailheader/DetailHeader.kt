@@ -8,7 +8,8 @@ import com.vodovoz.app.ui.model.ProductDetailUI
 data class DetailHeader(
     val id: Int,
     val productDetailUI: ProductDetailUI,
-    val replacementProductsCategoryDetail: CategoryDetailUI? = null
+    val replacementProductsCategoryDetail: CategoryDetailUI? = null,
+    val categoryId: Long? = null
 ) : Item {
 
     override fun getItemViewType(): Int {
