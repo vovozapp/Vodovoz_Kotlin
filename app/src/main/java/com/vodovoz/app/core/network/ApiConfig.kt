@@ -15,4 +15,6 @@ object ApiConfig {
     const val ABOUT_PAY_URL = "http://m.vodovoz.ru/newmobile/informatsiya/oplata.php"
     const val ABOUT_DELIVERY_URL = "http://m.vodovoz.ru/newmobile/informatsiya/dosytavka.php"
 
+    const val AMOUNT_CONTROLLER_TIMER = 1500L
+
 }

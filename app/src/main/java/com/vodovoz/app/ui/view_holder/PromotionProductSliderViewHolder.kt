@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
+import com.vodovoz.app.core.network.ApiConfig.AMOUNT_CONTROLLER_TIMER
 import com.vodovoz.app.databinding.ViewHolderSliderPromotionProductBinding
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
@@ -27,7 +28,7 @@ class PromotionProductSliderViewHolder(
     private val context: Context
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val amountControllerTimer = object: CountDownTimer(3000, 3000) {
+    private val amountControllerTimer = object: CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
             hideAmountController()

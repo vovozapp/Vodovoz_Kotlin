@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
+import com.vodovoz.app.core.network.ApiConfig.AMOUNT_CONTROLLER_TIMER
 import com.vodovoz.app.databinding.ViewHolderProductListBinding
 import com.vodovoz.app.ui.adapter.DetailPicturePagerAdapter
 import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
@@ -39,7 +40,7 @@ class ProductListViewHolder(
         iOnProductDetailPictureClick = { onProductClick(productUI.id) }
     )
 
-    private val amountControllerTimer = object: CountDownTimer(3000, 3000) {
+    private val amountControllerTimer = object: CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
             onChangeCartQuantity(productUI.id, productUI.cartQuantity)

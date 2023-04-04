@@ -11,6 +11,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.databinding.ViewHolderSliderProductBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.core.network.ApiConfig.AMOUNT_CONTROLLER_TIMER
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
@@ -31,7 +32,7 @@ class HomeProductsInnerViewHolder(
 
     private val binding: ViewHolderSliderProductBinding = ViewHolderSliderProductBinding.bind(view)
 
-    private val amountControllerTimer = object: CountDownTimer(3000, 3000) {
+    private val amountControllerTimer = object: CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
             hideAmountController()

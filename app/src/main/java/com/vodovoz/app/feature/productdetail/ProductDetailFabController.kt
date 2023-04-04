@@ -38,7 +38,7 @@ class ProductDetailFabController(
 
     private fun startTimer(header: DetailHeader, oldQuantity: Int) {
         timer?.cancel()
-        timer = object: CountDownTimer(3000, 3000) {
+        timer = object: CountDownTimer(2000, 2000) {
             override fun onTick(millisUntilFinished: Long) {}
             override fun onFinish() {
                 viewModel.changeCart(
