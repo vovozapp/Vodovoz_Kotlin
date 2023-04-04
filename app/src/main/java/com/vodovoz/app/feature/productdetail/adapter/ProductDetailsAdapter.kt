@@ -7,6 +7,7 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProductsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
@@ -28,7 +29,8 @@ class ProductDetailsAdapter(
     private val productsShowAllListener: ProductsShowAllListener,
     private val promotionsClickListener: PromotionsClickListener,
     private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    private val likeManager: LikeManager,
+    private val ratingProductManager: RatingProductManager
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
@@ -36,7 +38,7 @@ class ProductDetailsAdapter(
 
             //Header
             R.layout.fragment_product_details_header -> {
-                DetailHeaderViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager)
+                DetailHeaderViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager, ratingProductManager)
             }
 
             //Prices

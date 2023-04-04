@@ -6,6 +6,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.CountDownTimer
 import android.view.View
+import android.widget.RatingBar
+import android.widget.RatingBar.OnRatingBarChangeListener
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
@@ -15,6 +17,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.core.network.ApiConfig.AMOUNT_CONTROLLER_TIMER
 import com.vodovoz.app.databinding.FragmentProductDetailsHeaderBinding
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowClickListener
@@ -40,7 +43,8 @@ class DetailHeaderViewHolder(
     val clickListener: ProductDetailsClickListener,
     private val productsClickListener: ProductsClickListener,
     private val likeManager: LikeManager,
-    private val cartManager: CartManager
+    private val cartManager: CartManager,
+    private val ratingProductManager: RatingProductManager
 ) : ItemViewHolder<DetailHeader>(view) {
 
     private val binding: FragmentProductDetailsHeaderBinding = FragmentProductDetailsHeaderBinding.bind(view)
@@ -76,6 +80,18 @@ class DetailHeaderViewHolder(
     }
 
     init {
+
+        launch {
+            val item = item?.productDetailUI ?: return@launch
+            ratingProductManager
+                .observeRatings()
+                .filter{ it.containsKey(item.id) }
+                .onEach {
+                    item.rating = it[item.id] ?: item.rating
+                    binding.rbRating.rating = item.rating
+                }
+                .collect()
+        }
 
         launch {
             val item = item?.productDetailUI ?: return@launch
@@ -170,10 +186,17 @@ class DetailHeaderViewHolder(
 
         binding.tlIndicators.isVisible = item.productDetailUI.detailPictureList.size != 1
 
+        debugLog { "spasibo old rating ${item.productDetailUI.rating}" }
+
         item.productDetailUI.brandUI?.let { binding.tvBrand.text = it.name }
 
         binding.tvName.text = item.productDetailUI.name
         binding.rbRating.rating = item.productDetailUI.rating.toFloat()
+
+        binding.rbRating.onRatingBarChangeListener =
+            OnRatingBarChangeListener { p0, newRating, p2 ->
+                productsClickListener.onChangeRating(item.productDetailUI.id, newRating, item.productDetailUI.rating.toFloat())
+            }
 
         when(item.productDetailUI.youtubeVideoCode.isEmpty()) {
             true -> binding.cwPlayVideo.visibility = View.GONE

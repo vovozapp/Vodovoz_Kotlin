@@ -12,6 +12,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.FragmentProductDetailsFlowBinding
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
@@ -40,6 +41,9 @@ class ProductDetailsFlowFragment : BaseFragment() {
     @Inject
     lateinit var likeManager: LikeManager
 
+    @Inject
+    lateinit var ratingProductManager: RatingProductManager
+
     val args: ProductDetailsFragmentArgs by navArgs()
 
     private val productDetailsController by lazy {
@@ -50,7 +54,8 @@ class ProductDetailsFlowFragment : BaseFragment() {
             promotionsClickListener = getPromotionsClickListener(),
             cartManager = cartManager,
             likeManager = likeManager,
-            requireContext()
+            requireContext(),
+            ratingProductManager
         )
     }
 

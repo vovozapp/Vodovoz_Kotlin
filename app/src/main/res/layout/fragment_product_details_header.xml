@@ -193,15 +193,15 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <androidx.appcompat.widget.AppCompatRatingBar
+                <RatingBar
                     android:id="@+id/rbRating"
                     style="?android:attr/ratingBarStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:isIndicator="true"
+                    android:isIndicator="false"
                     android:numStars="5"
+                    android:stepSize="0.1"
                     android:progressTint="@color/accentPrimary"
-                    android:stepSize="1"
                     android:theme="@style/RatingBar" />
 
                 <androidx.appcompat.widget.AppCompatTextView

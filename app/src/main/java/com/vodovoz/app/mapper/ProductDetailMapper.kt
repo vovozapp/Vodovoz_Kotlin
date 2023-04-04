@@ -17,7 +17,7 @@ object ProductDetailMapper  {
         isFavorite = isFavorite,
         youtubeVideoCode = youtubeVideoCode,
         isAvailable = isAvailable,
-        rating = rating,
+        rating = rating.toFloat(),
         status = status,
         leftItems = leftItems,
         statusColor = statusColor,

@@ -12,6 +12,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
@@ -25,7 +26,8 @@ class ProductDetailsController(
     promotionsClickListener: PromotionsClickListener,
     cartManager: CartManager,
     likeManager: LikeManager,
-    val context: Context
+    val context: Context,
+    ratingProductManager: RatingProductManager
 ) {
     private val productDetailsAdapter = ProductDetailsAdapter(
         clickListener = listener,
@@ -33,7 +35,8 @@ class ProductDetailsController(
         productsShowAllListener = productsShowAllListener,
         promotionsClickListener = promotionsClickListener,
         cartManager = cartManager,
-        likeManager = likeManager
+        likeManager = likeManager,
+        ratingProductManager = ratingProductManager
     )
 
     fun bind(recyclerView: RecyclerView, fab: ConstraintLayout) {
