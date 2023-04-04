@@ -48,7 +48,7 @@ class SplashFragment : BaseFragment() {
                     debugLog {
                         "${state.data.items.map { it.position }}"
                     }
-                    if (state.data.items.size in (HomeFlowViewModel.POSITIONS_COUNT - 6..HomeFlowViewModel.POSITIONS_COUNT)) {
+                    if (state.data.items.size in (HomeFlowViewModel.POSITIONS_COUNT - 8..HomeFlowViewModel.POSITIONS_COUNT)) {
                         requireActivity().supportFragmentManager.beginTransaction()
                             .replace(R.id.fcvMainContainer, MainFragment())
                             .commit()
