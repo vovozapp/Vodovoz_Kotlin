@@ -120,6 +120,10 @@ class HomeFlowFragment : BaseFragment() {
                 flowViewModel.changeFavoriteStatus(id, isFavorite)
             }
 
+            override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
+
+            }
+
         }
     }
     private fun getProductsShowClickListener() : ProductsShowAllListener {

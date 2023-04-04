@@ -254,6 +254,9 @@ class FavoriteFragment : BaseFragment() {
                 viewModel.changeFavoriteStatus(id, isFavorite)
             }
 
+            override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
+
+            }
         }
     }
 

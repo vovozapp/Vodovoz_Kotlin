@@ -10,6 +10,7 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
@@ -31,7 +32,8 @@ class PromotionDetailFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val dataRepository: DataRepository,
     private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    private val likeManager: LikeManager,
+    private val ratingProductManager: RatingProductManager
 ) : PagingStateViewModel<PromotionDetailFlowViewModel.PromotionDetailFlowState>(PromotionDetailFlowState()) {
 
     private var promotionId = savedState.get<Long>("promotionId")
@@ -91,6 +93,12 @@ class PromotionDetailFlowViewModel @Inject constructor(
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
         viewModelScope.launch {
             cartManager.add(id = productId, oldCount = oldQuan, newCount = quantity)
+        }
+    }
+
+    fun changeRating(productId: Long, rating: Float, oldRating: Float) {
+        viewModelScope.launch {
+            ratingProductManager.rate(productId, rating = rating, oldRating = oldRating)
         }
     }
 

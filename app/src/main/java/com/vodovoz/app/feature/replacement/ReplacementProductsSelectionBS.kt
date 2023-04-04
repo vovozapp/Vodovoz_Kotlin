@@ -113,6 +113,10 @@ class ReplacementProductsSelectionBS : BaseBottomSheetFragment() {
             override fun onFavoriteClick(id: Long, isFavorite: Boolean) {
                 viewModel.changeFavoriteStatus(id, isFavorite)
             }
+
+            override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
+
+            }
         }
     }
 

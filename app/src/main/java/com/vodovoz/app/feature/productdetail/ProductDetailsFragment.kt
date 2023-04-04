@@ -20,6 +20,7 @@ import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.*
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -234,6 +235,9 @@ class ProductDetailsFragment : BaseFragment() {
                 viewModel.changeFavoriteStatus(id, isFavorite)
             }
 
+            override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
+                viewModel.changeRating(id, rating, oldRating)
+            }
         }
     }
 

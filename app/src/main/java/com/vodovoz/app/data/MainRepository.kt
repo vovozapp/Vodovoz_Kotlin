@@ -567,4 +567,18 @@ class MainRepository @Inject constructor(
         name = name
     )
 
+    /**
+     * rate product
+     */
+
+    suspend fun rateProduct(
+       productId: Long,
+       ratingValue: Float
+    ): ResponseBody {
+        return api.rateProduct(
+            productId = productId,
+            ratingValue = ratingValue
+        )
+    }
+
 }

@@ -176,6 +176,10 @@ class PromotionDetailsFragment : BaseFragment() {
                 viewModel.changeFavoriteStatus(id, isFavorite)
             }
 
+            override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
+                viewModel.changeRating(id, rating, oldRating)
+            }
+
         }
     }
 

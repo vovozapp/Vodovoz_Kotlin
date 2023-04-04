@@ -351,4 +351,10 @@ interface MainApi {
         @Query("tovar") productId: Long? = null
     ): ResponseBody
 
+    @GET("newmobile/voteRating.php")
+    suspend fun rateProduct(
+        @Query("element_id") productId: Long,
+        @Query("rating_value") ratingValue: Float
+    ): ResponseBody
+
 }

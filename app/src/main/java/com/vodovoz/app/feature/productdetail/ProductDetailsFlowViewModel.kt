@@ -8,6 +8,7 @@ import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.LocalSyncExtensions.syncCartQuantity
 import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
@@ -50,7 +51,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
     private val mainRepository: MainRepository,
     private val localDataSource: LocalDataSource,
     private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    private val likeManager: LikeManager,
+    private val ratingProductManager: RatingProductManager
 ) : ViewModel() {
 
     private val uiStateListener = MutableStateFlow(ProductDetailsState())
@@ -323,6 +325,12 @@ class ProductDetailsFlowViewModel @Inject constructor(
     fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
         viewModelScope.launch {
             likeManager.like(productId, !isFavorite)
+        }
+    }
+
+    fun changeRating(productId: Long, rating: Float, oldRating: Float) {
+        viewModelScope.launch {
+            ratingProductManager.rate(productId, rating = rating, oldRating = oldRating)
         }
     }
 
