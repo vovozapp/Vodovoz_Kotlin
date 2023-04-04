@@ -1,9 +1,7 @@
-package com.vodovoz.app.ui.fragment.pre_order
+package com.vodovoz.app.feature.preorder
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -19,9 +17,6 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.BsPreOrderBinding
-import com.vodovoz.app.feature.preorder.PreOrderFlowViewModel
-import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
 import com.vodovoz.app.ui.extensions.ContextExtensions.showSimpleMessageDialog
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.util.FieldValidationsSettings

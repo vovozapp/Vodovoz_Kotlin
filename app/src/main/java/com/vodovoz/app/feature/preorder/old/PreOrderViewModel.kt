@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.pre_order
+package com.vodovoz.app.feature.preorder.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

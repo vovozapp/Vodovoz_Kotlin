@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.preorder
+package com.vodovoz.app.feature.preorder.old
 
 import android.os.Bundle
 import android.view.View
@@ -17,9 +17,10 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.BsPreOrderBinding
+import com.vodovoz.app.feature.preorder.PreOrderBSArgs
+import com.vodovoz.app.feature.preorder.PreOrderFlowViewModel
 import com.vodovoz.app.ui.extensions.ContextExtensions.showSimpleMessageDialog
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
-import com.vodovoz.app.ui.fragment.pre_order.PreOrderBSArgs
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToFullFormat

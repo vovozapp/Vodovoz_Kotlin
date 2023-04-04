@@ -824,7 +824,7 @@
     </dialog>
     <dialog
         android:id="@+id/preOrderBS"
-        android:name="com.vodovoz.app.ui.fragment.pre_order.PreOrderBS"
+        android:name="com.vodovoz.app.feature.preorder.PreOrderBS"
         android:label="PreOrderBS" >
         <argument
             android:name="productId"
