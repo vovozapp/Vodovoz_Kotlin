@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.all_comments_by_product
+package com.vodovoz.app.feature.all.comments.old
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

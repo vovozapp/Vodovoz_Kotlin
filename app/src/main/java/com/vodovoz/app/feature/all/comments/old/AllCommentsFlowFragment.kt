@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.all.comments
+package com.vodovoz.app.feature.all.comments.old
 
 import android.os.Bundle
 import android.view.Menu
@@ -6,7 +6,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -14,12 +13,11 @@ import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.databinding.FragmentProductCommentsBinding
 import com.vodovoz.app.databinding.FragmentProductCommentsFlowBinding
-import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
-import com.vodovoz.app.feature.productlist.ProductsListFlowController
-import com.vodovoz.app.ui.fragment.all_comments_by_product.AllCommentsByProductDialogFragmentArgs
-import com.vodovoz.app.ui.fragment.all_comments_by_product.AllCommentsByProductDialogFragmentDirections
+import com.vodovoz.app.feature.all.comments.AllCommentsByProductDialogFragmentArgs
+import com.vodovoz.app.feature.all.comments.AllCommentsByProductDialogFragmentDirections
+import com.vodovoz.app.feature.all.comments.AllCommentsController
+import com.vodovoz.app.feature.all.comments.AllCommentsFlowViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

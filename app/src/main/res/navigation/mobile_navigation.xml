@@ -481,7 +481,7 @@
     </dialog>
     <fragment
         android:id="@+id/allCommentsByProductDialogFragment"
-        android:name="com.vodovoz.app.ui.fragment.all_comments_by_product.AllCommentsByProductDialogFragment"
+        android:name="com.vodovoz.app.feature.all.comments.AllCommentsByProductDialogFragment"
         android:label="AllCommentsByProductDialogFragment" >
         <argument
             android:name="productId"

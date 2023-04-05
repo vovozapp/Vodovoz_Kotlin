@@ -1,6 +1,5 @@
-package com.vodovoz.app.ui.fragment.all_comments_by_product
+package com.vodovoz.app.feature.all.comments
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
@@ -8,31 +7,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.paging.LoadState
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.databinding.FragmentProductCommentsBinding
 import com.vodovoz.app.databinding.FragmentProductCommentsFlowBinding
-import com.vodovoz.app.feature.all.comments.AllCommentsController
-import com.vodovoz.app.feature.all.comments.AllCommentsFlowViewModel
-import com.vodovoz.app.feature.productdetail.ProductDetailsFragmentDirections
-import com.vodovoz.app.ui.adapter.PagingCommentsAdapter
-import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
-import com.vodovoz.app.ui.base.loadStateAdapter.LoadStateAdapter
-import com.vodovoz.app.ui.diffUtils.CommentDiffItemCallback
-import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AllCommentsByProductDialogFragment : BaseFragment() {
@@ -63,13 +43,14 @@ class AllCommentsByProductDialogFragment : BaseFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.sendComment -> {
                 if (viewModel.isLoginAlready()) {
                     findNavController().navigate(
                         AllCommentsByProductDialogFragmentDirections.actionToSendCommentAboutProductFragment(
                             args.productId
-                        ))
+                        )
+                    )
                 } else {
                     findNavController().navigate(R.id.profileFragment)
                 }
