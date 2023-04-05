@@ -8,6 +8,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
@@ -17,11 +18,12 @@ class ReplacementController(
     cartManager: CartManager,
     likeManager: LikeManager,
     productsClickListener: ProductsClickListener,
-    private val context: Context
+    private val context: Context,
+    ratingProductManager: RatingProductManager
 ) {
     private val space: Int by lazy { context.resources.getDimension(R.dimen.space_16).toInt() }
 
-    private val productsAdapter = AvailableProductsAdapter(productsClickListener, likeManager, cartManager)
+    private val productsAdapter = AvailableProductsAdapter(productsClickListener, likeManager, cartManager, ratingProductManager)
 
     fun bind(recyclerView: RecyclerView, list: List<Item>) {
         initList(recyclerView, list)

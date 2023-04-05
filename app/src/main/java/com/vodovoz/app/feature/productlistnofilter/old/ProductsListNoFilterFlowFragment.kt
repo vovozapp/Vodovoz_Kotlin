@@ -14,6 +14,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentProductsWithoutFiltersFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
@@ -53,6 +54,9 @@ class ProductsListNoFilterFlowFragment : BaseFragment() {
     @Inject
     lateinit var likeManager: LikeManager
 
+    @Inject
+    lateinit var ratingProductManager: RatingProductManager
+
     private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
 
     private val categoryTabsController = CategoryTabsFlowController(categoryTabsClickListener())
@@ -62,7 +66,8 @@ class ProductsListNoFilterFlowFragment : BaseFragment() {
             cartManager,
             likeManager,
             getProductsClickListener(),
-            requireContext()
+            requireContext(),
+            ratingProductManager
         )
     }
 

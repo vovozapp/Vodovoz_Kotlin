@@ -17,6 +17,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.FragmentPromotionDetailFlowBinding
 import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
@@ -49,6 +50,9 @@ class PromotionDetailFlowFragment : BaseFragment() {
     @Inject
     lateinit var likeManager: LikeManager
 
+    @Inject
+    lateinit var ratingProductManager: RatingProductManager
+
     private val bestForYouController by lazy { BestForYouController(cartManager, likeManager, getProductsShowClickListener(), getProductsClickListener()) }
 
     private val productsController by lazy {
@@ -57,7 +61,8 @@ class PromotionDetailFlowFragment : BaseFragment() {
             cartManager,
             likeManager,
             getProductsClickListener(),
-            requireContext()
+            requireContext(),
+            ratingProductManager
         )
     }
 

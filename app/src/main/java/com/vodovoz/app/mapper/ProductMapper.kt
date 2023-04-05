@@ -21,7 +21,7 @@ object ProductMapper {
         priceList = priceList.mapToUI(),
         status = status,
         statusColor = statusColor,
-        rating = rating,
+        rating = rating.toFloat(),
         cartQuantity = cartQuantity,
         commentAmount = commentAmount,
         orderQuantity = orderQuantity,

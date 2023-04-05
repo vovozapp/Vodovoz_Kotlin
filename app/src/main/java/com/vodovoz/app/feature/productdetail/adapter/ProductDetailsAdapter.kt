@@ -63,7 +63,7 @@ class ProductDetailsAdapter(
 
             //Brand Products List
             R.layout.fragment_product_details_brand_product_list -> {
-                DetailBrandListViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager)
+                DetailBrandListViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager, ratingProductManager)
             }
 
             //Products - recommendProductSliderFragment, byWithProductsSliderFragment
@@ -78,7 +78,7 @@ class ProductDetailsAdapter(
 
             //Maybe Like
             R.layout.fragment_product_details_maybe_like_product_list -> {
-                DetailMaybeViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager)
+                DetailMaybeViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager, ratingProductManager)
             }
 
             //Search Word

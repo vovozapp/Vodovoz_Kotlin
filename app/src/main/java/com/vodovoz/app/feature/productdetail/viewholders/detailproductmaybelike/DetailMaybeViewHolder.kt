@@ -8,17 +8,20 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.FragmentProductDetailsMaybeLikeProductListBinding
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
+import javax.inject.Inject
 
 class DetailMaybeViewHolder(
     view: View,
     val clickListener: ProductDetailsClickListener,
-    private val productsClickListener: ProductsClickListener,
-    private val likeManager: LikeManager,
-    private val cartManager: CartManager
+    productsClickListener: ProductsClickListener,
+    likeManager: LikeManager,
+    cartManager: CartManager,
+    ratingProductManager: RatingProductManager
 ) : ItemViewHolder<DetailMaybeLike>(view) {
 
 
@@ -26,7 +29,7 @@ class DetailMaybeViewHolder(
 
     private val space: Int by lazy { itemView.context.resources.getDimension(R.dimen.space_16).toInt() }
 
-    private val productsAdapter = AvailableProductsAdapter(productsClickListener, likeManager, cartManager)
+    private val productsAdapter = AvailableProductsAdapter(productsClickListener, likeManager, cartManager, ratingProductManager)
 
     init {
         binding.tvNextPage.setOnClickListener { clickListener.onNextPageMaybeLikeClick() }

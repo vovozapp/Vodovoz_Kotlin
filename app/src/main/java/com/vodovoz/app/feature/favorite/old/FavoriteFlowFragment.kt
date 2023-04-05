@@ -14,6 +14,7 @@ import com.vodovoz.app.databinding.FragmentMainFavoriteFlowBinding
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
@@ -51,12 +52,15 @@ class FavoriteFlowFragment : BaseFragment() {
     @Inject
     lateinit var likeManager: LikeManager
 
+    @Inject
+    lateinit var ratingProductManager: RatingProductManager
+
     private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
 
     private val categoryTabsController = CategoryTabsFlowController(categoryTabsClickListener())
     private val bestForYouController by lazy { BestForYouController(cartManager, likeManager, getProductsShowClickListener(), getProductsClickListener()) }
     private val favoritesController by lazy {
-        FavoritesListController(viewModel, cartManager, likeManager, getProductsClickListener(), requireContext())
+        FavoritesListController(viewModel, cartManager, likeManager, getProductsClickListener(), requireContext(), ratingProductManager)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

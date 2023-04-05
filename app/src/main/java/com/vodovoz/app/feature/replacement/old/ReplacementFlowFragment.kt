@@ -14,6 +14,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.BsReplacementProductsBinding
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
@@ -43,8 +44,11 @@ class ReplacementFlowFragment : BaseBottomSheetFragment() {
     @Inject
     lateinit var likeManager: LikeManager
 
+    @Inject
+    lateinit var ratingProductManager: RatingProductManager
+
     private val productsAdapter by lazy {
-        AvailableProductsAdapter(getProductsClickListener(), likeManager, cartManager)
+        AvailableProductsAdapter(getProductsClickListener(), likeManager, cartManager, ratingProductManager)
     }
 
     private fun getProductsClickListener(): ProductsClickListener {

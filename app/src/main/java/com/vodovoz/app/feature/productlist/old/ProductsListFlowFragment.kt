@@ -14,6 +14,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentProductsFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
@@ -54,11 +55,14 @@ class ProductsListFlowFragment : BaseFragment() {
     @Inject
     lateinit var likeManager: LikeManager
 
+    @Inject
+    lateinit var ratingProductManager: RatingProductManager
+
     private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
 
     private val brandController = BrandFlowController(brandClickListener())
     private val productsListFlowController by lazy {
-        ProductsListFlowController(viewModel, cartManager, likeManager, getProductsClickListener(), requireContext())
+        ProductsListFlowController(viewModel, cartManager, likeManager, getProductsClickListener(), requireContext(), ratingProductManager)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

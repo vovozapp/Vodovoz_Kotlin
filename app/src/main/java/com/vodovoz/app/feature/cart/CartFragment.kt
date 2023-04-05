@@ -13,6 +13,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.FragmentMainCartFlowBinding
 import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
@@ -42,12 +43,16 @@ class CartFragment : BaseFragment() {
     @Inject
     lateinit var likeManager: LikeManager
 
+    @Inject
+    lateinit var ratingProductManager: RatingProductManager
+
     private val cartController by lazy {
         CartController(
             getCartMainClickListener(),
             getProductsClickListener(),
             cartManager,
-            likeManager
+            likeManager,
+            ratingProductManager
         )
     }
 

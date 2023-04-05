@@ -12,6 +12,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlist.adapter.SortedAdapter
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
@@ -23,11 +24,12 @@ class ProductsListNoFilterFlowController(
     cartManager: CartManager,
     likeManager: LikeManager,
     productsClickListener: ProductsClickListener,
-    private val context: Context
+    private val context: Context,
+    ratingProductManager: RatingProductManager
 ) {
     private val space: Int by lazy { context.resources.getDimension(R.dimen.space_16).toInt() }
 
-    private val favoritesAdapter = SortedAdapter(productsClickListener, cartManager, likeManager)
+    private val favoritesAdapter = SortedAdapter(productsClickListener, cartManager, likeManager, ratingProductManager)
 
     private val gridMarginDecoration: GridMarginDecoration by lazy {
         GridMarginDecoration(space)

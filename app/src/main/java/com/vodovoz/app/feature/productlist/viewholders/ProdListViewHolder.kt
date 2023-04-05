@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.CountDownTimer
 import android.view.View
+import android.widget.RatingBar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
@@ -13,6 +14,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.core.network.ApiConfig.AMOUNT_CONTROLLER_TIMER
 import com.vodovoz.app.databinding.ViewHolderProductListBinding
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowClickListener
@@ -30,12 +32,14 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class ProdListViewHolder(
     view: View,
     val productsClickListener: ProductsClickListener,
     private val likeManager: LikeManager,
-    private val cartManager: CartManager
+    private val cartManager: CartManager,
+    private val ratingProductManager: RatingProductManager
 ) : ItemViewHolder<ProductUI>(view) {
 
     private val binding: ViewHolderProductListBinding = ViewHolderProductListBinding.bind(view)
@@ -64,6 +68,18 @@ class ProdListViewHolder(
 
     override fun attach() {
         super.attach()
+
+        launch {
+            val item = item ?: return@launch
+            ratingProductManager
+                .observeRatings()
+                .filter{ it.containsKey(item.id) }
+                .onEach {
+                    item.rating = it[item.id] ?: item.rating
+                    binding.rbRating.rating = item.rating
+                }
+                .collect()
+        }
 
         launch {
             val item = item ?: return@launch
@@ -173,6 +189,12 @@ class ProdListViewHolder(
         binding.tvName.text = item.name
         binding.rbRating.rating = item.rating.toFloat()
         binding.llRatingContainer.visibility = View.GONE
+
+        binding.rbRating.onRatingBarChangeListener =
+            RatingBar.OnRatingBarChangeListener { p0, newRating, p2 ->
+                productsClickListener.onChangeRating(item.id, newRating, item.rating)
+            }
+
 
         //If left items = 0
         when(item.leftItems == 0) {

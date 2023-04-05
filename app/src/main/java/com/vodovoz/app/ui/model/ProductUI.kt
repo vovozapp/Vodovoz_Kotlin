@@ -16,7 +16,7 @@ data class ProductUI(
     val priceList: List<PriceUI>,
     val status: String,
     val statusColor: String,
-    val rating: Double,
+    var rating: Float,
     val isBottle: Boolean,
     val isGift: Boolean,
     var isAvailable: Boolean,

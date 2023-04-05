@@ -7,6 +7,7 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.CartAvailableProductsViewHolder
 import com.vodovoz.app.feature.cart.viewholders.cartempty.CartEmptyViewHolder
 import com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts.CartNotAvailableProductsViewHolder
@@ -18,13 +19,14 @@ class CartMainAdapter(
     private val clickListener: CartMainClickListener,
     private val productsClickListener: ProductsClickListener,
     private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    private val likeManager: LikeManager,
+    private val ratingProductManager: RatingProductManager
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
         return when (viewType) {
             R.layout.item_cart_available_products -> {
-                CartAvailableProductsViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager)
+                CartAvailableProductsViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager, ratingProductManager)
             }
             R.layout.item_cart_not_available_products -> {
                 CartNotAvailableProductsViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager)

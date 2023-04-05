@@ -15,6 +15,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.BsReplacementProductsBinding
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
@@ -45,10 +46,13 @@ class ReplacementProductsSelectionBS : BaseBottomSheetFragment() {
     @Inject
     lateinit var likeManager: LikeManager
 
+    @Inject
+    lateinit var ratingProductManager: RatingProductManager
+
     private val args: ReplacementProductsSelectionBSArgs by navArgs()
 
     private val replacementController by lazy {
-        ReplacementController(cartManager, likeManager, getProductsClickListener(), requireContext())
+        ReplacementController(cartManager, likeManager, getProductsClickListener(), requireContext(), ratingProductManager)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
