@@ -10,6 +10,7 @@ import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.pa
 import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
 import com.vodovoz.app.data.parser.response.comment.SendCommentAboutProductResponseJsonParser.parseSendCommentAboutProductResponse
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
+import com.vodovoz.app.data.parser.response.order.OrderDetailsResponseJsonParser.parseOrderDetailsResponse
 import com.vodovoz.app.data.parser.response.past_purchases.PastPurchasesHeaderResponseJsonParser.parsePastPurchasesHeaderResponse
 import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
 import com.vodovoz.app.data.parser.response.pre_order.PreOrderFormDataResponseJsonParser.parsePreOrderFormDataResponse
@@ -649,6 +650,42 @@ class MainRepository @Inject constructor(
             false -> "netnalichi"
             else -> null
         }
+    )
+
+    /**
+     * all orders
+     */
+
+    //Постраничная загрузка всех заказов
+    suspend fun fetchAllOrders(
+        userId: Long?,
+        appVersion: String?,
+        orderId: Long?,
+        status: String?,
+        page: Int?
+    ) = api.fetchOrdersHistoryResponse(
+        userId = userId,
+        appVersion = appVersion,
+        action = "spisok",
+        orderId = orderId,
+        status = status,
+        page = page
+    )
+
+    /**
+     * repeat order
+     */
+
+    //Детальная информация о заказе
+    suspend fun fetchOrderDetailsResponse(
+        userId: Long?,
+        appVersion: String?,
+        orderId: Long?
+    ) = api.fetchOrdersResponse(
+        action = "detail",
+        userId = userId,
+        appVersion = appVersion,
+        orderId = orderId
     )
 
 }

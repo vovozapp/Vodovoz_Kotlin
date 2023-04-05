@@ -388,4 +388,30 @@ interface MainApi {
         @Query("act") isAvailable: String? = null,
     ): ResponseBody
 
+    /**
+     * all orders
+     */
+
+    @GET("/newmobile/profile/historyorder/spisokzakazov.php")
+    suspend fun fetchOrdersHistoryResponse(
+        @Query("userid") userId: Long? = null,
+        @Query("action") action: String? = null,
+        @Query("nav") page: Int? = null,
+        @Query("android") appVersion: String? = null,
+        @Query("status") status: String? = null,
+        @Query("id") orderId: Long? = null,
+    ): ResponseBody
+
+    /**
+     * repeat order
+     */
+
+    @GET("/newmobile/profile/historyorder/detailzakaz.php")
+    suspend fun fetchOrdersResponse(
+        @Query("userid") userId: Long? = null,
+        @Query("action") action: String? = null,
+        @Query("android") appVersion: String? = null,
+        @Query("id") orderId: Long? = null,
+    ): ResponseBody
+
 }
