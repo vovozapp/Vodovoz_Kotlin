@@ -86,6 +86,8 @@ class PastPurchasesFlowViewModel @Inject constructor(
                                 favoriteCategory = checkSelectedFilter(data.favoriteCategoryUI),
                                 availableTitle = data.availableTitle,
                                 notAvailableTitle = data.notAvailableTitle,
+                                emptyTitle = response.data.emptyTitle,
+                                emptySubtitle = response.data.emptySubtitle
                             ),
                             loadingPage = false,
                             error = null
@@ -301,7 +303,9 @@ class PastPurchasesFlowViewModel @Inject constructor(
         val selectedCategoryId: Long = -1,
         val isFirstLoadSorted: Boolean = false,
         val itemsList: List<Item> = emptyList(),
-        val layoutManager: String = LINEAR
+        val layoutManager: String = LINEAR,
+        val emptyTitle: String = "",
+        val emptySubtitle: String = ""
     ) : State
 
     companion object {

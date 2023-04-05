@@ -119,6 +119,9 @@ class PastPurchasesFlowFragment : BaseFragment() {
 
         binding.imgViewMode.setOnClickListener { viewModel.changeLayoutManager() }
 
+        binding.errorTitle.text = state.emptyTitle
+        binding.errorSubtitle.text = state.emptySubtitle
+
         if (state.favoriteCategory != null && state.favoriteCategory.id != 0L) {
             showContainer(true)
         } else {

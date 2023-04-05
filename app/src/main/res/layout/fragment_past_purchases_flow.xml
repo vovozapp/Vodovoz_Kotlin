@@ -36,6 +36,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/errorTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/rotonda_normal"
@@ -44,7 +45,7 @@
                         android:textColor="@color/blackTextDark"
                         android:padding="@dimen/space_8"
                         android:gravity="center"
-                        android:text="В списке нет товаров" />
+                        tools:text="В списке нет товаров" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -57,7 +58,8 @@
                         android:paddingStart="@dimen/space_16"
                         android:paddingEnd="@dimen/space_16"
                         android:gravity="center"
-                        android:text="Добавляйте понравившиейся вам продукты в избранное" />
+                        android:id="@+id/errorSubtitle"
+                        tools:text="Добавляйте понравившиейся вам продукты в избранное" />
 
                 </LinearLayout>
 
