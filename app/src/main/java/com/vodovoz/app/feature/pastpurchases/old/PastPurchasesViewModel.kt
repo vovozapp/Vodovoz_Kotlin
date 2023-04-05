@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.past_purchases
+package com.vodovoz.app.feature.pastpurchases.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

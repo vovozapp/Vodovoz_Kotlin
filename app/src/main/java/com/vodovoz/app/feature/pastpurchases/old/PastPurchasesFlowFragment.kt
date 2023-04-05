@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.pastpurchases
+package com.vodovoz.app.feature.pastpurchases.old
 
 import android.os.Bundle
 import android.view.View
@@ -21,6 +21,8 @@ import com.vodovoz.app.feature.favorite.FavoriteFragmentDirections
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
+import com.vodovoz.app.feature.pastpurchases.PastPurchasesFlowViewModel
+import com.vodovoz.app.feature.pastpurchases.PastPurchasesListController
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.model.CategoryUI

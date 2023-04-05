@@ -626,7 +626,7 @@
     </fragment>
     <fragment
         android:id="@+id/pastPurchasesFragment"
-        android:name="com.vodovoz.app.ui.fragment.past_purchases.PastPurchasesFragment"
+        android:name="com.vodovoz.app.feature.pastpurchases.PastPurchasesFragment"
         android:label="PastPurchasesFragment" >
         <action
             android:id="@+id/action_to_sortProductsSettingsBottomFragment"
