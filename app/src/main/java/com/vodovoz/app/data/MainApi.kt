@@ -358,4 +358,19 @@ interface MainApi {
         @Query("rating_value") ratingValue: Float
     ): RatingResponse
 
+    /**
+     * all comments by products
+     */
+
+    @GET("/newmobile/comments.php")
+    suspend fun fetchCommentsResponse(
+        @Query("iblock_id") blockId: Long? = null,
+        @Query("action") action: String? = null,
+        @Query("id") productId: Long? = null,
+        @Query("nav") page: Int? = null,
+        @Query("rating_value") rating: Int? = null,
+        @Query("message") comment: String? = null,
+        @Query("userid") userId: Long? = null,
+    ): ResponseBody
+
 }

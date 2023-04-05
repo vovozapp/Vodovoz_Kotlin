@@ -582,4 +582,18 @@ class MainRepository @Inject constructor(
         )
     }
 
+    /**
+     * all comments by products
+     */
+
+    //Все отзывы о продукте
+    suspend fun fetchAllCommentsByProduct(
+        productId: Long,
+        page: Int?
+    ) = api.fetchCommentsResponse(
+        action = "detail",
+        productId = productId,
+        page = page
+    )
+
 }
