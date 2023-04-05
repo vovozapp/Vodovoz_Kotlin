@@ -15,6 +15,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tbToolbar"
+            android:theme="@style/ToolbarTitle.Back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:title="@string/product_comments_title"
