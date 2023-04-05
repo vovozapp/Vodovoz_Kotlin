@@ -5,6 +5,8 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsSendCommentBinding
@@ -26,6 +28,14 @@ class SendCommentAboutProductFlowFragment : BaseBottomSheetFragment() {
         initHeader()
         initSendButton()
         observeSendResult()
+        initDialog()
+    }
+
+    private fun initDialog() {
+        dialog?.let {
+            val behavior = (dialog as BottomSheetDialog).behavior
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
     }
 
     private fun observeSendResult() {
