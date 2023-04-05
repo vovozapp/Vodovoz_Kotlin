@@ -1,5 +1,6 @@
 package com.vodovoz.app.common.product.rating
 
+import com.squareup.moshi.JsonClass
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,6 +20,9 @@ class RatingProductManager @Inject constructor(
 
     fun observeRatings() = ratingsStateListener.asSharedFlow().filter { it.isNotEmpty() }
 
+    private val showRatingSnackbarListener = MutableSharedFlow<String>()
+    fun observeRatingSnackbar() = showRatingSnackbarListener.asSharedFlow()
+
     suspend fun rate(id: Long, oldRating: Float, rating: Float) {
         updateRates(id, rating)
 
@@ -30,7 +34,8 @@ class RatingProductManager @Inject constructor(
     }
 
     private suspend fun action(productId: Long, rating: Float) {
-        repository.rateProduct(productId, rating)
+        val response = repository.rateProduct(productId, rating)
+        showRatingSnackbarListener.emit(response.message ?: "Вы успешно проголосовали")
         updateRates(productId, rating)
     }
 
@@ -40,3 +45,10 @@ class RatingProductManager @Inject constructor(
     }
 
 }
+
+@JsonClass(generateAdapter = true)
+data class RatingResponse(
+    val status: String?,
+    val message: String?,
+    val data: Float?
+)

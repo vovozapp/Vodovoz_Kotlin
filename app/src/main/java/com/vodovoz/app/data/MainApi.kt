@@ -1,5 +1,6 @@
 package com.vodovoz.app.data
 
+import com.vodovoz.app.common.product.rating.RatingResponse
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -355,6 +356,6 @@ interface MainApi {
     suspend fun rateProduct(
         @Query("element_id") productId: Long,
         @Query("rating_value") ratingValue: Float
-    ): ResponseBody
+    ): RatingResponse
 
 }

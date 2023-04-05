@@ -1,6 +1,7 @@
 package com.vodovoz.app.data
 
 import com.vodovoz.app.BuildConfig
+import com.vodovoz.app.common.product.rating.RatingResponse
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
 import com.vodovoz.app.data.model.features.FavoriteProductsHeaderBundleEntity
@@ -574,7 +575,7 @@ class MainRepository @Inject constructor(
     suspend fun rateProduct(
        productId: Long,
        ratingValue: Float
-    ): ResponseBody {
+    ): RatingResponse {
         return api.rateProduct(
             productId = productId,
             ratingValue = ratingValue
