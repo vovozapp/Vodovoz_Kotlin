@@ -241,7 +241,6 @@ class ProductDetailsFragment : BaseFragment() {
             }
 
             override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
-                debugLog { "spasibo $oldRating $rating" }
                 viewModel.changeRating(id, rating, oldRating)
             }
         }

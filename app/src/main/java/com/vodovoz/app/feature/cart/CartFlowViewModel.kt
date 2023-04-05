@@ -15,6 +15,7 @@ import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.CartAvailableProducts
 import com.vodovoz.app.feature.cart.viewholders.cartempty.CartEmpty
 import com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts.CartNotAvailableProducts
@@ -37,7 +38,8 @@ class CartFlowViewModel @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val dataRepository: DataRepository,
     private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    private val likeManager: LikeManager,
+    private val ratingProductManager: RatingProductManager
 ) : PagingStateViewModel<CartFlowViewModel.CartState>(CartState()) {
 
     private val navigateToOrderFlow = MutableSharedFlow<NavigateToOrder>()
@@ -205,6 +207,12 @@ class CartFlowViewModel @Inject constructor(
             result.append(product.first).append(":").append(product.second).append(",")
         }
         return result.toString()
+    }
+
+    fun changeRating(productId: Long, rating: Float, oldRating: Float) {
+        viewModelScope.launch {
+            ratingProductManager.rate(productId, rating = rating, oldRating = oldRating)
+        }
     }
 
     data class CartState(

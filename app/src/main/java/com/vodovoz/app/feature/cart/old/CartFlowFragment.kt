@@ -25,6 +25,7 @@ import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -117,9 +118,8 @@ class CartFlowFragment : BaseFragment() {
             }
 
             override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
-
+                viewModel.changeRating(id, rating, oldRating)
             }
-
         }
     }
 

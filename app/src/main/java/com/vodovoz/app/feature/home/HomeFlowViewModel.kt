@@ -36,6 +36,7 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
 import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfo
@@ -74,7 +75,8 @@ class HomeFlowViewModel @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val dataRepository: DataRepository,
     private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    private val likeManager: LikeManager,
+    private val ratingProductManager: RatingProductManager
 ) : PagingStateViewModel<HomeFlowViewModel.HomeState>(HomeState.idle()) {
 
     private fun loadPage() {
@@ -879,6 +881,12 @@ class HomeFlowViewModel @Inject constructor(
     fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
         viewModelScope.launch {
             likeManager.like(productId, !isFavorite)
+        }
+    }
+
+    fun changeRating(productId: Long, rating: Float, oldRating: Float) {
+        viewModelScope.launch {
+            ratingProductManager.rate(productId, rating = rating, oldRating = oldRating)
         }
     }
 

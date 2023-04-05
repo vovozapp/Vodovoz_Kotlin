@@ -27,6 +27,7 @@ import com.vodovoz.app.ui.adapter.LinearProductsAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
+import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -158,7 +159,7 @@ class ProductsCatalogFragment : BaseFragment() {
             }
 
             override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
-
+                viewModel.changeRating(id, rating, oldRating)
             }
 
         }

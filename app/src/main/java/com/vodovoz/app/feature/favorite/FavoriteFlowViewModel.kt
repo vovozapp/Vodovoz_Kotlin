@@ -9,6 +9,7 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
@@ -35,7 +36,8 @@ class FavoriteFlowViewModel @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val dataRepository: DataRepository,
     private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    private val likeManager: LikeManager,
+    private val ratingProductManager: RatingProductManager
 ) : PagingStateViewModel<FavoriteFlowViewModel.FavoriteState>(FavoriteState()){
 
     private val changeLayoutManager = MutableStateFlow(LINEAR)
@@ -229,6 +231,12 @@ class FavoriteFlowViewModel @Inject constructor(
     fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
         viewModelScope.launch {
             likeManager.like(productId, !isFavorite)
+        }
+    }
+
+    fun changeRating(productId: Long, rating: Float, oldRating: Float) {
+        viewModelScope.launch {
+            ratingProductManager.rate(productId, rating = rating, oldRating = oldRating)
         }
     }
 

@@ -30,6 +30,7 @@ import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWitho
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -121,7 +122,7 @@ class HomeFlowFragment : BaseFragment() {
             }
 
             override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
-
+                flowViewModel.changeRating(id, rating, oldRating)
             }
 
         }

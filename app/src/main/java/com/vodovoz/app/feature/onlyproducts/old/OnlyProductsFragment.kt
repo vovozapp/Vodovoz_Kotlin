@@ -18,6 +18,7 @@ import com.vodovoz.app.feature.onlyproducts.OnlyProductsController
 import com.vodovoz.app.feature.onlyproducts.OnlyProductsViewModel
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragmentDirections
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
+import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.Serializable
 import javax.inject.Inject
@@ -146,7 +147,7 @@ class OnlyProductsFragment : BaseFragment() {
             }
 
             override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
-
+                viewModel.changeRating(id, rating, oldRating)
             }
         }
     }

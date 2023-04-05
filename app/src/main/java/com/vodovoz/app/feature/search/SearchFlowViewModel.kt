@@ -9,6 +9,7 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
@@ -38,7 +39,8 @@ class SearchFlowViewModel @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val dataRepository: DataRepository,
     private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    private val likeManager: LikeManager,
+    private val ratingProductManager: RatingProductManager
 ) : PagingStateViewModel<SearchFlowViewModel.SearchState>(SearchState()){
 
     private val changeLayoutManager = MutableStateFlow(LINEAR)
@@ -310,6 +312,11 @@ class SearchFlowViewModel @Inject constructor(
         }
     }
 
+    fun changeRating(productId: Long, rating: Float, oldRating: Float) {
+        viewModelScope.launch {
+            ratingProductManager.rate(productId, rating = rating, oldRating = oldRating)
+        }
+    }
 
     fun onTabClick(id: Long) {
         val categoryUI = state.data.categoryHeader ?: return

@@ -273,7 +273,7 @@ class ProductsListNoFilterFlowFragment : BaseFragment() {
             }
 
             override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
-
+                viewModel.changeRating(id, rating, oldRating)
             }
         }
     }

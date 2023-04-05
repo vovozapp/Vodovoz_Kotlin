@@ -30,6 +30,7 @@ import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowCon
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -260,7 +261,7 @@ class FavoriteFlowFragment : BaseFragment() {
             }
 
             override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
-
+                viewModel.changeRating(id, rating, oldRating)
             }
 
         }
