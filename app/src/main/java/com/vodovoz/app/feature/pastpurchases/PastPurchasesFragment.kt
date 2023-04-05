@@ -264,7 +264,8 @@ class PastPurchasesFragment : BaseFragment() {
     private fun initSearch() {
         initSearchToolbar(
             { findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment()) },
-            { findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment()) }
+            { findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment()) },
+            showBackBtn = true
         )
     }
 
