@@ -5,10 +5,12 @@ import com.vodovoz.app.common.product.rating.RatingResponse
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
 import com.vodovoz.app.data.model.features.FavoriteProductsHeaderBundleEntity
+import com.vodovoz.app.data.model.features.PastPurchasesHeaderBundleEntity
 import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.parseAllBrandsResponse
 import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
 import com.vodovoz.app.data.parser.response.comment.SendCommentAboutProductResponseJsonParser.parseSendCommentAboutProductResponse
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
+import com.vodovoz.app.data.parser.response.past_purchases.PastPurchasesHeaderResponseJsonParser.parsePastPurchasesHeaderResponse
 import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
 import com.vodovoz.app.data.parser.response.pre_order.PreOrderFormDataResponseJsonParser.parsePreOrderFormDataResponse
 import com.vodovoz.app.data.parser.response.pre_order.PreOrderProductResponseJsonParser.parsePreOrderProductResponse
@@ -614,6 +616,39 @@ class MainRepository @Inject constructor(
         rating = rating,
         comment = comment,
         userId = userId
+    )
+
+    /**
+     * past purchases
+     */
+
+    suspend fun fetchPastPurchasesHeader(
+        userId: Long?
+    ) = api.fetchPastPurchasesResponse(
+        action = "getLastFifty",
+        userId = userId,
+        page = 1
+    )
+
+    suspend fun fetchPastPurchasesProducts(
+        userId: Long?,
+        sort: String?,
+        orientation: String?,
+        categoryId: Long?,
+        isAvailable: Boolean?,
+        page: Int?,
+    ) = api.fetchPastPurchasesResponse(
+        action = "getLastFifty",
+        userId = userId,
+        sort = sort,
+        orientation = orientation,
+        categoryId = categoryId,
+        page = page,
+        isAvailable = when(isAvailable) {
+            true -> "nalichie"
+            false -> "netnalichi"
+            else -> null
+        }
     )
 
 }

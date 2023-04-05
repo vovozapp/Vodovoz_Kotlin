@@ -373,4 +373,19 @@ interface MainApi {
         @Query("userid") userId: Long? = null,
     ): ResponseBody
 
+    /**
+     * past purchases
+     */
+
+    @GET("/newmobile/profile/historyorder/proshlpokipki.php")
+    suspend fun fetchPastPurchasesResponse(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("sort") sort: String? = null,
+        @Query("ascdesc") orientation: String? = null,
+        @Query("nav") page: Int? = null,
+        @Query("sect") categoryId: Long? = null,
+        @Query("act") isAvailable: String? = null,
+    ): ResponseBody
+
 }
