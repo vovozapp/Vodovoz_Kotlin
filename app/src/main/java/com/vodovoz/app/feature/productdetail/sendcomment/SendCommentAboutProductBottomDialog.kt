@@ -2,6 +2,10 @@ package com.vodovoz.app.feature.productdetail.sendcomment
 
 import android.os.Bundle
 import android.view.View
+import android.widget.RatingBar
+import android.widget.RatingBar.OnRatingBarChangeListener
+import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -29,6 +33,13 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
         initSendButton()
         observeSendResult()
         initDialog()
+        binding.etComment.doAfterTextChanged {
+            binding.errorTv.isVisible = false
+        }
+
+        binding.rbRating.onRatingBarChangeListener =  RatingBar.OnRatingBarChangeListener { p0, newRating, p2 ->
+            binding.errorTv.isVisible = false
+        }
     }
 
     private fun initDialog() {
@@ -44,6 +55,7 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
                 .collect {
                     if (it) {
                         requireActivity().snack("Отзыв успешно добавлен!")
+                        dialog?.cancel()
                     } else {
                         requireActivity().snack("Ошибка, попробуйте снова.")
                     }
@@ -59,14 +71,15 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
     private fun initSendButton() {
         binding.btnSend.setOnClickListener {
 
-
             if(binding.rbRating.rating.toInt() == 0) {
-                requireActivity().snack("Поставьте оценку от 1 до 5")
+                binding.errorTv.text = "Поставьте оценку от 1 до 5"
+                binding.errorTv.isVisible = true
                 return@setOnClickListener
             }
 
             if (binding.etComment.text.toString().length < FieldValidationsSettings.MIN_COMMENT_LENGTH) {
-                requireActivity().snack("Длина отзыва должа быть не менее ${FieldValidationsSettings.MIN_COMMENT_LENGTH} символов")
+                binding.errorTv.text = "Длина отзыва должа быть не менее ${FieldValidationsSettings.MIN_COMMENT_LENGTH} символов"
+                binding.errorTv.isVisible = true
                 return@setOnClickListener
             }
 
