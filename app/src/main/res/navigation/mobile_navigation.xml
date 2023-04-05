@@ -492,7 +492,7 @@
     </fragment>
     <dialog
         android:id="@+id/sendCommentAboutProductFragment"
-        android:name="com.vodovoz.app.ui.fragment.send_comment_about_product.SendCommentAboutProductBottomDialog"
+        android:name="com.vodovoz.app.feature.productdetail.sendcomment.SendCommentAboutProductBottomDialog"
         android:label="SendCommentAboutProductFragment" >
         <argument
             android:name="productId"

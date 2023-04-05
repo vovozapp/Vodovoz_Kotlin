@@ -15,7 +15,7 @@ import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SendCommentAboutProductFlowFragment : BaseBottomSheetFragment() {
+class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
 
     override fun layout(): Int = R.layout.bs_send_comment
 
@@ -79,3 +79,83 @@ class SendCommentAboutProductFlowFragment : BaseBottomSheetFragment() {
     }
 
 }
+
+/*
+@AndroidEntryPoint
+class SendCommentAboutProductBottomDialog : ViewStateBaseBottomFragment() {
+
+    private lateinit var binding: BsSendCommentBinding
+    private val viewModel: SendCommentAboutProductViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+        getArgs()
+    }
+
+    private fun getArgs() {
+        viewModel.updateArgs(SendCommentAboutProductBottomDialogArgs.fromBundle(requireArguments()).productId)
+    }
+
+    override fun setContentView(
+        inflater: LayoutInflater,
+        container: ViewGroup
+    ) = BsSendCommentBinding.inflate(
+        inflater,
+        container,
+        false
+    ).apply { binding = this }.root
+
+    override fun initView() {
+        onStateSuccess()
+        initHeader()
+        initDialog()
+        initSendButton()
+        observeViewModel()
+    }
+
+    override fun update() {}
+
+    private fun initHeader() {
+        binding.incHeader.imgClose.setOnClickListener { dialog?.dismiss() }
+        binding.incHeader.tvTitle.text = getString(R.string.new_comment_title)
+    }
+
+    private fun initDialog() {
+        dialog?.let {
+            val behavior = (dialog as BottomSheetDialog).behavior
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+    }
+
+    private fun initSendButton() {
+        binding.btnSend.setOnClickListener {
+            viewModel.validate(
+                comment = binding.etComment.text.toString(),
+                rating = binding.rbRating.rating.toInt()
+            )
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.errorLD.observe(viewLifecycleOwner) { errorMessage ->
+            Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_SHORT).show()
+        }
+
+        viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
+            when(state) {
+                is ViewState.Loading -> onStateLoading()
+                is ViewState.Hide -> onStateHide()
+                is ViewState.Error -> {
+                    onStateSuccess()
+                    Snackbar.make(binding.root, state.errorMessage, Snackbar.LENGTH_SHORT).show()
+                }
+                is ViewState.Success -> {
+                    dialog?.cancel()
+                    Snackbar.make(binding.root, "Отзыв успешно доавблен!", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+}*/

@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.send_comment_about_product
+package com.vodovoz.app.feature.productdetail.sendcomment.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
