@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -19,15 +18,11 @@ import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentPastPurchasesFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFragmentDirections
-import com.vodovoz.app.feature.favorite.FavoritesListController
-import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
-import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -124,8 +119,10 @@ class PastPurchasesFlowFragment : BaseFragment() {
 
         binding.imgViewMode.setOnClickListener { viewModel.changeLayoutManager() }
 
-        if (state.favoriteCategory != null) {
+        if (state.favoriteCategory != null && state.favoriteCategory.id != 0L) {
             showContainer(true)
+        } else {
+            showContainer(false)
         }
 
         val categoryUiList = state.favoriteCategory?.categoryUIList ?: emptyList()
