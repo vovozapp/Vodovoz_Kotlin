@@ -1,63 +1,68 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--new -->
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<?xml version="1.0" encoding="utf-8"?><!--new -->
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/profileContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bkg_bs"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    android:visibility="visible">
 
-    <include
-        android:id="@+id/incHeader"
-        layout="@layout/view_popup_header"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/mtDivider"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dividerColor="@color/divider_gray_color"
-        app:layout_constraintTop_toBottomOf="@id/incHeader"/>
+        android:layout_height="match_parent"
+        android:background="@drawable/bkg_bs"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <androidx.appcompat.widget.AppCompatRatingBar
-        android:id="@+id/rbRating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/space_16"
-        android:numStars="5"
-        android:progressTint="@color/accentPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mtDivider" />
+        <include
+            android:id="@+id/incHeader"
+            layout="@layout/view_popup_header"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/etComment"
-        style="@style/EditTextViewNormalGray"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="@dimen/space_16"
-        android:layout_weight="1"
-        android:background="@drawable/bkg_stroke_field"
-        android:gravity="top|start"
-        android:padding="@dimen/space_16"
-        android:hint="@string/comment_hint_text"
-        app:layout_constraintBottom_toTopOf="@+id/btnSend"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rbRating" />
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/mtDivider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:dividerColor="@color/divider_gray_color"
+            app:layout_constraintTop_toBottomOf="@id/incHeader" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnSend"
-        style="@style/BlueButton"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_normal_height"
-        android:layout_marginHorizontal="@dimen/space_16"
-        android:layout_marginBottom="@dimen/space_16"
-        android:text="@string/send_comment_btn_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        <androidx.appcompat.widget.AppCompatRatingBar
+            android:id="@+id/rbRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/space_16"
+            android:numStars="5"
+            android:progressTint="@color/accentPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mtDivider" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etComment"
+            style="@style/EditTextViewNormalGray"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_margin="@dimen/space_16"
+            android:layout_weight="1"
+            android:background="@drawable/bkg_stroke_field"
+            android:gravity="top|start"
+            android:hint="@string/comment_hint_text"
+            android:padding="@dimen/space_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rbRating" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSend"
+            style="@style/BlueButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_normal_height"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:layout_marginVertical="@dimen/space_16"
+            android:text="@string/send_comment_btn_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etComment" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
