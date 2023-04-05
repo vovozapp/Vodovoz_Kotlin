@@ -73,6 +73,7 @@ class ProductsListFlowController(
     }
 
     fun changeLayoutManager(manager: String, recyclerView: RecyclerView, imageViewMode: AppCompatImageView) {
+        clearDecorators(recyclerView)
         when (manager) {
             ProductsListFlowViewModel.LINEAR -> {
                 imageViewMode.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_list))
@@ -116,6 +117,14 @@ class ProductsListFlowController(
         refresh.setOnRefreshListener {
             viewModel.refreshSorted()
             refresh.isRefreshing = false
+        }
+    }
+
+    private fun clearDecorators(recyclerView: RecyclerView) {
+        with(recyclerView) {
+            removeItemDecoration(linearMarginDecoration)
+            removeItemDecoration(linearDividerItemDecoration)
+            removeItemDecoration(gridMarginDecoration)
         }
     }
 }
