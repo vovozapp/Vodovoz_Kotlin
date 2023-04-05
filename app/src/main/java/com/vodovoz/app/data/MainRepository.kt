@@ -7,6 +7,7 @@ import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
 import com.vodovoz.app.data.model.features.FavoriteProductsHeaderBundleEntity
 import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.parseAllBrandsResponse
 import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
+import com.vodovoz.app.data.parser.response.comment.SendCommentAboutProductResponseJsonParser.parseSendCommentAboutProductResponse
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
 import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
 import com.vodovoz.app.data.parser.response.pre_order.PreOrderFormDataResponseJsonParser.parsePreOrderFormDataResponse
@@ -594,6 +595,25 @@ class MainRepository @Inject constructor(
         action = "detail",
         productId = productId,
         page = page
+    )
+
+    /**
+     * send comment by product
+     */
+
+    //Отправить отзыв о продукте
+    suspend fun sendCommentAboutProduct(
+        productId: Long,
+        rating: Int,
+        comment: String,
+        userId: Long
+    ) = api.fetchCommentsResponse(
+        blockId = 12,
+        action = "add",
+        productId = productId,
+        rating = rating,
+        comment = comment,
+        userId = userId
     )
 
 }
