@@ -70,7 +70,7 @@ class PastPurchasesFlowViewModel @Inject constructor(
         val userId = localDataSource.fetchUserId()
 
         viewModelScope.launch {
-            flow { emit(repository.fetchFavoriteProducts(userId = userId, null)) }
+            flow { emit(repository.fetchPastPurchasesHeader(userId = userId)) }
                 .catch {
                     debugLog { "fetch past purchases error ${it.localizedMessage}" }
                     uiStateListener.value =
