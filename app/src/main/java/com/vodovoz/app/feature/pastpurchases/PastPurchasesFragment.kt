@@ -24,6 +24,7 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllList
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -122,7 +123,7 @@ class PastPurchasesFragment : BaseFragment() {
         binding.errorTitle.text = state.emptyTitle
         binding.errorSubtitle.text = state.emptySubtitle
 
-        if (state.favoriteCategory != null && state.favoriteCategory.id != 0L) {
+        if (state.favoriteCategory?.categoryUIList != null && state.favoriteCategory.categoryUIList.isNotEmpty()) {
             showContainer(true)
         } else {
             showContainer(false)
