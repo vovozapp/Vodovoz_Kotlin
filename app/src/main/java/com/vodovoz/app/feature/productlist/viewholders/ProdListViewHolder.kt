@@ -187,12 +187,13 @@ class ProdListViewHolder(
         binding.rlAmountControllerContainer.visibility = View.VISIBLE
 
         binding.tvName.text = item.name
-        binding.rbRating.rating = item.rating.toFloat()
-        binding.llRatingContainer.visibility = View.GONE
+        binding.rbRating.rating = item.rating
 
         binding.rbRating.onRatingBarChangeListener =
             RatingBar.OnRatingBarChangeListener { p0, newRating, p2 ->
-                productsClickListener.onChangeRating(item.id, newRating, item.rating)
+                if (newRating != binding.rbRating.rating) {
+                    productsClickListener.onChangeRating(item.id, newRating, item.rating)
+                }
             }
 
 
