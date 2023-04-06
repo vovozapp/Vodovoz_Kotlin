@@ -403,7 +403,7 @@ interface MainApi {
     ): ResponseBody
 
     /**
-     * repeat order
+     * repeat order && order details
      */
 
     @GET("/newmobile/profile/historyorder/detailzakaz.php")
@@ -412,6 +412,11 @@ interface MainApi {
         @Query("action") action: String? = null,
         @Query("android") appVersion: String? = null,
         @Query("id") orderId: Long? = null,
+    ): ResponseBody
+
+    @GET("newmobile/changeOrderStatus.php")
+    suspend fun cancelOrder(
+        @Query("orderID") orderId: Long?
     ): ResponseBody
 
 }

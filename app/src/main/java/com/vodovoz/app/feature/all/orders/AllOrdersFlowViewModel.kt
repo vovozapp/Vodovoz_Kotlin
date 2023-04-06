@@ -147,7 +147,11 @@ class AllOrdersFlowViewModel @Inject constructor(
                 appVersion = BuildConfig.VERSION_NAME,
                 orderId = orderId
             )) }
-                .catch { debugLog { "repeat order error ${it.localizedMessage}" } }
+                .catch {
+                    debugLog { "repeat order error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseOrderDetailsResponse()
@@ -163,9 +167,9 @@ class AllOrdersFlowViewModel @Inject constructor(
                                 repeat = true
                             )
                         }
-                        uiStateListener.value =  state.copy(loadingPage = true)
+                        uiStateListener.value =  state.copy(loadingPage = true, error = null)
                         delay(3000)
-                        uiStateListener.value =  state.copy(loadingPage = false)
+                        uiStateListener.value =  state.copy(loadingPage = false, error = null)
                         goToCartListener.emit(true)
                     } else {
                         uiStateListener.value =
