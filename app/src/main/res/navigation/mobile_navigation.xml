@@ -566,7 +566,7 @@
     </fragment>
     <fragment
         android:id="@+id/orderDetailsFragment"
-        android:name="com.vodovoz.app.ui.fragment.order_details.OrderDetailsFragment"
+        android:name="com.vodovoz.app.feature.all.orders.detail.OrderDetailsFragment"
         android:label="OrderDetailsFragment" >
         <argument
             android:name="orderId"

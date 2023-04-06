@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.order_details
+package com.vodovoz.app.feature.all.orders.detail.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

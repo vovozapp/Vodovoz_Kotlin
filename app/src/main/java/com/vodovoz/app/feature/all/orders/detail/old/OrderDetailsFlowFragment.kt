@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.all.orders.detail
+package com.vodovoz.app.feature.all.orders.detail.old
 
 import android.os.Bundle
 import android.view.View
@@ -15,11 +15,13 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.FragmentOrderDetailsFlowBinding
+import com.vodovoz.app.feature.all.orders.detail.OrderDetailsController
+import com.vodovoz.app.feature.all.orders.detail.OrderDetailsFlowViewModel
+import com.vodovoz.app.feature.all.orders.detail.OrderDetailsFragmentArgs
+import com.vodovoz.app.feature.all.orders.detail.OrderDetailsFragmentDirections
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
-import com.vodovoz.app.ui.fragment.order_details.OrderDetailsFragmentArgs
-import com.vodovoz.app.ui.fragment.order_details.OrderDetailsFragmentDirections
 import com.vodovoz.app.ui.model.OrderDetailsUI
 import com.vodovoz.app.ui.model.OrderStatusUI
 import dagger.hilt.android.AndroidEntryPoint
