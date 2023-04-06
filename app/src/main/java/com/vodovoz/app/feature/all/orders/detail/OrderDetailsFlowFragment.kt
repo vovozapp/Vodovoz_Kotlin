@@ -23,6 +23,7 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.replacement.ReplacementController
 import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
 import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBSArgs
+import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
 import com.vodovoz.app.ui.fragment.order_details.OrderDetailsFragmentArgs
@@ -72,6 +73,13 @@ class OrderDetailsFlowFragment : BaseFragment() {
         observeUiState()
         observeGoToCart()
         observeCancelResult()
+        initActionBar()
+    }
+
+    private fun initActionBar() {
+        binding.imgBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun observeCancelResult() {
