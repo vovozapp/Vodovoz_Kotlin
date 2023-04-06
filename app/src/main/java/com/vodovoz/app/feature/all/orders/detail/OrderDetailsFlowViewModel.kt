@@ -47,12 +47,10 @@ class OrderDetailsFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow {
                 emit(
-                    repository.fetchAllOrders(
+                    repository.fetchOrderDetailsResponse(
                         userId = userId,
                         appVersion = BuildConfig.VERSION_NAME,
-                        orderId = id,
-                        null,
-                        null
+                        orderId = id
                     )
                 )
             }
