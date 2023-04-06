@@ -126,8 +126,8 @@ abstract class BaseFragment : Fragment() {
     protected fun initFilterToolbar(showBackBtn: Boolean = true, onFilterBtnClick: () -> Unit) {
         viewBinding.appbarLayout.isVisible = true
         viewBinding.appBarFilter.root.isVisible = true
-        viewBinding.imgBack.setOnClickListener { findNavController().popBackStack() }
-        viewBinding.imgBack.isVisible = showBackBtn
+        viewBinding.appBarFilter.imgBack.setOnClickListener { findNavController().popBackStack() }
+        viewBinding.appBarFilter.imgBack.isVisible = showBackBtn
 
         viewBinding.appBarFilter.filter.setOnClickListener {
             onFilterBtnClick.invoke()
