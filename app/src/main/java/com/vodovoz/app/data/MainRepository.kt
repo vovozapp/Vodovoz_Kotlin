@@ -7,6 +7,7 @@ import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
 import com.vodovoz.app.data.model.features.FavoriteProductsHeaderBundleEntity
 import com.vodovoz.app.data.model.features.PastPurchasesHeaderBundleEntity
 import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.parseAllBrandsResponse
+import com.vodovoz.app.data.parser.response.category.AllFiltersByCategoryResponseJsonParser.parseAllFiltersByCategoryResponse
 import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
 import com.vodovoz.app.data.parser.response.comment.SendCommentAboutProductResponseJsonParser.parseSendCommentAboutProductResponse
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
@@ -695,5 +696,13 @@ class MainRepository @Inject constructor(
     ) = api.cancelOrder(
         orderId = orderId
     )
+
+    /**
+     * products filters
+     */
+    //Все филтры по продуктам для выбранной категории
+    suspend fun fetchAllFiltersByCategory(
+        categoryId: Long
+    ) = api.fetchFilterBundleResponse(categoryId = categoryId)
 
 }

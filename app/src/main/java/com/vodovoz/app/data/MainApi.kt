@@ -419,4 +419,14 @@ interface MainApi {
         @Query("orderID") orderId: Long?
     ): ResponseBody
 
+    /**
+     * products filters
+     */
+    //Все филтры продуктов
+    @GET("/newmobile/razdel/filtercatalog.php")
+    suspend fun fetchFilterBundleResponse(
+        @Query("action") action: String = "getAllProps",
+        @Query("section") categoryId: Long,
+    ): ResponseBody
+
 }
