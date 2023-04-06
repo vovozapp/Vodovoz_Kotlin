@@ -19,6 +19,7 @@ import com.vodovoz.app.core.network.ApiConfig.AMOUNT_CONTROLLER_TIMER
 import com.vodovoz.app.databinding.ViewHolderProductListBinding
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowClickListener
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowPagerAdapter
+import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPicturePager
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDepositPriceText
@@ -51,13 +52,14 @@ class AvailableProductsViewHolder(
 
     private val detailPictureFlowPagerAdapter = DetailPictureFlowPagerAdapter(
         clickListener = object : DetailPictureFlowClickListener {
-            override fun onProductClick() {
-                val item = getItemByPosition() ?: return
-                productsClickListener.onProductClick(item.id)
-            }
 
             override fun onDetailPictureClick() {
 
+            }
+
+            override fun onProductClick(id: Long) {
+                val item = getItemByPosition() ?: return
+                productsClickListener.onProductClick(item.id)
             }
         }
     )
@@ -294,15 +296,7 @@ class AvailableProductsViewHolder(
         //UpdatePictures
         binding.tlIndicators.isVisible = item.detailPictureList.size != 1
 
-        val diffUtil = DetailPictureDiffUtilCallback(
-            oldList = detailPictureFlowPagerAdapter.detailPictureUrlList,
-            newList = item.detailPictureList
-        )
-
-        DiffUtil.calculateDiff(diffUtil).let { diffResult ->
-            detailPictureFlowPagerAdapter.detailPictureUrlList = item.detailPictureList
-            diffResult.dispatchUpdatesTo(detailPictureFlowPagerAdapter)
-        }
+        detailPictureFlowPagerAdapter.submitList(item.detailPictureList.map { DetailPicturePager(it) })
 
         //If is bottle
         if (item.isBottle) {

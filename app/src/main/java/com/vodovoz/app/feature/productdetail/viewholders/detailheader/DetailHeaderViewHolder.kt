@@ -22,6 +22,7 @@ import com.vodovoz.app.core.network.ApiConfig.AMOUNT_CONTROLLER_TIMER
 import com.vodovoz.app.databinding.FragmentProductDetailsHeaderBinding
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowClickListener
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowPagerAdapter
+import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPicturePager
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
 import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
@@ -60,7 +61,7 @@ class DetailHeaderViewHolder(
                 )
             }
 
-            override fun onProductClick() {
+            override fun onProductClick(id: Long) {
 
             }
         }
@@ -321,15 +322,7 @@ class DetailHeaderViewHolder(
             false -> binding.cgStatuses.visibility = View.VISIBLE
         }
 
-        val diffUtil = DetailPictureDiffUtilCallback(
-            oldList = detailPictureFlowPagerAdapter.detailPictureUrlList,
-            newList = item.productDetailUI.detailPictureList
-        )
-
-        DiffUtil.calculateDiff(diffUtil).let { diffResult ->
-            detailPictureFlowPagerAdapter.detailPictureUrlList = item.productDetailUI.detailPictureList
-            diffResult.dispatchUpdatesTo(detailPictureFlowPagerAdapter)
-        }
+        detailPictureFlowPagerAdapter.submitList(item.productDetailUI.detailPictureList.map { DetailPicturePager(it) })
 
     }
 

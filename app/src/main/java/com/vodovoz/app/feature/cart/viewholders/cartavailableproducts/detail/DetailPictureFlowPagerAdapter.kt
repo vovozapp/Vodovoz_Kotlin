@@ -1,34 +1,27 @@
 package com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import com.vodovoz.app.databinding.ViewHolderPagerDetailPictureBinding
+import com.vodovoz.app.R
+import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.common.content.itemadapter.ItemAdapter
+import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 
 class DetailPictureFlowPagerAdapter(
     private val clickListener: DetailPictureFlowClickListener
-) : RecyclerView.Adapter<DetailPictureFlowPagerViewHolder>() {
+) : ItemAdapter() {
 
-    var detailPictureUrlList =  listOf<String>()
-
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int,
-    ) = DetailPictureFlowPagerViewHolder(
-        binding = ViewHolderPagerDetailPictureBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        ),
-        clickListener = clickListener,
-        context = parent.context
-    )
-
-    override fun onBindViewHolder(
-        holder: DetailPictureFlowPagerViewHolder,
-        position: Int
-    ) = holder.onBind(detailPictureUrlList[position])
-
-    override fun getItemCount() = detailPictureUrlList.size
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
+        return when (viewType) {
+            R.layout.view_holder_pager_detail_picture -> {
+                DetailPictureFlowPagerViewHolder(getViewFromInflater(viewType, parent), clickListener)
+            }
+            R.layout.view_holder_slider_detail_picture -> {
+                DetailPictureFlowSliderViewHolder(getViewFromInflater(viewType, parent), clickListener)
+            }
+            else -> {
+                throw IllegalArgumentException("Adapter item viewType not found")
+            }
+        }
+    }
 
 }
