@@ -15,15 +15,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.FragmentOrderDetailsFlowBinding
-import com.vodovoz.app.databinding.FragmentProductCommentsFlowBinding
-import com.vodovoz.app.feature.all.comments.AllCommentsByProductDialogFragmentArgs
-import com.vodovoz.app.feature.all.comments.AllCommentsFlowViewModel
-import com.vodovoz.app.feature.all.orders.OrdersHistoryFragmentDirections
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.feature.replacement.ReplacementController
-import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
-import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBSArgs
-import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
 import com.vodovoz.app.ui.fragment.order_details.OrderDetailsFragmentArgs
