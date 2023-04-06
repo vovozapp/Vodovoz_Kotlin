@@ -187,8 +187,6 @@ class DetailHeaderViewHolder(
 
         binding.tlIndicators.isVisible = item.productDetailUI.detailPictureList.size != 1
 
-        debugLog { "spasibo old rating ${item.productDetailUI.rating}" }
-
         item.productDetailUI.brandUI?.let { binding.tvBrand.text = it.name }
 
         binding.tvName.text = item.productDetailUI.name

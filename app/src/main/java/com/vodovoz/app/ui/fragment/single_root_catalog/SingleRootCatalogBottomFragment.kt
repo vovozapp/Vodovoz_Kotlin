@@ -47,7 +47,6 @@ class SingleRootCatalogBottomFragment : ViewStateBaseBottomFragment() {
     }
 
     private fun getArgs() {
-        debugLog { "spasibo ${SingleRootCatalogBottomFragmentArgs.fromBundle(requireArguments()).categoryId}" }
         viewModel.selectedCategoryId = SingleRootCatalogBottomFragmentArgs.fromBundle(requireArguments()).categoryId
         viewModel.fetchCategory()
     }

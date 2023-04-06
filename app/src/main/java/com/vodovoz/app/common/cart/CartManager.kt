@@ -64,12 +64,10 @@ class CartManager @Inject constructor(
 
     private suspend fun action(id: Long, count: Int, isInCart: Boolean, plus: Boolean) {
         return if (!isInCart) {
-            debugLog { "spasibo change $id count $count" }
             tabManager.loadingAddToCart(true, plus = plus)
             repository.changeProductsQuantityInCart(id, count)
             updateCarts(id, count)
         } else {
-            debugLog { "spasibo add $id count $count" }
             tabManager.loadingAddToCart(true, plus = true)
             repository.addProductToCart(id, count)
             updateCarts(id, count)

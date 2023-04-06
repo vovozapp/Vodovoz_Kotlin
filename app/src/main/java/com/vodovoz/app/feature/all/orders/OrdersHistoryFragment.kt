@@ -83,7 +83,6 @@ class OrdersHistoryFragment : BaseFragment() {
             viewModel
                 .observeGoToFilter()
                 .collect {
-                    debugLog { "spasibo go to filter ${findNavController().currentBackStackEntry?.destination}" }
                     if (findNavController().currentBackStackEntry?.destination?.id == R.id.allOrdersFragment) {
                         findNavController().navigate(OrdersHistoryFragmentDirections.actionToOrdersFiltersDialog(it))
                     }
@@ -97,7 +96,6 @@ class OrdersHistoryFragment : BaseFragment() {
                 .observeGoToCart()
                 .collect {
                     if (it) {
-                        debugLog { "spasibo go to cart ${findNavController().currentBackStackEntry?.destination}" }
                         if (findNavController().currentBackStackEntry?.destination?.id == R.id.allOrdersFragment) {
                             findNavController().navigate(OrdersHistoryFragmentDirections.actionToCartFragment())
                         }
