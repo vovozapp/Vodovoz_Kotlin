@@ -66,7 +66,12 @@ class AllOrdersFlowFragment : BaseFragment() {
                         hideLoader()
                     }
 
-                    allOrdersController.submitList(state.data.itemsList)
+                    val data = state.data
+                    if (state.bottomItem != null) {
+                        allOrdersController.submitList(data.itemsList + state.bottomItem)
+                    } else {
+                        allOrdersController.submitList(data.itemsList)
+                    }
 
                     showError(state.error)
 
