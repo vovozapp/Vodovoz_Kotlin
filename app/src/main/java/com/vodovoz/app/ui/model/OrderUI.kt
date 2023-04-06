@@ -13,12 +13,16 @@ data class OrderUI(
 ) : Item {
 
     override fun getItemViewType(): Int {
-        return R.layout.view_holder_slider_order
+        return ORDER_VIEW_TYPE
     }
 
     override fun areItemsTheSame(item: Item): Boolean {
         if (item !is OrderUI) return false
 
         return id == item.id
+    }
+
+    companion object {
+        const val ORDER_VIEW_TYPE = -515125
     }
 }
