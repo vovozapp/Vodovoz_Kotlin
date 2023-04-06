@@ -163,6 +163,7 @@ class AllOrdersFlowViewModel @Inject constructor(
                         }
                         uiStateListener.value =  state.copy(loadingPage = true)
                         delay(3000)
+                        uiStateListener.value =  state.copy(loadingPage = false)
                         goToCartListener.emit(true)
                     } else {
                         uiStateListener.value =

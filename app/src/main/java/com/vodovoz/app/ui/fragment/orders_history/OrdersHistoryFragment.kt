@@ -10,9 +10,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
+import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentOrdersHistoryBinding
+import com.vodovoz.app.databinding.FragmentOrdersHistoryFlowBinding
+import com.vodovoz.app.feature.all.AllClickListener
+import com.vodovoz.app.feature.all.orders.AllOrdersController
+import com.vodovoz.app.feature.all.orders.AllOrdersFlowViewModel
 import com.vodovoz.app.ui.adapter.PagingOrdersAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
@@ -28,6 +34,123 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
+class OrdersHistoryFragment : BaseFragment() {
+
+    companion object {
+        const val FILTERS_BUNDLE =  "FILTERS_BUNDLE"
+    }
+
+    override fun layout(): Int = R.layout.fragment_orders_history_flow
+
+    private val binding: FragmentOrdersHistoryFlowBinding by viewBinding {
+        FragmentOrdersHistoryFlowBinding.bind(
+            contentView
+        )
+    }
+    private val viewModel: AllOrdersFlowViewModel by viewModels()
+
+    private val allOrdersController by lazy {
+        AllOrdersController(viewModel, requireContext(), getAllClickListener())
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.firstLoadSorted()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        allOrdersController.bind(binding.rvOrders, binding.refreshContainer)
+        bindErrorRefresh { viewModel.refreshSorted() }
+
+        initFilterToolbar(true) { viewModel.goToFilter() }
+
+        observeUiState()
+        observeResultLiveData()
+        bindSwipeRefresh()
+        observeGoToCart()
+        observeGoToFilter()
+    }
+
+    private fun observeUiState() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.observeUiState()
+                .collect { state ->
+
+                    if (state.loadingPage) {
+                        showLoader()
+                    } else {
+                        hideLoader()
+                    }
+
+                    val data = state.data
+                    if (state.bottomItem != null) {
+                        allOrdersController.submitList(data.itemsList + state.bottomItem)
+                    } else {
+                        allOrdersController.submitList(data.itemsList)
+                    }
+
+                    showError(state.error)
+
+                }
+        }
+    }
+
+    private fun observeGoToFilter() {
+        lifecycleScope.launchWhenStarted {
+            viewModel
+                .observeGoToFilter()
+                .collect {
+                    findNavController().navigate(OrdersHistoryFragmentDirections.actionToOrdersFiltersDialog(it))
+                }
+        }
+    }
+
+    private fun observeGoToCart() {
+        lifecycleScope.launchWhenStarted {
+            viewModel
+                .observeGoToCart()
+                .collect {
+                    if (it) {
+                        findNavController().navigate(OrdersHistoryFragmentDirections.actionToCartFragment())
+                    }
+                }
+        }
+    }
+
+    private fun observeResultLiveData() {
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<OrdersFiltersBundleUI>(OrdersHistoryFragment.FILTERS_BUNDLE)?.observe(viewLifecycleOwner) { filtersBundle ->
+                viewModel.updateFilterBundle(filtersBundle)
+            }
+    }
+
+    private fun getAllClickListener(): AllClickListener {
+        return object : AllClickListener {
+            override fun onMoreDetailClick(orderId: Long) {
+                findNavController().navigate(OrdersHistoryFragmentDirections.actionToOrderDetailsFragment(orderId))
+            }
+
+            override fun onRepeatOrderClick(orderId: Long) {
+                viewModel.repeatOrder(orderId)
+            }
+
+            override fun onProductDetailPictureClick(productId: Long) {
+                findNavController().navigate(OrdersHistoryFragmentDirections.actionToProductDetailFragment(productId))
+            }
+        }
+    }
+
+    private fun bindSwipeRefresh() {
+        binding.refreshContainer.setOnRefreshListener {
+            viewModel.refreshSorted()
+            binding.refreshContainer.isRefreshing = false
+        }
+    }
+}
+/*
 @AndroidEntryPoint
 class OrdersHistoryFragment : ViewStateBaseFragment() {
 
@@ -184,4 +307,4 @@ class OrdersHistoryFragment : ViewStateBaseFragment() {
         }
     }
 
-}
+}*/
