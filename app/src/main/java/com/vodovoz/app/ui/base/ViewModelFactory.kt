@@ -22,7 +22,7 @@ import com.vodovoz.app.ui.fragment.login.LoginViewModel
 import com.vodovoz.app.ui.fragment.map.MapViewModel
 import com.vodovoz.app.ui.fragment.order_details.OrderDetailsViewModel
 import com.vodovoz.app.ui.fragment.ordering.OrderingViewModel
-import com.vodovoz.app.ui.fragment.orders_history.OrdersHistoryViewModel
+import com.vodovoz.app.feature.all.orders.old.OrdersHistoryViewModel
 import com.vodovoz.app.feature.productlist.old.PaginatedProductsCatalogViewModel
 import com.vodovoz.app.feature.productlistnofilter.old.PaginatedProductsCatalogWithoutFiltersViewModel
 import com.vodovoz.app.feature.pastpurchases.old.PastPurchasesViewModel

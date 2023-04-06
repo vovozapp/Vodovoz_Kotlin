@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.all.orders
+package com.vodovoz.app.feature.all.orders.old
 
 import android.os.Bundle
 import android.view.View
@@ -10,8 +10,10 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentOrdersHistoryFlowBinding
 import com.vodovoz.app.feature.all.AllClickListener
-import com.vodovoz.app.ui.fragment.orders_history.OrdersHistoryFragment
-import com.vodovoz.app.ui.fragment.orders_history.OrdersHistoryFragmentDirections
+import com.vodovoz.app.feature.all.orders.AllOrdersController
+import com.vodovoz.app.feature.all.orders.AllOrdersFlowViewModel
+import com.vodovoz.app.feature.all.orders.OrdersHistoryFragment
+import com.vodovoz.app.feature.all.orders.OrdersHistoryFragmentDirections
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
 import dagger.hilt.android.AndroidEntryPoint
 

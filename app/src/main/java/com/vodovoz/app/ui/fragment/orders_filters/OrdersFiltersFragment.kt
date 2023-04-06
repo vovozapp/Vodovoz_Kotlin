@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentOrdersFiltersBinding
 import com.vodovoz.app.ui.adapter.OrderStatusesAdapter
-import com.vodovoz.app.ui.fragment.orders_history.OrdersHistoryFragment
+import com.vodovoz.app.feature.all.orders.OrdersHistoryFragment
 import com.vodovoz.app.ui.model.OrderStatusUI
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
 

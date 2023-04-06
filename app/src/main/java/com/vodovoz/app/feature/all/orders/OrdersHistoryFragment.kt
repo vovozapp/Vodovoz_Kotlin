@@ -1,38 +1,18 @@
-package com.vodovoz.app.ui.fragment.orders_history
+package com.vodovoz.app.feature.all.orders
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.databinding.FragmentOrdersHistoryBinding
 import com.vodovoz.app.databinding.FragmentOrdersHistoryFlowBinding
 import com.vodovoz.app.feature.all.AllClickListener
-import com.vodovoz.app.feature.all.orders.AllOrdersController
-import com.vodovoz.app.feature.all.orders.AllOrdersFlowViewModel
-import com.vodovoz.app.ui.adapter.PagingOrdersAdapter
-import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.loadStateAdapter.LoadStateAdapter
-import com.vodovoz.app.ui.diffUtils.OrderDiffItemCallback
-import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class OrdersHistoryFragment : BaseFragment() {
@@ -103,7 +83,10 @@ class OrdersHistoryFragment : BaseFragment() {
             viewModel
                 .observeGoToFilter()
                 .collect {
-                    findNavController().navigate(OrdersHistoryFragmentDirections.actionToOrdersFiltersDialog(it))
+                    debugLog { "spasibo go to filter ${findNavController().currentBackStackEntry?.destination}" }
+                    if (findNavController().currentBackStackEntry?.destination?.id == R.id.allOrdersFragment) {
+                        findNavController().navigate(OrdersHistoryFragmentDirections.actionToOrdersFiltersDialog(it))
+                    }
                 }
         }
     }
@@ -114,7 +97,10 @@ class OrdersHistoryFragment : BaseFragment() {
                 .observeGoToCart()
                 .collect {
                     if (it) {
-                        findNavController().navigate(OrdersHistoryFragmentDirections.actionToCartFragment())
+                        debugLog { "spasibo go to cart ${findNavController().currentBackStackEntry?.destination}" }
+                        if (findNavController().currentBackStackEntry?.destination?.id == R.id.allOrdersFragment) {
+                            findNavController().navigate(OrdersHistoryFragmentDirections.actionToCartFragment())
+                        }
                     }
                 }
         }
@@ -122,7 +108,7 @@ class OrdersHistoryFragment : BaseFragment() {
 
     private fun observeResultLiveData() {
         findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<OrdersFiltersBundleUI>(OrdersHistoryFragment.FILTERS_BUNDLE)?.observe(viewLifecycleOwner) { filtersBundle ->
+            ?.getLiveData<OrdersFiltersBundleUI>(FILTERS_BUNDLE)?.observe(viewLifecycleOwner) { filtersBundle ->
                 viewModel.updateFilterBundle(filtersBundle)
             }
     }
