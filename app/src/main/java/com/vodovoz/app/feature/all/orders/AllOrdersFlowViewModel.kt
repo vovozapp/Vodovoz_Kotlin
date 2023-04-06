@@ -153,12 +153,14 @@ class AllOrdersFlowViewModel @Inject constructor(
                     val response = it.parseOrderDetailsResponse()
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
-                        data.productUIList.forEachIndexed {index, product ->
+
+                        data.productUIList.filter { it.isAvailable }.forEachIndexed {index, product ->
                             cartManager.add(
                                 id = product.id,
                                 oldCount = product.orderQuantity,
                                 newCount = product.orderQuantity,
-                                withUpdate = index == data.productUIList.lastIndex
+                                withUpdate = index == data.productUIList.lastIndex-1,
+                                repeat = true
                             )
                         }
                         uiStateListener.value =  state.copy(loadingPage = true)

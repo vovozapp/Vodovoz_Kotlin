@@ -30,9 +30,8 @@ class CartManager @Inject constructor(
 
     fun observeCarts() = cartsStateListener.asSharedFlow().filter { it.isNotEmpty() }
 
-    suspend fun add(id: Long, oldCount: Int, newCount: Int, withUpdate: Boolean = true) {
-
-        val isInCart = oldCount == 0
+    suspend fun add(id: Long, oldCount: Int, newCount: Int, withUpdate: Boolean = true, repeat: Boolean = false) {
+        val isInCart = if (repeat) { true } else { oldCount == 0 }
         val plus = newCount >= oldCount
 
         updateCarts(id, newCount)
@@ -65,10 +64,12 @@ class CartManager @Inject constructor(
 
     private suspend fun action(id: Long, count: Int, isInCart: Boolean, plus: Boolean) {
         return if (!isInCart) {
+            debugLog { "spasibo change $id count $count" }
             tabManager.loadingAddToCart(true, plus = plus)
             repository.changeProductsQuantityInCart(id, count)
             updateCarts(id, count)
         } else {
+            debugLog { "spasibo add $id count $count" }
             tabManager.loadingAddToCart(true, plus = true)
             repository.addProductToCart(id, count)
             updateCarts(id, count)
