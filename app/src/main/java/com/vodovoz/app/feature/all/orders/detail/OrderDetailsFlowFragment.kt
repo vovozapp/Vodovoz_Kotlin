@@ -112,11 +112,7 @@ class OrderDetailsFlowFragment : BaseFragment() {
             viewModel.observeUiState()
                 .collect { state ->
 
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
-                    }
+                    showLoaderWithBg(state.loadingPage)
 
                     binding.llPayOrder.setOnClickListener {
                         val url = state.data.orderDetailsUI?.payUri ?: return@setOnClickListener

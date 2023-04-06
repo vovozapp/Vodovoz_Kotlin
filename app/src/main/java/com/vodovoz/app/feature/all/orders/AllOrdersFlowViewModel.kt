@@ -158,7 +158,7 @@ class AllOrdersFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
 
-                        data.productUIList.filter { it.isAvailable }.forEachIndexed {index, product ->
+                        data.productUIList.filter { it.leftItems > 0 }.forEachIndexed {index, product ->
                             cartManager.add(
                                 id = product.id,
                                 oldCount = product.orderQuantity,

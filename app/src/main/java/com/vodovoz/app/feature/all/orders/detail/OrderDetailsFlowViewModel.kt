@@ -66,6 +66,7 @@ class OrderDetailsFlowViewModel @Inject constructor(
                         val orderDetails = response.data.mapToUI()
                         uiStateListener.value = state.copy(
                             data = state.data.copy(orderDetailsUI = orderDetails),
+                            loadingPage = false,
                             error = null
                         )
                     } else {
@@ -102,7 +103,7 @@ class OrderDetailsFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
 
-                        data.productUIList.filter { it.isAvailable }.forEachIndexed {index, product ->
+                        data.productUIList.filter { it.leftItems > 0 }.forEachIndexed {index, product ->
                             cartManager.add(
                                 id = product.id,
                                 oldCount = product.orderQuantity,
