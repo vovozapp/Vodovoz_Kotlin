@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.all.orders
 
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.BuildConfig
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
@@ -12,11 +13,14 @@ import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.order.AllOrdersResponseJsonParser.parseAllOrdersSliderResponse
+import com.vodovoz.app.data.parser.response.order.OrderDetailsResponseJsonParser.parseOrderDetailsResponse
+import com.vodovoz.app.mapper.OrderDetailsMapper.mapToUI
 import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,8 +28,21 @@ import javax.inject.Inject
 @HiltViewModel
 class AllOrdersFlowViewModel @Inject constructor(
     private val repository: MainRepository,
-    private val dataRepository: DataRepository
+    private val dataRepository: DataRepository,
+    private val cartManager: CartManager
 ): PagingStateViewModel<AllOrdersFlowViewModel.AllOrdersState>(AllOrdersState()) {
+
+    private val goToCartListener = MutableSharedFlow<Boolean>()
+    fun observeGoToCart() = goToCartListener.asSharedFlow()
+
+    private val goToFilterListener = MutableSharedFlow<OrdersFiltersBundleUI>()
+    fun observeGoToFilter() = goToFilterListener.asSharedFlow()
+
+    fun goToFilter() {
+        viewModelScope.launch {
+            goToFilterListener.emit(state.data.ordersFiltersBundleUI)
+        }
+    }
 
     private fun fetchAllOrders() {
         val userId = dataRepository.fetchUserId() ?: return
@@ -120,6 +137,44 @@ class AllOrdersFlowViewModel @Inject constructor(
             loadingPage = true
         )
         fetchAllOrders()
+    }
+
+    fun repeatOrder(orderId: Long) {
+        val userId = dataRepository.fetchUserId() ?: return
+        viewModelScope.launch {
+            flow { emit(repository.fetchOrderDetailsResponse(
+                userId = userId,
+                appVersion = BuildConfig.VERSION_NAME,
+                orderId = orderId
+            )) }
+                .catch { debugLog { "repeat order error ${it.localizedMessage}" } }
+                .flowOn(Dispatchers.IO)
+                .onEach {
+                    val response = it.parseOrderDetailsResponse()
+                    if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
+                        data.productUIList.forEachIndexed {index, product ->
+                            cartManager.add(
+                                id = product.id,
+                                oldCount = product.orderQuantity,
+                                newCount = product.orderQuantity,
+                                withUpdate = index == data.productUIList.lastIndex
+                            )
+                        }
+                        uiStateListener.value =  state.copy(loadingPage = true)
+                        delay(3000)
+                        goToCartListener.emit(true)
+                    } else {
+                        uiStateListener.value =
+                            state.copy(
+                                loadingPage = false,
+                                error = ErrorState.Error()
+                            )
+                    }
+                }
+                .flowOn(Dispatchers.Default)
+                .collect()
+        }
     }
 
     fun isLoginAlready() = dataRepository.isAlreadyLogin()

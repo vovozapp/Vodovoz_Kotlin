@@ -69,6 +69,12 @@
             android:id="@+id/appBarDef"
             layout="@layout/app_bar_search" />
 
+        <include
+            android:visibility="gone"
+            tools:visibility="visible"
+            layout="@layout/app_bar_default_history"
+            android:id="@+id/appBarFilter"/>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/fragment_base_error_flow" android:id="@+id/error"/>

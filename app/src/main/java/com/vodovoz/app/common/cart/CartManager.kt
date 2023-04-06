@@ -33,7 +33,7 @@ class CartManager @Inject constructor(
     suspend fun add(id: Long, oldCount: Int, newCount: Int, withUpdate: Boolean = true) {
 
         val isInCart = oldCount == 0
-        val plus = newCount > oldCount
+        val plus = newCount >= oldCount
 
         updateCarts(id, newCount)
 

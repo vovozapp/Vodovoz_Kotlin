@@ -26,10 +26,11 @@ object TextBuilderExtensions {
     }
 
     fun TextView.setPriceText(
-        price: Int,
+        price: Int?,
         isNegative: Boolean = false,
         itCanBeGift: Boolean = false
     ) {
+        if (price == null) return
         if (price == 0 && itCanBeGift) {
             text = "Подарок"
             return

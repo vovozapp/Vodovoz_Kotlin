@@ -123,6 +123,17 @@ abstract class BaseFragment : Fragment() {
         }
     }
 
+    protected fun initFilterToolbar(showBackBtn: Boolean = true, onFilterBtnClick: () -> Unit) {
+        viewBinding.appbarLayout.isVisible = true
+        viewBinding.appBarFilter.root.isVisible = true
+        viewBinding.imgBack.setOnClickListener { findNavController().popBackStack() }
+        viewBinding.imgBack.isVisible = showBackBtn
+
+        viewBinding.appBarFilter.filter.setOnClickListener {
+            onFilterBtnClick.invoke()
+        }
+    }
+
     protected fun initToolbarDropDown(titleText: String, onTitleClick: () -> Unit)  {
         viewBinding.appbarLayout.isVisible = true
         viewBinding.appBarDropDown.root.isVisible = true
