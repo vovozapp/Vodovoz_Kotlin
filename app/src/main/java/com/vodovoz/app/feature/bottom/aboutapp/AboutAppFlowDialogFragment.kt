@@ -20,6 +20,7 @@ import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentAboutAppBinding
+import com.vodovoz.app.databinding.FragmentAboutAppFlowBinding
 import com.vodovoz.app.databinding.FragmentOrdersHistoryFlowBinding
 import com.vodovoz.app.feature.bottom.aboutapp.adapter.AboutApp
 import com.vodovoz.app.feature.bottom.aboutapp.adapter.AboutAppClickListener
@@ -36,14 +37,14 @@ class AboutAppFlowDialogFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_about_app_flow
 
-    private val binding: FragmentAboutAppBinding by viewBinding {
-        FragmentAboutAppBinding.bind(
+    private val binding: FragmentAboutAppFlowBinding by viewBinding {
+        FragmentAboutAppFlowBinding.bind(
             contentView
         )
     }
     private val viewModel: AboutAppFlowViewModel by viewModels()
 
-    private val space = resources.getDimension(R.dimen.space_8).toInt()
+    private val space by lazy { resources.getDimension(R.dimen.space_8).toInt() }
 
     private val aboutAppFlowAdapter = AboutAppFlowAdapter(
         object : AboutAppClickListener {
@@ -104,7 +105,10 @@ class AboutAppFlowDialogFragment : BaseFragment() {
     }
 
     private fun rate() {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${requireActivity().packageName}")))
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${requireActivity().packageName}"))
+        if (intent.resolveActivity(requireContext().packageManager) != null) {
+            startActivity(intent)
+        }
     }
 
     private fun writeToDevelopers() {
