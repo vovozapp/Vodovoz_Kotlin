@@ -117,6 +117,12 @@ class MapFlowViewModel @Inject constructor(
         fetchDeliveryZonesBundle()
     }
 
+    fun showAddAddressBottomDialog() {
+        viewModelScope.launch {
+            eventListener.emit(MapFlowEvents.ShowAddAddressBottomDialog(state.data.addressUI))
+        }
+    }
+
     data class MapFlowState(
         val deliveryZonesBundleUI: DeliveryZonesBundleUI? = null,
         val addressUI: AddressUI? = null
@@ -124,5 +130,6 @@ class MapFlowViewModel @Inject constructor(
 
     sealed class MapFlowEvents : Event {
 
+        data class ShowAddAddressBottomDialog(val address: AddressUI?) : MapFlowEvents()
     }
 }
