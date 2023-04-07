@@ -64,6 +64,14 @@ class MapFlowViewModel @Inject constructor(
         }
     }
 
+    fun updateZones() {
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                updateZones = true
+            )
+        )
+    }
+
     fun fetchAddressByGeocode(
         latitude: Double,
         longitude: Double
@@ -125,7 +133,8 @@ class MapFlowViewModel @Inject constructor(
 
     data class MapFlowState(
         val deliveryZonesBundleUI: DeliveryZonesBundleUI? = null,
-        val addressUI: AddressUI? = null
+        val addressUI: AddressUI? = null,
+        val updateZones: Boolean = false
     ) : State
 
     sealed class MapFlowEvents : Event {

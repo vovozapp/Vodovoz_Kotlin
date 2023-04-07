@@ -162,7 +162,9 @@ class MapDialogFragment : BaseFragment(),
                     }
 
                     val data = state.data
-                    drawDeliveryZones(data.deliveryZonesBundleUI?.deliveryZoneUIList)
+                    if (!state.data.updateZones) {
+                        drawDeliveryZones(data.deliveryZonesBundleUI?.deliveryZoneUIList)
+                    }
 
                     val searchText = state.data.addressUI?.fullAddress ?:""
                     binding.searchEdit.setText(searchText)
@@ -323,6 +325,7 @@ class MapDialogFragment : BaseFragment(),
             zone.strokeWidth = 0.0f
             zone.zIndex = 100.0f
         }
+        viewModel.updateZones()
     }
 
     override fun onMapTap(p0: Map, p1: Point) {
