@@ -4,11 +4,13 @@ import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
+import kotlinx.coroutines.flow.MutableSharedFlow
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.net.ssl.SSLException
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 abstract class PagingStateViewModel<S : State>(
@@ -21,6 +23,22 @@ abstract class PagingStateViewModel<S : State>(
 
     fun observeUiState() = uiStateListener.asStateFlow()
 }
+
+abstract class PagingContractViewModel<S : State, E: Event>(
+    idleState: S
+) : ViewModel() {
+
+    protected val uiStateListener = MutableStateFlow(PagingState.idle(idleState))
+    protected val state
+        get() = uiStateListener.value
+
+    fun observeUiState() = uiStateListener.asStateFlow()
+
+    protected val eventListener = MutableSharedFlow<E>()
+    fun observeEvent() = eventListener.asSharedFlow()
+}
+
+interface Event
 
 data class PagingState<S>(
     val data: S,

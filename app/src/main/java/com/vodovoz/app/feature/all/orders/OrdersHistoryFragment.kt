@@ -11,7 +11,6 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentOrdersHistoryFlowBinding
 import com.vodovoz.app.feature.all.AllClickListener
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
-import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,8 +49,7 @@ class OrdersHistoryFragment : BaseFragment() {
         observeUiState()
         observeResultLiveData()
         bindSwipeRefresh()
-        observeGoToCart()
-        observeGoToFilter()
+        observeEvents()
     }
 
     private fun observeUiState() {
@@ -78,26 +76,22 @@ class OrdersHistoryFragment : BaseFragment() {
         }
     }
 
-    private fun observeGoToFilter() {
+    private fun observeEvents() {
         lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeGoToFilter()
+            viewModel.observeEvent()
                 .collect {
-                    if (findNavController().currentBackStackEntry?.destination?.id == R.id.allOrdersFragment) {
-                        findNavController().navigate(OrdersHistoryFragmentDirections.actionToOrdersFiltersDialog(it))
-                    }
-                }
-        }
-    }
-
-    private fun observeGoToCart() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeGoToCart()
-                .collect {
-                    if (it) {
-                        if (findNavController().currentBackStackEntry?.destination?.id == R.id.allOrdersFragment) {
-                            findNavController().navigate(OrdersHistoryFragmentDirections.actionToCartFragment())
+                    when(it) {
+                        is AllOrdersFlowViewModel.AllOrdersEvent.GoToFilter -> {
+                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.allOrdersFragment) {
+                                findNavController().navigate(OrdersHistoryFragmentDirections.actionToOrdersFiltersDialog(it.bundle))
+                            }
+                        }
+                        is AllOrdersFlowViewModel.AllOrdersEvent.GoToCart -> {
+                            if (it.boolean) {
+                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.allOrdersFragment) {
+                                    findNavController().navigate(OrdersHistoryFragmentDirections.actionToCartFragment())
+                                }
+                            }
                         }
                     }
                 }

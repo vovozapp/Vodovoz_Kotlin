@@ -3,12 +3,9 @@ package com.vodovoz.app.feature.all.orders
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.common.content.ErrorState
-import com.vodovoz.app.common.content.PagingStateViewModel
-import com.vodovoz.app.common.content.State
+import com.vodovoz.app.common.content.*
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
-import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
@@ -30,17 +27,11 @@ class AllOrdersFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val dataRepository: DataRepository,
     private val cartManager: CartManager
-): PagingStateViewModel<AllOrdersFlowViewModel.AllOrdersState>(AllOrdersState()) {
-
-    private val goToCartListener = MutableSharedFlow<Boolean>()
-    fun observeGoToCart() = goToCartListener.asSharedFlow()
-
-    private val goToFilterListener = MutableSharedFlow<OrdersFiltersBundleUI>()
-    fun observeGoToFilter() = goToFilterListener.asSharedFlow()
+): PagingContractViewModel<AllOrdersFlowViewModel.AllOrdersState, AllOrdersFlowViewModel.AllOrdersEvent>(AllOrdersState()) {
 
     fun goToFilter() {
         viewModelScope.launch {
-            goToFilterListener.emit(state.data.ordersFiltersBundleUI)
+            eventListener.emit(AllOrdersEvent.GoToFilter(state.data.ordersFiltersBundleUI))
         }
     }
 
@@ -170,7 +161,7 @@ class AllOrdersFlowViewModel @Inject constructor(
                         uiStateListener.value =  state.copy(loadingPage = true, error = null)
                         delay(3000)
                         uiStateListener.value =  state.copy(loadingPage = false, error = null)
-                        goToCartListener.emit(true)
+                        eventListener.emit(AllOrdersEvent.GoToCart(true))
                     } else {
                         uiStateListener.value =
                             state.copy(
@@ -190,4 +181,9 @@ class AllOrdersFlowViewModel @Inject constructor(
         val itemsList: List<Item> = emptyList(),
         val ordersFiltersBundleUI: OrdersFiltersBundleUI = OrdersFiltersBundleUI()
     ) : State
+
+    sealed class AllOrdersEvent : Event {
+        data class GoToCart(val boolean: Boolean) : AllOrdersEvent()
+        data class GoToFilter(val bundle: OrdersFiltersBundleUI) : AllOrdersEvent()
+    }
 }

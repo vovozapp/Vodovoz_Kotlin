@@ -53,8 +53,6 @@ class AllOrdersFlowFragment : BaseFragment() {
         observeUiState()
         observeResultLiveData()
         bindSwipeRefresh()
-        observeGoToCart()
-        observeGoToFilter()
     }
 
     private fun observeUiState() {
@@ -77,28 +75,6 @@ class AllOrdersFlowFragment : BaseFragment() {
 
                     showError(state.error)
 
-                }
-        }
-    }
-
-    private fun observeGoToFilter() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeGoToFilter()
-                .collect {
-                    findNavController().navigate(OrdersHistoryFragmentDirections.actionToOrdersFiltersDialog(it))
-                }
-        }
-    }
-
-    private fun observeGoToCart() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeGoToCart()
-                .collect {
-                    if (it) {
-                        findNavController().navigate(OrdersHistoryFragmentDirections.actionToCartFragment())
-                    }
                 }
         }
     }
