@@ -429,4 +429,13 @@ interface MainApi {
         @Query("section") categoryId: Long,
     ): ResponseBody
 
+    /**
+     * map
+     */
+
+    @GET("/newmobile/profile/karta/index.php")
+    suspend fun fetchMapResponse(
+        @Query("action") action: String? = null
+    ): ResponseBody
+
 }

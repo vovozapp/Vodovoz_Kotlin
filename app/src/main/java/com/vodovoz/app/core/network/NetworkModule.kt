@@ -6,6 +6,7 @@ import com.vodovoz.app.data.MainApi
 import com.vodovoz.app.data.remote.MapKitApi
 import com.vodovoz.app.data.remote.VodovozApi
 import com.vodovoz.app.core.network.interceptor.VodovozInterceptor
+import com.vodovoz.app.feature.map.api.MapKitFlowApi
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -98,6 +99,9 @@ abstract class NetworkModule {
 
         @Provides
         fun provideMapKitApi(@Named("mapkit") retrofit: Retrofit): MapKitApi = retrofit.create()
+
+        @Provides
+        fun provideMapKitFlowApi(@Named("mapkit") retrofit: Retrofit): MapKitFlowApi = retrofit.create()
     }
 
     @Binds

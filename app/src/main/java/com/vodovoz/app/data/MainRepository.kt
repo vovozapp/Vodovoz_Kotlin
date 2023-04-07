@@ -4,6 +4,7 @@ import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.product.rating.RatingResponse
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
+import com.vodovoz.app.data.model.features.DeliveryZonesBundleEntity
 import com.vodovoz.app.data.model.features.FavoriteProductsHeaderBundleEntity
 import com.vodovoz.app.data.model.features.PastPurchasesHeaderBundleEntity
 import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.parseAllBrandsResponse
@@ -11,6 +12,8 @@ import com.vodovoz.app.data.parser.response.category.AllFiltersByCategoryRespons
 import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
 import com.vodovoz.app.data.parser.response.comment.SendCommentAboutProductResponseJsonParser.parseSendCommentAboutProductResponse
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
+import com.vodovoz.app.data.parser.response.map.AddressByGeocodeResponseJsonParser.parseAddressByGeocodeResponse
+import com.vodovoz.app.data.parser.response.map.DeliveryZonesBundleResponseJsonParser.parseDeliveryZonesBundleResponse
 import com.vodovoz.app.data.parser.response.order.CancelOrderResponseJsonParser.parseCancelOrderResponse
 import com.vodovoz.app.data.parser.response.order.OrderDetailsResponseJsonParser.parseOrderDetailsResponse
 import com.vodovoz.app.data.parser.response.past_purchases.PastPurchasesHeaderResponseJsonParser.parsePastPurchasesHeaderResponse
@@ -20,6 +23,7 @@ import com.vodovoz.app.data.parser.response.pre_order.PreOrderProductResponseJso
 import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonParser.parseAllPromotionsResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionsByBannerResponseJsonParser.parsePromotionsByBannerResponse
+import com.vodovoz.app.feature.map.api.MapKitFlowApi
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
 import okhttp3.ResponseBody
@@ -29,7 +33,8 @@ import retrofit2.http.Query
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
-    private val api: MainApi
+    private val api: MainApi,
+    private val mapKitApi: MapKitFlowApi
 ) {
 
     //Слайдер рекламных баннеров на главной странице
@@ -704,5 +709,24 @@ class MainRepository @Inject constructor(
     suspend fun fetchAllFiltersByCategory(
         categoryId: Long
     ) = api.fetchFilterBundleResponse(categoryId = categoryId)
+
+    /**
+     * map
+     */
+
+    //Информация о зонах доставки
+    suspend fun fetchDeliveryZonesResponse(): ResponseBody = api.fetchMapResponse(
+        action = "tochkakarta"
+    )
+
+    //Адрес по координатам
+    suspend fun fetchAddressByGeocodeResponse(
+        latitude: Double,
+        longitude: Double
+    ) = mapKitApi.fetchAddressByGeocodeResponse(
+        apiKey = "346ef353-b4b2-44b3-b597-210d62eeb66b",
+        geocode = "$longitude,$latitude",
+        format = "json"
+    )
 
 }
