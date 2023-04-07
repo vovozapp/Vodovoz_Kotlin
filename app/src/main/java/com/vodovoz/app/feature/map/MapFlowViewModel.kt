@@ -1,99 +1,128 @@
 package com.vodovoz.app.feature.map
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.content.*
 import com.vodovoz.app.data.DataRepository
+import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.response.map.AddressByGeocodeResponseJsonParser.parseAddressByGeocodeResponse
+import com.vodovoz.app.data.parser.response.map.DeliveryZonesBundleResponseJsonParser.parseDeliveryZonesBundleResponse
 import com.vodovoz.app.mapper.AddressMapper.mapToUI
 import com.vodovoz.app.mapper.DeliveryZonesBundleMapper.mapToUI
-import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.model.AddressUI
-import com.vodovoz.app.ui.model.DeliveryZoneUI
 import com.vodovoz.app.ui.model.custom.DeliveryZonesBundleUI
-import com.vodovoz.app.util.Keys
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MapFlowViewModel @Inject constructor(
-    private val dataRepository: DataRepository
-) : ViewModel() {
+    private val savedState: SavedStateHandle,
+    private val dataRepository: DataRepository,
+    private val repository: MainRepository
+) : PagingContractViewModel<MapFlowViewModel.MapFlowState, MapFlowViewModel.MapFlowEvents>(
+    MapFlowState()
+) {
 
-    private val viewStateMLD = MutableLiveData<ViewState>()
-    private val deliveryZoneUIListMLD = MutableLiveData<List<DeliveryZoneUI>>()
-    private val addressUIMLD = MutableLiveData<AddressUI>()
-    private val errorMLD = MutableLiveData<String>()
+    private val addressUI = savedState.get<AddressUI>("address")
 
-    val viewStateLD: LiveData<ViewState> = viewStateMLD
-    val deliveryZoneUIListLD: LiveData<List<DeliveryZoneUI>> = deliveryZoneUIListMLD
-    val addressUILD: LiveData<AddressUI> = addressUIMLD
-    val errorLD: LiveData<String> = errorMLD
-
-    private val compositeDisposable = CompositeDisposable()
-
-    private lateinit var deliveryZonesBundleUI: DeliveryZonesBundleUI
-    var addressUI: AddressUI? = null
-
-    fun updateArgs(addressUI: AddressUI?) {
-        this.addressUI = addressUI
-        addressUI?.let { addressUIMLD.value = it }
-    }
-
-    fun updateData() {
-        dataRepository
-            .fetchDeliveryZonesBundle()
-            .subscribeOn(Schedulers.io())
-            .doOnSubscribe { viewStateMLD.value = ViewState.Loading() }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-                onSuccess = { response ->
-                    when(response) {
-                        is ResponseEntity.Hide -> viewStateMLD.value = ViewState.Error("Hide")
-                        is ResponseEntity.Error -> viewStateMLD.value = ViewState.Error(response.errorMessage)
-                        is ResponseEntity.Success -> {
-                            deliveryZonesBundleUI = response.data.mapToUI()
-                            deliveryZoneUIListMLD.value = deliveryZonesBundleUI.deliveryZoneUIList
-                            viewStateMLD.value = ViewState.Success()
-                        }
+    private fun fetchDeliveryZonesBundle() {
+        viewModelScope.launch {
+            flow { emit(repository.fetchDeliveryZonesResponse()) }
+                .catch {
+                    debugLog { "fetch delivery zones error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
+                .flowOn(Dispatchers.IO)
+                .onEach {
+                    val response = it.parseDeliveryZonesBundleResponse()
+                    if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
+                        uiStateListener.value = state.copy(
+                            data = state.data.copy(
+                                deliveryZonesBundleUI = data,
+                                addressUI = addressUI
+                            ),
+                            loadingPage = false,
+                            error = null
+                        )
+                    } else {
+                        uiStateListener.value =
+                            state.copy(
+                                loadingPage = false,
+                                error = ErrorState.Error()
+                            )
                     }
-                },
-                onError = { throwable -> viewStateMLD.value = ViewState.Error(throwable.message ?: "Неизвестная") }
-            ).addTo(compositeDisposable)
-
+                }
+                .flowOn(Dispatchers.Default)
+                .collect()
+        }
     }
 
     fun fetchAddressByGeocode(
         latitude: Double,
         longitude: Double
     ) {
-        dataRepository
-            .fetchAddressByGeocode(
-                latitude = latitude,
-                longitude = longitude,
-                apiKey = Keys.MAPKIT_API_KEY
-            )
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-                onSuccess = { response ->
-                    val addressId = addressUI?.id ?: 0
-                    addressUI = (response as ResponseEntity.Success).data.mapToUI()
-                    addressUI?.id = addressId
-                    addressUIMLD.value = addressUI
-                },
-                onError = { throwable -> errorMLD.value = throwable.message ?: "Неизвестная ошибка"}
-            ).addTo(compositeDisposable)
+        uiStateListener.value = state.copy(loadingPage = true)
+
+        viewModelScope.launch {
+            flow { emit(repository.fetchAddressByGeocodeResponse(latitude, longitude)) }
+                .catch {
+                    debugLog { "fetch address by geocode error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
+                .flowOn(Dispatchers.IO)
+                .onEach {
+                    val response = it.parseAddressByGeocodeResponse()
+                    if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI().copy(id = state.data.addressUI?.id ?: 0)
+                        uiStateListener.value = state.copy(
+                            data = state.data.copy(
+                                addressUI = data
+                            ),
+                            error = null,
+                            loadingPage = false
+                        )
+
+                    } else {
+                        uiStateListener.value =
+                            state.copy(
+                                loadingPage = false,
+                                error = ErrorState.Error()
+                            )
+                    }
+                }
+                .flowOn(Dispatchers.Default)
+                .collect()
+        }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.dispose()
+    fun firstLoadSorted() {
+        if (!state.isFirstLoad) {
+            uiStateListener.value =
+                state.copy(isFirstLoad = true, loadingPage = true)
+            fetchDeliveryZonesBundle()
+        }
     }
 
+    fun refreshSorted() {
+        uiStateListener.value =
+            state.copy(loadingPage = true)
+        fetchDeliveryZonesBundle()
+    }
+
+    data class MapFlowState(
+        val deliveryZonesBundleUI: DeliveryZonesBundleUI? = null,
+        val addressUI: AddressUI? = null
+    ) : State
+
+    sealed class MapFlowEvents : Event {
+
+    }
 }
