@@ -742,7 +742,7 @@
     </fragment>
     <fragment
         android:id="@+id/aboutAppDialogFragment"
-        android:name="com.vodovoz.app.ui.fragment.about_app.AboutAppDialogFragment"
+        android:name="com.vodovoz.app.feature.bottom.aboutapp.AboutAppDialogFragment"
         android:label="AboutAppDialogFragment" />
     <dialog
         android:id="@+id/genderSelectionBS"

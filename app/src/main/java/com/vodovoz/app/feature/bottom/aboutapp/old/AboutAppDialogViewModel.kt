@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.about_app
+package com.vodovoz.app.feature.bottom.aboutapp.old
 
 import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
