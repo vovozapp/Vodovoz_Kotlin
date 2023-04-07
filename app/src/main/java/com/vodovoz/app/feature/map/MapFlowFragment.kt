@@ -339,7 +339,7 @@ class MapFlowFragment : BaseFragment(),
     }
 
     override fun onObjectAdded(p0: UserLocationView) {
-        binding.mapView.map.move(
+        /*binding.mapView.map.move(
             CameraPosition(
                 Point(
                     p0.arrow.geometry.longitude,
@@ -348,7 +348,7 @@ class MapFlowFragment : BaseFragment(),
             ),
             Animation(Animation.Type.SMOOTH, 1f),
             null
-        )
+        )*/
     }
 
     override fun onObjectRemoved(p0: UserLocationView) {}
