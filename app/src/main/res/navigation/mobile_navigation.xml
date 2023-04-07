@@ -508,7 +508,7 @@
     </dialog>
     <fragment
         android:id="@+id/mapDialogFragment"
-        android:name="com.vodovoz.app.ui.fragment.map.MapDialogFragment"
+        android:name="com.vodovoz.app.feature.map.MapDialogFragment"
         android:label="MapDialogFragment" >
         <action
             android:id="@+id/action_to_addAddressBottomFragment"

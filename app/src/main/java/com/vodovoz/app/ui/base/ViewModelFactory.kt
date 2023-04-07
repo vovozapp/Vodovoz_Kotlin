@@ -19,7 +19,7 @@ import com.vodovoz.app.ui.fragment.discount_card.DiscountCardViewModel
 import com.vodovoz.app.feature.favorite.old.FavoriteViewModel
 import com.vodovoz.app.ui.fragment.full_screen_history_slider.FullScreenHistoriesSliderViewModel
 import com.vodovoz.app.ui.fragment.login.LoginViewModel
-import com.vodovoz.app.ui.fragment.map.MapViewModel
+import com.vodovoz.app.feature.map.old.MapViewModel
 import com.vodovoz.app.feature.all.orders.detail.old.OrderDetailsViewModel
 import com.vodovoz.app.ui.fragment.ordering.OrderingViewModel
 import com.vodovoz.app.feature.all.orders.old.OrdersHistoryViewModel

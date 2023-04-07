@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.map
+package com.vodovoz.app.feature.map.old
 
 import android.content.Context
 import android.graphics.Color
@@ -19,12 +19,13 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentMapFlowBinding
+import com.vodovoz.app.feature.map.MapDialogFragmentArgs
+import com.vodovoz.app.feature.map.MapDialogFragmentDirections
+import com.vodovoz.app.feature.map.MapFlowViewModel
 import com.vodovoz.app.feature.map.adapter.AddressResult
 import com.vodovoz.app.feature.map.adapter.AddressResultClickListener
 import com.vodovoz.app.feature.map.adapter.AddressResultFlowAdapter
 import com.vodovoz.app.ui.extensions.ColorExtensions.getColorWithAlpha
-import com.vodovoz.app.ui.fragment.map.MapDialogFragmentArgs
-import com.vodovoz.app.ui.fragment.map.MapDialogFragmentDirections
 import com.vodovoz.app.ui.model.DeliveryZoneUI
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKit

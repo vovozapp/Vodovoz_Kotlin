@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.map
+package com.vodovoz.app.feature.map.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
