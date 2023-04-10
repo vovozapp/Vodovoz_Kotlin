@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--deferred-->
+<?xml version="1.0" encoding="utf-8"?><!--deferred-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -57,7 +56,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:src="@drawable/ic_search"
-                app:tint="@color/color_search"
+                app:tint="@color/text_new_black"
                 tools:ignore="ContentDescription" />
 
             <EditText
@@ -77,68 +76,92 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.imageview.ShapeableImageView
-        app:shapeAppearanceOverlay="@style/RoundedImageCircle"
-        android:background="@color/text_new_black"
-        android:id="@+id/plusIv"
-        android:alpha="0.8"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:tint="@color/white"
+    <FrameLayout
+        android:id="@+id/plusFrame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="4dp"
-        android:src="@drawable/ic_plus"
-        app:layout_constraintBottom_toTopOf="@id/minusIv"
+        android:background="@drawable/bg_with_ripple"
+        app:layout_constraintBottom_toTopOf="@id/minusFrame"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintVertical_chainStyle="packed">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        app:shapeAppearanceOverlay="@style/RoundedImageCircle"
-        android:background="@color/text_new_black"
-        android:id="@+id/minusIv"
-        android:alpha="0.8"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:tint="@color/white"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/plusIv"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="4dp"
+            android:src="@drawable/ic_plus"
+            android:tint="@color/white" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/minusFrame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:src="@drawable/ic_minus"
+        android:background="@drawable/bg_with_ripple"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/plusIv" />
+        app:layout_constraintTop_toBottomOf="@id/plusFrame">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        app:shapeAppearanceOverlay="@style/RoundedImageCircle"
-        android:background="@color/text_new_black"
-        android:id="@+id/infoIv"
-        android:alpha="0.8"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:tint="@color/white"
-        android:layout_marginEnd="16dp"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/minusIv"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="4dp"
+            android:src="@drawable/ic_minus"
+            android:tint="@color/white" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/infoFrame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:src="@drawable/baseline_info_24"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_with_ripple"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        app:shapeAppearanceOverlay="@style/RoundedImageCircle"
-        android:background="@color/text_new_black"
-        android:id="@+id/geoIv"
-        android:alpha="0.8"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:tint="@color/white"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/infoIv"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="4dp"
+            android:src="@drawable/baseline_info_24"
+            android:tint="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/geoFrame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:src="@drawable/baseline_near_me_24"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/addAddress" />
+        android:background="@drawable/bg_with_ripple"
+        app:layout_constraintBottom_toTopOf="@id/addAddress"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/geoIv"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="4dp"
+            android:src="@drawable/baseline_near_me_24"
+            app:shapeAppearanceOverlay="@style/RoundedImageCircle"
+            app:tint="@color/white" />
+    </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/addressesRecycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:alpha="0.8"
         android:background="@color/white"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"

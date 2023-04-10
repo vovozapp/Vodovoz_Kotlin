@@ -222,7 +222,6 @@ class MapDialogFragment : BaseFragment(),
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     private fun initMap() {
         binding.mapView.map.addInputListener(this)
         userLocationLayer.isVisible = true
@@ -234,19 +233,19 @@ class MapDialogFragment : BaseFragment(),
             override fun onLocationStatusUpdated(p0: LocationStatus) {}
         })
 
-        binding.plusIv.setOnClickListener {
+        binding.plusFrame.setOnClickListener {
             moveCameraPlus()
         }
 
-        binding.minusIv.setOnClickListener {
+        binding.minusFrame.setOnClickListener {
             moveCameraMinus()
         }
 
-        binding.infoIv.setOnClickListener {
+        binding.infoFrame.setOnClickListener {
 
         }
 
-        binding.geoIv.setOnClickListener {
+        binding.geoFrame.setOnClickListener {
 
             /*MaterialAlertDialogBuilder(requireContext()).apply {
                 setTitle("Attention")
