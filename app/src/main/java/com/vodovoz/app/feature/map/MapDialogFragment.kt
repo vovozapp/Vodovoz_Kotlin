@@ -16,7 +16,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentMapFlowBinding
 import com.vodovoz.app.feature.map.adapter.AddressResult
@@ -24,9 +23,9 @@ import com.vodovoz.app.feature.map.adapter.AddressResultClickListener
 import com.vodovoz.app.feature.map.adapter.AddressResultFlowAdapter
 import com.vodovoz.app.ui.extensions.ColorExtensions.getColorWithAlpha
 import com.vodovoz.app.ui.model.DeliveryZoneUI
-import com.yandex.mapkit.Animation
-import com.yandex.mapkit.MapKit
-import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.*
+import com.yandex.mapkit.directions.DirectionsFactory
+import com.yandex.mapkit.directions.driving.*
 import com.yandex.mapkit.geometry.*
 import com.yandex.mapkit.layers.ObjectEvent
 import com.yandex.mapkit.location.Location
@@ -43,13 +42,15 @@ import com.yandex.runtime.Error
 import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class MapDialogFragment : BaseFragment(),
     InputListener,
     UserLocationObjectListener,
-    SuggestSession.SuggestListener {
+    SuggestSession.SuggestListener,
+    DrivingSession.DrivingRouteListener{
 
-    override fun layout(): Int = R.layout.fragment_map_flow
+    override fun layout(): Int = com.vodovoz.app.R.layout.fragment_map_flow
 
     private val binding: FragmentMapFlowBinding by viewBinding {
         FragmentMapFlowBinding.bind(
@@ -109,7 +110,9 @@ class MapDialogFragment : BaseFragment(),
 
                             viewModel.fetchAddressByGeocode(point.latitude, point.longitude)
                             moveCamera(point)
-                            placeMark(point, R.drawable.png_map_marker)
+                            mapObjects.clear()
+                            viewModel.check(point)
+                            placeMark(point, com.vodovoz.app.R.drawable.png_map_marker)
                             showContainer(false)
                         }
 
@@ -134,6 +137,13 @@ class MapDialogFragment : BaseFragment(),
         mapKit.onStart()
         binding.mapView.onStart()
         moveCamera(center)
+    }
+
+    private val mapObjects: MapObjectCollection by lazy {
+        binding.mapView.map.mapObjects.addCollection();
+    }
+    private val drivingRouter: DrivingRouter by lazy {
+        DirectionsFactory.getInstance().createDrivingRouter();
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -183,6 +193,11 @@ class MapDialogFragment : BaseFragment(),
                             findNavController().navigate(
                                 MapDialogFragmentDirections.actionToAddAddressBottomFragment(it.address)
                             )
+                        }
+                        is MapFlowViewModel.MapFlowEvents.Submit -> {
+                            it.list.forEach {point ->
+                                submitRequest(it.startPoint, point)
+                            }
                         }
                     }
                 }
@@ -258,7 +273,7 @@ class MapDialogFragment : BaseFragment(),
 
     private fun moveCamera(point: Point) {
         binding.mapView.map.move(
-            CameraPosition(point, 16f, 0f, 0f),
+            CameraPosition(point, 10f, 0f, 0f),
             Animation(Animation.Type.SMOOTH, 1f),
             null
         )
@@ -288,7 +303,7 @@ class MapDialogFragment : BaseFragment(),
             binding.searchImage.setImageDrawable(
                 ContextCompat.getDrawable(
                     requireContext(),
-                    R.drawable.ic_arrow_left
+                    com.vodovoz.app.R.drawable.ic_arrow_left
                 )
             )
             binding.searchEdit.focusSearch(View.FOCUS_UP)
@@ -299,11 +314,11 @@ class MapDialogFragment : BaseFragment(),
             binding.searchImage.setImageDrawable(
                 ContextCompat.getDrawable(
                     requireContext(),
-                    R.drawable.ic_search
+                    com.vodovoz.app.R.drawable.ic_search
                 )
             )
             binding.searchEdit.clearFocus()
-            binding.searchContainer.elevation = resources.getDimension(R.dimen.elevation_3)
+            binding.searchContainer.elevation = resources.getDimension(com.vodovoz.app.R.dimen.elevation_3)
 
             val view = requireActivity().currentFocus
             if (view != null) {
@@ -375,11 +390,73 @@ class MapDialogFragment : BaseFragment(),
 
     private fun onMapClick(point: Point) {
         moveCamera(point)
-        placeMark(point, R.drawable.png_map_marker)
+        placeMark(point, com.vodovoz.app.R.drawable.png_map_marker)
         viewModel.fetchAddressByGeocode(
             point.latitude,
             point.longitude
         )
+        mapObjects.clear()
+        viewModel.check(point)
+    }
+
+    private fun initRouteLength(routes: List<Point>) : Double {
+        var dis = 0.0
+
+        for (i in 0 until routes.size - 1) {
+            val it = routes[i]
+            dis += Geo.distance(it, routes[i + 1])
+        }
+        return dis
+    }
+
+
+    private var drivingSession: DrivingSession? = null
+
+    private var currentDistance: Double = 0.0
+
+    override fun onDrivingRoutes(p0: MutableList<DrivingRoute>) {
+        for (route in p0) {
+            if (currentDistance == 0.0) {
+                currentDistance = initRouteLength(route.geometry.points)
+                mapObjects.addPolyline(route.geometry)
+            } else {
+                val distance = initRouteLength(route.geometry.points)
+                if (distance < currentDistance) {
+                    currentDistance = distance
+                    mapObjects.clear()
+                    mapObjects.addPolyline(route.geometry)
+                }
+            }
+        }
+    }
+
+    override fun onDrivingRoutesError(p0: Error) {
+    }
+
+    private fun submitRequest(start: Point, end: Point) {
+        val drivingOptions = DrivingOptions().apply {
+            routesCount = 1
+        }
+        val vehicleOptions = VehicleOptions().apply {
+
+        }
+        val requestPoints: ArrayList<RequestPoint> = ArrayList()
+        requestPoints.add(
+            RequestPoint(
+                start,
+                RequestPointType.WAYPOINT,
+                null
+            )
+        )
+        requestPoints.add(
+            RequestPoint(
+                end,
+                RequestPointType.WAYPOINT,
+                null
+            )
+        )
+        drivingSession =
+            drivingRouter.requestRoutes(requestPoints, drivingOptions, vehicleOptions, this)
     }
 }
 

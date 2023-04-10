@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.map
 
+import android.location.Location
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.content.*
@@ -13,6 +14,8 @@ import com.vodovoz.app.mapper.DeliveryZonesBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.ui.model.custom.DeliveryZonesBundleUI
 import com.vodovoz.app.util.extensions.debugLog
+import com.yandex.mapkit.geometry.Geo
+import com.yandex.mapkit.geometry.Point
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -46,7 +49,8 @@ class MapFlowViewModel @Inject constructor(
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
                                 deliveryZonesBundleUI = data,
-                                addressUI = addressUI
+                                addressUI = addressUI,
+                                centerPoints = data.deliveryZoneUIList.filter { it.color == "#16c60c" }.get(0).pointList
                             ),
                             loadingPage = false,
                             error = null
@@ -131,14 +135,48 @@ class MapFlowViewModel @Inject constructor(
         }
     }
 
+    fun check(startPoint: Point) {
+        val sortedList = mutableListOf<LocationFloatToPoint>()
+
+        state.data.centerPoints.forEach {
+
+            val locA = Location("locationA").apply {
+                    latitude = startPoint.latitude
+                    longitude = startPoint.longitude
+                }
+
+            val locB = Location("locationB").apply {
+                    latitude = it.latitude
+                    longitude = it.longitude
+                }
+
+            val distance = locA.distanceTo(locB)
+            sortedList.add(LocationFloatToPoint(distance, it))
+        }
+
+        val newList = sortedList.sortedBy { it.distance }
+        val listOnPoints = newList.map { it.point }.subList(0,10)
+
+        viewModelScope.launch {
+            eventListener.emit(MapFlowEvents.Submit(startPoint, listOnPoints))
+        }
+    }
+
+    data class LocationFloatToPoint(
+        val distance: Float,
+        val point: Point
+    )
+
     data class MapFlowState(
         val deliveryZonesBundleUI: DeliveryZonesBundleUI? = null,
         val addressUI: AddressUI? = null,
-        val updateZones: Boolean = false
+        val updateZones: Boolean = false,
+        val centerPoints: List<Point> = emptyList()
     ) : State
 
     sealed class MapFlowEvents : Event {
 
         data class ShowAddAddressBottomDialog(val address: AddressUI?) : MapFlowEvents()
+        data class Submit(val startPoint: Point, val list: List<Point>): MapFlowEvents()
     }
 }
