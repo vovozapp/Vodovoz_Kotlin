@@ -37,6 +37,7 @@ import com.vodovoz.app.feature.map.adapter.AddressResultFlowAdapter
 import com.vodovoz.app.ui.extensions.ColorExtensions.getColorWithAlpha
 import com.vodovoz.app.ui.model.DeliveryZoneUI
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.snack
 import com.yandex.mapkit.*
 import com.yandex.mapkit.directions.DirectionsFactory
 import com.yandex.mapkit.directions.driving.*
@@ -128,6 +129,7 @@ class MapDialogFragment : BaseFragment(),
 
                             viewModel.fetchAddressByGeocode(point.latitude, point.longitude)
                             moveCamera(point)
+                            listAAA.clear()
                             mapObjects.clear()
                             viewModel.check(point)
                             placeMark(point, com.vodovoz.app.R.drawable.png_map_marker)
@@ -214,7 +216,7 @@ class MapDialogFragment : BaseFragment(),
                         }
                         is MapFlowViewModel.MapFlowEvents.Submit -> {
                             it.list.forEach { point ->
-                                submitRequest(it.startPoint, point)
+                                submitRequest(point, it.startPoint)
                             }
                         }
                     }
@@ -470,6 +472,7 @@ class MapDialogFragment : BaseFragment(),
             point.latitude,
             point.longitude
         )
+        listAAA.clear()
         mapObjects.clear()
         viewModel.check(point)
     }
@@ -489,9 +492,16 @@ class MapDialogFragment : BaseFragment(),
 
     private var currentDistance: Double = 0.0
 
+    private val listAAA = hashMapOf<Double, DrivingRoute>()
+
+    data class AAA(
+        val distance: Double,
+        val route: DrivingRoute
+    )
+
     override fun onDrivingRoutes(p0: MutableList<DrivingRoute>) {
         for (route in p0) {
-            if (currentDistance == 0.0) {
+           /* if (currentDistance == 0.0) {
                 currentDistance = initRouteLength(route.geometry.points)
                 mapObjects.addPolyline(route.geometry)
             } else {
@@ -500,6 +510,19 @@ class MapDialogFragment : BaseFragment(),
                     currentDistance = distance
                     mapObjects.clear()
                     mapObjects.addPolyline(route.geometry)
+                }
+            }*/
+            listAAA[initRouteLength(route.geometry.points)] = route
+
+            if (listAAA.isNotEmpty()) {
+                mapObjects.clear()
+                val key = listAAA.minOf { it.key }
+                val routeNew = listAAA[key]?.geometry
+                debugLog { "spasibo show ${listAAA.keys}" }
+                debugLog { "spasibo min key ${key}" }
+                debugLog { "spasibo $routeNew ffasfasfa $key" }
+                routeNew?.let {
+                    mapObjects.addPolyline(it)
                 }
             }
         }
