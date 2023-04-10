@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--deferred-->
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,21 +10,21 @@
     <com.yandex.mapkit.mapview.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/addAddress"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_margin="@dimen/space_16"
-        android:translationZ="@dimen/elevation_3"
         android:background="@drawable/bkg_button_blue_rect_disabled"
         android:fontFamily="@font/rotonda_normal"
+        android:gravity="center"
+        android:text="Добавить адрес"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:text="Добавить адрес"
-        android:gravity="center"
+        android:translationZ="@dimen/elevation_3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -48,46 +47,103 @@
             android:layout_marginTop="@dimen/space_8"
             android:layout_marginEnd="@dimen/space_16"
             android:layout_marginBottom="@dimen/space_8"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="10dp"
-            android:paddingEnd="@dimen/space_8"
-            android:gravity="center_vertical"
-            >
+            android:paddingEnd="@dimen/space_8">
 
             <ImageView
                 android:id="@+id/searchImage"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:src="@drawable/ic_search"
-                tools:ignore="ContentDescription"
-                app:tint="@color/color_search" />
+                app:tint="@color/color_search"
+                tools:ignore="ContentDescription" />
 
             <EditText
                 android:id="@+id/searchEdit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
                 android:fontFamily="@font/rotonda_normal"
-                android:textColor="@color/blackTextDark"
-                android:textColorHint="@color/blackTextPrimary"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:singleLine="true"
-                android:background="@android:color/transparent"
-                android:layout_weight="1" />
+                android:textColor="@color/blackTextDark"
+                android:textColorHint="@color/blackTextPrimary" />
 
         </LinearLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.google.android.material.imageview.ShapeableImageView
+        app:shapeAppearanceOverlay="@style/RoundedImageCircle"
+        android:background="@color/text_new_black"
+        android:id="@+id/plusIv"
+        android:alpha="0.8"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:tint="@color/white"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="4dp"
+        android:src="@drawable/ic_plus"
+        app:layout_constraintBottom_toTopOf="@id/minusIv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        app:shapeAppearanceOverlay="@style/RoundedImageCircle"
+        android:background="@color/text_new_black"
+        android:id="@+id/minusIv"
+        android:alpha="0.8"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:tint="@color/white"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_minus"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/plusIv" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        app:shapeAppearanceOverlay="@style/RoundedImageCircle"
+        android:background="@color/text_new_black"
+        android:id="@+id/infoIv"
+        android:alpha="0.8"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:tint="@color/white"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/baseline_info_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        app:shapeAppearanceOverlay="@style/RoundedImageCircle"
+        android:background="@color/text_new_black"
+        android:id="@+id/geoIv"
+        android:alpha="0.8"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:tint="@color/white"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/baseline_near_me_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/addAddress" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/addressesRecycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="invisible"
         android:background="@color/white"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"/>
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

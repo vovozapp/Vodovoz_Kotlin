@@ -1,14 +1,23 @@
 package com.vodovoz.app.feature.map
 
+import android.Manifest
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,6 +25,10 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.location.*
+import com.google.android.gms.tasks.Task
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentMapFlowBinding
 import com.vodovoz.app.feature.map.adapter.AddressResult
@@ -23,6 +36,7 @@ import com.vodovoz.app.feature.map.adapter.AddressResultClickListener
 import com.vodovoz.app.feature.map.adapter.AddressResultFlowAdapter
 import com.vodovoz.app.ui.extensions.ColorExtensions.getColorWithAlpha
 import com.vodovoz.app.ui.model.DeliveryZoneUI
+import com.vodovoz.app.util.extensions.debugLog
 import com.yandex.mapkit.*
 import com.yandex.mapkit.directions.DirectionsFactory
 import com.yandex.mapkit.directions.driving.*
@@ -48,7 +62,7 @@ class MapDialogFragment : BaseFragment(),
     InputListener,
     UserLocationObjectListener,
     SuggestSession.SuggestListener,
-    DrivingSession.DrivingRouteListener{
+    DrivingSession.DrivingRouteListener {
 
     override fun layout(): Int = com.vodovoz.app.R.layout.fragment_map_flow
 
@@ -73,6 +87,10 @@ class MapDialogFragment : BaseFragment(),
     }
     private val suggestSession: SuggestSession by lazy {
         searchManager.createSuggestSession()
+    }
+
+    private val fusedLocationClient by lazy {
+        LocationServices.getFusedLocationProviderClient(requireActivity())
     }
 
     private val center = Point(55.75, 37.62)
@@ -176,7 +194,7 @@ class MapDialogFragment : BaseFragment(),
                         drawDeliveryZones(data.deliveryZonesBundleUI?.deliveryZoneUIList)
                     }
 
-                    val searchText = state.data.addressUI?.fullAddress ?:""
+                    val searchText = state.data.addressUI?.fullAddress ?: ""
                     binding.searchEdit.setText(searchText)
 
                     showError(state.error)
@@ -188,14 +206,14 @@ class MapDialogFragment : BaseFragment(),
         lifecycleScope.launchWhenStarted {
             viewModel.observeEvent()
                 .collect {
-                    when(it) {
+                    when (it) {
                         is MapFlowViewModel.MapFlowEvents.ShowAddAddressBottomDialog -> {
                             findNavController().navigate(
                                 MapDialogFragmentDirections.actionToAddAddressBottomFragment(it.address)
                             )
                         }
                         is MapFlowViewModel.MapFlowEvents.Submit -> {
-                            it.list.forEach {point ->
+                            it.list.forEach { point ->
                                 submitRequest(it.startPoint, point)
                             }
                         }
@@ -204,6 +222,7 @@ class MapDialogFragment : BaseFragment(),
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun initMap() {
         binding.mapView.map.addInputListener(this)
         userLocationLayer.isVisible = true
@@ -211,19 +230,53 @@ class MapDialogFragment : BaseFragment(),
         userLocationLayer.setObjectListener(this)
 
         mapKit.createLocationManager().requestSingleUpdate(object : LocationListener {
-            override fun onLocationUpdated(p0: Location) {
-                Toast.makeText(
-                    requireContext(),
-                    "${p0.position.latitude} ${p0.position.longitude}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            override fun onLocationStatusUpdated(p0: LocationStatus) {
-                Toast.makeText(requireContext(), "UPDATE", Toast.LENGTH_SHORT).show()
-            }
-
+            override fun onLocationUpdated(p0: Location) {}
+            override fun onLocationStatusUpdated(p0: LocationStatus) {}
         })
+
+        binding.plusIv.setOnClickListener {
+            moveCameraPlus()
+        }
+
+        binding.minusIv.setOnClickListener {
+            moveCameraMinus()
+        }
+
+        binding.infoIv.setOnClickListener {
+
+        }
+
+        binding.geoIv.setOnClickListener {
+
+            /*MaterialAlertDialogBuilder(requireContext()).apply {
+                setTitle("Attention")
+                setMessage("Location settings must be enabled from the settings to use the application")
+                setCancelable(false)
+                setPositiveButton(
+                    "Open settings"
+                ) { dialogInterface, i ->
+                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    startActivity(intent)
+                }
+            }*/
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@setOnClickListener
+            }
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: android.location.Location? ->
+                    location?.let {
+                        moveCamera(Point(it.latitude, it.longitude))
+                    }
+                }
+        }
     }
 
     private fun initSearch() {
@@ -279,6 +332,28 @@ class MapDialogFragment : BaseFragment(),
         )
     }
 
+    private fun moveCameraPlus() {
+        val currentZoom = binding.mapView.map.cameraPosition.zoom
+        if (currentZoom != 16f) {
+            binding.mapView.map.move(
+                CameraPosition(binding.mapView.map.cameraPosition.target, currentZoom + 1f, 0f, 0f),
+                Animation(Animation.Type.SMOOTH, 1f),
+                null
+            )
+        }
+    }
+
+    private fun moveCameraMinus() {
+        val currentZoom = binding.mapView.map.cameraPosition.zoom
+        if (currentZoom != 16f) {
+            binding.mapView.map.move(
+                CameraPosition(binding.mapView.map.cameraPosition.target, currentZoom - 1f, 0f, 0f),
+                Animation(Animation.Type.SMOOTH, 1f),
+                null
+            )
+        }
+    }
+
     private fun placeMark(point: Point, resId: Int) {
         lastPlaceMark?.let { binding.mapView.map.mapObjects.remove(it) }
         lastPlaceMark = binding.mapView.map.mapObjects.addPlacemark(
@@ -318,7 +393,8 @@ class MapDialogFragment : BaseFragment(),
                 )
             )
             binding.searchEdit.clearFocus()
-            binding.searchContainer.elevation = resources.getDimension(com.vodovoz.app.R.dimen.elevation_3)
+            binding.searchContainer.elevation =
+                resources.getDimension(com.vodovoz.app.R.dimen.elevation_3)
 
             val view = requireActivity().currentFocus
             if (view != null) {
@@ -399,7 +475,7 @@ class MapDialogFragment : BaseFragment(),
         viewModel.check(point)
     }
 
-    private fun initRouteLength(routes: List<Point>) : Double {
+    private fun initRouteLength(routes: List<Point>): Double {
         var dis = 0.0
 
         for (i in 0 until routes.size - 1) {
