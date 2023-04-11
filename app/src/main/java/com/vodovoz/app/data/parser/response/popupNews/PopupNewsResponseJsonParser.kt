@@ -27,10 +27,10 @@ object PopupNewsResponseJsonParser {
         name = getString("tile"),
         detailText = getString("text"),
         detailPicture = getString("Picture").parseImagePath(),
-        actionEntity = getJSONObject("HARAKTERISTIK").parseBannerActionEntity()
+        actionEntity = getJSONObject("HARAKTERISTIK").parseBannerActionEntity(getString("silka_android")),
     )
 
-    private fun JSONObject.parseBannerActionEntity() = when(getString("id")) {
+    private fun JSONObject.parseBannerActionEntity(link: String) = when(getString("id")) {
         "TOVAR" -> parseProductBannerActionEntity()
         "TOVARY" -> parseProductsBannerActionEntity()
         "ACTION" -> parsePromotionBannerActionEntity()
@@ -40,6 +40,7 @@ object PopupNewsResponseJsonParser {
         "BRANDY" -> parseBrandsActionEntity()
         "SSILKA" -> parseLinkBannerActionEntity()
         "DANNYEVSE" -> parseCustomBannerActionEntity()
+        "" -> parseLinkBannerActionEntity(link)
         else -> null
     }
 
@@ -112,6 +113,12 @@ object PopupNewsResponseJsonParser {
 
     private fun JSONObject.parseLinkBannerActionEntity() = ActionEntity.Link(
         url = getJSONObject("DANNYE").getString("SSILKA"),
+        action = parseAction(),
+        actionColor = parseActionColor()
+    )
+
+    private fun JSONObject.parseLinkBannerActionEntity(link: String) = ActionEntity.Link(
+        url = link,
         action = parseAction(),
         actionColor = parseActionColor()
     )

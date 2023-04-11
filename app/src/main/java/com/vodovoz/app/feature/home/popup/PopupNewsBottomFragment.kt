@@ -1,13 +1,17 @@
 package com.vodovoz.app.feature.home.popup
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsPopupNewsBinding
 import com.vodovoz.app.ui.model.PopupNewsUI
+import com.vodovoz.app.util.extensions.color
 import com.vodovoz.app.util.extensions.debugLog
 
 class PopupNewsBottomFragment : BaseBottomSheetFragment() {
@@ -40,18 +44,32 @@ class PopupNewsBottomFragment : BaseBottomSheetFragment() {
 
     private fun initView() {
         binding.incHeader.tvTitle.text = popupNewsUI.name
+
         binding.tvDetails.text = popupNewsUI.detailText
-        binding.btnShowDetails.text = popupNewsUI.actionEntity?.action
+        binding.tvDetails.isVisible = !popupNewsUI.detailText.isNullOrEmpty()
+
         binding.incHeader.imgClose.setOnClickListener { dismiss() }
+
         Glide.with(requireContext())
             .load(popupNewsUI.detailPicture)
             .into(binding.imgBanner)
 
-        binding.btnShowDetails.setOnClickListener {
-            popupNewsUI.actionEntity?.let { action ->
-                clickListener.onClick(action)
+        if (popupNewsUI.actionEntity?.action != null) {
+            binding.btnShowDetails.text = popupNewsUI.actionEntity?.action
+            binding.btnShowDetails.isVisible = true
+            binding.btnShowDetails.setOnClickListener {
+                popupNewsUI.actionEntity?.let { action ->
+                    clickListener.onClick(action)
+                }
+                dismiss()
             }
-            dismiss()
+        } else {
+            binding.btnShowDetails.isVisible = false
+        }
+
+        if (popupNewsUI.actionEntity?.actionColor != null) {
+            val color = Color.parseColor(popupNewsUI.actionEntity!!.actionColor)
+            binding.btnShowDetails.backgroundTintList = ColorStateList.valueOf(color)
         }
     }
 
