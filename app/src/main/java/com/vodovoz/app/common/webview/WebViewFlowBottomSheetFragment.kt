@@ -3,6 +3,9 @@ package com.vodovoz.app.common.webview
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -38,14 +41,17 @@ class WebViewFlowBottomSheetFragment : BaseBottomSheetFragment() {
         binding.wvContent.settings.javaScriptEnabled = true
 
         try {
+            binding.wvContent.webViewClient = object : WebViewClient() {
+                override fun shouldOverrideUrlLoading(
+                    view: WebView?,
+                    request: WebResourceRequest?
+                ): Boolean {
+                    return false
+                }
+            }
             binding.wvContent.loadUrl(args.url)
         } catch (e: Throwable) {
             showError(e.toErrorState())
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        dialog?.dismiss()
     }
 }
