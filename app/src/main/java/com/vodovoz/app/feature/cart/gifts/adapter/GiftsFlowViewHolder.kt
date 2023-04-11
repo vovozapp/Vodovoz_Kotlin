@@ -14,7 +14,7 @@ class GiftsFlowViewHolder(
     private val binding: ViewHolderGiftBinding = ViewHolderGiftBinding.bind(view)
 
     init {
-        binding.root.setOnClickListener {
+        binding.btnPickUpGift.setOnClickListener {
             val item = item ?:return@setOnClickListener
             clickListener.onProductClick(item)
         }

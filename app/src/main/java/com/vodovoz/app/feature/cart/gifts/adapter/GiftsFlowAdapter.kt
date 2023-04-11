@@ -15,10 +15,10 @@ class GiftsFlowAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
         return when (viewType) {
             ProductUI.PRODUCT_VIEW_TYPE -> {
-                GiftsFlowViewHolder(getViewFromInflater(R.layout.view_holder_promotion, parent), clickListener)
+                GiftsFlowViewHolder(getViewFromInflater(R.layout.view_holder_gift, parent), clickListener)
             }
             ProductUI.PRODUCT_VIEW_TYPE_GRID -> {
-                GiftsFlowViewHolder(getViewFromInflater(R.layout.view_holder_promotion, parent), clickListener)
+                GiftsFlowViewHolder(getViewFromInflater(R.layout.view_holder_gift, parent), clickListener)
             }
             R.layout.item_progress -> {
                 BottomProgressViewHolder(getViewFromInflater(viewType, parent))
