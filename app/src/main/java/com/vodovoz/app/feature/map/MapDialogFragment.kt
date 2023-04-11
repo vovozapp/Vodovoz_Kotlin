@@ -2,9 +2,13 @@ package com.vodovoz.app.feature.map
 
 import android.Manifest
 import android.content.Context
+import android.content.Context.LOCATION_SERVICE
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.LocationManager
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -19,6 +23,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.gms.location.*
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentMapFlowBinding
 import com.vodovoz.app.feature.map.adapter.AddressResult
@@ -26,6 +31,7 @@ import com.vodovoz.app.feature.map.adapter.AddressResultClickListener
 import com.vodovoz.app.feature.map.adapter.AddressResultFlowAdapter
 import com.vodovoz.app.ui.extensions.ColorExtensions.getColorWithAlpha
 import com.vodovoz.app.ui.model.DeliveryZoneUI
+import com.vodovoz.app.util.extensions.debugLog
 import com.yandex.mapkit.*
 import com.yandex.mapkit.directions.DirectionsFactory
 import com.yandex.mapkit.directions.driving.*
@@ -100,6 +106,10 @@ class MapDialogFragment : BaseFragment(),
     private var drivingSession: DrivingSession? = null
 
     private val distanceToRouteMap = hashMapOf<Double, DrivingRoute>()
+
+    private val locationManager by lazy {
+        requireContext().getSystemService(LOCATION_SERVICE) as? LocationManager
+    }
 
     private val addressesResultAdapter = AddressResultFlowAdapter(
         object : AddressResultClickListener {
@@ -240,17 +250,20 @@ class MapDialogFragment : BaseFragment(),
 
         binding.geoFrame.setOnClickListener {
 
-            /*MaterialAlertDialogBuilder(requireContext()).apply {
-                setTitle("Attention")
-                setMessage("Location settings must be enabled from the settings to use the application")
-                setCancelable(false)
-                setPositiveButton(
-                    "Open settings"
-                ) { dialogInterface, i ->
-                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                    startActivity(intent)
+            if (!detectGps()) {
+                MaterialAlertDialogBuilder(requireContext()).apply {
+                    setTitle("Внимание")
+                    setMessage("Настройки местоположения должны быть включены, чтобы использовать приложение.")
+                    setCancelable(false)
+                    setPositiveButton(
+                        "Открыть настройки"
+                    ) { dialogInterface, i ->
+                        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                        startActivity(intent)
+                    }
+                    show()
                 }
-            }*/
+            }
 
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
@@ -262,6 +275,7 @@ class MapDialogFragment : BaseFragment(),
             ) {
                 return@setOnClickListener
             }
+
             fusedLocationClient.lastLocation
                 .addOnSuccessListener { location: android.location.Location? ->
                     location?.let {
@@ -511,5 +525,10 @@ class MapDialogFragment : BaseFragment(),
         )
         drivingSession =
             drivingRouter.requestRoutes(requestPoints, drivingOptions, vehicleOptions, this)
+    }
+
+    private fun detectGps() : Boolean {
+        val manager = locationManager ?: return false
+        return manager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 }
