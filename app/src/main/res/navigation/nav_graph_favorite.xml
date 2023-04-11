@@ -1,0 +1,857 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/graph_favorite"
+    app:startDestination="@id/favoriteFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.vodovoz.app.feature.home.HomeFragment"
+        android:label="fragment_home">
+        <action
+            android:id="@+id/action_to_promotionDetailFragment"
+            app:destination="@id/promotionDetailFragment" />
+        <action
+            android:id="@+id/action_to_allPromotionsFragment"
+            app:destination="@id/allPromotionsFragment" />
+        <action
+            android:id="@+id/action_to_allBrandsFragment"
+            app:destination="@id/allBrandsFragment"
+            app:exitAnim="@anim/to_top" />
+        <action
+            android:id="@+id/action_to_productsCatalogFragment"
+            app:destination="@id/productsCatalogFragment" />
+        <action
+            android:id="@+id/action_to_paginatedProductsCatalogWithoutFiltersFragment"
+            app:destination="@id/paginatedProductsCatalogWithoutFiltersFragment" />
+        <action
+            android:id="@+id/action_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_to_paginatedProductsCatalogFragment"
+            app:destination="@id/paginatedProductsCatalogFragment" />
+        <action
+            android:id="@+id/action_to_popupNewsBottomFragment"
+            app:destination="@id/popupNewsBottomFragment" />
+        <action
+            android:id="@+id/action_to_fullScreenHistorySliderFragment"
+            app:destination="@id/fullScreenHistorySliderFragment" />
+        <action
+            android:id="@+id/action_to_aboutServicesDialogFragment"
+            app:destination="@id/aboutServicesDialogFragment" />
+        <action
+            android:id="@+id/action_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
+        <action
+            android:id="@+id/action_to_howToOrderFragment"
+            app:destination="@id/howToOrderFragment" />
+        <action
+            android:id="@+id/action_to_allOrdersFragment"
+            app:destination="@id/allOrdersFragment" />
+        <action
+            android:id="@+id/action_to_orderDetailsFragment"
+            app:destination="@id/orderDetailsFragment" />
+        <argument
+            android:name="isShowPopupNews"
+            android:defaultValue="true"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_to_sendCommentAboutShopBottomDialog"
+            app:destination="@id/sendCommentAboutShopBottomDialog" />
+        <action
+            android:id="@+id/action_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_to_contactsFragment"
+            app:destination="@id/contactsFragment" />
+        <action
+            android:id="@+id/action_to_aboutAppDialogFragment"
+            app:destination="@id/aboutAppDialogFragment" />
+        <action
+            android:id="@+id/action_to_pastPurchasesFragment"
+            app:destination="@id/pastPurchasesFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+        <action
+            android:id="@+id/action_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/catalogFragment"
+        android:name="com.vodovoz.app.feature.catalog.CatalogFragment"
+        android:label="fragment_catalog"
+        tools:layout="@layout/fragment_main_catalog" >
+        <action
+            android:id="@+id/action_to_paginatedProductsCatalogFragment"
+            app:destination="@id/paginatedProductsCatalogFragment" />
+        <action
+            android:id="@+id/action_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.vodovoz.app.feature.cart.CartFragment"
+        android:label="fragment_cart"
+        tools:layout="@layout/fragment_main_cart" >
+        <action
+            android:id="@+id/action_to_giftsBottomFragment"
+            app:destination="@id/giftsBottomFragment" />
+        <action
+            android:id="@+id/action_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_to_allOrdersFragment"
+            app:destination="@id/allOrdersFragment" />
+        <action
+            android:id="@+id/action_to_orderingFragment"
+            app:destination="@id/orderingFragment" />
+        <action
+            android:id="@+id/action_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_to_allBottlesFragment"
+            app:destination="@id/allBottlesFragment" />
+        <action
+            android:id="@+id/action_to_replacementProductsSelectionBS"
+            app:destination="@id/replacementProductsSelectionBS" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+    </fragment>
+    <fragment
+        android:id="@+id/paginatedProductsCatalogFragment"
+        android:name="com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragment"
+        android:label="PaginatedProductsCatalogFragment">
+        <argument
+            android:name="categoryId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_to_singleRootCatalogBottomFragment"
+            app:destination="@id/singleRootCatalogBottomFragment" />
+        <action
+            android:id="@+id/action_to_sortProductsSettingsBottomFragment"
+            app:destination="@id/sortProductsSettingsBottomFragment" />
+        <action
+            android:id="@+id/action_to_productFiltersFragment"
+            app:destination="@id/productFiltersFragment" />
+        <action
+            android:id="@+id/action_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+    </fragment>
+    <dialog
+        android:id="@+id/sortProductsSettingsBottomFragment"
+        android:name="com.vodovoz.app.ui.fragment.sort_products.SortProductsSettingsBottomFragment"
+        android:label="SortProductsSettingsBottomFragment">
+        <argument
+            android:name="sortType"
+            app:argType="string" />
+    </dialog>
+    <fragment
+        android:id="@+id/productDetailFragment"
+        android:name="com.vodovoz.app.feature.productdetail.ProductDetailsFragment"
+        android:label="ProductDetailFragment" >
+        <argument
+            android:name="productId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_to_self"
+            app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_to_promotionDetailFragment"
+            app:destination="@id/promotionDetailFragment" />
+        <action
+            android:id="@+id/action_to_paginatedProductsCatalogFragment"
+            app:destination="@id/paginatedProductsCatalogFragment" />
+        <action
+            android:id="@+id/action_to_paginatedProductsCatalogWithoutFiltersFragment"
+            app:destination="@id/paginatedProductsCatalogWithoutFiltersFragment" />
+        <action
+            android:id="@+id/action_to_fullScreenDetailPicturesSliderFragment"
+            app:destination="@id/fullScreenDetailPicturesSliderFragment" />
+        <action
+            android:id="@+id/action_to_youTubeVideoFragmentDialog"
+            app:destination="@id/youTubeVideoFragmentDialog" />
+        <action
+            android:id="@+id/action_to_allCommentsByProductDialogFragment"
+            app:destination="@id/allCommentsByProductDialogFragment" />
+        <action
+            android:id="@+id/action_to_sendCommentAboutProductFragment"
+            app:destination="@id/sendCommentAboutProductFragment" />
+        <action
+            android:id="@+id/action_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_to_replacementProductsSelectionBS"
+            app:destination="@id/replacementProductsSelectionBS" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+        <action
+            android:id="@+id/action_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/promotionDetailFragment"
+        android:name="com.vodovoz.app.feature.promotiondetail.PromotionDetailsFragment"
+        android:label="PromotionDetailFragment" >
+        <argument
+            android:name="promotionId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+        <action
+            android:id="@+id/action_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/allPromotionsFragment"
+        android:name="com.vodovoz.app.feature.all.promotions.AllPromotionsFragment"
+        android:label="AllPromotionsFragment" >
+        <argument
+            android:name="dataSource"
+            app:argType="com.vodovoz.app.feature.all.promotions.AllPromotionsFragment$DataSource" />
+        <action
+            android:id="@+id/action_to_promotionFiltersBottomFragment"
+            app:destination="@id/promotionFiltersBottomFragment" />
+        <action
+            android:id="@+id/action_to_promotionDetailFragment"
+            app:destination="@id/promotionDetailFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/promotionFiltersBottomFragment"
+        android:name="com.vodovoz.app.ui.fragment.promotion_filters.PromotionFiltersBottomFragment"
+        android:label="PromotionFiltersBottomFragment">
+        <argument
+            android:name="selectedFilterId"
+            app:argType="long" />
+        <argument
+            android:name="promotionFilterList"
+            app:argType="com.vodovoz.app.ui.model.ListOfPromotionFilterUi" />
+    </dialog>
+    <fragment
+        android:id="@+id/paginatedProductsCatalogWithoutFiltersFragment"
+        android:name="com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment"
+        android:label="PaginatedProductsCatalogWithoutFiltersFragment">
+        <argument
+            android:name="dataSource"
+            app:argType="com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment$DataSource" />
+        <action
+            android:id="@+id/action_to_miniCatalogBottomFragment"
+            app:destination="@id/miniCatalogBottomFragment" />
+        <action
+            android:id="@+id/action_to_sortProductsSettingsBottomFragment"
+            app:destination="@id/sortProductsSettingsBottomFragment" />
+        <action
+            android:id="@+id/action_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+    </fragment>
+    <dialog
+        android:id="@+id/miniCatalogBottomFragment"
+        android:name="com.vodovoz.app.ui.fragment.mini_catalog.MiniCatalogBottomFragment"
+        android:label="MiniCatalogBottomFragment" >
+        <argument
+            android:name="categoryList"
+            app:argType="com.vodovoz.app.ui.model.CategoryUI[]" />
+        <argument
+            android:name="categoryId"
+            app:argType="long" />
+    </dialog>
+    <fragment
+        android:id="@+id/allBrandsFragment"
+        android:name="com.vodovoz.app.feature.all.brands.AllBrandsFragment"
+        android:label="AllBrandsFragment" >
+        <argument
+            android:name="brandIdList"
+            app:argType="long[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_to_paginatedProductsCatalogWithoutFiltersFragment"
+            app:destination="@id/paginatedProductsCatalogWithoutFiltersFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productsCatalogFragment"
+        android:name="com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment"
+        android:label="ProductsCatalogFragment">
+        <argument
+            android:name="dataSource"
+            app:argType="com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment$DataSource" />
+        <action
+            android:id="@+id/action_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.vodovoz.app.ui.fragment.login.LoginFragment"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_to_registerFragment"
+            app:destination="@id/registerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.vodovoz.app.ui.fragment.register.RegisterFragment"
+        android:label="RegisterFragment" />
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.vodovoz.app.feature.favorite.FavoriteFragment"
+        android:label="FavoriteFragment" >
+        <action
+            android:id="@+id/action_to_sortProductsSettingsBottomFragment"
+            app:destination="@id/sortProductsSettingsBottomFragment" />
+        <action
+            android:id="@+id/action_to_miniCatalogBottomFragment"
+            app:destination="@id/miniCatalogBottomFragment" />
+        <action
+            android:id="@+id/action_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+        <action
+            android:id="@+id/action_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/giftsBottomFragment"
+        android:name="com.vodovoz.app.feature.cart.gifts.GiftsBottomFragment"
+        android:label="GiftsBottomFragment" >
+        <argument
+            android:name="giftList"
+            app:argType="com.vodovoz.app.ui.model.ProductUI[]" />
+    </dialog>
+    <dialog
+        android:id="@+id/singleRootCatalogBottomFragment"
+        android:name="com.vodovoz.app.ui.fragment.single_root_catalog.SingleRootCatalogBottomFragment"
+        android:label="SingleRootCatalogBottomFragment" >
+        <argument
+            android:name="categoryId"
+            app:argType="long" />
+    </dialog>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.vodovoz.app.ui.fragment.profile.ProfileFragment"
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_to_savedAddressesDialogFragment"
+            app:destination="@id/savedAddressesDialogFragment" />
+        <action
+            android:id="@+id/action_to_allOrdersFragment"
+            app:destination="@id/allOrdersFragment" />
+        <action
+            android:id="@+id/action_to_orderDetailsFragment"
+            app:destination="@id/orderDetailsFragment" />
+        <action
+            android:id="@+id/action_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
+        <action
+            android:id="@+id/action_to_pastPurchasesFragment"
+            app:destination="@id/pastPurchasesFragment" />
+        <action
+            android:id="@+id/action_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_to_userDataFragment"
+            app:destination="@id/userDataFragment" />
+        <action
+            android:id="@+id/action_to_discountCardFragment"
+            app:destination="@id/discountCardFragment" />
+        <action
+            android:id="@+id/action_to_questionnairesFragment"
+            app:destination="@id/questionnairesFragment2" />
+        <action
+            android:id="@+id/action_to_aboutAppDialogFragment"
+            app:destination="@id/aboutAppDialogFragment" />
+        <action
+            android:id="@+id/action_to_serviceDetailFragment"
+            app:destination="@id/serviceDetailFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+    </fragment>
+    <dialog
+        android:id="@+id/popupNewsBottomFragment"
+        android:name="com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment"
+        android:label="PopupNewsBottomFragment" >
+        <argument
+            android:name="popupNews"
+            app:argType="com.vodovoz.app.ui.model.PopupNewsUI" />
+    </dialog>
+    <dialog
+        android:id="@+id/fullScreenHistorySliderFragment"
+        android:name="com.vodovoz.app.ui.fragment.full_screen_history_slider.FullScreenHistoriesSliderFragment"
+        android:label="FullScreenHistorySliderFragment" >
+        <argument
+            android:name="startHistoryId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_to_promotionDetailFragment"
+            app:destination="@id/promotionDetailFragment" />
+        <action
+            android:id="@+id/action_to_paginatedProductsCatalogWithoutFiltersFragment"
+            app:destination="@id/paginatedProductsCatalogWithoutFiltersFragment" />
+        <action
+            android:id="@+id/action_to_allBrandsFragment"
+            app:destination="@id/allBrandsFragment" />
+        <action
+            android:id="@+id/action_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_to_paginatedProductsCatalogFragment"
+            app:destination="@id/paginatedProductsCatalogFragment" />
+        <action
+            android:id="@+id/action_to_productsCatalogFragment"
+            app:destination="@id/productsCatalogFragment" />
+        <action
+            android:id="@+id/action_to_allPromotionsFragment"
+            app:destination="@id/allPromotionsFragment" />
+    </dialog>
+    <dialog
+        android:id="@+id/concreteFilterFragment"
+        android:name="com.vodovoz.app.ui.fragment.concrete_filter.ConcreteFilterFragment"
+        android:label="ConcreteFilterFragment" >
+        <argument
+            android:name="categoryId"
+            app:argType="long" />
+        <argument
+            android:name="filter"
+            app:argType="com.vodovoz.app.ui.model.FilterUI" />
+    </dialog>
+    <dialog
+        android:id="@+id/productFiltersFragment"
+        android:name="com.vodovoz.app.ui.fragment.product_filters.ProductFiltersFragment"
+        android:label="ProductFiltersFragment" >
+        <argument
+            android:name="defaultFiltersBundle"
+            app:argType="com.vodovoz.app.ui.model.custom.FiltersBundleUI" />
+        <action
+            android:id="@+id/action_to_concreteFilterFragment"
+            app:destination="@id/concreteFilterFragment" />
+        <argument
+            android:name="categoryId"
+            app:argType="long" />
+    </dialog>
+    <dialog
+        android:id="@+id/fullScreenDetailPicturesSliderFragment"
+        android:name="com.vodovoz.app.ui.fragment.full_screen_detail_pictures_slider.FullScreenDetailPicturesSliderFragment"
+        android:label="FullScreenDetailPicturesSliderFragment" >
+        <argument
+            android:name="startPosition"
+            app:argType="integer" />
+        <argument
+            android:name="detailPictureList"
+            app:argType="string[]" />
+    </dialog>
+    <dialog
+        android:id="@+id/youTubeVideoFragmentDialog"
+        android:name="com.vodovoz.app.ui.fragment.youtube_player_dialog.YouTubeVideoFragmentDialog"
+        android:label="YouTubeVideoFragmentDialog" >
+        <argument
+            android:name="videoId"
+            app:argType="string" />
+    </dialog>
+    <fragment
+        android:id="@+id/allCommentsByProductDialogFragment"
+        android:name="com.vodovoz.app.feature.all.comments.AllCommentsByProductDialogFragment"
+        android:label="AllCommentsByProductDialogFragment" >
+        <argument
+            android:name="productId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_to_sendCommentAboutProductFragment"
+            app:destination="@id/sendCommentAboutProductFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/sendCommentAboutProductFragment"
+        android:name="com.vodovoz.app.feature.productdetail.sendcomment.SendCommentAboutProductBottomDialog"
+        android:label="SendCommentAboutProductFragment" >
+        <argument
+            android:name="productId"
+            app:argType="long" />
+    </dialog>
+    <dialog
+        android:id="@+id/aboutServicesDialogFragment"
+        android:name="com.vodovoz.app.ui.fragment.about_services.AboutServicesDialogFragment"
+        android:label="AboutServicesDialogFragment" >
+        <action
+            android:id="@+id/action_to_serviceDetailFragment"
+            app:destination="@id/serviceDetailFragment" />
+    </dialog>
+    <fragment
+        android:id="@+id/mapDialogFragment"
+        android:name="com.vodovoz.app.feature.map.MapDialogFragment"
+        android:label="MapDialogFragment" >
+        <action
+            android:id="@+id/action_to_addAddressBottomFragment"
+            app:destination="@id/addAddressBottomFragment" />
+        <argument
+            android:name="address"
+            app:argType="com.vodovoz.app.ui.model.AddressUI"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <dialog
+        android:id="@+id/addAddressBottomFragment"
+        android:name="com.vodovoz.app.ui.fragment.bottom_dialog_add_address.AddAddressBottomFragment"
+        android:label="AddAddressBottomFragment" >
+        <argument
+            android:name="address"
+            app:argType="com.vodovoz.app.ui.model.AddressUI"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </dialog>
+    <fragment
+        android:id="@+id/savedAddressesDialogFragment"
+        android:name="com.vodovoz.app.ui.fragment.saved_addresses.AddressesFragment"
+        android:label="SavedAddressesDialogFragment" >
+        <action
+            android:id="@+id/action_to_mapDialogFragment"
+            app:destination="@id/mapDialogFragment" />
+        <argument
+            android:name="openMode"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+        <argument
+            android:name="addressType"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+    </fragment>
+    <fragment
+        android:id="@+id/allOrdersFragment"
+        android:name="com.vodovoz.app.feature.all.orders.OrdersHistoryFragment"
+        android:label="AllOrdersFragment" >
+        <action
+            android:id="@+id/action_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_to_orderDetailsFragment"
+            app:destination="@id/orderDetailsFragment" />
+        <action
+            android:id="@+id/action_to_cartFragment"
+            app:destination="@id/cartFragment" />
+        <action
+            android:id="@+id/action_to_ordersFiltersDialog"
+            app:destination="@id/ordersFiltersDialog" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderDetailsFragment"
+        android:name="com.vodovoz.app.feature.all.orders.detail.OrderDetailsFragment"
+        android:label="OrderDetailsFragment" >
+        <argument
+            android:name="orderId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_to_cartFragment"
+            app:destination="@id/cartFragment" />
+        <action
+            android:id="@+id/action_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+    </fragment>
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="com.vodovoz.app.common.webview.WebViewFragment"
+        android:label="WebViewFragment" >
+        <argument
+            android:name="url"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/howToOrderFragment"
+        android:name="com.vodovoz.app.ui.fragment.how_to_order.HowToOrderFragment"
+        android:label="HowToOrderFragment" />
+    <dialog
+        android:id="@+id/sendCommentAboutShopBottomDialog"
+        android:name="com.vodovoz.app.ui.fragment.send_comment_about_shop.SendCommentAboutShopBottomDialog"
+        android:label="SendCommentAboutShopBottomDialog" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.vodovoz.app.feature.search.SearchFragment"
+        android:label="SearchFragment" >
+        <action
+            android:id="@+id/action_to_sortProductsSettingsBottomFragment"
+            app:destination="@id/sortProductsSettingsBottomFragment" />
+        <action
+            android:id="@+id/action_to_miniCatalogBottomFragment"
+            app:destination="@id/miniCatalogBottomFragment" />
+        <action
+            android:id="@+id/action_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+        <argument
+            android:name="query"
+            app:argType="string"
+            android:defaultValue=""/>
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+        <action
+            android:id="@+id/action_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pastPurchasesFragment"
+        android:name="com.vodovoz.app.feature.pastpurchases.PastPurchasesFragment"
+        android:label="PastPurchasesFragment" >
+        <action
+            android:id="@+id/action_to_sortProductsSettingsBottomFragment"
+            app:destination="@id/sortProductsSettingsBottomFragment" />
+        <action
+            android:id="@+id/action_to_miniCatalogBottomFragment"
+            app:destination="@id/miniCatalogBottomFragment" />
+        <action
+            android:id="@+id/action_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+    </fragment>
+    <fragment
+        android:id="@+id/userDataFragment"
+        android:name="com.vodovoz.app.ui.fragment.user_data.UserDataFragment"
+        android:label="UserDataFragment" >
+        <action
+            android:id="@+id/action_to_genderSelectionBS"
+            app:destination="@id/genderSelectionBS" />
+    </fragment>
+    <fragment
+        android:id="@+id/discountCardFragment"
+        android:name="com.vodovoz.app.ui.fragment.discount_card.DiscountCardFragment"
+        android:label="DiscountCardFragment" />
+    <fragment
+        android:id="@+id/questionnairesFragment2"
+        android:name="com.vodovoz.app.ui.fragment.questionnaires.QuestionnairesFragment"
+        android:label="QuestionnairesFragment" />
+    <fragment
+        android:id="@+id/contactsFragment"
+        android:name="com.vodovoz.app.ui.fragment.contacts.ContactsFragment"
+        android:label="ContactsFragment" />
+    <fragment
+        android:id="@+id/serviceDetailFragment"
+        android:name="com.vodovoz.app.ui.fragment.service_detail.ServiceDetailFragment"
+        android:label="ServiceDetailFragment" >
+        <argument
+            android:name="typeList"
+            app:argType="string[]" />
+        <argument
+            android:name="selectedType"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_to_serviceSelectionBS"
+            app:destination="@id/serviceSelectionBS" />
+        <action
+            android:id="@+id/action_to_serviceOrderFragment"
+            app:destination="@id/serviceOrderFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/serviceSelectionBS"
+        android:name="com.vodovoz.app.ui.fragment.service_detail.ServiceSelectionBS"
+        android:label="ServiceSelectionBS" >
+        <argument
+            android:name="serviceList"
+            app:argType="com.vodovoz.app.ui.model.ServiceUI[]" />
+        <argument
+            android:name="selectedService"
+            app:argType="string" />
+    </dialog>
+    <fragment
+        android:id="@+id/serviceOrderFragment"
+        android:name="com.vodovoz.app.ui.fragment.service_order.ServiceOrderFragment"
+        android:label="ServiceOrderFragment" >
+        <argument
+            android:name="serviceName"
+            app:argType="string" />
+        <argument
+            android:name="serviceType"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderingFragment"
+        android:name="com.vodovoz.app.ui.fragment.ordering.OrderingFragment"
+        android:label="OrderingFragment" >
+        <action
+            android:id="@+id/action_to_freeShippingSaysBS"
+            app:destination="@id/freeShippingSaysBS" />
+        <action
+            android:id="@+id/action_to_savedAddressesDialogFragment"
+            app:destination="@id/savedAddressesDialogFragment" />
+        <action
+            android:id="@+id/action_to_payMethodSelectionBS"
+            app:destination="@id/payMethodSelectionBS" />
+        <action
+            android:id="@+id/action_to_shippingIntervalSelectionBS"
+            app:destination="@id/shippingIntervalSelectionBS" />
+        <action
+            android:id="@+id/action_to_shippingAlertsSelectionBS"
+            app:destination="@id/shippingAlertsSelectionBS" />
+        <argument
+            android:name="total"
+            app:argType="integer" />
+        <argument
+            android:name="discount"
+            app:argType="integer" />
+        <argument
+            android:name="deposit"
+            app:argType="integer" />
+        <argument
+            android:name="full"
+            app:argType="integer" />
+        <argument android:name="lastActualCart"
+            app:argType="string" />
+        <argument
+            android:name="coupon"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/aboutAppDialogFragment"
+        android:name="com.vodovoz.app.feature.bottom.aboutapp.AboutAppDialogFragment"
+        android:label="AboutAppDialogFragment" />
+    <dialog
+        android:id="@+id/genderSelectionBS"
+        android:name="com.vodovoz.app.ui.fragment.user_data.GenderSelectionBS"
+        android:label="GenderSelectionBS" >
+        <argument
+            android:name="selectedGender"
+            app:argType="string" />
+    </dialog>
+    <dialog
+        android:id="@+id/freeShippingSaysBS"
+        android:name="com.vodovoz.app.ui.fragment.ordering.FreeShippingSaysBS"
+        android:label="FreeShippingSaysBS" >
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="info"
+            app:argType="string" />
+    </dialog>
+    <dialog
+        android:id="@+id/payMethodSelectionBS"
+        android:name="com.vodovoz.app.ui.fragment.ordering.PayMethodSelectionBS"
+        android:label="PayMethodSelectionBS" >
+        <argument
+            android:name="payMethodList"
+            app:argType="com.vodovoz.app.ui.model.PayMethodUI[]" />
+        <argument
+            android:name="selectedPayMethod"
+            app:argType="long" />
+    </dialog>
+    <dialog
+        android:id="@+id/shippingIntervalSelectionBS"
+        android:name="com.vodovoz.app.ui.fragment.ordering.ShippingIntervalSelectionBS"
+        android:label="ShippingIntervalSelectionBS" >
+        <argument
+            android:name="shippingIntervalList"
+            app:argType="com.vodovoz.app.ui.model.ShippingIntervalUI[]" />
+    </dialog>
+    <dialog
+        android:id="@+id/shippingAlertsSelectionBS"
+        android:name="com.vodovoz.app.ui.fragment.ordering.ShippingAlertsSelectionBS"
+        android:label="ShippingAlertsSelectionBS" >
+        <argument
+            android:name="shippingAlertList"
+            app:argType="com.vodovoz.app.ui.model.ShippingAlertUI[]" />
+    </dialog>
+    <fragment
+        android:id="@+id/allBottlesFragment"
+        android:name="com.vodovoz.app.ui.fragment.bottles.AllBottlesFragment"
+        android:label="AllBottlesFragment" />
+    <fragment
+        android:id="@+id/ordersFiltersDialog"
+        android:name="com.vodovoz.app.ui.fragment.orders_filters.OrdersFiltersFragment"
+        android:label="OrdersFiltersDialog" >
+        <argument
+            android:name="ordersFiltersBundleUI"
+            app:argType="com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI" />
+    </fragment>
+    <dialog
+        android:id="@+id/replacementProductsSelectionBS"
+        android:name="com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS"
+        android:label="ReplacementProductsSelectionBS" >
+        <argument
+            android:name="notAvailableProductDetailPicture"
+            app:argType="string" />
+        <argument
+            android:name="productList"
+            app:argType="com.vodovoz.app.ui.model.ProductUI[]" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+        <action
+            android:id="@+id/action_to_paginatedProductsCatalogFragment"
+            app:destination="@id/paginatedProductsCatalogFragment" />
+        <argument
+            android:name="productId"
+            app:argType="long" />
+        <argument
+            android:name="productName"
+            app:argType="string" />
+        <argument
+            android:name="categoryId"
+            android:defaultValue="-1L"
+            app:argType="long"
+            />
+    </dialog>
+    <dialog
+        android:id="@+id/preOrderBS"
+        android:name="com.vodovoz.app.feature.preorder.PreOrderBS"
+        android:label="PreOrderBS" >
+        <argument
+            android:name="productId"
+            app:argType="long" />
+        <argument
+            android:name="productName"
+            app:argType="string" />
+        <argument
+            android:name="productPictureUrl"
+            app:argType="string" />
+    </dialog>
+    <dialog
+        android:id="@+id/webViewFlowBottomSheetFragment"
+        android:name="com.vodovoz.app.common.webview.WebViewFlowBottomSheetFragment"
+        android:label="WebViewFlowBottomSheetFragment" />
+    <fragment
+        android:id="@+id/webViewFlowFragment"
+        android:name="com.vodovoz.app.common.webview.old.WebViewFlowFragment"
+        android:label="WebViewFlowFragment" />
+
+</navigation>
