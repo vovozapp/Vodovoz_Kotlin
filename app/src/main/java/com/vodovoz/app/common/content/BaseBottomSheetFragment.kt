@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.navigation.NavOptions
@@ -29,6 +30,9 @@ abstract class BaseBottomSheetFragment : BottomSheetDialogFragment() {
 
     private val progressBg: View
         get() = viewBinding.progressBgBottom
+
+    val refresh: TextView
+        get() = viewBinding.error.refreshTv
 
     protected abstract fun layout(): Int
 
@@ -65,6 +69,25 @@ abstract class BaseBottomSheetFragment : BottomSheetDialogFragment() {
     protected fun hideLoader() {
         loader.isVisible = false
         progressBg.isVisible = false
+    }
+
+    protected fun bindErrorRefresh(onRefresh: () -> Unit) {
+        refresh.setOnClickListener {
+            onRefresh.invoke()
+        }
+    }
+
+    protected fun showError(error: ErrorState?) {
+        if (error != null) {
+            with(viewBinding.error) {
+                root.isVisible = true
+                messageTv.text = error.message
+                descTv.text = error.description
+                icon.setImageDrawable(androidx.core.content.ContextCompat.getDrawable(requireContext(), error.iconDrawable))
+            }
+        } else {
+            viewBinding.error.root.isVisible = false
+        }
     }
 
     override fun onDestroyView() {

@@ -39,6 +39,8 @@
         android:visibility="gone"
         android:layout_height="match_parent"/>
 
+    <include layout="@layout/fragment_base_error_flow" android:id="@+id/error"/>
+
     <com.google.android.material.progressindicator.CircularProgressIndicator
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
