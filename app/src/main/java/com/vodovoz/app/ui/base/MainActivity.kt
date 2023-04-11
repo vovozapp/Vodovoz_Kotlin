@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
         MapKitFactory.initialize(this)
         binding = ActivityMainBinding.inflate(layoutInflater).apply { setContentView(root) }
 
-        showMainFragment()
         observeRatingSnackbar()
     }
 
@@ -39,12 +38,6 @@ class MainActivity : AppCompatActivity() {
                     this@MainActivity.snack(it)
                 }
         }
-    }
-
-    private fun showMainFragment() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fcvMainContainer, SplashFragment())
-            .commit()
     }
 
 }

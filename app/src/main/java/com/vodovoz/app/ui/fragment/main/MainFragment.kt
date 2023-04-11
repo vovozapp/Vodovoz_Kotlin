@@ -1,27 +1,19 @@
 package com.vodovoz.app.ui.fragment.main
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavOptions
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
+import androidx.navigation.Navigation
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.permissions.LocationController
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.navigation.setupWithNavController
 import com.vodovoz.app.databinding.FragmentMainBinding
-import com.vodovoz.app.databinding.FragmentMainHomeFlowBinding
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -47,7 +39,7 @@ class MainFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupBottomNav()
+        setupBottomNavigationBar()
         observeTabState()
         observeCartState()
         observeCartLoading()
@@ -114,38 +106,38 @@ class MainFragment : BaseFragment() {
         locationController.methodRequiresTwoPermission(requireActivity())
     }
 
-    private fun setupBottomNav() {
-        val navHostFragment =
-            (childFragmentManager.findFragmentById(R.id.fgvContainer)) as NavHostFragment
-        val navController = navHostFragment.navController
+    private var isBottomBarInited = false
 
-        binding.nvNavigation.setSetupWithNavController(navController)
-    }
+    /**
+     * Called on first creation and when restoring state.
+     */
+    private fun setupBottomNavigationBar() {
 
-    private fun BottomNavigationView.setSetupWithNavController(navController: NavController?) {
-        navController?.let {
-            setupWithNavController(navController)
-        }
+        debugLog { "spasibo setup $isBottomBarInited" }
 
-        setOnItemSelectedListener { menuItem ->
-            val builder = NavOptions.Builder().setLaunchSingleTop(true).setRestoreState(true)
-            val graph = navController?.currentDestination?.parent
-            val destination = graph?.findNode(menuItem.itemId)
+        isBottomBarInited = true
 
-            if (menuItem.order and Menu.CATEGORY_SECONDARY == 0) {
-                navController?.graph?.findStartDestination()?.id?.let {
-                    builder.setPopUpTo(
-                        it,
-                        inclusive = false,
-                        saveState = true
-                    )
-                }
-            }
+        val navGraphIds = listOfNotNull(
+            R.navigation.nav_graph_home,
+            R.navigation.nav_graph_catalog,
+            R.navigation.nav_graph_cart,
+            R.navigation.nav_graph_favorite,
+            R.navigation.nav_graph_profile
+        )
 
-            val options = builder.build()
-            destination?.id?.let { id -> navController.navigate(id, null, options) }
-
-            return@setOnItemSelectedListener true
+        // Setup the bottom navigation view with a list of navigation graphs
+        binding.nvNavigation.setupWithNavController(
+            navGraphIds = navGraphIds,
+            fragmentManager = childFragmentManager,
+            containerId = R.id.fgvContainer,
+            intent = requireActivity().intent,
+            recyclerViewToTop = {
+                //reselect
+            },
+            activity = requireActivity(),
+            lifecycleOwner = viewLifecycleOwner
+        ).observe(viewLifecycleOwner) {
+            Navigation.setViewNavController(requireView(), it)
         }
     }
 }

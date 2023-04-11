@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
@@ -49,9 +50,7 @@ class SplashFragment : BaseFragment() {
                         "${state.data.items.map { it.position }}"
                     }
                     if (state.data.items.size in (HomeFlowViewModel.POSITIONS_COUNT - 8..HomeFlowViewModel.POSITIONS_COUNT)) {
-                        requireActivity().supportFragmentManager.beginTransaction()
-                            .replace(R.id.fcvMainContainer, MainFragment())
-                            .commit()
+                        findNavController().navigate(R.id.mainFragment)
                     }
                     if (state.error is ErrorState.NetworkError) {
                         showError(state.error)

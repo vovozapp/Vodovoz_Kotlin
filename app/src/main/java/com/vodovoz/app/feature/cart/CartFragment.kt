@@ -214,6 +214,9 @@ class CartFragment : BaseFragment() {
             viewModel.observeNavigateToOrder()
                 .collect {
                     if (it.prices != null) {
+                        if (findNavController().currentBackStackEntry?.destination?.id == R.id.orderingFragment) {
+                            findNavController().popBackStack()
+                        }
                         findNavController().navigate(
                             CartFragmentDirections.actionToOrderingFragment(
                                 it.prices.total,
