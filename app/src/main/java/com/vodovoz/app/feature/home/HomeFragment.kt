@@ -26,6 +26,7 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
+import com.vodovoz.app.feature.home.popup.NewsClickListener
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.ui.fragment.popup_news.PopupNewsBottomFragment
 import com.vodovoz.app.ui.model.PopupNewsUI
@@ -392,10 +393,18 @@ class HomeFragment : BaseFragment() {
     private fun showPopUpNews(data: PopupNewsUI) {
         val dialog = PopupNewsBottomFragment.newInstance(
             data,
-            iOnInvokeAction = { action -> action.invoke() }
+            clickListener = newsClickListener()
         )
 
         dialog.show(childFragmentManager, dialog::class.simpleName)
         flowViewModel.hasShown()
+    }
+
+    private fun newsClickListener() : NewsClickListener {
+        return object : NewsClickListener {
+            override fun onClick(actionEntity: ActionEntity) {
+                actionEntity.invoke()
+            }
+        }
     }
 }
