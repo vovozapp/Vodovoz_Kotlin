@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.home.popup
+package com.vodovoz.app.feature.home.popup.old
 
 import android.os.Bundle
 import android.view.View
@@ -7,6 +7,7 @@ import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsPopupNewsBinding
+import com.vodovoz.app.feature.home.popup.NewsClickListener
 import com.vodovoz.app.ui.model.PopupNewsUI
 
 class PopupNewsFlowBottomFragment : BaseBottomSheetFragment() {

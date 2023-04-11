@@ -28,10 +28,8 @@ import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWitho
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.home.popup.NewsClickListener
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
-import com.vodovoz.app.ui.fragment.popup_news.PopupNewsBottomFragment
+import com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment
 import com.vodovoz.app.ui.model.PopupNewsUI
-import com.vodovoz.app.util.extensions.debugLog
-import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

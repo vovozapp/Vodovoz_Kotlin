@@ -400,7 +400,7 @@
     </fragment>
     <dialog
         android:id="@+id/popupNewsBottomFragment"
-        android:name="com.vodovoz.app.ui.fragment.popup_news.PopupNewsBottomFragment"
+        android:name="com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment"
         android:label="PopupNewsBottomFragment" >
         <argument
             android:name="popupNews"

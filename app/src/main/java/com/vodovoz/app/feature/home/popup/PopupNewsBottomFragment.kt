@@ -1,20 +1,14 @@
-package com.vodovoz.app.ui.fragment.popup_news
+package com.vodovoz.app.feature.home.popup
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
-import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.BsPopupNewsBinding
-import com.vodovoz.app.feature.home.popup.NewsClickListener
 import com.vodovoz.app.ui.model.PopupNewsUI
+import com.vodovoz.app.util.extensions.debugLog
 
 class PopupNewsBottomFragment : BaseBottomSheetFragment() {
 
