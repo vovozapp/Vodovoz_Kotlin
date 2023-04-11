@@ -583,7 +583,7 @@
     </fragment>
     <fragment
         android:id="@+id/webViewFragment"
-        android:name="com.vodovoz.app.ui.fragment.about_shop.WebViewFragment"
+        android:name="com.vodovoz.app.common.webview.WebViewFragment"
         android:label="WebViewFragment" >
         <argument
             android:name="url"
@@ -850,6 +850,6 @@
         android:label="WebViewFlowBottomSheetFragment" />
     <fragment
         android:id="@+id/webViewFlowFragment"
-        android:name="com.vodovoz.app.common.webview.WebViewFlowFragment"
+        android:name="com.vodovoz.app.common.webview.old.WebViewFlowFragment"
         android:label="WebViewFlowFragment" />
 </navigation>

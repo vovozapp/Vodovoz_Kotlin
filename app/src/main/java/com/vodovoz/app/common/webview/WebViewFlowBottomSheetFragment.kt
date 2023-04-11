@@ -12,7 +12,6 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.databinding.FragmentWebViewFlowBinding
-import com.vodovoz.app.ui.fragment.about_shop.WebViewFragmentArgs
 
 class WebViewFlowBottomSheetFragment : BaseBottomSheetFragment() {
 

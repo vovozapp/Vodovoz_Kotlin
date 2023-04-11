@@ -1,4 +1,4 @@
-package com.vodovoz.app.common.webview
+package com.vodovoz.app.common.webview.old
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -8,8 +8,8 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.common.webview.WebViewFragmentArgs
 import com.vodovoz.app.databinding.FragmentWebViewFlowBinding
-import com.vodovoz.app.ui.fragment.about_shop.WebViewFragmentArgs
 
 class WebViewFlowFragment : BaseFragment() {
 

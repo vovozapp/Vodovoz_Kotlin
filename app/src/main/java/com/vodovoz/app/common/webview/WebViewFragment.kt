@@ -1,20 +1,14 @@
-package com.vodovoz.app.ui.fragment.about_shop
+package com.vodovoz.app.common.webview
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.toErrorState
-import com.vodovoz.app.databinding.FragmentWebViewBinding
 import com.vodovoz.app.databinding.FragmentWebViewFlowBinding
-import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 
 class WebViewFragment : BaseFragment() {
 
