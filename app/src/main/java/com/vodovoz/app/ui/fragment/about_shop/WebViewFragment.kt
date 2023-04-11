@@ -3,12 +3,56 @@ package com.vodovoz.app.ui.fragment.about_shop
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.vodovoz.app.R
+import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.databinding.FragmentWebViewBinding
+import com.vodovoz.app.databinding.FragmentWebViewFlowBinding
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 
+class WebViewFragment : BaseFragment() {
+
+    override fun layout(): Int = R.layout.fragment_web_view_flow
+
+    private val binding: FragmentWebViewFlowBinding by viewBinding {
+        FragmentWebViewFlowBinding.bind(
+            contentView
+        )
+    }
+
+    private val args: WebViewFragmentArgs by navArgs()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        bindErrorRefresh {
+            binding.wvContent.reload()
+        }
+
+        initToolbar(args.title)
+
+        initWebView()
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun initWebView() {
+        binding.wvContent.settings.javaScriptEnabled = true
+
+        try {
+            binding.wvContent.loadUrl(args.url)
+        } catch (e: Throwable) {
+            showError(e.toErrorState())
+        }
+    }
+
+}
+/*
 class WebViewFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentWebViewBinding
@@ -58,4 +102,4 @@ class WebViewFragment : ViewStateBaseFragment() {
         binding.wvContent.loadUrl(url)
     }
 
-}
+}*/
