@@ -340,7 +340,7 @@
     </fragment>
     <dialog
         android:id="@+id/giftsBottomFragment"
-        android:name="com.vodovoz.app.ui.fragment.gifts.GiftsBottomFragment"
+        android:name="com.vodovoz.app.feature.cart.gifts.GiftsBottomFragment"
         android:label="GiftsBottomFragment" >
         <argument
             android:name="giftList"

@@ -12,17 +12,12 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsSelectionGiftsBinding
-import com.vodovoz.app.feature.all.AllClickListener
-import com.vodovoz.app.feature.all.brands.AllBrandsFragmentDirections
 import com.vodovoz.app.feature.cart.CartFragment
 import com.vodovoz.app.feature.cart.gifts.adapter.GiftsFlowAdapter
 import com.vodovoz.app.feature.cart.gifts.adapter.GiftsFlowClickListener
-import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
-import com.vodovoz.app.ui.adapter.GiftsAdapter
-import com.vodovoz.app.ui.fragment.gifts.GiftsBottomFragmentArgs
 import com.vodovoz.app.ui.model.ProductUI
 
-class GiftsBottomFlowFragment : BaseBottomSheetFragment() {
+class GiftsBottomFragment : BaseBottomSheetFragment() {
 
     override fun layout(): Int = R.layout.bs_selection_gifts
 
@@ -84,3 +79,79 @@ class GiftsBottomFlowFragment : BaseBottomSheetFragment() {
         }
     }
 }
+/*
+class GiftsBottomFragment : BottomSheetDialogFragment() {
+
+    private lateinit var binding: BsSelectionGiftsBinding
+
+    private var disposable: Disposable? = null
+    private val onPickUpGiftSubject: PublishSubject<ProductUI> = PublishSubject.create()
+    private val giftsAdapter = GiftsAdapter(onPickUpGiftSubject = onPickUpGiftSubject)
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) = BsSelectionGiftsBinding.inflate(
+        inflater,
+        container,
+        false
+    ).apply {
+        binding = this
+        initDialog()
+        initView()
+    }.root
+
+    private fun initDialog() {
+        dialog?.let {
+            val behavior = (dialog as BottomSheetDialog).behavior
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun initView() {
+        val space = resources.getDimension(R.dimen.space_16).toInt()
+        binding.rvGifts.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvGifts.adapter = giftsAdapter
+        binding.rvGifts.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        binding.rvGifts.addItemDecoration(
+            object : RecyclerView.ItemDecoration() {
+                override fun getItemOffsets(
+                    outRect: Rect,
+                    view: View,
+                    parent: RecyclerView,
+                    state: RecyclerView.State
+                ) {
+                    with(outRect) {
+                        top = space
+                        bottom = space
+                        right = space
+                        left = space
+                    }
+                }
+            }
+        )
+
+        giftsAdapter.productUIList  = GiftsBottomFragmentArgs.fromBundle(requireArguments()).giftList.toList()
+        binding.rvGifts.adapter = giftsAdapter
+
+        binding.incHeader.imgClose.setOnClickListener {
+            requireDialog().cancel()
+        }
+        binding.incHeader.tvTitle.text = getString(R.string.gift_selection_title)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        disposable = onPickUpGiftSubject.subscribeBy { gift ->
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(CartFragment.GIFT_ID, gift)
+            dialog?.dismiss()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        disposable?.dispose()
+    }
+}*/
