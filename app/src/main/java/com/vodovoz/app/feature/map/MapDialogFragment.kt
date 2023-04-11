@@ -25,6 +25,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.gms.location.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.permissions.LocationController
 import com.vodovoz.app.databinding.FragmentMapFlowBinding
 import com.vodovoz.app.feature.map.adapter.AddressResult
 import com.vodovoz.app.feature.map.adapter.AddressResultClickListener
@@ -109,6 +110,10 @@ class MapDialogFragment : BaseFragment(),
 
     private val locationManager by lazy {
         requireContext().getSystemService(LOCATION_SERVICE) as? LocationManager
+    }
+
+    private val locationController by lazy {
+        LocationController(requireContext())
     }
 
     private val addressesResultAdapter = AddressResultFlowAdapter(
@@ -265,24 +270,29 @@ class MapDialogFragment : BaseFragment(),
                 }
             }
 
-            if (ActivityCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                return@setOnClickListener
+            locationController.methodRequiresTwoPermission(requireActivity()) {
+                moveToLastLocation()
             }
-
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location: android.location.Location? ->
-                    location?.let {
-                        moveCamera(Point(it.latitude, it.longitude))
-                    }
-                }
         }
+    }
+
+    private fun moveToLastLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: android.location.Location? ->
+                location?.let {
+                    moveCamera(Point(it.latitude, it.longitude))
+                }
+            }
     }
 
     private fun initSearch() {
@@ -491,7 +501,11 @@ class MapDialogFragment : BaseFragment(),
                 routeNew?.let {
                     val startPoint = route.requestPoints!![0].point
                     val endPoint = route.requestPoints!![1].point
-                    if (viewModel.getTwoPointsDistance(startPoint, center) < viewModel.getTwoPointsDistance(endPoint, center)) {
+                    if (viewModel.getTwoPointsDistance(
+                            startPoint,
+                            center
+                        ) < viewModel.getTwoPointsDistance(endPoint, center)
+                    ) {
                         mapObjects.addPolyline(it)
                     }
                 }
@@ -527,7 +541,7 @@ class MapDialogFragment : BaseFragment(),
             drivingRouter.requestRoutes(requestPoints, drivingOptions, vehicleOptions, this)
     }
 
-    private fun detectGps() : Boolean {
+    private fun detectGps(): Boolean {
         val manager = locationManager ?: return false
         return manager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }

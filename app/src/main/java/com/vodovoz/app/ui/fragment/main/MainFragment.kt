@@ -1,20 +1,11 @@
 package com.vodovoz.app.ui.fragment.main
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.content.res.ColorStateList
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -25,11 +16,10 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vodovoz.app.R
+import com.vodovoz.app.common.permissions.LocationController
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentMainBinding
-import com.vodovoz.app.feature.home.HomeFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -40,20 +30,8 @@ class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    private val locationPermissionRequest = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        when {
-            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
-                // Precise location access granted.
-            }
-            permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                // Only approximate location access granted.
-            } else -> {
-            // No location access granted.
-        }
-        }
+    private val locationController by lazy {
+        LocationController(requireContext())
     }
 
     override fun onCreateView(
@@ -131,19 +109,9 @@ class MainFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    override fun onStart() {
-        super.onStart()
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            locationPermissionRequest.launch(arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION))
-        }
+    override fun onResume() {
+        super.onResume()
+        locationController.methodRequiresTwoPermission(requireActivity())
     }
 
     private fun BottomNavigationView.setSetupWithNavController(navController: NavController?) {
