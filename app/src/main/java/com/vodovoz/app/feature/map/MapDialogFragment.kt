@@ -16,6 +16,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -25,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.permissions.LocationController
 import com.vodovoz.app.databinding.FragmentMapFlowBinding
@@ -226,6 +228,11 @@ class MapDialogFragment : BaseFragment(),
                                 submitRequest(point, it.startPoint)
                             }
                         }
+                        is MapFlowViewModel.MapFlowEvents.ShowInfoDialog -> {
+                            if (it.url.isNullOrEmpty().not()) {
+                                findNavController().navigate(R.id.webViewFragment, bundleOf("title" to "Зоны бесплатных дней доставки за МКАД", "url" to it.url))
+                            }
+                        }
                     }
                 }
         }
@@ -251,7 +258,7 @@ class MapDialogFragment : BaseFragment(),
         }
 
         binding.infoFrame.setOnClickListener {
-
+            viewModel.showInfoDialog()
         }
 
         binding.geoFrame.setOnClickListener {

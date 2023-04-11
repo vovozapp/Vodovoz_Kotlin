@@ -134,6 +134,12 @@ class MapFlowViewModel @Inject constructor(
         }
     }
 
+    fun showInfoDialog() {
+        viewModelScope.launch {
+            eventListener.emit(MapFlowEvents.ShowInfoDialog(state.data.deliveryZonesBundleUI?.aboutDeliveryTimeUrl))
+        }
+    }
+
     fun fetchSeveralMinimalLineDistancesToMainPolygonPoints(startPoint: Point) {
         val sortedList = mutableListOf<LocationFloatToPoint>()
 
@@ -190,5 +196,6 @@ class MapFlowViewModel @Inject constructor(
 
         data class ShowAddAddressBottomDialog(val address: AddressUI?) : MapFlowEvents()
         data class Submit(val startPoint: Point, val list: List<Point>): MapFlowEvents()
+        data class ShowInfoDialog(val url: String?): MapFlowEvents()
     }
 }

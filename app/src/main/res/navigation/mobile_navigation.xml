@@ -844,4 +844,12 @@
             android:name="productPictureUrl"
             app:argType="string" />
     </dialog>
+    <dialog
+        android:id="@+id/webViewFlowBottomSheetFragment"
+        android:name="com.vodovoz.app.common.webview.WebViewFlowBottomSheetFragment"
+        android:label="WebViewFlowBottomSheetFragment" />
+    <fragment
+        android:id="@+id/webViewFlowFragment"
+        android:name="com.vodovoz.app.common.webview.WebViewFlowFragment"
+        android:label="WebViewFlowFragment" />
 </navigation>

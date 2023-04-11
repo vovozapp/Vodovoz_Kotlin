@@ -8,7 +8,6 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.common.content.toErrorState
-import com.vodovoz.app.databinding.FragmentWebViewBinding
 import com.vodovoz.app.databinding.FragmentWebViewFlowBinding
 import com.vodovoz.app.ui.fragment.about_shop.WebViewFragmentArgs
 
@@ -43,5 +42,10 @@ class WebViewFlowBottomSheetFragment : BaseBottomSheetFragment() {
         } catch (e: Throwable) {
             showError(e.toErrorState())
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        dialog?.dismiss()
     }
 }
