@@ -7,7 +7,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.ActivityMainBinding
 import com.vodovoz.app.ui.fragment.main.MainFragment
-import com.vodovoz.app.ui.fragment.splash.SplashFragment
+import com.vodovoz.app.feature.splash.SplashFragment
 import com.vodovoz.app.util.Keys
 import com.vodovoz.app.util.extensions.snack
 import com.yandex.mapkit.MapKitFactory

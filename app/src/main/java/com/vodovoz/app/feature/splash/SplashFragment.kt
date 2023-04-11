@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.splash
+package com.vodovoz.app.feature.splash
 
 import android.os.Bundle
 import android.view.View
