@@ -31,6 +31,7 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -56,7 +57,8 @@ class ProductsGridViewHolder(
     private val detailPictureFlowPagerAdapter = DetailPictureFlowPagerAdapter(
         clickListener = object : DetailPictureFlowClickListener {
             override fun onDetailPictureClick() {
-
+                val item = getItemByPosition() ?: return
+                productsClickListener.onProductClick(item.id)
             }
 
             override fun onProductClick(id: Long) {
@@ -325,6 +327,6 @@ class ProductsGridViewHolder(
     }
 
     private fun getItemByPosition(): ProductUI? {
-        return (bindingAdapter as? SortedAdapter)?.getItem(bindingAdapterPosition) as? ProductUI
+        return (bindingAdapter as? AvailableProductsAdapter)?.getItem(bindingAdapterPosition) as? ProductUI
     }
 }

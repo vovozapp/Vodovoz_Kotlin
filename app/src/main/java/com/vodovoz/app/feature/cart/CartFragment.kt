@@ -147,7 +147,7 @@ class CartFragment : BaseFragment() {
     }
 
     private fun initActionBar() {
-        initToolbar(requireContext().getString(R.string.cart_title), addAction = true)
+        initToolbar(requireContext().getString(R.string.cart_title), addAction = true, showNavBtn = false)
     }
 
     private fun observeUiState() {

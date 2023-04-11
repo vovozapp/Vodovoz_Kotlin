@@ -54,7 +54,8 @@ class AvailableProductsViewHolder(
         clickListener = object : DetailPictureFlowClickListener {
 
             override fun onDetailPictureClick() {
-
+                val item = getItemByPosition() ?: return
+                productsClickListener.onProductClick(item.id)
             }
 
             override fun onProductClick(id: Long) {
