@@ -13,22 +13,22 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.core.network.ApiConfig
-import com.vodovoz.app.data.model.common.ActionEntity
-import com.vodovoz.app.databinding.FragmentMainHomeFlowBinding
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.network.ApiConfig
+import com.vodovoz.app.data.model.common.ActionEntity
+import com.vodovoz.app.databinding.FragmentMainHomeFlowBinding
+import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
-import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
-import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
-import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
-import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.home.popup.NewsClickListener
-import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment
+import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
+import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
+import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
+import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
+import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.model.PopupNewsUI
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -85,6 +85,7 @@ class HomeFragment : BaseFragment() {
         )
         bindErrorRefresh { flowViewModel.refresh() }
         observeUiState()
+        observeTabReselect()
     }
 
     private fun observeUiState() {
@@ -403,6 +404,20 @@ class HomeFragment : BaseFragment() {
             override fun onClick(actionEntity: ActionEntity) {
                 actionEntity.invoke()
             }
+        }
+    }
+
+    private fun observeTabReselect() {
+        lifecycleScope.launchWhenStarted {
+            tabManager.observeTabReselect()
+                .collect {
+                    if (it != TabManager.DEFAULT_STATE && it == R.id.homeFragment) {
+                        binding.homeRv.post {
+                            binding.homeRv.smoothScrollToPosition(1)
+                        }
+                        tabManager.setDefaultState()
+                    }
+                }
         }
     }
 }

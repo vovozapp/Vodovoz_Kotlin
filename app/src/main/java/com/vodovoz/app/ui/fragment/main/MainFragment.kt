@@ -132,7 +132,7 @@ class MainFragment : BaseFragment() {
             containerId = R.id.fgvContainer,
             intent = requireActivity().intent,
             recyclerViewToTop = {
-                //reselect
+                tabManager.reselect(it)
             },
             activity = requireActivity(),
             lifecycleOwner = viewLifecycleOwner
