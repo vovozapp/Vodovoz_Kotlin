@@ -14,7 +14,6 @@ import com.vodovoz.app.mapper.DeliveryZonesBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.ui.model.custom.DeliveryZonesBundleUI
 import com.vodovoz.app.util.extensions.debugLog
-import com.yandex.mapkit.geometry.Geo
 import com.yandex.mapkit.geometry.Point
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -135,7 +134,7 @@ class MapFlowViewModel @Inject constructor(
         }
     }
 
-    fun check(startPoint: Point) {
+    fun fetchSeveralMinimalLineDistancesToMainPolygonPoints(startPoint: Point) {
         val sortedList = mutableListOf<LocationFloatToPoint>()
 
         state.data.centerPoints.forEach {
@@ -160,6 +159,19 @@ class MapFlowViewModel @Inject constructor(
         viewModelScope.launch {
             eventListener.emit(MapFlowEvents.Submit(startPoint, listOnPoints))
         }
+    }
+
+     fun getTwoPointsDistance(start: Point, end: Point) : Float {
+        val locA = Location("locationA").apply {
+            latitude = start.latitude
+            longitude = start.longitude
+        }
+
+        val locB = Location("locationB").apply {
+            latitude = end.latitude
+            longitude = end.longitude
+        }
+        return locA.distanceTo(locB)
     }
 
     data class LocationFloatToPoint(

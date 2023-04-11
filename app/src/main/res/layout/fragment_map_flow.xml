@@ -82,6 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="4dp"
+        android:elevation="10dp"
         android:background="@drawable/bg_with_ripple"
         app:layout_constraintBottom_toTopOf="@id/minusFrame"
         app:layout_constraintEnd_toEndOf="parent"
@@ -94,7 +95,7 @@
             android:layout_height="36dp"
             android:layout_margin="4dp"
             android:src="@drawable/ic_plus"
-            android:tint="@color/white" />
+            android:tint="@color/bluePrimary" />
 
     </FrameLayout>
 
@@ -102,6 +103,7 @@
         android:id="@+id/minusFrame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:elevation="10dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/bg_with_ripple"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -114,7 +116,7 @@
             android:layout_height="36dp"
             android:layout_margin="4dp"
             android:src="@drawable/ic_minus"
-            android:tint="@color/white" />
+            android:tint="@color/bluePrimary" />
 
     </FrameLayout>
 
@@ -124,6 +126,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:elevation="10dp"
         android:background="@drawable/bg_with_ripple"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appBarLayout">
@@ -133,8 +136,8 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_margin="4dp"
-            android:src="@drawable/baseline_info_24"
-            android:tint="@color/white" />
+            android:src="@drawable/info"
+            android:tint="@color/bluePrimary" />
     </FrameLayout>
 
     <FrameLayout
@@ -142,6 +145,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
+        android:elevation="10dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/bg_with_ripple"
         app:layout_constraintBottom_toTopOf="@id/addAddress"
@@ -152,9 +156,9 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_margin="4dp"
-            android:src="@drawable/baseline_near_me_24"
+            android:src="@drawable/png_gps_w"
             app:shapeAppearanceOverlay="@style/RoundedImageCircle"
-            app:tint="@color/white" />
+            app:tint="@color/bluePrimary" />
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
