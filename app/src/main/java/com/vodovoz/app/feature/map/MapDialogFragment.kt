@@ -230,7 +230,7 @@ class MapDialogFragment : BaseFragment(),
                         }
                         is MapFlowViewModel.MapFlowEvents.ShowInfoDialog -> {
                             if (it.url.isNullOrEmpty().not()) {
-                                findNavController().navigate(R.id.webViewFragment, bundleOf("title" to "Зоны бесплатных дней доставки за МКАД", "url" to it.url))
+                                findNavController().navigate(R.id.webViewFlowBottomSheetFragment, bundleOf("title" to "Зоны бесплатных дней доставки за МКАД", "url" to it.url))
                             }
                         }
                     }
