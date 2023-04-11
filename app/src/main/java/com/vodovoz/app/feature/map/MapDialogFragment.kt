@@ -6,6 +6,7 @@ import android.content.Context.LOCATION_SERVICE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.PointF
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
@@ -22,7 +23,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.gms.location.*
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.permissions.LocationController
@@ -32,7 +33,6 @@ import com.vodovoz.app.feature.map.adapter.AddressResultClickListener
 import com.vodovoz.app.feature.map.adapter.AddressResultFlowAdapter
 import com.vodovoz.app.ui.extensions.ColorExtensions.getColorWithAlpha
 import com.vodovoz.app.ui.model.DeliveryZoneUI
-import com.vodovoz.app.util.extensions.debugLog
 import com.yandex.mapkit.*
 import com.yandex.mapkit.directions.DirectionsFactory
 import com.yandex.mapkit.directions.driving.*
@@ -51,6 +51,7 @@ import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.Error
 import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MapDialogFragment : BaseFragment(),
@@ -443,7 +444,30 @@ class MapDialogFragment : BaseFragment(),
         onMapClick(p1)
     }
 
-    override fun onObjectAdded(p0: UserLocationView) {}
+    override fun onObjectAdded(userLocationView: UserLocationView) {
+
+        userLocationView.arrow.setIcon(
+            ImageProvider.fromResource(
+                requireContext(), com.vodovoz.app.R.drawable.png_gps_1
+            ), IconStyle().setScale(0.1f).setRotationType(RotationType.ROTATE).setZIndex(1f)
+        )
+
+        val pinIcon: CompositeIcon = userLocationView.pin.useCompositeIcon()
+
+        pinIcon.setIcon(
+            "pin",
+            ImageProvider.fromResource(requireContext(), com.vodovoz.app.R.drawable.search_result),
+            IconStyle()
+                .setAnchor (PointF(0.5f, 0.5f))
+                .setRotationType(RotationType.ROTATE)
+                .setZIndex(1f)
+                .setScale(0.5f)
+        )
+
+        userLocationView.accuracyCircle.fillColor = Color.BLUE and -0x66000001
+    }
+
+
     override fun onObjectRemoved(p0: UserLocationView) {}
     override fun onObjectUpdated(p0: UserLocationView, p1: ObjectEvent) {}
 
