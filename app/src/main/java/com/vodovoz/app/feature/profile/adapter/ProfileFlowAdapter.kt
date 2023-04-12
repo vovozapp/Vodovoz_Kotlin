@@ -13,6 +13,7 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProductsSliderV
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.profile.viewholders.ProfileHeaderViewHolder
+import com.vodovoz.app.feature.profile.viewholders.ProfileLogoutViewHolder
 import com.vodovoz.app.feature.profile.viewholders.ProfileOrderSliderViewHolder
 
 class ProfileFlowAdapter(
@@ -33,9 +34,13 @@ class ProfileFlowAdapter(
             R.layout.item_profile_header -> {
                 ProfileHeaderViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
-            R.layout.fragment_slider_order -> {
+            R.layout.item_profile_order_slider -> {
                 ProfileOrderSliderViewHolder(getViewFromInflater(viewType, parent), homeOrdersSliderClickListener)
             }
+            R.layout.item_profile_logout -> {
+                ProfileLogoutViewHolder(getViewFromInflater(viewType, parent), clickListener)
+            }
+
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")
             }
