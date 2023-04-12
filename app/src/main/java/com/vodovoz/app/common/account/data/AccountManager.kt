@@ -2,7 +2,9 @@ package com.vodovoz.app.common.account.data
 
 import android.content.SharedPreferences
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AccountManager @Inject constructor(
     private val sharedPrefs: SharedPreferences
 ) {
