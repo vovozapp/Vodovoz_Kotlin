@@ -1,6 +1,8 @@
 package com.vodovoz.app.common.account.data
 
 import android.content.SharedPreferences
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -9,7 +11,15 @@ class AccountManager @Inject constructor(
     private val sharedPrefs: SharedPreferences
 ) {
 
-    fun fetchUserId() = when(sharedPrefs.contains(USER_ID)) {
+    private val accountIdListener = MutableStateFlow<Long?>(null)
+    fun observeAccountId() = accountIdListener.asStateFlow()
+
+    fun fetchAccountId() {
+        val id = accountIdListener.value ?: fetchUserId()
+        accountIdListener.value = id
+    }
+
+    private fun fetchUserId() = when (sharedPrefs.contains(USER_ID)) {
         true -> {
             val userId = sharedPrefs.getLong(USER_ID, 0)
             userId
@@ -21,10 +31,12 @@ class AccountManager @Inject constructor(
 
     fun updateUserId(userId: Long) {
         sharedPrefs.edit().putLong(USER_ID, userId).apply()
+        accountIdListener.value = userId
     }
 
     fun removeUserId() {
         sharedPrefs.edit().remove(USER_ID).apply()
+        accountIdListener.value = null
     }
 
     fun removeUserSettings() {
@@ -32,7 +44,7 @@ class AccountManager @Inject constructor(
         sharedPrefs.edit().remove(PASSWORD).apply()
     }
 
-    fun fetchUserSettings() : UserSettings {
+    fun fetchUserSettings(): UserSettings {
         val email = sharedPrefs.getString(EMAIL, "") ?: ""
         val password = sharedPrefs.getString(PASSWORD, "") ?: ""
         return UserSettings(email, password)
