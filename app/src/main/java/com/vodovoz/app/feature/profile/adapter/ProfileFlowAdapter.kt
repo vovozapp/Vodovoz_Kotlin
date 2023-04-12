@@ -7,15 +7,11 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.feature.home.viewholders.homeorders.HomeOrdersSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeorders.inneradapter.HomeOrdersSliderClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProductsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.feature.profile.viewholders.ProfileBestForYouViewHolder
-import com.vodovoz.app.feature.profile.viewholders.ProfileHeaderViewHolder
-import com.vodovoz.app.feature.profile.viewholders.ProfileLogoutViewHolder
-import com.vodovoz.app.feature.profile.viewholders.ProfileOrderSliderViewHolder
+import com.vodovoz.app.feature.profile.viewholders.*
 
 class ProfileFlowAdapter(
     private val clickListener: ProfileFlowClickListener,
@@ -44,7 +40,9 @@ class ProfileFlowAdapter(
             R.layout.item_profile_best_for_you -> {
                 ProfileBestForYouViewHolder(getViewFromInflater(viewType, parent), cartManager, likeManager, productsShowAllListener, productsClickListener)
             }
-
+            R.layout.item_profile_main_rv -> {
+                ProfileMainViewHolder(getViewFromInflater(viewType, parent), clickListener)
+            }
 
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")
