@@ -394,5 +394,7 @@ class ProfileFlowViewModel @Inject constructor(
         const val POSITION_4 = 4
         const val POSITION_5 = 5
         const val POSITION_6 = 6
+
+        const val POSITIONS_COUNT = 6
     }
 }

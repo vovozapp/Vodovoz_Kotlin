@@ -17,8 +17,10 @@ import com.vodovoz.app.feature.home.viewholders.homeorders.inneradapter.HomeOrde
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.profile.adapter.ProfileFlowClickListener
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class ProfileFlowFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_profile_flow
@@ -97,7 +99,7 @@ class ProfileFlowFragment : BaseFragment() {
                         showLoaderWithBg(false)
                     }
 
-                    if (profileState.data.items.size in (HomeFlowViewModel.POSITIONS_COUNT - 2..HomeFlowViewModel.POSITIONS_COUNT)) {
+                    if (profileState.data.items.size in (ProfileFlowViewModel.POSITIONS_COUNT - 2..ProfileFlowViewModel.POSITIONS_COUNT)) {
                         val list =
                             profileState.data.items.sortedBy { it.position }.mapNotNull { it.item }
                         profileController.submitList(list)
