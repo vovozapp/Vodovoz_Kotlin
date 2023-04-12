@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.main
+package com.vodovoz.app.feature.main
 
 import android.os.Bundle
 import android.view.View

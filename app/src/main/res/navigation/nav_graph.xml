@@ -10,7 +10,7 @@
         android:label="SplashFragment" />
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.vodovoz.app.ui.fragment.main.MainFragment"
+        android:name="com.vodovoz.app.feature.main.MainFragment"
         android:label="MainFragment" />
 
 </navigation>

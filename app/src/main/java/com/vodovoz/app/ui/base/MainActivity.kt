@@ -3,12 +3,8 @@ package com.vodovoz.app.ui.base
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.vodovoz.app.R
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.ActivityMainBinding
-import com.vodovoz.app.ui.fragment.main.MainFragment
-import com.vodovoz.app.feature.splash.SplashFragment
-import com.vodovoz.app.util.Keys
 import com.vodovoz.app.util.extensions.snack
 import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint

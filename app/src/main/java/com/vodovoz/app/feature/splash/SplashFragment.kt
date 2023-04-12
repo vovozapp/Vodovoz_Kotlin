@@ -10,11 +10,8 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.feature.cart.CartFlowViewModel
 import com.vodovoz.app.feature.home.HomeFlowViewModel
-import com.vodovoz.app.feature.home.old.HomeViewModel
-import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.feature.catalog.CatalogFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
-import com.vodovoz.app.ui.fragment.main.MainFragment
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 
