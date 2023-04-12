@@ -17,6 +17,7 @@ import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.
 import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
+import com.vodovoz.app.feature.home.viewholders.homeorders.HomeOrders
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.profile.viewholders.models.*
 import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
