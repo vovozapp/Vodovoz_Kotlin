@@ -23,6 +23,8 @@ import com.vodovoz.app.data.parser.response.pre_order.PreOrderProductResponseJso
 import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonParser.parseAllPromotionsResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionsByBannerResponseJsonParser.parsePromotionsByBannerResponse
+import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
+import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.feature.map.api.MapKitFlowApi
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
@@ -727,6 +729,35 @@ class MainRepository @Inject constructor(
         apiKey = "346ef353-b4b2-44b3-b597-210d62eeb66b",
         geocode = "$longitude,$latitude",
         format = "json"
+    )
+
+    /**
+     * profile
+     */
+
+    //Информация о пользователе
+    suspend fun fetchUserData(
+        userId: Long
+    ) = api.fetchProfileResponse(
+        action = "details",
+        userId = userId
+    )
+
+    //Информация о пользователе
+    suspend fun fetchProfileCategories(
+        userId: Long
+    ) = api.fetchProfileResponse(
+        action = "glav",
+        userId = userId
+    )
+
+    suspend fun fetchPersonalProducts(
+        userId: Long?,
+        page: Int?
+    )  = api.fetchPersonalProducts(
+        action = "tovarchik",
+        userId = userId,
+        page = page
     )
 
 }

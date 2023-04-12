@@ -438,4 +438,28 @@ interface MainApi {
         @Query("action") action: String? = null
     ): ResponseBody
 
+    /**
+     * profile
+     */
+
+    //Профиль
+    @GET("/newmobile/profile/index.php")
+    suspend fun fetchProfileResponse(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("name") firstName: String? = null,
+        @Query("lastname") secondName: String? = null,
+        @Query("password") password: String? = null,
+        @Query("phone") phone: String? = null,
+        @Query("gender") sex: String? = null,
+        @Query("birthday") birthday: String? = null,
+        @Query("email") email: String? = null,
+    ): ResponseBody
+
+    @GET("newmobile/profile/tovary.php")
+    suspend fun fetchPersonalProducts(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("nav") page: Int? = null,
+    ): ResponseBody
 }

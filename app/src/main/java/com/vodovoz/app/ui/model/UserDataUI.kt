@@ -2,7 +2,7 @@ package com.vodovoz.app.ui.model
 
 import com.vodovoz.app.ui.fragment.user_data.Gender
 
-class UserDataUI(
+data class UserDataUI(
     val id: Long,
     var firstName: String,
     var secondName: String,
