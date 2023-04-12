@@ -6,7 +6,7 @@ import com.vodovoz.app.feature.profile.cats.ProfileCategoryUI
 
 data class ProfileMain(
     val id: Int = 3,
-    val items: List<ProfileCategoryUI>
+    val items: List<ProfileCategoryUI>?
 ) : Item {
 
     override fun getItemViewType(): Int {
