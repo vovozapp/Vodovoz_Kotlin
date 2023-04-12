@@ -64,6 +64,16 @@ class ProfileFlowFragment : BaseFragment() {
 
         bindErrorRefresh { viewModel.refresh() }
         observeUiState()
+        observeEvents()
+    }
+
+    private fun observeEvents() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.observeEvent()
+                .collect {
+
+                }
+        }
     }
 
     private fun observeUiState() {
