@@ -17,10 +17,12 @@ import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.
 import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
+import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.profile.viewholders.models.*
 import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
 import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.mapper.UserDataMapper.mapToUI
+import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -219,7 +221,11 @@ class ProfileFlowViewModel @Inject constructor(
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val item = PositionItem(
                             POSITION_5,
-                            ProfileViewed(items = response.data.mapToUI())
+                            HomeProducts(
+                                14, response.data.mapToUI(), ProductsSliderConfig(
+                                    containShowAllButton = false
+                                ), HomeProducts.VIEWED
+                            )
                         )
                         state.copy(
                             loadingPage = false,
