@@ -13,6 +13,27 @@ class ProfileCategoriesInnerViewHolder(
 
     private val binding: ItemProfileInsideCategoryUiBinding = ItemProfileInsideCategoryUiBinding.bind(view)
 
+    init {
+        binding.root.setOnClickListener {
+            val item = item ?:return@setOnClickListener
+            when(item.id) {
+                "moyadress" -> { clickListener.onAddressesClick() }
+                "url1" -> { clickListener.onUrlClick() }
+                "moyzakaz" -> { clickListener.onOrdersHistoryClick() }
+                "kyptovary" -> { clickListener.onLastPurchasesClick() }
+                "remont" -> { clickListener.onRepairClick() }
+                "sanitar" -> { clickListener.onOzonClick() }
+                "moyanketa" -> { clickListener.onQuestionnaireClick() }
+                "moyevedomleniya" -> { clickListener.onNotificationsClick() }
+                "moydostavka" -> { clickListener.onAboutDeliveryClick() }
+                "moyoplata" -> { clickListener.onAboutPaymentClick() }
+                "moychat" -> { clickListener.onMyChatClick() }
+                "moybezopasnost" -> { clickListener.onSafetyClick() }
+                "oprile" -> { clickListener.onAboutAppClick() }
+            }
+        }
+    }
+
     override fun bind(item: ProfileInsideCategoryUI) {
         super.bind(item)
 

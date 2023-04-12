@@ -28,7 +28,7 @@ class ProfileFlowController(
     homeOrdersSliderClickListener: HomeOrdersSliderClickListener
 ) {
 
-    private val profileFlowAdatper = ProfileFlowAdapter(
+    private val profileFlowAdapter = ProfileFlowAdapter(
         listener,
         cartManager,
         likeManager,
@@ -44,12 +44,12 @@ class ProfileFlowController(
     }
 
     fun submitList(list: List<Item>) {
-        profileFlowAdatper.submitList(list)
+        profileFlowAdapter.submitList(list)
     }
 
     private fun initList(recyclerView: RecyclerView) {
         with(recyclerView) {
-            adapter = profileFlowAdatper
+            adapter = profileFlowAdapter
             layoutManager = LinearLayoutManager(context)
         }
     }

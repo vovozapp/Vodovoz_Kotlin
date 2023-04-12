@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
@@ -12,12 +13,14 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.databinding.FragmentProfileFlowBinding
 import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.home.viewholders.homeorders.inneradapter.HomeOrdersSliderClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.profile.adapter.ProfileFlowClickListener
+import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -72,6 +75,13 @@ class ProfileFlowFragment : BaseFragment() {
         bindErrorRefresh { viewModel.refresh() }
         observeUiState()
         observeEvents()
+        bindRegOrLoginBtn()
+    }
+
+    private fun bindRegOrLoginBtn() {
+        binding.btnLoginOrReg.setOnClickListener {
+            findNavController().navigate(ProfileFragmentDirections.actionToLoginFragment())
+        }
     }
 
     private fun observeEvents() {
@@ -119,11 +129,78 @@ class ProfileFlowFragment : BaseFragment() {
     private fun getProfileFlowClickListener() : ProfileFlowClickListener {
         return object : ProfileFlowClickListener {
             override fun onHeaderClick() {
-
+                findNavController().navigate(ProfileFragmentDirections.actionToUserDataFragment())
             }
 
             override fun logout() {
+                viewModel.logout()
+            }
 
+            override fun onAddressesClick() {
+                findNavController().navigate(ProfileFragmentDirections.actionToSavedAddressesDialogFragment())
+            }
+
+            override fun onUrlClick() {
+                findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
+                    ApiConfig.ABOUT_DELIVERY_URL,
+                    "Стоимость доставки"
+                ))
+            }
+
+            override fun onOrdersHistoryClick() {
+                findNavController().navigate(ProfileFragmentDirections.actionToAllOrdersFragment())
+            }
+
+            override fun onLastPurchasesClick() {
+                findNavController().navigate(ProfileFragmentDirections.actionToPastPurchasesFragment())
+            }
+
+            override fun onRepairClick() {
+                findNavController().navigate(ProfileFragmentDirections.actionToServiceDetailFragment(
+                    listOf("sanitar", "remont").toTypedArray(),
+                    "remont"
+                ))
+            }
+
+            override fun onOzonClick() {
+                findNavController().navigate(ProfileFragmentDirections.actionToServiceDetailFragment(
+                    listOf("sanitar", "remont").toTypedArray(),
+                    "sanitar"
+                ))
+            }
+
+            override fun onQuestionnaireClick() {
+                findNavController().navigate(ProfileFragmentDirections.actionToQuestionnairesFragment())
+            }
+
+            override fun onNotificationsClick() {
+                TODO("Not yet implemented")
+            }
+
+            override fun onAboutDeliveryClick() {
+                findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
+                    ApiConfig.ABOUT_DELIVERY_URL,
+                    "Стоимость доставки"
+                ))
+            }
+
+            override fun onAboutPaymentClick() {
+                findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
+                    ApiConfig.ABOUT_PAY_URL,
+                    "Об оплате"
+                ))
+            }
+
+            override fun onMyChatClick() {
+                TODO("Not yet implemented")
+            }
+
+            override fun onSafetyClick() {
+                TODO("Not yet implemented")
+            }
+
+            override fun onAboutAppClick() {
+                findNavController().navigate(ProfileFragmentDirections.actionToAboutAppDialogFragment())
             }
 
         }
@@ -136,19 +213,21 @@ class ProfileFlowFragment : BaseFragment() {
     private fun getProductsClickListener(): ProductsClickListener {
         return object : ProductsClickListener {
             override fun onProductClick(id: Long) {
-
+                findNavController().navigate(ProfileFragmentDirections.actionToProductDetailFragment(id))
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-
+                findNavController().navigate(ProfileFragmentDirections.actionToPreOrderBS(
+                    id, name, detailPicture
+                ))
             }
 
             override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
-
+                viewModel.changeCart(id, cartQuantity, oldQuantity)
             }
 
             override fun onFavoriteClick(id: Long, isFavorite: Boolean) {
-
+                viewModel.changeFavoriteStatus(id, isFavorite)
             }
 
             override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
@@ -160,7 +239,8 @@ class ProfileFlowFragment : BaseFragment() {
     private fun getHomeOrdersSliderClickListener() : HomeOrdersSliderClickListener {
         return object : HomeOrdersSliderClickListener {
             override fun onOrderClick(id: Long?) {
-
+                if (id == null) return
+                findNavController().navigate(ProfileFragmentDirections.actionToOrderDetailsFragment(id))
             }
         }
     }
