@@ -3,7 +3,7 @@ package com.vodovoz.app.common.account.data
 import android.content.SharedPreferences
 import javax.inject.Inject
 
-class AccountLocal @Inject constructor(
+class AccountManager @Inject constructor(
     private val sharedPrefs: SharedPreferences
 ) {
 
