@@ -317,7 +317,7 @@ class HomeFragment : BaseFragment() {
             }
 
             override fun onShowAllFavoritesClick() {
-                tabManager.selectTab(R.id.favoriteFragment)
+                tabManager.selectTab(R.id.graph_favorite)
             }
 
             //POSITION_3
