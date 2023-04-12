@@ -7,9 +7,11 @@ import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.ItemProfileBestForYouBinding
 import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouAdapter
+import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.profile.viewholders.models.ProfileBestForYou
+import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 
 class ProfileBestForYouViewHolder(
     view: View,
@@ -34,7 +36,17 @@ class ProfileBestForYouViewHolder(
     override fun bind(item: ProfileBestForYou) {
         super.bind(item)
 
-        bestForYouAdapter.submitList(item.data.productUIList)
+        val homeProducts = HomeProducts(
+            1,
+            listOf(item.data),
+            ProductsSliderConfig(
+                containShowAllButton = false,
+                largeTitle = true
+            ),
+            HomeProducts.DISCOUNT
+        )
+
+        bestForYouAdapter.submitList(listOf(homeProducts))
     }
 
 }
