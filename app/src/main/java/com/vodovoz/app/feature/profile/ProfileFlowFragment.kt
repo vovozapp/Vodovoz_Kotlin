@@ -10,6 +10,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentProfileFlowBinding
 import com.vodovoz.app.feature.home.HomeFlowViewModel
@@ -42,11 +43,15 @@ class ProfileFlowFragment : BaseFragment() {
     @Inject
     lateinit var tabManager: TabManager
 
+    @Inject
+    lateinit var ratingProductManager: RatingProductManager
+
     private val profileController by lazy {
         ProfileFlowController(
             viewModel = viewModel,
             cartManager = cartManager,
             likeManager = likeManager,
+            ratingProductManager = ratingProductManager,
             listener = getProfileFlowClickListener(),
             productsShowAllListener = getProductsShowClickListener(),
             productsClickListener = getProductsClickListener(),

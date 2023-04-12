@@ -6,6 +6,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.home.adapter.HomeMainAdapter
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
@@ -20,6 +21,7 @@ class ProfileFlowController(
     private val viewModel: ProfileFlowViewModel,
     cartManager: CartManager,
     likeManager: LikeManager,
+    ratingProductManager: RatingProductManager,
     listener: ProfileFlowClickListener,
     productsShowAllListener: ProductsShowAllListener,
     productsClickListener: ProductsClickListener,
@@ -30,6 +32,7 @@ class ProfileFlowController(
         listener,
         cartManager,
         likeManager,
+        ratingProductManager,
         productsShowAllListener,
         productsClickListener,
         homeOrdersSliderClickListener

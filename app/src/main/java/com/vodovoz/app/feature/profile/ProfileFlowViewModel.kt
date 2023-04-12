@@ -17,6 +17,7 @@ import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.
 import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
+import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.feature.home.viewholders.homeorders.HomeOrders
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.profile.viewholders.models.*
@@ -293,9 +294,12 @@ class ProfileFlowViewModel @Inject constructor(
                 .onEach {
                     val response = it.parsePersonalProductsResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
                         val item = PositionItem(
                             POSITION_6,
-                            ProfileBestForYou(data = response.data.mapToUI())
+                            ProfileBestForYou(data = data.copy(
+                                productUIList = FavoritesMapper.mapFavoritesListByManager("grid", data.productUIList)
+                            ))
                         )
                         state.copy(
                             loadingPage = false,

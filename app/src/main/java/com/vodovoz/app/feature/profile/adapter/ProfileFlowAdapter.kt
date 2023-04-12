@@ -7,6 +7,7 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.home.viewholders.homeorders.inneradapter.HomeOrdersSliderClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProductsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
@@ -17,6 +18,7 @@ class ProfileFlowAdapter(
     private val clickListener: ProfileFlowClickListener,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
+    private val ratingProductManager: RatingProductManager,
     private val productsShowAllListener: ProductsShowAllListener,
     private val productsClickListener: ProductsClickListener,
     private val homeOrdersSliderClickListener: HomeOrdersSliderClickListener
@@ -38,7 +40,7 @@ class ProfileFlowAdapter(
                 ProfileLogoutViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
             R.layout.item_profile_best_for_you -> {
-                ProfileBestForYouViewHolder(getViewFromInflater(viewType, parent), cartManager, likeManager, productsShowAllListener, productsClickListener)
+                ProfileBestForYouViewHolder(getViewFromInflater(viewType, parent), cartManager, likeManager, ratingProductManager, productsClickListener)
             }
             R.layout.item_profile_main_rv -> {
                 ProfileMainViewHolder(getViewFromInflater(viewType, parent), clickListener)
