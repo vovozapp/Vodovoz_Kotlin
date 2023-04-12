@@ -12,6 +12,7 @@ import com.vodovoz.app.feature.home.viewholders.homeorders.inneradapter.HomeOrde
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProductsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
+import com.vodovoz.app.feature.profile.viewholders.ProfileBestForYouViewHolder
 import com.vodovoz.app.feature.profile.viewholders.ProfileHeaderViewHolder
 import com.vodovoz.app.feature.profile.viewholders.ProfileLogoutViewHolder
 import com.vodovoz.app.feature.profile.viewholders.ProfileOrderSliderViewHolder
@@ -40,6 +41,10 @@ class ProfileFlowAdapter(
             R.layout.item_profile_logout -> {
                 ProfileLogoutViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
+            R.layout.item_profile_best_for_you -> {
+                ProfileBestForYouViewHolder(getViewFromInflater(viewType, parent), cartManager, likeManager, productsShowAllListener, productsClickListener)
+            }
+
 
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")
