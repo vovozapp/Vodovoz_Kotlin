@@ -30,7 +30,7 @@ class ProfileCategoriesViewHolder(
 
         val list = item.insideCategories
         if (list != null) {
-            if (item.title != null) {
+            if (item.title.isNullOrEmpty().not()) {
                 binding.categoryTitleTv.text = item.title
                 binding.categoryTitleTv.isVisible = true
             } else {
