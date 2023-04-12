@@ -36,10 +36,14 @@ class MainFragment : BaseFragment() {
         )
     }
 
+    private var isBottomBarInited = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupBottomNavigationBar()
+        if (!isBottomBarInited) {
+            setupBottomNavigationBar()
+        }
         observeTabState()
         observeCartState()
         observeCartLoading()
@@ -106,14 +110,10 @@ class MainFragment : BaseFragment() {
         locationController.methodRequiresTwoPermission(requireActivity())
     }
 
-    private var isBottomBarInited = false
-
     /**
      * Called on first creation and when restoring state.
      */
     private fun setupBottomNavigationBar() {
-
-        debugLog { "spasibo setup $isBottomBarInited" }
 
         isBottomBarInited = true
 
