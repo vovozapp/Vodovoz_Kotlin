@@ -18,6 +18,7 @@ import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.pars
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
+import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.home.viewholders.homeorders.HomeOrders
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.profile.viewholders.models.*
@@ -331,6 +332,12 @@ class ProfileFlowViewModel @Inject constructor(
         }
     }
 
+    fun refreshIdle() {
+        uiStateListener.value =
+            state.copy(loadingPage = true, bottomItem = null, data = state.data.copy(items = ProfileState.idle().items))
+        loadPage()
+    }
+
     fun refresh() {
         uiStateListener.value =
             state.copy(loadingPage = true, bottomItem = null)
@@ -341,6 +348,12 @@ class ProfileFlowViewModel @Inject constructor(
         dataRepository.logout().subscribe()
         viewModelScope.launch {
             eventListener.emit(ProfileEvents.Logout)
+        }
+    }
+
+    fun checkLogin() {
+        viewModelScope.launch {
+            uiStateListener.value = state.copy(data = state.data.copy(isLogin = isLoginAlready()))
         }
     }
 

@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentLoginBinding
+import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setExpiredCodeText
@@ -27,6 +29,7 @@ class LoginFragment : ViewStateBaseFragment() {
 
     private lateinit var binding: FragmentLoginBinding
     private val viewModel: LoginViewModel by viewModels()
+    private val profileViewModel: ProfileFlowViewModel by activityViewModels()
 
     override fun setContentView(
         inflater: LayoutInflater,
@@ -139,6 +142,7 @@ class LoginFragment : ViewStateBaseFragment() {
                 is ViewState.Success -> {
                     if (viewModel.isAlreadyLogin()) {
                         viewModel.clearData()
+                        profileViewModel.refreshIdle()
                         findNavController().popBackStack()
                     } else {
                         onStateSuccess()

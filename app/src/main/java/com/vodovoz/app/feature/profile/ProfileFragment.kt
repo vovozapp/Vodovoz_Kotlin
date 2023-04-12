@@ -77,6 +77,11 @@ class ProfileFragment : BaseFragment() {
         bindRegOrLoginBtn()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.checkLogin()
+    }
+
     private fun bindRegOrLoginBtn() {
         binding.btnLoginOrReg.setOnClickListener {
             findNavController().navigate(ProfileFragmentDirections.actionToLoginFragment())
@@ -87,7 +92,12 @@ class ProfileFragment : BaseFragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.observeEvent()
                 .collect {
-
+                    when(it) {
+                        is ProfileFlowViewModel.ProfileEvents.Logout -> {
+                            binding.profileFlowRv.isVisible = false
+                            binding.noLoginContainer.isVisible = true
+                        }
+                    }
                 }
         }
     }
@@ -98,19 +108,16 @@ class ProfileFragment : BaseFragment() {
                 .collect { profileState ->
 
                     if (profileState.data.isLogin) {
-                        binding.profileFlowRv.isVisible = true
-                        binding.noLoginContainer.isVisible = false
+                        if (profileState.data.items.mapNotNull { it.item }.size < 4) {
+                            binding.profileFlowRv.isVisible = false
+                            showLoaderWithBg(true)
+                        } else {
+                            binding.profileFlowRv.isVisible = true
+                            showLoaderWithBg(false)
+                        }
                     } else {
-                        binding.profileFlowRv.isVisible = true
-                        binding.noLoginContainer.isVisible = false
-                    }
-
-                    if (profileState.data.items.mapNotNull { it.item }.size < 4) {
                         binding.profileFlowRv.isVisible = false
-                        showLoaderWithBg(true)
-                    } else {
-                        binding.profileFlowRv.isVisible = true
-                        showLoaderWithBg(false)
+                        binding.noLoginContainer.isVisible = true
                     }
 
                     if (profileState.data.items.size in (ProfileFlowViewModel.POSITIONS_COUNT - 2..ProfileFlowViewModel.POSITIONS_COUNT)) {
