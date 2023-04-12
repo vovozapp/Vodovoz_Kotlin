@@ -413,7 +413,7 @@ class HomeFragment : BaseFragment() {
                 .collect {
                     if (it != TabManager.DEFAULT_STATE && it == R.id.homeFragment) {
                         binding.homeRv.post {
-                            binding.homeRv.smoothScrollToPosition(1)
+                            binding.homeRv.smoothScrollToPosition(0)
                         }
                         tabManager.setDefaultState()
                     }

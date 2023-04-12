@@ -14,6 +14,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentMainCartFlowBinding
 import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
@@ -46,6 +47,9 @@ class CartFragment : BaseFragment() {
 
     @Inject
     lateinit var ratingProductManager: RatingProductManager
+
+    @Inject
+    lateinit var tabManager: TabManager
 
     private val cartController by lazy {
         CartController(
@@ -137,6 +141,7 @@ class CartFragment : BaseFragment() {
         cartController.bind(binding.mainRv)
         bindErrorRefresh { viewModel.refresh() }
         bindSwipeRefresh()
+        observeTabReselect()
     }
 
     private fun bindSwipeRefresh() {
@@ -313,6 +318,20 @@ class CartFragment : BaseFragment() {
             ?.observe(viewLifecycleOwner) {
                 if (it) viewModel.fetchCart()
             }
+    }
+
+    private fun observeTabReselect() {
+        lifecycleScope.launchWhenStarted {
+            tabManager.observeTabReselect()
+                .collect {
+                    if (it != TabManager.DEFAULT_STATE && it == R.id.cartFragment) {
+                        binding.mainRv.post {
+                            binding.mainRv.smoothScrollToPosition(0)
+                        }
+                        tabManager.setDefaultState()
+                    }
+                }
+        }
     }
 
 }
