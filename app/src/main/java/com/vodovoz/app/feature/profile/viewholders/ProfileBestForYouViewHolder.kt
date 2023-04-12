@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.profile.viewholders
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
@@ -13,6 +14,8 @@ import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.profile.viewholders.models.ProfileBestForYou
+import com.vodovoz.app.ui.decoration.GridMarginDecoration
+import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 
 class ProfileBestForYouViewHolder(
     view: View,
@@ -23,6 +26,12 @@ class ProfileBestForYouViewHolder(
 ) : ItemViewHolder<ProfileBestForYou>(view) {
 
     private val binding: ItemProfileBestForYouBinding = ItemProfileBestForYouBinding.bind(view)
+
+    private val space: Int by lazy { itemView.context.resources.getDimension(R.dimen.space_16).toInt() }
+
+    private val gridMarginDecoration: GridMarginDecoration by lazy {
+        GridMarginDecoration(space)
+    }
 
     private val availableProductsAdapter =
         AvailableProductsAdapter(
@@ -36,12 +45,15 @@ class ProfileBestForYouViewHolder(
         with(binding.bestForYouProductsRecycler) {
             adapter = availableProductsAdapter
             layoutManager = GridLayoutManager(context, 2)
+            addItemDecoration(gridMarginDecoration)
         }
     }
 
     override fun bind(item: ProfileBestForYou) {
         super.bind(item)
-        
+
+        binding.tvTitleBestForYou.text = item.data.name
+
         availableProductsAdapter.submitList(item.data.productUIList)
     }
 
