@@ -746,7 +746,7 @@ class MainRepository @Inject constructor(
     //Информация о пользователе
     suspend fun fetchProfileCategories(
         userId: Long
-    ) = api.fetchProfileResponse(
+    ) = api.fetchProfileCategoriesResponse(
         action = "glav",
         userId = userId
     )

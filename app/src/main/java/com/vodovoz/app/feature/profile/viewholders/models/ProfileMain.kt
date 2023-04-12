@@ -2,10 +2,11 @@ package com.vodovoz.app.feature.profile.viewholders.models
 
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
-import com.vodovoz.app.ui.model.OrderUI
+import com.vodovoz.app.feature.profile.cats.ProfileCategoryUI
 
 data class ProfileMain(
     val id: Int = 3,
+    val items: List<ProfileCategoryUI>
 ) : Item {
 
     override fun getItemViewType(): Int {

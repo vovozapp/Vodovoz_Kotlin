@@ -1,6 +1,7 @@
 package com.vodovoz.app.data
 
 import com.vodovoz.app.common.product.rating.RatingResponse
+import com.vodovoz.app.feature.profile.cats.ProfileCategoriesModel
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -455,6 +456,13 @@ interface MainApi {
         @Query("birthday") birthday: String? = null,
         @Query("email") email: String? = null,
     ): ResponseBody
+
+    //Профиль категории
+    @GET("/newmobile/profile/index.php")
+    suspend fun fetchProfileCategoriesResponse(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+    ): ProfileCategoriesModel
 
     @GET("newmobile/profile/tovary.php")
     suspend fun fetchPersonalProducts(
