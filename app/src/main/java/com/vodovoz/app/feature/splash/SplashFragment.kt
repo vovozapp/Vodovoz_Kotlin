@@ -12,6 +12,7 @@ import com.vodovoz.app.feature.cart.CartFlowViewModel
 import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.catalog.CatalogFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
+import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,6 +25,7 @@ class SplashFragment : BaseFragment() {
     private val catalogViewModel: CatalogFlowViewModel by activityViewModels()
     private val cartFlowViewModel: CartFlowViewModel by activityViewModels()
     private val favoriteViewModel: FavoriteFlowViewModel by activityViewModels()
+    private val profileViewModel: ProfileFlowViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +34,7 @@ class SplashFragment : BaseFragment() {
         cartFlowViewModel.firstLoad()
         favoriteViewModel.firstLoad()
         favoriteViewModel.firstLoadSorted()
+        profileViewModel.firstLoad()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
