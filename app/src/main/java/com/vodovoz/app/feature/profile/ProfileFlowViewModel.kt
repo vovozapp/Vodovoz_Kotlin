@@ -53,7 +53,11 @@ class ProfileFlowViewModel @Inject constructor(
 
     private fun fetchProfileData() {
         uiStateListener.value = state.copy(loadingPage = true)
-        val userId = dataRepository.fetchUserId() ?: return //todo
+        val userId = dataRepository.fetchUserId()
+        if (userId == null) {
+            uiStateListener.value = state.copy(data = state.data.copy(isLogin = false))
+            return
+        }
         viewModelScope.launch {
             flow { emit(repository.fetchUserData(userId)) }
                 .catch {
@@ -102,7 +106,11 @@ class ProfileFlowViewModel @Inject constructor(
 
     private fun fetchOrdersSlider() {
         uiStateListener.value = state.copy(loadingPage = true)
-        val userId = dataRepository.fetchUserId() ?: return //todo
+        val userId = dataRepository.fetchUserId()
+        if (userId == null) {
+            uiStateListener.value = state.copy(data = state.data.copy(isLogin = false))
+            return
+        }
         viewModelScope.launch {
             flow { emit(repository.fetchOrdersSlider(userId)) }
                 .catch {
@@ -151,7 +159,11 @@ class ProfileFlowViewModel @Inject constructor(
 
     private fun fetchProfileCategories() {
         uiStateListener.value = state.copy(loadingPage = true)
-        val userId = dataRepository.fetchUserId() ?: return //todo
+        val userId = dataRepository.fetchUserId()
+        if (userId == null) {
+            uiStateListener.value = state.copy(data = state.data.copy(isLogin = false))
+            return
+        }
         viewModelScope.launch {
             flow { emit(repository.fetchProfileCategories(userId)) }
                 .catch {
@@ -199,7 +211,11 @@ class ProfileFlowViewModel @Inject constructor(
 
     private fun fetchViewedProductsSlider() {
         uiStateListener.value = state.copy(loadingPage = true)
-        val userId = dataRepository.fetchUserId() ?: return //todo
+        val userId = dataRepository.fetchUserId()
+        if (userId == null) {
+            uiStateListener.value = state.copy(data = state.data.copy(isLogin = false))
+            return
+        }
         viewModelScope.launch {
             flow { emit(repository.fetchViewedProductsSlider(userId)) }
                 .catch {
@@ -252,7 +268,11 @@ class ProfileFlowViewModel @Inject constructor(
 
     private fun fetchPersonalProducts() {
         uiStateListener.value = state.copy(loadingPage = true)
-        val userId = dataRepository.fetchUserId() ?: return //todo
+        val userId = dataRepository.fetchUserId()
+        if (userId == null) {
+            uiStateListener.value = state.copy(data = state.data.copy(isLogin = false))
+            return
+        }
         viewModelScope.launch {
             flow { emit(repository.fetchPersonalProducts(userId, 1)) }
                 .catch {
@@ -342,6 +362,7 @@ class ProfileFlowViewModel @Inject constructor(
 
     data class ProfileState(
         val items: List<PositionItem>,
+        val isLogin: Boolean = true
     ) : State {
         companion object {
             fun idle(): ProfileState {

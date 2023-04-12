@@ -1,8 +1,8 @@
 package com.vodovoz.app.feature.home.viewholders.homeproducts
 
 interface ProductsShowAllListener {
-    fun showAllDiscountProducts(id: Long)
-    fun showAllTopProducts(id: Long)
-    fun showAllNoveltiesProducts(id: Long)
-    fun showAllBottomProducts(id: Long)
+    fun showAllDiscountProducts(id: Long) = Unit
+    fun showAllTopProducts(id: Long) = Unit
+    fun showAllNoveltiesProducts(id: Long) = Unit
+    fun showAllBottomProducts(id: Long) = Unit
 }
