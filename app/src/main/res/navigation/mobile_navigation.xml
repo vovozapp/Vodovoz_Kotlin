@@ -356,7 +356,7 @@
     </dialog>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.vodovoz.app.ui.fragment.profile.ProfileFragment"
+        android:name="com.vodovoz.app.feature.profile.ProfileFragment"
         android:label="ProfileFragment" >
         <action
             android:id="@+id/action_to_loginFragment"

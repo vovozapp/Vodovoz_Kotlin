@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.profile
+package com.vodovoz.app.feature.profile.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

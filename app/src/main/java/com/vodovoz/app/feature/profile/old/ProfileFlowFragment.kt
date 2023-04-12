@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.profile
+package com.vodovoz.app.feature.profile.old
 
 import android.os.Bundle
 import android.view.View
@@ -15,12 +15,13 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.databinding.FragmentProfileFlowBinding
-import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.home.viewholders.homeorders.inneradapter.HomeOrdersSliderClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
+import com.vodovoz.app.feature.profile.ProfileFlowController
+import com.vodovoz.app.feature.profile.ProfileFlowViewModel
+import com.vodovoz.app.feature.profile.ProfileFragmentDirections
 import com.vodovoz.app.feature.profile.adapter.ProfileFlowClickListener
-import com.vodovoz.app.ui.fragment.profile.ProfileFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
