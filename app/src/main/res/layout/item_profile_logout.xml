@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView android:id="@+id/tvLogout"
+    style="@style/TextViewNormalBlackBold"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/field_height"
+    android:textColor="@color/red"
+    android:gravity="center"
+    android:background="@color/dark_white"
+    android:paddingStart="@dimen/space_16"
+    android:paddingEnd="@dimen/space_16"
+    android:text="Выйти из аккаунта"
+    xmlns:android="http://schemas.android.com/apk/res/android" />
