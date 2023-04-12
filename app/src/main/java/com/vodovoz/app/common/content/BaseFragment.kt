@@ -19,6 +19,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentBaseFlowBinding
 import com.vodovoz.app.databinding.FragmentBasePageBinding
 import com.vodovoz.app.databinding.ViewSearchBinding
+import com.vodovoz.app.util.extensions.debugLog
 
 abstract class BaseFragment : Fragment() {
 
@@ -155,7 +156,13 @@ abstract class BaseFragment : Fragment() {
         }
         viewBinding.appbarLayout.isVisible = true
         viewBinding.appBarDef.imgSearch.isVisible = showSearch
-        viewBinding.appBarDef.imgBack.isVisible = showNavBtn
+        if (showNavBtn) {
+            viewBinding.appBarDef.imgBack.isVisible = true
+            viewBinding.appBarDef.tvTitle.setPadding(0,0,0,0)
+        } else {
+            viewBinding.appBarDef.imgBack.isVisible = false
+            viewBinding.appBarDef.tvTitle.setPadding(50,0,0,0)
+        }
         viewBinding.appBarDef.root.isVisible = true
         viewBinding.appBarDef.tvTitle.text = titleText
 
