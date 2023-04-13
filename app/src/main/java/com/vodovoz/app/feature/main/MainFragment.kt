@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -28,6 +29,8 @@ class MainFragment : BaseFragment() {
         LocationController(requireContext())
     }
 
+    private val viewModel: MainViewModel by viewModels()
+
     override fun layout(): Int = R.layout.fragment_main
 
     private val binding: FragmentMainBinding by viewBinding {
@@ -36,17 +39,24 @@ class MainFragment : BaseFragment() {
         )
     }
 
-    private var isBottomBarInited = false
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!isBottomBarInited) {
-            setupBottomNavigationBar()
-        }
         observeTabState()
         observeCartState()
         observeCartLoading()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (!viewModel.isBottomBarInited) {
+            setupBottomNavigationBar()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.isBottomBarInited = false
     }
 
     private fun observeCartLoading() {
@@ -115,7 +125,7 @@ class MainFragment : BaseFragment() {
      */
     private fun setupBottomNavigationBar() {
 
-        isBottomBarInited = true
+        viewModel.isBottomBarInited = true
 
         val navGraphIds = listOfNotNull(
             R.navigation.nav_graph_home,
