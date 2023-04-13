@@ -1,10 +1,12 @@
 package com.vodovoz.app.data
 
+import android.content.SharedPreferences
 import android.os.Build
 import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.map
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.data.LocalSyncExtensions.syncCartQuantity
 import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
 import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteStatus
@@ -29,6 +31,9 @@ class DataRepository @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
 ) {
+
+    @Inject
+    lateinit var accountManager: AccountManager
 
     fun preOrderProduct(
         productId: Long?,
@@ -527,6 +532,7 @@ class DataRepository @Inject constructor(
                 email = email,
                 password = password
             ))
+            accountManager.updateUserId(response.data)
             localDataSource.updateUserId(response.data)
         }
 

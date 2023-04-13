@@ -6,6 +6,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.feature.cart.CartFlowViewModel
@@ -15,6 +16,7 @@ import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SplashFragment : BaseFragment() {
@@ -27,6 +29,9 @@ class SplashFragment : BaseFragment() {
     private val favoriteViewModel: FavoriteFlowViewModel by activityViewModels()
     private val profileViewModel: ProfileFlowViewModel by activityViewModels()
 
+    @Inject
+    lateinit var accountManager: AccountManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         flowViewModel.firstLoad()
@@ -35,6 +40,7 @@ class SplashFragment : BaseFragment() {
         favoriteViewModel.firstLoad()
         favoriteViewModel.firstLoadSorted()
         profileViewModel.firstLoad()
+        accountManager.fetchAccountId()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

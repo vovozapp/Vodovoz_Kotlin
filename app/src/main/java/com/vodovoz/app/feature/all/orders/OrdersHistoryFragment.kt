@@ -7,11 +7,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentOrdersHistoryFlowBinding
 import com.vodovoz.app.feature.all.AllClickListener
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class OrdersHistoryFragment : BaseFragment() {
@@ -29,12 +32,19 @@ class OrdersHistoryFragment : BaseFragment() {
     }
     private val viewModel: AllOrdersFlowViewModel by viewModels()
 
+    @Inject
+    lateinit var accountManager: AccountManager
+
+    @Inject
+    lateinit var tabManager: TabManager
+
     private val allOrdersController by lazy {
         AllOrdersController(viewModel, requireContext(), getAllClickListener())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        observeAccount()
         viewModel.firstLoadSorted()
     }
 
@@ -50,6 +60,19 @@ class OrdersHistoryFragment : BaseFragment() {
         observeResultLiveData()
         bindSwipeRefresh()
         observeEvents()
+    }
+
+    private fun observeAccount() {
+        lifecycleScope.launchWhenStarted {
+            accountManager
+                .observeAccountId()
+                .collect {
+                    if (it == null) {
+                        findNavController().popBackStack()
+                        tabManager.selectTab(R.id.graph_profile)
+                    }
+                }
+        }
     }
 
     private fun observeUiState() {

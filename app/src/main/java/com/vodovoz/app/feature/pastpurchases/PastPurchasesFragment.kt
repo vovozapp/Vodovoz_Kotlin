@@ -9,11 +9,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentPastPurchasesFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
@@ -50,6 +52,12 @@ class PastPurchasesFragment : BaseFragment() {
     @Inject
     lateinit var ratingProductManager: RatingProductManager
 
+    @Inject
+    lateinit var accountManager: AccountManager
+
+    @Inject
+    lateinit var tabManager: TabManager
+
     private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
 
     private val categoryTabsController = CategoryTabsFlowController(categoryTabsClickListener())
@@ -59,6 +67,7 @@ class PastPurchasesFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        observeAccount()
         viewModel.firstLoad()
         viewModel.firstLoadSorted()
     }
@@ -75,6 +84,19 @@ class PastPurchasesFragment : BaseFragment() {
         observeChangeLayoutManager()
         bindErrorRefresh {
             viewModel.refreshSorted()
+        }
+    }
+
+    private fun observeAccount() {
+        lifecycleScope.launchWhenStarted {
+            accountManager
+                .observeAccountId()
+                .collect {
+                    if (it == null) {
+                        findNavController().popBackStack()
+                        tabManager.selectTab(R.id.graph_profile)
+                    }
+                }
         }
     }
 
