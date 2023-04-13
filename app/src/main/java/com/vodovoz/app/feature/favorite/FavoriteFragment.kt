@@ -97,6 +97,9 @@ class FavoriteFragment : BaseFragment() {
                             tabManager.selectTab(R.id.graph_profile)
                         }
                         is FavoriteFlowViewModel.FavoriteEvents.GoToPreOrder -> {
+                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
+                                findNavController().popBackStack()
+                            }
                             findNavController().navigate(
                                 FavoriteFragmentDirections.actionToPreOrderBS(
                                     it.id,

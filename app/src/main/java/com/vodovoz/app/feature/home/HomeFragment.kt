@@ -96,6 +96,9 @@ class HomeFragment : BaseFragment() {
                 .collect {
                     when(it) {
                         is HomeFlowViewModel.HomeEvents.GoToPreOrder -> {
+                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
+                                findNavController().popBackStack()
+                            }
                             findNavController().navigate(
                                 HomeFragmentDirections.actionToPreOrderBS(
                                     it.id,

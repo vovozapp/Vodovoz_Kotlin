@@ -96,7 +96,10 @@ class PastPurchasesFragment : BaseFragment() {
                 .collect {
                     when(it) {
                         is PastPurchasesFlowViewModel.PastPurchasesEvents.GoToPreOrder -> {
-                            FavoriteFragmentDirections.actionToPreOrderBS(
+                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
+                                findNavController().popBackStack()
+                            }
+                            PastPurchasesFragmentDirections.actionToPreOrderBS(
                                 it.id,
                                 it.name,
                                 it.detailPicture

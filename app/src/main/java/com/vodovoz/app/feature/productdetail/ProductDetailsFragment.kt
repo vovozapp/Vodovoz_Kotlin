@@ -103,6 +103,9 @@ class ProductDetailsFragment : BaseFragment() {
                 .collect {
                     when(it) {
                         is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToPreOrder -> {
+                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
+                                findNavController().popBackStack()
+                            }
                             findNavController().navigate(ProductDetailsFragmentDirections.actionToPreOrderBS(it.id, it.name, it.detailPicture))
                         }
                         is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProfile -> {

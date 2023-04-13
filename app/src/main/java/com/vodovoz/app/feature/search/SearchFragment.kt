@@ -122,6 +122,9 @@ class SearchFragment : BaseFragment() {
                 .collect {
                     when(it) {
                         is SearchFlowViewModel.SearchEvents.GoToPreOrder -> {
+                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
+                                findNavController().popBackStack()
+                            }
                             findNavController().navigate(
                                 SearchFragmentDirections.actionToPreOrderBS(
                                     it.id,
