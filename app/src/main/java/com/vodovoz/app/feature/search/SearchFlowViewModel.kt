@@ -360,7 +360,8 @@ class SearchFlowViewModel @Inject constructor(
             if (accountId == null) {
                 eventListener.emit(SearchEvents.GoToProfile)
             } else {
-                eventListener.emit(SearchEvents.GoToPreOrder(id, name, detailPicture))
+                eventListener.emit(SearchEvents.GoToProfile)
+                //eventListener.emit(SearchEvents.GoToPreOrder(id, name, detailPicture))
             }
         }
     }

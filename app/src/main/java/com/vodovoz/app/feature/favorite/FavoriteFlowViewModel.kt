@@ -306,7 +306,8 @@ class FavoriteFlowViewModel @Inject constructor(
             if (accountId == null) {
                 eventListener.emit(FavoriteEvents.GoToProfile)
             } else {
-                eventListener.emit(FavoriteEvents.GoToPreOrder(id, name, detailPicture))
+                eventListener.emit(FavoriteEvents.GoToProfile)
+                //eventListener.emit(FavoriteEvents.GoToPreOrder(id, name, detailPicture))
             }
         }
     }

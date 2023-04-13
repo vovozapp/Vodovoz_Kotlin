@@ -346,7 +346,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
             if (accountId == null) {
                 eventListener.emit(ProductDetailsEvents.GoToProfile)
             } else {
-                eventListener.emit(ProductDetailsEvents.GoToPreOrder(id, name, detailPicture))
+                eventListener.emit(ProductDetailsEvents.GoToProfile)
+                //eventListener.emit(ProductDetailsEvents.GoToPreOrder(id, name, detailPicture))
             }
         }
     }

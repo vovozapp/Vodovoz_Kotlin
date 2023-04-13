@@ -220,7 +220,8 @@ class CartFlowViewModel @Inject constructor(
             if (accountId == null) {
                 eventListener.emit(CartEvents.NavigateToProfile)
             } else {
-                eventListener.emit(CartEvents.GoToPreOrder(id, name, detailPicture))
+                eventListener.emit(CartEvents.NavigateToProfile)
+             //   eventListener.emit(CartEvents.GoToPreOrder(id, name, detailPicture))
             }
         }
     }

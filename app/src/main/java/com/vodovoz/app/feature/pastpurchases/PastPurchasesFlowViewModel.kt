@@ -300,7 +300,8 @@ class PastPurchasesFlowViewModel @Inject constructor(
             if (accountId == null) {
                 eventListener.emit(PastPurchasesEvents.GoToProfile)
             } else {
-                eventListener.emit(PastPurchasesEvents.GoToPreOrder(id, name, detailPicture))
+                eventListener.emit(PastPurchasesEvents.GoToProfile)
+                //eventListener.emit(PastPurchasesEvents.GoToPreOrder(id, name, detailPicture))
             }
         }
     }

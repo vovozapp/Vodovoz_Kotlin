@@ -878,7 +878,8 @@ class HomeFlowViewModel @Inject constructor(
             if (accountId == null) {
                 eventListener.emit(HomeEvents.GoToProfile)
             } else {
-                eventListener.emit(HomeEvents.GoToPreOrder(id, name, detailPicture))
+                eventListener.emit(HomeEvents.GoToProfile)
+                //eventListener.emit(HomeEvents.GoToPreOrder(id, name, detailPicture))
             }
         }
     }
