@@ -1,13 +1,11 @@
 package com.vodovoz.app.feature.pastpurchases
 
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.common.content.ErrorState
-import com.vodovoz.app.common.content.PagingStateViewModel
-import com.vodovoz.app.common.content.State
+import com.vodovoz.app.common.content.*
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
-import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.DataRepository
@@ -18,6 +16,7 @@ import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.data.parser.response.paginatedProducts.FavoriteProductsResponseJsonParser.parseFavoriteProductsResponse
 import com.vodovoz.app.data.parser.response.past_purchases.PastPurchasesHeaderResponseJsonParser.parsePastPurchasesHeaderResponse
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
+import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.mapper.PastPurchasesHeaderBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryUI
@@ -36,8 +35,9 @@ class PastPurchasesFlowViewModel @Inject constructor(
     private val dataRepository: DataRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
-    private val ratingProductManager: RatingProductManager
-) : PagingStateViewModel<PastPurchasesFlowViewModel.PastPurchasesState>(PastPurchasesState()){
+    private val ratingProductManager: RatingProductManager,
+    private val accountManager: AccountManager
+) : PagingContractViewModel<PastPurchasesFlowViewModel.PastPurchasesState, PastPurchasesFlowViewModel.PastPurchasesEvents>(PastPurchasesState()){
 
     private val changeLayoutManager = MutableStateFlow(LINEAR)
     fun observeChangeLayoutManager() = changeLayoutManager.asStateFlow()
@@ -292,6 +292,22 @@ class PastPurchasesFlowViewModel @Inject constructor(
             loadingPage = true
         )
         fetchPastPurchasesSorted()
+    }
+
+    fun onPreOrderClick(id: Long, name: String, detailPicture: String) {
+        viewModelScope.launch {
+            val accountId = accountManager.fetchAccountId()
+            if (accountId == null) {
+                eventListener.emit(PastPurchasesEvents.GoToProfile)
+            } else {
+                eventListener.emit(PastPurchasesEvents.GoToPreOrder(id, name, detailPicture))
+            }
+        }
+    }
+
+    sealed class PastPurchasesEvents : Event {
+        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) : PastPurchasesEvents()
+        object GoToProfile : PastPurchasesEvents()
     }
 
     data class PastPurchasesState(

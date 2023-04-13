@@ -22,6 +22,8 @@ import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFragmentDirections
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
+import com.vodovoz.app.feature.home.HomeFlowViewModel
+import com.vodovoz.app.feature.home.HomeFragmentDirections
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
@@ -84,6 +86,27 @@ class PastPurchasesFragment : BaseFragment() {
         observeChangeLayoutManager()
         bindErrorRefresh {
             viewModel.refreshSorted()
+        }
+        observeEvents()
+    }
+
+    private fun observeEvents() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.observeEvent()
+                .collect {
+                    when(it) {
+                        is PastPurchasesFlowViewModel.PastPurchasesEvents.GoToPreOrder -> {
+                            FavoriteFragmentDirections.actionToPreOrderBS(
+                                it.id,
+                                it.name,
+                                it.detailPicture
+                            )
+                        }
+                        is PastPurchasesFlowViewModel.PastPurchasesEvents.GoToProfile -> {
+                            tabManager.selectTab(R.id.graph_profile)
+                        }
+                    }
+                }
         }
     }
 
@@ -248,16 +271,7 @@ class PastPurchasesFragment : BaseFragment() {
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-                when (viewModel.isLoginAlready()) {
-                    true -> findNavController().navigate(
-                        FavoriteFragmentDirections.actionToPreOrderBS(
-                            id,
-                            name,
-                            detailPicture
-                        )
-                    )
-                    false -> findNavController().navigate(FavoriteFragmentDirections.actionToProfileFragment())
-                }
+                viewModel.onPreOrderClick(id, name, detailPicture)
             }
 
             override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
