@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.auth.login
 
 import android.os.CountDownTimer
+import android.view.View
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.account.data.LoginManager
@@ -16,7 +17,9 @@ import com.vodovoz.app.data.parser.response.user.AuthByPhoneJsonParser.parseAuth
 import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
 import com.vodovoz.app.data.parser.response.user.RecoverPasswordJsonParser.parseRecoverPasswordResponse
 import com.vodovoz.app.data.parser.response.user.RequestCodeResponseJsonParser.parseRequestCodeResponse
+import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.ui.model.enum.AuthType
+import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +41,19 @@ class LoginFlowViewModel @Inject constructor(
 
     private var codeTimeOutCountDownTimer: CountDownTimer? = null
     private var timerIsCancel = true
+
+    fun signIn() {
+        viewModelScope.launch {
+            when(state.data.authType) {
+                AuthType.EMAIL -> {
+                    eventListener.emit(LoginEvents.AuthByEmail)
+                }
+                AuthType.PHONE -> {
+                    eventListener.emit(LoginEvents.AuthByPhone)
+                }
+            }
+        }
+    }
 
     fun authByEmail(email: String, password: String) {
         viewModelScope.launch {
@@ -63,6 +79,7 @@ class LoginFlowViewModel @Inject constructor(
 
                             uiStateListener.value =
                                 state.copy(error = null, loadingPage = false)
+                            clearData()
                             eventListener.emit(LoginEvents.AuthSuccess)
                         }
                         is ResponseEntity.Error -> {
@@ -101,6 +118,7 @@ class LoginFlowViewModel @Inject constructor(
 
                             uiStateListener.value =
                                 state.copy(error = null, loadingPage = false)
+                            clearData()
                             eventListener.emit(LoginEvents.AuthSuccess)
                         }
                         is ResponseEntity.Error -> {
@@ -158,7 +176,7 @@ class LoginFlowViewModel @Inject constructor(
         }
     }
 
-    private fun startCountDownTimer(seconds: Int) {
+    fun startCountDownTimer(seconds: Int) {
         codeTimeOutCountDownTimer?.cancel()
         codeTimeOutCountDownTimer = object: CountDownTimer(seconds * 1000L, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -211,14 +229,38 @@ class LoginFlowViewModel @Inject constructor(
         }
     }
 
-    /*fun fetchLastRequestCodeDate() = dataRepository.fetchLastRequestCodeDate()
-    fun fetchLastRequestCodeTimeOut() = dataRepository.fetchLastRequestCodeTimeOut()
-    fun fetchLastAuthPhone() = dataRepository.fetchLastAuthPhone()
+    fun changeAuthType() {
+        if (state.data.authType == AuthType.PHONE) {
+            uiStateListener.value = state.copy(
+                data = state.data.copy(
+                    authType = AuthType.EMAIL
+                )
+            )
+        } else {
+            uiStateListener.value = state.copy(
+                data = state.data.copy(
+                    authType = AuthType.PHONE
+                )
+            )
+        }
+    }
+
+    fun setupByPhone() {
+        val curTime = Date().time
+        val expiredTime = ((curTime - loginManager.fetchLastRequestCodeDate() - loginManager.fetchLastRequestCodeTimeOut()*1000)/1000).toInt()
+        val phone = loginManager.fetchLastAuthPhone()
+        viewModelScope.launch {
+            eventListener.emit(LoginEvents.SetupByPhone(expiredTime, phone))
+        }
+    }
 
     fun clearData() {
-        dataRepository.updateLastRequestCodeDate(0)
-        dataRepository.updateLastRequestCodeTimeOut(0)
-    }*/
+        localDataSource.updateLastRequestCodeDate(0)
+        localDataSource.updateLastRequestCodeTimeOut(0)
+
+        loginManager.updateLastRequestCodeDate(0)
+        loginManager.updateLastRequestCodeTimeOut(0)
+    }
 
     sealed class LoginEvents : Event {
         object AuthSuccess : LoginEvents()
@@ -228,6 +270,11 @@ class LoginFlowViewModel @Inject constructor(
         object CodeComplete : LoginEvents()
         data class PasswordRecoverSuccess(val message: String) : LoginEvents()
         data class PasswordRecoverError(val message: String) : LoginEvents()
+
+        object AuthByPhone : LoginEvents()
+        object AuthByEmail : LoginEvents()
+
+        data class SetupByPhone(val time: Int, val phone: String) : LoginEvents()
     }
 
     data class LoginState(
