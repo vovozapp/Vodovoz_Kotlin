@@ -304,10 +304,10 @@ class FavoriteFlowViewModel @Inject constructor(
         viewModelScope.launch {
             val accountId = accountManager.fetchAccountId()
             if (accountId == null) {
-                eventListener.emit(FavoriteEvents.GoToProfile)
+                //eventListener.emit(FavoriteEvents.GoToProfile)
+                eventListener.emit(FavoriteEvents.GoToPreOrder(id, name, detailPicture))
             } else {
-                eventListener.emit(FavoriteEvents.GoToProfile)
-                //eventListener.emit(FavoriteEvents.GoToPreOrder(id, name, detailPicture))
+                eventListener.emit(FavoriteEvents.GoToPreOrder(id, name, detailPicture))
             }
         }
     }

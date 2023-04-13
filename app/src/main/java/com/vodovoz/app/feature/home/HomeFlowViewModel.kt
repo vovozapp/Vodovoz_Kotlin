@@ -876,10 +876,10 @@ class HomeFlowViewModel @Inject constructor(
         viewModelScope.launch {
             val accountId = accountManager.fetchAccountId()
             if (accountId == null) {
-                eventListener.emit(HomeEvents.GoToProfile)
+                //eventListener.emit(HomeEvents.GoToProfile)
+                eventListener.emit(HomeEvents.GoToPreOrder(id, name, detailPicture))
             } else {
-                eventListener.emit(HomeEvents.GoToProfile)
-                //eventListener.emit(HomeEvents.GoToPreOrder(id, name, detailPicture))
+                eventListener.emit(HomeEvents.GoToPreOrder(id, name, detailPicture))
             }
         }
     }

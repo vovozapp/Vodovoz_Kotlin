@@ -218,10 +218,10 @@ class CartFlowViewModel @Inject constructor(
         viewModelScope.launch {
             val accountId = accountManager.fetchAccountId()
             if (accountId == null) {
-                eventListener.emit(CartEvents.NavigateToProfile)
+                //eventListener.emit(CartEvents.NavigateToProfile)
+                eventListener.emit(CartEvents.GoToPreOrder(id, name, detailPicture))
             } else {
-                eventListener.emit(CartEvents.NavigateToProfile)
-             //   eventListener.emit(CartEvents.GoToPreOrder(id, name, detailPicture))
+                eventListener.emit(CartEvents.GoToPreOrder(id, name, detailPicture))
             }
         }
     }

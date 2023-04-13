@@ -358,10 +358,10 @@ class SearchFlowViewModel @Inject constructor(
         viewModelScope.launch {
             val accountId = accountManager.fetchAccountId()
             if (accountId == null) {
-                eventListener.emit(SearchEvents.GoToProfile)
+              //  eventListener.emit(SearchEvents.GoToProfile)
+                eventListener.emit(SearchEvents.GoToPreOrder(id, name, detailPicture))
             } else {
-                eventListener.emit(SearchEvents.GoToProfile)
-                //eventListener.emit(SearchEvents.GoToPreOrder(id, name, detailPicture))
+                eventListener.emit(SearchEvents.GoToPreOrder(id, name, detailPicture))
             }
         }
     }

@@ -344,10 +344,10 @@ class ProductDetailsFlowViewModel @Inject constructor(
         viewModelScope.launch {
             val accountId = accountManager.fetchAccountId()
             if (accountId == null) {
-                eventListener.emit(ProductDetailsEvents.GoToProfile)
+           //     eventListener.emit(ProductDetailsEvents.GoToProfile)
+                eventListener.emit(ProductDetailsEvents.GoToPreOrder(id, name, detailPicture))
             } else {
-                eventListener.emit(ProductDetailsEvents.GoToProfile)
-                //eventListener.emit(ProductDetailsEvents.GoToPreOrder(id, name, detailPicture))
+                eventListener.emit(ProductDetailsEvents.GoToPreOrder(id, name, detailPicture))
             }
         }
     }

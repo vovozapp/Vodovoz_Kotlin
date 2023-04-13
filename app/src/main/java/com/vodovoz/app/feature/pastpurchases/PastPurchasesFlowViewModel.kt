@@ -298,10 +298,10 @@ class PastPurchasesFlowViewModel @Inject constructor(
         viewModelScope.launch {
             val accountId = accountManager.fetchAccountId()
             if (accountId == null) {
-                eventListener.emit(PastPurchasesEvents.GoToProfile)
+                //eventListener.emit(PastPurchasesEvents.GoToProfile)
+                eventListener.emit(PastPurchasesEvents.GoToPreOrder(id, name, detailPicture))
             } else {
-                eventListener.emit(PastPurchasesEvents.GoToProfile)
-                //eventListener.emit(PastPurchasesEvents.GoToPreOrder(id, name, detailPicture))
+                eventListener.emit(PastPurchasesEvents.GoToPreOrder(id, name, detailPicture))
             }
         }
     }
