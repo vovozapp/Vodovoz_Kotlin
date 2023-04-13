@@ -182,36 +182,29 @@ class CartFlowViewModel @Inject constructor(
 
     fun navigateToOrderFragment() {
         viewModelScope.launch {
-            accountManager
-                .observeAccountId()
-                .collect {
-                    if (it == null) {
-                        eventListener.emit(CartEvents.NavigateToProfile)
-                    } else {
-                        eventListener.emit(
-                            CartEvents.NavigateToOrder(
-                                prices = state.data.total?.prices,
-                                cart = getCart(),
-                                coupon = state.data.coupon
-                            )
-                        )
-                    }
-                }
-
+            val id = accountManager.fetchAccountId()
+            if (id == null) {
+                eventListener.emit(CartEvents.NavigateToProfile)
+            } else {
+                eventListener.emit(
+                    CartEvents.NavigateToOrder(
+                        prices = state.data.total?.prices,
+                        cart = getCart(),
+                        coupon = state.data.coupon
+                    )
+                )
+            }
         }
     }
 
     fun navigateToGiftsBottomFragment() {
         viewModelScope.launch {
-            accountManager
-                .observeAccountId()
-                .collect {
-                    if (it == null) {
-                        eventListener.emit(CartEvents.NavigateToProfile)
-                    } else {
-                        eventListener.emit(CartEvents.NavigateToGifts(state.data.giftProductUIList))
-                    }
-                }
+            val id = accountManager.fetchAccountId()
+            if (id == null) {
+                eventListener.emit(CartEvents.NavigateToProfile)
+            } else {
+                eventListener.emit(CartEvents.NavigateToGifts(state.data.giftProductUIList))
+            }
         }
     }
 

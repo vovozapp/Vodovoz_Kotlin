@@ -14,9 +14,10 @@ class AccountManager @Inject constructor(
     private val accountIdListener = MutableStateFlow<Long?>(null)
     fun observeAccountId() = accountIdListener.asStateFlow()
 
-    fun fetchAccountId() {
+    fun fetchAccountId() : Long? {
         val id = accountIdListener.value ?: fetchUserId()
         accountIdListener.value = id
+        return id
     }
 
     private fun fetchUserId() = when (sharedPrefs.contains(USER_ID)) {
