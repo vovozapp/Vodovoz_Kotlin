@@ -12,6 +12,25 @@
         android:layout_height="match_parent" />
 
     <TextView
+        android:fontFamily="@font/rotonda_normal"
+        style="@style/TextViewNormalBlackBold"
+        android:textSize="18sp"
+        android:layout_marginHorizontal="16dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:id="@+id/streetNameTv"
+        android:layout_marginBottom="16dp"
+        tools:text="Волгоградский проспект"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@id/addAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
         android:id="@+id/addAddress"
         android:layout_width="match_parent"
         android:layout_height="45dp"

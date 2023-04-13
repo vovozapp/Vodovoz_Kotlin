@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PointF
+import android.location.Geocoder
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
@@ -17,6 +18,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -35,6 +37,7 @@ import com.vodovoz.app.feature.map.adapter.AddressResultClickListener
 import com.vodovoz.app.feature.map.adapter.AddressResultFlowAdapter
 import com.vodovoz.app.ui.extensions.ColorExtensions.getColorWithAlpha
 import com.vodovoz.app.ui.model.DeliveryZoneUI
+import com.vodovoz.app.util.extensions.debugLog
 import com.yandex.mapkit.*
 import com.yandex.mapkit.directions.DirectionsFactory
 import com.yandex.mapkit.directions.driving.*
@@ -53,6 +56,8 @@ import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.Error
 import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 @AndroidEntryPoint
@@ -115,6 +120,10 @@ class MapDialogFragment : BaseFragment(),
         requireContext().getSystemService(LOCATION_SERVICE) as? LocationManager
     }
 
+    private val geoCoder by lazy {
+        Geocoder(requireContext(), Locale.getDefault())
+    }
+
     private val locationController by lazy {
         LocationController(requireContext())
     }
@@ -165,7 +174,13 @@ class MapDialogFragment : BaseFragment(),
         super.onStart()
         mapKit.onStart()
         binding.mapView.onStart()
-        moveCamera(center)
+        if (detectGps()) {
+            locationController.methodRequiresTwoPermission(requireActivity()) {
+                moveToLastLocation()
+            }
+        } else {
+            moveCamera(center)
+        }
     }
 
     private val mapObjects: MapObjectCollection by lazy {
@@ -205,8 +220,17 @@ class MapDialogFragment : BaseFragment(),
                         drawDeliveryZones(data.deliveryZonesBundleUI?.deliveryZoneUIList)
                     }
 
-                    val searchText = state.data.addressUI?.fullAddress ?: ""
-                    binding.searchEdit.setText(searchText)
+                    val searchText = state.data.addressUI
+                    val address = if (searchText == null) {
+                        ""
+                    } else {
+                        "${searchText.locality}, ${searchText.street}, д.${searchText.house}"
+                    }
+
+                    val full = state.data.addressUI?.fullAddress?.substringAfter("Россия, ") ?: ""
+                    binding.searchEdit.setText(full)
+                    binding.streetNameTv.isVisible = true
+                    binding.streetNameTv.text = full
 
                     showError(state.error)
                 }
@@ -298,7 +322,14 @@ class MapDialogFragment : BaseFragment(),
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: android.location.Location? ->
                 location?.let {
-                    moveCamera(Point(it.latitude, it.longitude))
+                    moveCamera(Point(it.latitude, it.longitude), 12f)
+                    viewModel.fetchAddressByGeocode(it.latitude, it.longitude)
+                    /*val address = geoCoder.getFromLocation(it.latitude, it.longitude, 1)
+                    if (address.isNotEmpty()) {
+                        binding.streetNameTv.isVisible = true
+                        val a = address.first()
+                        binding.streetNameTv.text = a.getAddressLine(0)
+                    }*/
                 }
             }
     }
@@ -348,9 +379,9 @@ class MapDialogFragment : BaseFragment(),
         suggestSession.suggest(query, boundingBox, searchOptions, this)
     }
 
-    private fun moveCamera(point: Point) {
+    private fun moveCamera(point: Point, zoom: Float = 10f) {
         binding.mapView.map.move(
-            CameraPosition(point, 10f, 0f, 0f),
+            CameraPosition(point, zoom, 0f, 0f),
             Animation(Animation.Type.SMOOTH, 1f),
             null
         )
