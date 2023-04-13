@@ -31,6 +31,7 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.model.PopupNewsUI
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -86,6 +87,32 @@ class HomeFragment : BaseFragment() {
         bindErrorRefresh { flowViewModel.refresh() }
         observeUiState()
         observeTabReselect()
+        observeEvents()
+    }
+
+    private fun observeEvents() {
+        lifecycleScope.launchWhenStarted {
+            flowViewModel.observeEvent()
+                .collect {
+                    when(it) {
+                        is HomeFlowViewModel.HomeEvents.GoToPreOrder -> {
+                            findNavController().navigate(
+                                HomeFragmentDirections.actionToPreOrderBS(
+                                    it.id,
+                                    it.name,
+                                    it.detailPicture
+                                )
+                            )
+                        }
+                        is HomeFlowViewModel.HomeEvents.GoToProfile -> {
+                            tabManager.selectTab(R.id.graph_profile)
+                        }
+                        is HomeFlowViewModel.HomeEvents.SendComment -> {
+                            findNavController().navigate(HomeFragmentDirections.actionToSendCommentAboutShopBottomDialog())
+                        }
+                    }
+                }
+        }
     }
 
     private fun observeUiState() {
@@ -124,7 +151,7 @@ class HomeFragment : BaseFragment() {
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-                showPreOrderProductPopup(id, name, detailPicture)
+                flowViewModel.onPreOrderClick(id, name, detailPicture)
             }
 
             override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
@@ -267,11 +294,7 @@ class HomeFragment : BaseFragment() {
             override fun onCommentsClick(id: Long?) {}
 
             override fun onSendCommentAboutShop() {
-                if (flowViewModel.isLoginAlready()) {
-                    findNavController().navigate(HomeFragmentDirections.actionToSendCommentAboutShopBottomDialog())
-                } else {
-                    findNavController().navigate(R.id.profileFragment)
-                }
+                flowViewModel.onSendCommentClick()
             }
 
             //POSITION_13
@@ -374,19 +397,6 @@ class HomeFragment : BaseFragment() {
             )
         }
         navDirect?.let { navController.navigate(navDirect) }
-    }
-
-    private fun showPreOrderProductPopup(id: Long, name: String, picture: String) {
-        when (flowViewModel.isLoginAlready()) {
-            true -> findNavController().navigate(
-                HomeFragmentDirections.actionToPreOrderBS(
-                    id,
-                    name,
-                    picture
-                )
-            )
-            false -> findNavController().navigate(HomeFragmentDirections.actionToProfileFragment())
-        }
     }
 
     private fun showPopUpNews(data: PopupNewsUI) {

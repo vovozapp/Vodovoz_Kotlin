@@ -1,7 +1,10 @@
 package com.vodovoz.app.feature.home
 
+
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
+import com.vodovoz.app.common.content.*
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.LocalSyncExtensions.syncCartQuantity
 import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
@@ -31,13 +34,11 @@ import com.vodovoz.app.mapper.CountriesSliderBundleMapper.mapToUI
 import com.vodovoz.app.mapper.HistoryMapper.mapToUI
 import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.mapper.PromotionMapper.mapToUI
-import com.vodovoz.app.common.content.PagingStateViewModel
-import com.vodovoz.app.common.content.State
-import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
+import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
 import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfo
 import com.vodovoz.app.feature.home.viewholders.homebrands.HomeBrands
@@ -76,8 +77,9 @@ class HomeFlowViewModel @Inject constructor(
     private val dataRepository: DataRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
-    private val ratingProductManager: RatingProductManager
-) : PagingStateViewModel<HomeFlowViewModel.HomeState>(HomeState.idle()) {
+    private val ratingProductManager: RatingProductManager,
+    private val accountManager: AccountManager
+) : PagingContractViewModel<HomeFlowViewModel.HomeState, HomeFlowViewModel.HomeEvents>(HomeState.idle()) {
 
     private fun loadPage() {
         fetchAdvertisingBannersSlider()
@@ -870,6 +872,28 @@ class HomeFlowViewModel @Inject constructor(
         }
     }
 
+    fun onPreOrderClick(id: Long, name: String, detailPicture: String) {
+        viewModelScope.launch {
+            val accountId = accountManager.fetchAccountId()
+            if (accountId == null) {
+                eventListener.emit(HomeEvents.GoToProfile)
+            } else {
+                eventListener.emit(HomeEvents.GoToPreOrder(id, name, detailPicture))
+            }
+        }
+    }
+
+    fun onSendCommentClick() {
+        viewModelScope.launch {
+            val accountId = accountManager.fetchAccountId()
+            if (accountId == null) {
+                eventListener.emit(HomeEvents.GoToProfile)
+            } else {
+                eventListener.emit(HomeEvents.SendComment)
+            }
+        }
+    }
+
     fun isLoginAlready() = dataRepository.isAlreadyLogin()
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
@@ -902,6 +926,12 @@ class HomeFlowViewModel @Inject constructor(
         val position: Int,
         val item: Item?
     )
+
+    sealed class HomeEvents : Event {
+        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) : HomeEvents()
+        object GoToProfile : HomeEvents()
+        object SendComment : HomeEvents()
+    }
 
     data class HomeState(
         val items: List<PositionItem>,
