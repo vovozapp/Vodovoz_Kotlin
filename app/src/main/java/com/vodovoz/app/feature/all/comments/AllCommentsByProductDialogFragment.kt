@@ -10,9 +10,11 @@ import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentProductCommentsFlowBinding
 
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AllCommentsByProductDialogFragment : BaseFragment() {
@@ -25,6 +27,9 @@ class AllCommentsByProductDialogFragment : BaseFragment() {
     private val viewModel: AllCommentsFlowViewModel by viewModels()
 
     private val args: AllCommentsByProductDialogFragmentArgs by navArgs()
+
+    @Inject
+    lateinit var tabManager: TabManager
 
     override fun layout(): Int = R.layout.fragment_product_comments_flow
 
@@ -45,15 +50,7 @@ class AllCommentsByProductDialogFragment : BaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.sendComment -> {
-                if (viewModel.isLoginAlready()) {
-                    findNavController().navigate(
-                        AllCommentsByProductDialogFragmentDirections.actionToSendCommentAboutProductFragment(
-                            args.productId
-                        )
-                    )
-                } else {
-                    findNavController().navigate(R.id.profileFragment)
-                }
+                viewModel.onSendCommentClick()
             }
         }
         return false
@@ -67,6 +64,27 @@ class AllCommentsByProductDialogFragment : BaseFragment() {
             viewModel.refreshSorted()
         }
         observeUiState()
+        observeEvents()
+    }
+
+    private fun observeEvents() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.observeEvent()
+                .collect {
+                    when(it) {
+                        is AllCommentsFlowViewModel.AllCommentsEvents.GoToProfile -> {
+                            tabManager.selectTab(R.id.graph_profile)
+                        }
+                        is AllCommentsFlowViewModel.AllCommentsEvents.SendComment -> {
+                            findNavController().navigate(
+                                AllCommentsByProductDialogFragmentDirections.actionToSendCommentAboutProductFragment(
+                                    args.productId
+                                )
+                            )
+                        }
+                    }
+                }
+        }
     }
 
     private fun observeUiState() {
