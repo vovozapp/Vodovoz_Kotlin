@@ -37,6 +37,7 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -121,10 +122,12 @@ class SearchFragment : BaseFragment() {
                 .collect {
                     when(it) {
                         is SearchFlowViewModel.SearchEvents.GoToPreOrder -> {
-                            SearchFragmentDirections.actionToPreOrderBS(
-                                it.id,
-                                it.name,
-                                it.detailPicture
+                            findNavController().navigate(
+                                SearchFragmentDirections.actionToPreOrderBS(
+                                    it.id,
+                                    it.name,
+                                    it.detailPicture
+                                )
                             )
                         }
                         is SearchFlowViewModel.SearchEvents.GoToProfile -> {
