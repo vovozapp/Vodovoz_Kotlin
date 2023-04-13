@@ -1,6 +1,8 @@
 package com.vodovoz.app.data
 
 import com.vodovoz.app.common.product.rating.RatingResponse
+import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.response.user.RequestCodeResponseJsonParser.parseRequestCodeResponse
 import com.vodovoz.app.feature.profile.cats.ProfileCategoriesModel
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
@@ -469,5 +471,33 @@ interface MainApi {
         @Query("action") action: String? = null,
         @Query("userid") userId: Long? = null,
         @Query("nav") page: Int? = null,
+    ): ResponseBody
+
+    /**
+     * auth
+     */
+
+    //Авторизация
+    @GET("/newmobile/auth.php")
+    suspend fun fetchLoginResponse(
+        @Query("email") email: String,
+        @Query("pass") password: String,
+    ): ResponseBody
+
+    @GET("newmobile/profile/auth/authtelefon.php")
+    suspend fun fetchAuthByPhoneResponse(
+        @Query("action") action: String? = null,
+        @Query("telefon") phone: String? = null,
+        @Query("code") code: String? = null
+    ): ResponseBody
+
+    /**
+     * password recovery
+     */
+
+    @GET("newmobile/recoverPass.php")
+    suspend fun recoverPassword(
+        @Query("email") email: String? = null,
+        @Query("forgot_password") forgotPassword: String? = null,
     ): ResponseBody
 }

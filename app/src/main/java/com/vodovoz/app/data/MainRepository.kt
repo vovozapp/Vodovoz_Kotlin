@@ -23,7 +23,10 @@ import com.vodovoz.app.data.parser.response.pre_order.PreOrderProductResponseJso
 import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonParser.parseAllPromotionsResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionsByBannerResponseJsonParser.parsePromotionsByBannerResponse
+import com.vodovoz.app.data.parser.response.user.AuthByPhoneJsonParser.parseAuthByPhoneResponse
+import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
 import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
+import com.vodovoz.app.data.parser.response.user.RecoverPasswordJsonParser.parseRecoverPasswordResponse
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.feature.map.api.MapKitFlowApi
 import io.reactivex.rxjava3.core.Single
@@ -758,6 +761,46 @@ class MainRepository @Inject constructor(
         action = "tovarchik",
         userId = userId,
         page = page
+    )
+
+    /**
+     * auth
+     */
+
+    //Авторизация
+    suspend fun authByEmail(
+        email: String,
+        password: String
+    ) = api.fetchLoginResponse(
+        email = email,
+        password = password
+    )
+
+    suspend fun authByPhone(
+        phone: String?,
+        code: String?
+    ) = api.fetchAuthByPhoneResponse(
+        action = "tochkakarta",
+        phone = phone,
+        code = code
+    )
+
+    suspend fun requestCode(
+        phone: String?
+    ) = api.fetchAuthByPhoneResponse(
+        action = "tochkakarta",
+        phone = phone
+    )
+
+    /**
+     * password recovery
+     */
+
+    suspend fun recoverPassword(
+        email: String?
+    ) = api.recoverPassword(
+        forgotPassword = "yes",
+        email = email
     )
 
 }
