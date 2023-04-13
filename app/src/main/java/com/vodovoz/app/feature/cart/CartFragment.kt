@@ -95,16 +95,7 @@ class CartFragment : BaseFragment() {
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-                when (viewModel.isLoginAlready()) {
-                    true -> findNavController().navigate(
-                        CartFragmentDirections.actionToPreOrderBS(
-                            id,
-                            name,
-                            detailPicture
-                        )
-                    )
-                    false -> findNavController().navigate(CartFragmentDirections.actionToProfileFragment())
-                }
+                viewModel.onPreOrderClick(id, name, detailPicture)
             }
 
             override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
@@ -248,6 +239,15 @@ class CartFragment : BaseFragment() {
                         }
                         is CartFlowViewModel.CartEvents.NavigateToProfile -> {
                             tabManager.selectTab(R.id.graph_profile)
+                        }
+                        is CartFlowViewModel.CartEvents.GoToPreOrder -> {
+                            findNavController().navigate(
+                                CartFragmentDirections.actionToPreOrderBS(
+                                    it.id,
+                                    it.name,
+                                    it.detailPicture
+                                )
+                            )
                         }
                     }
                 }

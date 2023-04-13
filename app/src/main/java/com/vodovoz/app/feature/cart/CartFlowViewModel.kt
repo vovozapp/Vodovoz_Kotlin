@@ -18,6 +18,7 @@ import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.CartAvaila
 import com.vodovoz.app.feature.cart.viewholders.cartempty.CartEmpty
 import com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts.CartNotAvailableProducts
 import com.vodovoz.app.feature.cart.viewholders.carttotal.CartTotal
+import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.custom.CartBundleUI
@@ -213,6 +214,17 @@ class CartFlowViewModel @Inject constructor(
         }
     }
 
+    fun onPreOrderClick(id: Long, name: String, detailPicture: String) {
+        viewModelScope.launch {
+            val accountId = accountManager.fetchAccountId()
+            if (accountId == null) {
+                eventListener.emit(CartEvents.NavigateToProfile)
+            } else {
+                eventListener.emit(CartEvents.GoToPreOrder(id, name, detailPicture))
+            }
+        }
+    }
+
     private fun getCart(): String {
         val cart = state.data.availableProducts?.items?.map { Pair(it.id, it.cartQuantity) }
         val result = StringBuilder()
@@ -250,6 +262,7 @@ class CartFlowViewModel @Inject constructor(
 
         data class NavigateToGifts(val list: List<ProductUI>) : CartEvents()
         object NavigateToProfile : CartEvents()
+        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) : CartEvents()
     }
 
     companion object {
