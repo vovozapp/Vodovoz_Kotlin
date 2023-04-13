@@ -237,7 +237,7 @@ class SearchFragment : BaseFragment() {
                     bindShare(state.data.categoryHeader)
 
                     val data = state.data
-                    if (state.bottomItem != null && state.data.layoutManager == FavoriteFlowViewModel.LINEAR && state.page != 2) {
+                    if (state.bottomItem != null && state.data.layoutManager == FavoriteFlowViewModel.LINEAR) {
                         productsController.submitList(data.itemsList + state.bottomItem)
                     } else {
                         productsController.submitList(data.itemsList)
