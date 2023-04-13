@@ -57,7 +57,6 @@ import com.yandex.runtime.Error
 import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 @AndroidEntryPoint
@@ -185,6 +184,7 @@ class MapDialogFragment : BaseFragment(),
                     moveToLastLocation()
                 }
             } else {
+                viewModel.changeAddress()
                 moveCamera(center)
             }
         } else {
@@ -211,9 +211,14 @@ class MapDialogFragment : BaseFragment(),
     override fun onStop() {
         binding.mapView.onStop()
         mapKit.onStop()
-        viewModel.updateZones(false)
         super.onStop()
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.updateZones(false)
+    }
+
 
     private fun observeUiState() {
         lifecycleScope.launchWhenStarted {
@@ -501,6 +506,15 @@ class MapDialogFragment : BaseFragment(),
         )
 
         val pinIcon: CompositeIcon = userLocationView.pin.useCompositeIcon()
+
+        pinIcon.setIcon(
+            "icon",
+            ImageProvider.fromResource(requireContext(), com.vodovoz.app.R.drawable.search_result),
+            IconStyle().setAnchor(PointF(0.5f, 0.5f))
+                .setRotationType(RotationType.ROTATE)
+                .setZIndex(0f)
+                .setScale(0.5f)
+        )
 
         pinIcon.setIcon(
             "pin",

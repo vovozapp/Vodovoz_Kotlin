@@ -185,6 +185,12 @@ class MapFlowViewModel @Inject constructor(
         return locA.distanceTo(locB)
     }
 
+    fun changeAddress() {
+        uiStateListener.value = state.copy(data = state.data.copy(
+            addressUI = null
+        ))
+    }
+
     data class LocationFloatToPoint(
         val distance: Float,
         val point: Point
