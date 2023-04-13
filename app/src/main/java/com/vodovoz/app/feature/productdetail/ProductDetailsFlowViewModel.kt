@@ -3,8 +3,10 @@ package com.vodovoz.app.feature.productdetail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.common.content.Event
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
@@ -52,7 +54,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
-    private val ratingProductManager: RatingProductManager
+    private val ratingProductManager: RatingProductManager,
+    private val accountManager: AccountManager
 ) : ViewModel() {
 
     private val uiStateListener = MutableStateFlow(ProductDetailsState())
@@ -60,6 +63,9 @@ class ProductDetailsFlowViewModel @Inject constructor(
         get() = uiStateListener.value
 
     private val productId = savedState.get<Long>("productId")
+
+    private val eventListener = MutableSharedFlow<ProductDetailsEvents>()
+    fun observeEvent() = eventListener.asSharedFlow()
 
     fun observeUiState() = uiStateListener.asStateFlow()
 
@@ -333,6 +339,35 @@ class ProductDetailsFlowViewModel @Inject constructor(
             ratingProductManager.rate(productId, rating = rating, oldRating = oldRating)
         }
     }
+
+    fun onPreOrderClick(id: Long, name: String, detailPicture: String) {
+        viewModelScope.launch {
+            val accountId = accountManager.fetchAccountId()
+            if (accountId == null) {
+                eventListener.emit(ProductDetailsEvents.GoToProfile)
+            } else {
+                eventListener.emit(ProductDetailsEvents.GoToPreOrder(id, name, detailPicture))
+            }
+        }
+    }
+
+    fun onSendCommentClick(id: Long) {
+        viewModelScope.launch {
+            val accountId = accountManager.fetchAccountId()
+            if (accountId == null) {
+                eventListener.emit(ProductDetailsEvents.GoToProfile)
+            } else {
+                eventListener.emit(ProductDetailsEvents.SendComment(id))
+            }
+        }
+    }
+
+    sealed class ProductDetailsEvents : Event {
+        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) : ProductDetailsEvents()
+        object GoToProfile : ProductDetailsEvents()
+        data class SendComment(val id: Long) : ProductDetailsEvents()
+    }
+
 
     data class ProductDetailsState(
         val productDetailUI: ProductDetailUI? = null,

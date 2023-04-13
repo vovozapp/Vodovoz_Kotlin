@@ -13,7 +13,10 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentProductDetailsFlowBinding
+import com.vodovoz.app.feature.home.HomeFlowViewModel
+import com.vodovoz.app.feature.home.HomeFragmentDirections
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
@@ -42,6 +45,9 @@ class ProductDetailsFragment : BaseFragment() {
 
     @Inject
     lateinit var ratingProductManager: RatingProductManager
+
+    @Inject
+    lateinit var tabManager: TabManager
 
     val args: ProductDetailsFragmentArgs by navArgs()
 
@@ -86,8 +92,28 @@ class ProductDetailsFragment : BaseFragment() {
         observeResultLiveData()
         observeFabCartState()
         bindErrorRefresh { viewModel.fetchProductDetail() }
+        observeEvents()
 
         productDetailsController.bind(binding.mainRv, binding.floatingAmountControllerContainer)
+    }
+
+    private fun observeEvents() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.observeEvent()
+                .collect {
+                    when(it) {
+                        is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToPreOrder -> {
+                            findNavController().navigate(ProductDetailsFragmentDirections.actionToPreOrderBS(it.id, it.name, it.detailPicture))
+                        }
+                        is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProfile -> {
+                            tabManager.selectTab(R.id.graph_profile)
+                        }
+                        is ProductDetailsFlowViewModel.ProductDetailsEvents.SendComment -> {
+                            findNavController().navigate(ProductDetailsFragmentDirections.actionToSendCommentAboutProductFragment(it.id))
+                        }
+                    }
+                }
+        }
     }
 
     private fun observeFabCartState() {
@@ -206,11 +232,7 @@ class ProductDetailsFragment : BaseFragment() {
             }
 
             override fun onSendComment(id: Long) {
-                if (viewModel.isLoginAlready()) {
-                    findNavController().navigate(ProductDetailsFragmentDirections.actionToSendCommentAboutProductFragment(id))
-                } else {
-                    findNavController().navigate(R.id.profileFragment)
-                }
+                viewModel.onSendCommentClick(id)
             }
 
             override fun onShowAllComments(id: Long) {
@@ -226,10 +248,7 @@ class ProductDetailsFragment : BaseFragment() {
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-                when(viewModel.isLoginAlready()) {
-                    true -> findNavController().navigate(ProductDetailsFragmentDirections.actionToPreOrderBS(id, name, detailPicture))
-                    false -> findNavController().navigate(ProductDetailsFragmentDirections.actionToProfileFragment())
-                }
+                viewModel.onPreOrderClick(id, name, detailPicture)
             }
 
             override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
