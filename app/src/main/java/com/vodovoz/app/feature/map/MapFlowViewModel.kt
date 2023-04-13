@@ -160,7 +160,12 @@ class MapFlowViewModel @Inject constructor(
         }
 
         val newList = sortedList.sortedBy { it.distance }
-        val listOnPoints = newList.map { it.point }.subList(0,5)
+        val max = if (newList.size >= 5) {
+            5
+        } else {
+            newList.size
+        }
+        val listOnPoints = newList.map { it.point }.subList(0,max)
 
         viewModelScope.launch {
             eventListener.emit(MapFlowEvents.Submit(startPoint, listOnPoints))

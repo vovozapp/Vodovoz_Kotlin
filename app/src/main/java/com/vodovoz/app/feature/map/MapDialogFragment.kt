@@ -133,36 +133,40 @@ class MapDialogFragment : BaseFragment(),
             override fun onAddressClick(address: AddressResult) {
                 binding.searchEdit.setText(address.text)
 
-                searchManager.submit(
-                    address.text,
-                    VisibleRegionUtils.toPolygon(binding.mapView.map.visibleRegion),
-                    SearchOptions(),
-                    object : SearchListener {
-                        override fun onSearchResponse(p0: Response) {
-
-                            val point = Point(
-                                p0.collection.children[0].obj?.geometry?.get(0)?.point?.latitude!!,
-                                p0.collection.children[0].obj?.geometry?.get(0)?.point?.longitude!!
-                            )
-
-                            viewModel.fetchAddressByGeocode(point.latitude, point.longitude)
-                            moveCamera(point)
-                            distanceToRouteMap.clear()
-                            mapObjects.clear()
-                            viewModel.fetchSeveralMinimalLineDistancesToMainPolygonPoints(point)
-                            placeMark(point, com.vodovoz.app.R.drawable.png_map_marker)
-                            showContainer(false)
-                        }
-
-                        override fun onSearchError(p0: Error) {
-
-                        }
-                    }
-                )
+                search(address.text)
             }
 
         }
     )
+
+    private fun search(text: String) {
+        searchManager.submit(
+            text,
+            VisibleRegionUtils.toPolygon(binding.mapView.map.visibleRegion),
+            SearchOptions(),
+            object : SearchListener {
+                override fun onSearchResponse(p0: Response) {
+
+                    val point = Point(
+                        p0.collection.children[0].obj?.geometry?.get(0)?.point?.latitude!!,
+                        p0.collection.children[0].obj?.geometry?.get(0)?.point?.longitude!!
+                    )
+
+                    viewModel.fetchAddressByGeocode(point.latitude, point.longitude)
+                    moveCamera(point)
+                    distanceToRouteMap.clear()
+                    mapObjects.clear()
+                    viewModel.fetchSeveralMinimalLineDistancesToMainPolygonPoints(point)
+                    placeMark(point, com.vodovoz.app.R.drawable.png_map_marker)
+                    showContainer(false)
+                }
+
+                override fun onSearchError(p0: Error) {
+
+                }
+            }
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -174,12 +178,17 @@ class MapDialogFragment : BaseFragment(),
         super.onStart()
         mapKit.onStart()
         binding.mapView.onStart()
-        if (detectGps()) {
-            locationController.methodRequiresTwoPermission(requireActivity()) {
-                moveToLastLocation()
+        val address = args.address
+        if (address == null) {
+            if (detectGps()) {
+                locationController.methodRequiresTwoPermission(requireActivity()) {
+                    moveToLastLocation()
+                }
+            } else {
+                moveCamera(center)
             }
         } else {
-            moveCamera(center)
+            search(address.fullAddress)
         }
     }
 
