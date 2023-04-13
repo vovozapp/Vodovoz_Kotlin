@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.profile
 
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.Event
 import com.vodovoz.app.common.content.PagingContractViewModel
@@ -40,7 +41,8 @@ class ProfileFlowViewModel @Inject constructor(
     private val dataRepository: DataRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
-    private val ratingProductManager: RatingProductManager
+    private val ratingProductManager: RatingProductManager,
+    private val accountManager: AccountManager
 ) : PagingContractViewModel<ProfileFlowViewModel.ProfileState, ProfileFlowViewModel.ProfileEvents>(
     ProfileState.idle()
 ) {
@@ -334,7 +336,7 @@ class ProfileFlowViewModel @Inject constructor(
 
     fun refreshIdle() {
         uiStateListener.value =
-            state.copy(loadingPage = true, bottomItem = null, data = state.data.copy(items = ProfileState.idle().items))
+            state.copy(loadingPage = true, bottomItem = null, data = state.data.copy(items = ProfileState.idle().items, isLogin = true))
         loadPage()
     }
 
@@ -347,6 +349,8 @@ class ProfileFlowViewModel @Inject constructor(
     fun logout() {
         dataRepository.logout().subscribe()
         viewModelScope.launch {
+            cartManager.clearCart()
+            accountManager.removeUserId()
             eventListener.emit(ProfileEvents.Logout)
         }
     }

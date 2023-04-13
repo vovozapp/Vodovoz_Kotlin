@@ -58,11 +58,6 @@ class AccountManager @Inject constructor(
         }
     }
 
-    fun clearData() {
-        removeUserId()
-        removeUserSettings()
-    }
-
     fun isAlreadyLogin() = fetchUserId() != null
 
     data class UserSettings(

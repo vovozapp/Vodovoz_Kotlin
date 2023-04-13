@@ -14,6 +14,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentLoginBinding
+import com.vodovoz.app.feature.cart.CartFlowViewModel
+import com.vodovoz.app.feature.catalog.CatalogFlowViewModel
+import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
+import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
@@ -30,6 +34,9 @@ class LoginFragment : ViewStateBaseFragment() {
     private lateinit var binding: FragmentLoginBinding
     private val viewModel: LoginViewModel by viewModels()
     private val profileViewModel: ProfileFlowViewModel by activityViewModels()
+    private val flowViewModel: HomeFlowViewModel by activityViewModels()
+    private val cartFlowViewModel: CartFlowViewModel by activityViewModels()
+    private val favoriteViewModel: FavoriteFlowViewModel by activityViewModels()
 
     override fun setContentView(
         inflater: LayoutInflater,
@@ -142,6 +149,9 @@ class LoginFragment : ViewStateBaseFragment() {
                 is ViewState.Success -> {
                     if (viewModel.isAlreadyLogin()) {
                         viewModel.clearData()
+                        flowViewModel.refresh()
+                        cartFlowViewModel.refreshIdle()
+                        favoriteViewModel.refreshIdle()
                         profileViewModel.refreshIdle()
                         findNavController().popBackStack()
                     } else {

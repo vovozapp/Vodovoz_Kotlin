@@ -15,6 +15,9 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.databinding.FragmentProfileFlowBinding
+import com.vodovoz.app.feature.cart.CartFlowViewModel
+import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
+import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.home.viewholders.homeorders.inneradapter.HomeOrdersSliderClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
@@ -35,6 +38,9 @@ class ProfileFragment : BaseFragment() {
     }
 
     private val viewModel: ProfileFlowViewModel by activityViewModels()
+    private val flowViewModel: HomeFlowViewModel by activityViewModels()
+    private val cartFlowViewModel: CartFlowViewModel by activityViewModels()
+    private val favoriteViewModel: FavoriteFlowViewModel by activityViewModels()
 
     @Inject
     lateinit var cartManager: CartManager
@@ -96,6 +102,10 @@ class ProfileFragment : BaseFragment() {
                         is ProfileFlowViewModel.ProfileEvents.Logout -> {
                             binding.profileFlowRv.isVisible = false
                             binding.noLoginContainer.isVisible = true
+
+                            flowViewModel.refresh()
+                            cartFlowViewModel.refreshIdle()
+                            favoriteViewModel.refreshIdle()
                         }
                     }
                 }

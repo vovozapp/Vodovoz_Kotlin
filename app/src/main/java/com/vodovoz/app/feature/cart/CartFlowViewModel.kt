@@ -66,6 +66,11 @@ class CartFlowViewModel @Inject constructor(
         fetchCart()
     }
 
+    fun refreshIdle() {
+        uiStateListener.value = state.copy(loadingPage = true, data = CartState())
+        fetchCart()
+    }
+
     fun fetchCart(coupon: String? = null) {
         viewModelScope.launch {
             flow {

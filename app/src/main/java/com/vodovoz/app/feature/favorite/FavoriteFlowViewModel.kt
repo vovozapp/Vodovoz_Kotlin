@@ -67,6 +67,12 @@ class FavoriteFlowViewModel @Inject constructor(
         fetchFavoriteProductsHeader()
     }
 
+    fun refreshIdle() {
+        uiStateListener.value = state.copy(loadingPage = true, page = 1, loadMore = false, bottomItem = null, data = FavoriteState())
+        fetchFavoriteProductsHeader()
+        fetchFavoriteProductsSorted()
+    }
+
     private fun fetchFavoriteProductsHeader() {
         val userId = localDataSource.fetchUserId()
 
