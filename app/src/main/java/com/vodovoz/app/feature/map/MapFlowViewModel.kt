@@ -67,10 +67,10 @@ class MapFlowViewModel @Inject constructor(
         }
     }
 
-    fun updateZones() {
+    fun updateZones(bool: Boolean) {
         uiStateListener.value = state.copy(
             data = state.data.copy(
-                updateZones = true
+                updateZones = bool
             )
         )
     }

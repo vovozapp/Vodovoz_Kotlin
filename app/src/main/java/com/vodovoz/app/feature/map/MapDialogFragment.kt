@@ -211,6 +211,7 @@ class MapDialogFragment : BaseFragment(),
     override fun onStop() {
         binding.mapView.onStop()
         mapKit.onStop()
+        viewModel.updateZones(false)
         super.onStop()
     }
 
@@ -480,7 +481,7 @@ class MapDialogFragment : BaseFragment(),
             zone.strokeWidth = 0.0f
             zone.zIndex = 100.0f
         }
-        viewModel.updateZones()
+        viewModel.updateZones(true)
     }
 
     override fun onMapTap(p0: Map, p1: Point) {
