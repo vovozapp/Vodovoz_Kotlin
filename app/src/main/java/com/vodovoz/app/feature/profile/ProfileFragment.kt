@@ -81,6 +81,7 @@ class ProfileFragment : BaseFragment() {
         observeUiState()
         observeEvents()
         bindRegOrLoginBtn()
+        observeTabReselect()
     }
 
     override fun onResume() {
@@ -258,6 +259,20 @@ class ProfileFragment : BaseFragment() {
                 if (id == null) return
                 findNavController().navigate(ProfileFragmentDirections.actionToOrderDetailsFragment(id))
             }
+        }
+    }
+
+    private fun observeTabReselect() {
+        lifecycleScope.launchWhenStarted {
+            tabManager.observeTabReselect()
+                .collect {
+                    if (it != TabManager.DEFAULT_STATE && it == R.id.profileFragment) {
+                        binding.profileFlowRv.post {
+                            binding.profileFlowRv.smoothScrollToPosition(0)
+                        }
+                        tabManager.setDefaultState()
+                    }
+                }
         }
     }
 
