@@ -1,8 +1,9 @@
 package com.vodovoz.app.feature.cart
 
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.common.content.*
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
 import com.vodovoz.app.data.MainRepository
@@ -11,9 +12,6 @@ import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.cart.CartResponseJsonParser.parseCartResponse
 import com.vodovoz.app.data.parser.response.cart.ClearCartResponseJsonParser.parseClearCartResponse
 import com.vodovoz.app.mapper.CartBundleMapper.mapUoUI
-import com.vodovoz.app.common.content.PagingStateViewModel
-import com.vodovoz.app.common.content.State
-import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.CartAvailableProducts
@@ -39,14 +37,9 @@ class CartFlowViewModel @Inject constructor(
     private val dataRepository: DataRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
-    private val ratingProductManager: RatingProductManager
-) : PagingStateViewModel<CartFlowViewModel.CartState>(CartState()) {
-
-    private val navigateToOrderFlow = MutableSharedFlow<NavigateToOrder>()
-    fun observeNavigateToOrder() = navigateToOrderFlow.asSharedFlow()
-
-    private val navigateToGiftsBottomFlow = MutableSharedFlow<List<ProductUI>>()
-    fun observeNavigateToGiftsBottom() = navigateToGiftsBottomFlow.asSharedFlow()
+    private val ratingProductManager: RatingProductManager,
+    private val accountManager: AccountManager
+) : PagingContractViewModel<CartFlowViewModel.CartState, CartFlowViewModel.CartEvents>(CartState()) {
 
     init {
         viewModelScope.launch {
@@ -111,7 +104,10 @@ class CartFlowViewModel @Inject constructor(
                         }
                         val mappedData = response.data.mapUoUI()
                         val calculatedPrices = calculatePrice(mappedData.availableProductUIList)
-                        cartManager.syncCart(mappedData.availableProductUIList, calculatedPrices.total)
+                        cartManager.syncCart(
+                            mappedData.availableProductUIList,
+                            calculatedPrices.total
+                        )
                         state.copy(
                             data = state.data.copy(
                                 coupon = coupon ?: "",
@@ -124,7 +120,9 @@ class CartFlowViewModel @Inject constructor(
                                     showReturnBottleBtn = false
                                 ),
                                 notAvailableProducts = CartNotAvailableProducts(
-                                    CART_NOT_AVAILABLE_PRODUCTS_ID, mappedData.notAvailableProductUIList),
+                                    CART_NOT_AVAILABLE_PRODUCTS_ID,
+                                    mappedData.notAvailableProductUIList
+                                ),
                                 total = CartTotal(CART_TOTAL_ID, calculatedPrices),
                                 bestForYouProducts = mappedData.bestForYouCategoryDetailUI
                             ),
@@ -184,19 +182,36 @@ class CartFlowViewModel @Inject constructor(
 
     fun navigateToOrderFragment() {
         viewModelScope.launch {
-            navigateToOrderFlow.emit(
-                NavigateToOrder(
-                    prices = state.data.total?.prices,
-                    cart = getCart(),
-                    coupon = state.data.coupon
-                )
-            )
+            accountManager
+                .observeAccountId()
+                .collect {
+                    if (it == null) {
+                        eventListener.emit(CartEvents.NavigateToProfile)
+                    } else {
+                        eventListener.emit(
+                            CartEvents.NavigateToOrder(
+                                prices = state.data.total?.prices,
+                                cart = getCart(),
+                                coupon = state.data.coupon
+                            )
+                        )
+                    }
+                }
+
         }
     }
 
     fun navigateToGiftsBottomFragment() {
         viewModelScope.launch {
-            navigateToGiftsBottomFlow.emit(state.data.giftProductUIList)
+            accountManager
+                .observeAccountId()
+                .collect {
+                    if (it == null) {
+                        eventListener.emit(CartEvents.NavigateToProfile)
+                    } else {
+                        eventListener.emit(CartEvents.NavigateToGifts(state.data.giftProductUIList))
+                    }
+                }
         }
     }
 
@@ -226,11 +241,18 @@ class CartFlowViewModel @Inject constructor(
         val cartEmpty: CartEmpty = CartEmpty(CART_EMPTY_ID)
     ) : State
 
-    data class NavigateToOrder(
-        val prices: CalculatedPrices?,
-        val cart: String,
-        val coupon: String
-    )
+
+    sealed class CartEvents : Event {
+
+        data class NavigateToOrder(
+            val prices: CalculatedPrices?,
+            val cart: String,
+            val coupon: String
+        ) : CartEvents()
+
+        data class NavigateToGifts(val list: List<ProductUI>) : CartEvents()
+        object NavigateToProfile : CartEvents()
+    }
 
     companion object {
         private const val CART_EMPTY_ID = -1

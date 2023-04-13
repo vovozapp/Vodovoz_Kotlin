@@ -138,7 +138,6 @@ class CartFlowFragment : BaseFragment() {
         bindButtons()
         initActionBar()
         observeResultLiveData()
-        observeNavigates()
         cartController.bind(binding.mainRv)
     }
 
@@ -191,50 +190,6 @@ class CartFlowFragment : BaseFragment() {
                                     cartState.data.total
                                 )
                             )
-                        }
-                    }
-                }
-        }
-    }
-
-    private fun observeNavigates() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeNavigateToOrder()
-                .collect {
-                    if (it.prices != null) {
-                        findNavController().navigate(
-                            CartFragmentDirections.actionToOrderingFragment(
-                                it.prices.total,
-                                it.prices.discountPrice,
-                                it.prices.deposit,
-                                it.prices.fullPrice,
-                                it.cart,
-                                it.coupon
-                            )
-                        )
-                    }
-                }
-        }
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeNavigateToGiftsBottom()
-                .collect {
-                    when (viewModel.isLoginAlready()) {
-                        true -> {
-                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.giftsBottomFragment) {
-                                findNavController().popBackStack()
-                            }
-
-                            findNavController().navigate(
-                                CartFragmentDirections.actionToGiftsBottomFragment(
-                                    it.toTypedArray()
-                                ))
-                        }
-                        false -> {
-                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.giftsBottomFragment) {
-                                findNavController().popBackStack()
-                            }
-                            findNavController().navigate(CartFragmentDirections.actionToProfileFragment())
                         }
                     }
                 }

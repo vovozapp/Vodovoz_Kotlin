@@ -137,7 +137,7 @@ class CartFragment : BaseFragment() {
         bindButtons()
         initActionBar()
         observeResultLiveData()
-        observeNavigates()
+        observeEvents()
         cartController.bind(binding.mainRv)
         bindErrorRefresh { viewModel.refresh() }
         bindSwipeRefresh()
@@ -214,47 +214,40 @@ class CartFragment : BaseFragment() {
         }
     }
 
-    private fun observeNavigates() {
+    private fun observeEvents() {
         lifecycleScope.launchWhenStarted {
-            viewModel.observeNavigateToOrder()
+            viewModel.observeEvent()
                 .collect {
-                    if (it.prices != null) {
-                        if (findNavController().currentBackStackEntry?.destination?.id == R.id.orderingFragment) {
-                            findNavController().popBackStack()
+                    when(it) {
+                        is CartFlowViewModel.CartEvents.NavigateToOrder -> {
+                            if (it.prices != null) {
+                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.orderingFragment) {
+                                    findNavController().popBackStack()
+                                }
+                                findNavController().navigate(
+                                    CartFragmentDirections.actionToOrderingFragment(
+                                        it.prices.total,
+                                        it.prices.discountPrice,
+                                        it.prices.deposit,
+                                        it.prices.fullPrice,
+                                        it.cart,
+                                        it.coupon
+                                    )
+                                )
+                            }
                         }
-                        findNavController().navigate(
-                            CartFragmentDirections.actionToOrderingFragment(
-                                it.prices.total,
-                                it.prices.discountPrice,
-                                it.prices.deposit,
-                                it.prices.fullPrice,
-                                it.cart,
-                                it.coupon
-                            )
-                        )
-                    }
-                }
-        }
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeNavigateToGiftsBottom()
-                .collect {
-                    when (viewModel.isLoginAlready()) {
-                        true -> {
+                        is CartFlowViewModel.CartEvents.NavigateToGifts -> {
                             if (findNavController().currentBackStackEntry?.destination?.id == R.id.giftsBottomFragment) {
                                 findNavController().popBackStack()
                             }
 
                             findNavController().navigate(
                                 CartFragmentDirections.actionToGiftsBottomFragment(
-                                    it.toTypedArray()
+                                    it.list.toTypedArray()
                                 ))
                         }
-                        false -> {
-                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.giftsBottomFragment) {
-                                findNavController().popBackStack()
-                            }
-                            findNavController().navigate(CartFragmentDirections.actionToProfileFragment())
+                        is CartFlowViewModel.CartEvents.NavigateToProfile -> {
+                            tabManager.selectTab(R.id.graph_profile)
                         }
                     }
                 }
