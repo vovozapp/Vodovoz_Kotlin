@@ -1,13 +1,11 @@
 package com.vodovoz.app.feature.search
 
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.common.content.ErrorState
-import com.vodovoz.app.common.content.PagingStateViewModel
-import com.vodovoz.app.common.content.State
+import com.vodovoz.app.common.content.*
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
-import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.DataRepository
@@ -20,6 +18,7 @@ import com.vodovoz.app.data.parser.response.search.DefaultSearchDataResponseJson
 import com.vodovoz.app.data.parser.response.search.MatchesQueriesResponseJsonParser.parseMatchesQueriesResponse
 import com.vodovoz.app.data.parser.response.search.ProductsByQueryHeaderResponseJsonParser.parseProductsByQueryHeaderResponse
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
+import com.vodovoz.app.feature.pastpurchases.PastPurchasesFlowViewModel
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.DefaultSearchDataBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
@@ -40,8 +39,9 @@ class SearchFlowViewModel @Inject constructor(
     private val dataRepository: DataRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
-    private val ratingProductManager: RatingProductManager
-) : PagingStateViewModel<SearchFlowViewModel.SearchState>(SearchState()){
+    private val ratingProductManager: RatingProductManager,
+    private val accountManager: AccountManager
+) : PagingContractViewModel<SearchFlowViewModel.SearchState, SearchFlowViewModel.SearchEvents>(SearchState()){
 
     private val changeLayoutManager = MutableStateFlow(LINEAR)
     fun observeChangeLayoutManager() = changeLayoutManager.asStateFlow()
@@ -352,6 +352,22 @@ class SearchFlowViewModel @Inject constructor(
             loadingPage = true
         )
         fetchHeader()
+    }
+
+    fun onPreOrderClick(id: Long, name: String, detailPicture: String) {
+        viewModelScope.launch {
+            val accountId = accountManager.fetchAccountId()
+            if (accountId == null) {
+                eventListener.emit(SearchEvents.GoToProfile)
+            } else {
+                eventListener.emit(SearchEvents.GoToPreOrder(id, name, detailPicture))
+            }
+        }
+    }
+
+    sealed class SearchEvents : Event {
+        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) : SearchEvents()
+        object GoToProfile : SearchEvents()
     }
 
     data class SearchState(

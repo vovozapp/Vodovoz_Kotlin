@@ -21,6 +21,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentSearchFlowBinding
 import com.vodovoz.app.databinding.ViewSimpleTextChipBinding
@@ -31,6 +32,7 @@ import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowCli
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
+import com.vodovoz.app.feature.pastpurchases.PastPurchasesFlowViewModel
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
@@ -72,6 +74,9 @@ class SearchFragment : BaseFragment() {
     @Inject
     lateinit var ratingProductManager: RatingProductManager
 
+    @Inject
+    lateinit var tabManager: TabManager
+
     private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
     private val compositeDisposable = CompositeDisposable()
 
@@ -106,6 +111,27 @@ class SearchFragment : BaseFragment() {
         observeNoMatchesToast()
         bindErrorRefresh {
             viewModel.refreshSorted()
+        }
+        observeEvents()
+    }
+
+    private fun observeEvents() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.observeEvent()
+                .collect {
+                    when(it) {
+                        is SearchFlowViewModel.SearchEvents.GoToPreOrder -> {
+                            SearchFragmentDirections.actionToPreOrderBS(
+                                it.id,
+                                it.name,
+                                it.detailPicture
+                            )
+                        }
+                        is SearchFlowViewModel.SearchEvents.GoToProfile -> {
+                            tabManager.selectTab(R.id.graph_profile)
+                        }
+                    }
+                }
         }
     }
 
@@ -392,16 +418,7 @@ class SearchFragment : BaseFragment() {
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-                when (viewModel.isLoginAlready()) {
-                    true -> findNavController().navigate(
-                        FavoriteFragmentDirections.actionToPreOrderBS(
-                            id,
-                            name,
-                            detailPicture
-                        )
-                    )
-                    false -> findNavController().navigate(SearchFragmentDirections.actionToProfileFragment())
-                }
+                viewModel.onPreOrderClick(id, name, detailPicture)
             }
 
             override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
