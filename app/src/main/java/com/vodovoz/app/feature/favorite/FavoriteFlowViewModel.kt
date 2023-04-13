@@ -1,13 +1,11 @@
 package com.vodovoz.app.feature.favorite
 
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.common.content.ErrorState
-import com.vodovoz.app.common.content.PagingStateViewModel
-import com.vodovoz.app.common.content.State
+import com.vodovoz.app.common.content.*
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
-import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.DataRepository
@@ -37,8 +35,9 @@ class FavoriteFlowViewModel @Inject constructor(
     private val dataRepository: DataRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
-    private val ratingProductManager: RatingProductManager
-) : PagingStateViewModel<FavoriteFlowViewModel.FavoriteState>(FavoriteState()){
+    private val ratingProductManager: RatingProductManager,
+    private val accountManager: AccountManager
+) : PagingContractViewModel<FavoriteFlowViewModel.FavoriteState, FavoriteFlowViewModel.FavoriteEvents>(FavoriteState()){
 
     private val changeLayoutManager = MutableStateFlow(LINEAR)
     fun observeChangeLayoutManager() = changeLayoutManager.asStateFlow()
@@ -299,6 +298,22 @@ class FavoriteFlowViewModel @Inject constructor(
             loadingPage = true
         )
         fetchFavoriteProductsSorted()
+    }
+
+    fun onPreOrderClick(id: Long, name: String, detailPicture: String) {
+        viewModelScope.launch {
+            val accountId = accountManager.fetchAccountId()
+            if (accountId == null) {
+                eventListener.emit(FavoriteEvents.GoToProfile)
+            } else {
+                eventListener.emit(FavoriteEvents.GoToPreOrder(id, name, detailPicture))
+            }
+        }
+    }
+
+    sealed class FavoriteEvents : Event {
+        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) : FavoriteEvents()
+        object GoToProfile : FavoriteEvents()
     }
 
     data class FavoriteState(

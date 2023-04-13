@@ -14,6 +14,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentMainFavoriteFlowBinding
 import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
@@ -52,6 +53,9 @@ class FavoriteFragment : BaseFragment() {
     @Inject
     lateinit var ratingProductManager: RatingProductManager
 
+    @Inject
+    lateinit var tabManager: TabManager
+
     private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
 
     private val categoryTabsController = CategoryTabsFlowController(categoryTabsClickListener())
@@ -74,11 +78,35 @@ class FavoriteFragment : BaseFragment() {
         favoritesController.bind(binding.productRecycler, binding.refreshEmptyFavoriteContainer)
 
         observeUiState()
+        observeEvents()
         observeResultLiveData()
         initSearch()
         observeChangeLayoutManager()
         bindErrorRefresh {
             viewModel.refreshSorted()
+        }
+    }
+
+    private fun observeEvents() {
+        lifecycleScope.launchWhenStarted {
+            viewModel
+                .observeEvent()
+                .collect {
+                    when(it) {
+                        is FavoriteFlowViewModel.FavoriteEvents.GoToProfile -> {
+                            tabManager.selectTab(R.id.graph_profile)
+                        }
+                        is FavoriteFlowViewModel.FavoriteEvents.GoToPreOrder -> {
+                            findNavController().navigate(
+                                FavoriteFragmentDirections.actionToPreOrderBS(
+                                    it.id,
+                                    it.name,
+                                    it.detailPicture
+                                )
+                            )
+                        }
+                    }
+                }
         }
     }
 
@@ -239,16 +267,7 @@ class FavoriteFragment : BaseFragment() {
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-                when (viewModel.isLoginAlready()) {
-                    true -> findNavController().navigate(
-                        FavoriteFragmentDirections.actionToPreOrderBS(
-                            id,
-                            name,
-                            detailPicture
-                        )
-                    )
-                    false -> findNavController().navigate(FavoriteFragmentDirections.actionToProfileFragment())
-                }
+                viewModel.onPreOrderClick(id, name, detailPicture)
             }
 
             override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
