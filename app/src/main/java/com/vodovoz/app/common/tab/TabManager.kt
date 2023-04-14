@@ -45,7 +45,7 @@ class TabManager @Inject constructor() {
         bottomNavCartStateListener.value = BottomNavCartState(count, total)
     }
 
-    fun saveBottomNavProfileState(amount: Int) {
+    fun saveBottomNavProfileState(amount: Int?) {
         bottomNavProfileStateListener.value = amount
     }
 
