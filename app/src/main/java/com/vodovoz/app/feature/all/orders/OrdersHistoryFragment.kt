@@ -9,6 +9,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentOrdersHistoryFlowBinding
 import com.vodovoz.app.feature.all.AllClickListener
@@ -86,14 +87,21 @@ class OrdersHistoryFragment : BaseFragment() {
                         hideLoader()
                     }
 
+                    binding.llEmptyHistoryContainer.visibility = View.GONE
+                    binding.refreshContainer.visibility = View.VISIBLE
+
                     val data = state.data
                     if (state.bottomItem != null) {
                         allOrdersController.submitList(data.itemsList + state.bottomItem)
                     } else {
                         allOrdersController.submitList(data.itemsList)
                     }
-
-                    showError(state.error)
+                    if (state.error is ErrorState.Empty) {
+                        binding.llEmptyHistoryContainer.visibility = View.VISIBLE
+                        binding.refreshContainer.visibility = View.GONE
+                    } else {
+                        showError(state.error)
+                    }
 
                 }
         }
