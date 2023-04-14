@@ -61,10 +61,12 @@ class LoginFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             val settings = accountManager.fetchUserSettings()
+            val phone = loginManager.fetchLastAuthPhone()
             viewModelScope.launch {
                 uiStateListener.value = state.copy(
                     data = state.data.copy(
-                        settings = settings
+                        settings = settings,
+                        lastAuthPhone = phone
                     )
                 )
             }
@@ -319,6 +321,7 @@ class LoginFlowViewModel @Inject constructor(
     data class LoginState(
         val authType: AuthType = AuthType.PHONE,
         val requestUrl: String? = null,
-        val settings: AccountManager.UserSettings? = null
+        val settings: AccountManager.UserSettings? = null,
+        val lastAuthPhone: String? = null
     ) : State
 }

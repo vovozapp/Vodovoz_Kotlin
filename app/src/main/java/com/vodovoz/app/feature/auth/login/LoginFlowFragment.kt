@@ -180,6 +180,10 @@ class LoginFlowFragment : BaseFragment() {
                         binding.etPassword.setText(it.data.settings.password)
                     }
 
+                    if (it.data.lastAuthPhone != null) {
+                        binding.etPhone.setText(it.data.lastAuthPhone)
+                    }
+
                     when (it.data.authType) {
                         AuthType.EMAIL -> {
                             bindEmailBtn()
