@@ -791,9 +791,9 @@ class MainRepository @Inject constructor(
         val uri = ApiConfig.VODOVOZ_URL
             .toUri()
             .buildUpon()
-            .appendPath(url)
+            .encodedPath(url)
             .appendQueryParameter("action", "tochkakarta")
-            .appendQueryParameter("phone", phone)
+            .appendQueryParameter("telefon", phone)
             .appendQueryParameter("code", code)
             .build()
             .toString()
@@ -809,9 +809,9 @@ class MainRepository @Inject constructor(
         val uri = ApiConfig.VODOVOZ_URL
             .toUri()
             .buildUpon()
-            .appendPath(url)
+            .encodedPath(url)
             .appendQueryParameter("action", "tochkakarta")
-            .appendQueryParameter("phone", phone)
+            .appendQueryParameter("telefon", phone)
             .build()
             .toString()
 
