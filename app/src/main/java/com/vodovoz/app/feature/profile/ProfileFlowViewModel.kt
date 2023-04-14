@@ -10,6 +10,7 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
@@ -44,7 +45,8 @@ class ProfileFlowViewModel @Inject constructor(
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
     private val accountManager: AccountManager,
-    private val siteStateManager: SiteStateManager
+    private val siteStateManager: SiteStateManager,
+    private val tabManager: TabManager
 ) : PagingContractViewModel<ProfileFlowViewModel.ProfileState, ProfileFlowViewModel.ProfileEvents>(
     ProfileState.idle()
 ) {
@@ -357,6 +359,7 @@ class ProfileFlowViewModel @Inject constructor(
     fun logout() {
         dataRepository.logout().subscribe()
         viewModelScope.launch {
+            tabManager.clearBottomNavProfileState()
             cartManager.clearCart()
             accountManager.removeUserId()
             eventListener.emit(ProfileEvents.Logout)

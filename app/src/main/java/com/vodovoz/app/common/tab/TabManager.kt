@@ -21,6 +21,9 @@ class TabManager @Inject constructor() {
     private val bottomNavCartStateListener = MutableStateFlow<BottomNavCartState?>(null)
     fun observeBottomNavCartState() = bottomNavCartStateListener.asStateFlow()
 
+    private val bottomNavProfileStateListener = MutableStateFlow<Int?>(null)
+    fun observeBottomNavProfileState() = bottomNavProfileStateListener.asStateFlow()
+
     private val loadingAddToCartListener = MutableSharedFlow<BottomNavCartState>()
     fun observeAddToCartLoading() = loadingAddToCartListener.asSharedFlow()
 
@@ -40,6 +43,10 @@ class TabManager @Inject constructor() {
 
     fun saveBottomNavCartState(count: Int, total: Int) {
         bottomNavCartStateListener.value = BottomNavCartState(count, total)
+    }
+
+    fun saveBottomNavProfileState(amount: Int) {
+        bottomNavProfileStateListener.value = amount
     }
 
     fun loadingAddToCart(load: Boolean, plus: Boolean) {
@@ -66,6 +73,10 @@ class TabManager @Inject constructor() {
 
     fun clearBottomNavCartState() {
         bottomNavCartStateListener.value = null
+    }
+
+    fun clearBottomNavProfileState() {
+        bottomNavProfileStateListener.value = null
     }
 
     data class BottomNavCartState(

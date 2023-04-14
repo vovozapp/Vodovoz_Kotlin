@@ -44,6 +44,7 @@ class MainFragment : BaseFragment() {
 
         observeTabState()
         observeCartState()
+        observeProfileState()
         observeCartLoading()
     }
 
@@ -100,6 +101,21 @@ class MainFragment : BaseFragment() {
                             }
                             .start()
                         binding.nvNavigation.menu.getItem(2).title = state.total.toString() + " ₽"
+                    }
+                }
+        }
+    }
+
+    private fun observeProfileState() {
+        lifecycleScope.launchWhenStarted {
+            tabManager
+                .observeBottomNavProfileState()
+                .collect { state ->
+                    if (state == null) {
+                        binding.circleAmountProfile.isVisible = false
+                    } else {
+                        binding.circleAmountProfile.text = state.toString()
+                        binding.circleAmountProfile.isVisible = true
                     }
                 }
         }

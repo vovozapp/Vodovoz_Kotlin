@@ -1,17 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/insideCategoryTv"
-    style="@style/TextViewNormalGray"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/field_height"
-    android:drawableEnd="@drawable/ic_pointer_right"
-    android:drawableTint="@color/text_gray"
-    android:gravity="center_vertical"
-    android:paddingStart="@dimen/space_16"
-    android:paddingEnd="@dimen/space_16"
-    android:textSize="16sp"
-    app:drawableTint="#C2CBCE"
-    tools:ignore="UseCompatTextViewDrawableXml"
-    tools:text="История заказов" />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/insideCategoryTv"
+        style="@style/TextViewNormalGray"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:drawableEnd="@drawable/ic_pointer_right"
+        android:drawableTint="@color/text_gray"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/space_16"
+        android:paddingEnd="@dimen/space_16"
+        android:textSize="16sp"
+        app:drawableTint="#C2CBCE"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UseCompatTextViewDrawableXml"
+        tools:text="История заказов" />
+
+    <TextView
+        android:translationZ="@dimen/_10sdp"
+        android:id="@+id/amountTv"
+        android:layout_width="@dimen/_16sdp"
+        android:layout_height="@dimen/_16sdp"
+        android:background="@drawable/bkg_number_gray"
+        android:fontFamily="@font/rotonda_normal"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:visibility="gone"
+        android:outlineProvider="none"
+        android:textColor="@color/text_new_black"
+        android:layout_marginEnd="@dimen/space_32"
+        android:textSize="13sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

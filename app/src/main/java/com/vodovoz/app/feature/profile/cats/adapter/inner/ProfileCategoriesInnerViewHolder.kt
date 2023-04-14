@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.profile.cats.adapter.inner
 
 import android.view.View
+import androidx.core.view.isVisible
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ItemProfileInsideCategoryUiBinding
 import com.vodovoz.app.feature.profile.adapter.ProfileFlowClickListener
@@ -38,6 +39,13 @@ class ProfileCategoriesInnerViewHolder(
         super.bind(item)
 
         binding.insideCategoryTv.text = item.name
+
+        if(item.amount != null) {
+            binding.amountTv.text = item.amount.toString()
+            binding.amountTv.isVisible = true
+        } else {
+            binding.amountTv.isVisible = false
+        }
     }
 
 }
