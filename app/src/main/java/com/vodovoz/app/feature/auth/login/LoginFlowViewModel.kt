@@ -306,6 +306,13 @@ class LoginFlowViewModel @Inject constructor(
         loginManager.updateLastRequestCodeTimeOut(0)
     }
 
+    fun checkIfLoginAlready() {
+        accountManager.fetchAccountId() ?: return
+        viewModelScope.launch {
+            eventListener.emit(LoginEvents.AuthSuccess)
+        }
+    }
+
     sealed class LoginEvents : Event {
         object AuthSuccess : LoginEvents()
         data class AuthError(val message: String) : LoginEvents()
