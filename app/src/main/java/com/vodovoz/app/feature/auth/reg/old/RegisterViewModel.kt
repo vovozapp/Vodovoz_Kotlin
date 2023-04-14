@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.register
+package com.vodovoz.app.feature.auth.reg.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

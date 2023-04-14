@@ -18,7 +18,7 @@ import com.vodovoz.app.util.extensions.textOrError
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RegFlowFragment : BaseFragment() {
+class RegisterFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_register_flow
 
@@ -48,9 +48,13 @@ class RegFlowFragment : BaseFragment() {
             val secondName = binding.tilSecondName.textOrError(2) ?: return@setOnClickListener
 
             val validateEmail = validateEmail()
-            if (validateEmail.not()) return@setOnClickListener
+            if (validateEmail.not()) {
+                return@setOnClickListener
+            }
 
-            if (FieldValidationsSettings.PHONE_REGEX.matches(it.toString()).not()) return@setOnClickListener
+            if (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString()).not()) {
+                return@setOnClickListener
+            }
 
             val password = binding.tilPassword.textOrError(2) ?: return@setOnClickListener
 

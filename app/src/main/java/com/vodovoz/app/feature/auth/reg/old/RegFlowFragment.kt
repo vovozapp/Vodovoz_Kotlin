@@ -1,10 +1,7 @@
-package com.vodovoz.app.ui.fragment.register
+package com.vodovoz.app.feature.auth.reg.old
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -13,28 +10,16 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.databinding.FragmentRegisterBinding
 import com.vodovoz.app.databinding.FragmentRegisterFlowBinding
 import com.vodovoz.app.feature.auth.reg.RegFlowViewModel
-import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setEmailValidation
-import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setNameValidation
-import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setPasswordValidation
-import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setPhoneValidation
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.util.FieldValidationsSettings
-import com.vodovoz.app.util.LogSettings
 import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.textOrError
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.subjects.PublishSubject
 
 @AndroidEntryPoint
-class RegisterFragment : BaseFragment() {
+class RegFlowFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_register_flow
 
@@ -64,13 +49,9 @@ class RegisterFragment : BaseFragment() {
             val secondName = binding.tilSecondName.textOrError(2) ?: return@setOnClickListener
 
             val validateEmail = validateEmail()
-            if (validateEmail.not()) {
-                return@setOnClickListener
-            }
+            if (validateEmail.not()) return@setOnClickListener
 
-            if (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString()).not()) {
-                return@setOnClickListener
-            }
+            if (FieldValidationsSettings.PHONE_REGEX.matches(it.toString()).not()) return@setOnClickListener
 
             val password = binding.tilPassword.textOrError(2) ?: return@setOnClickListener
 

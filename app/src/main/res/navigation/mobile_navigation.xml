@@ -313,7 +313,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.vodovoz.app.ui.fragment.register.RegisterFragment"
+        android:name="com.vodovoz.app.feature.auth.reg.RegisterFragment"
         android:label="RegisterFragment" />
     <fragment
         android:id="@+id/favoriteFragment"
