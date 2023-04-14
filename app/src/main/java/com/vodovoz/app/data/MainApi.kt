@@ -3,6 +3,7 @@ package com.vodovoz.app.data
 import com.vodovoz.app.common.product.rating.RatingResponse
 import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
 import com.vodovoz.app.feature.profile.cats.ProfileCategoriesModel
+import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -505,4 +506,18 @@ interface MainApi {
     suspend fun fetchSiteState(
         @Query("action") action: String? = null
     ): SiteStateResponse
+
+    /**
+     * registration
+     */
+
+    //Регистрация
+    @GET("/newmobile/reg.php")
+    suspend fun fetchRegisterResponse(
+        @Query("name") firstName: String,
+        @Query("lastname") secondName: String,
+        @Query("email") email: String,
+        @Query("pass") password: String,
+        @Query("phone") phone: String,
+    ): ResponseBody
 }

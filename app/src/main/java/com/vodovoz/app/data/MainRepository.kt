@@ -30,6 +30,7 @@ import com.vodovoz.app.data.parser.response.user.AuthByPhoneJsonParser.parseAuth
 import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
 import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
 import com.vodovoz.app.data.parser.response.user.RecoverPasswordJsonParser.parseRecoverPasswordResponse
+import com.vodovoz.app.data.parser.response.user.RegisterResponseJsonParser.parseRegisterResponse
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.feature.map.api.MapKitFlowApi
 import io.reactivex.rxjava3.core.Single
@@ -833,5 +834,24 @@ class MainRepository @Inject constructor(
      * site state
      */
     suspend fun fetchSiteState() = api.fetchSiteState(action = "saitosnova")
+
+    /**
+     * registration
+     */
+
+    //Регистрация нового пользователя
+    suspend fun register(
+        firstName: String,
+        secondName: String,
+        email: String,
+        password: String,
+        phone: String,
+    ) = api.fetchRegisterResponse(
+        firstName = firstName,
+        secondName = secondName,
+        email = email,
+        password = password,
+        phone = phone
+    )
 
 }
