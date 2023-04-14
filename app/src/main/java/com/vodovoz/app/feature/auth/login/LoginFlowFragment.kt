@@ -175,6 +175,11 @@ class LoginFlowFragment : BaseFragment() {
                         hideLoader()
                     }
 
+                    if (it.data.settings != null) {
+                        binding.etEmail.setText(it.data.settings.email)
+                        binding.etPassword.setText(it.data.settings.password)
+                    }
+
                     when (it.data.authType) {
                         AuthType.EMAIL -> {
                             bindEmailBtn()

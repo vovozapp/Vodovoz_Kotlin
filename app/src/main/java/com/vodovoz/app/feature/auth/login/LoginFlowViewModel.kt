@@ -58,6 +58,17 @@ class LoginFlowViewModel @Inject constructor(
                 }
 
         }
+
+        viewModelScope.launch {
+            val settings = accountManager.fetchUserSettings()
+            viewModelScope.launch {
+                uiStateListener.value = state.copy(
+                    data = state.data.copy(
+                        settings = settings
+                    )
+                )
+            }
+        }
     }
 
     private var codeTimeOutCountDownTimer: CountDownTimer? = null
@@ -65,7 +76,7 @@ class LoginFlowViewModel @Inject constructor(
 
     fun signIn() {
         viewModelScope.launch {
-            when(state.data.authType) {
+            when (state.data.authType) {
                 AuthType.EMAIL -> {
                     eventListener.emit(LoginEvents.AuthByEmail)
                 }
@@ -86,7 +97,7 @@ class LoginFlowViewModel @Inject constructor(
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
-                    when(val response = it.parseLoginResponse()) {
+                    when (val response = it.parseLoginResponse()) {
                         is ResponseEntity.Hide -> {}
                         is ResponseEntity.Success -> {
                             accountManager.updateLastLoginSetting(
@@ -127,7 +138,7 @@ class LoginFlowViewModel @Inject constructor(
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
-                    when(val response = it.parseAuthByPhoneResponse()) {
+                    when (val response = it.parseAuthByPhoneResponse()) {
                         is ResponseEntity.Hide -> {
                             uiStateListener.value =
                                 state.copy(loadingPage = false)
@@ -166,7 +177,7 @@ class LoginFlowViewModel @Inject constructor(
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
-                    when(val response = it.parseRequestCodeResponse()) {
+                    when (val response = it.parseRequestCodeResponse()) {
                         is ResponseEntity.Hide -> {
                             uiStateListener.value =
                                 state.copy(loadingPage = false)
@@ -184,7 +195,7 @@ class LoginFlowViewModel @Inject constructor(
                             uiStateListener.value =
                                 state.copy(error = null, loadingPage = false)
                             eventListener.emit(LoginEvents.CodeComplete)
-                            
+
                             startCountDownTimer(response.data)
                         }
                         is ResponseEntity.Error -> {
@@ -202,12 +213,13 @@ class LoginFlowViewModel @Inject constructor(
     fun startCountDownTimer(seconds: Int) {
         viewModelScope.launch {
             codeTimeOutCountDownTimer?.cancel()
-            codeTimeOutCountDownTimer = object: CountDownTimer(seconds * 1000L, 1000) {
+            codeTimeOutCountDownTimer = object : CountDownTimer(seconds * 1000L, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     viewModelScope.launch {
-                        eventListener.emit(LoginEvents.TimerTick((millisUntilFinished/1000).toInt()))
+                        eventListener.emit(LoginEvents.TimerTick((millisUntilFinished / 1000).toInt()))
                     }
                 }
+
                 override fun onFinish() {
                     viewModelScope.launch {
                         eventListener.emit(LoginEvents.TimerFinished)
@@ -219,16 +231,16 @@ class LoginFlowViewModel @Inject constructor(
             codeTimeOutCountDownTimer?.start()
         }
     }
-    
+
     fun recoverPassword(email: String) {
 
         if (email.length < 4) {
-            viewModelScope.launch { 
+            viewModelScope.launch {
                 eventListener.emit(LoginEvents.PasswordRecoverError("Неправильно указан email"))
             }
             return
         }
-        
+
         viewModelScope.launch {
             flow { emit(repository.recoverPassword(email)) }
                 .catch {
@@ -238,17 +250,17 @@ class LoginFlowViewModel @Inject constructor(
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
-                   val response = it.parseRecoverPasswordResponse()
+                    val response = it.parseRecoverPasswordResponse()
                     debugLog { "spasibo $response" }
-                   if (response is ResponseEntity.Success) {
-                       uiStateListener.value =
-                           state.copy(error = null, loadingPage = false)
-                       eventListener.emit(LoginEvents.PasswordRecoverSuccess("Пароль упешно изменен и выслан вам на почту: $email"))
-                   } else {
-                       uiStateListener.value =
-                           state.copy(loadingPage = false)
-                       eventListener.emit(LoginEvents.PasswordRecoverError("Ошибка. Попробуйте снова."))
-                   }
+                    if (response is ResponseEntity.Success) {
+                        uiStateListener.value =
+                            state.copy(error = null, loadingPage = false)
+                        eventListener.emit(LoginEvents.PasswordRecoverSuccess("Пароль упешно изменен и выслан вам на почту: $email"))
+                    } else {
+                        uiStateListener.value =
+                            state.copy(loadingPage = false)
+                        eventListener.emit(LoginEvents.PasswordRecoverError("Ошибка. Попробуйте снова."))
+                    }
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
@@ -273,7 +285,8 @@ class LoginFlowViewModel @Inject constructor(
 
     fun setupByPhone() {
         val curTime = Date().time
-        val expiredTime = ((curTime - loginManager.fetchLastRequestCodeDate() - loginManager.fetchLastRequestCodeTimeOut()*1000)/1000).toInt()
+        val expiredTime =
+            ((curTime - loginManager.fetchLastRequestCodeDate() - loginManager.fetchLastRequestCodeTimeOut() * 1000) / 1000).toInt()
         val phone = loginManager.fetchLastAuthPhone()
         viewModelScope.launch {
             eventListener.emit(LoginEvents.SetupByPhone(expiredTime, phone))
@@ -305,6 +318,7 @@ class LoginFlowViewModel @Inject constructor(
 
     data class LoginState(
         val authType: AuthType = AuthType.PHONE,
-        val requestUrl: String? = null
+        val requestUrl: String? = null,
+        val settings: AccountManager.UserSettings? = null
     ) : State
 }
