@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.login
+package com.vodovoz.app.feature.auth.login.old
 
 import android.os.CountDownTimer
 import android.util.Log

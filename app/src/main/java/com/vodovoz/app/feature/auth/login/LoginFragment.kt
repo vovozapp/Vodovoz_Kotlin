@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.login
+package com.vodovoz.app.feature.auth.login
 
 import android.graphics.Typeface
 import android.os.Bundle
@@ -16,14 +16,12 @@ import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentLoginFlowBinding
-import com.vodovoz.app.feature.auth.login.LoginFlowViewModel
 import com.vodovoz.app.feature.cart.CartFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setExpiredCodeText
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
-import com.vodovoz.app.ui.fragment.login.LoginFragmentDirections
 import com.vodovoz.app.ui.model.enum.AuthType
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.extensions.debugLog
