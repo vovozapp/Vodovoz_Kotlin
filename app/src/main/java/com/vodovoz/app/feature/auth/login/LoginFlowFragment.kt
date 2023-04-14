@@ -52,6 +52,7 @@ class LoginFlowFragment : BaseFragment() {
         observeUiState()
         observeEvents()
         viewModel.setupByPhone()
+        binding.etPhone.setPhoneValidator {}
     }
 
     private fun observeEvents() {

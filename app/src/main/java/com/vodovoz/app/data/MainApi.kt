@@ -487,7 +487,7 @@ interface MainApi {
     @GET("newmobile/profile/auth/authtelefon.php")
     suspend fun fetchAuthByPhoneResponse(
         @Query("action") action: String? = null,
-        @Query("telefon") phone: String? = null,
+        @Query("telefon", encoded = true) phone: String? = null,
         @Query("code") code: String? = null
     ): ResponseBody
 

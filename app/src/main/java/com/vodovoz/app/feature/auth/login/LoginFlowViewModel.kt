@@ -177,22 +177,24 @@ class LoginFlowViewModel @Inject constructor(
     }
 
     fun startCountDownTimer(seconds: Int) {
-        codeTimeOutCountDownTimer?.cancel()
-        codeTimeOutCountDownTimer = object: CountDownTimer(seconds * 1000L, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                viewModelScope.launch {
-                    eventListener.emit(LoginEvents.TimerTick((millisUntilFinished/1000).toInt()))
+        viewModelScope.launch {
+            codeTimeOutCountDownTimer?.cancel()
+            codeTimeOutCountDownTimer = object: CountDownTimer(seconds * 1000L, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    viewModelScope.launch {
+                        eventListener.emit(LoginEvents.TimerTick((millisUntilFinished/1000).toInt()))
+                    }
+                }
+                override fun onFinish() {
+                    viewModelScope.launch {
+                        eventListener.emit(LoginEvents.TimerFinished)
+                    }
+                    timerIsCancel = true
                 }
             }
-            override fun onFinish() {
-                viewModelScope.launch {
-                    eventListener.emit(LoginEvents.TimerFinished)
-                }
-                timerIsCancel = true
-            }
+            timerIsCancel = false
+            codeTimeOutCountDownTimer?.start()
         }
-        timerIsCancel = false
-        codeTimeOutCountDownTimer?.start()
     }
     
     fun recoverPassword(email: String) {
