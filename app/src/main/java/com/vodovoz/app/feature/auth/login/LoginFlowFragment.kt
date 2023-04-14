@@ -25,6 +25,7 @@ import com.vodovoz.app.ui.fragment.login.LoginFragmentDirections
 import com.vodovoz.app.ui.model.enum.AuthType
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.textOrError
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -85,10 +86,13 @@ class LoginFlowFragment : BaseFragment() {
                             }
                         }
                         LoginFlowViewModel.LoginEvents.AuthByEmail -> {
+                            val email = validateEmail()
+                            if (!email) return@collect
+                            val password = binding.tilPassword.textOrError(3) ?: return@collect
                             debugLog { "AuthByEmail" }
                             viewModel.authByEmail(
                                 binding.etEmail.text.toString(),
-                                binding.etPassword.text.toString()
+                                password
                             )
                         }
                         is LoginFlowViewModel.LoginEvents.AuthError -> {
@@ -148,6 +152,14 @@ class LoginFlowFragment : BaseFragment() {
                     }
                 }
         }
+    }
+
+    private fun validateEmail(): Boolean {
+        if (!FieldValidationsSettings.EMAIL_REGEX.matches(binding.etEmail.text.toString())) {
+            binding.tilEmail.error = "Неправильный формат почты"
+            return false
+        } else  binding.tilEmail.error = null
+        return true
     }
 
     private fun observeUiState() {

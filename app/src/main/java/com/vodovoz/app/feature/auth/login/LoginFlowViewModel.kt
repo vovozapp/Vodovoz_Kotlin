@@ -239,6 +239,7 @@ class LoginFlowViewModel @Inject constructor(
                 .flowOn(Dispatchers.IO)
                 .onEach {
                    val response = it.parseRecoverPasswordResponse()
+                    debugLog { "spasibo $response" }
                    if (response is ResponseEntity.Success) {
                        uiStateListener.value =
                            state.copy(error = null, loadingPage = false)

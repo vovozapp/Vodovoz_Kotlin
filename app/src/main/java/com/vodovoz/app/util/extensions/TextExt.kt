@@ -1,4 +1,4 @@
-package com.a.ramczy.util
+package com.vodovoz.app.util.extensions
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -13,11 +13,8 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat.Type
-import androidx.core.view.WindowInsetsCompat.Type.ime
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
