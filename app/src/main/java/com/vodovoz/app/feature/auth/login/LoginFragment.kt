@@ -25,6 +25,7 @@ import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.ui.model.enum.AuthType
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.textOrError
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -200,7 +201,12 @@ class LoginFragment : BaseFragment() {
 
     private fun initButtons() {
         binding.btnSignIn.setOnClickListener {
-            viewModel.signIn()
+            if (binding.scPersonalInfo.isChecked.not()) {
+                requireActivity().snack("Необходимо согласие на обработку персональных данных")
+                binding.scPersonalInfo.error = "Необходимо согласие на обработку персональных данных"
+            } else {
+                viewModel.signIn()
+            }
         }
         binding.tvRecoverPassword.setOnClickListener {
             viewModel.recoverPassword(binding.etEmail.text.toString())
@@ -296,6 +302,12 @@ class LoginFragment : BaseFragment() {
 
         binding.etPhone.doOnTextChanged { _, _,_, count ->
             if (count >0) binding.tilPhone.isErrorEnabled = false
+        }
+
+        binding.scPersonalInfo.setOnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                binding.scPersonalInfo.error = null
+            }
         }
     }
 }

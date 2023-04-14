@@ -192,13 +192,15 @@
             android:id="@+id/scPersonalInfo"
             style="@style/TextViewNormalBlack"
             android:layout_width="match_parent"
+            android:checked="true"
             android:layout_height="wrap_content"
             android:text="Я подтверждаю согласие на обработку персональных данных"
-            android:layout_marginTop="@dimen/space_4"
+            android:layout_marginTop="@dimen/space_8"
             android:layout_marginHorizontal="@dimen/space_16"/>
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/scDistribution"
+            android:checked="true"
             style="@style/TextViewNormalBlack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
