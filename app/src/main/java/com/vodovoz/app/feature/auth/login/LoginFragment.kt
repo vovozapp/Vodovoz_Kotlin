@@ -56,6 +56,7 @@ class LoginFragment : BaseFragment() {
         viewModel.setupByPhone()
         binding.etPhone.setPhoneValidator {}
         bindTextListeners()
+        bindErrorRefresh { showError(null) }
     }
 
     private fun observeEvents() {
