@@ -191,7 +191,7 @@ class ProfileFragment : BaseFragment() {
             }
 
             override fun onNotificationsClick() {
-                TODO("Not yet implemented")
+                //todo
             }
 
             override fun onAboutDeliveryClick() {
@@ -209,11 +209,11 @@ class ProfileFragment : BaseFragment() {
             }
 
             override fun onMyChatClick() {
-                TODO("Not yet implemented")
+                //todo
             }
 
             override fun onSafetyClick() {
-                TODO("Not yet implemented")
+                //todo
             }
 
             override fun onAboutAppClick() {
