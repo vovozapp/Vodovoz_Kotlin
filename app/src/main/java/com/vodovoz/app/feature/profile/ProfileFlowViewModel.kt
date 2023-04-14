@@ -23,6 +23,7 @@ import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.home.viewholders.homeorders.HomeOrders
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.profile.viewholders.models.*
+import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
 import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.mapper.UserDataMapper.mapToUI
@@ -42,10 +43,17 @@ class ProfileFlowViewModel @Inject constructor(
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
-    private val accountManager: AccountManager
+    private val accountManager: AccountManager,
+    private val siteStateManager: SiteStateManager
 ) : PagingContractViewModel<ProfileFlowViewModel.ProfileState, ProfileFlowViewModel.ProfileEvents>(
     ProfileState.idle()
 ) {
+
+    init {
+        viewModelScope.launch {
+            siteStateManager.requestSiteState()
+        }
+    }
 
     private fun loadPage() {
         fetchProfileData()

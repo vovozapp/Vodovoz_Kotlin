@@ -1,14 +1,12 @@
 package com.vodovoz.app.data
 
 import com.vodovoz.app.common.product.rating.RatingResponse
-import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.user.RequestCodeResponseJsonParser.parseRequestCodeResponse
+import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
 import com.vodovoz.app.feature.profile.cats.ProfileCategoriesModel
-import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface MainApi {
 
@@ -484,11 +482,9 @@ interface MainApi {
         @Query("pass") password: String,
     ): ResponseBody
 
-    @GET("newmobile/profile/auth/authtelefon.php")
+    @GET
     suspend fun fetchAuthByPhoneResponse(
-        @Query("action") action: String? = null,
-        @Query("telefon", encoded = true) phone: String? = null,
-        @Query("code") code: String? = null
+        @Url url: String
     ): ResponseBody
 
     /**
@@ -500,4 +496,13 @@ interface MainApi {
         @Query("email") email: String? = null,
         @Query("forgot_password") forgotPassword: String? = null,
     ): ResponseBody
+
+    /**
+     * block site
+     */
+
+    @GET("newmobile/config/closesait.php")
+    suspend fun fetchSiteState(
+        @Query("action") action: String? = null
+    ): SiteStateResponse
 }

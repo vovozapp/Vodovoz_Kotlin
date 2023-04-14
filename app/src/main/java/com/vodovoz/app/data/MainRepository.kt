@@ -1,7 +1,10 @@
 package com.vodovoz.app.data
 
+import android.net.Uri
+import androidx.core.net.toUri
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.product.rating.RatingResponse
+import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
 import com.vodovoz.app.data.model.features.DeliveryZonesBundleEntity
@@ -31,10 +34,12 @@ import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.pars
 import com.vodovoz.app.feature.map.api.MapKitFlowApi
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.net.URL
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
@@ -336,11 +341,11 @@ class MainRepository @Inject constructor(
      * Поиск
      */
 
-    suspend fun fetchSearchDefaultData() : ResponseBody {
+    suspend fun fetchSearchDefaultData(): ResponseBody {
         return api.fetchSearchResponse(action = "glav")
     }
 
-    suspend fun fetchProductsByQueryHeader(query: String) : ResponseBody {
+    suspend fun fetchProductsByQueryHeader(query: String): ResponseBody {
         return api.fetchSearchResponse(
             action = "search",
             query = query,
@@ -355,7 +360,7 @@ class MainRepository @Inject constructor(
         sort: String,
         orientation: String,
         page: Int?
-    ) : ResponseBody {
+    ): ResponseBody {
         return api.fetchSearchResponse(
             action = "search",
             limit = 10,
@@ -367,7 +372,7 @@ class MainRepository @Inject constructor(
         )
     }
 
-    suspend fun fetchMatchesQueries(query: String) : ResponseBody {
+    suspend fun fetchMatchesQueries(query: String): ResponseBody {
         return api.fetchMatchesQueries(
             action = "glav",
             query = query
@@ -380,7 +385,7 @@ class MainRepository @Inject constructor(
 
     suspend fun fetchBrandHeader(
         brandId: Long
-    ) : ResponseBody {
+    ): ResponseBody {
         return api.fetchBrandResponse(
             action = "detail",
             brandId = brandId.toString()
@@ -394,7 +399,7 @@ class MainRepository @Inject constructor(
         sort: String?,
         orientation: String?,
         page: Int?
-    ) : ResponseBody {
+    ): ResponseBody {
         return api.fetchBrandResponse(
             action = "detail",
             brandId = brandId.toString(),
@@ -408,7 +413,7 @@ class MainRepository @Inject constructor(
 
     suspend fun fetchCountryHeader(
         countryId: Long
-    ) : ResponseBody {
+    ): ResponseBody {
         return api.fetchCountryResponse(
             action = "details",
             countryId = countryId
@@ -421,7 +426,7 @@ class MainRepository @Inject constructor(
         orientation: String?,
         categoryId: Long?,
         page: Int?,
-    ) : ResponseBody {
+    ): ResponseBody {
         return api.fetchCountryResponse(
             action = "details",
             countryId = countryId,
@@ -432,7 +437,7 @@ class MainRepository @Inject constructor(
         )
     }
 
-    suspend fun fetchDiscountHeader() : ResponseBody {
+    suspend fun fetchDiscountHeader(): ResponseBody {
         return api.fetchNoveltiesResponse(
             action = "specpredlosh",
             page = 1
@@ -444,7 +449,7 @@ class MainRepository @Inject constructor(
         sort: String?,
         orientation: String?,
         page: Int?
-    ) : ResponseBody {
+    ): ResponseBody {
         return api.fetchNoveltiesResponse(
             action = "specpredlosh",
             categoryId = categoryId,
@@ -454,7 +459,7 @@ class MainRepository @Inject constructor(
         )
     }
 
-    suspend fun fetchNoveltiesHeader() : ResponseBody {
+    suspend fun fetchNoveltiesHeader(): ResponseBody {
         return api.fetchNoveltiesResponse(
             action = "novinki",
             page = 1
@@ -466,7 +471,7 @@ class MainRepository @Inject constructor(
         sort: String?,
         orientation: String?,
         page: Int?
-    ) : ResponseBody {
+    ): ResponseBody {
         return api.fetchNoveltiesResponse(
             action = "novinki",
             categoryId = categoryId,
@@ -478,7 +483,7 @@ class MainRepository @Inject constructor(
 
     suspend fun fetchDoubleSliderHeader(
         categoryId: Long
-    ) : ResponseBody {
+    ): ResponseBody {
         return api.fetchDoubleSlider(
             action = "details",
             androidVersion = BuildConfig.VERSION_NAME,
@@ -491,7 +496,7 @@ class MainRepository @Inject constructor(
         page: Int?,
         sort: String?,
         orientation: String?
-    ) : ResponseBody {
+    ): ResponseBody {
         return api.fetchDoubleSlider(
             action = "details",
             androidVersion = BuildConfig.VERSION_NAME,
@@ -532,10 +537,11 @@ class MainRepository @Inject constructor(
     )
 
     //Акции по баннеру
-    suspend fun fetchPromotionsByBanner(categoryId: Long): ResponseBody = api.fetchMainSliderResponse(
-        action = "detailaction",
-        categoryId = categoryId
-    )
+    suspend fun fetchPromotionsByBanner(categoryId: Long): ResponseBody =
+        api.fetchMainSliderResponse(
+            action = "detailaction",
+            categoryId = categoryId
+        )
 
     //Все бренды
     suspend fun fetchAllBrands(
@@ -589,8 +595,8 @@ class MainRepository @Inject constructor(
      */
 
     suspend fun rateProduct(
-       productId: Long,
-       ratingValue: Float
+        productId: Long,
+        ratingValue: Float
     ): RatingResponse {
         return api.rateProduct(
             productId = productId,
@@ -657,7 +663,7 @@ class MainRepository @Inject constructor(
         orientation = orientation,
         categoryId = categoryId,
         page = page,
-        isAvailable = when(isAvailable) {
+        isAvailable = when (isAvailable) {
             true -> "nalichie"
             false -> "netnalichi"
             else -> null
@@ -757,7 +763,7 @@ class MainRepository @Inject constructor(
     suspend fun fetchPersonalProducts(
         userId: Long?,
         page: Int?
-    )  = api.fetchPersonalProducts(
+    ) = api.fetchPersonalProducts(
         action = "tovarchik",
         userId = userId,
         page = page
@@ -778,19 +784,39 @@ class MainRepository @Inject constructor(
 
     suspend fun authByPhone(
         phone: String?,
+        url: String,
         code: String?
-    ) = api.fetchAuthByPhoneResponse(
-        action = "tochkakarta",
-        phone = phone,
-        code = code
-    )
+    ) : ResponseBody {
+
+        val uri = ApiConfig.VODOVOZ_URL
+            .toUri()
+            .buildUpon()
+            .appendPath(url)
+            .appendQueryParameter("action", "tochkakarta")
+            .appendQueryParameter("phone", phone)
+            .appendQueryParameter("code", code)
+            .build()
+            .toString()
+
+        return api.fetchAuthByPhoneResponse(uri)
+    }
 
     suspend fun requestCode(
-        phone: String?
-    ) = api.fetchAuthByPhoneResponse(
-        action = "tochkakarta",
-        phone = phone
-    )
+        phone: String?,
+        url: String
+    ): ResponseBody {
+
+        val uri = ApiConfig.VODOVOZ_URL
+            .toUri()
+            .buildUpon()
+            .appendPath(url)
+            .appendQueryParameter("action", "tochkakarta")
+            .appendQueryParameter("phone", phone)
+            .build()
+            .toString()
+
+        return api.fetchAuthByPhoneResponse(uri)
+    }
 
     /**
      * password recovery
@@ -802,5 +828,10 @@ class MainRepository @Inject constructor(
         forgotPassword = "yes",
         email = email
     )
+
+    /**
+     * site state
+     */
+    suspend fun fetchSiteState() = api.fetchSiteState(action = "saitosnova")
 
 }

@@ -17,6 +17,7 @@ import com.vodovoz.app.data.parser.response.user.AuthByPhoneJsonParser.parseAuth
 import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
 import com.vodovoz.app.data.parser.response.user.RecoverPasswordJsonParser.parseRecoverPasswordResponse
 import com.vodovoz.app.data.parser.response.user.RequestCodeResponseJsonParser.parseRequestCodeResponse
+import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.ui.model.enum.AuthType
 import com.vodovoz.app.util.FieldValidationsSettings
@@ -34,10 +35,30 @@ class LoginFlowViewModel @Inject constructor(
     private val tabManager: TabManager,
     private val localDataSource: LocalDataSource,
     private val accountManager: AccountManager,
-    private val loginManager: LoginManager
+    private val loginManager: LoginManager,
+    private val siteStateManager: SiteStateManager
 ) : PagingContractViewModel<LoginFlowViewModel.LoginState, LoginFlowViewModel.LoginEvents>(
     LoginState()
 ) {
+
+    init {
+        viewModelScope.launch {
+            siteStateManager
+                .observeSiteState()
+                .collect {
+                    if (it != null) {
+                        uiStateListener.value = state.copy(
+                            data = state.data.copy(
+                                requestUrl = it.requestPhone
+                            )
+                        )
+                    } else {
+                        siteStateManager.requestSiteState()
+                    }
+                }
+
+        }
+    }
 
     private var codeTimeOutCountDownTimer: CountDownTimer? = null
     private var timerIsCancel = true
@@ -96,8 +117,9 @@ class LoginFlowViewModel @Inject constructor(
     }
 
     fun authByPhone(phone: String, code: String) {
+        val url = state.data.requestUrl ?: return
         viewModelScope.launch {
-            flow { emit(repository.authByPhone(phone, code)) }
+            flow { emit(repository.authByPhone(phone, code, url)) }
                 .catch {
                     debugLog { "auth by phone error ${it.localizedMessage}" }
                     uiStateListener.value =
@@ -134,8 +156,9 @@ class LoginFlowViewModel @Inject constructor(
     }
 
     fun requestCode(phone: String) {
+        val url = state.data.requestUrl ?: return
         viewModelScope.launch {
-            flow { emit(repository.requestCode(phone)) }
+            flow { emit(repository.requestCode(phone, url)) }
                 .catch {
                     debugLog { "request code error ${it.localizedMessage}" }
                     uiStateListener.value =
@@ -280,6 +303,7 @@ class LoginFlowViewModel @Inject constructor(
     }
 
     data class LoginState(
-        val authType: AuthType = AuthType.PHONE
+        val authType: AuthType = AuthType.PHONE,
+        val requestUrl: String? = null
     ) : State
 }
