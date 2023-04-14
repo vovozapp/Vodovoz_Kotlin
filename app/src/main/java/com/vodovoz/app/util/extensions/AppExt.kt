@@ -100,9 +100,9 @@ inline fun Activity.snack(
     val view = snack.view
     view.background = this.drawable(R.drawable.bg_custom_snackbar)
     val params = view.layoutParams as FrameLayout.LayoutParams
-    params.gravity = Gravity.BOTTOM
+    params.gravity = Gravity.TOP
     view.layoutParams = params
-    snack.setTextColor(this.color(R.color.bluePrimary))
+    snack.setTextColor(this.color(R.color.text_black))
     snack.f()
     snack.show()
 }

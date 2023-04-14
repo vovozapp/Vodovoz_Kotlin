@@ -197,23 +197,13 @@ class ProfileFlowViewModel @Inject constructor(
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     uiStateListener.value = if (it.status != null && it.status == "Success") {
-                        val list = it.fetchProfileCategoryUIList()
+                        val mapped = it.fetchProfileCategoryUIList()
                         val item = PositionItem(
                             POSITION_3,
-                            ProfileMain(items = list)
+                            ProfileMain(items = mapped.list)
                         )
 
-                        var amount: Int? = null
-
-                        list?.forEach {
-                            it.insideCategories?.forEach {cat ->
-                                if (cat.amount != null) {
-                                    amount = cat.amount
-                                }
-                            }
-                        }
-
-                        tabManager.saveBottomNavProfileState(amount)
+                        tabManager.saveBottomNavProfileState(mapped.amount)
 
                         state.copy(
                             loadingPage = false,

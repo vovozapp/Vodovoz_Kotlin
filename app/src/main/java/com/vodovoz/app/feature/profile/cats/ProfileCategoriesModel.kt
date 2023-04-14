@@ -14,11 +14,15 @@ data class ProfileCategoriesModel(
     val zakaz: List<Zakaz>?
 ): Parcelable {
 
-    fun fetchProfileCategoryUIList() : List<ProfileCategoryUI>? {
-        return dannie?.map {
+    fun fetchProfileCategoryUIList() : MappedProfileCategories {
+        var amount: Int? = null
+        val list = dannie?.map {
             ProfileCategoryUI(
                 it.RAZDEL,
                 it.PODRAZDEL?.map {
+                    if (it.ZNACHENI != null) {
+                        amount = it.ZNACHENI
+                    }
                     ProfileInsideCategoryUI(
                         it.ID,
                         it.NAME,
@@ -28,8 +32,15 @@ data class ProfileCategoriesModel(
                 }
             )
         }
+
+        return MappedProfileCategories(list, amount)
     }
 }
+
+data class MappedProfileCategories(
+    val list: List<ProfileCategoryUI>?,
+    val amount: Int?
+)
 
 @Parcelize
 @JsonClass(generateAdapter = true)

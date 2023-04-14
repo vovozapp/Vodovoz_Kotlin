@@ -90,6 +90,7 @@ class LoginFlowViewModel @Inject constructor(
     }
 
     fun authByEmail(email: String, password: String) {
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.authByEmail(email, password)) }
                 .catch {
@@ -131,6 +132,7 @@ class LoginFlowViewModel @Inject constructor(
 
     fun authByPhone(phone: String, code: String) {
         val url = state.data.requestUrl ?: return
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.authByPhone(phone, code, url)) }
                 .catch {
@@ -170,6 +172,7 @@ class LoginFlowViewModel @Inject constructor(
 
     fun requestCode(phone: String) {
         val url = state.data.requestUrl ?: return
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.requestCode(phone, url)) }
                 .catch {
@@ -242,7 +245,7 @@ class LoginFlowViewModel @Inject constructor(
             }
             return
         }
-
+        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.recoverPassword(email)) }
                 .catch {
@@ -295,7 +298,7 @@ class LoginFlowViewModel @Inject constructor(
         }
     }
 
-    fun clearData() {
+    private fun clearData() {
         localDataSource.updateLastRequestCodeDate(0)
         localDataSource.updateLastRequestCodeTimeOut(0)
 

@@ -30,6 +30,8 @@ import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.model.PopupNewsUI
+import com.vodovoz.app.util.extensions.addOnBackPressedCallback
+import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
@@ -88,6 +90,7 @@ class HomeFragment : BaseFragment() {
         observeUiState()
         observeTabReselect()
         observeEvents()
+        bindBackPressed()
     }
 
     private fun observeEvents() {
@@ -431,6 +434,18 @@ class HomeFragment : BaseFragment() {
                         tabManager.setDefaultState()
                     }
                 }
+        }
+    }
+
+    private fun bindBackPressed() {
+        var back = false
+        addOnBackPressedCallback {
+            if (!back) {
+                requireActivity().snack("Нажмите назад еще раз, чтобы выйти") {}
+                back = true
+            } else {
+                requireActivity().finish()
+            }
         }
     }
 }
