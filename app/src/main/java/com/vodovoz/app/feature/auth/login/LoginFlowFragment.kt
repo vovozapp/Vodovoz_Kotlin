@@ -24,6 +24,7 @@ import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.ui.fragment.login.LoginFragmentDirections
 import com.vodovoz.app.ui.model.enum.AuthType
 import com.vodovoz.app.util.FieldValidationsSettings
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -62,6 +63,7 @@ class LoginFlowFragment : BaseFragment() {
                         LoginFlowViewModel.LoginEvents.AuthByPhone -> {
                             when (binding.tilCode.visibility == View.VISIBLE) {
                                 true -> {
+                                    debugLog { "authByPhone" }
                                     viewModel.authByPhone(
                                         binding.etPhone.text.toString(),
                                         binding.etCode.text.toString()
@@ -69,22 +71,31 @@ class LoginFlowFragment : BaseFragment() {
                                 }
                                 false -> {
                                     when (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString())) {
-                                        true -> viewModel.requestCode(binding.etPhone.text.toString())
-                                        false -> binding.tilPhone.error = "Неверный формат телефона"
+                                        true -> {
+                                            debugLog { "requestCode" }
+                                            viewModel.requestCode(binding.etPhone.text.toString())
+                                        }
+                                        false -> {
+                                            debugLog { "Неверный формат телефона" }
+                                            binding.tilPhone.error = "Неверный формат телефона"
+                                        }
                                     }
                                 }
                             }
                         }
                         LoginFlowViewModel.LoginEvents.AuthByEmail -> {
+                            debugLog { "AuthByEmail" }
                             viewModel.authByEmail(
                                 binding.etEmail.text.toString(),
                                 binding.etPassword.text.toString()
                             )
                         }
                         is LoginFlowViewModel.LoginEvents.AuthError -> {
+                            debugLog { "AuthError" }
                             binding.tilPassword.error = it.message
                         }
                         LoginFlowViewModel.LoginEvents.AuthSuccess -> {
+                            debugLog { "AuthSuccess" }
                             flowViewModel.refresh()
                             cartFlowViewModel.refreshIdle()
                             favoriteViewModel.refreshIdle()
@@ -92,12 +103,15 @@ class LoginFlowFragment : BaseFragment() {
                             findNavController().popBackStack()
                         }
                         LoginFlowViewModel.LoginEvents.CodeComplete -> {
+                            debugLog { "CodeComplete" }
                             binding.tilCode.requestFocus()
                         }
                         is LoginFlowViewModel.LoginEvents.PasswordRecoverError -> {
+                            debugLog { "PasswordRecoverError" }
                             Snackbar.make(binding.root, it.message, Snackbar.LENGTH_LONG).show()
                         }
                         is LoginFlowViewModel.LoginEvents.PasswordRecoverSuccess -> {
+                            debugLog { "PasswordRecoverSuccess" }
                             MaterialAlertDialogBuilder(requireContext())
                                 .setMessage(it.message)
                                 .setPositiveButton("Ок") { dialog, _ ->
@@ -106,6 +120,7 @@ class LoginFlowFragment : BaseFragment() {
                                 .show()
                         }
                         LoginFlowViewModel.LoginEvents.TimerFinished -> {
+                            debugLog { "TimerFinished" }
                             binding.tvExpired.text = "Отправить код повторно"
                             binding.tvExpired.setTextColor(ContextCompat.getColor(requireContext(), R.color.bluePrimary))
                             binding.tvExpired.setTypeface(ResourcesCompat.getFont(requireContext(), R.font.rotonda_normal), Typeface.BOLD)
@@ -117,6 +132,7 @@ class LoginFlowFragment : BaseFragment() {
                             }
                         }
                         is LoginFlowViewModel.LoginEvents.TimerTick -> {
+                            debugLog { "TimerTick" }
                             binding.tvExpired.setExpiredCodeText(it.tick)
                             binding.tvExpired.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_gray))
                             binding.tvExpired.typeface = ResourcesCompat.getFont(requireContext(), R.font.rotonda_normal)
@@ -125,6 +141,7 @@ class LoginFlowFragment : BaseFragment() {
                             binding.tilCode.visibility = View.VISIBLE
                         }
                         is LoginFlowViewModel.LoginEvents.SetupByPhone -> {
+                            debugLog { "SetupByPhone" }
                             setupAuthByPhone(it.time, it.phone)
                         }
                     }
