@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -54,6 +55,7 @@ class LoginFlowFragment : BaseFragment() {
         observeEvents()
         viewModel.setupByPhone()
         binding.etPhone.setPhoneValidator {}
+        bindTextListeners()
     }
 
     private fun observeEvents() {
@@ -268,6 +270,20 @@ class LoginFlowFragment : BaseFragment() {
                 binding.etPhone.setText(phone)
                 binding.tilCode.requestFocus()
             }
+        }
+    }
+
+    private fun bindTextListeners() {
+        binding.etEmail.doOnTextChanged { _, _,_, count ->
+            if (count >0) binding.tilEmail.isErrorEnabled = false
+        }
+
+        binding.etPassword.doOnTextChanged { _, _,_, count ->
+            if (count >0) binding.tilPassword.isErrorEnabled = false
+        }
+
+        binding.etCode.doOnTextChanged { _, _,_, count ->
+            if (count >0) binding.tilCode.isErrorEnabled = false
         }
     }
 }
