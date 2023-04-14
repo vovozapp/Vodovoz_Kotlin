@@ -3,18 +3,30 @@ package com.vodovoz.app.ui.fragment.register
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
+import com.vodovoz.app.R
+import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentRegisterBinding
+import com.vodovoz.app.databinding.FragmentRegisterFlowBinding
+import com.vodovoz.app.feature.auth.reg.RegFlowViewModel
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setEmailValidation
 import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setNameValidation
 import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setPasswordValidation
 import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setPhoneValidation
+import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
+import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.LogSettings
+import com.vodovoz.app.util.extensions.snack
+import com.vodovoz.app.util.extensions.textOrError
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -22,108 +34,135 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 @AndroidEntryPoint
-class RegisterFragment : ViewStateBaseFragment() {
+class RegisterFragment : BaseFragment() {
 
-    private lateinit var binding: FragmentRegisterBinding
-    private val viewModel: RegisterViewModel by viewModels()
+    override fun layout(): Int = R.layout.fragment_register_flow
 
-    private val compositeDisposable = CompositeDisposable()
-    private val trackErrorSubject: PublishSubject<Boolean> = PublishSubject.create()
-    private val validEmailSubject: PublishSubject<Boolean> = PublishSubject.create()
-    private val validPhoneSubject: PublishSubject<Boolean> = PublishSubject.create()
-    private val validFirstNameSubject: PublishSubject<Boolean> = PublishSubject.create()
-    private val validSecondNameSubject: PublishSubject<Boolean> = PublishSubject.create()
-    private val validPasswordSubject: PublishSubject<Boolean> = PublishSubject.create()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        subscribeSubjects()
+    private val binding: FragmentRegisterFlowBinding by viewBinding {
+        FragmentRegisterFlowBinding.bind(
+            contentView
+        )
     }
 
-    private fun subscribeSubjects() {
-        validEmailSubject.subscribeBy { viewModel.validEmail = it }.addTo(compositeDisposable)
-        validPhoneSubject.subscribeBy { viewModel.validPhone = it }.addTo(compositeDisposable)
-        validFirstNameSubject.subscribeBy { viewModel.validFirstName = it }.addTo(compositeDisposable)
-        validSecondNameSubject.subscribeBy { viewModel.validSecondName = it }.addTo(compositeDisposable)
-        validPasswordSubject.subscribeBy { viewModel.validPassword = it }.addTo(compositeDisposable)
-    }
+    private val viewModel: RegFlowViewModel by viewModels()
 
-    override fun setContentView(
-        inflater: LayoutInflater,
-        container: ViewGroup
-    ) = FragmentRegisterBinding.inflate(
-        inflater,
-        container,
-        false
-    ).apply { binding = this }.root
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun initView() {
-        onStateSuccess()
-        initAppBar()
+        initToolbar("Регистрация")
         initButtons()
-        setupFields()
-        observeViewModel()
-    }
-
-    override fun update() {}
-
-    private fun initAppBar() {
-        binding.incAppBar.tvTitle.text = "Регистрация"
-        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
+        observeEvents()
+        observeUiState()
+        bindErrorRefresh { showError(null) }
+        bindTextListeners()
     }
 
     private fun initButtons() {
         binding.btnRegister.setOnClickListener {
-            trackErrorSubject.onNext(true)
-            Log.d(LogSettings.ID_LOG, "${viewModel.validEmail} ${viewModel.validPhone} ${viewModel.validFirstName} ${viewModel.validSecondName}")
-            when(
-                viewModel.validEmail &&
-                        viewModel.validPhone &&
-                        viewModel.validFirstName &&
-                        viewModel.validSecondName &&
-                        viewModel.validPassword
-            ) {
-                true -> viewModel.register(
-                    firstName = binding.etFirstName.text.toString(),
-                    secondName = binding.etSecondName.text.toString(),
-                    email = binding.etEmail.text.toString(),
-                    phone = binding.etPhone.text.toString(),
-                    password = binding.etPassword.text.toString()
-                )
-                false -> {
-                    Snackbar.make(binding.root, "Проверьте правильность введенных данных!", Snackbar.LENGTH_LONG).show()
+
+            val firstName = binding.tilFirstName.textOrError(2) ?: return@setOnClickListener
+            val secondName = binding.tilSecondName.textOrError(2) ?: return@setOnClickListener
+
+            val validateEmail = validateEmail()
+            if (validateEmail.not()) {
+                return@setOnClickListener
+            }
+
+            if (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString()).not()) {
+                return@setOnClickListener
+            }
+
+            val password = binding.tilPassword.textOrError(2) ?: return@setOnClickListener
+
+            if (binding.scPersonalInfo.isChecked.not()) {
+                requireActivity().snack("Необходимо согласие на обработку персональных данных")
+                binding.scPersonalInfo.error = "Необходимо согласие на обработку персональных данных"
+                return@setOnClickListener
+            }
+
+            viewModel.register(
+                firstName = firstName,
+                secondName = secondName,
+                email = binding.etEmail.text.toString(),
+                phone = binding.etPhone.text.toString(),
+                password = password
+            )
+        }
+    }
+
+    private fun validateEmail(): Boolean {
+        if (!FieldValidationsSettings.EMAIL_REGEX.matches(binding.etEmail.text.toString())) {
+            binding.tilEmail.error = "Неправильный формат почты"
+            return false
+        } else  binding.tilEmail.error = null
+        return true
+    }
+
+    private fun observeUiState() {
+        lifecycleScope.launchWhenStarted {
+            viewModel
+                .observeUiState()
+                .collect {
+                    if (it.loadingPage) {
+                        showLoader()
+                    } else {
+                        hideLoader()
+                    }
+
+                    showError(it.error)
                 }
-            }
         }
     }
 
-    private fun setupFields() {
-        binding.etEmail.setEmailValidation(binding.tilEmail, compositeDisposable, trackErrorSubject, validEmailSubject)
-        binding.etPhone.setPhoneValidation(binding.tilPhone, compositeDisposable, trackErrorSubject, validPhoneSubject)
-        binding.etFirstName.setNameValidation(binding.tilFirstName, compositeDisposable, trackErrorSubject, validFirstNameSubject)
-        binding.etSecondName.setNameValidation(binding.tilSecondName, compositeDisposable, trackErrorSubject, validSecondNameSubject)
-        binding.etPassword.setPasswordValidation(binding.tilPassword, compositeDisposable, trackErrorSubject, validPasswordSubject, true)
-    }
-
-    private fun observeViewModel() {
-        viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
-            when(state) {
-                is ViewState.Success -> onStateSuccess()
-                is ViewState.Error -> onStateError(state.errorMessage)
-                is ViewState.Loading -> onStateLoading()
-                is ViewState.Hide -> {}
-            }
-        }
-
-        viewModel.isRegisterSuccessLD.observe(viewLifecycleOwner) { isSuccess ->
-            if (isSuccess) {
-                findNavController().popBackStack()
-            }
-        }
-
-        viewModel.errorLD.observe(viewLifecycleOwner) { message ->
-            Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
+    private fun observeEvents() {
+        lifecycleScope.launchWhenStarted {
+            viewModel
+                .observeEvent()
+                .collect {
+                    when(it) {
+                        is RegFlowViewModel.RegEvents.RegError -> {
+                            Snackbar.make(binding.root, it.message, Snackbar.LENGTH_LONG).show()
+                        }
+                        is RegFlowViewModel.RegEvents.RegSuccess -> {
+                            findNavController().popBackStack() //todo
+                        }
+                    }
+                }
         }
     }
 
+    private fun bindTextListeners() {
+        binding.etEmail.doOnTextChanged { _, _,_, count ->
+            if (count >0) binding.tilEmail.isErrorEnabled = false
+        }
+
+        binding.etPassword.doOnTextChanged { _, _,_, count ->
+            if (count >0) binding.tilPassword.isErrorEnabled = false
+        }
+
+        binding.etFirstName.doOnTextChanged { _, _,_, count ->
+            if (count >0) binding.tilFirstName.isErrorEnabled = false
+        }
+
+        binding.etSecondName.doOnTextChanged { _, _,_, count ->
+            if (count >0) binding.tilSecondName.isErrorEnabled = false
+        }
+
+        binding.etPhone.doOnTextChanged { _, _,_, count ->
+            if (count >0) binding.tilPhone.isErrorEnabled = false
+        }
+
+        binding.scPersonalInfo.setOnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                binding.scPersonalInfo.error = null
+            }
+        }
+
+        binding.etPhone.setPhoneValidator {
+            when(FieldValidationsSettings.PHONE_REGEX.matches(it.toString())) {
+                true -> binding.tilPhone.error = null
+                false -> binding.tilPhone.error = "Неверный формат телефона"
+            }
+        }
+    }
 }

@@ -27,6 +27,8 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     style="@style/TextField"
+                    android:maxLines="1"
+                    android:inputType="text"
                     android:id="@+id/etFirstName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -46,6 +48,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     style="@style/TextField"
                     android:id="@+id/etSecondName"
+                    android:maxLines="1"
+                    android:inputType="text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Имя Отчество*" />
@@ -65,6 +69,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     style="@style/TextField"
                     android:id="@+id/etEmail"
+                    android:maxLines="1"
+                    android:inputType="text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Почта*" />
@@ -87,6 +93,8 @@
                     android:id="@+id/etPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:inputType="number"
                     android:hint="Телефон*" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -105,6 +113,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     style="@style/TextField"
                     android:id="@+id/etPassword"
+                    android:maxLines="1"
+                    android:inputType="textPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Пароль*" />

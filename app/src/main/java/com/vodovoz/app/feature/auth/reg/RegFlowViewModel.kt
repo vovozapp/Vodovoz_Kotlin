@@ -54,6 +54,7 @@ class RegFlowViewModel @Inject constructor(
                         is ResponseEntity.Success -> {
                             accountManager.updateUserId(response.data)
                             localDataSource.updateUserId(response.data)
+                            accountManager.updateLastLoginSetting(AccountManager.UserSettings(email, password))
 
                             uiStateListener.value =
                                 state.copy(error = null, loadingPage = false)
