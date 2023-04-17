@@ -31,7 +31,11 @@ class ProductDetailsFlowFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_product_details_flow
 
-    private val binding: FragmentProductDetailsFlowBinding by viewBinding { FragmentProductDetailsFlowBinding.bind(contentView) }
+    private val binding: FragmentProductDetailsFlowBinding by viewBinding {
+        FragmentProductDetailsFlowBinding.bind(
+            contentView
+        )
+    }
 
     private val viewModel: ProductDetailsFlowViewModel by viewModels()
 
@@ -62,14 +66,8 @@ class ProductDetailsFlowFragment : BaseFragment() {
     private val productDetailFabController by lazy {
         ProductDetailFabController(
             context = requireContext(),
-            amountTv = binding.floatingAmountController.amount,
-            circleAmountTv = binding.floatingAmountController.circleAmount,
             viewModel = viewModel,
             navController = findNavController(),
-            addIv = binding.floatingAmountController.add,
-            reduceIv = binding.floatingAmountController.reduceAmount,
-            increaseIv = binding.floatingAmountController.increaseAmount,
-            amountDeployed = binding.floatingAmountController.amountControllerDeployed
         )
     }
 
@@ -94,8 +92,8 @@ class ProductDetailsFlowFragment : BaseFragment() {
         lifecycleScope.launchWhenStarted {
             viewModel
                 .observeUpdateFab()
-                .collect{
-                    productDetailFabController.updateFabQuantity(it)
+                .collect {
+
                 }
         }
     }
@@ -125,14 +123,6 @@ class ProductDetailsFlowFragment : BaseFragment() {
                             detailState.detailBuyWith.takeIf { it?.items?.first()?.productUIList?.size != 0 },
                             detailState.detailComments
                         )
-                    )
-
-                    productDetailFabController.bindFab(
-                        header = detailState.detailHeader,
-                        oldPriceTv = binding.tvFloatingOldPrice,
-                        miniDetailIv = binding.miniDetailImage,
-                        currentPriceTv = binding.tvFloatingCurrentPrice,
-                        conditionTv = binding.tvFloatingPriceCondition
                     )
 
                     showError(detailState.error)
@@ -165,18 +155,28 @@ class ProductDetailsFlowFragment : BaseFragment() {
             }
 
             override fun onTvCommentAmount(productId: Long) {
-                findNavController().navigate(ProductDetailsFragmentDirections.actionToAllCommentsByProductDialogFragment(productId))
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToAllCommentsByProductDialogFragment(
+                        productId
+                    )
+                )
             }
 
             override fun onYouTubeClick(videoCode: String) {
-                findNavController().navigate(ProductDetailsFragmentDirections.actionToYouTubeVideoFragmentDialog(videoCode))
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToYouTubeVideoFragmentDialog(
+                        videoCode
+                    )
+                )
             }
 
             override fun onDetailPictureClick(currentItem: Int, detailPictureList: Array<String>) {
-                findNavController().navigate(ProductDetailsFragmentDirections.actionToFullScreenDetailPicturesSliderFragment(
-                    currentItem,
-                    detailPictureList
-                ))
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToFullScreenDetailPicturesSliderFragment(
+                        currentItem,
+                        detailPictureList
+                    )
+                )
             }
 
             override fun showProductsByCategory(id: Long) {
@@ -202,19 +202,31 @@ class ProductDetailsFlowFragment : BaseFragment() {
             }
 
             override fun onQueryClick(query: String) {
-                findNavController().navigate(ProductDetailsFragmentDirections.actionToSearchFragment(query))
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToSearchFragment(
+                        query
+                    )
+                )
             }
 
             override fun onSendComment(id: Long) {
                 if (viewModel.isLoginAlready()) {
-                    findNavController().navigate(ProductDetailsFragmentDirections.actionToSendCommentAboutProductFragment(id))
+                    findNavController().navigate(
+                        ProductDetailsFragmentDirections.actionToSendCommentAboutProductFragment(
+                            id
+                        )
+                    )
                 } else {
                     findNavController().navigate(R.id.profileFragment)
                 }
             }
 
             override fun onShowAllComments(id: Long) {
-                findNavController().navigate(ProductDetailsFragmentDirections.actionToAllCommentsByProductDialogFragment(id))
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToAllCommentsByProductDialogFragment(
+                        id
+                    )
+                )
             }
         }
     }
@@ -226,8 +238,14 @@ class ProductDetailsFlowFragment : BaseFragment() {
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-                when(viewModel.isLoginAlready()) {
-                    true -> findNavController().navigate(ProductDetailsFragmentDirections.actionToPreOrderBS(id, name, detailPicture))
+                when (viewModel.isLoginAlready()) {
+                    true -> findNavController().navigate(
+                        ProductDetailsFragmentDirections.actionToPreOrderBS(
+                            id,
+                            name,
+                            detailPicture
+                        )
+                    )
                     false -> findNavController().navigate(ProductDetailsFragmentDirections.actionToProfileFragment())
                 }
             }
@@ -246,7 +264,7 @@ class ProductDetailsFlowFragment : BaseFragment() {
         }
     }
 
-    private fun getProductsShowClickListener() : ProductsShowAllListener {
+    private fun getProductsShowClickListener(): ProductsShowAllListener {
         return object : ProductsShowAllListener {
             override fun showAllDiscountProducts(id: Long) {}
             override fun showAllTopProducts(id: Long) {}
@@ -255,11 +273,16 @@ class ProductDetailsFlowFragment : BaseFragment() {
         }
     }
 
-    private fun getPromotionsClickListener() : PromotionsClickListener {
+    private fun getPromotionsClickListener(): PromotionsClickListener {
         return object : PromotionsClickListener {
             override fun onPromotionClick(id: Long) {
-                findNavController().navigate(ProductDetailsFragmentDirections.actionToPromotionDetailFragment(id))
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToPromotionDetailFragment(
+                        id
+                    )
+                )
             }
+
             override fun onShowAllPromotionsClick() {}
         }
     }
@@ -270,7 +293,11 @@ class ProductDetailsFlowFragment : BaseFragment() {
             ?.observe(viewLifecycleOwner) { productId ->
                 if (findNavController().currentDestination?.id == R.id.replacementProductsSelectionBS) {
                     findNavController().popBackStack()
-                    findNavController().navigate(ProductDetailsFragmentDirections.actionToSelf(productId))
+                    findNavController().navigate(
+                        ProductDetailsFragmentDirections.actionToSelf(
+                            productId
+                        )
+                    )
                 }
             }
     }

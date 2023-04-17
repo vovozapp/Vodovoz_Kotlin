@@ -15,16 +15,13 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentProductDetailsFlowBinding
-import com.vodovoz.app.feature.home.HomeFlowViewModel
-import com.vodovoz.app.feature.home.HomeFragmentDirections
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
-import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
+import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
-import com.vodovoz.app.ui.model.*
-import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.ui.model.ProductUI
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -33,7 +30,11 @@ class ProductDetailsFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_product_details_flow
 
-    private val binding: FragmentProductDetailsFlowBinding by viewBinding { FragmentProductDetailsFlowBinding.bind(contentView) }
+    private val binding: FragmentProductDetailsFlowBinding by viewBinding {
+        FragmentProductDetailsFlowBinding.bind(
+            contentView
+        )
+    }
 
     private val viewModel: ProductDetailsFlowViewModel by viewModels()
 
@@ -67,14 +68,8 @@ class ProductDetailsFragment : BaseFragment() {
     private val productDetailFabController by lazy {
         ProductDetailFabController(
             context = requireContext(),
-            amountTv = binding.floatingAmountController.amount,
-            circleAmountTv = binding.floatingAmountController.circleAmount,
             viewModel = viewModel,
-            navController = findNavController(),
-            addIv = binding.floatingAmountController.add,
-            reduceIv = binding.floatingAmountController.reduceAmount,
-            increaseIv = binding.floatingAmountController.increaseAmount,
-            amountDeployed = binding.floatingAmountController.amountControllerDeployed
+            navController = findNavController()
         )
     }
 
@@ -101,18 +96,28 @@ class ProductDetailsFragment : BaseFragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.observeEvent()
                 .collect {
-                    when(it) {
+                    when (it) {
                         is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToPreOrder -> {
                             if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
                                 findNavController().popBackStack()
                             }
-                            findNavController().navigate(ProductDetailsFragmentDirections.actionToPreOrderBS(it.id, it.name, it.detailPicture))
+                            findNavController().navigate(
+                                ProductDetailsFragmentDirections.actionToPreOrderBS(
+                                    it.id,
+                                    it.name,
+                                    it.detailPicture
+                                )
+                            )
                         }
                         is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProfile -> {
                             tabManager.selectTab(R.id.graph_profile)
                         }
                         is ProductDetailsFlowViewModel.ProductDetailsEvents.SendComment -> {
-                            findNavController().navigate(ProductDetailsFragmentDirections.actionToSendCommentAboutProductFragment(it.id))
+                            findNavController().navigate(
+                                ProductDetailsFragmentDirections.actionToSendCommentAboutProductFragment(
+                                    it.id
+                                )
+                            )
                         }
                     }
                 }
@@ -123,8 +128,12 @@ class ProductDetailsFragment : BaseFragment() {
         lifecycleScope.launchWhenStarted {
             viewModel
                 .observeUpdateFab()
-                .collect{
-                    productDetailFabController.updateFabQuantity(it)
+                .collect {
+                    productDetailFabController.updateFabQuantity(
+                        cartQuantity = it,
+                        amountTv = binding.floatingAmountController.amount,
+                        circleAmountTv = binding.floatingAmountController.circleAmount,
+                    )
                 }
         }
     }
@@ -161,7 +170,13 @@ class ProductDetailsFragment : BaseFragment() {
                         oldPriceTv = binding.tvFloatingOldPrice,
                         miniDetailIv = binding.miniDetailImage,
                         currentPriceTv = binding.tvFloatingCurrentPrice,
-                        conditionTv = binding.tvFloatingPriceCondition
+                        conditionTv = binding.tvFloatingPriceCondition,
+                        amountTv = binding.floatingAmountController.amount,
+                        circleAmountTv = binding.floatingAmountController.circleAmount,
+                        addIv = binding.floatingAmountController.add,
+                        reduceIv = binding.floatingAmountController.reduceAmount,
+                        increaseIv = binding.floatingAmountController.increaseAmount,
+                        amountDeployed = binding.floatingAmountController.amountControllerDeployed
                     )
 
                     showError(detailState.error)
@@ -188,24 +203,34 @@ class ProductDetailsFragment : BaseFragment() {
             ) {
                 findNavController().navigate(
                     ProductDetailsFragmentDirections.actionToReplacementProductsSelectionBS(
-                        detailPicture, products, id, name, categoryId =  categoryId ?: -1L
+                        detailPicture, products, id, name, categoryId = categoryId ?: -1L
                     )
                 )
             }
 
             override fun onTvCommentAmount(productId: Long) {
-                findNavController().navigate(ProductDetailsFragmentDirections.actionToAllCommentsByProductDialogFragment(productId))
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToAllCommentsByProductDialogFragment(
+                        productId
+                    )
+                )
             }
 
             override fun onYouTubeClick(videoCode: String) {
-                findNavController().navigate(ProductDetailsFragmentDirections.actionToYouTubeVideoFragmentDialog(videoCode))
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToYouTubeVideoFragmentDialog(
+                        videoCode
+                    )
+                )
             }
 
             override fun onDetailPictureClick(currentItem: Int, detailPictureList: Array<String>) {
-                findNavController().navigate(ProductDetailsFragmentDirections.actionToFullScreenDetailPicturesSliderFragment(
-                    currentItem,
-                    detailPictureList
-                ))
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToFullScreenDetailPicturesSliderFragment(
+                        currentItem,
+                        detailPictureList
+                    )
+                )
             }
 
             override fun showProductsByCategory(id: Long) {
@@ -231,7 +256,11 @@ class ProductDetailsFragment : BaseFragment() {
             }
 
             override fun onQueryClick(query: String) {
-                findNavController().navigate(ProductDetailsFragmentDirections.actionToSearchFragment(query))
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToSearchFragment(
+                        query
+                    )
+                )
             }
 
             override fun onSendComment(id: Long) {
@@ -239,7 +268,11 @@ class ProductDetailsFragment : BaseFragment() {
             }
 
             override fun onShowAllComments(id: Long) {
-                findNavController().navigate(ProductDetailsFragmentDirections.actionToAllCommentsByProductDialogFragment(id))
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToAllCommentsByProductDialogFragment(
+                        id
+                    )
+                )
             }
         }
     }
@@ -268,7 +301,7 @@ class ProductDetailsFragment : BaseFragment() {
         }
     }
 
-    private fun getProductsShowClickListener() : ProductsShowAllListener {
+    private fun getProductsShowClickListener(): ProductsShowAllListener {
         return object : ProductsShowAllListener {
             override fun showAllDiscountProducts(id: Long) {}
             override fun showAllTopProducts(id: Long) {}
@@ -277,11 +310,16 @@ class ProductDetailsFragment : BaseFragment() {
         }
     }
 
-    private fun getPromotionsClickListener() : PromotionsClickListener {
+    private fun getPromotionsClickListener(): PromotionsClickListener {
         return object : PromotionsClickListener {
             override fun onPromotionClick(id: Long) {
-                findNavController().navigate(ProductDetailsFragmentDirections.actionToPromotionDetailFragment(id))
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToPromotionDetailFragment(
+                        id
+                    )
+                )
             }
+
             override fun onShowAllPromotionsClick() {}
         }
     }
@@ -292,7 +330,11 @@ class ProductDetailsFragment : BaseFragment() {
             ?.observe(viewLifecycleOwner) { productId ->
                 if (findNavController().currentDestination?.id == R.id.replacementProductsSelectionBS) {
                     findNavController().popBackStack()
-                    findNavController().navigate(ProductDetailsFragmentDirections.actionToSelf(productId))
+                    findNavController().navigate(
+                        ProductDetailsFragmentDirections.actionToSelf(
+                            productId
+                        )
+                    )
                 }
             }
     }
