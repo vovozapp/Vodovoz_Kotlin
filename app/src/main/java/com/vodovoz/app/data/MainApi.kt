@@ -520,4 +520,13 @@ interface MainApi {
         @Query("pass") password: String,
         @Query("phone") phone: String,
     ): ResponseBody
+
+    //Firebase Token
+    @GET("newmobile/osnova/userpushapi.php")
+    suspend fun sendFirebaseToken(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("token") token: String? = null,
+    ): ResponseBody
+
 }

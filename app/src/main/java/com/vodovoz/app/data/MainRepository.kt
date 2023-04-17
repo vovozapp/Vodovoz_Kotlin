@@ -787,7 +787,7 @@ class MainRepository @Inject constructor(
         phone: String?,
         url: String,
         code: String?
-    ) : ResponseBody {
+    ): ResponseBody {
 
         val uri = ApiConfig.VODOVOZ_URL
             .toUri()
@@ -852,6 +852,15 @@ class MainRepository @Inject constructor(
         email = email,
         password = password,
         phone = phone
+    )
+
+    //Firebase Token
+    suspend fun sendFirebaseToken(
+        action: String = "token",
+        userId: Long? = null,
+        token: String
+    ) = api.sendFirebaseToken(
+        action = action, userId = userId, token = token
     )
 
 }

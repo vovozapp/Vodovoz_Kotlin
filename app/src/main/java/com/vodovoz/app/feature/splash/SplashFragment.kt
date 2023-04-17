@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.splash
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
@@ -23,6 +24,7 @@ class SplashFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_splash
 
+    private val viewModel: SplashViewModel by viewModels()
     private val flowViewModel: HomeFlowViewModel by activityViewModels()
     private val catalogViewModel: CatalogFlowViewModel by activityViewModels()
     private val cartFlowViewModel: CartFlowViewModel by activityViewModels()
@@ -34,6 +36,7 @@ class SplashFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+      //  viewModel.sendFirebaseToken()
         flowViewModel.firstLoad()
         catalogViewModel.firstLoad()
         cartFlowViewModel.firstLoad()
