@@ -2,8 +2,10 @@ package com.vodovoz.app.util.extensions
 
 import android.app.Activity
 import android.content.Context
+import android.os.Build
 import android.os.Parcelable
 import android.os.StrictMode
+import android.text.Html
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextPaint
@@ -200,4 +202,13 @@ fun <T : Parcelable> parcelableArgs(key: String): ReadOnlyProperty<Fragment, T> 
         require(args.containsKey(key)) { "Arguments don't contain key $key" }
         requireNotNull(args.getParcelable(key)) as T
     }
+}
+
+fun String?.fromHtml(): Spanned {
+    val result: Spanned = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY)
+    } else {
+        Html.fromHtml(this)
+    }
+    return result
 }

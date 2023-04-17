@@ -2,7 +2,6 @@ package com.vodovoz.app.feature.bottom.services
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.text.HtmlCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -13,6 +12,7 @@ import com.vodovoz.app.databinding.FragmentAboutServicesFlowBinding
 import com.vodovoz.app.feature.bottom.services.adapter.ServicesClickListener
 import com.vodovoz.app.ui.fragment.about_services.AboutServicesDialogFragmentDirections
 import com.vodovoz.app.ui.model.ServiceUI
+import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -78,8 +78,7 @@ class AboutServicesFlowFragment : BaseFragment() {
                     val title =
                         state.data.item?.title ?: resources.getString(R.string.services_title)
 
-                    binding.tvDetails.text =
-                        HtmlCompat.fromHtml(detail, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+                    binding.tvDetails.text = detail.fromHtml()
 
                     initToolbar(title)
 
