@@ -499,14 +499,14 @@
             android:name="productId"
             app:argType="long" />
     </dialog>
-    <dialog
+    <fragment
         android:id="@+id/aboutServicesDialogFragment"
         android:name="com.vodovoz.app.ui.fragment.about_services.AboutServicesDialogFragment"
         android:label="AboutServicesDialogFragment">
         <action
             android:id="@+id/action_to_serviceDetailFragment"
             app:destination="@id/serviceDetailFragment" />
-    </dialog>
+    </fragment>
     <fragment
         android:id="@+id/mapDialogFragment"
         android:name="com.vodovoz.app.feature.map.MapDialogFragment"

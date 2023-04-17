@@ -20,19 +20,19 @@ class ServicesController(
         context.resources.getDimension(R.dimen.space_16).toInt()
     }
 
-    private val adapter = ServicesAdapter(clickListener)
+    private val servicesAdapter = ServicesAdapter(clickListener)
 
     fun bind(recyclerView: RecyclerView) {
         initList(recyclerView)
     }
 
     fun submitList(list: List<Item>) {
-        adapter.submitList(list)
+        servicesAdapter.submitList(list)
     }
 
     private fun initList(recyclerView: RecyclerView) {
         with(recyclerView) {
-            adapter = adapter
+            adapter = servicesAdapter
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(
                     object : RecyclerView.ItemDecoration() {
