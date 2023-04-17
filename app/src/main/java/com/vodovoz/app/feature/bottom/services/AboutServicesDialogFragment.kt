@@ -51,6 +51,9 @@ class AboutServicesDialogFragment : BaseFragment() {
                 .collect {
                     when (it) {
                         is AboutServicesFlowViewModel.AboutServicesEvents.NavigateToDetails -> {
+                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.serviceDetailFragment) {
+                                findNavController().popBackStack()
+                            }
                             findNavController().navigate(
                                 AboutServicesDialogFragmentDirections.actionToServiceDetailFragment(
                                     it.typeList.toTypedArray(),
