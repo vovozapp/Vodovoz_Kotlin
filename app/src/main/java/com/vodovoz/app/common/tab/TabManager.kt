@@ -1,5 +1,6 @@
 package com.vodovoz.app.common.tab
 
+import com.vodovoz.app.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -30,6 +31,17 @@ class TabManager @Inject constructor() {
     private val tabReselectListener = MutableStateFlow(DEFAULT_STATE)
     fun observeTabReselect() = tabReselectListener.asStateFlow()
     fun setDefaultState() { tabReselectListener.value = DEFAULT_STATE }
+
+    private val tabAuthRedirectListener = MutableStateFlow<Int>(DEFAULT_AUTH_REDIRECT)
+    fun fetchAuthRedirect() = tabAuthRedirectListener.value
+
+    fun setAuthRedirect(graphId: Int) {
+        tabAuthRedirectListener.value = graphId
+    }
+
+    fun setDefaultAuthRedirect() {
+        tabAuthRedirectListener.value = DEFAULT_AUTH_REDIRECT
+    }
 
     fun selectTab(id: Int) {
         scope.launch {
@@ -86,5 +98,6 @@ class TabManager @Inject constructor() {
 
     companion object {
         const val DEFAULT_STATE = -1
+        const val DEFAULT_AUTH_REDIRECT = R.id.graph_profile
     }
 }
