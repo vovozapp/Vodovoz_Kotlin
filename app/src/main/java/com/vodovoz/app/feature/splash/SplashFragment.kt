@@ -36,7 +36,7 @@ class SplashFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-      //  viewModel.sendFirebaseToken()
+        viewModel.sendFirebaseToken()
         flowViewModel.firstLoad()
         catalogViewModel.firstLoad()
         cartFlowViewModel.firstLoad()

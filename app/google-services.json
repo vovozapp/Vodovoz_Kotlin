@@ -1,0 +1,93 @@
+{
+  "project_info": {
+    "project_number": "361656277458",
+    "firebase_url": "https://vodovoz-8befa.firebaseio.com",
+    "project_id": "vodovoz-8befa",
+    "storage_bucket": "vodovoz-8befa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:361656277458:android:e3306175b60c7b3fd6500b",
+        "android_client_info": {
+          "package_name": "com.m.vodovoz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "361656277458-3ph9dsbde8ks0ekl21hs484381qmtr9l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_E7PU-f_8re7sLAWjxY4s4OtWrvqQd7c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "361656277458-3ph9dsbde8ks0ekl21hs484381qmtr9l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "361656277458-1lc0v0mevp9i40d0ukuctnpgdrtdssr4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ru.m.vodovoz.app",
+                "app_store_id": "883954108"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:361656277458:android:4ff9b45fb799a4f2d6500b",
+        "android_client_info": {
+          "package_name": "com.vodovoz.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "361656277458-6rs9q1qnh7gl4m18d7eerfl8n990u68v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vodovoz.app",
+            "certificate_hash": "f3938ef3b59f2c2704cde7cc6e5aa72ce4433e94"
+          }
+        },
+        {
+          "client_id": "361656277458-3ph9dsbde8ks0ekl21hs484381qmtr9l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_E7PU-f_8re7sLAWjxY4s4OtWrvqQd7c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "361656277458-3ph9dsbde8ks0ekl21hs484381qmtr9l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "361656277458-1lc0v0mevp9i40d0ukuctnpgdrtdssr4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ru.m.vodovoz.app",
+                "app_store_id": "883954108"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
