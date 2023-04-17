@@ -500,7 +500,7 @@
     </dialog>
     <dialog
         android:id="@+id/aboutServicesDialogFragment"
-        android:name="com.vodovoz.app.ui.fragment.about_services.AboutServicesDialogFragment"
+        android:name="com.vodovoz.app.feature.bottom.services.AboutServicesDialogFragment"
         android:label="AboutServicesDialogFragment" >
         <action
             android:id="@+id/action_to_serviceDetailFragment"

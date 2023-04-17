@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.bottom.services
+package com.vodovoz.app.feature.bottom.services.old
 
 import android.os.Bundle
 import android.view.View
@@ -9,8 +9,10 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentAboutServicesFlowBinding
+import com.vodovoz.app.feature.bottom.services.AboutServicesDialogFragmentDirections
+import com.vodovoz.app.feature.bottom.services.AboutServicesFlowViewModel
+import com.vodovoz.app.feature.bottom.services.ServicesController
 import com.vodovoz.app.feature.bottom.services.adapter.ServicesClickListener
-import com.vodovoz.app.ui.fragment.about_services.AboutServicesDialogFragmentDirections
 import com.vodovoz.app.ui.model.ServiceUI
 import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint

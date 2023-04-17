@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.feature.home.old.HomeViewModel
 import com.vodovoz.app.feature.bottom.aboutapp.old.AboutAppDialogViewModel
-import com.vodovoz.app.ui.fragment.about_services.AboutServicesViewModel
+import com.vodovoz.app.feature.bottom.services.old.AboutServicesViewModel
 import com.vodovoz.app.feature.all.brands.old.AllBrandsViewModel
 import com.vodovoz.app.feature.all.comments.old.AllCommentsByProductViewModel
 import com.vodovoz.app.feature.all.promotions.old.AllPromotionsViewModel
