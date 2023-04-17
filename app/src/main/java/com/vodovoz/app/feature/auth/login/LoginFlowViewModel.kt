@@ -116,6 +116,7 @@ class LoginFlowViewModel @Inject constructor(
                                 state.copy(error = null, loadingPage = false)
                             clearData()
                             eventListener.emit(LoginEvents.AuthSuccess)
+                            accountManager.sendFirebaseToken()
                         }
                         is ResponseEntity.Error -> {
                             uiStateListener.value =
@@ -157,6 +158,7 @@ class LoginFlowViewModel @Inject constructor(
                                 state.copy(error = null, loadingPage = false)
                             clearData()
                             eventListener.emit(LoginEvents.AuthSuccess)
+                            accountManager.sendFirebaseToken()
                         }
                         is ResponseEntity.Error -> {
                             uiStateListener.value =

@@ -59,6 +59,7 @@ class RegFlowViewModel @Inject constructor(
                             uiStateListener.value =
                                 state.copy(error = null, loadingPage = false)
                             eventListener.emit(RegEvents.RegSuccess)
+                            accountManager.sendFirebaseToken()
                         }
                         is ResponseEntity.Error -> {
                             uiStateListener.value =
