@@ -15,6 +15,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentLoginFlowBinding
 import com.vodovoz.app.feature.cart.CartFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
@@ -28,6 +29,7 @@ import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.textOrError
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment() {
@@ -39,6 +41,9 @@ class LoginFragment : BaseFragment() {
             contentView
         )
     }
+
+    @Inject
+    lateinit var tabManager: TabManager
 
     private val viewModel: LoginFlowViewModel by viewModels()
     private val profileViewModel: ProfileFlowViewModel by activityViewModels()
@@ -110,7 +115,13 @@ class LoginFragment : BaseFragment() {
                             cartFlowViewModel.refreshIdle()
                             favoriteViewModel.refreshIdle()
                             profileViewModel.refreshIdle()
-                            findNavController().popBackStack()
+                            val redirect = tabManager.fetchAuthRedirect()
+                            if (redirect == TabManager.DEFAULT_AUTH_REDIRECT) {
+                                findNavController().popBackStack()
+                            } else {
+                                tabManager.selectTab(redirect)
+                                tabManager.setDefaultAuthRedirect()
+                            }
                         }
                         LoginFlowViewModel.LoginEvents.CodeComplete -> {
                             debugLog { "CodeComplete" }

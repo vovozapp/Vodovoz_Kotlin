@@ -46,7 +46,6 @@ class OrdersHistoryFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeAccount()
-        viewModel.firstLoadSorted()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,8 +68,10 @@ class OrdersHistoryFragment : BaseFragment() {
                 .observeAccountId()
                 .collect {
                     if (it == null) {
-                        findNavController().popBackStack()
+                        tabManager.setAuthRedirect(findNavController().graph.id)
                         tabManager.selectTab(R.id.graph_profile)
+                    } else {
+                        viewModel.firstLoadSorted()
                     }
                 }
         }

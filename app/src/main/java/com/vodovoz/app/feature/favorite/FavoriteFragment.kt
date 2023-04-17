@@ -94,6 +94,7 @@ class FavoriteFragment : BaseFragment() {
                 .collect {
                     when(it) {
                         is FavoriteFlowViewModel.FavoriteEvents.GoToProfile -> {
+                            tabManager.setAuthRedirect(findNavController().graph.id)
                             tabManager.selectTab(R.id.graph_profile)
                         }
                         is FavoriteFlowViewModel.FavoriteEvents.GoToPreOrder -> {

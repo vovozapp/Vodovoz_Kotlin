@@ -70,8 +70,6 @@ class PastPurchasesFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeAccount()
-        viewModel.firstLoad()
-        viewModel.firstLoadSorted()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -106,6 +104,7 @@ class PastPurchasesFragment : BaseFragment() {
                             )
                         }
                         is PastPurchasesFlowViewModel.PastPurchasesEvents.GoToProfile -> {
+                            tabManager.setAuthRedirect(findNavController().graph.id)
                             tabManager.selectTab(R.id.graph_profile)
                         }
                     }
@@ -119,8 +118,11 @@ class PastPurchasesFragment : BaseFragment() {
                 .observeAccountId()
                 .collect {
                     if (it == null) {
-                        findNavController().popBackStack()
+                        tabManager.setAuthRedirect(findNavController().graph.id)
                         tabManager.selectTab(R.id.graph_profile)
+                    } else {
+                        viewModel.firstLoad()
+                        viewModel.firstLoadSorted()
                     }
                 }
         }

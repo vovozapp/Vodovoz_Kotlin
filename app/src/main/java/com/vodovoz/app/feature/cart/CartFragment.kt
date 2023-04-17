@@ -253,6 +253,7 @@ class CartFragment : BaseFragment() {
                                 ))
                         }
                         is CartFlowViewModel.CartEvents.NavigateToProfile -> {
+                            tabManager.setAuthRedirect(findNavController().graph.id)
                             tabManager.selectTab(R.id.graph_profile)
                         }
                         is CartFlowViewModel.CartEvents.GoToPreOrder -> {

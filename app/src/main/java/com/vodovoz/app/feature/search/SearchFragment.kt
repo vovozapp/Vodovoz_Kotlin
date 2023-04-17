@@ -134,6 +134,7 @@ class SearchFragment : BaseFragment() {
                             )
                         }
                         is SearchFlowViewModel.SearchEvents.GoToProfile -> {
+                            tabManager.setAuthRedirect(findNavController().graph.id)
                             tabManager.selectTab(R.id.graph_profile)
                         }
                     }

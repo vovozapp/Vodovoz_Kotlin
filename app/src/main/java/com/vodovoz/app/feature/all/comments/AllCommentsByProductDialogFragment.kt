@@ -73,9 +73,13 @@ class AllCommentsByProductDialogFragment : BaseFragment() {
                 .collect {
                     when(it) {
                         is AllCommentsFlowViewModel.AllCommentsEvents.GoToProfile -> {
+                            tabManager.setAuthRedirect(findNavController().graph.id)
                             tabManager.selectTab(R.id.graph_profile)
                         }
                         is AllCommentsFlowViewModel.AllCommentsEvents.SendComment -> {
+                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutProductFragment) {
+                                findNavController().popBackStack()
+                            }
                             findNavController().navigate(
                                 AllCommentsByProductDialogFragmentDirections.actionToSendCommentAboutProductFragment(
                                     args.productId

@@ -110,6 +110,7 @@ class ProductDetailsFragment : BaseFragment() {
                             )
                         }
                         is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProfile -> {
+                            tabManager.setAuthRedirect(findNavController().graph.id)
                             tabManager.selectTab(R.id.graph_profile)
                         }
                         is ProductDetailsFlowViewModel.ProductDetailsEvents.SendComment -> {

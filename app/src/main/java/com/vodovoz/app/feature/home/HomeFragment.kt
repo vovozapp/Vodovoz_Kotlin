@@ -111,6 +111,7 @@ class HomeFragment : BaseFragment() {
                             )
                         }
                         is HomeFlowViewModel.HomeEvents.GoToProfile -> {
+                            tabManager.setAuthRedirect(findNavController().graph.id)
                             tabManager.selectTab(R.id.graph_profile)
                         }
                         is HomeFlowViewModel.HomeEvents.SendComment -> {
