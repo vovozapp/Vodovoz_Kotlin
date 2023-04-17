@@ -35,7 +35,7 @@ class AboutServicesFlowViewModel @Inject constructor(
 
     private fun fetchServicesData() {
         viewModelScope.launch {
-            flow { emit(repository.fetchAboutServices()) }
+            flow { emit(repository.fetchAboutServices("glav")) }
                 .catch {
                     debugLog { "fetch about services error ${it.localizedMessage}" }
                     uiStateListener.value =

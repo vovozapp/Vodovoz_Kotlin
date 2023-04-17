@@ -869,8 +869,8 @@ class MainRepository @Inject constructor(
      */
 
     //Общая информация о предоставляемых услугах
-    suspend fun fetchAboutServices() = api.fetchServicesResponse(
-        action = "glav"
+    suspend fun fetchAboutServices(action: String) = api.fetchServicesResponse(
+        action = action
     )
 
 }
