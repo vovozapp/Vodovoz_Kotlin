@@ -26,6 +26,7 @@ import com.vodovoz.app.data.parser.response.pre_order.PreOrderProductResponseJso
 import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonParser.parseAllPromotionsResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionsByBannerResponseJsonParser.parsePromotionsByBannerResponse
+import com.vodovoz.app.data.parser.response.service.AboutServicesResponseJsonParser.parseAboutServicesResponse
 import com.vodovoz.app.data.parser.response.user.AuthByPhoneJsonParser.parseAuthByPhoneResponse
 import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
 import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
@@ -861,6 +862,15 @@ class MainRepository @Inject constructor(
         token: String
     ) = api.sendFirebaseToken(
         action = action, userId = userId, token = token
+    )
+
+    /**
+     * Services
+     */
+
+    //Общая информация о предоставляемых услугах
+    suspend fun fetchAboutServices() = api.fetchServicesResponse(
+        action = "glav"
     )
 
 }

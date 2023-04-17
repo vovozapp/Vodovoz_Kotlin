@@ -529,4 +529,13 @@ interface MainApi {
         @Query("token") token: String? = null,
     ): ResponseBody
 
+    /**
+     * Services
+     */
+
+    @GET("/newmobile/glavnaya/uslygi/uslygi.php")
+    suspend fun fetchServicesResponse(
+        @Query("action") action: String? = null,
+    ): ResponseBody
+
 }

@@ -15,12 +15,16 @@ data class ServiceUI(
 ): Parcelable, Item {
 
     override fun getItemViewType(): Int {
-        return R.layout.view_holder_service
+        return SERVICE_VIEW_TYPE
     }
 
     override fun areItemsTheSame(item: Item): Boolean {
         if (item !is ServiceUI) return false
 
         return this == item
+    }
+
+    companion object {
+        const val SERVICE_VIEW_TYPE = -41241244
     }
 }
