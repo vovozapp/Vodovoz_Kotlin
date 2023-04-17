@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -148,11 +149,13 @@ abstract class BaseFragment : Fragment() {
         viewBinding.appBarDropDown.tvDropDownTitle.text = titleText
     }
 
-    protected fun initToolbar(titleText: String, showSearch: Boolean = false, showNavBtn: Boolean = true, addAction: Boolean = false, doAfterTextChanged: (query: String) -> Unit = {}) {
+    protected fun initToolbar(titleText: String, showSearch: Boolean = false, showNavBtn: Boolean = true, addAction: Boolean = false, provider: MenuProvider? = null, doAfterTextChanged: (query: String) -> Unit = {}) {
         if (addAction) {
-            (requireActivity() as AppCompatActivity).setSupportActionBar(viewBinding.appBarDef.tbToolbar)
             viewBinding.appBarDef.tbToolbar.overflowIcon =
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_more_actions)
+        }
+        if (provider != null) {
+            viewBinding.appBarDef.tbToolbar.addMenuProvider(provider)
         }
         viewBinding.appbarLayout.isVisible = true
         viewBinding.appBarDef.imgSearch.isVisible = showSearch

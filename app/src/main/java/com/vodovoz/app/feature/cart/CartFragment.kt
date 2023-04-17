@@ -17,6 +17,8 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentMainCartFlowBinding
 import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
+import com.vodovoz.app.feature.cart.menu.CartMenuListener
+import com.vodovoz.app.feature.cart.menu.CartMenuProvider
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.ProductUI
@@ -115,7 +117,6 @@ class CartFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         viewModel.firstLoad()
 
     }
@@ -143,7 +144,19 @@ class CartFragment : BaseFragment() {
     }
 
     private fun initActionBar() {
-        initToolbar(requireContext().getString(R.string.cart_title), addAction = true, showNavBtn = false)
+        initToolbar(requireContext().getString(R.string.cart_title), addAction = true, showNavBtn = false, provider = CartMenuProvider(getCartMenuListener()))
+    }
+
+    private fun getCartMenuListener() : CartMenuListener {
+        return object : CartMenuListener {
+            override fun onClearCartClick() {
+                clearCart()
+            }
+
+            override fun onHistoryClick() {
+                findNavController().navigate(CartFragmentDirections.actionToAllOrdersFragment())
+            }
+        }
     }
 
     private fun observeUiState() {
@@ -264,20 +277,6 @@ class CartFragment : BaseFragment() {
         binding.bottom.btnRegOrderFlow.setOnClickListener {
             viewModel.navigateToOrderFragment()
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.fragment_cart_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.clearCart -> clearCart()
-            R.id.orderHistory -> {
-                findNavController().navigate(CartFragmentDirections.actionToAllOrdersFragment())
-            }
-        }
-        return false
     }
 
     private fun clearCart() {
