@@ -194,6 +194,8 @@ class CartFragment : BaseFragment() {
                         binding.bottom.btnRegOrderFlow.text = StringBuilder().append("Оформить заказ на ").append(cartState.data.total.prices.total).append(" ₽").toString()
                     }
 
+                    showHideDefToolbarItem(R.id.clearCart, availableItems.isNullOrEmpty().not())
+
                     if (availableItems != null) {
                         if (availableItems.isEmpty()) {
                             binding.bottom.root.isVisible = false

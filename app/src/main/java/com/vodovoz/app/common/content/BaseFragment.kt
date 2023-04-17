@@ -190,6 +190,11 @@ abstract class BaseFragment : Fragment() {
         }
     }
 
+    fun showHideDefToolbarItem(itemId: Int, show: Boolean) {
+        val menuItem = viewBinding.appBarDef.tbToolbar.menu.findItem(itemId)
+        menuItem.isVisible = show
+    }
+
     override fun onResume() {
         super.onResume()
 
