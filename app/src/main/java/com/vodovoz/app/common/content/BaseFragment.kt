@@ -149,6 +149,10 @@ abstract class BaseFragment : Fragment() {
         viewBinding.appBarDropDown.tvDropDownTitle.text = titleText
     }
 
+    protected fun setToolbarDropDownTitle(title: String) {
+        viewBinding.appBarDropDown.tvDropDownTitle.text = title
+    }
+
     protected fun initToolbar(titleText: String, showSearch: Boolean = false, showNavBtn: Boolean = true, addAction: Boolean = false, provider: MenuProvider? = null, doAfterTextChanged: (query: String) -> Unit = {}) {
         if (addAction) {
             viewBinding.appBarDef.tbToolbar.overflowIcon =

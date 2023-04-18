@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.bottom.services
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -19,7 +20,7 @@ class AboutServicesDialogFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_about_services_flow
 
-    private val viewModel: AboutServicesFlowViewModel by viewModels()
+    private val viewModel: AboutServicesFlowViewModel by activityViewModels()
 
     private val binding: FragmentAboutServicesFlowBinding by viewBinding {
         FragmentAboutServicesFlowBinding.bind(
@@ -47,7 +48,7 @@ class AboutServicesDialogFragment : BaseFragment() {
 
     private fun observeEvents() {
         lifecycleScope.launchWhenStarted {
-            viewModel.observeEvent()
+            viewModel.observeAboutServicesEvents()
                 .collect {
                     when (it) {
                         is AboutServicesFlowViewModel.AboutServicesEvents.NavigateToDetails -> {
@@ -61,6 +62,7 @@ class AboutServicesDialogFragment : BaseFragment() {
                                 )
                             )
                         }
+                        else -> {}
                     }
                 }
         }

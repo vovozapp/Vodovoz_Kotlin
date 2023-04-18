@@ -1,25 +1,21 @@
 package com.vodovoz.app.ui.fragment.service_detail
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsSelectionServicesBinding
+import com.vodovoz.app.feature.bottom.services.AboutServicesFlowViewModel
 import com.vodovoz.app.feature.bottom.services.detail.ServiceDetailFlowFragment
-import com.vodovoz.app.feature.bottom.services.detail.bottom.adapter.ServiceNameItem
 import com.vodovoz.app.feature.bottom.services.detail.bottom.adapter.ServiceNamesFlowAdapter
 import com.vodovoz.app.feature.bottom.services.detail.bottom.adapter.ServiceNamesFlowClickListener
-import com.vodovoz.app.ui.adapter.ServiceNamesAdapter
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
-import com.vodovoz.app.ui.fragment.service_detail.ServiceDetailFragment.Companion.SERVICE_TYPE
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,6 +24,8 @@ class ServiceSelectionBS : BaseBottomSheetFragment() {
     override fun layout(): Int = R.layout.bs_selection_services
 
     private val binding: BsSelectionServicesBinding by viewBinding { BsSelectionServicesBinding.bind(contentView) }
+
+    private val viewModel: AboutServicesFlowViewModel by activityViewModels()
 
     private val args: ServiceSelectionBSArgs by navArgs()
 
@@ -43,6 +41,19 @@ class ServiceSelectionBS : BaseBottomSheetFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initList()
+        observeUiState()
+    }
+
+    private fun observeUiState() {
+        lifecycleScope.launchWhenStarted {
+            viewModel
+                .observeUiState()
+                .collect {
+                    if (it.data.nameItemList.isNotEmpty()) {
+                        serviceNamesAdapter.submitList(it.data.nameItemList)
+                    }
+                }
+        }
     }
 
     private fun initList() {
@@ -53,16 +64,6 @@ class ServiceSelectionBS : BaseBottomSheetFragment() {
             if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.bottom = space
         }
         binding.rvServices.adapter = serviceNamesAdapter
-
-        val list = args.serviceList.map {
-            ServiceNameItem(
-                it.name,
-                it.type,
-                isSelected = it.type == args.selectedService
-            )
-        }
-
-        serviceNamesAdapter.submitList(list)
     }
 }
 /*
