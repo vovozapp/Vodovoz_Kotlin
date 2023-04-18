@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.bottom.services.detail
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -12,6 +13,7 @@ import com.vodovoz.app.databinding.FragmentAboutServicesFlowBinding
 import com.vodovoz.app.databinding.FragmentServiceDetailsFlowBinding
 import com.vodovoz.app.feature.bottom.services.AboutServicesFlowViewModel
 import com.vodovoz.app.ui.fragment.service_detail.ServiceDetailFragmentDirections
+import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -70,6 +72,7 @@ class ServiceDetailFlowFragment : BaseFragment() {
                         initToolbarDropDown(state.data.selectedService.name) {
                             viewModel.onTitleClick()
                         }
+                        binding.tvDetails.text = state.data.selectedService.detail.fromHtml()
                     }
 
                     showError(state.error)
