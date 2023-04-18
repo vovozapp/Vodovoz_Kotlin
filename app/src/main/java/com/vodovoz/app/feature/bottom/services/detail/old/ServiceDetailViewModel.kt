@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.service_detail
+package com.vodovoz.app.feature.bottom.services.detail.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

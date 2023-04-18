@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.bottom.services.detail.bottom
+package com.vodovoz.app.feature.bottom.services.detail.bottom.old
 
 import android.os.Bundle
 import android.view.View
@@ -9,12 +9,12 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsSelectionServicesBinding
-import com.vodovoz.app.feature.bottom.services.detail.ServiceDetailFlowFragment.Companion.SERVICE_TYPE
+import com.vodovoz.app.feature.bottom.services.detail.bottom.ServiceSelectionBSArgs
+import com.vodovoz.app.feature.bottom.services.detail.old.ServiceDetailFlowFragment.Companion.SERVICE_TYPE
 import com.vodovoz.app.feature.bottom.services.detail.bottom.adapter.ServiceNameItem
 import com.vodovoz.app.feature.bottom.services.detail.bottom.adapter.ServiceNamesFlowAdapter
 import com.vodovoz.app.feature.bottom.services.detail.bottom.adapter.ServiceNamesFlowClickListener
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
-import com.vodovoz.app.ui.fragment.service_detail.ServiceSelectionBSArgs
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

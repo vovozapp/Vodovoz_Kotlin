@@ -1,24 +1,16 @@
-package com.vodovoz.app.ui.fragment.service_detail
+package com.vodovoz.app.feature.bottom.services.detail
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.core.text.HtmlCompat
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.databinding.FragmentServiceDetailsBinding
 import com.vodovoz.app.databinding.FragmentServiceDetailsFlowBinding
 import com.vodovoz.app.feature.bottom.services.AboutServicesFlowViewModel
-import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint
 

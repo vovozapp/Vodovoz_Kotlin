@@ -667,7 +667,7 @@
         android:label="ContactsFragment" />
     <fragment
         android:id="@+id/serviceDetailFragment"
-        android:name="com.vodovoz.app.ui.fragment.service_detail.ServiceDetailFragment"
+        android:name="com.vodovoz.app.feature.bottom.services.detail.ServiceDetailFragment"
         android:label="ServiceDetailFragment">
         <argument
             android:name="typeList"
@@ -684,7 +684,7 @@
     </fragment>
     <dialog
         android:id="@+id/serviceSelectionBS"
-        android:name="com.vodovoz.app.ui.fragment.service_detail.ServiceSelectionBS"
+        android:name="com.vodovoz.app.feature.bottom.services.detail.bottom.ServiceSelectionBS"
         android:label="ServiceSelectionBS">
         <argument
             android:name="serviceList"

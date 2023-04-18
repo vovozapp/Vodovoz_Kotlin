@@ -6,7 +6,6 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.service.AboutServicesResponseJsonParser.parseAboutServicesResponse
 import com.vodovoz.app.data.parser.response.service.ServiceByIdResponseJsonParser.parseServiceByIdResponse
-import com.vodovoz.app.feature.bottom.services.detail.ServiceDetailFlowViewModel
 import com.vodovoz.app.feature.bottom.services.detail.bottom.adapter.ServiceNameItem
 import com.vodovoz.app.mapper.AboutServicesBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ServiceMapper.mapToUI
