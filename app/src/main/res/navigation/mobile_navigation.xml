@@ -594,7 +594,7 @@
     </fragment>
     <fragment
         android:id="@+id/howToOrderFragment"
-        android:name="com.vodovoz.app.ui.fragment.how_to_order.HowToOrderFragment"
+        android:name="com.vodovoz.app.feature.bottom.howtoorder.HowToOrderFragment"
         android:label="HowToOrderFragment" />
     <dialog
         android:id="@+id/sendCommentAboutShopBottomDialog"

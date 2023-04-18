@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.bottom.howtoorder
+package com.vodovoz.app.feature.bottom.howtoorder.old
 
 import android.os.Bundle
 import android.view.View
@@ -10,6 +10,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentHowToOrderFlowBinding
+import com.vodovoz.app.feature.bottom.howtoorder.HowToOrderFlowViewModel
 import com.vodovoz.app.feature.bottom.howtoorder.adapter.HowToOrderFlowAdapter
 import dagger.hilt.android.AndroidEntryPoint
 

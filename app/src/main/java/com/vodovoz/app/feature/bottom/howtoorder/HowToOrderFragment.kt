@@ -1,24 +1,16 @@
-package com.vodovoz.app.ui.fragment.how_to_order
+package com.vodovoz.app.feature.bottom.howtoorder
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.databinding.FragmentHowToOrderBinding
 import com.vodovoz.app.databinding.FragmentHowToOrderFlowBinding
-import com.vodovoz.app.feature.bottom.howtoorder.HowToOrderFlowViewModel
 import com.vodovoz.app.feature.bottom.howtoorder.adapter.HowToOrderFlowAdapter
-import com.vodovoz.app.ui.adapter.HowToOrderStepsAdapter
-import com.vodovoz.app.ui.model.HowToOrderStepUI
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
