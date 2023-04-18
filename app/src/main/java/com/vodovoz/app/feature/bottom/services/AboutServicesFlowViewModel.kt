@@ -133,15 +133,14 @@ class AboutServicesFlowViewModel @Inject constructor(
             fetchServiceByType(type)
         } else {
             val list = state.data.item?.serviceUIList
-            if (list.isNullOrEmpty()) return
 
-            val namedList = list.map {
+            val namedList = list?.map {
                 ServiceNameItem(
                     it.name,
                     it.type,
                     isSelected = it.type == type
                 )
-            }
+            } ?: emptyList()
             uiStateListener.value = state.copy(
                 data = state.data.copy(
                     selectedType = type,
