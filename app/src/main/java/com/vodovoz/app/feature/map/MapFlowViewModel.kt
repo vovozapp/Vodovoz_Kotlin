@@ -9,6 +9,7 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.map.AddressByGeocodeResponseJsonParser.parseAddressByGeocodeResponse
 import com.vodovoz.app.data.parser.response.map.DeliveryZonesBundleResponseJsonParser.parseDeliveryZonesBundleResponse
+import com.vodovoz.app.feature.map.test.model.MapTestResponse
 import com.vodovoz.app.mapper.AddressMapper.mapToUI
 import com.vodovoz.app.mapper.DeliveryZonesBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.AddressUI
@@ -17,6 +18,7 @@ import com.vodovoz.app.util.extensions.debugLog
 import com.yandex.mapkit.geometry.Point
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -191,6 +193,32 @@ class MapFlowViewModel @Inject constructor(
         ))
     }
 
+    fun sendTestMapResponse(
+        latitude: String,
+        longitude: String,
+        length: String,
+        date: String
+    ) {
+        viewModelScope.launch {
+            delay(3000)
+            val addr = state.data.addressUI?.fullAddress?.substringAfter("Россия, ") ?:""
+            debugLog { "send test map response address $addr" }
+
+            flow { emit(repository.fetchTestMapResponse(addr, latitude, longitude, length, date)) }
+                .catch {
+                    debugLog { "send test map response error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
+                .flowOn(Dispatchers.IO)
+                .onEach {
+                    eventListener.emit(MapFlowEvents.ShowAlert(it))
+                }
+                .flowOn(Dispatchers.Default)
+                .collect()
+        }
+    }
+
     data class LocationFloatToPoint(
         val distance: Float,
         val point: Point
@@ -208,5 +236,6 @@ class MapFlowViewModel @Inject constructor(
         data class ShowAddAddressBottomDialog(val address: AddressUI?) : MapFlowEvents()
         data class Submit(val startPoint: Point, val list: List<Point>): MapFlowEvents()
         data class ShowInfoDialog(val url: String?): MapFlowEvents()
+        data class ShowAlert(val response: MapTestResponse) : MapFlowEvents()
     }
 }

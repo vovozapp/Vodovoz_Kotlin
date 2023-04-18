@@ -34,6 +34,7 @@ import com.vodovoz.app.data.parser.response.user.RecoverPasswordJsonParser.parse
 import com.vodovoz.app.data.parser.response.user.RegisterResponseJsonParser.parseRegisterResponse
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.feature.map.api.MapKitFlowApi
+import com.vodovoz.app.feature.map.test.model.MapTestResponse
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
 import okhttp3.RequestBody
@@ -872,5 +873,22 @@ class MainRepository @Inject constructor(
     suspend fun fetchAboutServices(action: String) = api.fetchServicesResponse(
         action = action
     )
+
+    suspend fun fetchTestMapResponse(
+        address: String,
+        latitude: String,
+        longitude: String,
+        length: String,
+        date: String
+    ) : MapTestResponse {
+        return api.sendTestMapRequest(
+            sourse = "API",
+            address = address,
+            latitude = latitude,
+            longitude = longitude,
+            length = length,
+            date = date
+        )
+    }
 
 }

@@ -1,10 +1,12 @@
 package com.vodovoz.app.data
 
 import com.vodovoz.app.common.product.rating.RatingResponse
+import com.vodovoz.app.feature.map.test.model.MapTestResponse
 import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
 import com.vodovoz.app.feature.profile.cats.ProfileCategoriesModel
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.Url
@@ -537,5 +539,15 @@ interface MainApi {
     suspend fun fetchServicesResponse(
         @Query("action") action: String? = null,
     ): ResponseBody
+
+    @GET("http://szorinvodovoz.tw1.ru/local/components/semap/delivery.calc/order.php")
+    suspend fun sendTestMapRequest(
+        @Query("SOURCE") sourse: String,
+        @Query("ADDRESS", encoded = false) address: String,
+        @Query("COORDS_FROM[0]", encoded = false) latitude: String,
+        @Query("COORDS_FROM[1]", encoded = false) longitude: String,
+        @Query("LENGTH") length: String,
+        @Query("DELIVERY_DATE", encoded = false) date: String
+    ): MapTestResponse
 
 }

@@ -272,6 +272,12 @@ class MapDialogFragment : BaseFragment(),
                                 findNavController().navigate(R.id.webViewFlowBottomSheetFragment, bundleOf("title" to "Зоны бесплатных дней доставки за МКАД", "url" to it.url))
                             }
                         }
+                        is MapFlowViewModel.MapFlowEvents.ShowAlert -> {
+                            MaterialAlertDialogBuilder(requireContext())
+                                .setMessage(it.response.UF_DELIVERY_PRICE.toString())
+                                .setPositiveButton("Ок") { dialog, _ -> dialog.dismiss() }
+                                .show()
+                        }
                     }
                 }
         }
@@ -587,12 +593,16 @@ class MapDialogFragment : BaseFragment(),
                 routeNew?.let {
                     val startPoint = route.requestPoints!![0].point
                     val endPoint = route.requestPoints!![1].point
-                    if (viewModel.getTwoPointsDistance(
-                            startPoint,
-                            center
-                        ) < viewModel.getTwoPointsDistance(endPoint, center)
-                    ) {
+                    val distance = viewModel.getTwoPointsDistance(startPoint, center)
+                    if (distance < viewModel.getTwoPointsDistance(endPoint, center)) {
                         mapObjects.addPolyline(it)
+
+                        /*viewModel.sendTestMapResponse(
+                            latitude = startPoint.latitude.toString(),
+                            longitude = startPoint.longitude.toString(),
+                            length = (distance/1000).toInt().toString(),
+                            date = "18.04.2023"
+                        )*/
                     }
                 }
             }
