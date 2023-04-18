@@ -31,7 +31,6 @@ class HowToOrderFlowFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initToolbar(resources.getString(R.string.how_order_title))
-        initList()
         observeList()
     }
 
@@ -39,15 +38,12 @@ class HowToOrderFlowFragment : BaseFragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.observeHowToOrderSteps()
                 .collect {
+                    binding.vpHowOrder.orientation = ViewPager2.ORIENTATION_HORIZONTAL
                     howToOrderAdapter.submitList(it)
+                    binding.vpHowOrder.adapter = howToOrderAdapter
+                    TabLayoutMediator(binding.tlIndicators, binding.vpHowOrder) { _, _ -> }.attach()
                 }
         }
-    }
-
-    private fun initList() {
-        binding.vpHowOrder.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.vpHowOrder.adapter = howToOrderAdapter
-        TabLayoutMediator(binding.tlIndicators, binding.vpHowOrder) { _, _ -> }.attach()
     }
 
 }
