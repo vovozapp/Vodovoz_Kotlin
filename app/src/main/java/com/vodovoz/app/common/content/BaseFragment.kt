@@ -1,5 +1,6 @@
 package com.vodovoz.app.common.content
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentBaseFlowBinding
 import com.vodovoz.app.databinding.FragmentBasePageBinding
 import com.vodovoz.app.databinding.ViewSearchBinding
+import com.vodovoz.app.ui.extensions.TextViewExtensions.setDrawableColor
 import com.vodovoz.app.util.extensions.debugLog
 
 abstract class BaseFragment : Fragment() {
@@ -149,8 +151,14 @@ abstract class BaseFragment : Fragment() {
         viewBinding.appBarDropDown.tvDropDownTitle.text = titleText
     }
 
-    protected fun setToolbarDropDownTitle(title: String) {
+    protected fun setToolbarDropDownTitle(title: String, showArrowDropDown: Boolean = true) {
         viewBinding.appBarDropDown.tvDropDownTitle.text = title
+
+        if (showArrowDropDown) {
+            viewBinding.appBarDropDown.tvDropDownTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, requireContext().getDrawable(R.drawable.ic_drop_down),null)
+        } else {
+            viewBinding.appBarDropDown.tvDropDownTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, null,null)
+        }
     }
 
     protected fun initToolbar(titleText: String, showSearch: Boolean = false, showNavBtn: Boolean = true, addAction: Boolean = false, provider: MenuProvider? = null, doAfterTextChanged: (query: String) -> Unit = {}) {
