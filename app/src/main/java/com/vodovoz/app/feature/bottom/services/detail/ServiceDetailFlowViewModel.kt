@@ -27,7 +27,7 @@ class ServiceDetailFlowViewModel @Inject constructor(
     ServiceDetailState()
 ) {
 
-    private val typeList = savedState.get<Array<String>>("typeList")
+    private val typeList = savedState.get<Array<String>>("typeList")?.asList()
     private val type = savedState.get<String>("selectedType")
 
     fun fetchServices() {
@@ -72,8 +72,16 @@ class ServiceDetailFlowViewModel @Inject constructor(
 
     }
 
-    sealed class ServiceDetailEvents : Event {
+    fun onTitleClick() {
+        viewModelScope.launch {
+            if (typeList.isNullOrEmpty()) return@launch
+            if (type.isNullOrEmpty()) return@launch
+            eventListener.emit(ServiceDetailEvents.OnTitleClick(typeList, state.data.selectedService?.type ?: type))
+        }
+    }
 
+    sealed class ServiceDetailEvents : Event {
+        data class OnTitleClick(val typeList: List<String>, val selectedType: String) : ServiceDetailEvents()
     }
 
     data class ServiceDetailState(

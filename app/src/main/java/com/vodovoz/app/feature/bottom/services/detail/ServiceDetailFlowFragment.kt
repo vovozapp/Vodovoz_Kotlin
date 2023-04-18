@@ -11,6 +11,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentAboutServicesFlowBinding
 import com.vodovoz.app.databinding.FragmentServiceDetailsFlowBinding
 import com.vodovoz.app.feature.bottom.services.AboutServicesFlowViewModel
+import com.vodovoz.app.ui.fragment.service_detail.ServiceDetailFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -37,6 +38,21 @@ class ServiceDetailFlowFragment : BaseFragment() {
         bindErrorRefresh {  }
         observeResultLiveData()
         observeUiState()
+        observeEvents()
+    }
+
+    private fun observeEvents() {
+        lifecycleScope.launchWhenStarted {
+            viewModel
+                .observeEvent()
+                .collect {
+                    when(it) {
+                        is ServiceDetailFlowViewModel.ServiceDetailEvents.OnTitleClick -> {
+
+                        }
+                    }
+                }
+        }
     }
 
     private fun observeUiState() {
@@ -52,7 +68,7 @@ class ServiceDetailFlowFragment : BaseFragment() {
 
                     if (state.data.selectedService != null) {
                         initToolbarDropDown(state.data.selectedService.name) {
-
+                            viewModel.onTitleClick()
                         }
                     }
 
