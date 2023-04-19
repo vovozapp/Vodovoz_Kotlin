@@ -560,4 +560,16 @@ interface MainApi {
         @Query("versiyaan") appVersion: String? = null,
     ): ResponseBody
 
+    /**
+     * Send Mail
+     */
+
+    @GET("/newmobile/mail.php")
+    suspend fun sendMail(
+        @Query("name") name: String? = null,
+        @Query("phone") phone: String? = null,
+        @Query("email") email: String? = null,
+        @Query("comment") comment: String? = null,
+    ): ResponseBody
+
 }

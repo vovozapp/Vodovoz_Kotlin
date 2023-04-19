@@ -15,6 +15,7 @@ import com.vodovoz.app.data.parser.response.category.AllFiltersByCategoryRespons
 import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
 import com.vodovoz.app.data.parser.response.comment.SendCommentAboutProductResponseJsonParser.parseSendCommentAboutProductResponse
 import com.vodovoz.app.data.parser.response.contacts.ContactsBundleResponseJsonParser.parseContactsBundleResponse
+import com.vodovoz.app.data.parser.response.contacts.SendMailResponseJsonParser.parseSendMailResponse
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
 import com.vodovoz.app.data.parser.response.map.AddressByGeocodeResponseJsonParser.parseAddressByGeocodeResponse
 import com.vodovoz.app.data.parser.response.map.DeliveryZonesBundleResponseJsonParser.parseDeliveryZonesBundleResponse
@@ -901,6 +902,22 @@ class MainRepository @Inject constructor(
     ) = api.fetchContactsResponse(
         action = "dannyesvyazi",
         appVersion = appVersion
+    )
+
+    /**
+     * Send Mail
+     */
+
+    suspend fun sendMail(
+        name: String?,
+        phone: String?,
+        email: String?,
+        comment: String?
+    ) = api.sendMail(
+        name = name,
+        phone = phone,
+        email = email,
+        comment = comment
     )
 
 }
