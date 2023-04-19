@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.bottom.contacts
+package com.vodovoz.app.feature.bottom.contacts.old
 
 import android.content.Intent
 import android.net.Uri
@@ -9,9 +9,9 @@ import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.databinding.FragmentContactsFlowBinding
+import com.vodovoz.app.feature.bottom.contacts.ContactsFlowViewModel
 import com.vodovoz.app.feature.bottom.contacts.adapter.ContactsClickListener
 import com.vodovoz.app.feature.bottom.contacts.adapter.controller.EmailController
 import com.vodovoz.app.feature.bottom.contacts.adapter.controller.PhoneController

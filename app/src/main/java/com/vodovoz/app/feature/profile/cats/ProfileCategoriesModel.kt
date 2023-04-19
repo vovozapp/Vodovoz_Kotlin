@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class ProfileCategoriesModel(
-    val block: String?,
+    val block: List<BLOCKRESPONSE>?,
     val dannie: List<Dannie>?,
     val message: String?,
     val status: String?,
@@ -68,4 +68,10 @@ data class PODRAZDEL(
     val NAME: String?,
     val URL: String?,
     val ZNACHENI: Int?
+) : Parcelable
+
+@Parcelize
+@JsonClass(generateAdapter = true)
+data class BLOCKRESPONSE(
+    val ZAGALOVOK: String
 ) : Parcelable

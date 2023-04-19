@@ -662,7 +662,7 @@
         android:label="QuestionnairesFragment" />
     <fragment
         android:id="@+id/contactsFragment"
-        android:name="com.vodovoz.app.ui.fragment.contacts.ContactsFragment"
+        android:name="com.vodovoz.app.feature.bottom.contacts.ContactsFragment"
         android:label="ContactsFragment" />
     <fragment
         android:id="@+id/serviceDetailFragment"

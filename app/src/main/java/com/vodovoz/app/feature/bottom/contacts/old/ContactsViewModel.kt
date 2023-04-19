@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.contacts
+package com.vodovoz.app.feature.bottom.contacts.old
 
 import android.os.Build
 import androidx.lifecycle.LiveData
