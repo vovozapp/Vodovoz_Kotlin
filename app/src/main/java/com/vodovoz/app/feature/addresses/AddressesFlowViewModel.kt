@@ -1,7 +1,9 @@
 package com.vodovoz.app.feature.addresses
 
+import android.app.Application
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.*
 import com.vodovoz.app.common.content.itemadapter.Item
@@ -13,6 +15,8 @@ import com.vodovoz.app.data.parser.response.map.FetchAddressesSavedResponseJsonP
 import com.vodovoz.app.feature.bottom.contacts.ContactsFlowViewModel
 import com.vodovoz.app.mapper.AddressMapper.mapToUI
 import com.vodovoz.app.mapper.ContactsBundleMapper.mapToUI
+import com.vodovoz.app.ui.fragment.ordering.OrderType
+import com.vodovoz.app.ui.model.AddressFlowTitle
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +29,8 @@ import javax.inject.Inject
 class AddressesFlowViewModel @Inject constructor(
     private val savedState: SavedStateHandle,
     private val repository: MainRepository,
-    private val accountManager: AccountManager
+    private val accountManager: AccountManager,
+    private val application: Application
 ) : PagingContractViewModel<AddressesFlowViewModel.AddressesState, AddressesFlowViewModel.AddressesEvents>(AddressesState()){
 
     private val openMode = savedState.get<String>("openMode")
@@ -101,9 +106,23 @@ class AddressesFlowViewModel @Inject constructor(
                     when (val response = it.parseDeleteAddressResponse()) {
                         is ResponseEntity.Success -> {
                             val list = state.data.items.filter { it.id != addressId }
+
+                            val personal = list.filter { it.type == OrderType.PERSONAL.value }
+                            val company = list.filter { it.type == OrderType.COMPANY.value }
+                            val fullList = mutableListOf<Item>()
+                            if (personal.isNotEmpty()) {
+                                fullList.addAll(listOf(AddressFlowTitle(application.resources.getString(R.string.personal_addresses_title))) + personal)
+                            }
+                            if (company.isNotEmpty()) {
+                                fullList.addAll(listOf(AddressFlowTitle(application.resources.getString(R.string.company_addresses_title))) + company)
+                            }
+
                             uiStateListener.value = state.copy(
                                 data = state.data.copy(
-                                    items = list
+                                    items = list,
+                                    companyItems = company,
+                                    personalItems = personal,
+                                    fullList = fullList
                                 )
                             )
                             eventListener.emit(AddressesEvents.DeleteEvent("Удалено"))
@@ -126,6 +145,9 @@ class AddressesFlowViewModel @Inject constructor(
     }
 
     data class AddressesState(
-        val items: List<AddressUI> = emptyList()
+        val items: List<AddressUI> = emptyList(),
+        val companyItems: List<AddressUI> = emptyList(),
+        val personalItems: List<AddressUI> = emptyList(),
+        val fullList: List<Item> = emptyList()
     ) : State
 }
