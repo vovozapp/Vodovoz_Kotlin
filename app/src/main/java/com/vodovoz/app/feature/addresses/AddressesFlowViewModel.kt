@@ -155,8 +155,16 @@ class AddressesFlowViewModel @Inject constructor(
         }
     }
 
+    fun onAddressClick(address: AddressUI) {
+        if (openMode == null) return
+        viewModelScope.launch {
+            eventListener.emit(AddressesEvents.OnAddressClick(address))
+        }
+    }
+
     sealed class AddressesEvents : Event {
         data class DeleteEvent(val message: String) : AddressesEvents()
+        data class OnAddressClick(val address: AddressUI) : AddressesEvents()
     }
 
     data class AddressesState(

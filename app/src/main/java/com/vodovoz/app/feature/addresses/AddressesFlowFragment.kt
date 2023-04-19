@@ -11,6 +11,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentAddressesFlowBinding
 import com.vodovoz.app.feature.addresses.adapter.AddressesClickListener
+import com.vodovoz.app.ui.fragment.saved_addresses.AddressesFragment
 import com.vodovoz.app.ui.fragment.saved_addresses.AddressesFragmentDirections
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.util.extensions.snack
@@ -85,6 +86,11 @@ class AddressesFlowFragment : BaseFragment() {
                         is AddressesFlowViewModel.AddressesEvents.DeleteEvent -> {
                             requireActivity().snack(it.message)
                         }
+                        is AddressesFlowViewModel.AddressesEvents.OnAddressClick -> {
+                            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                                AddressesFragment.SELECTED_ADDRESS, it)
+                            findNavController().popBackStack()
+                        }
                     }
                 }
         }
@@ -93,7 +99,7 @@ class AddressesFlowFragment : BaseFragment() {
     private fun getAddressesClickListener(): AddressesClickListener {
         return object : AddressesClickListener {
             override fun onAddressClick(item: AddressUI) {
-
+                viewModel.onAddressClick(item)
             }
 
             override fun onEditClick(item: AddressUI) {
