@@ -16,6 +16,7 @@ import com.vodovoz.app.feature.bottom.contacts.ContactsFlowViewModel
 import com.vodovoz.app.mapper.AddressMapper.mapToUI
 import com.vodovoz.app.mapper.ContactsBundleMapper.mapToUI
 import com.vodovoz.app.ui.fragment.ordering.OrderType
+import com.vodovoz.app.ui.fragment.saved_addresses.OpenMode
 import com.vodovoz.app.ui.model.AddressFlowTitle
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -156,7 +157,7 @@ class AddressesFlowViewModel @Inject constructor(
     }
 
     fun onAddressClick(address: AddressUI) {
-        if (openMode == null) return
+        if (openMode != OpenMode.SelectAddress.name) return
         viewModelScope.launch {
             eventListener.emit(AddressesEvents.OnAddressClick(address))
         }

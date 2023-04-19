@@ -88,7 +88,7 @@ class AddressesFlowFragment : BaseFragment() {
                         }
                         is AddressesFlowViewModel.AddressesEvents.OnAddressClick -> {
                             findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                                AddressesFragment.SELECTED_ADDRESS, it)
+                                AddressesFragment.SELECTED_ADDRESS, it.address)
                             findNavController().popBackStack()
                         }
                     }
