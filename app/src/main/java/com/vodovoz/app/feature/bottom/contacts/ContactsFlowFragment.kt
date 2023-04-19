@@ -1,5 +1,7 @@
 package com.vodovoz.app.feature.bottom.contacts
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -7,7 +9,12 @@ import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.databinding.FragmentContactsFlowBinding
+import com.vodovoz.app.feature.bottom.contacts.adapter.ContactsClickListener
+import com.vodovoz.app.ui.model.ChatUI
+import com.vodovoz.app.ui.model.EmailUI
+import com.vodovoz.app.ui.model.PhoneUI
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -92,5 +99,44 @@ class ContactsFlowFragment : BaseFragment() {
         }
 
         viewModel.sendMail(name, phone, email, descriptions)
+    }
+
+    private fun getContactsClickListener() : ContactsClickListener {
+        return object : ContactsClickListener {
+            override fun onPhoneSelect(item: PhoneUI) {
+                when(item.type) {
+                    WHATSAPP_TYPE -> {
+                        val uri = Uri.parse("https://api.whatsapp.com/send?phone=${item.value}")
+                        val sendIntent = Intent(Intent.ACTION_VIEW, uri)
+                        startActivity(sendIntent)
+                    }
+                    PHONE_TYPE -> {
+                        val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", item.value, null))
+                        startActivity(intent)
+                    }
+                }
+            }
+
+            override fun onChatIconSelect(item: ChatUI) {
+                when(item.type) {
+                    WHATSAPP_TYPE -> {
+                        val uri = Uri.parse("https://api.whatsapp.com/send?phone=${item.action}")
+                        val sendIntent = Intent(Intent.ACTION_VIEW, uri)
+                        startActivity(sendIntent)
+                    }
+                    VIBER_TYPE -> {
+                    }
+                    TELEGRAM_TYPE -> {}
+                    CHAT_TYPE -> {}
+                }
+            }
+
+            override fun onEmailSelect(item: EmailUI) {
+                val emailIntent = Intent(Intent.ACTION_SEND)
+                emailIntent.type = "plain/text"
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(item.value))
+                startActivity(Intent.createChooser(emailIntent, "Send mail..."))
+            }
+        }
     }
 }
