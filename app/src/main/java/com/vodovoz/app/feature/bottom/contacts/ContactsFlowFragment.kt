@@ -9,9 +9,12 @@ import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.databinding.FragmentContactsFlowBinding
 import com.vodovoz.app.feature.bottom.contacts.adapter.ContactsClickListener
+import com.vodovoz.app.feature.bottom.contacts.adapter.controller.EmailController
+import com.vodovoz.app.feature.bottom.contacts.adapter.controller.PhoneController
 import com.vodovoz.app.ui.model.ChatUI
 import com.vodovoz.app.ui.model.EmailUI
 import com.vodovoz.app.ui.model.PhoneUI
@@ -31,6 +34,9 @@ class ContactsFlowFragment : BaseFragment() {
         )
     }
 
+    private val emailController = EmailController(getContactsClickListener())
+    private val phoneController = PhoneController(getContactsClickListener())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.fetchContacts()
@@ -38,6 +44,9 @@ class ContactsFlowFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        phoneController.bind(binding.phonesRecycler)
+        emailController.bind(binding.emailsRecycler)
 
         initToolbar("Связаться с нами")
         initWriteUsButton()
@@ -72,6 +81,18 @@ class ContactsFlowFragment : BaseFragment() {
                         hideLoader()
                     }
 
+                    if (state.data.item != null) {
+
+                        emailController.submitList(state.data.item.emailUIList)
+                        val chatBundle = state.data.item.chatsBundleUI
+                        val mappedList = if (chatBundle != null) {
+                            state.data.item.phoneUIList + state.data.item.chatsBundleUI
+                        } else {
+                            state.data.item.phoneUIList
+                        }
+
+                        phoneController.submitList(mappedList)
+                    }
 
                     showError(state.error)
 
