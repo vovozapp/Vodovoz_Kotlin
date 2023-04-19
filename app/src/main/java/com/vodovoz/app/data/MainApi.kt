@@ -572,4 +572,24 @@ interface MainApi {
         @Query("comment") comment: String? = null,
     ): ResponseBody
 
+    /**
+     * Addresses
+     */
+
+    @GET("/newmobile/address.php")
+    suspend fun fetchAddressResponse(
+        @Query("city") locality: String? = null,
+        @Query("description") comment: String? = null,
+        @Query("entrance") entrance: String? = null,
+        @Query("flat") office: String? = null,
+        @Query("floor") floor: String? = null,
+        @Query("house") house: String? = null,
+        @Query("street") street: String? = null,
+        @Query("userid") userid: Long? = null,
+        @Query("iblock_id") blockId: Int? = null,
+        @Query("action") action: String? = null,
+        @Query("tip") type: Int? = null,
+        @Query("addressid") addressId: Long? = null,
+    ): ResponseBody
+
 }

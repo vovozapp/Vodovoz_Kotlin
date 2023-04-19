@@ -18,7 +18,9 @@ import com.vodovoz.app.data.parser.response.contacts.ContactsBundleResponseJsonP
 import com.vodovoz.app.data.parser.response.contacts.SendMailResponseJsonParser.parseSendMailResponse
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
 import com.vodovoz.app.data.parser.response.map.AddressByGeocodeResponseJsonParser.parseAddressByGeocodeResponse
+import com.vodovoz.app.data.parser.response.map.DeleteAddressResponseJsonParser.parseDeleteAddressResponse
 import com.vodovoz.app.data.parser.response.map.DeliveryZonesBundleResponseJsonParser.parseDeliveryZonesBundleResponse
+import com.vodovoz.app.data.parser.response.map.FetchAddressesSavedResponseJsonParser.parseFetchAddressesSavedResponse
 import com.vodovoz.app.data.parser.response.order.CancelOrderResponseJsonParser.parseCancelOrderResponse
 import com.vodovoz.app.data.parser.response.order.OrderDetailsResponseJsonParser.parseOrderDetailsResponse
 import com.vodovoz.app.data.parser.response.past_purchases.PastPurchasesHeaderResponseJsonParser.parsePastPurchasesHeaderResponse
@@ -918,6 +920,32 @@ class MainRepository @Inject constructor(
         phone = phone,
         email = email,
         comment = comment
+    )
+
+    /**
+     * Addresses
+     */
+
+    //Получить сохраненные адреса
+    suspend fun fetchAddressesSaved(
+        userId: Long?,
+        type: Int?
+    ) = api.fetchAddressResponse(
+        blockId = 102,
+        action = "get",
+        userid = userId,
+        type = type
+    )
+
+    //Удалить адресс
+    suspend fun deleteAddress(
+        addressId: Long?,
+        userId: Long?
+    ) = api.fetchAddressResponse(
+        addressId = addressId,
+        userid = userId,
+        action = "del",
+        blockId = 102
     )
 
 }
