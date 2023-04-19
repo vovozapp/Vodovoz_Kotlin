@@ -17,10 +17,12 @@ import com.vodovoz.app.data.parser.response.comment.SendCommentAboutProductRespo
 import com.vodovoz.app.data.parser.response.contacts.ContactsBundleResponseJsonParser.parseContactsBundleResponse
 import com.vodovoz.app.data.parser.response.contacts.SendMailResponseJsonParser.parseSendMailResponse
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
+import com.vodovoz.app.data.parser.response.map.AddAddressResponseJsonParser.parseAddAddressResponse
 import com.vodovoz.app.data.parser.response.map.AddressByGeocodeResponseJsonParser.parseAddressByGeocodeResponse
 import com.vodovoz.app.data.parser.response.map.DeleteAddressResponseJsonParser.parseDeleteAddressResponse
 import com.vodovoz.app.data.parser.response.map.DeliveryZonesBundleResponseJsonParser.parseDeliveryZonesBundleResponse
 import com.vodovoz.app.data.parser.response.map.FetchAddressesSavedResponseJsonParser.parseFetchAddressesSavedResponse
+import com.vodovoz.app.data.parser.response.map.UpdateAddressResponseJsonParser.parseUpdateAddressResponse
 import com.vodovoz.app.data.parser.response.order.CancelOrderResponseJsonParser.parseCancelOrderResponse
 import com.vodovoz.app.data.parser.response.order.OrderDetailsResponseJsonParser.parseOrderDetailsResponse
 import com.vodovoz.app.data.parser.response.past_purchases.PastPurchasesHeaderResponseJsonParser.parsePastPurchasesHeaderResponse
@@ -946,6 +948,58 @@ class MainRepository @Inject constructor(
         userid = userId,
         action = "del",
         blockId = 102
+    )
+
+    //Добавить адрес в сохраненные
+    suspend fun addAddress(
+        locality: String?,
+        street: String?,
+        house: String?,
+        entrance: String?,
+        floor: String?,
+        office: String?,
+        comment: String?,
+        type: Int?,
+        userId: Long?
+    ) = api.fetchAddressResponse(
+        locality = locality,
+        street = street,
+        house = house,
+        entrance = entrance,
+        floor = floor,
+        office = office,
+        comment = comment,
+        type = type,
+        userid = userId,
+        blockId = 102,
+        action = "add"
+    )
+
+    //Обновить адрес
+    suspend fun updateAddress(
+        locality: String?,
+        street: String?,
+        house: String?,
+        entrance: String?,
+        floor: String?,
+        office: String?,
+        comment: String?,
+        type: Int?,
+        addressId: Long?,
+        userId: Long?
+    ) = api.fetchAddressResponse(
+        locality = locality,
+        street = street,
+        house = house,
+        entrance = entrance,
+        floor = floor,
+        office = office,
+        comment = comment,
+        type = type,
+        addressId = addressId,
+        userid = userId,
+        blockId = 102,
+        action = "update"
     )
 
 }
