@@ -14,6 +14,7 @@ import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.pa
 import com.vodovoz.app.data.parser.response.category.AllFiltersByCategoryResponseJsonParser.parseAllFiltersByCategoryResponse
 import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
 import com.vodovoz.app.data.parser.response.comment.SendCommentAboutProductResponseJsonParser.parseSendCommentAboutProductResponse
+import com.vodovoz.app.data.parser.response.contacts.ContactsBundleResponseJsonParser.parseContactsBundleResponse
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
 import com.vodovoz.app.data.parser.response.map.AddressByGeocodeResponseJsonParser.parseAddressByGeocodeResponse
 import com.vodovoz.app.data.parser.response.map.DeliveryZonesBundleResponseJsonParser.parseDeliveryZonesBundleResponse
@@ -890,5 +891,16 @@ class MainRepository @Inject constructor(
             date = date
         )
     }
+
+    /**
+     * Contacts
+     */
+
+    suspend fun fetchContacts(
+        appVersion: String?
+    ) = api.fetchContactsResponse(
+        action = "dannyesvyazi",
+        appVersion = appVersion
+    )
 
 }

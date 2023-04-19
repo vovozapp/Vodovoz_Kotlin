@@ -550,4 +550,14 @@ interface MainApi {
         @Query("DELIVERY_DATE", encoded = true) date: String
     ): ResponseBody
 
+    /**
+     * Contacts
+     */
+
+    @GET("/newmobile/glavnaya/svyssnam.php")
+    suspend fun fetchContactsResponse(
+        @Query("action") action: String? = null,
+        @Query("versiyaan") appVersion: String? = null,
+    ): ResponseBody
+
 }
