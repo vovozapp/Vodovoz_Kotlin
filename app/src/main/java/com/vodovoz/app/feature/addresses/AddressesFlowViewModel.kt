@@ -65,9 +65,23 @@ class AddressesFlowViewModel @Inject constructor(
                         val data = response.data.mapToUI()
 
                         if (data.isNotEmpty()) {
+
+                            val personal = data.filter { it.type == OrderType.PERSONAL.value }
+                            val company = data.filter { it.type == OrderType.COMPANY.value }
+                            val fullList = mutableListOf<Item>()
+                            if (personal.isNotEmpty()) {
+                                fullList.addAll(listOf(AddressFlowTitle(application.resources.getString(R.string.personal_addresses_title))) + personal)
+                            }
+                            if (company.isNotEmpty()) {
+                                fullList.addAll(listOf(AddressFlowTitle(application.resources.getString(R.string.company_addresses_title))) + company)
+                            }
+
                             uiStateListener.value = state.copy(
                                 data = state.data.copy(
-                                    items = data
+                                    items = data,
+                                    companyItems = company,
+                                    personalItems = personal,
+                                    fullList = fullList
                                 ),
                                 loadingPage = false,
                                 error = null
@@ -105,10 +119,11 @@ class AddressesFlowViewModel @Inject constructor(
 
                     when (val response = it.parseDeleteAddressResponse()) {
                         is ResponseEntity.Success -> {
-                            val list = state.data.items.filter { it.id != addressId }
 
-                            val personal = list.filter { it.type == OrderType.PERSONAL.value }
-                            val company = list.filter { it.type == OrderType.COMPANY.value }
+                            val list = state.data.items.filter { it.id != addressId }
+                            val personal = state.data.personalItems.filter { it.id == addressId }
+                            val company = state.data.companyItems.filter { it.id == addressId }
+
                             val fullList = mutableListOf<Item>()
                             if (personal.isNotEmpty()) {
                                 fullList.addAll(listOf(AddressFlowTitle(application.resources.getString(R.string.personal_addresses_title))) + personal)
