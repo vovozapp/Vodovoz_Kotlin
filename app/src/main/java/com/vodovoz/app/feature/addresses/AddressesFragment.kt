@@ -1,32 +1,17 @@
-package com.vodovoz.app.ui.fragment.saved_addresses
+package com.vodovoz.app.feature.addresses
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.databinding.FragmentAddressesBinding
 import com.vodovoz.app.databinding.FragmentAddressesFlowBinding
-import com.vodovoz.app.feature.addresses.AddressesController
-import com.vodovoz.app.feature.addresses.AddressesFlowViewModel
 import com.vodovoz.app.feature.addresses.adapter.AddressesClickListener
-import com.vodovoz.app.ui.adapter.AddressesAdapter
-import com.vodovoz.app.ui.adapter.AddressesAdapterItem
-import com.vodovoz.app.ui.adapter.AddressesAdapterItemType
-import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
-import com.vodovoz.app.ui.fragment.ordering.OrderType
 import com.vodovoz.app.ui.model.AddressUI
-import com.vodovoz.app.ui.view.Divider
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -101,7 +86,7 @@ class AddressesFragment : BaseFragment() {
                         }
                         is AddressesFlowViewModel.AddressesEvents.OnAddressClick -> {
                             findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                                AddressesFragment.SELECTED_ADDRESS, it.address)
+                                SELECTED_ADDRESS, it.address)
                             findNavController().popBackStack()
                         }
                     }

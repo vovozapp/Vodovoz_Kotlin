@@ -9,14 +9,10 @@ import com.vodovoz.app.common.content.*
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.contacts.SendMailResponseJsonParser.parseSendMailResponse
 import com.vodovoz.app.data.parser.response.map.DeleteAddressResponseJsonParser.parseDeleteAddressResponse
 import com.vodovoz.app.data.parser.response.map.FetchAddressesSavedResponseJsonParser.parseFetchAddressesSavedResponse
-import com.vodovoz.app.feature.bottom.contacts.ContactsFlowViewModel
 import com.vodovoz.app.mapper.AddressMapper.mapToUI
-import com.vodovoz.app.mapper.ContactsBundleMapper.mapToUI
 import com.vodovoz.app.ui.fragment.ordering.OrderType
-import com.vodovoz.app.ui.fragment.saved_addresses.OpenMode
 import com.vodovoz.app.ui.model.AddressFlowTitle
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.util.extensions.debugLog

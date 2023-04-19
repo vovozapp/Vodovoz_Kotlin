@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.saved_addresses
+package com.vodovoz.app.feature.addresses.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.config.AddressConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.feature.addresses.OpenMode
 import com.vodovoz.app.mapper.AddressMapper.mapToUI
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.fragment.ordering.OrderType

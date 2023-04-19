@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.addresses
+package com.vodovoz.app.feature.addresses.old
 
 import android.os.Bundle
 import android.view.View
@@ -10,9 +10,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentAddressesFlowBinding
+import com.vodovoz.app.feature.addresses.AddressesController
+import com.vodovoz.app.feature.addresses.AddressesFlowViewModel
+import com.vodovoz.app.feature.addresses.AddressesFragment
+import com.vodovoz.app.feature.addresses.AddressesFragmentDirections
 import com.vodovoz.app.feature.addresses.adapter.AddressesClickListener
-import com.vodovoz.app.ui.fragment.saved_addresses.AddressesFragment
-import com.vodovoz.app.ui.fragment.saved_addresses.AddressesFragmentDirections
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint

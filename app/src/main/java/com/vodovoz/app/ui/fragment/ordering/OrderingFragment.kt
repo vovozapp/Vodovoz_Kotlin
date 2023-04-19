@@ -31,8 +31,8 @@ import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
-import com.vodovoz.app.ui.fragment.saved_addresses.AddressesFragment
-import com.vodovoz.app.ui.fragment.saved_addresses.OpenMode
+import com.vodovoz.app.feature.addresses.AddressesFragment
+import com.vodovoz.app.feature.addresses.OpenMode
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.ui.model.FreeShippingDaysInfoBundleUI
 import com.vodovoz.app.ui.model.PayMethodUI

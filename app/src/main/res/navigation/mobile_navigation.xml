@@ -531,7 +531,7 @@
     </dialog>
     <fragment
         android:id="@+id/savedAddressesDialogFragment"
-        android:name="com.vodovoz.app.ui.fragment.saved_addresses.AddressesFragment"
+        android:name="com.vodovoz.app.feature.addresses.AddressesFragment"
         android:label="SavedAddressesDialogFragment" >
         <action
             android:id="@+id/action_to_mapDialogFragment"
