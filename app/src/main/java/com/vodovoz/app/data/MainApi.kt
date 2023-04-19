@@ -547,7 +547,7 @@ interface MainApi {
         @Query("COORDS_FROM[0]", encoded = false) latitude: String,
         @Query("COORDS_FROM[1]", encoded = false) longitude: String,
         @Query("LENGTH") length: String,
-        @Query("DELIVERY_DATE", encoded = false) date: String
-    ): MapTestResponse
+        @Query("DELIVERY_DATE", encoded = true) date: String
+    ): ResponseBody
 
 }

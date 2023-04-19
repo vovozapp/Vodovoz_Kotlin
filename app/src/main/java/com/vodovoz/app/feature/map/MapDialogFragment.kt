@@ -269,12 +269,18 @@ class MapDialogFragment : BaseFragment(),
                         }
                         is MapFlowViewModel.MapFlowEvents.ShowInfoDialog -> {
                             if (it.url.isNullOrEmpty().not()) {
-                                findNavController().navigate(R.id.webViewFlowBottomSheetFragment, bundleOf("title" to "Зоны бесплатных дней доставки за МКАД", "url" to it.url))
+                                findNavController().navigate(
+                                    R.id.webViewFlowBottomSheetFragment,
+                                    bundleOf(
+                                        "title" to "Зоны бесплатных дней доставки за МКАД",
+                                        "url" to it.url
+                                    )
+                                )
                             }
                         }
                         is MapFlowViewModel.MapFlowEvents.ShowAlert -> {
                             MaterialAlertDialogBuilder(requireContext())
-                                .setMessage(it.response.UF_DELIVERY_PRICE.toString())
+                                .setMessage(it.response.string())
                                 .setPositiveButton("Ок") { dialog, _ -> dialog.dismiss() }
                                 .show()
                         }
@@ -526,7 +532,7 @@ class MapDialogFragment : BaseFragment(),
             "pin",
             ImageProvider.fromResource(requireContext(), com.vodovoz.app.R.drawable.search_result),
             IconStyle()
-                .setAnchor (PointF(0.5f, 0.5f))
+                .setAnchor(PointF(0.5f, 0.5f))
                 .setRotationType(RotationType.ROTATE)
                 .setZIndex(1f)
                 .setScale(0.5f)
@@ -600,7 +606,7 @@ class MapDialogFragment : BaseFragment(),
                         /*viewModel.sendTestMapResponse(
                             latitude = startPoint.latitude.toString(),
                             longitude = startPoint.longitude.toString(),
-                            length = (distance/1000).toInt().toString(),
+                            length = (key/1000).toInt().toString(),
                             date = "18.04.2023"
                         )*/
                     }

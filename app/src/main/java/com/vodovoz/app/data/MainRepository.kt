@@ -880,7 +880,7 @@ class MainRepository @Inject constructor(
         longitude: String,
         length: String,
         date: String
-    ) : MapTestResponse {
+    ) : ResponseBody {
         return api.sendTestMapRequest(
             sourse = "API",
             address = address,

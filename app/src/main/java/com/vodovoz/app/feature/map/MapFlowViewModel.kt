@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
 import javax.inject.Inject
 
 @HiltViewModel
@@ -236,6 +237,6 @@ class MapFlowViewModel @Inject constructor(
         data class ShowAddAddressBottomDialog(val address: AddressUI?) : MapFlowEvents()
         data class Submit(val startPoint: Point, val list: List<Point>): MapFlowEvents()
         data class ShowInfoDialog(val url: String?): MapFlowEvents()
-        data class ShowAlert(val response: MapTestResponse) : MapFlowEvents()
+        data class ShowAlert(val response: ResponseBody) : MapFlowEvents()
     }
 }
