@@ -14,12 +14,17 @@ class ContactEmailFlowViewHolder(
     private val binding: ViewHolderContactEmailBinding = ViewHolderContactEmailBinding.bind(view)
 
     init {
-
+        binding.value.setOnClickListener {
+            val item = item ?:return@setOnClickListener
+            clickListener.onEmailSelect(item)
+        }
     }
 
     override fun bind(item: EmailUI) {
         super.bind(item)
 
+        binding.name.text = item.name
+        binding.value.text = item.value
     }
 
 }

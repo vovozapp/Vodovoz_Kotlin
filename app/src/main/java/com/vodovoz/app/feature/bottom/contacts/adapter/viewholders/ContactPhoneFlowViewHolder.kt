@@ -14,12 +14,16 @@ class ContactPhoneFlowViewHolder(
     private val binding: ViewHolderContactPhoneBinding = ViewHolderContactPhoneBinding.bind(view)
 
     init {
-
+        binding.value.setOnClickListener {
+            val item = item ?:return@setOnClickListener
+            clickListener.onPhoneSelect(item)
+        }
     }
 
     override fun bind(item: PhoneUI) {
         super.bind(item)
-
+        binding.name.text = item.name
+        binding.value.text = item.value
     }
 
 }
