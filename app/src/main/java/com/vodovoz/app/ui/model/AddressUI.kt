@@ -20,7 +20,10 @@ data class AddressUI(
     val entrance: String,
     val floor: String,
     val flat: String,
-    val comment: String
+    val comment: String,
+    val latitude: String = "",
+    val longitude: String = "",
+    val length: String = ""
 ): Parcelable, Item {
 
     override fun getItemViewType(): Int {

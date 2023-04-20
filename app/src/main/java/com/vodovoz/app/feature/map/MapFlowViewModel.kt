@@ -133,7 +133,12 @@ class MapFlowViewModel @Inject constructor(
 
     fun showAddAddressBottomDialog() {
         viewModelScope.launch {
-            eventListener.emit(MapFlowEvents.ShowAddAddressBottomDialog(state.data.addressUI))
+            val mappedAddress = state.data.addressUI?.copy(
+                latitude = state.data.savedPointData?.latitude ?: "",
+                longitude = state.data.savedPointData?.longitude ?: "",
+                length = state.data.savedPointData?.length ?: ""
+            )
+            eventListener.emit(MapFlowEvents.ShowAddAddressBottomDialog(mappedAddress))
         }
     }
 
@@ -220,6 +225,24 @@ class MapFlowViewModel @Inject constructor(
         }
     }
 
+    fun savePointData(
+        latitude: String,
+        longitude: String,
+        length: String
+    ) {
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                savedPointData = SavedPointData(latitude, longitude, length)
+            )
+        )
+    }
+
+    data class SavedPointData(
+        val latitude: String,
+        val longitude: String,
+        val length: String
+    )
+
     data class LocationFloatToPoint(
         val distance: Float,
         val point: Point
@@ -229,7 +252,8 @@ class MapFlowViewModel @Inject constructor(
         val deliveryZonesBundleUI: DeliveryZonesBundleUI? = null,
         val addressUI: AddressUI? = null,
         val updateZones: Boolean = false,
-        val centerPoints: List<Point> = emptyList()
+        val centerPoints: List<Point> = emptyList(),
+        val savedPointData: SavedPointData? = null
     ) : State
 
     sealed class MapFlowEvents : Event {

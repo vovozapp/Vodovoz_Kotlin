@@ -602,7 +602,11 @@ class MapDialogFragment : BaseFragment(),
                     val distance = viewModel.getTwoPointsDistance(startPoint, center)
                     if (distance < viewModel.getTwoPointsDistance(endPoint, center)) {
                         mapObjects.addPolyline(it)
-
+                        viewModel.savePointData(
+                            latitude = startPoint.latitude.toString(),
+                            longitude = startPoint.longitude.toString(),
+                            length = (key/1000).toInt().toString()
+                        )
                         /*viewModel.sendTestMapResponse(
                             latitude = startPoint.latitude.toString(),
                             longitude = startPoint.longitude.toString(),
