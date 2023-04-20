@@ -57,6 +57,7 @@ import com.yandex.runtime.Error
 import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import kotlin.math.roundToInt
 
 
 @AndroidEntryPoint
@@ -611,7 +612,7 @@ class MapDialogFragment : BaseFragment(),
                         viewModel.savePointData(
                             latitude = startPoint.latitude.toString(),
                             longitude = startPoint.longitude.toString(),
-                            length = (key / 1000).toInt().toString()
+                            length = (key / 1000).roundToInt().toString()
                         )
                         /*viewModel.sendTestMapResponse(
                             latitude = startPoint.latitude.toString(),
