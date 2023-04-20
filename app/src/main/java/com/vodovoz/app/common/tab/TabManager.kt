@@ -35,6 +35,13 @@ class TabManager @Inject constructor() {
     private val tabAuthRedirectListener = MutableStateFlow<Int>(DEFAULT_AUTH_REDIRECT)
     fun fetchAuthRedirect() = tabAuthRedirectListener.value
 
+    private val addressesRefreshListener = MutableStateFlow(ADDRESSES_DEFAULT_STATE)
+    fun observeAddressesRefresh() = addressesRefreshListener.asStateFlow()
+
+    fun setAddressesRefreshState(refresh: Boolean) {
+        addressesRefreshListener.value = refresh
+    }
+
     fun setAuthRedirect(graphId: Int) {
         tabAuthRedirectListener.value = graphId
     }
@@ -99,5 +106,6 @@ class TabManager @Inject constructor() {
     companion object {
         const val DEFAULT_STATE = -1
         const val DEFAULT_AUTH_REDIRECT = R.id.graph_profile
+        const val ADDRESSES_DEFAULT_STATE = false
     }
 }

@@ -9,12 +9,14 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentAddressesFlowBinding
 import com.vodovoz.app.feature.addresses.adapter.AddressesClickListener
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddressesFragment : BaseFragment() {
@@ -30,6 +32,9 @@ class AddressesFragment : BaseFragment() {
             contentView
         )
     }
+
+    @Inject
+    lateinit var tabManager: TabManager
 
     private val viewModel: AddressesFlowViewModel by viewModels()
 
@@ -55,7 +60,20 @@ class AddressesFragment : BaseFragment() {
         initAddAddressButton()
         observeUiState()
         observeEvents()
+        observeRefresh()
+    }
 
+    private fun observeRefresh() {
+        lifecycleScope.launchWhenStarted {
+            tabManager
+                .observeAddressesRefresh()
+                .collect {
+                    if (it) {
+                        viewModel.refresh()
+                        tabManager.setAddressesRefreshState(false)
+                    }
+                }
+        }
     }
 
     private fun observeUiState() {

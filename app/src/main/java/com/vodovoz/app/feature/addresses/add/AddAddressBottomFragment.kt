@@ -17,6 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.config.AddressConfig
 import com.vodovoz.app.databinding.BsAddAddressBinding
 import com.vodovoz.app.ui.base.ViewState
@@ -26,6 +27,7 @@ import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.textOrError
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddAddressBottomFragment : BaseBottomSheetFragment() {
@@ -41,6 +43,9 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
     private val viewModel: AddAddressFlowViewModel by viewModels()
 
     private val args: AddAddressBottomFragmentArgs by navArgs()
+
+    @Inject
+    lateinit var tabManager: TabManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -151,6 +156,7 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
                             requireActivity().snack(it.message)
                         }
                         is AddAddressFlowViewModel.AddAddressEvents.AddAddressSuccess -> {
+                            tabManager.setAddressesRefreshState(true)
                             findNavController().popBackStack(R.id.savedAddressesDialogFragment, false)
                             dismiss()
                         }
