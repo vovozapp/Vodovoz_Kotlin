@@ -17,8 +17,8 @@ object CartResponseJsonParser {
 
     fun ResponseBody.parseCartResponse(): ResponseEntity<CartBundleEntity> {
         val responseJson = JSONObject(this.string())
-        Log.d(LogSettings.RESPONSE_BODY_LOG, "--------------------------------------------------------CART")
-        Log.d(LogSettings.RESPONSE_BODY_LOG, responseJson.toString(2))
+     //   Log.d(LogSettings.RESPONSE_BODY_LOG, "--------------------------------------------------------CART")
+     //   Log.d(LogSettings.RESPONSE_BODY_LOG, responseJson.toString(2))
         return ResponseEntity.Success(
             CartBundleEntity(
                 infoMessage = when(responseJson.getJSONArray("textkorzina").getJSONObject(1).isNull("MESSAGETEXT")) {

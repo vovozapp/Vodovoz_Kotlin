@@ -12,6 +12,7 @@ import javax.net.ssl.SSLException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import retrofit2.HttpException
 
 abstract class PagingStateViewModel<S : State>(
     idleState: S
@@ -71,6 +72,7 @@ sealed class ErrorState(
     data class Error(val messageInfo: String = "Ошибка загрузки.", val desc: String = "Пропробуйте снова.") : ErrorState(message = messageInfo, description = desc)
     data class NetworkError(val messageInfo: String = "Проблемы с интернетом.", val desc: String = "Проверьте соединение с сетью и обновите страницу") : ErrorState(message = messageInfo, iconDrawable = R.drawable.ic_no_connection, description = desc)
     data class Empty(val messageInfo: String = "Список пуст.", val icon: Int = R.drawable.png_logo, val desc: String = "") : ErrorState(message = messageInfo, iconDrawable = icon, description = desc)
+    object BadGateway : ErrorState(message = "Слишком частый запрос.", description = "Обновите страницу.")
 }
 
 fun Throwable.toErrorState(): ErrorState {
@@ -80,7 +82,13 @@ fun Throwable.toErrorState(): ErrorState {
         is SocketTimeoutException,
         is ConnectException,
         is SSLException -> ErrorState.NetworkError()
-        else -> ErrorState.Error()
+        else -> {
+            if ((this as? HttpException)?.code() == 502) {
+                ErrorState.BadGateway
+            } else {
+                ErrorState.Error()
+            }
+        }
     }
 }
 
