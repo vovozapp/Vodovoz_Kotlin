@@ -40,6 +40,21 @@ fun TextInputLayout.textOrError(minLength: Int): String? {
     return text
 }
 
+fun TextInputLayout.textOrError(range: IntRange): String? {
+    val text = editText?.text?.toString()?.trim().orEmpty()
+    if (text.isBlank()) {
+        error = "Заполните поле"
+        return null
+    }
+
+    if (text.length < range.first || text.length > range.last) {
+        error = "Должно быть от ${range.first} до ${range.last} символов"
+        return null
+    }
+
+    return text
+}
+
 inline fun EditText.onDone(crossinline callback: () -> Unit) {
     setOnEditorActionListener { _, actionId, _ ->
         if (actionId == EditorInfo.IME_ACTION_DONE) {
