@@ -15,8 +15,8 @@ object FieldValidationsSettings {
     val PHONE_REGEX = Regex("\\+7-[0-9]{3}-([0-9]{3})-([0-9]{2})-([0-9]{2})")
     val EMAIL_REGEX = Regex("^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
 
-    val LOCALITY_LENGTH = 1..20
-    val STREET_LENGTH = 1..20
+    val LOCALITY_LENGTH = 1..40
+    val STREET_LENGTH = 1..40
     val HOUSE_LENGTH = 1..20
     val ENTRANCE_LENGTH = 1..20
     val FLOOR_LENGTH = 1..20
