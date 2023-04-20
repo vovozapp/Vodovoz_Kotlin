@@ -778,7 +778,7 @@
     </dialog>
     <dialog
         android:id="@+id/shippingIntervalSelectionBS"
-        android:name="com.vodovoz.app.ui.fragment.ordering.ShippingIntervalSelectionBS"
+        android:name="com.vodovoz.app.feature.cart.ordering.intervals.ShippingIntervalSelectionBS"
         android:label="ShippingIntervalSelectionBS">
         <argument
             android:name="shippingIntervalList"
@@ -786,7 +786,7 @@
     </dialog>
     <dialog
         android:id="@+id/shippingAlertsSelectionBS"
-        android:name="com.vodovoz.app.ui.fragment.ordering.ShippingAlertsSelectionBS"
+        android:name="com.vodovoz.app.feature.cart.ordering.intervals.ShippingAlertsSelectionBS"
         android:label="ShippingAlertsSelectionBS">
         <argument
             android:name="shippingAlertList"
