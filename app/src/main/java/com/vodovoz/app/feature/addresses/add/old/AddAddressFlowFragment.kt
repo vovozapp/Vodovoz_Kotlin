@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.addresses.add
+package com.vodovoz.app.feature.addresses.add.old
 
 import android.os.Bundle
 import android.view.View
@@ -6,16 +6,15 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.data.config.AddressConfig
 import com.vodovoz.app.databinding.BsAddAddressBinding
-import com.vodovoz.app.ui.fragment.bottom_dialog_add_address.AddAddressBottomFragmentArgs
-import com.vodovoz.app.ui.fragment.bottom_dialog_add_address.AddAddressViewModel
+import com.vodovoz.app.feature.addresses.add.AddAddressBottomFragmentArgs
+import com.vodovoz.app.feature.addresses.add.AddAddressFlowViewModel
 import com.vodovoz.app.util.FieldValidationsSettings.ENTRANCE_LENGTH
 import com.vodovoz.app.util.FieldValidationsSettings.FLOOR_LENGTH
 import com.vodovoz.app.util.FieldValidationsSettings.HOUSE_LENGTH
@@ -25,7 +24,6 @@ import com.vodovoz.app.util.FieldValidationsSettings.STREET_LENGTH
 import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.textOrError
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class AddAddressFlowFragment : BaseBottomSheetFragment() {
@@ -127,8 +125,6 @@ class AddAddressFlowFragment : BaseBottomSheetFragment() {
                         hideLoader()
                     }
 
-
-
                     showError(state.error)
                 }
         }
@@ -143,7 +139,7 @@ class AddAddressFlowFragment : BaseBottomSheetFragment() {
                             requireActivity().snack(it.message)
                         }
                         is AddAddressFlowViewModel.AddAddressEvents.AddAddressSuccess -> {
-                            //todo navigate to addresses
+                            findNavController().navigate(R.id.savedAddressesDialogFragment)
                             dismiss()
                         }
                     }

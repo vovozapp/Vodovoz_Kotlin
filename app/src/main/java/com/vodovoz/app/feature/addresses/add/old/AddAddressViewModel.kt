@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.bottom_dialog_add_address
+package com.vodovoz.app.feature.addresses.add.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

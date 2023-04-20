@@ -10,7 +10,7 @@ import com.vodovoz.app.feature.all.brands.old.AllBrandsViewModel
 import com.vodovoz.app.feature.all.comments.old.AllCommentsByProductViewModel
 import com.vodovoz.app.feature.all.promotions.old.AllPromotionsViewModel
 import com.vodovoz.app.ui.fragment.bottles.AllBottlesViewModel
-import com.vodovoz.app.ui.fragment.bottom_dialog_add_address.AddAddressViewModel
+import com.vodovoz.app.feature.addresses.add.old.AddAddressViewModel
 import com.vodovoz.app.feature.cart.old.CartViewModel
 import com.vodovoz.app.feature.catalog.old.CatalogViewModel
 import com.vodovoz.app.ui.fragment.concrete_filter.ConcreteFilterViewModel

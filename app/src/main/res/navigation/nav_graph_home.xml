@@ -522,7 +522,7 @@
     </fragment>
     <dialog
         android:id="@+id/addAddressBottomFragment"
-        android:name="com.vodovoz.app.ui.fragment.bottom_dialog_add_address.AddAddressBottomFragment"
+        android:name="com.vodovoz.app.feature.addresses.add.AddAddressBottomFragment"
         android:label="AddAddressBottomFragment">
         <argument
             android:name="address"
