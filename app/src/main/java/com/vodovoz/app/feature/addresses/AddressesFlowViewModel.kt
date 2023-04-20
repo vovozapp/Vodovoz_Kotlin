@@ -123,8 +123,8 @@ class AddressesFlowViewModel @Inject constructor(
                         is ResponseEntity.Success -> {
 
                             val list = state.data.items.filter { it.id != addressId }
-                            val personal = state.data.personalItems.filter { it.id == addressId }
-                            val company = state.data.companyItems.filter { it.id == addressId }
+                            val personal = state.data.personalItems.filter { it.id != addressId }
+                            val company = state.data.companyItems.filter { it.id != addressId }
 
                             val fullList = mutableListOf<Item>()
                             if (personal.isNotEmpty()) {

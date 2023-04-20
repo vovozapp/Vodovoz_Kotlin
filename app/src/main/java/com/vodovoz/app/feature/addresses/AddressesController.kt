@@ -37,10 +37,6 @@ class AddressesController(
             layoutManager = LinearLayoutManager(context)
             addMarginDecoration { rect, view, parent, state ->
                 rect.top = space16
-                val position = parent.getChildAdapterPosition(view)
-                if (parent.adapter?.getItemViewType(position) == AddressesAdapterItemType.ADDRESS.value) {
-                    if (position == state.itemCount - 1) rect.bottom = spaceLastItemBottomSpace
-                }
             }
         }
     }
