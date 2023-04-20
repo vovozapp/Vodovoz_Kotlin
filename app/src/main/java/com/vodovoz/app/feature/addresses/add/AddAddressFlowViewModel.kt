@@ -39,15 +39,19 @@ class AddAddressFlowViewModel @Inject constructor(
         floor: String?,
         office: String?,
         comment: String?,
-        type: Int?
+        type: Int?,
+        lat: String,
+        longitude: String,
+        length: String,
+        fullAddress: String
     ) {
         val userId = accountManager.fetchAccountId() ?: return
         val addressId = addressUi?.id
 
         if (addressId == null || addressId == 0L) {
-            addAddress(locality, street, house, entrance, floor, office, comment, type, userId)
+            addAddress(locality, street, house, entrance, floor, office, comment, type, userId, lat, longitude, length, fullAddress)
         } else {
-            updateAddress(locality, street, house, entrance, floor, office, comment, type, userId, addressId)
+            updateAddress(locality, street, house, entrance, floor, office, comment, type, userId, addressId, lat, longitude, length, fullAddress)
         }
     }
 
@@ -61,7 +65,10 @@ class AddAddressFlowViewModel @Inject constructor(
         comment: String?,
         type: Int?,
         userId: Long,
-
+        lat: String,
+        longitude: String,
+        length: String,
+        fullAddress: String
     ) {
         uiStateListener.value = state.copy(loadingPage = true)
 
@@ -77,7 +84,11 @@ class AddAddressFlowViewModel @Inject constructor(
                         office = office,
                         comment = comment,
                         type = type,
-                        userId = userId
+                        userId = userId,
+                        lat = lat,
+                        longitude = longitude,
+                        length = length,
+                        fullAddress = fullAddress
                     )
                 )
             }
@@ -114,7 +125,11 @@ class AddAddressFlowViewModel @Inject constructor(
         comment: String?,
         type: Int?,
         userId: Long,
-        addressId: Long
+        addressId: Long,
+        lat: String,
+        longitude: String,
+        length: String,
+        fullAddress: String
     ) {
         uiStateListener.value = state.copy(loadingPage = true)
 
@@ -131,7 +146,11 @@ class AddAddressFlowViewModel @Inject constructor(
                         comment = comment,
                         type = type,
                         userId = userId,
-                        addressId = addressId
+                        addressId = addressId,
+                        lat = lat,
+                        longitude = longitude,
+                        length = length,
+                        fullAddress = fullAddress
                     )
                 )
             }

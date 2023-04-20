@@ -437,7 +437,13 @@ class MapDialogFragment : BaseFragment(),
     }
 
     private fun placeMark(point: Point, resId: Int) {
-        lastPlaceMark?.let { binding.mapView.map.mapObjects.remove(it) }
+        lastPlaceMark?.let {
+            try {
+                binding.mapView.map.mapObjects.remove(it)
+            } catch (_: Throwable) {
+
+            }
+        }
         lastPlaceMark = binding.mapView.map.mapObjects.addPlacemark(
             point,
             ImageProvider.fromResource(context, resId)
@@ -605,7 +611,7 @@ class MapDialogFragment : BaseFragment(),
                         viewModel.savePointData(
                             latitude = startPoint.latitude.toString(),
                             longitude = startPoint.longitude.toString(),
-                            length = (key/1000).toInt().toString()
+                            length = (key / 1000).toInt().toString()
                         )
                         /*viewModel.sendTestMapResponse(
                             latitude = startPoint.latitude.toString(),

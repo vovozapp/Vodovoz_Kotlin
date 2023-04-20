@@ -590,6 +590,9 @@ interface MainApi {
         @Query("action") action: String? = null,
         @Query("tip") type: Int? = null,
         @Query("addressid") addressId: Long? = null,
+        @Query("leghtkm") length: String? = null,
+        @Query("polnadres") fullAddress: String? = null,
+        @Query("ktochka") longAndLat: String? = null
     ): ResponseBody
 
 }

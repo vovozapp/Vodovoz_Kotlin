@@ -960,7 +960,11 @@ class MainRepository @Inject constructor(
         office: String?,
         comment: String?,
         type: Int?,
-        userId: Long?
+        userId: Long?,
+        lat: String,
+        longitude: String,
+        length: String,
+        fullAddress: String
     ) = api.fetchAddressResponse(
         locality = locality,
         street = street,
@@ -972,7 +976,10 @@ class MainRepository @Inject constructor(
         type = type,
         userid = userId,
         blockId = 102,
-        action = "add"
+        action = "add",
+        fullAddress = fullAddress,
+        length = length,
+        longAndLat = "$lat,$longitude"
     )
 
     //Обновить адрес
@@ -986,7 +993,11 @@ class MainRepository @Inject constructor(
         comment: String?,
         type: Int?,
         addressId: Long?,
-        userId: Long?
+        userId: Long?,
+        lat: String,
+        longitude: String,
+        length: String,
+        fullAddress: String
     ) = api.fetchAddressResponse(
         locality = locality,
         street = street,
@@ -999,7 +1010,10 @@ class MainRepository @Inject constructor(
         addressId = addressId,
         userid = userId,
         blockId = 102,
-        action = "update"
+        action = "update",
+        fullAddress = fullAddress,
+        length = length,
+        longAndLat = "$lat,$longitude"
     )
 
 }

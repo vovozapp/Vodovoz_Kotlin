@@ -22,6 +22,7 @@ import com.vodovoz.app.databinding.BsAddAddressBinding
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
 import com.vodovoz.app.util.FieldValidationsSettings
+import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.textOrError
 import dagger.hilt.android.AndroidEntryPoint
@@ -76,6 +77,12 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
             val office = binding.tilFlat.textOrError(FieldValidationsSettings.OFFICE_LENGTH) ?: return@setOnClickListener
             val comment = binding.etComment.text.toString()
 
+            val address = args.address
+            val lat = address?.latitude ?: ""
+            val longitude = address?.longitude ?: ""
+            val length = address?.length ?: ""
+            val fullAddress = address?.fullAddress?.substringAfter("Россия, ") ?: ""
+
             viewModel.action(
                 locality = locality,
                 street = street,
@@ -84,7 +91,11 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
                 floor = floor,
                 office = office,
                 comment = comment,
-                type = type
+                type = type,
+                lat = lat,
+                longitude = longitude,
+                length = length,
+                fullAddress = fullAddress
             )
 
         }

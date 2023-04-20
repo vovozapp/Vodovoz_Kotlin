@@ -75,7 +75,7 @@ class AddAddressFlowFragment : BaseBottomSheetFragment() {
             val office = binding.tilFlat.textOrError(OFFICE_LENGTH) ?: return@setOnClickListener
             val comment = binding.etComment.text.toString()
 
-            viewModel.action(
+            /*viewModel.action(
                 locality = locality,
                 street = street,
                 house = house,
@@ -84,7 +84,7 @@ class AddAddressFlowFragment : BaseBottomSheetFragment() {
                 office = office,
                 comment = comment,
                 type = type
-            )
+            )*/
 
         }
 
