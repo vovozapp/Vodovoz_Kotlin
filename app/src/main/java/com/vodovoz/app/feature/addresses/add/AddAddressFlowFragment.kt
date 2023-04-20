@@ -139,8 +139,12 @@ class AddAddressFlowFragment : BaseBottomSheetFragment() {
             viewModel.observeEvent()
                 .collect {
                     when(it) {
-                        is AddAddressFlowViewModel.AddAddressEvents.AddAddressEvent -> {
+                        is AddAddressFlowViewModel.AddAddressEvents.AddAddressError -> {
                             requireActivity().snack(it.message)
+                        }
+                        is AddAddressFlowViewModel.AddAddressEvents.AddAddressSuccess -> {
+                            //todo navigate to addresses
+                            dismiss()
                         }
                     }
                 }

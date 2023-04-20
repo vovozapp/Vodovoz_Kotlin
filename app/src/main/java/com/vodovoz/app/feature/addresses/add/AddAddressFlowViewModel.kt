@@ -94,11 +94,9 @@ class AddAddressFlowViewModel @Inject constructor(
                         error = null
                     )
                     when (response) {
-                        is ResponseEntity.Success -> {
-                            //todo
-                        }
-                        is ResponseEntity.Error -> eventListener.emit(AddAddressEvents.AddAddressEvent(response.errorMessage))
-                        is ResponseEntity.Hide -> eventListener.emit(AddAddressEvents.AddAddressEvent("Неизвестная ошибка"))
+                        is ResponseEntity.Success -> eventListener.emit(AddAddressEvents.AddAddressSuccess)
+                        is ResponseEntity.Error -> eventListener.emit(AddAddressEvents.AddAddressError(response.errorMessage))
+                        is ResponseEntity.Hide -> eventListener.emit(AddAddressEvents.AddAddressError("Неизвестная ошибка"))
                     }
                 }
                 .flowOn(Dispatchers.Default)
@@ -150,11 +148,9 @@ class AddAddressFlowViewModel @Inject constructor(
                         error = null
                     )
                     when (response) {
-                        is ResponseEntity.Success -> {
-                            //todo
-                        }
-                        is ResponseEntity.Error -> eventListener.emit(AddAddressEvents.AddAddressEvent(response.errorMessage))
-                        is ResponseEntity.Hide -> eventListener.emit(AddAddressEvents.AddAddressEvent("Неизвестная ошибка"))
+                        is ResponseEntity.Success -> eventListener.emit(AddAddressEvents.AddAddressSuccess)
+                        is ResponseEntity.Error -> eventListener.emit(AddAddressEvents.AddAddressError(response.errorMessage))
+                        is ResponseEntity.Hide -> eventListener.emit(AddAddressEvents.AddAddressError("Неизвестная ошибка"))
                     }
                 }
                 .flowOn(Dispatchers.Default)
@@ -164,7 +160,8 @@ class AddAddressFlowViewModel @Inject constructor(
 
 
     sealed class AddAddressEvents : Event {
-        data class AddAddressEvent(val message: String) : AddAddressEvents()
+        object AddAddressSuccess : AddAddressEvents()
+        data class AddAddressError(val message: String) : AddAddressEvents()
     }
 
     data class AddAddressState(
