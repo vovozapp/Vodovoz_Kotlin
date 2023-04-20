@@ -151,7 +151,7 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
                             requireActivity().snack(it.message)
                         }
                         is AddAddressFlowViewModel.AddAddressEvents.AddAddressSuccess -> {
-                            findNavController().navigate(R.id.savedAddressesDialogFragment)
+                            findNavController().popBackStack(R.id.savedAddressesDialogFragment, false)
                             dismiss()
                         }
                     }

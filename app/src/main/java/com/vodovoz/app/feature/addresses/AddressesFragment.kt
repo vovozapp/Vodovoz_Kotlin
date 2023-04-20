@@ -12,6 +12,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentAddressesFlowBinding
 import com.vodovoz.app.feature.addresses.adapter.AddressesClickListener
 import com.vodovoz.app.ui.model.AddressUI
+import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -87,7 +88,7 @@ class AddressesFragment : BaseFragment() {
                         is AddressesFlowViewModel.AddressesEvents.OnAddressClick -> {
                             findNavController().previousBackStackEntry?.savedStateHandle?.set(
                                 SELECTED_ADDRESS, it.address)
-                            findNavController().popBackStack()
+                            findNavController().popBackStack(R.id.orderingFragment, false)
                         }
                     }
                 }
