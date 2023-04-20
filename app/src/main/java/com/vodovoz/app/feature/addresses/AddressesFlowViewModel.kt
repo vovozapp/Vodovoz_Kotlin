@@ -47,8 +47,13 @@ class AddressesFlowViewModel @Inject constructor(
 
     private fun fetchAddresses() {
         val userId = accountManager.fetchAccountId() ?: return
+        val type = when(addressType) {
+            "RERSONAL" -> 1
+            "COMPANY" -> 2
+            else -> null
+        }
         viewModelScope.launch {
-            flow { emit(repository.fetchAddressesSaved(userId, null)) }
+            flow { emit(repository.fetchAddressesSaved(userId, type)) }
                 .catch {
                     debugLog { "fetch addresses error ${it.localizedMessage}" }
                     uiStateListener.value =
