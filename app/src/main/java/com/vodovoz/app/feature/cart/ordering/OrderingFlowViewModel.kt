@@ -57,7 +57,7 @@ class OrderingFlowViewModel @Inject constructor(
         phone: String = "",
         email: String = "",
         companyName: String = "",
-        inputCash: Int = 0,
+        inputCash: String = "",
     ) {
         viewModelScope.launch {
 
@@ -65,18 +65,28 @@ class OrderingFlowViewModel @Inject constructor(
             val deviceInfo = application.getDeviceInfo()
             val addressId = state.data.selectedAddressUI?.id
             if (addressId == null) {
-                eventListener.emit(OrderingEvents.OrderingErrorInfo("Выберите адрес!"))
+                eventListener.emit(OrderingEvents.ChooseAddressError("Выберите адрес!"))
                 return@launch
             }
 
             val selectedDate = state.data.selectedDate
 
             if (selectedDate == null) {
-                eventListener.emit(OrderingEvents.OrderingErrorInfo("Выберите дату!"))
+                eventListener.emit(OrderingEvents.ChooseDateError("Выберите дату!"))
                 return@launch
             }
 
-            val needCall = when(state.data.needOperatorCall) {
+            if (state.data.selectedShippingIntervalUI == null) {
+                eventListener.emit(OrderingEvents.ChooseIntervalError("Выберите интервал!"))
+                return@launch
+            }
+
+            if (state.data.selectedPayMethodUI == null) {
+                eventListener.emit(OrderingEvents.ChoosePayMethodError("Выберите способ оплаты!"))
+                return@launch
+            }
+
+            val needCall = when (state.data.needOperatorCall) {
                 true -> "Y"
                 false -> "N"
             }
@@ -108,7 +118,7 @@ class OrderingFlowViewModel @Inject constructor(
                         commonShippingPrice = state.data.shippingInfoBundleUI?.commonShippingPrice,
                         coupon = coupon,
                         shippingIntervalId = state.data.selectedShippingIntervalUI?.id,
-                        overMoney = inputCash,
+                        overMoney = inputCash.toInt(),
                         parking = state.data.shippingInfoBundleUI?.parkingPrice,
                         userId = userId
                     )
@@ -124,7 +134,6 @@ class OrderingFlowViewModel @Inject constructor(
                     val response = it.parseRegOrderResponse()
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
-                        //todo clear cart
                         cartManager.clearCart()
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
@@ -156,7 +165,9 @@ class OrderingFlowViewModel @Inject constructor(
     }
 
     fun setSelectedShippingInterval(itemId: Long) {
-        val interval = state.data.shippingInfoBundleUI?.shippingIntervalUIList?.find { it.id == itemId } ?: return
+        val interval =
+            state.data.shippingInfoBundleUI?.shippingIntervalUIList?.find { it.id == itemId }
+                ?: return
 
         uiStateListener.value = state.copy(
             data = state.data.copy(
@@ -166,9 +177,7 @@ class OrderingFlowViewModel @Inject constructor(
     }
 
     fun setSelectedShippingAlert(itemId: Long) {
-
         val alert = state.data.shippingAlertList.find { it.id == itemId } ?: return
-
         uiStateListener.value = state.copy(
             data = state.data.copy(
                 selectedShippingAlertUI = alert
@@ -193,7 +202,8 @@ class OrderingFlowViewModel @Inject constructor(
     }
 
     fun setSelectedPaymentMethod(itemId: Long) {
-        val method = state.data.shippingInfoBundleUI?.payMethodUIList?.find { it.id == itemId } ?: return
+        val method =
+            state.data.shippingInfoBundleUI?.payMethodUIList?.find { it.id == itemId } ?: return
         uiStateListener.value = state.copy(
             data = state.data.copy(
                 selectedPayMethodUI = method
@@ -268,9 +278,19 @@ class OrderingFlowViewModel @Inject constructor(
                             loadingPage = false,
                             error = null
                         )
-                        eventListener.emit(OrderingEvents.ShowPaymentMethod(data.payMethodUIList, state.data.selectedPayMethodUI?.id))
+                        eventListener.emit(
+                            OrderingEvents.ShowPaymentMethod(
+                                data.payMethodUIList,
+                                state.data.selectedPayMethodUI?.id
+                            )
+                        )
                         //todo
-                        eventListener.emit(OrderingEvents.ShowShippingIntervals(data.shippingIntervalUIList, state.data.selectedDate))
+                        eventListener.emit(
+                            OrderingEvents.ShowShippingIntervals(
+                                data.shippingIntervalUIList,
+                                state.data.selectedDate
+                            )
+                        )
                         //todo
                         eventListener.emit(OrderingEvents.TodayShippingMessage(data.todayShippingInfo))
                     } else {
@@ -384,14 +404,28 @@ class OrderingFlowViewModel @Inject constructor(
         data class OrderingErrorInfo(val message: String) : OrderingEvents()
         data class OrderSuccess(val item: OrderingCompletedInfoBundleUI) : OrderingEvents()
 
-        data class OnAddressBtnClick(val typeName: String): OrderingEvents()
-        data class OnFreeShippingClick(val bundle: FreeShippingDaysInfoBundleUI): OrderingEvents()
+        data class OnAddressBtnClick(val typeName: String) : OrderingEvents()
+        data class OnFreeShippingClick(val bundle: FreeShippingDaysInfoBundleUI) : OrderingEvents()
         object ShowDatePicker : OrderingEvents()
-        data class OnShippingAlertClick(val list: List<ShippingAlertUI>): OrderingEvents()
+        data class OnShippingAlertClick(val list: List<ShippingAlertUI>) : OrderingEvents()
 
-        data class ShowFreeShippingDaysInfo(val item : FreeShippingDaysInfoBundleUI) : OrderingEvents()
-        data class ShowPaymentMethod(val list : List<PayMethodUI>, val selectedPayMethodId: Long?) : OrderingEvents()
-        data class ShowShippingIntervals(val list : List<ShippingIntervalUI>, val selectedDate: Date?) : OrderingEvents()
+        data class ShowFreeShippingDaysInfo(val item: FreeShippingDaysInfoBundleUI) :
+            OrderingEvents()
+
+        data class ShowPaymentMethod(val list: List<PayMethodUI>, val selectedPayMethodId: Long?) :
+            OrderingEvents()
+
+        data class ShowShippingIntervals(
+            val list: List<ShippingIntervalUI>,
+            val selectedDate: Date?
+        ) : OrderingEvents()
+
         data class TodayShippingMessage(val message: String) : OrderingEvents()
+
+        data class ChooseAddressError(val message: String) : OrderingEvents()
+        data class ChooseDateError(val message: String) : OrderingEvents()
+        data class ChooseIntervalError(val message: String) : OrderingEvents()
+        data class ChoosePayMethodError(val message: String) : OrderingEvents()
+
     }
 }
