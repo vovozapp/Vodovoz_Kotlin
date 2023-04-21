@@ -359,9 +359,8 @@ class OrderingFlowFragment : BaseFragment() {
             binding.tvShippingInterval.text = "Время"
             if (currentYear == year && currentMonth == month && currentDay == day) {
                 viewModel.fetchShippingInfo(today = true)
-            } else {
-                viewModel.fetchShippingInfo()
             }
+            viewModel.fetchShippingInfo()
         }
         val datePicker = DatePickerDialog(
             requireContext(),
