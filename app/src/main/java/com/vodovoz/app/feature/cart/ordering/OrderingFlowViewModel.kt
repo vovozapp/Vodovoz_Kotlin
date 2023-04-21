@@ -147,18 +147,31 @@ class OrderingFlowViewModel @Inject constructor(
         }
     }
 
-    fun setSelectedShippingInterval(item: ShippingIntervalUI) {
+    fun setSelectedDate(date: Date) {
         uiStateListener.value = state.copy(
             data = state.data.copy(
-                selectedShippingIntervalUI = item
+                selectedDate = date
             )
         )
     }
 
-    fun setSelectedShippingAlert(item: ShippingAlertUI) {
+    fun setSelectedShippingInterval(itemId: Long) {
+        val interval = state.data.shippingInfoBundleUI?.shippingIntervalUIList?.find { it.id == itemId } ?: return
+
         uiStateListener.value = state.copy(
             data = state.data.copy(
-                selectedShippingAlertUI = item
+                selectedShippingIntervalUI = interval
+            )
+        )
+    }
+
+    fun setSelectedShippingAlert(itemId: Long) {
+
+        val alert = state.data.shippingAlertList.find { it.id == itemId } ?: return
+
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                selectedShippingAlertUI = alert
             )
         )
     }
@@ -171,15 +184,26 @@ class OrderingFlowViewModel @Inject constructor(
         )
     }
 
-    fun setSelectedPaymentMethod(item: PayMethodUI) {
+    fun setSelectedAddress(item: AddressUI) {
         uiStateListener.value = state.copy(
             data = state.data.copy(
-                selectedPayMethodUI = item
+                selectedAddressUI = item
+            )
+        )
+    }
+
+    fun setSelectedPaymentMethod(itemId: Long) {
+        val method = state.data.shippingInfoBundleUI?.payMethodUIList?.find { it.id == itemId } ?: return
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                selectedPayMethodUI = method
             )
         )
     }
 
     fun setSelectedOrderType(type: OrderType) {
+        if (state.data.selectedOrderType == type) return
+        clearData()
         uiStateListener.value = if (type == OrderType.PERSONAL) {
             state.copy(
                 data = state.data.copy(
@@ -244,6 +268,11 @@ class OrderingFlowViewModel @Inject constructor(
                             loadingPage = false,
                             error = null
                         )
+                        eventListener.emit(OrderingEvents.ShowPaymentMethod(data.payMethodUIList, state.data.selectedPayMethodUI?.id))
+                        //todo
+                        eventListener.emit(OrderingEvents.ShowShippingIntervals(data.shippingIntervalUIList, state.data.selectedDate))
+                        //todo
+                        eventListener.emit(OrderingEvents.TodayShippingMessage(data.todayShippingInfo))
                     } else {
                         uiStateListener.value =
                             state.copy(
@@ -277,6 +306,7 @@ class OrderingFlowViewModel @Inject constructor(
                             loadingPage = false,
                             error = null
                         )
+                        eventListener.emit(OrderingEvents.ShowFreeShippingDaysInfo(data))
                     } else {
                         uiStateListener.value =
                             state.copy(
@@ -287,6 +317,45 @@ class OrderingFlowViewModel @Inject constructor(
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
+        }
+    }
+
+    fun clearData() {
+        uiStateListener.value = state.copy(
+            data = OrderingState()
+        )
+    }
+
+    fun onAddressBtnClick() {
+        viewModelScope.launch {
+            eventListener.emit(OrderingEvents.OnAddressBtnClick(state.data.selectedOrderType.name))
+        }
+    }
+
+    fun onFreeShippingClick() {
+        viewModelScope.launch {
+            val bundle = state.data.shippingDaysInfoBundleUi
+            if (bundle == null) {
+                fetchFreeShippingDaysInfo()
+            } else {
+                eventListener.emit(OrderingEvents.OnFreeShippingClick(bundle))
+            }
+        }
+    }
+
+    fun onDateClick() {
+        viewModelScope.launch {
+            if (state.data.selectedAddressUI == null) {
+                eventListener.emit(OrderingEvents.OrderingErrorInfo("Выберите адрес!"))
+            } else {
+                eventListener.emit(OrderingEvents.ShowDatePicker)
+            }
+        }
+    }
+
+    fun onShippingAlertClick() {
+        viewModelScope.launch {
+            eventListener.emit(OrderingEvents.OnShippingAlertClick(state.data.shippingAlertList))
         }
     }
 
@@ -314,5 +383,15 @@ class OrderingFlowViewModel @Inject constructor(
     sealed class OrderingEvents : Event {
         data class OrderingErrorInfo(val message: String) : OrderingEvents()
         data class OrderSuccess(val item: OrderingCompletedInfoBundleUI) : OrderingEvents()
+
+        data class OnAddressBtnClick(val typeName: String): OrderingEvents()
+        data class OnFreeShippingClick(val bundle: FreeShippingDaysInfoBundleUI): OrderingEvents()
+        object ShowDatePicker : OrderingEvents()
+        data class OnShippingAlertClick(val list: List<ShippingAlertUI>): OrderingEvents()
+
+        data class ShowFreeShippingDaysInfo(val item : FreeShippingDaysInfoBundleUI) : OrderingEvents()
+        data class ShowPaymentMethod(val list : List<PayMethodUI>, val selectedPayMethodId: Long?) : OrderingEvents()
+        data class ShowShippingIntervals(val list : List<ShippingIntervalUI>, val selectedDate: Date?) : OrderingEvents()
+        data class TodayShippingMessage(val message: String) : OrderingEvents()
     }
 }

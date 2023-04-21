@@ -98,7 +98,7 @@ inline fun Activity.snack(
     length: Int = Snackbar.LENGTH_LONG,
     f: Snackbar.() -> Unit = {}
 ) {
-    val snack = Snackbar.make(findViewById(android.R.id.content), message, length)
+    /*val snack = Snackbar.make(findViewById(android.R.id.content), message, length)
     val view = snack.view
     view.background = this.drawable(R.drawable.bg_custom_snackbar)
     val params = view.layoutParams as FrameLayout.LayoutParams
@@ -106,7 +106,9 @@ inline fun Activity.snack(
     view.layoutParams = params
     snack.setTextColor(this.color(R.color.text_black))
     snack.f()
-    snack.show()
+    snack.show()*/
+
+    Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
 }
 
 fun Snackbar.action(action: String, color: Int? = null, listener: (View) -> Unit) {

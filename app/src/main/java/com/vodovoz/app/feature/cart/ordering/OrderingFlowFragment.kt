@@ -1,15 +1,37 @@
 package com.vodovoz.app.feature.cart.ordering
 
+import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentOrderingFlowBinding
+import com.vodovoz.app.feature.addresses.AddressesFragment
+import com.vodovoz.app.feature.addresses.OpenMode
+import com.vodovoz.app.ui.extensions.Date
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
+import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
+import com.vodovoz.app.ui.fragment.ordering.OrderType
+import com.vodovoz.app.ui.fragment.ordering.OrderingFragment
 import com.vodovoz.app.ui.fragment.ordering.OrderingFragmentArgs
+import com.vodovoz.app.ui.fragment.ordering.OrderingFragmentDirections
+import com.vodovoz.app.ui.model.AddressUI
+import com.vodovoz.app.ui.model.FreeShippingDaysInfoBundleUI
+import com.vodovoz.app.ui.model.PayMethodUI
+import com.vodovoz.app.ui.model.ShippingIntervalUI
+import com.vodovoz.app.ui.model.custom.OrderingCompletedInfoBundleUI
+import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -38,7 +60,368 @@ class OrderingFlowFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initToolbar(getString(R.string.ordering_title_text))
+        initArgs()
 
-
+        bindButtons()
+        observeUiState()
+        observeEvents()
+        observeResultLiveData()
     }
+
+    private fun initArgs() {
+        binding.tvFullPrice.setPriceText(args.full)
+        binding.tvDepositPrice.setPriceText(args.deposit)
+        binding.tvDiscountPrice.setPriceText(args.deposit, true)
+        binding.btnOrder.text = String.format(getString(R.string.order_btn_text), args.total)
+        binding.tvTotalPrice.setPriceText(args.total)
+    }
+
+    private fun observeUiState() {
+        lifecycleScope.launchWhenStarted {
+            viewModel
+                .observeUiState()
+                .collect { state ->
+
+                    if (state.loadingPage) {
+                        showLoader()
+                    } else {
+                        hideLoader()
+                    }
+
+                    val orderType = state.data.selectedOrderType
+                    if (orderType == OrderType.PERSONAL) {
+                        showPersonalBtn()
+                    } else {
+                        showCompanyBtn()
+                    }
+
+                    binding.tvPayMethod.text = state.data.selectedPayMethodUI?.name
+
+                    binding.tvShippingInterval.text =
+                        state.data.selectedShippingIntervalUI?.name.toString()
+
+                    binding.tvShippingPrice.setPriceText(state.data.shippingPrice)
+                    binding.tvParkingPrice.setPriceText(state.data.parkingPrice)
+
+                    val addressUI = state.data.selectedAddressUI
+                    if (addressUI != null) {
+                        binding.tvAddress.text = addressUI.fullAddress
+                        binding.etName.setText(addressUI.name)
+                        binding.etEmail.setText(addressUI.email)
+                        binding.etPhone.setText(addressUI.phone)
+                    }
+
+                    showError(state.error)
+                }
+        }
+    }
+
+    private fun orderingCompleted(orderingCompletedInfoBundleUI: OrderingCompletedInfoBundleUI) {
+        binding.ab.translationZ = 0f
+        binding.nsvContent.visibility = View.INVISIBLE
+        binding.tvOrderId.text = orderingCompletedInfoBundleUI.message
+        binding.llOrderingCompleted.visibility = View.VISIBLE
+        when(orderingCompletedInfoBundleUI.paymentURL.isNotEmpty()) {
+            true -> {
+                binding.btnGoToPayment.visibility = View.VISIBLE
+                binding.btnGoToPayment.setOnClickListener { binding.root.openLink(orderingCompletedInfoBundleUI.paymentURL) }
+            }
+            false -> binding.btnGoToPayment.visibility = View.INVISIBLE
+        }
+        binding.incAppBar.tvTitle.text = "Спасибо за заказ"
+    }
+
+    private fun observeEvents() {
+        lifecycleScope.launchWhenStarted {
+            viewModel
+                .observeEvent()
+                .collect {
+                    when (it) {
+                        is OrderingFlowViewModel.OrderingEvents.OrderingErrorInfo -> {
+                            requireActivity().snack(it.message)
+                        }
+                        is OrderingFlowViewModel.OrderingEvents.OrderSuccess -> {
+                            orderingCompleted(it.item)
+                        }
+                        is OrderingFlowViewModel.OrderingEvents.OnAddressBtnClick -> {
+                            if (findNavController().currentDestination?.id == R.id.orderingFragment) {
+                                findNavController().navigate(
+                                    OrderingFragmentDirections.actionToSavedAddressesDialogFragment(
+                                        OpenMode.SelectAddress.name,
+                                        it.typeName
+                                    )
+                                )
+                            }
+                        }
+                        is OrderingFlowViewModel.OrderingEvents.OnFreeShippingClick -> {
+                            if (findNavController().currentDestination?.id == R.id.orderingFragment) {
+                                findNavController().navigate(
+                                    OrderingFragmentDirections.actionToFreeShippingSaysBS(
+                                        it.bundle.title,
+                                        it.bundle.info
+                                    )
+                                )
+                            }
+                        }
+                        is OrderingFlowViewModel.OrderingEvents.ShowDatePicker -> {
+                            showDatePickerDialog()
+                        }
+                        is OrderingFlowViewModel.OrderingEvents.OnShippingAlertClick -> {
+                            if (findNavController().currentDestination?.id == R.id.orderingFragment) {
+                                findNavController().navigate(
+                                    OrderingFragmentDirections.actionToShippingAlertsSelectionBS(
+                                        it.list.toTypedArray()
+                                    )
+                                )
+                            }
+                        }
+                        is OrderingFlowViewModel.OrderingEvents.ShowFreeShippingDaysInfo -> {
+                            showFreeShippingDaysInfoPopup(it.item)
+                        }
+                        is OrderingFlowViewModel.OrderingEvents.ShowPaymentMethod -> {
+                            showPayMethodPopup(
+                                payMethodUIList = it.list,
+                                selectedPayMethodId = it.selectedPayMethodId ?: it.list.first().id
+                            )
+                        }
+                        is OrderingFlowViewModel.OrderingEvents.ShowShippingIntervals -> {
+                            showShippingIntervalSelectionPopup(it.list, it.selectedDate)
+                        }
+                        is OrderingFlowViewModel.OrderingEvents.TodayShippingMessage -> {
+                            MaterialAlertDialogBuilder(requireContext())
+                                .setMessage(it.message)
+                                .setPositiveButton("Ок") { dialog, _ ->
+                                    dialog.dismiss()
+                                }
+                                .show()
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun bindButtons() {
+        binding.btnOrder.setOnClickListener {
+
+        }
+
+        binding.btnPersonal.setOnClickListener {
+            viewModel.setSelectedOrderType(OrderType.PERSONAL)
+        }
+
+        binding.btnCompany.setOnClickListener {
+            viewModel.setSelectedOrderType(OrderType.COMPANY)
+        }
+
+        binding.tvAddress.setOnClickListener {
+            viewModel.onAddressBtnClick()
+        }
+
+        binding.tvFreeShipping.setOnClickListener {
+            viewModel.onFreeShippingClick()
+        }
+
+        binding.tvDate.setOnClickListener {
+            viewModel.onDateClick()
+        }
+
+        binding.tvShippingInterval.setOnClickListener {
+            viewModel.fetchShippingInfo()
+        }
+
+        binding.tvPayMethod.setOnClickListener {
+            viewModel.fetchShippingInfo()
+        }
+
+        binding.scShippingAlert.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                viewModel.onShippingAlertClick()
+            }
+        }
+    }
+
+    private fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val currentYear = calendar[Calendar.YEAR]
+        val currentMonth = calendar[Calendar.MONTH]
+        val currentDay = calendar[Calendar.DAY_OF_MONTH]
+
+        val datePickerListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
+            val date = Date.from(day, month, year)
+            binding.tvDate.text = dateFormatter.format(date)
+
+            viewModel.setSelectedDate(date)
+            if (currentYear == year && currentMonth == month && currentDay == day) {
+                viewModel.fetchShippingInfo()
+            }
+            binding.tvShippingInterval.text = "Время"
+            viewModel.fetchShippingInfo()
+        }
+        val datePicker = DatePickerDialog(
+            requireContext(),
+            datePickerListener,
+            currentYear, currentMonth, currentDay
+        )
+
+        datePicker.datePicker.minDate = calendar.timeInMillis
+        datePicker.show()
+    }
+
+    private fun showPersonalBtn() {
+        binding.btnCompany.setBackgroundResource(R.drawable.selector_bkg_button_gray_rect)
+        binding.btnPersonal.setBackgroundResource(R.drawable.bkg_button_blue_rect_disabled)
+        binding.llCompanyNameContainer.visibility = View.GONE
+        clearFields()
+    }
+
+    private fun showCompanyBtn() {
+        binding.btnPersonal.setBackgroundResource(R.drawable.selector_bkg_button_gray_rect)
+        binding.btnCompany.setBackgroundResource(R.drawable.bkg_button_blue_rect_disabled)
+        binding.llCompanyNameContainer.visibility = View.VISIBLE
+        clearFields()
+    }
+
+    private fun clearFields() {
+        viewModel.clearData()
+        binding.root.clearFocus()
+        binding.tvNameAddress.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.text_black
+            )
+        )
+        binding.tvNameCompanyName.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.text_black
+            )
+        )
+        binding.tvNameName.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.text_black
+            )
+        )
+        binding.tvNameEmail.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.text_black
+            )
+        )
+        binding.tvNamePhone.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.text_black
+            )
+        )
+        binding.tvNameDate.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.text_black
+            )
+        )
+        binding.tvNamePayMethod.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.text_black
+            )
+        )
+        binding.etCompanyName.text = null
+        binding.etName.text = null
+        binding.etEmail.text = null
+        binding.tvAddress.text = "Адрес"
+        binding.tvDate.text = "Дата"
+        binding.etPhone.setText("")
+        binding.tvShippingInterval.text = "Время"
+        binding.tvShippingPrice.setPriceText(0)
+        binding.tvParkingPrice.setPriceText(0)
+        binding.tvPayMethod.text = "Выберите способ оплаты"
+        binding.etInputCash.text = null
+        binding.mtBetweenPayMethodAndInputCash.visibility = View.GONE
+        binding.etInputCash.visibility = View.GONE
+        binding.etComment.text = null
+    }
+
+    private fun observeResultLiveData() {
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Long>(OrderingFragment.SELECTED_PAY_METHOD)
+            ?.observe(viewLifecycleOwner) { payMethodId ->
+
+                viewModel.setSelectedPaymentMethod(payMethodId)
+
+                if (payMethodId == 1L) {
+                    binding.etInputCash.visibility = View.VISIBLE
+                    binding.mtBetweenPayMethodAndInputCash.visibility = View.VISIBLE
+                } else {
+                    binding.etInputCash.visibility = View.GONE
+                    binding.mtBetweenPayMethodAndInputCash.visibility = View.GONE
+                    binding.tvNamePayMethod.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.text_black
+                        )
+                    )
+                    binding.etInputCash.text = null
+                }
+            }
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Long>(OrderingFragment.SELECTED_SHIPPING_INTERVAL)
+            ?.observe(viewLifecycleOwner) { shippingIntervalId ->
+                viewModel.setSelectedShippingInterval(shippingIntervalId)
+                binding.tvNameDate.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.text_black
+                    )
+                )
+            }
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Long>(OrderingFragment.SELECTED_SHIPPING_ALERT)
+            ?.observe(viewLifecycleOwner) { shippingAlertId ->
+                viewModel.setSelectedShippingAlert(shippingAlertId)
+            }
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<AddressUI>(AddressesFragment.SELECTED_ADDRESS)
+            ?.observe(viewLifecycleOwner) { addressUI ->
+                viewModel.clearData()
+                clearFields()
+                viewModel.setSelectedAddress(addressUI)
+                viewModel.fetchShippingInfo()
+            }
+    }
+
+    private fun showFreeShippingDaysInfoPopup(freeShippingDaysInfoBundleUI: FreeShippingDaysInfoBundleUI) {
+        if (findNavController().currentDestination?.id == R.id.orderingFragment) {
+            findNavController().navigate(OrderingFragmentDirections.actionToFreeShippingSaysBS(
+                freeShippingDaysInfoBundleUI.title,
+                freeShippingDaysInfoBundleUI.info
+            ))
+        }
+    }
+
+    private fun showPayMethodPopup(payMethodUIList: List<PayMethodUI>, selectedPayMethodId: Long) {
+        if (findNavController().currentDestination?.id == R.id.orderingFragment) {
+            findNavController().navigate(OrderingFragmentDirections.actionToPayMethodSelectionBS(
+                payMethodUIList.toTypedArray(),
+                selectedPayMethodId
+            ))
+        }
+    }
+
+    private fun showShippingIntervalSelectionPopup(shippingIntervalUIList: List<ShippingIntervalUI>, selectedDate: java.util.Date?) {
+        if (selectedDate == null) {
+            Snackbar.make(binding.root, "Выберите дату!", Snackbar.LENGTH_LONG).show()
+            return
+        }
+        if (shippingIntervalUIList.isEmpty()) {
+            Snackbar.make(binding.root, "На эту дату нет доставок!", Snackbar.LENGTH_LONG).show()
+        } else {
+            if (findNavController().currentDestination?.id == R.id.orderingFragment) {
+                findNavController().navigate(OrderingFragmentDirections.actionToShippingIntervalSelectionBS(
+                    shippingIntervalUIList.toTypedArray()
+                ))
+            }
+        }
+    }
+
 }
