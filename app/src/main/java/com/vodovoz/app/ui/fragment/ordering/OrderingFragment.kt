@@ -448,35 +448,6 @@ class OrderingFragment : ViewStateBaseFragment() {
         }
     }
 
-    private fun validateField(formField: FormField) =  when(formField.fieldType) {
-        FieldType.NAME,
-        FieldType.PAY_METHOD,
-        FieldType.COMPANY_NAME -> {
-            formField.isValid = (formField as FormField.SingleLineField).value.isNotEmpty()
-            formField.isValid
-        }
-        FieldType.ADDRESS -> {
-            formField.isValid = (formField as FormField.SingleLineWithPromptField).value.isNotEmpty()
-            formField.isValid
-        }
-        FieldType.DATE -> {
-            val first = (formField as FormField.DoubleLineField).firstValue.isNotEmpty()
-            val second = (formField as FormField.DoubleLineField).secondValue.isNotEmpty()
-            formField.isValid = first && second
-            formField.isValid
-        }
-        FieldType.EMAIL -> {
-            formField.isValid = FieldValidationsSettings.EMAIL_REGEX.matches((formField as FormField.SingleLineField).value)
-            formField.isValid
-        }
-//        FieldType.PHONE -> {
-//            formField.isValid = PHONE_REGEX.matches((formField as FormField.SingleLineField).value)
-//            formField.isValid
-//        }
-
-        else -> true
-    }
-
 }
 
 enum class OrderType(val value: Int) {
