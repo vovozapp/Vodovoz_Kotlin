@@ -8,25 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.text.HtmlCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.BsFreeShippingDaysBinding
-import com.vodovoz.app.databinding.BsSelectionPayMethodBinding
 import com.vodovoz.app.databinding.FragmentOrderingBinding
-import com.vodovoz.app.ui.adapter.FieldType
-import com.vodovoz.app.ui.adapter.FormField
-import com.vodovoz.app.ui.adapter.PayMethodsAdapter
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.extensions.ContextExtensions.getDeviceInfo
 import com.vodovoz.app.ui.extensions.Date
-import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
@@ -454,52 +445,3 @@ enum class OrderType(val value: Int) {
     PERSONAL(1), COMPANY(2)
 }
 
-class FreeShippingSaysBS : BottomSheetDialogFragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ) = BsFreeShippingDaysBinding.inflate(
-        layoutInflater,
-        container,
-        false
-    ).apply {
-        this.incHeader.imgClose.setOnClickListener { dismiss() }
-        this.incHeader.tvTitle.text = FreeShippingSaysBSArgs.fromBundle(requireArguments()).title
-        this.tvContent.text = HtmlCompat.fromHtml(FreeShippingSaysBSArgs.fromBundle(requireArguments()).info, HtmlCompat.FROM_HTML_MODE_LEGACY)
-    }.root
-
-}
-
-class PayMethodSelectionBS : BottomSheetDialogFragment() {
-
-    private val payMethodsAdapter = PayMethodsAdapter()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ) = BsSelectionPayMethodBinding.inflate(
-        layoutInflater,
-        container,
-        false
-    ).apply {
-        this.rvPayMethods.layoutManager = LinearLayoutManager(requireContext())
-        payMethodsAdapter.setupListeners {
-            findNavController().previousBackStackEntry?.savedStateHandle?.set(OrderingFragment.SELECTED_PAY_METHOD, it.id)
-            dismiss()
-        }
-        PayMethodSelectionBSArgs.fromBundle(requireArguments()).let { args ->
-            payMethodsAdapter.updateData(args.payMethodList.toList(), args.selectedPayMethod)
-        }
-
-        this.rvPayMethods.adapter = payMethodsAdapter
-        val space8 = resources.getDimension(R.dimen.space_8).toInt()
-        this.rvPayMethods.addMarginDecoration { rect, view, parent, state ->
-            if (parent.getChildAdapterPosition(view) == 0) rect.top = space8
-            if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.bottom = space8
-        }
-    }.root
-
-}
