@@ -14,10 +14,10 @@ object CommentJsonParser {
 
     fun JSONObject.parseCommentEntity() = CommentEntity(
         id = getLong("ID"),
-        text = getString("PREVIEW_TEXT"),
-        date = getString("DATE_ACTIVE_FROM"),
-        author = getString("PROPERTY_AUTHOR_VALUE"),
-        rating = getString("PROPERTY_RATING_VALUE_VALUE").parseRating()
+        text = safeString("PREVIEW_TEXT"),
+        date = safeString("DATE_ACTIVE_FROM"),
+        author = safeString("PROPERTY_AUTHOR_VALUE"),
+        rating = safeString("PROPERTY_RATING_VALUE_VALUE").parseRating()
     )
 
     private fun String.parseRating() = when(this) {
@@ -26,7 +26,7 @@ object CommentJsonParser {
         "обычный магазин" -> 3
         "плохой магазин" -> 2
         "ужасный магазин" -> 1
-        else -> throw Exception()
+        else -> 0
     }
 
 }

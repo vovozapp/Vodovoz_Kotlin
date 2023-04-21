@@ -66,7 +66,6 @@ class OrderingFlowFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initToolbar(getString(R.string.ordering_title_text))
-        initArgs()
 
         bindButtons()
         observeUiState()
@@ -74,14 +73,6 @@ class OrderingFlowFragment : BaseFragment() {
         observeResultLiveData()
         binding.etPhone.setPhoneValidator {}
         bindTextWatchers()
-    }
-
-    private fun initArgs() {
-        binding.tvFullPrice.setPriceText(args.full)
-        binding.tvDepositPrice.setPriceText(args.deposit)
-        binding.tvDiscountPrice.setPriceText(args.deposit, true)
-        binding.btnOrder.text = String.format(getString(R.string.order_btn_text), args.total)
-        binding.tvTotalPrice.setPriceText(args.total)
     }
 
     private fun observeUiState() {
@@ -132,9 +123,19 @@ class OrderingFlowFragment : BaseFragment() {
                         binding.etPhone.setText(addressUI.phone)
                     }
 
+                    initArgs(data = state.data)
+
                     showError(state.error)
                 }
         }
+    }
+
+    private fun initArgs(data: OrderingFlowViewModel.OrderingState) {
+        binding.tvFullPrice.setPriceText(data.full)
+        binding.tvDepositPrice.setPriceText(data.deposit)
+        binding.tvDiscountPrice.setPriceText(data.deposit, true)
+        binding.btnOrder.text = String.format(getString(R.string.order_btn_text), data.total)
+        binding.tvTotalPrice.setPriceText(data.total)
     }
 
     private fun orderingCompleted(orderingCompletedInfoBundleUI: OrderingCompletedInfoBundleUI) {

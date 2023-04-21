@@ -41,17 +41,18 @@ class OrderingFlowViewModel @Inject constructor(
     private val application: Application,
     private val cartManager: CartManager
 ) : PagingContractViewModel<OrderingFlowViewModel.OrderingState, OrderingFlowViewModel.OrderingEvents>(
-    OrderingState()
+    OrderingState(
+        full = savedStateHandle.get<Int>("full"),
+        deposit = savedStateHandle.get<Int>("deposit"),
+        discount = savedStateHandle.get<Int>("discount"),
+        total = savedStateHandle.get<Int>("total")
+    )
 ) {
 
     override val eventListener = MutableSharedFlow<OrderingEvents>(replay = 0, extraBufferCapacity = 1, BufferOverflow.DROP_OLDEST)
 
     private val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
-    private val fullPrice = savedStateHandle.get<Int>("full")
-    private val deposit = savedStateHandle.get<Int>("deposit")
-    private val discount = savedStateHandle.get<Int>("discount")
-    private val total = savedStateHandle.get<Int>("total")
     private val lastActualCart = savedStateHandle.get<String>("lastActualCart")
     private val coupon = savedStateHandle.get<String>("coupon") ?: ""
 
@@ -95,8 +96,8 @@ class OrderingFlowViewModel @Inject constructor(
                 false -> "N"
             }
 
-            val totalPrice = total ?: return@launch
-            val depositPrice = deposit ?: return@launch
+            val totalPrice = state.data.total ?: return@launch
+            val depositPrice = state.data.deposit ?: return@launch
 
             flow {
                 emit(
@@ -262,8 +263,17 @@ class OrderingFlowViewModel @Inject constructor(
                     val response = it.parseShippingInfoResponse()
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
+                        val full = state.data.full
+                        val discount = state.data.discount
+                        val total = state.data.total
+                        val newTotal = if (full != null && discount != null && total != null) {
+                            full - discount + data.shippingPrice + data.parkingPrice
+                        } else {
+                            state.data.total
+                        }
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
+                                total = newTotal,
                                 shippingInfoBundleUI = data,
                                 shippingPrice = data.shippingPrice,
                                 parkingPrice = data.parkingPrice,
@@ -380,6 +390,12 @@ class OrderingFlowViewModel @Inject constructor(
     }
 
     data class OrderingState(
+        val full: Int? = null,
+        val deposit: Int? = null,
+        val discount: Int? = null,
+        val total: Int? = null,
+
+
         val selectedAddressUI: AddressUI? = null,
         val selectedDate: Date? = null,
         val selectedOrderType: OrderType = OrderType.PERSONAL,
