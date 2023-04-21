@@ -756,7 +756,7 @@
     </dialog>
     <dialog
         android:id="@+id/freeShippingSaysBS"
-        android:name="com.vodovoz.app.ui.fragment.ordering.FreeShippingSaysBS"
+        android:name="com.vodovoz.app.feature.cart.ordering.intervals.FreeShippingSaysBS"
         android:label="FreeShippingSaysBS">
         <argument
             android:name="title"
@@ -767,7 +767,7 @@
     </dialog>
     <dialog
         android:id="@+id/payMethodSelectionBS"
-        android:name="com.vodovoz.app.ui.fragment.ordering.PayMethodSelectionBS"
+        android:name="com.vodovoz.app.feature.cart.ordering.intervals.PayMethodSelectionBS"
         android:label="PayMethodSelectionBS">
         <argument
             android:name="payMethodList"

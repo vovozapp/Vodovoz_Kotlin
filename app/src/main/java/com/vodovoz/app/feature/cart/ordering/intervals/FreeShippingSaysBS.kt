@@ -1,13 +1,9 @@
-package com.vodovoz.app.ui.fragment.ordering
+package com.vodovoz.app.feature.cart.ordering.intervals
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsFreeShippingDaysBinding
