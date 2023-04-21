@@ -5,6 +5,7 @@ import androidx.core.net.toUri
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.product.rating.RatingResponse
 import com.vodovoz.app.core.network.ApiConfig
+import com.vodovoz.app.data.config.ShippingAlertConfig
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.model.features.*
 import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.parseAllBrandsResponse
@@ -1084,4 +1085,7 @@ class MainRepository @Inject constructor(
         overMoney = overMoney,
         parking = parking
     )
+
+    fun fetchShippingAlertEntityList() = ShippingAlertConfig.shippingAlertEntityList
+
 }
