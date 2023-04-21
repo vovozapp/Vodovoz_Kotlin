@@ -77,7 +77,7 @@ class OrderingFlowFragment : BaseFragment() {
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel
                 .observeUiState()
                 .collect { state ->
@@ -376,14 +376,12 @@ class OrderingFlowFragment : BaseFragment() {
         binding.btnCompany.setBackgroundResource(R.drawable.selector_bkg_button_gray_rect)
         binding.btnPersonal.setBackgroundResource(R.drawable.bkg_button_blue_rect_disabled)
         binding.llCompanyNameContainer.visibility = View.GONE
-        clearFields()
     }
 
     private fun showCompanyBtn() {
         binding.btnPersonal.setBackgroundResource(R.drawable.selector_bkg_button_gray_rect)
         binding.btnCompany.setBackgroundResource(R.drawable.bkg_button_blue_rect_disabled)
         binding.llCompanyNameContainer.visibility = View.VISIBLE
-        clearFields()
     }
 
     private fun clearFields() {
