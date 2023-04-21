@@ -77,7 +77,7 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
             val locality = binding.tilLocality.textOrError(FieldValidationsSettings.LOCALITY_LENGTH) ?: return@setOnClickListener
             val street = binding.tilStreet.textOrError(FieldValidationsSettings.STREET_LENGTH) ?: return@setOnClickListener
             val house = binding.tilHouse.textOrError(FieldValidationsSettings.HOUSE_LENGTH) ?: return@setOnClickListener
-            val entrance = binding.tilEntrance.textOrError(FieldValidationsSettings.ENTRANCE_LENGTH) ?: return@setOnClickListener
+            val entrance = binding.etEntrance.text.toString()
             val floor = binding.tilFloor.textOrError(FieldValidationsSettings.FLOOR_LENGTH) ?: return@setOnClickListener
             val office = binding.tilFlat.textOrError(FieldValidationsSettings.OFFICE_LENGTH) ?: return@setOnClickListener
             val comment = binding.etComment.text.toString()
