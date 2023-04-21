@@ -135,7 +135,6 @@ class OrderingFlowFragment : BaseFragment() {
     }
 
     private fun orderingCompleted(orderingCompletedInfoBundleUI: OrderingCompletedInfoBundleUI) {
-        binding.ab.translationZ = 0f
         binding.nsvContent.visibility = View.INVISIBLE
         binding.tvOrderId.text = orderingCompletedInfoBundleUI.message
         binding.llOrderingCompleted.visibility = View.VISIBLE
@@ -146,7 +145,7 @@ class OrderingFlowFragment : BaseFragment() {
             }
             false -> binding.btnGoToPayment.visibility = View.INVISIBLE
         }
-        binding.incAppBar.tvTitle.text = "Спасибо за заказ"
+        initToolbar("Спасибо за заказ")
     }
 
     private fun observeEvents() {
