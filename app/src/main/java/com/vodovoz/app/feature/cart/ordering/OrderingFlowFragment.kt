@@ -10,6 +10,8 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentOrderingFlowBinding
 import com.vodovoz.app.ui.fragment.ordering.OrderingFragmentArgs
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
 
 @AndroidEntryPoint
 class OrderingFlowFragment : BaseFragment() {
@@ -29,6 +31,8 @@ class OrderingFlowFragment : BaseFragment() {
     private val args: OrderingFragmentArgs by navArgs()
 
     private val viewModel: OrderingFlowViewModel by viewModels()
+
+    private val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -6,10 +6,7 @@ import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.product.rating.RatingResponse
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.*
-import com.vodovoz.app.data.model.features.AllPromotionsBundleEntity
-import com.vodovoz.app.data.model.features.DeliveryZonesBundleEntity
-import com.vodovoz.app.data.model.features.FavoriteProductsHeaderBundleEntity
-import com.vodovoz.app.data.model.features.PastPurchasesHeaderBundleEntity
+import com.vodovoz.app.data.model.features.*
 import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.parseAllBrandsResponse
 import com.vodovoz.app.data.parser.response.category.AllFiltersByCategoryResponseJsonParser.parseAllFiltersByCategoryResponse
 import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
@@ -25,6 +22,7 @@ import com.vodovoz.app.data.parser.response.map.FetchAddressesSavedResponseJsonP
 import com.vodovoz.app.data.parser.response.map.UpdateAddressResponseJsonParser.parseUpdateAddressResponse
 import com.vodovoz.app.data.parser.response.order.CancelOrderResponseJsonParser.parseCancelOrderResponse
 import com.vodovoz.app.data.parser.response.order.OrderDetailsResponseJsonParser.parseOrderDetailsResponse
+import com.vodovoz.app.data.parser.response.ordering.RegOrderResponseJsonParser.parseRegOrderResponse
 import com.vodovoz.app.data.parser.response.past_purchases.PastPurchasesHeaderResponseJsonParser.parsePastPurchasesHeaderResponse
 import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
 import com.vodovoz.app.data.parser.response.pre_order.PreOrderFormDataResponseJsonParser.parsePreOrderFormDataResponse
@@ -33,6 +31,8 @@ import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonP
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionsByBannerResponseJsonParser.parsePromotionsByBannerResponse
 import com.vodovoz.app.data.parser.response.service.AboutServicesResponseJsonParser.parseAboutServicesResponse
+import com.vodovoz.app.data.parser.response.shipping.FreeShippingDaysResponseJsonParser.parseFreeShippingDaysResponse
+import com.vodovoz.app.data.parser.response.shipping.ShippingInfoResponseJsonParser.parseShippingInfoResponse
 import com.vodovoz.app.data.parser.response.user.AuthByPhoneJsonParser.parseAuthByPhoneResponse
 import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
 import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
@@ -1016,4 +1016,72 @@ class MainRepository @Inject constructor(
         longAndLat = "$lat,$longitude"
     )
 
+    /**
+     * Ordering
+     */
+
+    suspend fun fetchShippingInfo(
+        userId: Long?,
+        addressId: Long?,
+        date: String?
+    ) = api.fetchInfoAboutOrderingResponse(
+        userId = userId,
+        addressId = addressId,
+        date = date
+    )
+
+    suspend fun fetchFreeShippingDaysInfoResponse() =
+        api.fetchInfoAboutOrderingResponse()
+
+    suspend fun regOrder(
+        orderType: Int?, //Тип заказа (1/2)
+        device: String?, //Телефон Android:12 Версия: 1.4.83
+        addressId: Long?, //адрес id - (150543)
+        date: String?, //23.08.2022
+        paymentId: Long?, //Pay method Id
+        needOperatorCall: String?, // Y/N
+        needShippingAlert: String?, //За 90 минут
+        comment: String?,
+        totalPrice: Int?, //Итоговая сумма заказа
+        shippingId: Long?, //
+        shippingPrice: Int?, // цена доставки
+        name: String?,
+        phone: String?,
+        email: String?,
+        companyName: String?,
+        userId: Long?,
+        deposit: Int?, //?
+        fastShippingPrice: Int?, // 500 р
+        extraShippingPrice: Int?, // из delivery
+        commonShippingPrice: Int?, //?
+        coupon: String?, // передавать из корзины
+        shippingIntervalId: Long?, //id Интервал доставки
+        overMoney: Int?, //?
+        parking: Int?, // числовое значение
+    )  = api.fetchRegOrderResponse(
+        orderType = orderType,
+        device = device,
+        addressId = addressId,
+        date = date,
+        paymentId = paymentId,
+        needOperatorCall = needOperatorCall,
+        needShippingAlert = needShippingAlert,
+        comment = comment,
+        totalPrice = totalPrice,
+        shippingId = shippingId,
+        shippingPrice = shippingPrice,
+        name = name,
+        phone = phone,
+        email = email,
+        companyName = companyName,
+        userId = userId,
+        deposit = deposit,
+        fastShippingPrice = fastShippingPrice,
+        extraShippingPrice = extraShippingPrice,
+        commonShippingPrice = commonShippingPrice,
+        coupon = coupon,
+        shippingIntervalId = shippingIntervalId,
+        overMoney = overMoney,
+        parking = parking
+    )
 }

@@ -8,6 +8,7 @@ import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 import retrofit2.http.Url
 
@@ -595,4 +596,42 @@ interface MainApi {
         @Query("ktochka") longAndLat: String? = null
     ): ResponseBody
 
+    /**
+     * Ordering
+     */
+
+    @GET("newmobile/getActualDelivery.php")
+    suspend fun fetchInfoAboutOrderingResponse(
+        @Query("address_id") addressId: Long? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("curDate") date: String? = null,
+    ): ResponseBody
+
+    @GET("newmobile/doorder.php")
+    suspend fun fetchRegOrderResponse(
+        @Query("type") orderType: Int?, //Тип заказа (1/2)
+        @Query("device") device: String?, //Телефон Android:12 Версия: 1.4.83
+        @Query("profile_buyer") addressId: Long?, //адрес id - (150543)
+        @Query("date") date: String?, //23.08.2022
+        @Query("payment") paymentId: Long?, //Pay method Id
+        @Query("operator") needOperatorCall: String?, // Y/N
+        @Query("driver") needShippingAlert: String?, //За 90 минут
+        @Query("comment") comment: String?,
+        @Query("summ") totalPrice: Int?, //Итоговая сумма заказа
+        @Query("delivery_id") shippingId: Long?, //
+        @Query("summdelivery") shippingPrice: Int?, // цена доставки
+        @Query("fio_f") name: String?,
+        @Query("phone_f") phone: String?,
+        @Query("email_f") email: String?,
+        @Query("companyname") companyName: String?,
+        @Query("userid") userId: Long?,
+        @Query("zalogcena") deposit: Int?, //?
+        @Query("sroch") fastShippingPrice: Int?, // 500 р
+        @Query("nacenka") extraShippingPrice: Int?, // из delivery
+        @Query("obichd") commonShippingPrice: Int?, //?
+        @Query("kupon") coupon: String?, // передавать из корзины
+        @Query("indos") shippingIntervalId: Long?, //id Интервал доставки
+        @Query("sdacha") overMoney: Int?, //?
+        @Query("parkovka") parking: Int?, // числовое значение
+    ): ResponseBody
 }
