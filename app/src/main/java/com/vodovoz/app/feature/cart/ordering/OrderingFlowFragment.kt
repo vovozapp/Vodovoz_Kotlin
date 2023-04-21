@@ -298,11 +298,11 @@ class OrderingFlowFragment : BaseFragment() {
         }
 
         binding.tvShippingInterval.setOnClickListener {
-            viewModel.fetchShippingInfo()
+            viewModel.fetchShippingInfo(intervals = true)
         }
 
         binding.tvPayMethod.setOnClickListener {
-            viewModel.fetchShippingInfo()
+            viewModel.fetchShippingInfo(pay = true)
         }
 
         binding.scShippingAlert.setOnCheckedChangeListener { _, isChecked ->
@@ -354,7 +354,7 @@ class OrderingFlowFragment : BaseFragment() {
 
             viewModel.setSelectedDate(date)
             if (currentYear == year && currentMonth == month && currentDay == day) {
-                viewModel.fetchShippingInfo()
+                viewModel.fetchShippingInfo(today = true)
             }
             binding.tvShippingInterval.text = "Время"
             viewModel.fetchShippingInfo()

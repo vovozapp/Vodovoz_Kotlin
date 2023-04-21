@@ -221,7 +221,11 @@ class OrderingFlowViewModel @Inject constructor(
         uiStateListener.value = state.copy(data = OrderingState(selectedOrderType = type))
     }
 
-    fun fetchShippingInfo() {
+    fun fetchShippingInfo(
+        pay: Boolean = false,
+        intervals: Boolean = false,
+        today: Boolean = false
+    ) {
         viewModelScope.launch {
             val address = state.data.selectedAddressUI
             if (address == null) {
@@ -270,21 +274,25 @@ class OrderingFlowViewModel @Inject constructor(
                             loadingPage = false,
                             error = null
                         )
-                        eventListener.emit(
-                            OrderingEvents.ShowPaymentMethod(
-                                data.payMethodUIList,
-                                state.data.selectedPayMethodUI?.id
+                        if (pay) {
+                            eventListener.emit(
+                                OrderingEvents.ShowPaymentMethod(
+                                    data.payMethodUIList,
+                                    state.data.selectedPayMethodUI?.id
+                                )
                             )
-                        )
-                        //todo
-                        eventListener.emit(
-                            OrderingEvents.ShowShippingIntervals(
-                                data.shippingIntervalUIList,
-                                state.data.selectedDate
+                        }
+                        if (intervals) {
+                            eventListener.emit(
+                                OrderingEvents.ShowShippingIntervals(
+                                    data.shippingIntervalUIList,
+                                    state.data.selectedDate
+                                )
                             )
-                        )
-                        //todo
-                        eventListener.emit(OrderingEvents.TodayShippingMessage(data.todayShippingInfo))
+                        }
+                        if (today) {
+                            eventListener.emit(OrderingEvents.TodayShippingMessage(data.todayShippingInfo))
+                        }
                     } else {
                         uiStateListener.value =
                             state.copy(
