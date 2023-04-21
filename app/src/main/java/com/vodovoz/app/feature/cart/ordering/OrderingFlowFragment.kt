@@ -38,6 +38,7 @@ import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -153,7 +154,7 @@ class OrderingFlowFragment : BaseFragment() {
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel
                 .observeEvent()
                 .collect {
@@ -209,6 +210,7 @@ class OrderingFlowFragment : BaseFragment() {
                             showShippingIntervalSelectionPopup(it.list, it.selectedDate)
                         }
                         is OrderingFlowViewModel.OrderingEvents.TodayShippingMessage -> {
+                            debugLog { "spasibo TodayShippingMessage" }
                             MaterialAlertDialogBuilder(requireContext())
                                 .setMessage(it.message)
                                 .setPositiveButton("Ок") { dialog, _ ->
@@ -354,11 +356,12 @@ class OrderingFlowFragment : BaseFragment() {
             binding.tvDate.text = dateFormatter.format(date)
 
             viewModel.setSelectedDate(date)
+            binding.tvShippingInterval.text = "Время"
             if (currentYear == year && currentMonth == month && currentDay == day) {
                 viewModel.fetchShippingInfo(today = true)
+            } else {
+                viewModel.fetchShippingInfo()
             }
-            binding.tvShippingInterval.text = "Время"
-            viewModel.fetchShippingInfo()
         }
         val datePicker = DatePickerDialog(
             requireContext(),
