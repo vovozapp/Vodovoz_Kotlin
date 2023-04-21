@@ -14,6 +14,7 @@ import com.vodovoz.app.data.parser.response.map.FetchAddressesSavedResponseJsonP
 import com.vodovoz.app.data.parser.response.ordering.RegOrderResponseJsonParser.parseRegOrderResponse
 import com.vodovoz.app.data.parser.response.shipping.FreeShippingDaysResponseJsonParser.parseFreeShippingDaysResponse
 import com.vodovoz.app.data.parser.response.shipping.ShippingInfoResponseJsonParser.parseShippingInfoResponse
+import com.vodovoz.app.feature.bottom.services.AboutServicesFlowViewModel
 import com.vodovoz.app.mapper.AddressMapper.mapToUI
 import com.vodovoz.app.mapper.FreeShippingDaysInfoBundleMapper.mapToUI
 import com.vodovoz.app.mapper.OrderingCompletedInfoBundleMapper.mapToUI
@@ -25,6 +26,7 @@ import com.vodovoz.app.ui.model.custom.OrderingCompletedInfoBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -41,6 +43,8 @@ class OrderingFlowViewModel @Inject constructor(
 ) : PagingContractViewModel<OrderingFlowViewModel.OrderingState, OrderingFlowViewModel.OrderingEvents>(
     OrderingState()
 ) {
+
+    override val eventListener = MutableSharedFlow<OrderingEvents>(replay = 0, extraBufferCapacity = 1, BufferOverflow.DROP_OLDEST)
 
     private val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
@@ -199,6 +203,7 @@ class OrderingFlowViewModel @Inject constructor(
                 selectedAddressUI = item
             )
         )
+        fetchShippingInfo()
     }
 
     fun setSelectedPaymentMethod(itemId: Long) {
@@ -213,20 +218,7 @@ class OrderingFlowViewModel @Inject constructor(
 
     fun setSelectedOrderType(type: OrderType) {
         if (state.data.selectedOrderType == type) return
-        clearData()
-        uiStateListener.value = if (type == OrderType.PERSONAL) {
-            state.copy(
-                data = state.data.copy(
-                    selectedOrderType = OrderType.PERSONAL
-                )
-            )
-        } else {
-            state.copy(
-                data = state.data.copy(
-                    selectedOrderType = OrderType.COMPANY
-                )
-            )
-        }
+        uiStateListener.value = state.copy(data = OrderingState(selectedOrderType = type))
     }
 
     fun fetchShippingInfo() {

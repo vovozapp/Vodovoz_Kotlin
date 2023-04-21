@@ -34,6 +34,7 @@ import com.vodovoz.app.ui.model.PayMethodUI
 import com.vodovoz.app.ui.model.ShippingIntervalUI
 import com.vodovoz.app.ui.model.custom.OrderingCompletedInfoBundleUI
 import com.vodovoz.app.util.FieldValidationsSettings
+import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -96,6 +97,7 @@ class OrderingFlowFragment : BaseFragment() {
                     }
 
                     val orderType = state.data.selectedOrderType
+
                     if (orderType == OrderType.PERSONAL) {
                         showPersonalBtn()
                     } else {
@@ -126,6 +128,7 @@ class OrderingFlowFragment : BaseFragment() {
                         binding.tvAddress.text = addressUI.fullAddress
                         binding.etName.setText(addressUI.name)
                         binding.etEmail.setText(addressUI.email)
+                        binding.etPhone.setPhoneValidator {  }
                         binding.etPhone.setText(addressUI.phone)
                     }
 
@@ -230,7 +233,6 @@ class OrderingFlowFragment : BaseFragment() {
     }
 
     private fun bindButtons() {
-
 
         binding.btnOrder.setOnClickListener {
 
@@ -382,7 +384,6 @@ class OrderingFlowFragment : BaseFragment() {
     }
 
     private fun clearFields() {
-        viewModel.clearData()
         binding.root.clearFocus()
         binding.tvNameAddress.setTextColor(
             ContextCompat.getColor(
@@ -486,7 +487,6 @@ class OrderingFlowFragment : BaseFragment() {
                 viewModel.clearData()
                 clearFields()
                 viewModel.setSelectedAddress(addressUI)
-                viewModel.fetchShippingInfo()
             }
     }
 
