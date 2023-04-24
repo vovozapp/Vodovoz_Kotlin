@@ -7,7 +7,7 @@ import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.ViewHolderGenderBinding
-import com.vodovoz.app.ui.fragment.user_data.Gender
+import com.vodovoz.app.feature.profile.userdata.Gender
 
 class GendersAdapter : RecyclerView.Adapter<GenderVH>() {
 

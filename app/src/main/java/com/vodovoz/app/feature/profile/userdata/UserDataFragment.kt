@@ -1,10 +1,7 @@
-package com.vodovoz.app.ui.fragment.user_data
+package com.vodovoz.app.feature.profile.userdata
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
@@ -13,33 +10,16 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.databinding.FragmentUserDataBinding
 import com.vodovoz.app.databinding.FragmentUserDataFlowBinding
-import com.vodovoz.app.feature.profile.userdata.GenderSelectionBS
-import com.vodovoz.app.feature.profile.userdata.UserDataFlowViewModel
-import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setEmailValidation
-import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setNameValidation
-import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setPasswordValidation
-import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setPhoneValidation
-import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
-import com.vodovoz.app.ui.model.UserDataUI
 import com.vodovoz.app.util.FieldValidationsSettings
-import com.vodovoz.app.util.LogSettings
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToFullFormat
 import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.textOrErrorWithEmpty
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.launch
 import java.util.*
 

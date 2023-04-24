@@ -647,7 +647,7 @@
     </fragment>
     <fragment
         android:id="@+id/userDataFragment"
-        android:name="com.vodovoz.app.ui.fragment.user_data.UserDataFragment"
+        android:name="com.vodovoz.app.feature.profile.userdata.UserDataFragment"
         android:label="UserDataFragment" >
         <action
             android:id="@+id/action_to_genderSelectionBS"

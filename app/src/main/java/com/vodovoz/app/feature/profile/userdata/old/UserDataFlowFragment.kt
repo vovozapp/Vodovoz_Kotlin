@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.profile.userdata
+package com.vodovoz.app.feature.profile.userdata.old
 
 import android.os.Bundle
 import android.view.View
@@ -13,9 +13,11 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentUserDataFlowBinding
+import com.vodovoz.app.feature.profile.userdata.Gender
+import com.vodovoz.app.feature.profile.userdata.GenderSelectionBS
+import com.vodovoz.app.feature.profile.userdata.UserDataFlowViewModel
+import com.vodovoz.app.feature.profile.userdata.UserDataFragmentDirections
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
-import com.vodovoz.app.ui.fragment.user_data.Gender
-import com.vodovoz.app.ui.fragment.user_data.UserDataFragmentDirections
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToFullFormat

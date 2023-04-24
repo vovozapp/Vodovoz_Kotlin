@@ -1,19 +1,14 @@
 package com.vodovoz.app.feature.profile.userdata
 
-import android.service.autofill.UserData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.*
-import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.user.UpdateUserDataResponseJsonParser.parseUpdateUserDataResponse
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
-import com.vodovoz.app.feature.profile.ProfileFlowViewModel
-import com.vodovoz.app.feature.profile.viewholders.models.ProfileHeader
 import com.vodovoz.app.mapper.UserDataMapper.mapToUI
-import com.vodovoz.app.ui.fragment.user_data.Gender
 import com.vodovoz.app.ui.model.UserDataUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel

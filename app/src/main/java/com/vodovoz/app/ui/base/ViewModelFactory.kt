@@ -44,7 +44,7 @@ import com.vodovoz.app.ui.fragment.service_order.ServiceOrderViewModel
 import com.vodovoz.app.ui.fragment.single_root_catalog.SingleRootCatalogViewModel
 import com.vodovoz.app.ui.fragment.some_products_by_brand.SomeProductsByBrandViewModel
 import com.vodovoz.app.ui.fragment.some_products_maybe_like.SomeProductsMaybeLikeViewModel
-import com.vodovoz.app.ui.fragment.user_data.UserDataViewModel
+import com.vodovoz.app.feature.profile.userdata.old.UserDataViewModel
 
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory(

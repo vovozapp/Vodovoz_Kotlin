@@ -1,6 +1,6 @@
 package com.vodovoz.app.ui.model
 
-import com.vodovoz.app.ui.fragment.user_data.Gender
+import com.vodovoz.app.feature.profile.userdata.Gender
 
 data class UserDataUI(
     val id: Long,
