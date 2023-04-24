@@ -38,8 +38,8 @@ class SingleRootCatalogFlowFragment : BaseBottomSheetFragment() {
 
     private val categoryClickSubject: PublishSubject<CategoryUI> = PublishSubject.create()
 
-    private val singleRootCatalogAdapter = SingleRootFlowAdapter(
-        clickListener = getSingleRootClickListener(),
+    private val singleRootCatalogAdapter = SingleRootCatalogAdapter(
+        categoryClickSubject = categoryClickSubject,
         nestingPosition = 0
     )
 
@@ -90,8 +90,11 @@ class SingleRootCatalogFlowFragment : BaseBottomSheetFragment() {
                         hideLoader()
                     }
 
-
-
+                    if (state.data.bundle != null) {
+                        singleRootCatalogAdapter.categoryUIList = state.data.bundle.categoryUIList
+                        singleRootCatalogAdapter.way = state.data.bundle.way
+                        singleRootCatalogAdapter.notifyDataSetChanged()
+                    }
 
                     showError(state.error)
                 }
