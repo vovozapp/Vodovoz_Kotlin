@@ -21,7 +21,7 @@ import com.vodovoz.app.ui.fragment.full_screen_history_slider.FullScreenHistorie
 import com.vodovoz.app.feature.auth.login.old.LoginViewModel
 import com.vodovoz.app.feature.map.old.MapViewModel
 import com.vodovoz.app.feature.all.orders.detail.old.OrderDetailsViewModel
-import com.vodovoz.app.ui.fragment.ordering.OrderingViewModel
+import com.vodovoz.app.feature.cart.ordering.old.OrderingViewModel
 import com.vodovoz.app.feature.all.orders.old.OrdersHistoryViewModel
 import com.vodovoz.app.feature.productlist.old.PaginatedProductsCatalogViewModel
 import com.vodovoz.app.feature.productlistnofilter.old.PaginatedProductsCatalogWithoutFiltersViewModel

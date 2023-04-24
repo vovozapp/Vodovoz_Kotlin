@@ -1,9 +1,10 @@
-package com.vodovoz.app.ui.fragment.ordering
+package com.vodovoz.app.feature.cart.ordering.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.feature.cart.ordering.OrderType
 import com.vodovoz.app.mapper.CartBundleMapper.mapUoUI
 import com.vodovoz.app.mapper.FreeShippingDaysInfoBundleMapper.mapToUI
 import com.vodovoz.app.mapper.OrderingCompletedInfoBundleMapper.mapToUI

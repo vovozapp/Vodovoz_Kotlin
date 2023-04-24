@@ -1,6 +1,5 @@
-package com.vodovoz.app.feature.cart.ordering
+package com.vodovoz.app.feature.cart.ordering.old
 
-import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
@@ -20,14 +19,11 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentOrderingFlowBinding
 import com.vodovoz.app.feature.addresses.AddressesFragment
 import com.vodovoz.app.feature.addresses.OpenMode
+import com.vodovoz.app.feature.cart.ordering.*
 import com.vodovoz.app.ui.extensions.Date
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
-import com.vodovoz.app.ui.fragment.ordering.OrderType
-import com.vodovoz.app.ui.fragment.ordering.OrderingFragment
-import com.vodovoz.app.ui.fragment.ordering.OrderingFragmentArgs
-import com.vodovoz.app.ui.fragment.ordering.OrderingFragmentDirections
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.ui.model.FreeShippingDaysInfoBundleUI
 import com.vodovoz.app.ui.model.PayMethodUI
@@ -36,11 +32,9 @@ import com.vodovoz.app.ui.model.custom.OrderingCompletedInfoBundleUI
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToFullFormat
-import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.scrollViewToTop
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*

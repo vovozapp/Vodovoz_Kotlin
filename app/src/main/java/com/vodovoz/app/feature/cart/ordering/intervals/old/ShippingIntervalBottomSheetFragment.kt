@@ -11,7 +11,7 @@ import com.vodovoz.app.databinding.BsSelectionShippingIntervalsBinding
 import com.vodovoz.app.feature.cart.ordering.intervals.ShippingIntervalSelectionBSArgs
 import com.vodovoz.app.feature.cart.ordering.intervals.adapter.IntervalsClickListener
 import com.vodovoz.app.feature.cart.ordering.intervals.adapter.IntervalsController
-import com.vodovoz.app.ui.fragment.ordering.OrderingFragment
+import com.vodovoz.app.feature.cart.ordering.OrderingFragment
 import com.vodovoz.app.ui.model.ShippingIntervalUI
 import dagger.hilt.android.AndroidEntryPoint
 

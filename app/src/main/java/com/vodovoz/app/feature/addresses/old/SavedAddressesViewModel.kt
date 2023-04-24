@@ -9,7 +9,7 @@ import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.feature.addresses.OpenMode
 import com.vodovoz.app.mapper.AddressMapper.mapToUI
 import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.fragment.ordering.OrderType
+import com.vodovoz.app.feature.cart.ordering.OrderType
 import com.vodovoz.app.ui.model.AddressUI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers

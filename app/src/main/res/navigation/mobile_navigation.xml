@@ -705,7 +705,7 @@
     </fragment>
     <fragment
         android:id="@+id/orderingFragment"
-        android:name="com.vodovoz.app.ui.fragment.ordering.OrderingFragment"
+        android:name="com.vodovoz.app.feature.cart.ordering.OrderingFragment"
         android:label="OrderingFragment" >
         <action
             android:id="@+id/action_to_freeShippingSaysBS"

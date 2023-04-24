@@ -1,15 +1,11 @@
-package com.vodovoz.app.ui.fragment.ordering
+package com.vodovoz.app.feature.cart.ordering
 
-import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,18 +16,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.databinding.FragmentOrderingBinding
 import com.vodovoz.app.databinding.FragmentOrderingFlowBinding
-import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.extensions.ContextExtensions.getDeviceInfo
 import com.vodovoz.app.ui.extensions.Date
-import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
 import com.vodovoz.app.feature.addresses.AddressesFragment
 import com.vodovoz.app.feature.addresses.OpenMode
-import com.vodovoz.app.feature.cart.ordering.OrderingFlowViewModel
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.ui.model.FreeShippingDaysInfoBundleUI
 import com.vodovoz.app.ui.model.PayMethodUI
@@ -464,7 +455,7 @@ class OrderingFragment : BaseFragment() {
 
     private fun observeResultLiveData() {
         findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<Long>(OrderingFragment.SELECTED_PAY_METHOD)
+            ?.getLiveData<Long>(SELECTED_PAY_METHOD)
             ?.observe(viewLifecycleOwner) { payMethodId ->
 
                 viewModel.setSelectedPaymentMethod(payMethodId)
@@ -485,7 +476,7 @@ class OrderingFragment : BaseFragment() {
                 }
             }
         findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<Long>(OrderingFragment.SELECTED_SHIPPING_INTERVAL)
+            ?.getLiveData<Long>(SELECTED_SHIPPING_INTERVAL)
             ?.observe(viewLifecycleOwner) { shippingIntervalId ->
                 viewModel.setSelectedShippingInterval(shippingIntervalId)
                 binding.tvNameDate.setTextColor(
@@ -496,7 +487,7 @@ class OrderingFragment : BaseFragment() {
                 )
             }
         findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<Long>(OrderingFragment.SELECTED_SHIPPING_ALERT)
+            ?.getLiveData<Long>(SELECTED_SHIPPING_ALERT)
             ?.observe(viewLifecycleOwner) { shippingAlertId ->
                 viewModel.setSelectedShippingAlert(shippingAlertId)
             }
