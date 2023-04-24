@@ -31,6 +31,8 @@ import androidx.viewbinding.BuildConfig
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import java.io.FileInputStream
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.properties.ReadOnlyProperty
 
 
@@ -232,4 +234,9 @@ fun openNotificationSettingsForApp(context: Context) {
     }
 
     context.startActivity(intent)
+}
+
+fun Long.millisToItemDate(): String {
+    val targetFormat = SimpleDateFormat("MMM_dd_yyyy_hh_mm_a", Locale.ROOT)
+    return targetFormat.format(this)
 }

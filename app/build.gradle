@@ -130,6 +130,10 @@ dependencies {
     //EasyPermissions
     implementation 'pub.devrel:easypermissions:3.0.0'
 
+    //ImagePicker
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
+
+
     //Test
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
