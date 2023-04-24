@@ -28,6 +28,7 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setOrderQuantity
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -55,11 +56,13 @@ class AvailableProductsViewHolder(
 
             override fun onDetailPictureClick() {
                 val item = getItemByPosition() ?: return
+                if (item.priceList.first().currentPrice <= 1) return
                 productsClickListener.onProductClick(item.id)
             }
 
             override fun onProductClick(id: Long) {
                 val item = getItemByPosition() ?: return
+                if (item.priceList.first().currentPrice <= 1) return
                 productsClickListener.onProductClick(item.id)
             }
         }
@@ -106,10 +109,6 @@ class AvailableProductsViewHolder(
     }
 
     init {
-        binding.vpPictures.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
-            productsClickListener.onProductClick(item.id)
-        }
         binding.vpPictures.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.vpPictures.adapter = detailPictureFlowPagerAdapter
 
@@ -119,17 +118,19 @@ class AvailableProductsViewHolder(
 
         binding.root.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
+            if (item.priceList.first().currentPrice <= 1) return@setOnClickListener
             productsClickListener.onProductClick(item.id)
         }
 
         binding.vpPictures.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
+            if (item.priceList.first().currentPrice <= 1) return@setOnClickListener
             productsClickListener.onProductClick(item.id)
         }
 
         binding.amountController.add.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
-            if (item.isGift) return@setOnClickListener
+            if (item.priceList.first().currentPrice <= 1) return@setOnClickListener
 
             item.oldQuantity = item.cartQuantity
             item.cartQuantity++
@@ -307,10 +308,10 @@ class AvailableProductsViewHolder(
         }
 
         //If is gift
-        if (item.isGift) {
+        if (item.priceList.first().currentPrice <= 1) {
             binding.imgFavoriteStatus.visibility = View.INVISIBLE
             binding.cgStatuses.visibility = View.GONE
-            if (item.isGift) binding.tvOldPrice.visibility = View.GONE
+            binding.tvOldPrice.visibility = View.GONE
         }
 
         //If is not available
