@@ -37,7 +37,9 @@ class UserDataFlowViewModel @Inject constructor(
                     if (it != null) {
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
-                                avatar = it.path
+                                item = state.data.item?.copy(
+                                    avatar = it.path
+                                )
                             )
                         )
 
@@ -78,7 +80,9 @@ class UserDataFlowViewModel @Inject constructor(
         uiStateListener.value =
             state.copy(
                 data = state.data.copy(
-                    avatar = ""
+                    item = state.data.item?.copy(
+                        avatar = ""
+                    )
                 )
             )
     }
@@ -223,8 +227,7 @@ class UserDataFlowViewModel @Inject constructor(
 
     data class UserDataState(
         val item: UserDataUI? = null,
-        val canChangeBirthDay: Boolean = true,
-        val avatar: String? = null
+        val canChangeBirthDay: Boolean = true
     ) : State
 
 }

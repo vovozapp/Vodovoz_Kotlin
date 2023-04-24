@@ -636,7 +636,7 @@ interface MainApi {
     @Multipart
     @POST("/newmobile/profile/index.php?action=uploadPhoto")
     suspend fun addAvatar(
-        @Field("userid") id: Long,
+        @Part("userid") id: Long,
         @Part file: MultipartBody.Part
     ): Response<Void>
 
