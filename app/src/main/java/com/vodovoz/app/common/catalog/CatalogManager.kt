@@ -14,6 +14,8 @@ class CatalogManager @Inject constructor() {
         catalogStateListener.value = catalog
     }
 
+    fun fetchCatalog() = catalogStateListener.value
+
     fun hasRootItems(selectedCategoryId: Long) : Boolean {
         val cat = getRoot(selectedCategoryId) ?: return false
         return cat.categoryUIList.isNotEmpty()
