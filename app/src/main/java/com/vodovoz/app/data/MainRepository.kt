@@ -39,6 +39,7 @@ import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLo
 import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
 import com.vodovoz.app.data.parser.response.user.RecoverPasswordJsonParser.parseRecoverPasswordResponse
 import com.vodovoz.app.data.parser.response.user.RegisterResponseJsonParser.parseRegisterResponse
+import com.vodovoz.app.data.parser.response.user.UpdateUserDataResponseJsonParser.parseUpdateUserDataResponse
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.feature.map.api.MapKitFlowApi
 import com.vodovoz.app.feature.map.test.model.MapTestResponse
@@ -1088,4 +1089,24 @@ class MainRepository @Inject constructor(
 
     fun fetchShippingAlertEntityList() = ShippingAlertConfig.shippingAlertEntityList
 
+    suspend fun updateUserData(
+        userId: Long,
+        firstName: String?,
+        secondName: String?,
+        password: String?,
+        phone: String?,
+        sex: String?,
+        birthday: String?,
+        email: String?,
+    ) = api.fetchProfileResponse(
+        action = "edit",
+        userId = userId,
+        firstName = firstName,
+        secondName = secondName,
+        password = password,
+        phone = phone,
+        sex = sex,
+        birthday = birthday,
+        email = email
+    )
 }
