@@ -24,6 +24,7 @@ import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToFullFormat
 import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.textOrError
+import com.vodovoz.app.util.extensions.textOrErrorWithEmpty
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -68,18 +69,39 @@ class UserDataFlowFragment : BaseFragment() {
 
         binding.btnSave.setOnClickListener {
 
-            val firstName = binding.tilFirstName.textOrError(2) ?: return@setOnClickListener
-            val secondName = binding.tilSecondName.textOrError(2) ?: return@setOnClickListener
+            val firstName = binding.tilFirstName.textOrErrorWithEmpty(2) ?: return@setOnClickListener
+            val secondName = binding.tilSecondName.textOrErrorWithEmpty(2) ?: return@setOnClickListener
 
             val validateEmail = validateEmail()
             if (validateEmail.not()) {
                 return@setOnClickListener
             }
 
-            if (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString()).not()) {
-                return@setOnClickListener
+            if (binding.etPhone.text.isNullOrEmpty().not()) {
+                if (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString())
+                        .not()
+                ) {
+                    return@setOnClickListener
+                }
             }
 
+            val password = binding.tilPassword.textOrErrorWithEmpty(2) ?: return@setOnClickListener
+
+            val birthday = if (binding.etBirthday.text.toString() == "Не указано") {
+                ""
+            } else {
+                binding.etBirthday.text.toString()
+            }
+
+            viewModel.updateUserData(
+                firstName = firstName,
+                secondName = secondName,
+                sex = binding.etGender.text.toString(),
+                birthday = birthday,
+                email = binding.etEmail.text.toString(),
+                phone = binding.etPhone.text.toString(),
+                password = password
+            )
 
         }
 

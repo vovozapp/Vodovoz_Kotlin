@@ -40,6 +40,20 @@ fun TextInputLayout.textOrError(minLength: Int): String? {
     return text
 }
 
+fun TextInputLayout.textOrErrorWithEmpty(minLength: Int): String? {
+    val text = editText?.text?.toString()?.trim().orEmpty()
+    if (text.isBlank()) {
+        return ""
+    }
+
+    if (text.length < minLength) {
+        error = "Должно быть минимум $minLength символов"
+        return null
+    }
+
+    return text
+}
+
 fun TextInputLayout.textOrError(range: IntRange): String? {
     val text = editText?.text?.toString()?.trim().orEmpty()
     if (text.isBlank()) {
