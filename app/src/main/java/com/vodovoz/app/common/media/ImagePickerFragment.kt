@@ -16,9 +16,11 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.util.extensions.intArgs
 import com.vodovoz.app.util.extensions.millisToItemDate
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class ImagePickerFragment : BaseFragment() {
 
     companion object {

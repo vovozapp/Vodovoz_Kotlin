@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.profile.userdata
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -12,11 +13,13 @@ import com.bumptech.glide.Glide
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.media.ImagePickerFragment
 import com.vodovoz.app.databinding.FragmentUserDataFlowBinding
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToFullFormat
+import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.textOrErrorWithEmpty
 import dagger.hilt.android.AndroidEntryPoint
@@ -253,6 +256,13 @@ class UserDataFragment : BaseFragment() {
     }
 
     private fun bindButtons() {
+
+        binding.downloadAvatar.setOnClickListener {
+            debugLog { "spasibo clcick" }
+            findNavController().navigate(R.id.imagePickerFragment, bundleOf(ImagePickerFragment.IMAGE_PICKER_RECEIVER to ImagePickerFragment.AVATAR))
+        }
+
+
         binding.vGender.setOnClickListener {
             viewModel.navigateToGenderChoose()
         }

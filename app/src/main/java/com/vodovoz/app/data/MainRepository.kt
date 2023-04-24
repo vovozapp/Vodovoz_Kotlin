@@ -45,11 +45,15 @@ import com.vodovoz.app.feature.map.api.MapKitFlowApi
 import com.vodovoz.app.feature.map.test.model.MapTestResponse
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.io.File
 import java.net.URL
 import javax.inject.Inject
 
@@ -1109,4 +1113,11 @@ class MainRepository @Inject constructor(
         birthday = birthday,
         email = email
     )
+
+    suspend fun addAvatar(id: Long, image: File): Response<Void> {
+        val requestBody = image.asRequestBody(image.extension.toMediaTypeOrNull())
+        val filePart = MultipartBody.Part.createFormData("userpic", image.name, requestBody)
+        return api.addAvatar(id = id, file = filePart)
+    }
+
 }

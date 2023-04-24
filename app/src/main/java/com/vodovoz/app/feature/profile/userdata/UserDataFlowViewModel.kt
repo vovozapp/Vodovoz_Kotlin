@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.*
+import com.vodovoz.app.common.media.MediaManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.user.UpdateUserDataResponseJsonParser.parseUpdateUserDataResponse
@@ -15,16 +16,72 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class UserDataFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val savedStateHandle: SavedStateHandle,
-    private val accountManager: AccountManager
+    private val accountManager: AccountManager,
+    private val mediaManager: MediaManager
 ) : PagingContractViewModel<UserDataFlowViewModel.UserDataState, UserDataFlowViewModel.UserDataEvents>(
     UserDataState()
 ) {
+
+    init {
+        viewModelScope.launch {
+            mediaManager
+                .observeAvatarImage()
+                .collect {
+                    if (it != null) {
+                        uiStateListener.value = state.copy(
+                            data = state.data.copy(
+                                avatar = it.path
+                            )
+                        )
+
+                        addAvatar(it)
+                    }
+                }
+        }
+    }
+
+    private fun addAvatar(image: File) {
+        val userId = accountManager.fetchAccountId() ?: return
+        viewModelScope.launch {
+            flow { emit(repository.addAvatar(userId, image)) }
+                .catch {
+                    debugLog { "add avatar error ${it.localizedMessage}" }
+                    clearAvatarState()
+                    uiStateListener.value =
+                        state.copy(
+                            error =  it.toErrorState(),
+                            loadingPage = false,
+                            loadMore = false,
+                            bottomItem = null
+                        )
+                }
+                .flowOn(Dispatchers.IO)
+                .collect {
+                    if (!it.isSuccessful) {
+                        clearAvatarState()
+                    }
+                }
+        }
+    }
+
+
+    private fun clearAvatarState() {
+        mediaManager.removeAvatarImage()
+
+        uiStateListener.value =
+            state.copy(
+                data = state.data.copy(
+                    avatar = ""
+                )
+            )
+    }
 
     fun fetchUserData() {
         viewModelScope.launch {
@@ -166,7 +223,8 @@ class UserDataFlowViewModel @Inject constructor(
 
     data class UserDataState(
         val item: UserDataUI? = null,
-        val canChangeBirthDay: Boolean = true
+        val canChangeBirthDay: Boolean = true,
+        val avatar: String? = null
     ) : State
 
 }

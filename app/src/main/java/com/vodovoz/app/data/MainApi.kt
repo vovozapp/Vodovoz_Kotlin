@@ -5,12 +5,10 @@ import com.vodovoz.app.feature.map.test.model.MapTestResponse
 import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
 import com.vodovoz.app.feature.profile.cats.ProfileCategoriesModel
 import io.reactivex.rxjava3.core.Single
+import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
-import retrofit2.http.Url
+import retrofit2.http.*
 
 interface MainApi {
 
@@ -634,4 +632,12 @@ interface MainApi {
         @Query("sdacha") overMoney: Int?, //?
         @Query("parkovka") parking: Int?, // числовое значение
     ): ResponseBody
+
+    @Multipart
+    @POST("/newmobile/profile/index.php?action=uploadPhoto")
+    suspend fun addAvatar(
+        @Field("userid") id: Long,
+        @Part file: MultipartBody.Part
+    ): Response<Void>
+
 }
