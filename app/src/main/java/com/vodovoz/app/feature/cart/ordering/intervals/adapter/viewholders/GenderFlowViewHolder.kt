@@ -19,7 +19,12 @@ class GenderFlowViewHolder(
     init {
         binding.root.setOnClickListener {
             val item = item ?:return@setOnClickListener
-            clickListener.onGenderClick(item.name)
+            val send = if (item.name == "Мужской") {
+                "MALE"
+            } else {
+                "FEMALE"
+            }
+            clickListener.onGenderClick(send)
         }
     }
 
