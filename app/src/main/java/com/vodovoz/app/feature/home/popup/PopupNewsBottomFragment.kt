@@ -40,6 +40,7 @@ class PopupNewsBottomFragment : BaseBottomSheetFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        binding.incHeader.imgClose.isVisible = false
     }
 
     private fun initView() {
