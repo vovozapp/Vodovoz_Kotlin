@@ -65,7 +65,7 @@ class ProfileFlowViewModel @Inject constructor(
         fetchProfileCategories()
     }
 
-    private fun fetchProfileData() {
+    fun fetchProfileData() {
         uiStateListener.value = state.copy(loadingPage = true)
         val userId = dataRepository.fetchUserId()
         if (userId == null) {

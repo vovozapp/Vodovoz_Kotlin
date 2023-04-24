@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -15,6 +16,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.media.ImagePickerFragment
 import com.vodovoz.app.databinding.FragmentUserDataFlowBinding
+import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
@@ -234,6 +236,8 @@ class UserDataFragment : BaseFragment() {
 
     private val viewModel: UserDataFlowViewModel by viewModels()
 
+    private val profileViewModel: ProfileFlowViewModel by activityViewModels()
+
     private val binding: FragmentUserDataFlowBinding by viewBinding {
         FragmentUserDataFlowBinding.bind(contentView)
     }
@@ -258,7 +262,6 @@ class UserDataFragment : BaseFragment() {
     private fun bindButtons() {
 
         binding.downloadAvatar.setOnClickListener {
-            debugLog { "spasibo clcick" }
             findNavController().navigate(R.id.imagePickerFragment, bundleOf(ImagePickerFragment.IMAGE_PICKER_RECEIVER to ImagePickerFragment.AVATAR))
         }
 
@@ -392,6 +395,9 @@ class UserDataFragment : BaseFragment() {
                             }
 
                             datePickerDialog.show(childFragmentManager, datePickerDialog::class.simpleName)
+                        }
+                        is UserDataFlowViewModel.UserDataEvents.UpdateProfile -> {
+                            profileViewModel.fetchProfileData()
                         }
                     }
                 }

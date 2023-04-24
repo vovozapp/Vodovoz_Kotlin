@@ -68,6 +68,8 @@ class UserDataFlowViewModel @Inject constructor(
                 .collect {
                     if (!it.isSuccessful) {
                         clearAvatarState()
+                    } else {
+                        eventListener.emit(UserDataEvents.UpdateProfile)
                     }
                 }
         }
@@ -223,6 +225,7 @@ class UserDataFlowViewModel @Inject constructor(
         data class UpdateUserDataEvent(val message: String) : UserDataEvents()
         data class NavigateToGenderChoose(val gender: String) : UserDataEvents()
         object ShowDatePicker : UserDataEvents()
+        object UpdateProfile : UserDataEvents()
     }
 
     data class UserDataState(
