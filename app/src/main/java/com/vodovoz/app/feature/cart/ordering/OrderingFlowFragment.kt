@@ -249,6 +249,8 @@ class OrderingFlowFragment : BaseFragment() {
 
         binding.btnOrder.setOnClickListener {
 
+            viewModel.checkAddress()
+
             if (!validateSimpleField(binding.tvNameName, binding.etName.text.toString())) {
                 binding.nsvContent.scrollViewToTop()
                 return@setOnClickListener

@@ -161,6 +161,16 @@ class OrderingFlowViewModel @Inject constructor(
         }
     }
 
+    fun checkAddress() {
+        viewModelScope.launch {
+            val addressId = state.data.selectedAddressUI?.id
+            if (addressId == null) {
+                eventListener.emit(OrderingEvents.ChooseAddressError("Выберите адрес!"))
+                return@launch
+            }
+        }
+    }
+
     fun setSelectedDate(date: Date) {
         uiStateListener.value = state.copy(
             data = state.data.copy(
@@ -219,10 +229,8 @@ class OrderingFlowViewModel @Inject constructor(
 
     fun setSelectedOrderType(type: OrderType) {
         viewModelScope.launch {
-            if (state.data.selectedOrderType == type) {
-                eventListener.emit(OrderingEvents.ClearFields)
-                return@launch
-            }
+            if (state.data.selectedOrderType == type) return@launch
+            eventListener.emit(OrderingEvents.ClearFields)
             uiStateListener.value = state.copy(data = OrderingState(selectedOrderType = type, total = state.data.total, full = state.data.full, deposit = state.data.deposit, discount = state.data.discount))
         }
     }
