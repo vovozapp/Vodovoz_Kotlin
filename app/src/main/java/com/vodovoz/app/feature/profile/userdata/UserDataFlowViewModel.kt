@@ -109,7 +109,11 @@ class UserDataFlowViewModel @Inject constructor(
                                     firstName = firstName,
                                     secondName = secondName,
                                     email = email,
-                                    gender = Gender.valueOf(sex),
+                                    gender = if (sex == "Мужской") {
+                                        Gender.MALE
+                                    } else {
+                                        Gender.FEMALE
+                                    },
                                     phone = phone
                                 ),
                                 canChangeBirthDay = birthday.isNotEmpty().not()
