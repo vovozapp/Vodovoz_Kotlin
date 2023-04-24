@@ -99,7 +99,7 @@ class LoginFragment : BaseFragment() {
                             val email = validateEmail()
                             if (!email) return@collect
                             val password = binding.tilPassword.textOrError(3) ?: return@collect
-                            debugLog { "AuthByEmail" }
+                            debugLog { "AuthByEmail ${binding.etEmail.text.toString()}" }
                             viewModel.authByEmail(
                                 binding.etEmail.text.toString(),
                                 password
