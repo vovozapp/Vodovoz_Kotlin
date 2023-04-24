@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.profile.userdata
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -13,13 +14,16 @@ import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentUserDataFlowBinding
+import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.ui.fragment.user_data.Gender
 import com.vodovoz.app.ui.fragment.user_data.GenderSelectionBS
 import com.vodovoz.app.ui.fragment.user_data.UserDataFragmentDirections
 import com.vodovoz.app.ui.fragment.user_data.UserDataViewModel
+import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToFullFormat
 import com.vodovoz.app.util.extensions.snack
+import com.vodovoz.app.util.extensions.textOrError
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -49,6 +53,8 @@ class UserDataFlowFragment : BaseFragment() {
         observeUiState()
         observeEvents()
         bindButtons()
+        bindTextListeners()
+        binding.etPhone.setPhoneValidator {}
     }
 
     private fun bindButtons() {
@@ -61,6 +67,19 @@ class UserDataFlowFragment : BaseFragment() {
         }
 
         binding.btnSave.setOnClickListener {
+
+            val firstName = binding.tilFirstName.textOrError(2) ?: return@setOnClickListener
+            val secondName = binding.tilSecondName.textOrError(2) ?: return@setOnClickListener
+
+            val validateEmail = validateEmail()
+            if (validateEmail.not()) {
+                return@setOnClickListener
+            }
+
+            if (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString()).not()) {
+                return@setOnClickListener
+            }
+
 
         }
 
@@ -158,5 +177,42 @@ class UserDataFlowFragment : BaseFragment() {
             ?.getLiveData<String>(GenderSelectionBS.SELECTED_GENDER)?.observe(viewLifecycleOwner) { gender ->
                viewModel.setUserGender(Gender.valueOf(gender))
             }
+    }
+
+    private fun validateEmail(): Boolean {
+        if (!FieldValidationsSettings.EMAIL_REGEX.matches(binding.etEmail.text.toString())) {
+            binding.tilEmail.error = "Неправильный формат почты"
+            return false
+        } else  binding.tilEmail.error = null
+        return true
+    }
+
+    private fun bindTextListeners() {
+        binding.etEmail.doOnTextChanged { _, _,_, count ->
+            if (count >0) binding.tilEmail.isErrorEnabled = false
+        }
+
+        binding.etPassword.doOnTextChanged { _, _,_, count ->
+            if (count >0) binding.tilPassword.isErrorEnabled = false
+        }
+
+        binding.etFirstName.doOnTextChanged { _, _,_, count ->
+            if (count >0) binding.tilFirstName.isErrorEnabled = false
+        }
+
+        binding.etSecondName.doOnTextChanged { _, _,_, count ->
+            if (count >0) binding.tilSecondName.isErrorEnabled = false
+        }
+
+        binding.etPhone.doOnTextChanged { _, _,_, count ->
+            if (count >0) binding.tilPhone.isErrorEnabled = false
+        }
+
+        binding.etPhone.setPhoneValidator {
+            when(FieldValidationsSettings.PHONE_REGEX.matches(it.toString())) {
+                true -> binding.tilPhone.error = null
+                false -> binding.tilPhone.error = "Неверный формат телефона"
+            }
+        }
     }
 }
