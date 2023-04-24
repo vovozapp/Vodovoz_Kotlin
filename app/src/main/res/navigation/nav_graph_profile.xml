@@ -747,7 +747,7 @@
         android:label="AboutAppDialogFragment" />
     <dialog
         android:id="@+id/genderSelectionBS"
-        android:name="com.vodovoz.app.ui.fragment.user_data.GenderSelectionBS"
+        android:name="com.vodovoz.app.feature.profile.userdata.GenderSelectionBS"
         android:label="GenderSelectionBS" >
         <argument
             android:name="selectedGender"

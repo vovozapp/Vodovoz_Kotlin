@@ -10,23 +10,18 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentUserDataFlowBinding
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.ui.fragment.user_data.Gender
-import com.vodovoz.app.ui.fragment.user_data.GenderSelectionBS
 import com.vodovoz.app.ui.fragment.user_data.UserDataFragmentDirections
-import com.vodovoz.app.ui.fragment.user_data.UserDataViewModel
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToFullFormat
 import com.vodovoz.app.util.extensions.snack
-import com.vodovoz.app.util.extensions.textOrError
 import com.vodovoz.app.util.extensions.textOrErrorWithEmpty
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 

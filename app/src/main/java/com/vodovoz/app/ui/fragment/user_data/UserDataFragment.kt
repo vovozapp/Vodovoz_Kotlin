@@ -12,6 +12,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentUserDataBinding
+import com.vodovoz.app.feature.profile.userdata.GenderSelectionBS
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.extensions.FiledValidationsExtensions.setEmailValidation

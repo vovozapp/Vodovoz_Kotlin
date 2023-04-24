@@ -1,23 +1,16 @@
-package com.vodovoz.app.ui.fragment.user_data
+package com.vodovoz.app.feature.profile.userdata
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsSelectionGenderBinding
 import com.vodovoz.app.feature.cart.ordering.intervals.adapter.IntervalsClickListener
 import com.vodovoz.app.feature.cart.ordering.intervals.adapter.IntervalsController
 import com.vodovoz.app.feature.cart.ordering.intervals.adapter.viewholders.GenderUI
-import com.vodovoz.app.ui.adapter.GendersAdapter
-import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
-import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -56,7 +49,7 @@ class GenderSelectionBS : BaseBottomSheetFragment() {
     private fun getIntervalsClickListener() : IntervalsClickListener {
         return object: IntervalsClickListener {
             override fun onGenderClick(gender: String) {
-                findNavController().previousBackStackEntry?.savedStateHandle?.set(GenderSelectionBS.SELECTED_GENDER, gender)
+                findNavController().previousBackStackEntry?.savedStateHandle?.set(SELECTED_GENDER, gender)
                 dismiss()
             }
         }
