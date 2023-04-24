@@ -34,6 +34,7 @@ import com.vodovoz.app.ui.model.PayMethodUI
 import com.vodovoz.app.ui.model.ShippingIntervalUI
 import com.vodovoz.app.ui.model.custom.OrderingCompletedInfoBundleUI
 import com.vodovoz.app.util.FieldValidationsSettings
+import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToFullFormat
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.scrollViewToTop
 import com.vodovoz.app.util.extensions.snack
@@ -122,7 +123,7 @@ class OrderingFlowFragment : BaseFragment() {
                         binding.etName.setText(addressUI.name)
                         binding.etEmail.setText(addressUI.email)
                         binding.etPhone.setPhoneValidator {  }
-                        binding.etPhone.setText(addressUI.phone)
+                        binding.etPhone.setText(addressUI.phone.convertPhoneToFullFormat())
                     }
 
                     initArgs(data = state.data)
