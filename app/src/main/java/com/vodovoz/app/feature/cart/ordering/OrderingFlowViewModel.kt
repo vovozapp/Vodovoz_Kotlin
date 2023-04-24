@@ -218,8 +218,13 @@ class OrderingFlowViewModel @Inject constructor(
     }
 
     fun setSelectedOrderType(type: OrderType) {
-        if (state.data.selectedOrderType == type) return
-        uiStateListener.value = state.copy(data = OrderingState(selectedOrderType = type))
+        viewModelScope.launch {
+            if (state.data.selectedOrderType == type) {
+                eventListener.emit(OrderingEvents.ClearFields)
+                return@launch
+            }
+            uiStateListener.value = state.copy(data = OrderingState(selectedOrderType = type, total = state.data.total, full = state.data.full, deposit = state.data.deposit, discount = state.data.discount))
+        }
     }
 
     fun fetchShippingInfo(
@@ -443,5 +448,6 @@ class OrderingFlowViewModel @Inject constructor(
         data class ChooseIntervalError(val message: String) : OrderingEvents()
         data class ChoosePayMethodError(val message: String) : OrderingEvents()
 
+        object ClearFields : OrderingEvents()
     }
 }

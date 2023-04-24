@@ -237,6 +237,9 @@ class OrderingFlowFragment : BaseFragment() {
                             binding.nsvContent.scrollViewToTop()
                             binding.tvNameDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
                         }
+                        is OrderingFlowViewModel.OrderingEvents.ClearFields -> {
+                            clearFields()
+                        }
                     }
                 }
         }
@@ -496,7 +499,7 @@ class OrderingFlowFragment : BaseFragment() {
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<AddressUI>(AddressesFragment.SELECTED_ADDRESS)
             ?.observe(viewLifecycleOwner) { addressUI ->
-                viewModel.clearData()
+                //viewModel.clearData()
                 clearFields()
                 viewModel.setSelectedAddress(addressUI)
             }
