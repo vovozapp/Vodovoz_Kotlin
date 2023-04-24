@@ -27,7 +27,9 @@ class UserDataFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val savedStateHandle: SavedStateHandle,
     private val accountManager: AccountManager
-) : PagingContractViewModel<UserDataFlowViewModel.UserDataState, UserDataFlowViewModel.UserDataEvents>(UserDataState()) {
+) : PagingContractViewModel<UserDataFlowViewModel.UserDataState, UserDataFlowViewModel.UserDataEvents>(
+    UserDataState()
+) {
 
     fun fetchUserData() {
         viewModelScope.launch {
@@ -47,7 +49,8 @@ class UserDataFlowViewModel @Inject constructor(
                         state.copy(
                             loadingPage = false,
                             data = state.data.copy(
-                                item = data
+                                item = data,
+                                canChangeBirthDay = data.birthday.isNotEmpty().not()
                             ),
                             error = null
                         )
@@ -75,16 +78,20 @@ class UserDataFlowViewModel @Inject constructor(
         viewModelScope.launch {
             val userId = accountManager.fetchAccountId() ?: return@launch
 
-            flow { emit(repository.updateUserData(
-                userId = userId,
-                firstName = firstName,
-                secondName = secondName,
-                password = password,
-                phone = phone,
-                sex = sex,
-                birthday = birthday,
-                email = email
-            )) }
+            flow {
+                emit(
+                    repository.updateUserData(
+                        userId = userId,
+                        firstName = firstName,
+                        secondName = secondName,
+                        password = password,
+                        phone = phone,
+                        sex = sex,
+                        birthday = birthday,
+                        email = email
+                    )
+                )
+            }
                 .catch {
                     debugLog { "update user data error ${it.localizedMessage}" }
                     uiStateListener.value =
@@ -104,7 +111,8 @@ class UserDataFlowViewModel @Inject constructor(
                                     email = email,
                                     gender = Gender.valueOf(sex),
                                     phone = phone
-                                )
+                                ),
+                                canChangeBirthDay = birthday.isNotEmpty().not()
                             ),
                             error = null
                         )
@@ -121,13 +129,45 @@ class UserDataFlowViewModel @Inject constructor(
         }
     }
 
+    fun setUserGender(gender: Gender) {
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                item = state.data.item?.copy(
+                    gender = gender,
+                )
+            )
+        )
+    }
+
+    fun navigateToGenderChoose() {
+        viewModelScope.launch {
+            val name = state.data.item?.gender?.name ?: return@launch
+            eventListener.emit(UserDataEvents.NavigateToGenderChoose(name))
+        }
+    }
+
+    fun onBirthdayClick() {
+        val birthday = state.data.item?.birthday
+        val canChange = state.data.canChangeBirthDay
+        viewModelScope.launch {
+            if (birthday != null && birthday == "Не указано" && canChange) {
+                eventListener.emit(UserDataEvents.ShowDatePicker)
+            } else {
+                eventListener.emit(UserDataEvents.UpdateUserDataEvent("Это поле нельзя изменить!"))
+            }
+        }
+    }
+
 
     sealed class UserDataEvents : Event {
         data class UpdateUserDataEvent(val message: String) : UserDataEvents()
+        data class NavigateToGenderChoose(val gender: String) : UserDataEvents()
+        object ShowDatePicker : UserDataEvents()
     }
 
     data class UserDataState(
-        val item: UserDataUI? = null
+        val item: UserDataUI? = null,
+        val canChangeBirthDay: Boolean = true
     ) : State
 
 }
