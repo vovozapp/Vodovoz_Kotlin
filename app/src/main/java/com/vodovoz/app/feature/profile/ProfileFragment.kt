@@ -1,6 +1,8 @@
 package com.vodovoz.app.feature.profile
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -22,6 +24,7 @@ import com.vodovoz.app.feature.home.viewholders.homeorders.inneradapter.HomeOrde
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.profile.adapter.ProfileFlowClickListener
+import com.vodovoz.app.util.extensions.openNotificationSettingsForApp
 
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -191,7 +194,7 @@ class ProfileFragment : BaseFragment() {
             }
 
             override fun onNotificationsClick() {
-                //todo
+                openNotificationSettingsForApp(requireContext())
             }
 
             override fun onAboutDeliveryClick() {
@@ -209,11 +212,17 @@ class ProfileFragment : BaseFragment() {
             }
 
             override fun onMyChatClick() {
-                //todo
+                findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
+                    "http://jivo.chat/mk31km1IlP",
+                    "Чат"
+                ))
             }
 
             override fun onSafetyClick() {
-                //todo
+                kotlin.runCatching {
+                    val intent = Intent(Settings.ACTION_SECURITY_SETTINGS)
+                    startActivity(intent)
+                }
             }
 
             override fun onAboutAppClick() {

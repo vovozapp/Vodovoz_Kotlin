@@ -2,9 +2,12 @@ package com.vodovoz.app.util.extensions
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Parcelable
 import android.os.StrictMode
+import android.provider.Settings
 import android.text.Html
 import android.text.SpannableString
 import android.text.Spanned
@@ -12,9 +15,7 @@ import android.text.TextPaint
 import android.text.style.ClickableSpan
 import android.util.Base64
 import android.view.ContextThemeWrapper
-import android.view.Gravity
 import android.view.View
-import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
@@ -28,10 +29,10 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.BuildConfig
 import com.google.android.material.snackbar.Snackbar
-import com.vodovoz.app.R
 import java.io.File
 import java.io.FileInputStream
 import kotlin.properties.ReadOnlyProperty
+
 
 inline fun Fragment.addOnBackPressedCallback(crossinline callback: () -> Unit) {
     val onBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -213,4 +214,22 @@ fun String?.fromHtml(): Spanned {
         Html.fromHtml(this)
     }
     return result
+}
+
+fun openNotificationSettingsForApp(context: Context) {
+    val intent = Intent().apply {
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+            }
+            else -> {
+                action = "android.settings.APP_NOTIFICATION_SETTINGS"
+                putExtra("app_package", context.packageName)
+                putExtra("app_uid", context.applicationInfo.uid)
+            }
+        }
+    }
+
+    context.startActivity(intent)
 }
