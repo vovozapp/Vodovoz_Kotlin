@@ -9,5 +9,5 @@ interface IntervalsClickListener {
     fun onAlertClick(item: ShippingAlertUI) = Unit
     fun onIntervalClick(item: ShippingIntervalUI) = Unit
     fun onPayMethodClick(item: PayMethodUI) = Unit
-
+    fun onGenderClick(gender: String) = Unit
 }
