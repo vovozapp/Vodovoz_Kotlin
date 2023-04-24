@@ -35,6 +35,7 @@ import com.vodovoz.app.ui.model.ShippingIntervalUI
 import com.vodovoz.app.ui.model.custom.OrderingCompletedInfoBundleUI
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.scrollViewToTop
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -160,6 +161,7 @@ class OrderingFlowFragment : BaseFragment() {
                 .collect {
                     when (it) {
                         is OrderingFlowViewModel.OrderingEvents.OrderingErrorInfo -> {
+                            binding.nsvContent.scrollViewToTop()
                             requireActivity().snack(it.message)
                         }
                         is OrderingFlowViewModel.OrderingEvents.OrderSuccess -> {
@@ -210,7 +212,6 @@ class OrderingFlowFragment : BaseFragment() {
                             showShippingIntervalSelectionPopup(it.list, it.selectedDate)
                         }
                         is OrderingFlowViewModel.OrderingEvents.TodayShippingMessage -> {
-                            debugLog { "spasibo TodayShippingMessage" }
                             MaterialAlertDialogBuilder(requireContext())
                                 .setMessage(it.message)
                                 .setPositiveButton("Ок") { dialog, _ ->
@@ -219,15 +220,19 @@ class OrderingFlowFragment : BaseFragment() {
                                 .show()
                         }
                         is OrderingFlowViewModel.OrderingEvents.ChooseAddressError -> {
+                            binding.nsvContent.scrollViewToTop()
                             binding.tvNameAddress.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
                         }
                         is OrderingFlowViewModel.OrderingEvents.ChoosePayMethodError -> {
+                            binding.nsvContent.scrollViewToTop()
                             binding.tvNamePayMethod.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
                         }
                         is OrderingFlowViewModel.OrderingEvents.ChooseIntervalError -> {
+                            binding.nsvContent.scrollViewToTop()
                             binding.tvNameDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
                         }
                         is OrderingFlowViewModel.OrderingEvents.ChooseDateError -> {
+                            binding.nsvContent.scrollViewToTop()
                             binding.tvNameDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
                         }
                     }
@@ -240,16 +245,19 @@ class OrderingFlowFragment : BaseFragment() {
         binding.btnOrder.setOnClickListener {
 
             if (!validateSimpleField(binding.tvNameName, binding.etName.text.toString())) {
+                binding.nsvContent.scrollViewToTop()
                 return@setOnClickListener
             }
 
             binding.etPhone.setPhoneValidator {}
 
             if (!validatePhone(binding.tvNamePhone, binding.etPhone.text.toString())) {
+                binding.nsvContent.scrollViewToTop()
                 return@setOnClickListener
             }
 
             if (!validateEmail(binding.tvNameEmail, binding.etEmail.text.toString())) {
+                binding.nsvContent.scrollViewToTop()
                 return@setOnClickListener
             }
             if (binding.llCompanyNameContainer.isVisible) {
@@ -259,6 +267,7 @@ class OrderingFlowFragment : BaseFragment() {
                         binding.etCompanyName.text.toString()
                     )
                 ) {
+                    binding.nsvContent.scrollViewToTop()
                     return@setOnClickListener
                 }
             }

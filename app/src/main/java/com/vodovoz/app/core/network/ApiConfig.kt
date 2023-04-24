@@ -5,7 +5,7 @@ object ApiConfig {
     private const val VODOVOZ_IP = "m.vodovoz.ru/"
 
     const val VODOVOZ_URL = "$VODOVOZ_PROTOCOL$VODOVOZ_IP"
-    const val TEST_URL = "http://szorinvodovoz.tw1.ru/"
+    //const val VODOVOZ_URL = "http://szorinvodovoz.tw1.ru/"
 
     private const val MAPKIT_PROTOCOL = "https://"
     private const val MAPKIT_IP = "geocode-maps.yandex.ru"
