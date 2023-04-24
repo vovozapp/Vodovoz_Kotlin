@@ -90,7 +90,14 @@ class LoginFlowViewModel @Inject constructor(
     }
 
     fun authByEmail(email: String, password: String) {
-        uiStateListener.value = state.copy(loadingPage = true)
+        uiStateListener.value = state.copy(
+            loadingPage = true, data = state.data.copy(
+                settings = AccountManager.UserSettings(
+                    email = email,
+                    password = password
+                )
+            )
+        )
         viewModelScope.launch {
             flow { emit(repository.authByEmail(email, password)) }
                 .catch {
