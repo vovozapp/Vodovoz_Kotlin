@@ -73,5 +73,6 @@ data class PODRAZDEL(
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class BLOCKRESPONSE(
-    val ZAGALOVOK: String
+    val ZAGALOVOK: String?,
+    val OPISANIE: String?
 ) : Parcelable
