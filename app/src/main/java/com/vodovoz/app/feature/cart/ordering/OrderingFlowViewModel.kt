@@ -44,7 +44,11 @@ class OrderingFlowViewModel @Inject constructor(
     )
 ) {
 
-    override val eventListener = MutableSharedFlow<OrderingEvents>(replay = 0, extraBufferCapacity = 1, BufferOverflow.DROP_OLDEST)
+    override val eventListener = MutableSharedFlow<OrderingEvents>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        BufferOverflow.DROP_OLDEST
+    )
 
     private val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
@@ -118,7 +122,11 @@ class OrderingFlowViewModel @Inject constructor(
                         commonShippingPrice = state.data.shippingInfoBundleUI?.commonShippingPrice,
                         coupon = coupon,
                         shippingIntervalId = state.data.selectedShippingIntervalUI?.id,
-                        overMoney = inputCash.toInt(),
+                        overMoney = if (inputCash == "") {
+                            0
+                        } else {
+                            inputCash.toInt()
+                        },
                         parking = state.data.shippingInfoBundleUI?.parkingPrice,
                         userId = userId
                     )
@@ -135,6 +143,7 @@ class OrderingFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         cartManager.clearCart()
+                        cartManager.updateCartListState(true)
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
                                 orderingCompletedInfoBundleUI = data
@@ -142,6 +151,7 @@ class OrderingFlowViewModel @Inject constructor(
                             loadingPage = false,
                             error = null
                         )
+                        eventListener.emit(OrderingEvents.OrderSuccess(data))
                     } else {
                         uiStateListener.value =
                             state.copy(
