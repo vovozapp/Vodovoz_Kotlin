@@ -111,7 +111,7 @@ class OrderingFlowViewModel @Inject constructor(
                         comment = comment,
                         totalPrice = totalPrice,
                         shippingId = state.data.shippingInfoBundleUI?.id,
-                        shippingPrice = state.data.shippingInfoBundleUI?.shippingPrice,
+                        shippingPrice = state.data.shippingPrice,
                         name = name,
                         phone = phone,
                         email = email,
