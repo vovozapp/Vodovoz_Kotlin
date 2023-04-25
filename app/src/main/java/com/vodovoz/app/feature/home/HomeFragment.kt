@@ -29,6 +29,7 @@ import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickLi
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
+import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.extensions.addOnBackPressedCallback
 import com.vodovoz.app.util.extensions.snack
@@ -61,6 +62,9 @@ class HomeFragment : BaseFragment() {
     @Inject
     lateinit var tabManager: TabManager
 
+    @Inject
+    lateinit var siteStateManager: SiteStateManager
+
     private val homeController by lazy {
         HomeController(
             viewModel = flowViewModel,
@@ -91,6 +95,74 @@ class HomeFragment : BaseFragment() {
         observeTabReselect()
         observeEvents()
         bindBackPressed()
+        observeSiteState()
+    }
+
+    private fun observeSiteState() {
+        lifecycleScope.launchWhenStarted {
+            siteStateManager
+                .observeDeepLinkPath()
+                .collect {
+                    when(it) {
+                        "catalog" -> {
+                            tabManager.selectTab(R.id.graph_catalog)
+                            siteStateManager.clearDeepLinkListener()
+                        }
+                        "action" -> {
+                            findNavController().navigate(
+                                HomeFragmentDirections.actionToAllPromotionsFragment(
+                                    AllPromotionsFragment.DataSource.All()
+                                )
+                            )
+                            siteStateManager.clearDeepLinkListener()
+                        }
+                        "brand" -> {
+                            findNavController().navigate(HomeFragmentDirections.actionToAllBrandsFragment())
+                            siteStateManager.clearDeepLinkListener()
+                        }
+                        "mobile_app" -> {
+                            findNavController().navigate(HomeFragmentDirections.actionToAboutAppDialogFragment())
+                            siteStateManager.clearDeepLinkListener()
+                        }
+                        "about" -> {
+                            findNavController().navigate(
+                                HomeFragmentDirections.actionToWebViewFragment(
+                                    ApiConfig.ABOUT_SHOP_URL,
+                                    "О магазине"
+                                )
+                            )
+                            siteStateManager.clearDeepLinkListener()
+                        }
+                        "dostavka" -> {
+                            findNavController().navigate(
+                                HomeFragmentDirections.actionToWebViewFragment(
+                                    ApiConfig.ABOUT_DELIVERY_URL,
+                                    "О доставке"
+                                )
+                            )
+                            siteStateManager.clearDeepLinkListener()
+                        }
+                        "service" -> {
+                            findNavController().navigate(HomeFragmentDirections.actionToAboutServicesDialogFragment())
+                            siteStateManager.clearDeepLinkListener()
+                        }
+                        "remont_kulerov" -> {
+                            findNavController().navigate(HomeFragmentDirections.actionToAboutServicesDialogFragment())
+                            siteStateManager.clearDeepLinkListener()
+                        }
+                        "feedback" -> {
+                            findNavController().navigate(HomeFragmentDirections.actionToContactsFragment())
+                            siteStateManager.clearDeepLinkListener()
+                        }
+                        "gl" -> {
+                            siteStateManager.clearDeepLinkListener()
+                        }
+                        null -> {
+                            siteStateManager.clearDeepLinkListener()
+                        }
+                    }
+                }
+        }
     }
 
     private fun observeEvents() {

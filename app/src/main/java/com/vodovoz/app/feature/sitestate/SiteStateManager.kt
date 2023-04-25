@@ -15,6 +15,9 @@ class SiteStateManager @Inject constructor(
     private var siteStateListener = MutableStateFlow<SiteStateResponse?>(null)
     fun observeSiteState() = siteStateListener.asStateFlow()
 
+    private val deepLinkPathListener = MutableStateFlow<String?>(null)
+    fun observeDeepLinkPath() = deepLinkPathListener.asStateFlow()
+
     suspend fun requestSiteState() {
         if (siteStateListener.value == null) {
             kotlin.runCatching {
@@ -23,5 +26,15 @@ class SiteStateManager @Inject constructor(
                 siteStateListener.value = null
             }
         }
+    }
+
+    fun saveDeepLinkPath(path: String?) {
+        if (path != null) {
+            deepLinkPathListener.value = path
+        }
+    }
+
+    fun clearDeepLinkListener() {
+        deepLinkPathListener.value = null
     }
 }
