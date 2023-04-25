@@ -135,7 +135,7 @@ class ProfileFlowViewModel @Inject constructor(
                             loadingPage = false,
                             data = state.data.copy(
                                 items = state.data.items + PositionItem(
-                                    POSITION_2,
+                                    POSITION_3,
                                     null
                                 )
                             )
@@ -146,7 +146,7 @@ class ProfileFlowViewModel @Inject constructor(
                     val response = it.parseOrderSliderResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val item = PositionItem(
-                            POSITION_2,
+                            POSITION_3,
                             ProfileOrders(data = response.data.mapToUI())
                         )
                         state.copy(
@@ -159,7 +159,7 @@ class ProfileFlowViewModel @Inject constructor(
                             loadingPage = false,
                             data = state.data.copy(
                                 items = state.data.items + PositionItem(
-                                    POSITION_2,
+                                    POSITION_3,
                                     null
                                 )
                             )
@@ -188,7 +188,7 @@ class ProfileFlowViewModel @Inject constructor(
                             loadingPage = false,
                             data = state.data.copy(
                                 items = state.data.items + PositionItem(
-                                    POSITION_3,
+                                    POSITION_4,
                                     null
                                 )
                             )
@@ -199,15 +199,28 @@ class ProfileFlowViewModel @Inject constructor(
                     uiStateListener.value = if (it.status != null && it.status == "Success") {
                         val mapped = it.fetchProfileCategoryUIList()
                         val item = PositionItem(
-                            POSITION_3,
+                            POSITION_4,
                             ProfileMain(items = mapped.list)
                         )
+
+                        val blockList = it.block
+                        val itemBlock = if (!blockList.isNullOrEmpty()) {
+                            PositionItem(
+                                POSITION_2,
+                                ProfileBlock(data = blockList)
+                            )
+                        } else {
+                            PositionItem(
+                                POSITION_2,
+                                null
+                            )
+                        }
 
                         tabManager.saveBottomNavProfileState(mapped.amount)
 
                         state.copy(
                             loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
+                            data = state.data.copy(items = state.data.items + item + itemBlock),
                             error = null
                         )
                     } else {
@@ -215,7 +228,7 @@ class ProfileFlowViewModel @Inject constructor(
                             loadingPage = false,
                             data = state.data.copy(
                                 items = state.data.items + PositionItem(
-                                    POSITION_3,
+                                    POSITION_4,
                                     null
                                 )
                             )
@@ -244,7 +257,7 @@ class ProfileFlowViewModel @Inject constructor(
                             loadingPage = false,
                             data = state.data.copy(
                                 items = state.data.items + PositionItem(
-                                    POSITION_5,
+                                    POSITION_6,
                                     null
                                 )
                             )
@@ -255,7 +268,7 @@ class ProfileFlowViewModel @Inject constructor(
                     val response = it.parseViewedProductsSliderResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val item = PositionItem(
-                            POSITION_5,
+                            POSITION_6,
                             HomeProducts(
                                 14, response.data.mapToUI(), ProductsSliderConfig(
                                     containShowAllButton = false
@@ -301,7 +314,7 @@ class ProfileFlowViewModel @Inject constructor(
                             loadingPage = false,
                             data = state.data.copy(
                                 items = state.data.items + PositionItem(
-                                    POSITION_6,
+                                    POSITION_7,
                                     null
                                 )
                             )
@@ -313,7 +326,7 @@ class ProfileFlowViewModel @Inject constructor(
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         val item = PositionItem(
-                            POSITION_6,
+                            POSITION_7,
                             ProfileBestForYou(data = data.copy(
                                 productUIList = FavoritesMapper.mapFavoritesListByManager("grid", data.productUIList)
                             ))
@@ -328,7 +341,7 @@ class ProfileFlowViewModel @Inject constructor(
                             loadingPage = false,
                             data = state.data.copy(
                                 items = state.data.items + PositionItem(
-                                    POSITION_6,
+                                    POSITION_7,
                                     null
                                 )
                             )
@@ -405,7 +418,7 @@ class ProfileFlowViewModel @Inject constructor(
                 return ProfileState(
                     listOf(
                         PositionItem(
-                            POSITION_4,
+                            POSITION_5,
                             ProfileLogout()
                         ),
                     )
@@ -430,7 +443,8 @@ class ProfileFlowViewModel @Inject constructor(
         const val POSITION_4 = 4
         const val POSITION_5 = 5
         const val POSITION_6 = 6
+        const val POSITION_7 = 7
 
-        const val POSITIONS_COUNT = 6
+        const val POSITIONS_COUNT = 7
     }
 }

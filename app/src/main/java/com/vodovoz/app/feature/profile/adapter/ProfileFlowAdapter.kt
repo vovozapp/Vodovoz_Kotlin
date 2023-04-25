@@ -45,6 +45,9 @@ class ProfileFlowAdapter(
             R.layout.item_profile_main_rv -> {
                 ProfileMainViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
+            R.layout.item_profile_block -> {
+                ProfileBlockViewHolder(getViewFromInflater(viewType, parent))
+            }
 
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")

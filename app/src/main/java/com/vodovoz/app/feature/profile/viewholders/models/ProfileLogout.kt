@@ -4,7 +4,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
 
 data class ProfileLogout(
-    val id: Int = 4,
+    val id: Int = 5,
 ) : Item {
 
     override fun getItemViewType(): Int {

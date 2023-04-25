@@ -5,7 +5,7 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.ui.model.CategoryDetailUI
 
 data class ProfileBestForYou(
-    val id: Int = 6,
+    val id: Int = 7,
     val data: CategoryDetailUI
 ) : Item {
 

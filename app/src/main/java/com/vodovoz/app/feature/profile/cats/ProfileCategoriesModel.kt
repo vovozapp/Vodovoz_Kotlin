@@ -2,6 +2,9 @@ package com.vodovoz.app.feature.profile.cats
 
 import android.os.Parcelable
 import com.squareup.moshi.JsonClass
+import com.vodovoz.app.R
+import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -75,4 +78,16 @@ data class PODRAZDEL(
 data class BLOCKRESPONSE(
     val ZAGALOVOK: String?,
     val OPISANIE: String?
-) : Parcelable
+) : Parcelable, Item {
+
+    override fun getItemViewType(): Int {
+        return R.layout.view_holder_slider_block
+    }
+
+    override fun areItemsTheSame(item: Item): Boolean {
+        if (item !is BLOCKRESPONSE) return false
+
+        return this == item
+    }
+
+}

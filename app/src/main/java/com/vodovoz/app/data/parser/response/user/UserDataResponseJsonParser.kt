@@ -2,6 +2,7 @@ package com.vodovoz.app.data.parser.response.user
 
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.UserDataEntity
+import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import okhttp3.ResponseBody
@@ -13,7 +14,7 @@ object UserDataResponseJsonParser {
         val responseJson = JSONObject(this.string())
         return when(responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(responseJson.getJSONObject("data").parseUserDataEntity())
-            else -> ResponseEntity.Error(responseJson.getString("message"))
+            else -> ResponseEntity.Error(responseJson.safeString("message"))
         }
     }
 
