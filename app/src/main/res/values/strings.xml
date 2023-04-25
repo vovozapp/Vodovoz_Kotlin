@@ -1,6 +1,10 @@
 <resources>
     <string name="plug">Текст</string>
 
+    <string name="new_app">szorinvodovoz.tw1.ru</string>
+    <string name="new_app_ssl_not">http</string>
+    <string name="new_app_ssl">https</string>
+
     <string name="app_name">Vodovoz</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
