@@ -21,11 +21,7 @@ class LikeRepositoryImpl @Inject constructor(
         return api.like(
             blockId = 12,
             action = "add",
-            productIdList = StringBuilder().apply {
-                productIdList.forEach { productId ->
-                    append(productId).append(",")
-                }
-            }.toString(),
+            productIdList = bindProductIdList(productIdList),
             userId = userId
         )
     }
@@ -40,5 +36,15 @@ class LikeRepositoryImpl @Inject constructor(
             productIdList = productId.toString(),
             userId = userId
         )
+    }
+
+    private fun bindProductIdList(productIdList: List<Long>): String {
+        if (productIdList.size == 1) return productIdList.first().toString()
+
+        return StringBuilder().apply {
+            productIdList.forEach { productId ->
+                append(productId).append(",")
+            }
+        }.toString()
     }
 }
