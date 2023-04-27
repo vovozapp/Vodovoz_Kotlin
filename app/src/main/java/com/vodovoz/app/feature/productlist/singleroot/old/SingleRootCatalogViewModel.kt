@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.single_root_catalog
+package com.vodovoz.app.feature.productlist.singleroot.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

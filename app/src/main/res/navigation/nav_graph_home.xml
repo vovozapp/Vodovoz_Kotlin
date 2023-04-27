@@ -349,7 +349,7 @@
     </dialog>
     <dialog
         android:id="@+id/singleRootCatalogBottomFragment"
-        android:name="com.vodovoz.app.ui.fragment.single_root_catalog.SingleRootCatalogBottomFragment"
+        android:name="com.vodovoz.app.feature.productlist.singleroot.SingleRootCatalogBottomFragment"
         android:label="SingleRootCatalogBottomFragment">
         <argument
             android:name="categoryId"

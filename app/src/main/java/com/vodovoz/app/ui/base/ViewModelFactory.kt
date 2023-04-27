@@ -41,7 +41,7 @@ import com.vodovoz.app.feature.productdetail.sendcomment.old.SendCommentAboutPro
 import com.vodovoz.app.ui.fragment.send_comment_about_shop.SendCommentAboutShopViewModel
 import com.vodovoz.app.feature.bottom.services.detail.old.ServiceDetailViewModel
 import com.vodovoz.app.ui.fragment.service_order.ServiceOrderViewModel
-import com.vodovoz.app.ui.fragment.single_root_catalog.SingleRootCatalogViewModel
+import com.vodovoz.app.feature.productlist.singleroot.old.SingleRootCatalogViewModel
 import com.vodovoz.app.ui.fragment.some_products_by_brand.SomeProductsByBrandViewModel
 import com.vodovoz.app.ui.fragment.some_products_maybe_like.SomeProductsMaybeLikeViewModel
 import com.vodovoz.app.feature.profile.userdata.old.UserDataViewModel

@@ -1,8 +1,7 @@
-package com.vodovoz.app.feature.productlist.singleroot
+package com.vodovoz.app.feature.productlist.singleroot.old
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -11,21 +10,17 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsCatalogSingleFlowBinding
-import com.vodovoz.app.databinding.BsCatalogSingleRootBinding
 import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragment
+import com.vodovoz.app.feature.productlist.singleroot.SingleRootCatalogFlowViewModel
 import com.vodovoz.app.feature.productlist.singleroot.adapter.SingleRootClickListener
-import com.vodovoz.app.feature.productlist.singleroot.adapter.SingleRootFlowAdapter
 import com.vodovoz.app.ui.adapter.SingleRootCatalogAdapter
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
-import com.vodovoz.app.ui.fragment.single_root_catalog.SingleRootCatalogViewModel
 import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class SingleRootCatalogFlowFragment : BaseBottomSheetFragment() {
