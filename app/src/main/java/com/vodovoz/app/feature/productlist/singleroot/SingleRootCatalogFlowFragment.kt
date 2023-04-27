@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
+import com.vodovoz.app.databinding.BsCatalogSingleFlowBinding
 import com.vodovoz.app.databinding.BsCatalogSingleRootBinding
 import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragment
 import com.vodovoz.app.feature.productlist.singleroot.adapter.SingleRootClickListener
@@ -18,6 +19,7 @@ import com.vodovoz.app.ui.adapter.SingleRootCatalogAdapter
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.fragment.single_root_catalog.SingleRootCatalogViewModel
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -28,12 +30,12 @@ import kotlinx.coroutines.flow.collect
 @AndroidEntryPoint
 class SingleRootCatalogFlowFragment : BaseBottomSheetFragment() {
 
-    override fun layout(): Int = R.layout.bs_catalog_single_root
+    override fun layout(): Int = R.layout.bs_catalog_single_flow
 
     private val viewModel: SingleRootCatalogFlowViewModel by viewModels()
 
-    private val binding: BsCatalogSingleRootBinding by viewBinding {
-        BsCatalogSingleRootBinding.bind(contentView)
+    private val binding: BsCatalogSingleFlowBinding by viewBinding {
+        BsCatalogSingleFlowBinding.bind(contentView)
     }
 
     private val categoryClickSubject: PublishSubject<CategoryUI> = PublishSubject.create()

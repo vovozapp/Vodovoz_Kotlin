@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--new(mnr)-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imgClose"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:src="@drawable/png_close_old"
+        android:layout_margin="@dimen/space_16"
+        app:layout_constraintBottom_toTopOf="@id/rvCategories"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCategories"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="wrap"
+        android:layout_marginStart="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_8"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:itemCount="50"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgClose" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnChoose"
+        style="@style/BlueButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_normal_height"
+        android:layout_alignBottom="@+id/rvCategories"
+        android:layout_margin="@dimen/space_16"
+        android:text="@string/choose_category_btn_text"
+        app:layout_constraintBottom_toBottomOf="@+id/rvCategories"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
