@@ -9,12 +9,12 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.map.AddressByGeocodeResponseJsonParser.parseAddressByGeocodeResponse
 import com.vodovoz.app.data.parser.response.map.DeliveryZonesBundleResponseJsonParser.parseDeliveryZonesBundleResponse
-import com.vodovoz.app.feature.map.test.model.MapTestResponse
 import com.vodovoz.app.mapper.AddressMapper.mapToUI
 import com.vodovoz.app.mapper.DeliveryZonesBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.ui.model.custom.DeliveryZonesBundleUI
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.polygoncreator.Polygon
 import com.yandex.mapkit.geometry.Point
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -48,11 +48,13 @@ class MapFlowViewModel @Inject constructor(
                     val response = it.parseDeliveryZonesBundleResponse()
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
+                        val centerP = data.deliveryZoneUIList.filter { it.color == "#16c60c" }.get(0).pointList
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
                                 deliveryZonesBundleUI = data,
                                 addressUI = addressUI,
-                                centerPoints = data.deliveryZoneUIList.filter { it.color == "#16c60c" }.get(0).pointList
+                                centerPoints = centerP,
+                                centerPolygon = buildCenterPolygon(centerP)
                             ),
                             loadingPage = false,
                             error = null
@@ -237,6 +239,22 @@ class MapFlowViewModel @Inject constructor(
         )
     }
 
+    private fun buildCenterPolygon(centerPoints: List<Point>) : Polygon? {
+        if (centerPoints.isEmpty()) return null
+
+        return Polygon.Builder()
+            .apply {
+                centerPoints.forEach {
+                    addVertex(com.vodovoz.app.util.polygoncreator.Point(it.latitude, it.longitude))
+                }
+            }
+            .build()
+    }
+
+    fun checkPointInCenterPolygon(point: Point) {
+        debugLog { "spasibo contains ${state.data.centerPolygon?.contains(com.vodovoz.app.util.polygoncreator.Point(point.latitude, point.longitude))}" }
+    }
+
     data class SavedPointData(
         val latitude: String,
         val longitude: String,
@@ -253,6 +271,7 @@ class MapFlowViewModel @Inject constructor(
         val addressUI: AddressUI? = null,
         val updateZones: Boolean = false,
         val centerPoints: List<Point> = emptyList(),
+        val centerPolygon: Polygon? = null,
         val savedPointData: SavedPointData? = null
     ) : State
 

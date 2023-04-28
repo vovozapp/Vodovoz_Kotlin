@@ -67,7 +67,7 @@ class MapDialogFragment : BaseFragment(),
     SuggestSession.SuggestListener,
     DrivingSession.DrivingRouteListener {
 
-    override fun layout(): Int = com.vodovoz.app.R.layout.fragment_map_flow
+    override fun layout(): Int = R.layout.fragment_map_flow
 
     private val binding: FragmentMapFlowBinding by viewBinding {
         FragmentMapFlowBinding.bind(
@@ -109,19 +109,22 @@ class MapDialogFragment : BaseFragment(),
     )
 
     private var lastPlaceMark: PlacemarkMapObject? = null
+    private var lastPolyline: PolylineMapObject? = null
     private var isShowSearchResult = false
-    private var isEditOldAddressMode = false
 
     private var drivingSession: DrivingSession? = null
 
     private val distanceToRouteMap = hashMapOf<Double, DrivingRoute>()
 
-    private val locationManager by lazy {
-        requireContext().getSystemService(LOCATION_SERVICE) as? LocationManager
+    private val mapObjects: MapObjectCollection by lazy {
+        binding.mapView.map.mapObjects.addCollection()
+    }
+    private val drivingRouter: DrivingRouter by lazy {
+        DirectionsFactory.getInstance().createDrivingRouter()
     }
 
-    private val geoCoder by lazy {
-        Geocoder(requireContext(), Locale.getDefault())
+    private val locationManager by lazy {
+        requireContext().getSystemService(LOCATION_SERVICE) as? LocationManager
     }
 
     private val locationController by lazy {
@@ -155,7 +158,6 @@ class MapDialogFragment : BaseFragment(),
                     viewModel.fetchAddressByGeocode(point.latitude, point.longitude)
                     moveCamera(point)
                     distanceToRouteMap.clear()
-                    mapObjects.clear()
                     viewModel.fetchSeveralMinimalLineDistancesToMainPolygonPoints(point)
                     placeMark(point, com.vodovoz.app.R.drawable.png_map_marker)
                     showContainer(false)
@@ -171,7 +173,6 @@ class MapDialogFragment : BaseFragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.firstLoadSorted()
-        isEditOldAddressMode = true
     }
 
     override fun onStart() {
@@ -191,13 +192,6 @@ class MapDialogFragment : BaseFragment(),
         } else {
             search(address.fullAddress)
         }
-    }
-
-    private val mapObjects: MapObjectCollection by lazy {
-        binding.mapView.map.mapObjects.addCollection();
-    }
-    private val drivingRouter: DrivingRouter by lazy {
-        DirectionsFactory.getInstance().createDrivingRouter();
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -352,12 +346,6 @@ class MapDialogFragment : BaseFragment(),
                 location?.let {
                     moveCamera(Point(it.latitude, it.longitude), 12f)
                     viewModel.fetchAddressByGeocode(it.latitude, it.longitude)
-                    /*val address = geoCoder.getFromLocation(it.latitude, it.longitude, 1)
-                    if (address.isNotEmpty()) {
-                        binding.streetNameTv.isVisible = true
-                        val a = address.first()
-                        binding.streetNameTv.text = a.getAddressLine(0)
-                    }*/
                 }
             }
     }
@@ -440,15 +428,30 @@ class MapDialogFragment : BaseFragment(),
     private fun placeMark(point: Point, resId: Int) {
         lastPlaceMark?.let {
             try {
-                binding.mapView.map.mapObjects.remove(it)
+                mapObjects.remove(it)
             } catch (_: Throwable) {
 
             }
         }
-        lastPlaceMark = binding.mapView.map.mapObjects.addPlacemark(
+        lastPlaceMark = mapObjects.addPlacemark(
             point,
             ImageProvider.fromResource(context, resId)
         )
+    }
+
+    private fun addPolyline(line: Polyline?) {
+        lastPolyline?.let {
+            try {
+                mapObjects.remove(it)
+            } catch (_: Throwable) {
+
+            }
+        }
+        lastPolyline = if (line != null) {
+            mapObjects.addPolyline(line)
+        } else {
+            null
+        }
     }
 
     private fun showContainer(bool: Boolean) {
@@ -575,13 +578,12 @@ class MapDialogFragment : BaseFragment(),
 
     private fun onMapClick(point: Point) {
         moveCamera(point)
-        placeMark(point, com.vodovoz.app.R.drawable.png_map_marker)
+        placeMark(point, R.drawable.png_map_marker)
         viewModel.fetchAddressByGeocode(
             point.latitude,
             point.longitude
         )
         distanceToRouteMap.clear()
-        mapObjects.clear()
         viewModel.fetchSeveralMinimalLineDistancesToMainPolygonPoints(point)
     }
 
@@ -600,26 +602,22 @@ class MapDialogFragment : BaseFragment(),
             distanceToRouteMap[initRouteLength(route.geometry.points)] = route
 
             if (distanceToRouteMap.isNotEmpty()) {
-                mapObjects.clear()
                 val key = distanceToRouteMap.minOf { it.key }
                 val routeNew = distanceToRouteMap[key]?.geometry
                 routeNew?.let {
                     val startPoint = route.requestPoints!![0].point
                     val endPoint = route.requestPoints!![1].point
+                    viewModel.checkPointInCenterPolygon(endPoint)
                     val distance = viewModel.getTwoPointsDistance(startPoint, center)
                     if (distance < viewModel.getTwoPointsDistance(endPoint, center)) {
-                        mapObjects.addPolyline(it)
+                        addPolyline(it)
                         viewModel.savePointData(
                             latitude = startPoint.latitude.toString(),
                             longitude = startPoint.longitude.toString(),
                             length = (key / 1000).roundToInt().toString()
                         )
-                        /*viewModel.sendTestMapResponse(
-                            latitude = startPoint.latitude.toString(),
-                            longitude = startPoint.longitude.toString(),
-                            length = (key/1000).toInt().toString(),
-                            date = "18.04.2023"
-                        )*/
+                    } else {
+                        addPolyline(null)
                     }
                 }
             }
