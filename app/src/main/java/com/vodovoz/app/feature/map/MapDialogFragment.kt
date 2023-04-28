@@ -59,7 +59,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import kotlin.math.roundToInt
 
-
 @AndroidEntryPoint
 class MapDialogFragment : BaseFragment(),
     InputListener,
@@ -278,6 +277,9 @@ class MapDialogFragment : BaseFragment(),
                                 .setMessage(it.response.string())
                                 .setPositiveButton("Ок") { dialog, _ -> dialog.dismiss() }
                                 .show()
+                        }
+                        is MapFlowViewModel.MapFlowEvents.ShowPolyline -> {
+                            addPolyline(it.polyline)
                         }
                     }
                 }
@@ -604,22 +606,9 @@ class MapDialogFragment : BaseFragment(),
             if (distanceToRouteMap.isNotEmpty()) {
                 val key = distanceToRouteMap.minOf { it.key }
                 val routeNew = distanceToRouteMap[key]?.geometry
-                routeNew?.let {
-                    val startPoint = route.requestPoints!![0].point
-                    val endPoint = route.requestPoints!![1].point
-                    viewModel.checkPointInCenterPolygon(endPoint)
-                    val distance = viewModel.getTwoPointsDistance(startPoint, center)
-                    if (distance < viewModel.getTwoPointsDistance(endPoint, center)) {
-                        addPolyline(it)
-                        viewModel.savePointData(
-                            latitude = startPoint.latitude.toString(),
-                            longitude = startPoint.longitude.toString(),
-                            length = (key / 1000).roundToInt().toString()
-                        )
-                    } else {
-                        addPolyline(null)
-                    }
-                }
+                val startPoint = route.requestPoints!![0].point
+                val endPoint = route.requestPoints!![1].point
+                viewModel.addPolyline(key, routeNew, startPoint, endPoint)
             }
         }
     }

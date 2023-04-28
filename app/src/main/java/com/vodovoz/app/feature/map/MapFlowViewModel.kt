@@ -16,6 +16,7 @@ import com.vodovoz.app.ui.model.custom.DeliveryZonesBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.polygoncreator.Polygon
 import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.geometry.Polyline
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @HiltViewModel
 class MapFlowViewModel @Inject constructor(
@@ -227,7 +229,7 @@ class MapFlowViewModel @Inject constructor(
         }
     }
 
-    fun savePointData(
+    private fun savePointData(
         latitude: String,
         longitude: String,
         length: String
@@ -251,8 +253,44 @@ class MapFlowViewModel @Inject constructor(
             .build()
     }
 
-    fun checkPointInCenterPolygon(point: Point) {
-        debugLog { "spasibo contains ${state.data.centerPolygon?.contains(com.vodovoz.app.util.polygoncreator.Point(point.latitude, point.longitude))}" }
+    fun addPolyline(distance: Double, polyline: Polyline?, startPoint: Point, endPoint: Point) {
+        viewModelScope.launch {
+
+            if (polyline == null) {
+                eventListener.emit(MapFlowEvents.ShowPolyline())
+                return@launch
+            }
+
+            val polygon = state.data.centerPolygon
+            val centerPolygon = if (polygon != null) {
+                polygon
+            } else {
+                eventListener.emit(MapFlowEvents.ShowPolyline())
+                return@launch
+            }
+            val newDistance = (distance / 1000).roundToInt().toString()
+
+            if (centerPolygon.contains(com.vodovoz.app.util.polygoncreator.Point(endPoint.latitude, endPoint.longitude))) {
+                savePointData(
+                    latitude = startPoint.latitude.toString(),
+                    longitude = startPoint.longitude.toString(),
+                    length = "0"
+                )
+                eventListener.emit(MapFlowEvents.ShowPolyline())
+            } else {
+                if (state.data.savedPointData == null || state.data.savedPointData?.length != newDistance) {
+                    savePointData(
+                        latitude = startPoint.latitude.toString(),
+                        longitude = startPoint.longitude.toString(),
+                        length = newDistance
+                    )
+                    eventListener.emit(MapFlowEvents.ShowPolyline(polyline))
+                }
+            }
+
+
+        }
+
     }
 
     data class SavedPointData(
@@ -272,7 +310,9 @@ class MapFlowViewModel @Inject constructor(
         val updateZones: Boolean = false,
         val centerPoints: List<Point> = emptyList(),
         val centerPolygon: Polygon? = null,
-        val savedPointData: SavedPointData? = null
+        val savedPointData: SavedPointData? = null,
+        val polyline: Polyline? = null,
+        val distance: Double? = null
     ) : State
 
     sealed class MapFlowEvents : Event {
@@ -281,5 +321,6 @@ class MapFlowViewModel @Inject constructor(
         data class Submit(val startPoint: Point, val list: List<Point>): MapFlowEvents()
         data class ShowInfoDialog(val url: String?): MapFlowEvents()
         data class ShowAlert(val response: ResponseBody) : MapFlowEvents()
+        data class ShowPolyline(val polyline: Polyline? = null) : MapFlowEvents()
     }
 }
