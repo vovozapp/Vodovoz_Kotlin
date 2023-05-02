@@ -51,12 +51,15 @@ class MapFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         val centerP = data.deliveryZoneUIList.filter { it.color == "#16c60c" }.get(0).pointList
+                        val moPoints = data.deliveryZoneUIList.filter { it.color == "#dfdddd" }.get(0).pointList
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
                                 deliveryZonesBundleUI = data,
                                 addressUI = addressUI,
                                 centerPoints = centerP,
-                                centerPolygon = buildCenterPolygon(centerP)
+                                centerPolygon = buildCenterPolygon(centerP),
+                                moPoints = moPoints,
+                                moPolygon = buildCenterPolygon(moPoints)
                             ),
                             loadingPage = false,
                             error = null
@@ -153,6 +156,22 @@ class MapFlowViewModel @Inject constructor(
     }
 
     fun fetchSeveralMinimalLineDistancesToMainPolygonPoints(startPoint: Point) {
+
+        viewModelScope.launch {
+            val moPolygon = state.data.moPolygon
+            if (moPolygon != null) {
+                if(!moPolygon.contains(com.vodovoz.app.util.polygoncreator.Point(startPoint.latitude, startPoint.longitude))) {
+                    savePointData(
+                        latitude = startPoint.latitude.toString(),
+                        longitude = startPoint.longitude.toString(),
+                        length = "0",
+                        distance = 0.0
+                    )
+                    eventListener.emit(MapFlowEvents.ShowPolyline(message = "Вне зоны доставки"))
+                }
+            }
+        }
+
         val sortedList = mutableListOf<LocationFloatToPoint>()
 
         state.data.centerPoints.forEach {
@@ -184,49 +203,10 @@ class MapFlowViewModel @Inject constructor(
         }
     }
 
-     fun getTwoPointsDistance(start: Point, end: Point) : Float {
-        val locA = Location("locationA").apply {
-            latitude = start.latitude
-            longitude = start.longitude
-        }
-
-        val locB = Location("locationB").apply {
-            latitude = end.latitude
-            longitude = end.longitude
-        }
-        return locA.distanceTo(locB)
-    }
-
     fun changeAddress() {
         uiStateListener.value = state.copy(data = state.data.copy(
             addressUI = null
         ))
-    }
-
-    fun sendTestMapResponse(
-        latitude: String,
-        longitude: String,
-        length: String,
-        date: String
-    ) {
-        viewModelScope.launch {
-            delay(3000)
-            val addr = state.data.addressUI?.fullAddress?.substringAfter("Россия, ") ?:""
-            debugLog { "send test map response address $addr" }
-
-            flow { emit(repository.fetchTestMapResponse(addr, latitude, longitude, length, date)) }
-                .catch {
-                    debugLog { "send test map response error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
-                .flowOn(Dispatchers.IO)
-                .onEach {
-                    eventListener.emit(MapFlowEvents.ShowAlert(it))
-                }
-                .flowOn(Dispatchers.Default)
-                .collect()
-        }
     }
 
     private fun savePointData(
@@ -334,7 +314,9 @@ class MapFlowViewModel @Inject constructor(
         val centerPolygon: Polygon? = null,
         val savedPointData: SavedPointData? = null,
         val polyline: Polyline? = null,
-        val distance: Double? = null
+        val distance: Double? = null,
+        val moPoints: List<Point> = emptyList(),
+        val moPolygon: Polygon? = null,
     ) : State
 
     sealed class MapFlowEvents : Event {
@@ -343,6 +325,6 @@ class MapFlowViewModel @Inject constructor(
         data class Submit(val startPoint: Point, val list: List<Point>): MapFlowEvents()
         data class ShowInfoDialog(val url: String?): MapFlowEvents()
         data class ShowAlert(val response: ResponseBody) : MapFlowEvents()
-        data class ShowPolyline(val polyline: Polyline? = null) : MapFlowEvents()
+        data class ShowPolyline(val polyline: Polyline? = null, val message: String? = null) : MapFlowEvents()
     }
 }

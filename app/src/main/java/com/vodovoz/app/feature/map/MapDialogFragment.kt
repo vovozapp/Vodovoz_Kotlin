@@ -38,6 +38,7 @@ import com.vodovoz.app.feature.map.adapter.AddressResultFlowAdapter
 import com.vodovoz.app.ui.extensions.ColorExtensions.getColorWithAlpha
 import com.vodovoz.app.ui.model.DeliveryZoneUI
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.snack
 import com.yandex.mapkit.*
 import com.yandex.mapkit.directions.DirectionsFactory
 import com.yandex.mapkit.directions.driving.*
@@ -281,6 +282,9 @@ class MapDialogFragment : BaseFragment(),
                         }
                         is MapFlowViewModel.MapFlowEvents.ShowPolyline -> {
                             addPolyline(it.polyline)
+                            if (it.message != null) {
+                                requireActivity().snack(it.message)
+                            }
                         }
                     }
                 }
