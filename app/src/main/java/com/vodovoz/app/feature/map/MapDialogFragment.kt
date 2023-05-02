@@ -142,6 +142,7 @@ class MapDialogFragment : BaseFragment(),
     )
 
     private fun search(text: String) {
+        viewModel.clear()
         searchManager.submit(
             text,
             VisibleRegionUtils.toPolygon(binding.mapView.map.visibleRegion),
@@ -380,6 +381,11 @@ class MapDialogFragment : BaseFragment(),
                 showContainer(true)
             }
         }
+
+        binding.clear.setOnClickListener {
+            binding.searchEdit.text = null
+            binding.clear.isVisible = false
+        }
     }
 
     private fun initAddressesRecycler() {
@@ -475,6 +481,7 @@ class MapDialogFragment : BaseFragment(),
                     com.vodovoz.app.R.drawable.ic_arrow_left
                 )
             )
+            binding.clear.isVisible = true
             binding.searchEdit.focusSearch(View.FOCUS_UP)
             binding.searchContainer.elevation = 0f
         } else {
@@ -486,6 +493,7 @@ class MapDialogFragment : BaseFragment(),
                     com.vodovoz.app.R.drawable.ic_search
                 )
             )
+            binding.clear.isVisible = false
             binding.searchEdit.clearFocus()
             binding.searchContainer.elevation =
                 resources.getDimension(com.vodovoz.app.R.dimen.elevation_3)
@@ -579,6 +587,7 @@ class MapDialogFragment : BaseFragment(),
     override fun onError(p0: Error) {}
 
     private fun onMapClick(point: Point) {
+        viewModel.clear()
         moveCamera(point)
         placeMark(point, R.drawable.png_map_marker)
         viewModel.fetchAddressByGeocode(
@@ -602,13 +611,17 @@ class MapDialogFragment : BaseFragment(),
     override fun onDrivingRoutes(p0: MutableList<DrivingRoute>) {
         for (route in p0) {
             distanceToRouteMap[initRouteLength(route.geometry.points)] = route
+        }
 
-            if (distanceToRouteMap.isNotEmpty()) {
-                val key = distanceToRouteMap.minOf { it.key }
-                val routeNew = distanceToRouteMap[key]?.geometry
-                val startPoint = route.requestPoints!![0].point
-                val endPoint = route.requestPoints!![1].point
-                viewModel.addPolyline(key, routeNew, startPoint, endPoint)
+        if (distanceToRouteMap.isNotEmpty()) {
+            val key = distanceToRouteMap.minOf { it.key }
+            val route = distanceToRouteMap[key]
+            val polyline = route?.geometry
+
+            route?.let {
+                val startPoint = it.requestPoints!![0].point
+                val endPoint = it.requestPoints!![1].point
+                viewModel.addPolyline(key, polyline, startPoint, endPoint)
             }
         }
     }
@@ -616,9 +629,7 @@ class MapDialogFragment : BaseFragment(),
     override fun onDrivingRoutesError(p0: Error) {}
 
     private fun submitRequest(start: Point, end: Point) {
-        val drivingOptions = DrivingOptions().apply {
-            routesCount = 1
-        }
+        val drivingOptions = DrivingOptions()
         val vehicleOptions = VehicleOptions().apply {
 
         }

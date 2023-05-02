@@ -232,11 +232,13 @@ class MapFlowViewModel @Inject constructor(
     private fun savePointData(
         latitude: String,
         longitude: String,
-        length: String
+        length: String,
+        distance: Double
     ) {
         uiStateListener.value = state.copy(
             data = state.data.copy(
-                savedPointData = SavedPointData(latitude, longitude, length)
+                savedPointData = SavedPointData(latitude, longitude, length),
+                distance = distance
             )
         )
     }
@@ -274,23 +276,43 @@ class MapFlowViewModel @Inject constructor(
                 savePointData(
                     latitude = startPoint.latitude.toString(),
                     longitude = startPoint.longitude.toString(),
-                    length = "0"
+                    length = "0",
+                    distance = 0.0
                 )
                 eventListener.emit(MapFlowEvents.ShowPolyline())
             } else {
-                if (state.data.savedPointData == null || state.data.savedPointData?.length != newDistance) {
+                val length = state.data.distance
+                if (length != null) {
+                    if (distance < length) {
+                        savePointData(
+                            latitude = startPoint.latitude.toString(),
+                            longitude = startPoint.longitude.toString(),
+                            length = newDistance,
+                            distance = distance
+                        )
+                        eventListener.emit(MapFlowEvents.ShowPolyline(polyline))
+                    }
+                } else {
                     savePointData(
                         latitude = startPoint.latitude.toString(),
                         longitude = startPoint.longitude.toString(),
-                        length = newDistance
+                        length = newDistance,
+                        distance = distance
                     )
                     eventListener.emit(MapFlowEvents.ShowPolyline(polyline))
                 }
             }
-
-
         }
 
+    }
+
+    fun clear() {
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                savedPointData = null,
+                distance = null
+            )
+        )
     }
 
     data class SavedPointData(

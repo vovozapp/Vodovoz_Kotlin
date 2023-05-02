@@ -91,6 +91,15 @@
                 android:textColor="@color/blackTextDark"
                 android:textColorHint="@color/blackTextPrimary" />
 
+            <ImageView
+                android:id="@+id/clear"
+                android:visibility="gone"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_close_circle"
+                app:tint="@color/text_new_black"
+                tools:ignore="ContentDescription" />
+
         </LinearLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
