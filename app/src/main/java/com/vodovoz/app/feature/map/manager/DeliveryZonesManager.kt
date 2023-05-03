@@ -1,7 +1,6 @@
 package com.vodovoz.app.feature.map.manager
 
-import com.vodovoz.app.common.content.ErrorState
-import com.vodovoz.app.common.content.toErrorState
+import android.location.Location
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.map.DeliveryZonesBundleResponseJsonParser.parseDeliveryZonesBundleResponse
@@ -38,8 +37,10 @@ class DeliveryZonesManager @Inject constructor(
                 val response = it.parseDeliveryZonesBundleResponse()
                 if (response is ResponseEntity.Success) {
                     val data = response.data.mapToUI()
-                    val centerPoints = data.deliveryZoneUIList.filter { it.color == CENTER_COLOR }[0].pointList
-                    val moPoints = data.deliveryZoneUIList.filter { it.color == MO_COLOR }[0].pointList
+                    val centerPoints =
+                        data.deliveryZoneUIList.filter { it.color == CENTER_COLOR }[0].pointList
+                    val moPoints =
+                        data.deliveryZoneUIList.filter { it.color == MO_COLOR }[0].pointList
                     deliveryZonesStateListener.value = DeliveryZonesState(
                         deliveryZonesBundleUI = data,
                         centerPoints = centerPoints,
@@ -55,19 +56,49 @@ class DeliveryZonesManager @Inject constructor(
             .collect()
     }
 
-    fun containsInCenterPolygon(point: Point) : Boolean{
+    fun containsInCenterPolygon(point: Point): Boolean {
         val centerPolygon = deliveryZonesStateListener.value?.centerPolygon ?: return false
         val mappedPoint = com.vodovoz.app.util.polygoncreator.Point(point.latitude, point.longitude)
         return centerPolygon.contains(mappedPoint)
     }
 
-    fun containsInMoPolygon(point: Point) : Boolean{
+    fun containsInMoPolygon(point: Point): Boolean {
         val moPolygon = deliveryZonesStateListener.value?.moPolygon ?: return false
         val mappedPoint = com.vodovoz.app.util.polygoncreator.Point(point.latitude, point.longitude)
         return moPolygon.contains(mappedPoint)
     }
 
-    private fun buildPolygon(centerPoints: List<Point>) : Polygon? {
+    fun fetchSeveralMinimalLineDistancesToMainPolygonPoints(startPoint: Point): List<Point> {
+        val sortedList = mutableListOf<LocationFloatToPoint>()
+
+        val centerPoints = deliveryZonesStateListener.value?.centerPoints ?: emptyList()
+
+        centerPoints.forEach {
+
+            val locA = Location("locationA").apply {
+                latitude = startPoint.latitude
+                longitude = startPoint.longitude
+            }
+
+            val locB = Location("locationB").apply {
+                latitude = it.latitude
+                longitude = it.longitude
+            }
+
+            val distance = locA.distanceTo(locB)
+            sortedList.add(LocationFloatToPoint(distance, it))
+        }
+
+        val newList = sortedList.sortedBy { it.distance }
+        val max = if (newList.size >= 5) {
+            5
+        } else {
+            newList.size
+        }
+        return newList.map { it.point }.subList(0, max)
+    }
+
+    private fun buildPolygon(centerPoints: List<Point>): Polygon? {
         if (centerPoints.isEmpty()) return null
 
         return Polygon.Builder()
@@ -85,6 +116,11 @@ class DeliveryZonesManager @Inject constructor(
         val centerPolygon: Polygon? = null,
         val moPoints: List<Point> = emptyList(),
         val moPolygon: Polygon? = null,
+    )
+
+    data class LocationFloatToPoint(
+        val distance: Float,
+        val point: Point
     )
 
 }

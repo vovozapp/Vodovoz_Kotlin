@@ -131,7 +131,6 @@ class MapFlowFragment : BaseFragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.firstLoadSorted()
         isEditOldAddressMode = true
     }
 

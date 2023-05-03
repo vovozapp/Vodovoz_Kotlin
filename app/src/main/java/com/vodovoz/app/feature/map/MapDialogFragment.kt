@@ -57,6 +57,7 @@ import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.Error
 import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -171,11 +172,6 @@ class MapDialogFragment : BaseFragment(),
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.firstLoadSorted()
-    }
-
     override fun onStart() {
         super.onStart()
         mapKit.onStart()
@@ -231,13 +227,6 @@ class MapDialogFragment : BaseFragment(),
                         drawDeliveryZones(data.deliveryZonesBundleUI?.deliveryZoneUIList)
                     }
 
-                    val searchText = state.data.addressUI
-                    val address = if (searchText == null) {
-                        ""
-                    } else {
-                        "${searchText.locality}, ${searchText.street}, д.${searchText.house}"
-                    }
-
                     val full = state.data.addressUI?.fullAddress?.substringAfter("Россия, ") ?: ""
                     binding.searchEdit.setText(full)
                     binding.streetNameTv.isVisible = true
@@ -249,7 +238,7 @@ class MapDialogFragment : BaseFragment(),
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.observeEvent()
                 .collect {
                     when (it) {
@@ -440,12 +429,12 @@ class MapDialogFragment : BaseFragment(),
     private fun placeMark(point: Point, resId: Int) {
         lastPlaceMark?.let {
             try {
-                mapObjects.remove(it)
+                binding.mapView.map.mapObjects.remove(it)
             } catch (_: Throwable) {
 
             }
         }
-        lastPlaceMark = mapObjects.addPlacemark(
+        lastPlaceMark = binding.mapView.map.mapObjects.addPlacemark(
             point,
             ImageProvider.fromResource(context, resId)
         )
@@ -454,13 +443,13 @@ class MapDialogFragment : BaseFragment(),
     private fun addPolyline(line: Polyline?) {
         lastPolyline?.let {
             try {
-                mapObjects.remove(it)
+                binding.mapView.map.mapObjects.remove(it)
             } catch (_: Throwable) {
 
             }
         }
         lastPolyline = if (line != null) {
-            mapObjects.addPolyline(line)
+            binding.mapView.map.mapObjects.addPolyline(line)
         } else {
             null
         }
