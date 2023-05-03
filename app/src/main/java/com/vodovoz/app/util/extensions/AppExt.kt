@@ -27,6 +27,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.viewbinding.BuildConfig
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
@@ -240,3 +243,35 @@ fun Long.millisToItemDate(): String {
     val targetFormat = SimpleDateFormat("MMM_dd_yyyy_hh_mm_a", Locale.ROOT)
     return targetFormat.format(this)
 }
+
+inline fun LifecycleOwner.whenCreated(crossinline block: () -> Unit) {
+    lifecycle.whenAtLeast(Lifecycle.State.CREATED, block)
+}
+
+inline fun LifecycleOwner.whenStarted(crossinline block: () -> Unit) {
+    lifecycle.whenAtLeast(Lifecycle.State.STARTED, block)
+}
+
+inline fun Lifecycle.whenAtLeast(state: Lifecycle.State, crossinline block: () -> Unit) {
+    if (currentState.isAtLeast(state)) {
+        block.invoke()
+    } else {
+        val observer = object : LifecycleEventObserver {
+
+            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+                when {
+                    source.lifecycle.currentState.isAtLeast(state) -> {
+                        block.invoke()
+                        removeObserver(this)
+                    }
+                    source.lifecycle.currentState == Lifecycle.State.DESTROYED -> {
+                        removeObserver(this)
+                    }
+                }
+            }
+        }
+
+        addObserver(observer)
+    }
+}
+
