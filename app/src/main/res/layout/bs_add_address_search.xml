@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--new -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    android:layout_height="wrap_content">
+
+    <com.yandex.mapkit.mapview.MapView
+        android:id="@+id/mapView"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvFullAddress"
+        style="@style/TextViewHeaderBlack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/space_16"
+        android:paddingTop="@dimen/space_16"
+        android:visibility="gone"
+        android:text="@string/new_address_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/searchContainer"
+        android:background="@drawable/bg_round_corner_gray"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginStart="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_8"
+        android:layout_marginEnd="@dimen/space_16"
+        android:layout_marginBottom="@dimen/space_8"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="@dimen/space_8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvFullAddress"
+        >
+
+        <ImageView
+            android:id="@+id/searchImage"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/ic_search"
+            app:tint="@color/text_new_black"
+            tools:ignore="ContentDescription" />
+
+        <EditText
+            android:id="@+id/searchEdit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Улица, дом"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/rotonda_normal"
+            android:paddingStart="@dimen/space_16"
+            android:paddingEnd="@dimen/space_16"
+            android:singleLine="true"
+            android:textColor="@color/blackTextDark"
+            android:textColorHint="@color/blackTextPrimary" />
+
+        <ImageView
+            android:id="@+id/clear"
+            android:visibility="gone"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/ic_close_circle"
+            app:tint="@color/text_new_black"
+            tools:ignore="ContentDescription" />
+
+    </LinearLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/searchErrorTv"
+        android:layout_marginHorizontal="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/space_8"
+        app:layout_constraintTop_toBottomOf="@+id/searchContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:text="Некорректный адрес. Укажите номер дома."
+        android:textColor="@color/red"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/addressesRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:visibility="gone"
+        android:layout_marginHorizontal="@dimen/_16sdp"
+        app:layout_constraintTop_toBottomOf="@+id/searchContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/scPersonalHouseDelivery"
+        style="@style/SwitchBlue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_32"
+        app:thumbTint="@color/switch_selector"
+        app:trackTint="@color/switch_track_selector"
+        android:text="@string/personal_house_delivery_text"
+        android:textColor="@color/text_new_black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchContainer" />
+
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/scOfficeDelivery"
+        style="@style/SwitchBlue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_16"
+        android:paddingHorizontal="@dimen/space_16"
+        app:thumbTint="@color/switch_selector"
+        app:trackTint="@color/switch_track_selector"
+        android:textColor="@color/text_new_black"
+        android:text="@string/company_office_delivery_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scPersonalHouseDelivery" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilEntrance"
+        style="@style/TextInputAddress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_16"
+        android:layout_marginEnd="@dimen/space_8"
+        android:textColorHint="@color/color_search"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toStartOf="@id/tilFloor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scOfficeDelivery">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEntrance"
+            style="@style/EditTextViewNormalGray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/entrance_hint_text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilFloor"
+        style="@style/TextInputAddress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_8"
+        android:layout_marginTop="@dimen/space_16"
+        android:layout_marginEnd="@dimen/space_8"
+        android:textColorHint="@color/color_search"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toStartOf="@+id/tilFlat"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toEndOf="@+id/tilEntrance"
+        app:layout_constraintTop_toBottomOf="@id/scOfficeDelivery">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etFloor"
+            style="@style/EditTextViewNormalGray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/floor_hint_text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilFlat"
+        style="@style/TextInputAddress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_8"
+        android:layout_marginTop="@dimen/space_16"
+        android:layout_marginEnd="@dimen/space_16"
+        android:textColorHint="@color/color_search"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tilFloor"
+        app:layout_constraintTop_toBottomOf="@id/scOfficeDelivery">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etFlat"
+            style="@style/EditTextViewNormalGray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/flat_hint_text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilComment"
+        style="@style/TextInputAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_16"
+        android:layout_marginEnd="@dimen/space_16"
+        android:textColorHint="@color/color_search"
+        app:errorEnabled="true"
+        app:layout_constraintTop_toBottomOf="@+id/tilEntrance">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etComment"
+            style="@style/EditTextViewNormalGray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/courier_comment_hint_text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnAdd"
+        style="@style/BlueButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_normal_height"
+        android:layout_marginStart="@dimen/space_16"
+        android:layout_marginEnd="@dimen/space_16"
+        android:text="@string/submit_address_btn_text"
+        app:layout_constraintBottom_toTopOf="@id/cancel"
+        app:layout_constraintTop_toBottomOf="@+id/tilComment" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/cancel"
+        style="@style/TextViewHeaderBlack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/space_16"
+        android:layout_marginBottom="@dimen/space_16"
+        android:textSize="16sp"
+        android:textColor="@color/bluePrimary"
+        android:text="Отмена"
+        app:layout_constraintTop_toBottomOf="@id/btnAdd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

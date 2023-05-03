@@ -27,9 +27,9 @@ class AddAddressFlowViewModel @Inject constructor(
     private val savedState: SavedStateHandle,
     private val repository: MainRepository,
     private val accountManager: AccountManager
-) : PagingContractViewModel<AddAddressFlowViewModel.AddAddressState, AddAddressFlowViewModel.AddAddressEvents>(AddAddressState()){
-
-    private val addressUi = savedState.get<AddressUI>("address")
+) : PagingContractViewModel<AddAddressFlowViewModel.AddAddressState, AddAddressFlowViewModel.AddAddressEvents>(
+    AddAddressState(item = savedState.get<AddressUI>("address"))
+){
 
     fun action(
         locality: String?,
@@ -39,14 +39,15 @@ class AddAddressFlowViewModel @Inject constructor(
         floor: String?,
         office: String?,
         comment: String?,
-        type: Int?,
-        lat: String,
-        longitude: String,
-        length: String,
-        fullAddress: String
+        type: Int?
     ) {
         val userId = accountManager.fetchAccountId() ?: return
-        val addressId = addressUi?.id
+        val addressId = state.data.item?.id
+
+        val lat = state.data.item?.latitude ?: ""
+        val longitude = state.data.item?.longitude ?: ""
+        val length = state.data.item?.length ?: ""
+        val fullAddress = state.data.item?.fullAddress?.substringAfter("Россия, ") ?: ""
 
         if (addressId == null || addressId == 0L) {
             addAddress(locality, street, house, entrance, floor, office, comment, type, userId, lat, longitude, length, fullAddress)
@@ -184,6 +185,6 @@ class AddAddressFlowViewModel @Inject constructor(
     }
 
     data class AddAddressState(
-        val item: Item? = null
+        val item: AddressUI? = null
     ) : State
 }

@@ -22,6 +22,7 @@ import com.vodovoz.app.data.config.AddressConfig
 import com.vodovoz.app.databinding.BsAddAddressBinding
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
+import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
@@ -42,8 +43,6 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
 
     private val viewModel: AddAddressFlowViewModel by viewModels()
 
-    private val args: AddAddressBottomFragmentArgs by navArgs()
-
     @Inject
     lateinit var tabManager: TabManager
 
@@ -55,16 +54,15 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
         observeEvents()
         initButtons()
         bindTextWatchers()
-        initUi()
     }
 
-    private fun initUi() {
-        val address = args.address ?: return
-        binding.etLocality.setText(address.locality ?: "")
-        binding.etStreet.setText(address.street ?: "")
-        binding.etHouse.setText(address.house ?: "")
+    private fun buildAddressFields(address: AddressUI?) {
+        if (address == null) return
+        binding.etLocality.setText(address.locality)
+        binding.etStreet.setText(address.street)
+        binding.etHouse.setText(address.house)
         binding.tvFullAddress.isVisible = address.fullAddress.isNotBlank()
-        binding.tvFullAddress.text = address.fullAddress ?: ""
+        binding.tvFullAddress.text = address.fullAddress.substringAfter("Россия, ") ?: ""
     }
 
     private fun initButtons() {
@@ -82,12 +80,6 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
             val office = binding.tilFlat.textOrError(FieldValidationsSettings.OFFICE_LENGTH) ?: return@setOnClickListener
             val comment = binding.etComment.text.toString()
 
-            val address = args.address
-            val lat = address?.latitude ?: ""
-            val longitude = address?.longitude ?: ""
-            val length = address?.length ?: ""
-            val fullAddress = address?.fullAddress?.substringAfter("Россия, ") ?: ""
-
             viewModel.action(
                 locality = locality,
                 street = street,
@@ -96,11 +88,7 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
                 floor = floor,
                 office = office,
                 comment = comment,
-                type = type,
-                lat = lat,
-                longitude = longitude,
-                length = length,
-                fullAddress = fullAddress
+                type = type
             )
 
         }
@@ -141,6 +129,8 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
                     } else {
                         hideLoader()
                     }
+
+                    buildAddressFields(state.data.item)
 
                     showError(state.error)
                 }
