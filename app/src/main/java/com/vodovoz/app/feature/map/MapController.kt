@@ -32,6 +32,7 @@ import com.vodovoz.app.feature.map.adapter.AddressResult
 import com.vodovoz.app.feature.map.adapter.AddressResultClickListener
 import com.vodovoz.app.feature.map.adapter.AddressResultFlowAdapter
 import com.vodovoz.app.ui.extensions.ColorExtensions.getColorWithAlpha
+import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.ui.model.DeliveryZoneUI
 import com.vodovoz.app.util.extensions.whenCreated
 import com.vodovoz.app.util.extensions.whenStarted
@@ -55,29 +56,17 @@ import com.yandex.runtime.image.ImageProvider
 import java.util.ArrayList
 
 class MapController(
-    private val mapView: MapView,
-    private val searchEditText: EditText,
-    private val lifecycleOwner: LifecycleOwner,
+    private val mapKit: MapKit,
+    private val addressResultClickListener: AddressResultClickListener,
+    private val userLocationLayer: UserLocationLayer,
     private val viewModel: MapFlowViewModel,
     private val context: Context,
     private val activity: FragmentActivity,
     private val showContainer: (Boolean) -> Unit
-): InputListener,
+) : InputListener,
     UserLocationObjectListener,
     SuggestSession.SuggestListener,
-    DrivingSession.DrivingRouteListener  {
-
-    init {
-        lifecycleOwner.whenCreated {
-            mapView.onStop()
-            mapKit.onStop()
-        }
-
-        lifecycleOwner.whenStarted {
-            mapKit.onStart()
-            mapView.onStart()
-        }
-    }
+    DrivingSession.DrivingRouteListener {
 
     private val locationManager by lazy {
         context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
@@ -91,13 +80,6 @@ class MapController(
         LocationServices.getFusedLocationProviderClient(activity)
     }
 
-    private val userLocationLayer: UserLocationLayer by lazy {
-        mapKit.createUserLocationLayer(mapView.mapWindow)
-    }
-    private val mapKit: MapKit by lazy {
-        MapKitFactory.getInstance()
-    }
-
     private val searchManager: SearchManager by lazy {
         SearchFactory.getInstance().createSearchManager(SearchManagerType.COMBINED)
     }
@@ -105,16 +87,7 @@ class MapController(
         searchManager.createSuggestSession()
     }
 
-    private val addressesResultAdapter = AddressResultFlowAdapter(
-        object : AddressResultClickListener {
-            override fun onAddressClick(address: AddressResult) {
-                searchEditText.setText(address.text)
-
-                search(address.text)
-            }
-
-        }
-    )
+    private val addressesResultAdapter = AddressResultFlowAdapter(addressResultClickListener)
 
     private val center = Point(55.75, 37.62)
     private val boxSize = 0.2
@@ -140,12 +113,21 @@ class MapController(
         DirectionsFactory.getInstance().createDrivingRouter()
     }
 
-    private fun initMap(
+    private lateinit var mapView: MapView
+
+    /**
+     * init MAP, init map buttons
+     */
+
+    fun initMap(
+        mapView: MapView,
         plusFrame: FrameLayout,
         minusFrame: FrameLayout,
         infoFrame: FrameLayout,
-        geoFrame: FrameLayout,
-        ) {
+        geoFrame: FrameLayout
+    ) {
+        this.mapView = mapView
+
         mapView.map.addInputListener(this)
         userLocationLayer.isVisible = true
         userLocationLayer.isHeadingEnabled = true
@@ -190,7 +172,11 @@ class MapController(
             }
         }
     }
+    /*************************/
 
+    /**
+     * Camera move
+     */
     private fun moveToLastLocation() {
         if (ActivityCompat.checkSelfPermission(
                 context,
@@ -240,22 +226,62 @@ class MapController(
             )
         }
     }
+    /*************************/
 
-    private fun drawDeliveryZones(deliveryZoneUIList: List<DeliveryZoneUI>?) {
-        if (deliveryZoneUIList == null) return
+    /**
+     * init SEARCH
+     */
 
-        deliveryZoneUIList.forEach { deliveryZoneUI ->
-            val zone = mapView.map.mapObjects.addPolygon(
-                Polygon(LinearRing(deliveryZoneUI.pointList), ArrayList())
-            )
-            zone.fillColor = Color.parseColor(deliveryZoneUI.color).getColorWithAlpha(0.4f)
-            zone.strokeWidth = 0.0f
-            zone.zIndex = 100.0f
+    fun initSearch(
+        addAddress: TextView,
+        searchEditText: EditText,
+        searchContainer: LinearLayout,
+        searchImage: ImageView,
+        clear: ImageView
+    ) {
+
+        addAddress.setOnClickListener {
+            viewModel.showAddAddressBottomDialog()
         }
-        viewModel.updateZones(true)
+
+        searchEditText.addTextChangedListener(
+            object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+                override fun afterTextChanged(query: Editable?) {
+                    searchAddresses(query.toString())
+                }
+            }
+        )
+
+        searchContainer.setOnClickListener {
+            isShowSearchResult = true
+            showContainer(true)
+        }
+        searchEditText.setOnFocusChangeListener { _, isFocus ->
+            if (isFocus) {
+                isShowSearchResult = true
+                showContainer(true)
+            }
+        }
+        searchImage.setOnClickListener {
+            if (isShowSearchResult) {
+                searchEditText.text = null
+                isShowSearchResult = false
+                showContainer(false)
+            } else {
+                isShowSearchResult = true
+                showContainer(true)
+            }
+        }
+
+        clear.setOnClickListener {
+            searchEditText.text = null
+            clear.isVisible = false
+        }
     }
 
-    private fun search(text: String) {
+    fun search(text: String) {
         viewModel.clear()
         searchManager.submit(
             text,
@@ -274,7 +300,8 @@ class MapController(
                     distanceToRouteMap.clear()
                     viewModel.fetchSeveralMinimalLineDistancesToMainPolygonPoints(point)
                     placeMark(point, com.vodovoz.app.R.drawable.png_map_marker)
-                    showContainer.invoke(false)
+                    isShowSearchResult = false
+                    showContainer(false)
                 }
 
                 override fun onSearchError(p0: Error) {
@@ -283,6 +310,11 @@ class MapController(
             }
         )
     }
+    /*************************/
+
+    /**
+     * add map objects -> UserLocationObjectListener
+     */
 
     private fun placeMark(point: Point, resId: Int) {
         lastPlaceMark?.let {
@@ -298,7 +330,7 @@ class MapController(
         )
     }
 
-    private fun addPolyline(line: Polyline?) {
+    fun addPolyline(line: Polyline?) {
         lastPolyline?.let {
             try {
                 mapView.map.mapObjects.remove(it)
@@ -313,55 +345,11 @@ class MapController(
         }
     }
 
-    fun initSearch(
-        addAddress: TextView,
-        searchEditText: EditText,
-        searchContainer: LinearLayout,
-        searchImage: ImageView,
-        clear: ImageView
-        ) {
+    /*************************/
 
-        addAddress.setOnClickListener {
-            viewModel.showAddAddressBottomDialog()
-        }
-
-        searchEditText.addTextChangedListener(
-            object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun afterTextChanged(query: Editable?) {
-                    searchAddresses(query.toString())
-                }
-            }
-        )
-
-        searchContainer.setOnClickListener { showContainer(true) }
-        searchEditText.setOnFocusChangeListener { _, isFocus ->
-            if (isFocus) showContainer(true)
-        }
-        searchImage.setOnClickListener {
-            if (isShowSearchResult) {
-                searchEditText.text = null
-                showContainer(false)
-            } else {
-                showContainer(true)
-            }
-        }
-
-        clear.setOnClickListener {
-            searchEditText.text = null
-            clear.isVisible = false
-        }
-    }
-
-    private fun searchAddresses(query: String) {
-        suggestSession.suggest(query, boundingBox, searchOptions, this)
-    }
-
-    private fun detectGps(): Boolean {
-        val manager = locationManager ?: return false
-        return manager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-    }
+    /**
+     * InputListener
+     */
 
     override fun onMapTap(p0: Map, p1: Point) {
         onMapClick(p1)
@@ -382,6 +370,11 @@ class MapController(
         distanceToRouteMap.clear()
         viewModel.fetchSeveralMinimalLineDistancesToMainPolygonPoints(point)
     }
+    /*************************/
+
+    /**
+     * UserLocationObjectListener
+     */
 
     override fun onObjectAdded(userLocationView: UserLocationView) {
         userLocationView.arrow.setIcon(
@@ -418,6 +411,27 @@ class MapController(
 
     override fun onObjectUpdated(p0: UserLocationView, p1: ObjectEvent) {}
 
+    /**
+     * SuggestListener
+     */
+
+    fun initAddressesRecycler(addressesRecycler: RecyclerView) {
+        with(addressesRecycler) {
+            layoutManager = LinearLayoutManager(context)
+            adapter = addressesResultAdapter
+            addItemDecoration(
+                DividerItemDecoration(
+                    context,
+                    DividerItemDecoration.VERTICAL
+                )
+            )
+        }
+    }
+
+    private fun searchAddresses(query: String) {
+        suggestSession.suggest(query, boundingBox, searchOptions, this)
+    }
+
     override fun onResponse(p0: MutableList<SuggestItem>) {
         val addressList = mutableListOf<AddressResult>()
         for (item in p0) {
@@ -439,6 +453,10 @@ class MapController(
 
     override fun onError(p0: Error) {}
 
+    /**
+     * DrivingRouteListener
+     */
+
     override fun onDrivingRoutes(p0: MutableList<DrivingRoute>) {
         for (route in p0) {
             distanceToRouteMap[initRouteLength(route.geometry.points)] = route
@@ -459,7 +477,7 @@ class MapController(
 
     override fun onDrivingRoutesError(p0: Error) {}
 
-    private fun submitRequest(start: Point, end: Point) {
+    fun submitRequest(start: Point, end: Point) {
         val drivingOptions = DrivingOptions()
         val vehicleOptions = VehicleOptions().apply {
 
@@ -493,16 +511,40 @@ class MapController(
         return dis
     }
 
-    private fun initAddressesRecycler(addressesRecycler: RecyclerView) {
-        addressesRecycler.layoutManager = LinearLayoutManager(context)
-        addressesRecycler.adapter = addressesResultAdapter
-        addressesRecycler.addItemDecoration(
-            DividerItemDecoration(
-                context,
-                DividerItemDecoration.VERTICAL
-            )
-        )
+    /*************************/
+
+    fun onStart(address: AddressUI?) {
+        if (address == null) {
+            if (detectGps()) {
+                locationController.methodRequiresTwoPermission(activity) {
+                    moveToLastLocation()
+                }
+            } else {
+                viewModel.changeAddress()
+                moveCamera(center)
+            }
+        } else {
+            search(address.fullAddress)
+        }
     }
 
+    fun drawDeliveryZones(deliveryZoneUIList: List<DeliveryZoneUI>?) {
+        if (deliveryZoneUIList == null) return
+
+        deliveryZoneUIList.forEach { deliveryZoneUI ->
+            val zone = mapView.map.mapObjects.addPolygon(
+                Polygon(LinearRing(deliveryZoneUI.pointList), ArrayList())
+            )
+            zone.fillColor = Color.parseColor(deliveryZoneUI.color).getColorWithAlpha(0.4f)
+            zone.strokeWidth = 0.0f
+            zone.zIndex = 100.0f
+        }
+        viewModel.updateZones(true)
+    }
+
+    private fun detectGps(): Boolean {
+        val manager = locationManager ?: return false
+        return manager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
 
 }
