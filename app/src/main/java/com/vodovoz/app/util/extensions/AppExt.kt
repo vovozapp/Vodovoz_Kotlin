@@ -16,6 +16,7 @@ import android.text.style.ClickableSpan
 import android.util.Base64
 import android.view.ContextThemeWrapper
 import android.view.View
+import android.widget.EditText
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
@@ -272,6 +273,17 @@ inline fun Lifecycle.whenAtLeast(state: Lifecycle.State, crossinline block: () -
         }
 
         addObserver(observer)
+    }
+}
+
+fun EditText.updateText(text: String) {
+    val focussed = hasFocus()
+    if (focussed) {
+        clearFocus()
+    }
+    setText(text)
+    if (focussed) {
+        requestFocus()
     }
 }
 

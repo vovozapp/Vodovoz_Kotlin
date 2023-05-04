@@ -168,6 +168,7 @@ class MapDialogFragment : BaseFragment() {
                                 requireActivity().snack(it.message)
                             }
                         }
+                        else -> {}
                     }
                 }
         }

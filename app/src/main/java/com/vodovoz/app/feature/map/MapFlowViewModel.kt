@@ -2,10 +2,14 @@ package com.vodovoz.app.feature.map
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.*
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.response.map.AddAddressResponseJsonParser.parseAddAddressResponse
 import com.vodovoz.app.data.parser.response.map.AddressByGeocodeResponseJsonParser.parseAddressByGeocodeResponse
+import com.vodovoz.app.data.parser.response.map.UpdateAddressResponseJsonParser.parseUpdateAddressResponse
+import com.vodovoz.app.feature.addresses.add.AddAddressFlowViewModel
 import com.vodovoz.app.feature.map.manager.DeliveryZonesManager
 import com.vodovoz.app.mapper.AddressMapper.mapToUI
 import com.vodovoz.app.ui.model.AddressUI
@@ -25,7 +29,8 @@ import kotlin.math.roundToInt
 class MapFlowViewModel @Inject constructor(
     savedState: SavedStateHandle,
     private val repository: MainRepository,
-    private val deliveryZonesManager: DeliveryZonesManager
+    private val deliveryZonesManager: DeliveryZonesManager,
+    private val accountManager: AccountManager
 ) : PagingContractViewModel<MapFlowViewModel.MapFlowState, MapFlowViewModel.MapFlowEvents>(
     MapFlowState(addressUI = savedState.get<AddressUI>("address"))
 ) {
@@ -131,10 +136,17 @@ class MapFlowViewModel @Inject constructor(
         length: String,
         distance: Double
     ) {
+        val mappedAddress = state.data.addressUI?.copy(
+            latitude = latitude,
+            longitude = longitude,
+            length = length
+        )
         uiStateListener.value = state.copy(
+
             data = state.data.copy(
                 savedPointData = SavedPointData(latitude, longitude, length),
-                distance = distance
+                distance = distance,
+                addressUI = mappedAddress
             )
         )
     }
@@ -192,6 +204,160 @@ class MapFlowViewModel @Inject constructor(
         )
     }
 
+    fun action(
+        entrance: String?,
+        floor: String?,
+        office: String?,
+        comment: String?,
+        type: Int?
+    ) {
+        val userId = accountManager.fetchAccountId() ?: return
+        val addressId = state.data.addressUI?.id
+
+        val locality = state.data.addressUI?.locality
+        val street = state.data.addressUI?.street
+        val house = state.data.addressUI?.house
+        val lat = state.data.addressUI?.latitude
+        val longitude = state.data.addressUI?.longitude
+        val length = state.data.addressUI?.length
+        val fullAddress = state.data.addressUI?.fullAddress?.substringAfter("Россия, ")
+
+        if (house.isNullOrEmpty() || lat.isNullOrEmpty() || longitude.isNullOrEmpty() || length.isNullOrEmpty() || fullAddress.isNullOrEmpty()) {
+            viewModelScope.launch {
+                eventListener.emit(MapFlowEvents.ShowSearchError)
+            }
+            return
+        }
+
+        if (addressId == null || addressId == 0L) {
+            addAddress(locality, street, house, entrance, floor, office, comment, type, userId, lat, longitude, length, fullAddress)
+        } else {
+            updateAddress(locality, street, house, entrance, floor, office, comment, type, userId, addressId, lat, longitude, length, fullAddress)
+        }
+    }
+
+    private fun addAddress(
+        locality: String?,
+        street: String?,
+        house: String?,
+        entrance: String?,
+        floor: String?,
+        office: String?,
+        comment: String?,
+        type: Int?,
+        userId: Long,
+        lat: String,
+        longitude: String,
+        length: String,
+        fullAddress: String
+    ) {
+        uiStateListener.value = state.copy(loadingPage = true)
+
+        viewModelScope.launch {
+            flow {
+                emit(
+                    repository.addAddress(
+                        locality = locality,
+                        street = street,
+                        house = house,
+                        entrance = entrance,
+                        floor = floor,
+                        office = office,
+                        comment = comment,
+                        type = type,
+                        userId = userId,
+                        lat = lat,
+                        longitude = longitude,
+                        length = length,
+                        fullAddress = fullAddress
+                    )
+                )
+            }
+                .catch {
+                    debugLog { "add address error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
+                .flowOn(Dispatchers.IO)
+                .onEach {
+                    val response = it.parseAddAddressResponse()
+                    uiStateListener.value = state.copy(
+                        loadingPage = false,
+                        error = null
+                    )
+                    when (response) {
+                        is ResponseEntity.Success -> eventListener.emit(MapFlowEvents.AddAddressSuccess)
+                        is ResponseEntity.Error -> eventListener.emit(MapFlowEvents.AddAddressError(response.errorMessage))
+                        is ResponseEntity.Hide -> eventListener.emit(MapFlowEvents.AddAddressError("Неизвестная ошибка"))
+                    }
+                }
+                .flowOn(Dispatchers.Default)
+                .collect()
+        }
+    }
+
+    private fun updateAddress(
+        locality: String?,
+        street: String?,
+        house: String?,
+        entrance: String?,
+        floor: String?,
+        office: String?,
+        comment: String?,
+        type: Int?,
+        userId: Long,
+        addressId: Long,
+        lat: String,
+        longitude: String,
+        length: String,
+        fullAddress: String
+    ) {
+        uiStateListener.value = state.copy(loadingPage = true)
+
+        viewModelScope.launch {
+            flow {
+                emit(
+                    repository.updateAddress(
+                        locality = locality,
+                        street = street,
+                        house = house,
+                        entrance = entrance,
+                        floor = floor,
+                        office = office,
+                        comment = comment,
+                        type = type,
+                        userId = userId,
+                        addressId = addressId,
+                        lat = lat,
+                        longitude = longitude,
+                        length = length,
+                        fullAddress = fullAddress
+                    )
+                )
+            }
+                .catch {
+                    debugLog { "update address error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
+                .flowOn(Dispatchers.IO)
+                .onEach {
+                    val response = it.parseUpdateAddressResponse()
+                    uiStateListener.value = state.copy(
+                        loadingPage = false,
+                        error = null
+                    )
+                    when (response) {
+                        is ResponseEntity.Success -> eventListener.emit(MapFlowEvents.AddAddressSuccess)
+                        is ResponseEntity.Error -> eventListener.emit(MapFlowEvents.AddAddressError(response.errorMessage))
+                        is ResponseEntity.Hide -> eventListener.emit(MapFlowEvents.AddAddressError("Неизвестная ошибка"))
+                    }
+                }
+                .flowOn(Dispatchers.Default)
+                .collect()
+        }
+    }
+
     data class SavedPointData(
         val latitude: String,
         val longitude: String,
@@ -214,5 +380,8 @@ class MapFlowViewModel @Inject constructor(
         data class ShowInfoDialog(val url: String?): MapFlowEvents()
         data class ShowAlert(val response: ResponseBody) : MapFlowEvents()
         data class ShowPolyline(val polyline: Polyline? = null, val message: String? = null) : MapFlowEvents()
+        object AddAddressSuccess : MapFlowEvents()
+        data class AddAddressError(val message: String) : MapFlowEvents()
+        object ShowSearchError : MapFlowEvents()
     }
 }

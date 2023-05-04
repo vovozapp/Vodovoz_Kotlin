@@ -10,6 +10,7 @@ import android.location.LocationManager
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -121,10 +122,10 @@ class MapController(
 
     fun initMap(
         mapView: MapView,
-        plusFrame: FrameLayout,
-        minusFrame: FrameLayout,
-        infoFrame: FrameLayout,
-        geoFrame: FrameLayout
+        plusFrame: FrameLayout? = null,
+        minusFrame: FrameLayout? = null,
+        infoFrame: FrameLayout? = null,
+        geoFrame: FrameLayout? = null
     ) {
         this.mapView = mapView
 
@@ -138,19 +139,19 @@ class MapController(
             override fun onLocationStatusUpdated(p0: LocationStatus) {}
         })
 
-        plusFrame.setOnClickListener {
+        plusFrame?.setOnClickListener {
             moveCameraPlus()
         }
 
-        minusFrame.setOnClickListener {
+        minusFrame?.setOnClickListener {
             moveCameraMinus()
         }
 
-        infoFrame.setOnClickListener {
+        infoFrame?.setOnClickListener {
             viewModel.showInfoDialog()
         }
 
-        geoFrame.setOnClickListener {
+        geoFrame?.setOnClickListener {
 
             if (!detectGps()) {
                 MaterialAlertDialogBuilder(context).apply {
@@ -233,14 +234,17 @@ class MapController(
      */
 
     fun initSearch(
-        addAddress: TextView,
+        addAddress: TextView? = null,
         searchEditText: EditText,
         searchContainer: LinearLayout,
         searchImage: ImageView,
-        clear: ImageView
+        clear: ImageView,
+        fullAddressTextView: TextView? = null,
+        searchErrorTv: TextView? = null,
+        addressesRecycler: RecyclerView? = null
     ) {
 
-        addAddress.setOnClickListener {
+        addAddress?.setOnClickListener {
             viewModel.showAddAddressBottomDialog()
         }
 
@@ -249,7 +253,10 @@ class MapController(
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                 override fun afterTextChanged(query: Editable?) {
-                    searchAddresses(query.toString())
+                    if (searchEditText.hasFocus()) {
+                        addressesRecycler?.isVisible = true
+                        searchAddresses(query.toString())
+                    }
                 }
             }
         )
@@ -278,6 +285,11 @@ class MapController(
         clear.setOnClickListener {
             searchEditText.text = null
             clear.isVisible = false
+            searchErrorTv?.isVisible = false
+            addressesResultAdapter.submitList(emptyList())
+            addressesRecycler?.isVisible = false
+            fullAddressTextView?.text = null
+            fullAddressTextView?.visibility = View.INVISIBLE
         }
     }
 
@@ -448,7 +460,7 @@ class MapController(
                 )
             }
         }
-        addressesResultAdapter.submitList(addressList)
+        addressesResultAdapter.submitList(addressList, "")
     }
 
     override fun onError(p0: Error) {}
