@@ -33,108 +33,29 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <!-- Catalog -->
                 <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/catalog"
-                    android:scheme="@string/new_app_ssl" />
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/catalog"
-                    android:scheme="@string/new_app_ssl_not" />
-                <!-- Action -->
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/action"
-                    android:scheme="@string/new_app_ssl" />
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/action"
-                    android:scheme="@string/new_app_ssl_not" />
-                <!-- Brand -->
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/brand"
-                    android:scheme="@string/new_app_ssl" />
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/brand"
-                    android:scheme="@string/new_app_ssl_not" />
-
-                <!-- mobile_app -->
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/mobile_app"
-                    android:scheme="@string/new_app_ssl" />
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/mobile_app"
-                    android:scheme="@string/new_app_ssl_not" />
-                <!-- About -->
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/about"
-                    android:scheme="@string/new_app_ssl" />
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/about"
-                    android:scheme="@string/new_app_ssl_not" />
-
-                <!-- dostavka -->
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/dostavka"
-                    android:scheme="@string/new_app_ssl" />
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/dostavka"
-                    android:scheme="@string/new_app_ssl_not" />
-                <!-- service - услуги -->
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/service"
-                    android:scheme="@string/new_app_ssl" />
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/service"
-                    android:scheme="@string/new_app_ssl_not" />
-
-                <!-- санитарная обработка -->
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/remont_kulerov"
-                    android:scheme="@string/new_app_ssl" />
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/remont_kulerov"
-                    android:scheme="@string/new_app_ssl_not" />
-
-                <!-- feedback - связаться с нами -->
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/feedback"
-                    android:scheme="@string/new_app_ssl" />
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/feedback"
-                    android:scheme="@string/new_app_ssl_not" />
-                <!-- Glavnee -->
-
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/gl"
-                    android:scheme="@string/new_app_ssl" />
-                <data
-                    android:host="@string/new_app"
-                    android:pathPrefix="/gl"
-                    android:scheme="@string/new_app_ssl_not" />
+                    android:scheme="@string/new_app_ssl_not"
+                    android:host="@string/new_app" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="@string/new_app_ssl"
+                    android:host="@string/new_app" />
+            </intent-filter>
+
         </activity>
     </application>
 
