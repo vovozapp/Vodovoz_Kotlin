@@ -322,6 +322,29 @@ class MapController(
             }
         )
     }
+
+    fun searchForUpdate(address: AddressUI) {
+        viewModel.clear()
+        searchManager.submit(
+            address.fullAddress,
+            VisibleRegionUtils.toPolygon(mapView.map.visibleRegion),
+            SearchOptions(),
+            object : Session.SearchListener {
+                override fun onSearchResponse(p0: Response) {
+
+                    val point = Point(
+                        p0.collection.children[0].obj?.geometry?.get(0)?.point?.latitude!!,
+                        p0.collection.children[0].obj?.geometry?.get(0)?.point?.longitude!!
+                    )
+
+                    distanceToRouteMap.clear()
+                    viewModel.fetchSeveralMinimalLineDistancesToMainPolygonPoints(point, address)
+                }
+
+                override fun onSearchError(p0: Error) {}
+            }
+        )
+    }
     /*************************/
 
     /**

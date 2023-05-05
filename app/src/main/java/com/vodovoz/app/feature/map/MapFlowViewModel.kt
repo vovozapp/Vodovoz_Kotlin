@@ -117,9 +117,10 @@ class MapFlowViewModel @Inject constructor(
         }
     }
 
-    fun fetchSeveralMinimalLineDistancesToMainPolygonPoints(startPoint: Point) {
+    fun fetchSeveralMinimalLineDistancesToMainPolygonPoints(startPoint: Point, pendingUpdateAddressUI: AddressUI? = null) {
         viewModelScope.launch {
             val listOnPoints = deliveryZonesManager.fetchSeveralMinimalLineDistancesToMainPolygonPoints(startPoint)
+            uiStateListener.value = state.copy(data = state.data.copy(pendingUpdateAddressUI = pendingUpdateAddressUI))
             eventListener.emit(MapFlowEvents.Submit(startPoint, listOnPoints))
         }
     }
@@ -371,6 +372,7 @@ class MapFlowViewModel @Inject constructor(
         val savedPointData: SavedPointData? = null,
         val polyline: Polyline? = null,
         val distance: Double? = null,
+        val pendingUpdateAddressUI: AddressUI? = null
     ) : State
 
     sealed class MapFlowEvents : Event {
