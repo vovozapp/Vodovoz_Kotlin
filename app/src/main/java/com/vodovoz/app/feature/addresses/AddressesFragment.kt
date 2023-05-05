@@ -110,6 +110,9 @@ class AddressesFragment : BaseFragment() {
                                 SELECTED_ADDRESS, it.address)
                             findNavController().popBackStack(R.id.orderingFragment, false)
                         }
+                        is AddressesFlowViewModel.AddressesEvents.UpdateAddress -> {
+
+                        }
                     }
                 }
         }

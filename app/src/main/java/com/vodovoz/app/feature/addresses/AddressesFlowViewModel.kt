@@ -164,7 +164,7 @@ class AddressesFlowViewModel @Inject constructor(
             if (address.length.isNotEmpty()) {
                 eventListener.emit(AddressesEvents.OnAddressClick(address))
             } else {
-                //todo update address
+                eventListener.emit(AddressesEvents.UpdateAddress(address))
             }
         }
     }
@@ -172,6 +172,7 @@ class AddressesFlowViewModel @Inject constructor(
     sealed class AddressesEvents : Event {
         data class DeleteEvent(val message: String) : AddressesEvents()
         data class OnAddressClick(val address: AddressUI) : AddressesEvents()
+        data class UpdateAddress(val address: AddressUI) : AddressesEvents()
     }
 
     data class AddressesState(
