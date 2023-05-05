@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.addresses
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -151,8 +152,27 @@ class AddressesFragment : BaseFragment() {
                             findNavController().popBackStack(R.id.orderingFragment, false)
                         }
                         is AddressesFlowViewModel.AddressesEvents.UpdateAddress -> {
-                            //mapController.searchForUpdate(it.address)
+                         //   mapController.searchForUpdate(it.address)
                         }
+                    }
+                }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            mapViewModel.observeEvent()
+                .collect {
+                    when(it) {
+                        is MapFlowViewModel.MapFlowEvents.Submit -> {
+                            it.list.forEach { point ->
+                                mapController.submitRequest(point, it.startPoint)
+                            }
+                        }
+                        is MapFlowViewModel.MapFlowEvents.UpdatePendingAddressUISuccess -> {
+                            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                                SELECTED_ADDRESS, it.address)
+                            findNavController().popBackStack(R.id.orderingFragment, false)
+                        }
+                        else -> {}
                     }
                 }
         }

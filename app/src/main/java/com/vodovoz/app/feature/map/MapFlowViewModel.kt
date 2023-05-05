@@ -349,7 +349,19 @@ class MapFlowViewModel @Inject constructor(
                         error = null
                     )
                     when (response) {
-                        is ResponseEntity.Success -> eventListener.emit(MapFlowEvents.AddAddressSuccess)
+                        is ResponseEntity.Success -> {
+                            val pendingUpdateAddressUi = state.data.pendingUpdateAddressUI
+                            if (pendingUpdateAddressUi == null) {
+                                eventListener.emit(MapFlowEvents.AddAddressSuccess)
+                            } else {
+                                eventListener.emit(MapFlowEvents.UpdatePendingAddressUISuccess(pendingUpdateAddressUi))
+                                uiStateListener.value = state.copy(
+                                    data = state.data.copy(
+                                        pendingUpdateAddressUI = null
+                                    )
+                                )
+                            }
+                        }
                         is ResponseEntity.Error -> eventListener.emit(MapFlowEvents.AddAddressError(response.errorMessage))
                         is ResponseEntity.Hide -> eventListener.emit(MapFlowEvents.AddAddressError("Неизвестная ошибка"))
                     }
@@ -357,6 +369,28 @@ class MapFlowViewModel @Inject constructor(
                 .flowOn(Dispatchers.Default)
                 .collect()
         }
+    }
+
+    private fun updatePendingAddress(
+        address: AddressUI,
+        latitude: String,
+        longitude: String,
+        length: String,
+    ) {
+        val mappedAddress = address.copy(
+            latitude = latitude,
+            longitude = longitude,
+            length = length
+        )
+
+        action(
+            entrance = mappedAddress.entrance,
+            floor = mappedAddress.floor,
+            office = mappedAddress.flat,
+            comment = mappedAddress.comment,
+            type = mappedAddress.type
+        )
+
     }
 
     data class SavedPointData(
@@ -384,6 +418,7 @@ class MapFlowViewModel @Inject constructor(
         data class ShowPolyline(val polyline: Polyline? = null, val message: String? = null) : MapFlowEvents()
         object AddAddressSuccess : MapFlowEvents()
         data class AddAddressError(val message: String) : MapFlowEvents()
+        data class UpdatePendingAddressUISuccess(val address: AddressUI) : MapFlowEvents()
         object ShowSearchError : MapFlowEvents()
     }
 }
