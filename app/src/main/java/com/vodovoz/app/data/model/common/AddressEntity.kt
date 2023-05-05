@@ -13,5 +13,7 @@ class AddressEntity(
     val entrance: String = "",
     val floor: String = "",
     val flat: String = "",
-    val comment: String = ""
+    val comment: String = "",
+    val length: String = "",
+    val coordinates: String = ""
 )

@@ -40,7 +40,9 @@ object FetchAddressesSavedResponseJsonParser {
             entrance = propsList.find { it.first == "POD" || it.first == "F_POD"  }?.second?: "",
             floor = propsList.find { it.first == "ETAJ" || it.first == "F_ETAJ"  }?.second?: "",
             flat = propsList.find { it.first == "KV" || it.first == "F_OFIS" }?.second?: "",
-            comment = propsList.find { it.first == "KOMENT" || it.first == "F_KOMENT" }?.second?: ""
+            comment = propsList.find { it.first == "KOMENT" || it.first == "F_KOMENT" }?.second?: "",
+            length = propsList.find {it.first == "UF_SEMAP_LEN_KM"}?.second?: "",
+            coordinates = propsList.find {it.first == "KOORDINAT_TOCHKI"}?.second?: "",
         )
     }
 

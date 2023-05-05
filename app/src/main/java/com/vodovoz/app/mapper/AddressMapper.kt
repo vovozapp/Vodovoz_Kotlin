@@ -22,7 +22,10 @@ object AddressMapper {
         entrance = entrance,
         floor = floor,
         flat = flat,
-        comment = comment
+        comment = comment,
+        length = length,
+        latitude = coordinates.substringBefore(","),
+        longitude = coordinates.substringAfter(",")
     )
 
 }

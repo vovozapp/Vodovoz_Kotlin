@@ -160,7 +160,12 @@ class AddressesFlowViewModel @Inject constructor(
     fun onAddressClick(address: AddressUI) {
         if (openMode != OpenMode.SelectAddress.name) return
         viewModelScope.launch {
-            eventListener.emit(AddressesEvents.OnAddressClick(address))
+            debugLog { "full ${address.fullAddress} length ${address.length} latitude ${address.latitude} longitude ${address.longitude}" }
+            if (address.length.isNotEmpty()) {
+                eventListener.emit(AddressesEvents.OnAddressClick(address))
+            } else {
+                //todo update address
+            }
         }
     }
 
