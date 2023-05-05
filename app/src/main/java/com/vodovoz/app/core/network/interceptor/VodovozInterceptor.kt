@@ -9,7 +9,7 @@ import timber.log.Timber
 
 class VodovozInterceptor @Inject constructor(
     private val localDataSource: LocalDataSource
-): Interceptor {
+) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
 
@@ -20,7 +20,11 @@ class VodovozInterceptor @Inject constructor(
             builder.addHeader("Cookie", cookieSessionId)
         }
 
-        val originalResponse = chain.proceed(builder.build())
+        val originalResponse = try {
+            chain.proceed(builder.build())
+        } catch (t: Throwable) {
+            chain.proceed(chain.request())
+        }
 
         if (!localDataSource.isAvailableCookieSessionId()) {
             localDataSource.updateCookieSessionId(
