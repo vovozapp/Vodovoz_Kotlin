@@ -235,10 +235,10 @@ class MapController(
 
     fun initSearch(
         addAddress: TextView? = null,
-        searchEditText: EditText,
-        searchContainer: LinearLayout,
-        searchImage: ImageView,
-        clear: ImageView,
+        searchEditText: EditText? = null,
+        searchContainer: LinearLayout? = null,
+        searchImage: ImageView? = null,
+        clear: ImageView? = null,
         fullAddressTextView: TextView? = null,
         searchErrorTv: TextView? = null,
         addressesRecycler: RecyclerView? = null
@@ -248,7 +248,7 @@ class MapController(
             viewModel.showAddAddressBottomDialog()
         }
 
-        searchEditText.addTextChangedListener(
+        searchEditText?.addTextChangedListener(
             object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -261,19 +261,19 @@ class MapController(
             }
         )
 
-        searchContainer.setOnClickListener {
+        searchContainer?.setOnClickListener {
             isShowSearchResult = true
             showContainer(true)
         }
-        searchEditText.setOnFocusChangeListener { _, isFocus ->
+        searchEditText?.setOnFocusChangeListener { _, isFocus ->
             if (isFocus) {
                 isShowSearchResult = true
                 showContainer(true)
             }
         }
-        searchImage.setOnClickListener {
+        searchImage?.setOnClickListener {
             if (isShowSearchResult) {
-                searchEditText.text = null
+                searchEditText?.text = null
                 isShowSearchResult = false
                 showContainer(false)
             } else {
@@ -282,8 +282,8 @@ class MapController(
             }
         }
 
-        clear.setOnClickListener {
-            searchEditText.text = null
+        clear?.setOnClickListener {
+            searchEditText?.text = null
             clear.isVisible = false
             searchErrorTv?.isVisible = false
             addressesResultAdapter.submitList(emptyList())

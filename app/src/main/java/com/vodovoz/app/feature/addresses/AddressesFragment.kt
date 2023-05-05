@@ -14,9 +14,15 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentAddressesFlowBinding
 import com.vodovoz.app.feature.addresses.adapter.AddressesClickListener
+import com.vodovoz.app.feature.map.MapController
+import com.vodovoz.app.feature.map.MapFlowViewModel
+import com.vodovoz.app.feature.map.adapter.AddressResultClickListener
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
+import com.yandex.mapkit.MapKit
+import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.user_location.UserLocationLayer
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -39,6 +45,25 @@ class AddressesFragment : BaseFragment() {
     lateinit var tabManager: TabManager
 
     private val viewModel: AddressesFlowViewModel by viewModels()
+    private val mapViewModel: MapFlowViewModel by viewModels()
+
+    private val userLocationLayer: UserLocationLayer by lazy {
+        mapKit.createUserLocationLayer(binding.mapView.mapWindow)
+    }
+    private val mapKit: MapKit by lazy {
+        MapKitFactory.getInstance()
+    }
+
+    private val mapController by lazy {
+        MapController(
+            mapKit,
+            object: AddressResultClickListener {},
+            userLocationLayer,
+            mapViewModel,
+            requireContext(),
+            requireActivity()
+        ) {}
+    }
 
     private val addressesController by lazy {
         AddressesController(
@@ -56,6 +81,9 @@ class AddressesFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        mapController.initMap(binding.mapView)
+        mapController.initSearch()
+
         addressesController.bind(binding.rvAddresses, binding.refreshContainer)
         initToolbar(resources.getString(R.string.addresses_title))
         bindErrorRefresh { viewModel.refresh() }
@@ -63,6 +91,18 @@ class AddressesFragment : BaseFragment() {
         observeUiState()
         observeEvents()
         observeRefresh()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mapKit.onStart()
+        binding.mapView.onStart()
+    }
+
+    override fun onStop() {
+        binding.mapView.onStop()
+        mapKit.onStop()
+        super.onStop()
     }
 
     private fun observeRefresh() {
@@ -111,7 +151,7 @@ class AddressesFragment : BaseFragment() {
                             findNavController().popBackStack(R.id.orderingFragment, false)
                         }
                         is AddressesFlowViewModel.AddressesEvents.UpdateAddress -> {
-
+                            //mapController.searchForUpdate(it.address)
                         }
                     }
                 }
