@@ -11,8 +11,6 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsPopupNewsBinding
 import com.vodovoz.app.ui.model.PopupNewsUI
-import com.vodovoz.app.util.extensions.color
-import com.vodovoz.app.util.extensions.debugLog
 
 class PopupNewsBottomFragment : BaseBottomSheetFragment() {
 
@@ -50,6 +48,8 @@ class PopupNewsBottomFragment : BaseBottomSheetFragment() {
         binding.tvDetails.isVisible = !popupNewsUI.detailText.isNullOrEmpty()
 
         binding.incHeader.imgClose.setOnClickListener { dismiss() }
+
+        this.isCancelable = popupNewsUI.androidVersion.isNullOrEmpty()
 
         Glide.with(requireContext())
             .load(popupNewsUI.detailPicture)

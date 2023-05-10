@@ -5,5 +5,6 @@ class PopupNewsEntity(
     val detailText: String? = null,
     val detailPicture: String? = null,
     val actionEntity: ActionEntity? = null,
-    val link: String? = null
+    val link: String? = null,
+    val androidVersion: String? = null
 )

@@ -28,6 +28,7 @@ object PopupNewsResponseJsonParser {
         detailText = getString("text"),
         detailPicture = getString("Picture").parseImagePath(),
         actionEntity = getJSONObject("HARAKTERISTIK").parseBannerActionEntity(getString("silka_android")),
+        androidVersion = getString("versiya_android")
     )
 
     private fun JSONObject.parseBannerActionEntity(link: String) = when(getString("id")) {

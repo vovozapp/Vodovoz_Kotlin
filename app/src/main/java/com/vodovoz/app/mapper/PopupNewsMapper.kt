@@ -9,7 +9,8 @@ object PopupNewsMapper {
         name = name,
         detailText = detailText,
         detailPicture = detailPicture,
-        actionEntity = actionEntity
+        actionEntity = actionEntity,
+        androidVersion = androidVersion
     )
 
 }
