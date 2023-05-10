@@ -2,6 +2,7 @@ package com.vodovoz.app.ui.base
 
 import android.app.Application
 import android.util.Log
+import com.vodovoz.app.common.notification.NotificationChannels
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.local.LocalData
@@ -35,6 +36,7 @@ class VodovozApplication : Application() {
         super.onCreate()
         MapKitFactory.setApiKey(Keys.MAPKIT_API_KEY)
         Timber.plant(Timber.DebugTree())
+        NotificationChannels.create(this)
 
         vodovozApi = buildVodovozClient()
         mapKitApi = buildMapkitClient()
