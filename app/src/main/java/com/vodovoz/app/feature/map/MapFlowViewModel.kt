@@ -165,7 +165,7 @@ class MapFlowViewModel @Inject constructor(
 
         uiStateListener.value = state.copy(
             data = state.data.copy(
-                listOfSavedPolilinesData = state.data.listOfSavedPolilinesData + listOf(
+                listOfSavedPolylinesData = state.data.listOfSavedPolylinesData + listOf(
                     SavedPolylineData(distance, polyline, startPoint, endPoint)
                 )
             )
@@ -183,10 +183,15 @@ class MapFlowViewModel @Inject constructor(
                     length = "0",
                     distance = 0.0
                 )
-                eventListener.emit(MapFlowEvents.ShowPolyline())
+                tryToUpdate(
+                    lat = startPoint.longitude.toString(),
+                    long = startPoint.longitude.toString(),
+                    length = "0",
+                    polyline = null
+                )
             } else {
 
-                if (state.data.listOnPoints.size == state.data.listOfSavedPolilinesData.size) {
+                if (state.data.listOnPoints.size == state.data.listOfSavedPolylinesData.size) {
                     amountControllerTimer.cancel()
                     addPolyline()
                 }
@@ -196,15 +201,42 @@ class MapFlowViewModel @Inject constructor(
 
     }
 
+    private fun tryToUpdate(lat: String, long: String, length: String, polyline: Polyline?) {
+        viewModelScope.launch {
+            val pendingUpdateAddressUi = state.data.pendingUpdateAddressUI
+            if (pendingUpdateAddressUi == null) {
+                eventListener.emit(MapFlowEvents.ShowPolyline(polyline = polyline))
+            } else {
+                val userId = accountManager.fetchAccountId() ?: return@launch
+                updateAddress(
+                    locality = pendingUpdateAddressUi.locality,
+                    street = pendingUpdateAddressUi.street,
+                    house = pendingUpdateAddressUi.house,
+                    entrance = pendingUpdateAddressUi.entrance,
+                    floor = pendingUpdateAddressUi.floor,
+                    office = pendingUpdateAddressUi.flat,
+                    comment = pendingUpdateAddressUi.comment,
+                    type = pendingUpdateAddressUi.type,
+                    userId = userId,
+                    addressId = pendingUpdateAddressUi.id,
+                    lat = lat,
+                    longitude = long,
+                    length = length,
+                    fullAddress = pendingUpdateAddressUi.fullAddress
+                )
+            }
+        }
+
+    }
+
     private fun addPolyline() {
         viewModelScope.launch {
-            val minDistancePolyline = state.data.listOfSavedPolilinesData.filter { it.polyline != null }.minByOrNull { it.distance }
+            val minDistancePolyline = state.data.listOfSavedPolylinesData.filter { it.polyline != null }.minByOrNull { it.distance }
             minDistancePolyline?.let {
                 if (it.polyline == null) {
                     eventListener.emit(MapFlowEvents.ShowPolyline())
                     return@launch
                 }
-
                 val newDistance = (it.distance / 1000).roundToInt().toString()
 
                 savePointData(
@@ -213,7 +245,13 @@ class MapFlowViewModel @Inject constructor(
                     length = newDistance,
                     distance = it.distance
                 )
-                eventListener.emit(MapFlowEvents.ShowPolyline(it.polyline))
+
+                tryToUpdate(
+                    polyline = it.polyline,
+                    lat = it.startPoint.latitude.toString(),
+                    long = it.startPoint.longitude.toString(),
+                    length = newDistance
+                )
             }
         }
     }
@@ -225,7 +263,7 @@ class MapFlowViewModel @Inject constructor(
                 savedPointData = null,
                 distance = null,
                 listOnPoints = emptyList(),
-                listOfSavedPolilinesData = emptyList()
+                listOfSavedPolylinesData = emptyList()
             )
         )
     }
@@ -396,28 +434,6 @@ class MapFlowViewModel @Inject constructor(
         }
     }
 
-    private fun updatePendingAddress(
-        address: AddressUI,
-        latitude: String,
-        longitude: String,
-        length: String,
-    ) {
-        val mappedAddress = address.copy(
-            latitude = latitude,
-            longitude = longitude,
-            length = length
-        )
-
-        action(
-            entrance = mappedAddress.entrance,
-            floor = mappedAddress.floor,
-            office = mappedAddress.flat,
-            comment = mappedAddress.comment,
-            type = mappedAddress.type
-        )
-
-    }
-
     data class SavedPolylineData(
         val distance: Double,
         val polyline: Polyline?,
@@ -439,7 +455,7 @@ class MapFlowViewModel @Inject constructor(
         val polyline: Polyline? = null,
         val distance: Double? = null,
         val listOnPoints: List<Point> = emptyList(),
-        val listOfSavedPolilinesData: List<SavedPolylineData> = emptyList(),
+        val listOfSavedPolylinesData: List<SavedPolylineData> = emptyList(),
         val pendingUpdateAddressUI: AddressUI? = null
     ) : State
 
