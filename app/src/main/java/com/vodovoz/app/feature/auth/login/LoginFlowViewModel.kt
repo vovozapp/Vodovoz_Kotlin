@@ -9,6 +9,7 @@ import com.vodovoz.app.common.content.Event
 import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
@@ -36,7 +37,8 @@ class LoginFlowViewModel @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val accountManager: AccountManager,
     private val loginManager: LoginManager,
-    private val siteStateManager: SiteStateManager
+    private val siteStateManager: SiteStateManager,
+    private val likeManager: LikeManager
 ) : PagingContractViewModel<LoginFlowViewModel.LoginState, LoginFlowViewModel.LoginEvents>(
     LoginState()
 ) {
@@ -117,6 +119,7 @@ class LoginFlowViewModel @Inject constructor(
                                 )
                             )
                             accountManager.updateUserId(response.data)
+                            likeManager.updateLikesAfterLogin(response.data)
                             localDataSource.updateUserId(response.data)
 
                             uiStateListener.value =
@@ -158,6 +161,7 @@ class LoginFlowViewModel @Inject constructor(
                         }
                         is ResponseEntity.Success -> {
                             accountManager.updateUserId(response.data)
+                            likeManager.updateLikesAfterLogin(response.data)
                             loginManager.updateLastAuthPhone(phone)
                             localDataSource.updateUserId(response.data)
 

@@ -7,6 +7,7 @@ import javax.inject.Inject
 interface LikeRepository {
 
     suspend fun like(productIdList: List<Long>, userId: Long): ResponseBody
+    suspend fun like(productIdListStr: String, userId: Long): ResponseBody
     suspend fun dislike(productId: Long, userId: Long): ResponseBody
 }
 
@@ -22,6 +23,15 @@ class LikeRepositoryImpl @Inject constructor(
             blockId = 12,
             action = "add",
             productIdList = bindProductIdList(productIdList),
+            userId = userId
+        )
+    }
+
+    override suspend fun like(productIdListStr: String, userId: Long): ResponseBody {
+        return api.like(
+            blockId = 12,
+            action = "add",
+            productIdList = productIdListStr,
             userId = userId
         )
     }

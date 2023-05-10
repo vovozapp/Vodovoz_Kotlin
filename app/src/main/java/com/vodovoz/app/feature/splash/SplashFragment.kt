@@ -10,6 +10,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.cart.CartFlowViewModel
 import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.catalog.CatalogFlowViewModel

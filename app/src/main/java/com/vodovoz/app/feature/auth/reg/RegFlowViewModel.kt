@@ -8,6 +8,7 @@ import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.config.AuthConfig
@@ -30,7 +31,8 @@ class RegFlowViewModel @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val accountManager: AccountManager,
     private val loginManager: LoginManager,
-    private val siteStateManager: SiteStateManager
+    private val siteStateManager: SiteStateManager,
+    private val likeManager: LikeManager
 ) : PagingContractViewModel<RegFlowViewModel.RegState, RegFlowViewModel.RegEvents>(RegState()) {
 
     fun register(
@@ -53,6 +55,7 @@ class RegFlowViewModel @Inject constructor(
                     when(val response = it.parseRegisterResponse()) {
                         is ResponseEntity.Success -> {
                             accountManager.updateUserId(response.data)
+                            likeManager.updateLikesAfterLogin(response.data)
                             localDataSource.updateUserId(response.data)
                             accountManager.updateLastLoginSetting(AccountManager.UserSettings(email, password))
 

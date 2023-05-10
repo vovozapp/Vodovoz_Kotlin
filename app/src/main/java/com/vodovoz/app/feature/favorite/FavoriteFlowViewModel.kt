@@ -73,10 +73,11 @@ class FavoriteFlowViewModel @Inject constructor(
     }
 
     private fun fetchFavoriteProductsHeader() {
-        val userId = localDataSource.fetchUserId()
+        val userId = accountManager.fetchAccountId()
+        val productIdListStr = likeManager.fetchLikeLocalStr()
 
         viewModelScope.launch {
-            flow { emit(repository.fetchFavoriteProducts(userId = userId, null)) }
+            flow { emit(repository.fetchFavoriteProducts(userId = userId, productIdListStr = productIdListStr)) }
                 .catch {
                     debugLog { "fetch favorite products error ${it.localizedMessage}" }
                     uiStateListener.value =
@@ -138,7 +139,8 @@ class FavoriteFlowViewModel @Inject constructor(
     }
 
     private fun fetchFavoriteProductsSorted() {
-        val userId = localDataSource.fetchUserId()
+        val userId = accountManager.fetchAccountId()
+        val productIdListStr = likeManager.fetchLikeLocalStr()
 
         viewModelScope.launch {
             flow {
@@ -153,7 +155,7 @@ class FavoriteFlowViewModel @Inject constructor(
                         orientation = state.data.sortType.orientation,
                         isAvailable = state.data.isAvailable,
                         page = state.page,
-                        productIdListStr = ""
+                        productIdListStr = productIdListStr
                     )
                 )
             }

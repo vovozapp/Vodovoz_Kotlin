@@ -225,7 +225,7 @@ class MainRepository @Inject constructor(
     //Основная информация об избранных продуктах
     suspend fun fetchFavoriteProductsSorted(
         userId: Long?,
-        productIdListStr: String,
+        productIdListStr: String?,
         categoryId: Long?,
         sort: String?,
         orientation: String?,

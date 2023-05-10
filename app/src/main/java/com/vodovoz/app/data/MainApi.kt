@@ -151,7 +151,7 @@ interface MainApi {
 
     @GET("/newmobile/izbrannoe.php?")
     suspend fun fetchFavoriteResponse(
-        @Query("id") productIdList: String? = null,
+        @Query("id", encoded = true) productIdList: String? = null,
         @Query("userid") userId: Long? = null,
         @Query("sort") sort: String? = null,
         @Query("ascdesc") orientation: String? = null,

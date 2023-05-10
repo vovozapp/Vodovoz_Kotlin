@@ -10,7 +10,7 @@ interface LikeApi {
     suspend fun like(
         @Query("iblock") blockId: Long? = null,
         @Query("action") action: String? = null,
-        @Query("id") productIdList: String? = null,
+        @Query("id", encoded = true) productIdList: String? = null,
         @Query("userid") userId: Long? = null,
     ): ResponseBody
 
