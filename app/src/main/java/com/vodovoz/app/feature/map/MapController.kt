@@ -35,6 +35,7 @@ import com.vodovoz.app.feature.map.adapter.AddressResultFlowAdapter
 import com.vodovoz.app.ui.extensions.ColorExtensions.getColorWithAlpha
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.ui.model.DeliveryZoneUI
+import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.whenCreated
 import com.vodovoz.app.util.extensions.whenStarted
 import com.yandex.mapkit.*
@@ -502,11 +503,9 @@ class MapController(
             val route = distanceToRouteMap[key]
             val polyline = route?.geometry
 
-            route?.let {
-                val startPoint = it.requestPoints!![0].point
-                val endPoint = it.requestPoints!![1].point
-                viewModel.addPolyline(key, polyline, startPoint, endPoint)
-            }
+            val startPoint = route?.requestPoints?.get(0)?.point ?: Point(0.0, 0.0)
+            val endPoint = route?.requestPoints?.get(1)?.point ?: Point(0.0, 0.0)
+            viewModel.savePolyline(key, polyline, startPoint, endPoint)
         }
     }
 
