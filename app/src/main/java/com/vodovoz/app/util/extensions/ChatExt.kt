@@ -11,6 +11,12 @@ fun Activity.startWhatsUp(phone: String) {
     startActivity(sendIntent)
 }
 
+fun Activity.startWhatsUpWithUri(uriString: String) {
+    val uri = Uri.parse(uriString)
+    val sendIntent = Intent(Intent.ACTION_VIEW, uri)
+    startActivity(sendIntent)
+}
+
 fun Activity.startViber(phone: String) {
     val viberPackageName = "com.viber.voip"
 
@@ -62,5 +68,20 @@ fun Activity.startTelegram(phone: String) {
                 )
             )
         }
+    }
+}
+
+fun Activity.startJivo(url: String) {
+    val uri = Uri.parse(url)
+    val likeIng = Intent(Intent.ACTION_VIEW, uri)
+    try {
+        startActivity(likeIng)
+    } catch (e: ActivityNotFoundException) {
+        startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(url)
+            )
+        )
     }
 }

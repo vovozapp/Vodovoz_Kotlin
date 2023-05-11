@@ -24,15 +24,55 @@ data class SiteStateData(
     @Json(name = "EMAIL")
     val email: String?,
     @Json(name = "WATSAP")
-    val whatsUp: String?,
+    val whatsUp: SiteStateWhatsUp?,
     @Json(name = "VIBER")
-    val viber: String?,
+    val viber: SiteStateViber?,
     @Json(name = "TELEGA")
-    val telegragm: String?,
+    val telegram: SiteStateTelegram?,
     @Json(name = "JIVOSAIT")
-    val chat: String?,
+    val chat: SiteStateChat?,
     @Json(name = "PHONE")
-    val phone: String?,
+    val phone: SiteStatePhone?,
     @Json(name = "TIME")
     val time: String?
+)
+
+@JsonClass(generateAdapter = true)
+data class SiteStatePhone(
+    @Json(name = "URL")
+    val url: String,
+    @Json(name = "IMAGES")
+    val image: String
+)
+
+@JsonClass(generateAdapter = true)
+data class SiteStateWhatsUp(
+    @Json(name = "URL")
+    val url: String,
+    @Json(name = "IMAGES")
+    val image: String
+)
+
+@JsonClass(generateAdapter = true)
+data class SiteStateViber(
+    @Json(name = "URL")
+    val url: String,
+    @Json(name = "IMAGES")
+    val image: String
+)
+
+@JsonClass(generateAdapter = true)
+data class SiteStateTelegram(
+    @Json(name = "URL")
+    val url: String,
+    @Json(name = "IMAGES")
+    val image: String
+)
+
+@JsonClass(generateAdapter = true)
+data class SiteStateChat(
+    @Json(name = "URL")
+    val url: String,
+    @Json(name = "IMAGES")
+    val image: String
 )

@@ -248,28 +248,28 @@
             android:layout_weight="0" />
 
         <ImageView
-            android:id="@+id/imageonlinechat1"
+            android:id="@+id/whatsUp"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="4dp"
             android:layout_weight="0" />
 
         <ImageView
-            android:id="@+id/imageonlinechat2"
+            android:id="@+id/viber"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="4dp"
             android:layout_weight="0" />
 
         <ImageView
-            android:id="@+id/imageonlinechat3"
+            android:id="@+id/telegram"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="4dp"
             android:layout_weight="0" />
 
         <ImageView
-            android:id="@+id/imageonlinechat4"
+            android:id="@+id/chat"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="4dp"
