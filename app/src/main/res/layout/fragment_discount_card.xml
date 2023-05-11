@@ -5,21 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:elevation="0dp">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:title="Активация скидочной карты"/>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,6 +13,7 @@
         <ScrollView
             android:id="@+id/scrollableContentContainer"
             android:layout_width="match_parent"
+            android:paddingBottom="@dimen/space_8"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/buttonContainer"
             app:layout_constraintTop_toTopOf="parent">
@@ -38,6 +24,7 @@
 
                 <TextView
                     android:id="@+id/info"
+                    android:paddingTop="@dimen/space_16"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/rotonda_normal"
