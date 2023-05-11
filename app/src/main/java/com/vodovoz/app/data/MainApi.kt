@@ -1,6 +1,7 @@
 package com.vodovoz.app.data
 
 import com.vodovoz.app.common.product.rating.RatingResponse
+import com.vodovoz.app.feature.home.ratebottom.model.RateBottomModel
 import com.vodovoz.app.feature.map.test.model.MapTestResponse
 import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
 import com.vodovoz.app.feature.profile.cats.ProfileCategoriesModel
@@ -648,4 +649,10 @@ interface MainApi {
         @Query("userid") userId: Long? = null,
         @Query("filtervalue") value: String? = null,
     ): ResponseBody
+
+    @GET("/newmobile/glavnaya/otzivtovari.php")
+    suspend fun fetchRateBottomData(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+    ): RateBottomModel
 }

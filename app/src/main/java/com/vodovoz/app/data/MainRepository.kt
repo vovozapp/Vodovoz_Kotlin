@@ -1140,4 +1140,11 @@ class MainRepository @Inject constructor(
         value = value
     )
 
+    suspend fun fetchRateBottomData(
+        userId: Long?,
+    ) = api.fetchRateBottomData(
+        action = "tovarglav",
+        userId = userId
+    )
+
 }
