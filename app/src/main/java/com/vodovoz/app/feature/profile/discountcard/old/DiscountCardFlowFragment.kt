@@ -45,6 +45,9 @@ class DiscountCardFlowFragment : BaseFragment() {
         initButtons()
         observeUiState()
         observeEvents()
+        bindErrorRefresh {
+            viewModel.refresh()
+        }
     }
 
     private fun initDiscountCardPropertiesRecycler() {

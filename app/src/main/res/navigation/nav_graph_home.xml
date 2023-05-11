@@ -10,6 +10,9 @@
         android:name="com.vodovoz.app.feature.home.HomeFragment"
         android:label="fragment_home">
         <action
+            android:id="@+id/action_to_rateBottomFragment"
+            app:destination="@+id/rateBottomFragment"/>
+        <action
             android:id="@+id/action_to_promotionDetailFragment"
             app:destination="@id/promotionDetailFragment" />
         <action
@@ -857,5 +860,9 @@
         android:id="@+id/webViewFlowFragment"
         android:name="com.vodovoz.app.common.webview.old.WebViewFlowFragment"
         android:label="WebViewFlowFragment" />
+    <dialog
+        android:id="@+id/rateBottomFragment"
+        android:name="com.vodovoz.app.feature.home.ratebottom.RateBottomFragment"
+        android:label="RateBottomFragment" />
 
 </navigation>
