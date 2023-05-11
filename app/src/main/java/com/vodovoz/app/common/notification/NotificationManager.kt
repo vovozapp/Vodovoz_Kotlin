@@ -1,11 +1,20 @@
 package com.vodovoz.app.common.notification
 
-import android.app.PendingIntent
-import android.content.Intent
+import android.content.ContentResolver
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import android.text.Html
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.vodovoz.app.ui.base.MainActivity
-
+import com.vodovoz.app.R
+import com.vodovoz.app.util.extensions.fromHtml
 
 class NotificationManager : FirebaseMessagingService() {
 
@@ -19,7 +28,11 @@ class NotificationManager : FirebaseMessagingService() {
 
 
         if (message.notification != null) {
-            showNotification(message.notification!!)
+            if (message.notification!!.imageUrl != null) {
+                showLargeIconNotification(message.notification!!)
+            } else {
+                showSmallIconNotification(message.notification!!)
+            }
         }
 
 
@@ -48,18 +61,65 @@ class NotificationManager : FirebaseMessagingService() {
         }*/
     }
 
-    private fun showNotification(notification: RemoteMessage.Notification) {
+    private fun showLargeIconNotification(not: RemoteMessage.Notification) {
+        val pendingIntent = NavDeepLinkBuilder(applicationContext)
+            .setGraph(R.navigation.nav_graph)
+            .setDestination(R.id.splashFragment)
+            .createPendingIntent()
 
-        val intent = Intent(this, MainActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        val bigPictureStyle = NotificationCompat.BigPictureStyle().also {
+            it.setBigContentTitle(not.title)
+            it.setSummaryText(not.body.fromHtml())
+            it.bigPicture(getBitmap(applicationContext.contentResolver, not.imageUrl))
         }
 
-        val pendingIntent = PendingIntent.getActivity(
-            this, 0, intent,
-            PendingIntent.FLAG_ONE_SHOT
-        )
+        val notification =
+            NotificationCompat.Builder(this, NotificationChannels.NOTIFICATION_CHANNEL_ID)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setSmallIcon(R.drawable.png_logo)
+                .setAutoCancel(false)
+                .setContentIntent(pendingIntent)
+                .setStyle(bigPictureStyle)
+                .build()
 
+        NotificationManagerCompat.from(this)
+            .notify(NotificationConfig.NOTIFICATION_ID_BIG_IMAGE, notification)
+    }
 
+    private fun showSmallIconNotification(not: RemoteMessage.Notification) {
+        val pendingIntent = NavDeepLinkBuilder(applicationContext)
+            .setGraph(R.navigation.nav_graph)
+            .setDestination(R.id.splashFragment)
+            .createPendingIntent()
+
+        val inboxStyle = NotificationCompat.InboxStyle().also {
+            it.addLine(not.body)
+        }
+
+        val notification =
+            NotificationCompat.Builder(this, NotificationChannels.NOTIFICATION_CHANNEL_ID)
+                .setContentTitle(not.title)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setSmallIcon(R.drawable.png_logo)
+                .setAutoCancel(false)
+                .setContentIntent(pendingIntent)
+                .setStyle(inboxStyle)
+                .build()
+
+        NotificationManagerCompat.from(this)
+            .notify(NotificationConfig.NOTIFICATION_ID, notification)
+    }
+
+    private fun getBitmap(contentResolver: ContentResolver, fileUri: Uri?): Bitmap? {
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, fileUri!!))
+            } else {
+                MediaStore.Images.Media.getBitmap(contentResolver, fileUri)
+            }
+        } catch (e: Exception){
+            null
+        }
     }
 
     /*private fun handleNotificationWithoutImage(title: String?, message: String?) {
