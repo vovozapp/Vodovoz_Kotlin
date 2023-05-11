@@ -12,5 +12,9 @@
         android:id="@+id/mainFragment"
         android:name="com.vodovoz.app.feature.main.MainFragment"
         android:label="MainFragment" />
+    <fragment
+        android:id="@+id/blockAppFragment"
+        android:name="com.vodovoz.app.feature.blockapp.BlockAppFragment"
+        android:label="BlockAppFragment" />
 
 </navigation>

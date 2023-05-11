@@ -28,6 +28,17 @@ class SiteStateManager @Inject constructor(
         }
     }
 
+    suspend fun fetchSiteStateActive() : Boolean {
+        val stateActive = siteStateListener.value?.active ?: kotlin.run {
+            requestSiteState()
+            return false
+        }
+        return when(stateActive) {
+            "N" -> true
+            else -> false
+        }
+    }
+
     fun saveDeepLinkPath(path: String?) {
         if (path != null) {
             deepLinkPathListener.value = path

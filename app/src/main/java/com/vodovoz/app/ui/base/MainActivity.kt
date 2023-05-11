@@ -31,6 +31,10 @@ class MainActivity : AppCompatActivity() {
         MapKitFactory.initialize(this)
         binding = ActivityMainBinding.inflate(layoutInflater).apply { setContentView(root) }
 
+        lifecycleScope.launchWhenStarted {
+            siteStateManager.requestSiteState()
+        }
+
         observeRatingSnackbar()
 
         handleIntent(intent)

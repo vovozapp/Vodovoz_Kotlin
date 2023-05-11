@@ -16,6 +16,7 @@ import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.catalog.CatalogFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel
+import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -35,8 +36,14 @@ class SplashFragment : BaseFragment() {
     @Inject
     lateinit var accountManager: AccountManager
 
+    @Inject
+    lateinit var siteStateManager: SiteStateManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycleScope.launchWhenStarted {
+            siteStateManager.requestSiteState()
+        }
         viewModel.sendFirebaseToken()
         flowViewModel.firstLoad()
         catalogViewModel.firstLoad()
@@ -60,7 +67,11 @@ class SplashFragment : BaseFragment() {
                         "${state.data.items.map { it.position }}"
                     }
                     if (state.data.items.size in (HomeFlowViewModel.POSITIONS_COUNT - 8..HomeFlowViewModel.POSITIONS_COUNT)) {
-                        findNavController().navigate(R.id.mainFragment)
+                        if (siteStateManager.fetchSiteStateActive()) {
+                            findNavController().navigate(R.id.mainFragment)
+                        } else {
+                            findNavController().navigate(R.id.blockAppFragment)
+                        }
                     }
                     if (state.error is ErrorState.NetworkError) {
                         showError(state.error)
