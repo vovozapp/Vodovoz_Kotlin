@@ -59,7 +59,11 @@ class VodovozApplication : Application() {
                 builder.addHeader("Cookie", cookieSessionId)
             }
 
-            val originalResponse = chain.proceed(builder.build())
+            val originalResponse = try {
+                chain.proceed(builder.build())
+            } catch (t: Throwable) {
+                chain.proceed(chain.request())
+            }
 
             if (!localDataSource.isAvailableCookieSessionId()) {
                 localDataSource.updateCookieSessionId(originalResponse.headers.values("Set-Cookie").first())
