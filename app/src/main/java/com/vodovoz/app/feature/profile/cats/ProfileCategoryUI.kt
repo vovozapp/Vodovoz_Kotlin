@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.profile.cats
 
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.ui.model.ChatUI
 
 data class ProfileCategoryUI(
     val title: String?,
@@ -24,7 +25,8 @@ data class ProfileInsideCategoryUI(
     val id: String?,
     val name: String?,
     val url: String?,
-    val amount: Int?
+    val amount: Int?,
+    val chatUiList: List<DANNYECHAT>?
 ) : Item {
 
     override fun getItemViewType(): Int {

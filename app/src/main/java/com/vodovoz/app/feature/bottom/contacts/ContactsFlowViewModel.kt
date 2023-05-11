@@ -28,7 +28,7 @@ class ContactsFlowViewModel @Inject constructor(
 
     fun fetchContacts() {
         viewModelScope.launch {
-            flow { emit(repository.fetchContacts(Build.VERSION.RELEASE)) }
+            flow { emit(repository.fetchContacts()) }
                 .catch {
                     debugLog { "fetch contacts error ${it.localizedMessage}" }
                     uiStateListener.value =

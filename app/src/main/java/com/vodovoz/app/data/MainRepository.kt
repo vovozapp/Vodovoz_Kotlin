@@ -1,6 +1,7 @@
 package com.vodovoz.app.data
 
 import android.net.Uri
+import android.os.Build
 import androidx.core.net.toUri
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.product.rating.RatingResponse
@@ -769,11 +770,14 @@ class MainRepository @Inject constructor(
 
     //Информация о пользователе
     suspend fun fetchProfileCategories(
-        userId: Long
+        userId: Long,
+        isTablet: Boolean
     ) = api.fetchProfileCategoriesResponse(
         action = "glav",
-        userId = userId
-    )
+        userId = userId,
+        appVersion = "1.5.07",
+        isTablet = isTablet
+    ) //todo Build.VERSION.RELEASE
 
     suspend fun fetchPersonalProducts(
         userId: Long?,
@@ -907,12 +911,10 @@ class MainRepository @Inject constructor(
      * Contacts
      */
 
-    suspend fun fetchContacts(
-        appVersion: String?
-    ) = api.fetchContactsResponse(
+    suspend fun fetchContacts() = api.fetchContactsResponse(
         action = "dannyesvyazi",
-        appVersion = appVersion
-    )
+        appVersion = "1.5.07"
+    ) //todo Build.VERSION.RELEASE
 
     /**
      * Send Mail

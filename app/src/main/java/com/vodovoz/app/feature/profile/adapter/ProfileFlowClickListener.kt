@@ -6,7 +6,8 @@ interface ProfileFlowClickListener {
     fun logout()
 
     fun onAddressesClick()
-    fun onUrlClick()
+    fun onUrlClick(url: String?)
+    fun onUrlTwoClick(url: String?)
 
     fun onOrdersHistoryClick()
     fun onLastPurchasesClick()
@@ -23,5 +24,12 @@ interface ProfileFlowClickListener {
     fun onMyChatClick()
     fun onSafetyClick()
     fun onAboutAppClick()
+
+    fun onNewWaterApp()
+    fun onFetchDiscount()
+
+    fun onWhatsUpClick(phone: String?)
+    fun onViberClick(phone: String?)
+    fun onTelegramClick(phone: String?)
 
 }

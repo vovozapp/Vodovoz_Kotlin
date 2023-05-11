@@ -664,7 +664,11 @@
     <fragment
         android:id="@+id/contactsFragment"
         android:name="com.vodovoz.app.feature.bottom.contacts.ContactsFragment"
-        android:label="ContactsFragment" />
+        android:label="ContactsFragment">
+        <action
+            android:id="@+id/action_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
+    </fragment>
     <fragment
         android:id="@+id/serviceDetailFragment"
         android:name="com.vodovoz.app.feature.bottom.services.detail.ServiceDetailFragment"

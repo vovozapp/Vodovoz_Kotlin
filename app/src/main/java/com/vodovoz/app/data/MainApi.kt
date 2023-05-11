@@ -464,6 +464,8 @@ interface MainApi {
     suspend fun fetchProfileCategoriesResponse(
         @Query("action") action: String? = null,
         @Query("userid") userId: Long? = null,
+        @Query("versiyaan") appVersion: String? = null,
+        @Query("device_type_android") isTablet: Boolean = false,
     ): ProfileCategoriesModel
 
     @GET("newmobile/profile/tovary.php")

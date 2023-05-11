@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.profile
 
+import android.app.Application
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
@@ -28,6 +29,7 @@ import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
 import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.mapper.UserDataMapper.mapToUI
+import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,7 +48,8 @@ class ProfileFlowViewModel @Inject constructor(
     private val ratingProductManager: RatingProductManager,
     private val accountManager: AccountManager,
     private val siteStateManager: SiteStateManager,
-    private val tabManager: TabManager
+    private val tabManager: TabManager,
+    private val application: Application
 ) : PagingContractViewModel<ProfileFlowViewModel.ProfileState, ProfileFlowViewModel.ProfileEvents>(
     ProfileState.idle()
 ) {
@@ -178,8 +181,9 @@ class ProfileFlowViewModel @Inject constructor(
             uiStateListener.value = state.copy(data = state.data.copy(isLogin = false))
             return
         }
+        val isTablet = application.isTablet()
         viewModelScope.launch {
-            flow { emit(repository.fetchProfileCategories(userId)) }
+            flow { emit(repository.fetchProfileCategories(userId, isTablet)) }
                 .catch {
                     debugLog { "fetch profile categories error ${it.localizedMessage}" }
                     uiStateListener.value =

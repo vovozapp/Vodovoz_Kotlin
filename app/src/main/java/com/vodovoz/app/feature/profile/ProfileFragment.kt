@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.profile
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
@@ -25,6 +26,9 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllList
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.profile.adapter.ProfileFlowClickListener
 import com.vodovoz.app.util.extensions.openNotificationSettingsForApp
+import com.vodovoz.app.util.extensions.startTelegram
+import com.vodovoz.app.util.extensions.startViber
+import com.vodovoz.app.util.extensions.startWhatsUp
 
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -160,11 +164,21 @@ class ProfileFragment : BaseFragment() {
                 findNavController().navigate(ProfileFragmentDirections.actionToSavedAddressesDialogFragment())
             }
 
-            override fun onUrlClick() {
+            override fun onUrlClick(url: String?) {
+                if (url == null) return
                 findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
-                    ApiConfig.ABOUT_DELIVERY_URL,
+                    url,
                     "Стоимость доставки"
                 ))
+            }
+
+            override fun onUrlTwoClick(url: String?) {
+                kotlin.runCatching {
+                    if (url == null) return
+                    val uri = Uri.parse(url)
+                    val intent = Intent(Intent.ACTION_VIEW, uri)
+                    startActivity(intent)
+                }
             }
 
             override fun onOrdersHistoryClick() {
@@ -227,6 +241,32 @@ class ProfileFragment : BaseFragment() {
 
             override fun onAboutAppClick() {
                 findNavController().navigate(ProfileFragmentDirections.actionToAboutAppDialogFragment())
+            }
+
+            override fun onNewWaterApp() {
+                TODO("Not yet implemented")
+            }
+
+            override fun onFetchDiscount() {
+                findNavController().navigate(ProfileFragmentDirections.actionToDiscountCardFragment())
+            }
+
+            override fun onTelegramClick(phone: String?) {
+                if (phone != null) {
+                    requireActivity().startTelegram(phone)
+                }
+            }
+
+            override fun onWhatsUpClick(phone: String?) {
+                if (phone != null) {
+                    requireActivity().startWhatsUp(phone)
+                }
+            }
+
+            override fun onViberClick(phone: String?) {
+                if (phone != null) {
+                    requireActivity().startViber(phone)
+                }
             }
 
         }

@@ -4,7 +4,9 @@ import android.os.Parcelable
 import com.squareup.moshi.JsonClass
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
+import com.vodovoz.app.ui.model.ChatUI
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -30,7 +32,8 @@ data class ProfileCategoriesModel(
                         it.ID,
                         it.NAME,
                         it.URL,
-                        it.ZNACHENI
+                        it.ZNACHENI,
+                        it.DANNYECHAT
                     )
                 }
             )
@@ -70,8 +73,34 @@ data class PODRAZDEL(
     val ID: String?,
     val NAME: String?,
     val URL: String?,
-    val ZNACHENI: Int?
+    val ZNACHENI: Int?,
+    val DANNYECHAT: List<DANNYECHAT>?
 ) : Parcelable
+
+@Parcelize
+@JsonClass(generateAdapter = true)
+data class DANNYECHAT(
+    val ID: String?,
+    val NAME: String?,
+    val CHATDAN: String?,
+    val CHATDANIOS: String?
+): Parcelable, Item {
+
+    companion object {
+        const val DANNAYE_CHAT_VIEW_TYPE = -412412222
+    }
+
+    override fun getItemViewType(): Int {
+        return DANNAYE_CHAT_VIEW_TYPE
+    }
+
+    override fun areItemsTheSame(item: Item): Boolean {
+        if (item !is DANNYECHAT) return false
+
+        return this == item
+    }
+
+}
 
 @Parcelize
 @JsonClass(generateAdapter = true)

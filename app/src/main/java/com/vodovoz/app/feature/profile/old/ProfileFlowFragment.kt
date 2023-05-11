@@ -141,11 +141,15 @@ class ProfileFlowFragment : BaseFragment() {
                 findNavController().navigate(ProfileFragmentDirections.actionToSavedAddressesDialogFragment())
             }
 
-            override fun onUrlClick() {
+            override fun onUrlClick(url: String?) {
                 findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
                     ApiConfig.ABOUT_DELIVERY_URL,
                     "Стоимость доставки"
                 ))
+            }
+
+            override fun onUrlTwoClick(url: String?) {
+                TODO("Not yet implemented")
             }
 
             override fun onOrdersHistoryClick() {
@@ -202,6 +206,26 @@ class ProfileFlowFragment : BaseFragment() {
 
             override fun onAboutAppClick() {
                 findNavController().navigate(ProfileFragmentDirections.actionToAboutAppDialogFragment())
+            }
+
+            override fun onNewWaterApp() {
+                TODO("Not yet implemented")
+            }
+
+            override fun onFetchDiscount() {
+                TODO("Not yet implemented")
+            }
+
+            override fun onWhatsUpClick(phone: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onViberClick(phone: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onTelegramClick(phone: String?) {
+                TODO("Not yet implemented")
             }
 
         }
