@@ -642,4 +642,10 @@ interface MainApi {
         @Part file: MultipartBody.Part
     ): Response<Void>
 
+    @GET("/newmobile/profile/aktivacija_karty/index.php")
+    suspend fun fetchDiscountCardBaseRequest(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("filtervalue") value: String? = null,
+    ): ResponseBody
 }

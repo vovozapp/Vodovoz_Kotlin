@@ -15,6 +15,8 @@ import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonP
 import com.vodovoz.app.data.parser.response.comment.SendCommentAboutProductResponseJsonParser.parseSendCommentAboutProductResponse
 import com.vodovoz.app.data.parser.response.contacts.ContactsBundleResponseJsonParser.parseContactsBundleResponse
 import com.vodovoz.app.data.parser.response.contacts.SendMailResponseJsonParser.parseSendMailResponse
+import com.vodovoz.app.data.parser.response.discount_card.ActivateDiscountCardInfoJsonParser.parseActivateDiscountCardInfoResponse
+import com.vodovoz.app.data.parser.response.discount_card.ActivateDiscountCardJsonParser.parseActivateDiscountCardResponse
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
 import com.vodovoz.app.data.parser.response.map.AddAddressResponseJsonParser.parseAddAddressResponse
 import com.vodovoz.app.data.parser.response.map.AddressByGeocodeResponseJsonParser.parseAddressByGeocodeResponse
@@ -1121,5 +1123,21 @@ class MainRepository @Inject constructor(
         val filePart = MultipartBody.Part.createFormData("userpic", image.name, requestBody)
         return api.addAvatar(id = id, file = filePart)
     }
+
+    suspend fun fetchActivateDiscountCardInfo(
+        userId: Long?
+    ) = api.fetchDiscountCardBaseRequest(
+        action = "glav",
+        userId = userId
+    )
+
+    suspend fun activateDiscountCard(
+        userId: Long?,
+        value: String?,
+    ) = api.fetchDiscountCardBaseRequest(
+        action = "edit",
+        userId = userId,
+        value = value
+    )
 
 }
