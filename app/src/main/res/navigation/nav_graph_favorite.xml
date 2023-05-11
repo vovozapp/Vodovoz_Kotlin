@@ -655,7 +655,7 @@
     </fragment>
     <fragment
         android:id="@+id/discountCardFragment"
-        android:name="com.vodovoz.app.ui.fragment.discount_card.DiscountCardFragment"
+        android:name="com.vodovoz.app.feature.profile.discountcard.DiscountCardFragment"
         android:label="DiscountCardFragment" />
     <fragment
         android:id="@+id/questionnairesFragment2"

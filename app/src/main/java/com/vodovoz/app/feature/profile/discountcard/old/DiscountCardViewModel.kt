@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.discount_card
+package com.vodovoz.app.feature.profile.discountcard.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
