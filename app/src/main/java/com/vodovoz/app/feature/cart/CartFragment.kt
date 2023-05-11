@@ -23,6 +23,7 @@ import com.vodovoz.app.feature.cart.menu.CartMenuProvider
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -296,9 +297,12 @@ class CartFragment : BaseFragment() {
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<ProductUI>(GIFT_ID)
             ?.observe(viewLifecycleOwner) { gift ->
+                if (gift == null) return@observe
                 val oldQ = gift.cartQuantity
                 gift.cartQuantity++
                 viewModel.changeCart(gift.id, gift.cartQuantity, oldQ)
+                findNavController().currentBackStackEntry?.savedStateHandle?.set(GIFT_ID, null)
+                findNavController().previousBackStackEntry?.savedStateHandle?.set(GIFT_ID, null)
             }
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<Long>(ReplacementProductsSelectionBS.SELECTED_PRODUCT_ID)
