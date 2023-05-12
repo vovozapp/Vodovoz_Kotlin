@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -12,11 +13,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.FragmentRateBottomBinding
 import com.vodovoz.app.feature.home.ratebottom.adapter.RateBottomClickListener
 import com.vodovoz.app.feature.home.ratebottom.adapter.RateBottomImageAdapter
 import com.vodovoz.app.feature.home.ratebottom.adapter.RateBottomViewPagerAdapter
+import com.vodovoz.app.feature.productdetail.sendcomment.SendCommentAboutProductBottomDialog
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RateBottomFragment : BaseBottomSheetFragment() {
@@ -31,8 +35,20 @@ class RateBottomFragment : BaseBottomSheetFragment() {
 
     private val viewModel: RateBottomViewModel by activityViewModels()
 
+    @Inject
+    lateinit var ratingProductManager: RatingProductManager
+
     private val collapsedImagesAdapter = RateBottomImageAdapter()
     private val rateBottomViewPagerAdapter = RateBottomViewPagerAdapter(object : RateBottomClickListener {
+
+        override fun dontCommentProduct(id: Long) {
+            ratingProductManager.dontCommentProduct(id)
+            dialog?.dismiss()
+        }
+
+        override fun rateProduct(id: Long, ratingCount: Int) {
+            SendCommentAboutProductBottomDialog.newInstance(id, ratingCount).show(childFragmentManager, "TAG")
+        }
 
     })
 

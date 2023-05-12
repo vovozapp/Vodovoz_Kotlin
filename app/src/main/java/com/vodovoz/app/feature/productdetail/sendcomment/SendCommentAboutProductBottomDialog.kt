@@ -4,16 +4,21 @@ import android.os.Bundle
 import android.view.View
 import android.widget.RatingBar
 import android.widget.RatingBar.OnRatingBarChangeListener
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsSendCommentBinding
+import com.vodovoz.app.feature.home.popup.NewsClickListener
+import com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment
+import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,14 +26,31 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
 
+    companion object {
+        fun newInstance(
+            productId: Long,
+            rate: Int
+        ) = SendCommentAboutProductBottomDialog().apply {
+            arguments = bundleOf("productId" to productId, "rate" to rate)
+        }
+    }
+
+
     override fun layout(): Int = R.layout.bs_send_comment
 
     private val binding: BsSendCommentBinding by viewBinding { BsSendCommentBinding.bind(contentView) }
 
     private val viewModel: SendCommentAboutProductFlowViewModel by viewModels()
 
+    private val args: SendCommentAboutProductBottomDialogArgs by navArgs()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (args.rate != -4) {
+            binding.rbRating.rating = args.rate.toFloat()
+        }
+
         initHeader()
         initSendButton()
         observeSendResult()

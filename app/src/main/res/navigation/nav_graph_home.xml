@@ -501,6 +501,10 @@
         <argument
             android:name="productId"
             app:argType="long" />
+        <argument
+            android:name="rate"
+            android:defaultValue="-4"
+            app:argType="integer"/>
     </dialog>
     <fragment
         android:id="@+id/aboutServicesDialogFragment"
@@ -863,6 +867,10 @@
     <dialog
         android:id="@+id/rateBottomFragment"
         android:name="com.vodovoz.app.feature.home.ratebottom.RateBottomFragment"
-        android:label="RateBottomFragment" />
+        android:label="RateBottomFragment">
+        <action
+            android:id="@+id/action_to_sendCommentAboutProductFragment"
+            app:destination="@id/sendCommentAboutProductFragment" />
+    </dialog>
 
 </navigation>

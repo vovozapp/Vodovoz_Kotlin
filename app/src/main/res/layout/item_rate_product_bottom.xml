@@ -65,6 +65,7 @@
             style="@style/TextAppearance.AppCompat.Small"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
+            android:progressTint="@color/accentPrimary"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="16dp"
             android:stepSize="1" />

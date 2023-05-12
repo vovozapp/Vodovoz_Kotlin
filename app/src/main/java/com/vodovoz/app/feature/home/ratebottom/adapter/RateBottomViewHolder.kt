@@ -15,6 +15,18 @@ class RateBottomViewHolder(
 
     private val binding: ItemRateProductBottomBinding = ItemRateProductBottomBinding.bind(view)
 
+    init {
+        binding.dontRateBtn.setOnClickListener {
+            val itemId = item?.id?.toLong() ?:return@setOnClickListener
+            clickListener.dontCommentProduct(itemId)
+        }
+
+        binding.ratingBar.setOnRatingBarChangeListener { ratingBar, fl, b ->
+            val itemId = item?.id?.toLong() ?:return@setOnRatingBarChangeListener
+            clickListener.rateProduct(itemId, fl.toInt())
+        }
+    }
+
     override fun bind(item: ProductRateBottom) {
         super.bind(item)
 
