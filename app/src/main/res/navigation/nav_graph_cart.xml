@@ -463,7 +463,7 @@
     </dialog>
     <dialog
         android:id="@+id/fullScreenDetailPicturesSliderFragment"
-        android:name="com.vodovoz.app.ui.fragment.full_screen_detail_pictures_slider.FullScreenDetailPicturesSliderFragment"
+        android:name="com.vodovoz.app.feature.productdetail.fullscreen.FullScreenDetailPicturesSliderFragment"
         android:label="FullScreenDetailPicturesSliderFragment" >
         <argument
             android:name="startPosition"

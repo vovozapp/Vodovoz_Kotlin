@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.view_holder
+package com.vodovoz.app.feature.productdetail.fullscreen.adapter
 
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView

@@ -1,15 +1,13 @@
-package com.vodovoz.app.ui.adapter
+package com.vodovoz.app.feature.productdetail.fullscreen.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderFullScreenDetailPictureBinding
-import com.vodovoz.app.ui.view_holder.FullScreenDetailPictureViewHolder
 
 class FullScreenDetailPicturesAdapter(
     val detailPictureList: List<String>
 ) : RecyclerView.Adapter<FullScreenDetailPictureViewHolder>() {
-
 
 
     override fun onCreateViewHolder(
