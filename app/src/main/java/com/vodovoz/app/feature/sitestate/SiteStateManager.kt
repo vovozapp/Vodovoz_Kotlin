@@ -12,6 +12,8 @@ class SiteStateManager @Inject constructor(
     private val repository: MainRepository
 ) {
 
+    var showRateBottom = false
+
     private var siteStateListener = MutableStateFlow<SiteStateResponse?>(null)
     fun observeSiteState() = siteStateListener.asStateFlow()
 
@@ -48,4 +50,6 @@ class SiteStateManager @Inject constructor(
     fun clearDeepLinkListener() {
         deepLinkPathListener.value = null
     }
+
+
 }

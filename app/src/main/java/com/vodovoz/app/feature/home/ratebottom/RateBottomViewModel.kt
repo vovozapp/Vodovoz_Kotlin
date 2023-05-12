@@ -50,7 +50,7 @@ class RateBottomViewModel @Inject constructor(
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
-                    if (it.status == "Success") {
+                    uiStateListener.value = if (it.status == "Success") {
                         state.copy(
                             loadingPage = false,
                             data = state.data.copy(

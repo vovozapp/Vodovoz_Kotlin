@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:orientation="vertical"
@@ -16,7 +16,9 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/collapsedHeaderTv"
             android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/space_8"
             android:layout_height="wrap_content"
+            android:gravity="center"
             app:fontFamily="@font/rotondac"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -30,6 +32,7 @@
             android:layout_height="wrap_content"
             app:fontFamily="@font/rotondac"
             android:layout_marginTop="@dimen/space_8"
+            android:gravity="center"
             android:textSize="14sp"
             android:textStyle="normal"
             android:textAllCaps="false"
@@ -37,11 +40,12 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/collapsedRv"
-            tools:itemCount="5"
+            tools:itemCount="1"
+            android:layout_gravity="center"
             tools:listitem="@layout/item_collapsed_rate_image"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="horizontal"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>

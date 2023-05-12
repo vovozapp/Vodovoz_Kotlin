@@ -62,7 +62,7 @@ class HomeFlowFragment : BaseFragment() {
             productsShowAllListener = getProductsShowClickListener(),
             productsClickListener = getProductsClickListener(),
             promotionsClickListener = getPromotionsClickListener()
-        )
+        ) {}
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

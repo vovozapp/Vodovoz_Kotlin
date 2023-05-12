@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.home
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
@@ -19,7 +20,8 @@ class HomeController(
     listener: HomeMainClickListener,
     productsShowAllListener: ProductsShowAllListener,
     productsClickListener: ProductsClickListener,
-    promotionsClickListener: PromotionsClickListener
+    promotionsClickListener: PromotionsClickListener,
+    private val showRateBottomSheetFragment: () -> Unit
 ) {
     private val homeMainAdapter = HomeMainAdapter(listener, cartManager, likeManager, productsShowAllListener, productsClickListener, promotionsClickListener)
 
@@ -36,6 +38,14 @@ class HomeController(
         with(recyclerView) {
             adapter = homeMainAdapter
             layoutManager = LinearLayoutManager(context)
+            addOnScrollListener(object : OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (dy > 0) {
+                        showRateBottomSheetFragment.invoke()
+                    }
+                }
+            })
         }
     }
 

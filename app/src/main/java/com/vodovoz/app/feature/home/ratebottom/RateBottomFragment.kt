@@ -12,7 +12,6 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.FragmentRateBottomBinding
 import com.vodovoz.app.feature.home.ratebottom.adapter.RateBottomImageAdapter
-import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 

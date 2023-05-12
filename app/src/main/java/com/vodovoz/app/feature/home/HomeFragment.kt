@@ -24,6 +24,7 @@ import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.popup.NewsClickListener
 import com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment
+import com.vodovoz.app.feature.home.ratebottom.RateBottomFragment
 import com.vodovoz.app.feature.home.ratebottom.RateBottomViewModel
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
@@ -76,7 +77,12 @@ class HomeFragment : BaseFragment() {
             productsShowAllListener = getProductsShowClickListener(),
             productsClickListener = getProductsClickListener(),
             promotionsClickListener = getPromotionsClickListener()
-        )
+        ) {
+            if (!siteStateManager.showRateBottom) {
+                siteStateManager.showRateBottom = true
+                RateBottomFragment().show(childFragmentManager, "TAG")
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
