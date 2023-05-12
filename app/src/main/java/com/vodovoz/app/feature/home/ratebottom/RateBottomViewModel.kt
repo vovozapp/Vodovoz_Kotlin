@@ -7,6 +7,8 @@ import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.MainRepository
+import com.vodovoz.app.feature.home.ratebottom.model.CollapsedData
+import com.vodovoz.app.feature.home.ratebottom.model.CollapsedDataImage
 import com.vodovoz.app.feature.home.ratebottom.model.RateBottomModel
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,7 +54,8 @@ class RateBottomViewModel @Inject constructor(
                         state.copy(
                             loadingPage = false,
                             data = state.data.copy(
-                                item = it
+                                item = it,
+                                collapsedData = it.mapToCollapsedData()
                             ),
                             error = null
                         )
@@ -69,6 +72,18 @@ class RateBottomViewModel @Inject constructor(
     }
 
     data class RateBottomState(
-        val item: RateBottomModel? = null
+        val item: RateBottomModel? = null,
+        val collapsedData: CollapsedData? = null,
+        val expandedData: RateBottomModel? = null
     ) : State
+
+    fun RateBottomModel.mapToCollapsedData() : CollapsedData {
+        return CollapsedData(
+            this.rateBottomData?.titleCategory,
+            this.rateBottomData?.allProductsCount,
+            this.rateBottomData?.productsList?.map {
+                CollapsedDataImage(it.image)
+            }
+        )
+    }
 }

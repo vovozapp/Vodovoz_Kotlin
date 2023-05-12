@@ -24,6 +24,7 @@ import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.popup.NewsClickListener
 import com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment
+import com.vodovoz.app.feature.home.ratebottom.RateBottomViewModel
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
@@ -52,6 +53,7 @@ class HomeFragment : BaseFragment() {
     }
 
     private val flowViewModel: HomeFlowViewModel by activityViewModels()
+    private val rateBottomViewModel: RateBottomViewModel by activityViewModels()
 
     @Inject
     lateinit var cartManager: CartManager
@@ -80,6 +82,7 @@ class HomeFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         flowViewModel.firstLoad()
+        rateBottomViewModel.firstLoad()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

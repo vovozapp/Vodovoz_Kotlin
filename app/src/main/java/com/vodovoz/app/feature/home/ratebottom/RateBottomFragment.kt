@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.home.ratebottom
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -47,6 +48,22 @@ class RateBottomFragment : BaseBottomSheetFragment() {
                         showLoader()
                     } else {
                         hideLoader()
+                    }
+
+                    if (state.data.expandedData != null) {
+                        binding.expandedLL.isVisible = true
+                        binding.collapsedLL.isVisible = false
+                    } else {
+                        binding.expandedLL.isVisible = false
+                        binding.collapsedLL.isVisible = true
+                    }
+
+                    if (state.data.collapsedData != null) {
+                        binding.expandedLL.isVisible = false
+                        binding.collapsedLL.isVisible = true
+                    } else {
+                        binding.expandedLL.isVisible = true
+                        binding.collapsedLL.isVisible = false
                     }
 
                     showError(state.error)
