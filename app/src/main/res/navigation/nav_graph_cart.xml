@@ -498,6 +498,10 @@
         <argument
             android:name="productId"
             app:argType="long" />
+        <argument
+            android:name="rate"
+            android:defaultValue="-4"
+            app:argType="integer"/>
     </dialog>
     <dialog
         android:id="@+id/aboutServicesDialogFragment"

@@ -10,6 +10,7 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.feature.home.ratebottom.model.CollapsedData
 import com.vodovoz.app.feature.home.ratebottom.model.CollapsedDataImage
 import com.vodovoz.app.feature.home.ratebottom.model.RateBottomModel
+import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RateBottomViewModel @Inject constructor(
     private val repository: MainRepository,
-    private val accountManager: AccountManager
+    private val accountManager: AccountManager,
+    private val siteStateManager: SiteStateManager
 ) : PagingStateViewModel<RateBottomViewModel.RateBottomState>(RateBottomState()) {
 
     fun firstLoad() {
@@ -51,6 +53,7 @@ class RateBottomViewModel @Inject constructor(
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     uiStateListener.value = if (it.status == "Success") {
+                        siteStateManager.showRateBottom = false
                         state.copy(
                             loadingPage = false,
                             data = state.data.copy(

@@ -12,7 +12,7 @@ class SiteStateManager @Inject constructor(
     private val repository: MainRepository
 ) {
 
-    var showRateBottom = false
+    var showRateBottom: Boolean?= null
 
     private var siteStateListener = MutableStateFlow<SiteStateResponse?>(null)
     fun observeSiteState() = siteStateListener.asStateFlow()

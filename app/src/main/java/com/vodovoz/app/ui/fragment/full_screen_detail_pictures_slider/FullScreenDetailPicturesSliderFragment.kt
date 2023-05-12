@@ -46,6 +46,7 @@ class FullScreenDetailPicturesSliderFragment : DialogFragment() {
         binding.vpImages.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.vpImages.adapter = FullScreenDetailPicturesAdapter(detailPictureUrlList)
         binding.vpImages.currentItem = startPosition
+        binding.dotsIndicator.attachTo(binding.vpImages)
 
         binding.imgClose.setOnClickListener { findNavController().popBackStack() }
     }

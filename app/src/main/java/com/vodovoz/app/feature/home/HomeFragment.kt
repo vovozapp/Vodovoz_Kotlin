@@ -78,9 +78,11 @@ class HomeFragment : BaseFragment() {
             productsClickListener = getProductsClickListener(),
             promotionsClickListener = getPromotionsClickListener()
         ) {
-            if (!siteStateManager.showRateBottom) {
-                siteStateManager.showRateBottom = true
-                RateBottomFragment().show(childFragmentManager, "TAG")
+            if (siteStateManager.showRateBottom != null) {
+                if (!siteStateManager.showRateBottom!!) {
+                    siteStateManager.showRateBottom = true
+                    RateBottomFragment().show(childFragmentManager, "TAG")
+                }
             }
         }
     }
