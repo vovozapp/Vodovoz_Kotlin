@@ -8,10 +8,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.FragmentRateBottomBinding
 import com.vodovoz.app.feature.home.ratebottom.adapter.RateBottomImageAdapter
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -41,6 +44,35 @@ class RateBottomFragment : BaseBottomSheetFragment() {
         bindErrorRefresh { viewModel.refresh() }
         observeUiState()
         initImageRv()
+        initBottomSheetCallback()
+    }
+
+    private fun initBottomSheetCallback() {
+        val behavior = (dialog as? BottomSheetDialog)?.behavior
+        val density = requireContext().resources.displayMetrics.density
+        behavior?.peekHeight = (150 * density).toInt()
+        behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+        behavior?.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {}
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                if (slideOffset > 0) {
+                    binding.collapsedLL.alpha = 1 - 2 * slideOffset
+                    binding.expandedLL.alpha = slideOffset * slideOffset
+
+                    if (slideOffset > 0.5) {
+                        binding.collapsedLL.visibility = View.GONE
+                        binding.expandedLL.visibility = View.VISIBLE
+                    }
+
+                    if (slideOffset < 0.5 && binding.expandedLL.visibility == View.VISIBLE) {
+                        binding.collapsedLL.visibility = View.VISIBLE
+                        binding.expandedLL.visibility = View.INVISIBLE
+                    }
+                }
+            }
+        })
     }
 
     private fun initImageRv() {
