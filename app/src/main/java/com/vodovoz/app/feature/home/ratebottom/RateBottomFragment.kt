@@ -2,21 +2,21 @@ package com.vodovoz.app.feature.home.ratebottom
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
+import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.FragmentRateBottomBinding
+import com.vodovoz.app.feature.home.ratebottom.adapter.RateBottomClickListener
 import com.vodovoz.app.feature.home.ratebottom.adapter.RateBottomImageAdapter
-import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.feature.home.ratebottom.adapter.RateBottomViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class RateBottomFragment : BaseBottomSheetFragment() {
@@ -32,6 +32,9 @@ class RateBottomFragment : BaseBottomSheetFragment() {
     private val viewModel: RateBottomViewModel by activityViewModels()
 
     private val collapsedImagesAdapter = RateBottomImageAdapter()
+    private val rateBottomViewPagerAdapter = RateBottomViewPagerAdapter(object : RateBottomClickListener {
+
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,13 +47,20 @@ class RateBottomFragment : BaseBottomSheetFragment() {
         bindErrorRefresh { viewModel.refresh() }
         observeUiState()
         initImageRv()
+        initViewPager()
         initBottomSheetCallback()
+    }
+
+    private fun initViewPager() {
+        binding.rateViewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.rateViewPager.adapter = rateBottomViewPagerAdapter
+        binding.dotsIndicator.attachTo(binding.rateViewPager)
     }
 
     private fun initBottomSheetCallback() {
         val behavior = (dialog as? BottomSheetDialog)?.behavior
         val density = requireContext().resources.displayMetrics.density
-        behavior?.peekHeight = (150 * density).toInt()
+        behavior?.peekHeight = (160 * density).toInt()
         behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         behavior?.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
 
@@ -64,6 +74,7 @@ class RateBottomFragment : BaseBottomSheetFragment() {
                     if (slideOffset > 0.5) {
                         binding.collapsedLL.visibility = View.GONE
                         binding.expandedLL.visibility = View.VISIBLE
+                        bottomSheet.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
                     }
 
                     if (slideOffset < 0.5 && binding.expandedLL.visibility == View.VISIBLE) {
@@ -93,27 +104,20 @@ class RateBottomFragment : BaseBottomSheetFragment() {
                         hideLoader()
                     }
 
-                    if (state.data.expandedData != null) {
-                        binding.expandedLL.isVisible = true
-                        binding.collapsedLL.isVisible = false
-                    } else {
-                        binding.expandedLL.isVisible = false
-                        binding.collapsedLL.isVisible = true
+                    if (state.data.item != null) {
+                        binding.expandedHeaderTv.text = state.data.item.rateBottomData?.titleProduct
+                        val prList = state.data.item.rateBottomData?.productsList
+                        if (!prList.isNullOrEmpty()) {
+                            rateBottomViewPagerAdapter.submitList(prList)
+                        }
                     }
 
                     if (state.data.collapsedData != null) {
-
                         binding.collapsedBodyTv.text = state.data.collapsedData.body
                         binding.collapsedHeaderTv.text = state.data.collapsedData.title
                         if (!state.data.collapsedData.imageList.isNullOrEmpty()) {
                             collapsedImagesAdapter.submitList(state.data.collapsedData.imageList)
                         }
-
-                        binding.expandedLL.isVisible = false
-                        binding.collapsedLL.isVisible = true
-                    } else {
-                        binding.expandedLL.isVisible = true
-                        binding.collapsedLL.isVisible = false
                     }
 
                     showError(state.error)

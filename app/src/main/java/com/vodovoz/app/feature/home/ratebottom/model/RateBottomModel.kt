@@ -34,7 +34,17 @@ data class ProductRateBottom(
     val id: Int?,
     @Json(name = "NAME")
     val name: String?
-)
+) : Item {
+    override fun getItemViewType(): Int {
+        return R.layout.item_rate_product_bottom
+    }
+
+    override fun areItemsTheSame(item: Item): Boolean {
+        if (item !is ProductRateBottom) return false
+
+        return this == item
+    }
+}
 
 data class CollapsedData(
     val title: String?,

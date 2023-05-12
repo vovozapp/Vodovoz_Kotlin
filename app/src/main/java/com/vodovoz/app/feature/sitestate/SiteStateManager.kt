@@ -31,13 +31,12 @@ class SiteStateManager @Inject constructor(
     }
 
     suspend fun fetchSiteStateActive() : Boolean {
-        val stateActive = siteStateListener.value?.active ?: kotlin.run {
-            requestSiteState()
-            return false
-        }
-        return when(stateActive) {
+        return when(siteStateListener.value?.active) {
             "N" -> true
-            else -> false
+            else -> {
+                requestSiteState()
+                false
+            }
         }
     }
 

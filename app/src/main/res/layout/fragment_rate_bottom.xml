@@ -1,86 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/collapsedLL"
-        android:layout_marginHorizontal="@dimen/space_16"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_marginBottom="@dimen/_30sdp"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/collapsedHeaderTv"
-            android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/space_8"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            app:fontFamily="@font/rotondac"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textAllCaps="false"
-            android:textColor="#434343"/>
-
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/collapsedBodyTv"
+        <LinearLayout
+            android:id="@+id/collapsedLL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:fontFamily="@font/rotondac"
-            android:layout_marginTop="@dimen/space_8"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:textStyle="normal"
-            android:textAllCaps="false"
-            android:textColor="#60000000"/>
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:layout_marginBottom="@dimen/_30sdp"
+            android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/collapsedRv"
-            tools:itemCount="1"
-            android:layout_gravity="center"
-            tools:listitem="@layout/item_collapsed_rate_image"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/collapsedHeaderTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_16"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:textColor="#434343"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:fontFamily="@font/rotondac" />
 
-    </LinearLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/expandedLL"
-        android:visibility="gone"
-        tools:visibility="visible"
-        android:layout_marginHorizontal="@dimen/space_16"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/collapsedBodyTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_8"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:textColor="#60000000"
+                android:textSize="14sp"
+                android:textStyle="normal"
+                app:fontFamily="@font/rotondac" />
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/rateViewPager"
-            android:layout_weight="20"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/collapsedRv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="1"
+                tools:listitem="@layout/item_collapsed_rate_image" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/expandedLL"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@color/white"/>
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
 
-        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-            android:id="@+id/dots_indicator"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="10dp"
-            app:dotsColor="#BDBDBD"
-            android:layout_weight="1"
-            app:dotsCornerRadius="16dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginHorizontal="16dp"
-            app:dotsSize="7.5dp"
-            app:dotsWidthFactor="1"
-            app:dotsSpacing="4dp"
-            app:selectedDotColor="@color/bluePrimary" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/expandedHeaderTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_16"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:textColor="#434343"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:fontFamily="@font/rotondac" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/rateViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="20"
+                android:background="@color/white" />
+
+            <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                android:id="@+id/dots_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="10dp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="@dimen/_30sdp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                app:dotsColor="#BDBDBD"
+                app:dotsCornerRadius="16dp"
+                app:dotsSize="7.5dp"
+                app:dotsSpacing="4dp"
+                app:dotsWidthFactor="1"
+                app:selectedDotColor="@color/bluePrimary" />
+        </LinearLayout>
+
     </LinearLayout>
-
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>

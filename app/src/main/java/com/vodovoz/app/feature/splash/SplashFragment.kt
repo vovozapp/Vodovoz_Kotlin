@@ -67,7 +67,9 @@ class SplashFragment : BaseFragment() {
                         "${state.data.items.map { it.position }}"
                     }
                     if (state.data.items.size in (HomeFlowViewModel.POSITIONS_COUNT - 8..HomeFlowViewModel.POSITIONS_COUNT)) {
-                        if (siteStateManager.fetchSiteStateActive()) {
+                        val active = siteStateManager.fetchSiteStateActive()
+                        debugLog { "site state active $active" }
+                        if (active) {
                             findNavController().navigate(R.id.mainFragment)
                         } else {
                             findNavController().navigate(R.id.blockAppFragment)
