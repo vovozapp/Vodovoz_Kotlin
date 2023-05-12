@@ -377,6 +377,13 @@ interface MainApi {
         @Query("userid") userId: Long? = null,
     ): ResponseBody
 
+    @GET("/newmobile/glavnaya/otzivtovari.php")
+    suspend fun dontCommentProduct(
+        @Query("action") action: String? = null,
+        @Query("id") productId: Long? = null,
+        @Query("userid") userId: Long? = null
+    ): ResponseBody
+
     /**
      * past purchases
      */

@@ -655,6 +655,15 @@ class MainRepository @Inject constructor(
         userId = userId
     )
 
+    suspend fun dontCommentProduct(
+        productId: Long,
+        userId: Long
+    ) = api.dontCommentProduct(
+        action = "addblock",
+        productId = productId,
+        userId = userId
+    )
+
     /**
      * past purchases
      */
