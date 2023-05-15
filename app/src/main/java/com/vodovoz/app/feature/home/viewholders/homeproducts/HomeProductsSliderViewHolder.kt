@@ -98,7 +98,8 @@ class HomeProductsSliderViewHolder(
         when(items.items.size) {
             1 -> {
                 binding.tlCategories.visibility = View.GONE
-                binding.llSingleTitleContainer.visibility = View.VISIBLE
+                binding.tvName.visibility = View.VISIBLE
+                binding.tvShowAll.visibility = View.VISIBLE
                 binding.tvName.text = items.items.first().name
                 when (items.productsSliderConfig.containShowAllButton) {
                     true -> binding.tvShowAll.visibility = View.VISIBLE
@@ -107,7 +108,8 @@ class HomeProductsSliderViewHolder(
             }
             else -> {
                 binding.tlCategories.visibility = View.VISIBLE
-                binding.llSingleTitleContainer.visibility = View.GONE
+                binding.tvName.visibility = View.GONE
+                binding.tvShowAll.visibility = View.GONE
                 for (index in items.items.indices) {
                     binding.tlCategories.newTab().apply {
                         val customTabBinding = ViewCustomTabBinding.inflate(

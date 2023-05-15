@@ -1,62 +1,64 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--new-->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--new-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/llSingleTitleContainer"
-        android:layout_width="match_parent"
+    <androidx.appcompat.widget.AppCompatTextView
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tvShowAll"
+        android:id="@+id/tvName"
+        style="@style/TextViewMediumBlackBold"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="bottom">
+        android:layout_weight="1"
+        android:paddingHorizontal="@dimen/space_16"
+        android:paddingVertical="@dimen/space_8"
+        android:textSize="16sp"
+        tools:text="Название категории" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvName"
-            style="@style/TextViewMediumBlackBold"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textSize="16sp"
-            android:layout_height="wrap_content"
-            android:paddingVertical="@dimen/space_8"
-            android:paddingHorizontal="@dimen/space_16"
-            tools:text="Название категории"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvShowAll"
-            style="@style/TextViewSmallBlue"
-            android:textSize="12sp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/show_all"
-            android:paddingVertical="@dimen/space_8"
-            android:paddingHorizontal="@dimen/space_16" />
-
-    </LinearLayout>
+    <androidx.appcompat.widget.AppCompatTextView
+        app:layout_constraintStart_toEndOf="@id/tvName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvName"
+        app:layout_constraintBottom_toBottomOf="@id/tvName"
+        android:id="@+id/tvShowAll"
+        style="@style/TextViewSmallBlue"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/space_16"
+        android:paddingVertical="@dimen/space_8"
+        android:text="@string/show_all"
+        android:textSize="12sp" />
 
     <com.google.android.material.tabs.TabLayout
+        app:layout_constraintTop_toBottomOf="@id/tvName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/tlCategories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        app:tabMode="scrollable"
         android:layout_marginTop="16dp"
-        app:tabPaddingStart="0dp"
-        app:tabPaddingEnd="0dp"
-        app:tabPaddingBottom="0dp"
-        app:tabPaddingTop="0dp"
+        android:visibility="visible"
         app:tabIndicatorHeight="0dp"
+        app:tabMode="scrollable"
+        app:tabPaddingBottom="0dp"
+        app:tabPaddingEnd="0dp"
+        app:tabPaddingStart="0dp"
+        app:tabPaddingTop="0dp"
         app:tabRippleColor="@null"
-        app:tabTextAppearance="@style/Tab"/>
+        app:tabTextAppearance="@style/Tab" />
 
     <androidx.recyclerview.widget.RecyclerView
+        app:layout_constraintTop_toBottomOf="@id/tlCategories"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/rvCategories"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
