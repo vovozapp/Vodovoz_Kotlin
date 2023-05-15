@@ -87,7 +87,7 @@ object ProductJsonParser {
                 }
             },
             pricePerUnit = safeInt("PROPERTY_TSENA_ZA_EDINITSU_TOVARA_VALUE"),
-            replacementProductEntityList = when(has("nettovar")) {
+            replacementProductEntityList = when(has("nettovar") && !isNull("nettovar")) {
                 false -> listOf()
                 true -> getJSONObject("nettovar").getJSONArray("data").parseProductEntityList()
             }
