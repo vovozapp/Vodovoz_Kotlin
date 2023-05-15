@@ -1,185 +1,172 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--new(mnr)-->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--new(mnr)-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="4dp"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="4dp"
     android:paddingStart="@dimen/space_8"
-    android:paddingEnd="@dimen/space_8"
-    android:baselineAligned="false">
+    android:paddingEnd="@dimen/space_8">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.cardview.widget.CardView
+        android:id="@+id/lastPurchases"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/space_8"
+        app:cardCornerRadius="@dimen/corner_5"
+        app:cardElevation="@dimen/elevation_3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@id/favorite"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/lastPurchases"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="@dimen/space_8"
-            app:cardCornerRadius="@dimen/corner_5"
-            app:cardElevation="@dimen/elevation_3"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="8dp"
+            tools:ignore="UseCompoundDrawables">
 
-            <RelativeLayout
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/appCompatImageView2"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:padding="4dp"
+                android:src="@drawable/png_past_purchases"
+                app:layout_constraintBottom_toTopOf="@+id/appCompatTextView2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/appCompatTextView2"
+                style="@style/TextViewNormalGray"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="8dp"
-                tools:ignore="UseCompoundDrawables">
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/rotondac"
+                android:gravity="center"
+                android:text="@string/last_purchases"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appCompatImageView2" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:padding="4dp"
-                    android:layout_above="@+id/pastPurchasesDivider"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/png_past_purchases"
-                    tools:ignore="ContentDescription" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <View
-                    android:id="@+id/pastPurchasesDivider"
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:layout_centerInParent="true" />
+    </androidx.cardview.widget.CardView>
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/TextViewNormalGray"
-                    android:layout_width="match_parent"
-                    android:fontFamily="@font/rotondac"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/pastPurchasesDivider"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center"
-                    android:text="@string/last_purchases" />
-
-            </RelativeLayout>
-
-        </androidx.cardview.widget.CardView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.cardview.widget.CardView
+        android:id="@+id/favorite"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/space_8"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
+        app:cardCornerRadius="@dimen/corner_5"
+        app:cardElevation="@dimen/elevation_3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@id/ordersHistory"
+        app:layout_constraintStart_toEndOf="@id/lastPurchases"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/favorite"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="@dimen/space_8"
-            app:cardCornerRadius="@dimen/corner_5"
-            app:cardElevation="@dimen/elevation_3"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:orientation="vertical"
+            android:padding="8dp"
+            tools:ignore="UseCompoundDrawables">
 
-            <RelativeLayout
+            <androidx.appcompat.widget.AppCompatImageView
+                app:layout_constraintBottom_toTopOf="@+id/appCompatTextView3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/appCompatImageView3"
+                android:layout_height="40dp"
+                android:layout_width="40dp"
+                android:padding="4dp"
+                android:src="@drawable/hearticon"
+                app:tint="@color/bluePrimary"
+                tools:ignore="ContentDescription" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/appCompatTextView3"
+                style="@style/TextViewNormalGray"
+                android:fontFamily="@font/rotondac"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appCompatImageView3"
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="8dp"
-                tools:ignore="UseCompoundDrawables">
+                android:text="@string/additional_navigation_favorite" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:padding="4dp"
-                    android:layout_above="@+id/favoriteDivider"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/hearticon"
-                    app:tint="@color/bluePrimary"
-                    tools:ignore="ContentDescription" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <View
-                    android:id="@+id/favoriteDivider"
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:layout_centerInParent="true" />
+    </androidx.cardview.widget.CardView>
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/TextViewNormalGray"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/favoriteDivider"
-                    android:fontFamily="@font/rotondac"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center"
-                    android:text="@string/additional_navigation_favorite" />
-
-            </RelativeLayout>
-
-        </androidx.cardview.widget.CardView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.cardview.widget.CardView
+        android:id="@+id/ordersHistory"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/space_8"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
+        app:cardCornerRadius="@dimen/corner_5"
+        app:cardElevation="@dimen/elevation_3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/favorite"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/ordersHistory"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="@dimen/space_8"
-            app:cardCornerRadius="@dimen/corner_5"
-            app:cardElevation="@dimen/elevation_3"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:orientation="vertical"
+            android:padding="8dp"
+            tools:ignore="UseCompoundDrawables">
 
-            <RelativeLayout
+            <androidx.appcompat.widget.AppCompatImageView
+                app:layout_constraintBottom_toTopOf="@+id/appCompatTextView4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/appCompatImageView4"
+                android:layout_centerHorizontal="true"
+                android:layout_height="40dp"
+                android:layout_width="40dp"
+                android:padding="4dp"
+                android:src="@drawable/png_order_history"
+                tools:ignore="ContentDescription" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/appCompatTextView4"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appCompatImageView4"
+                style="@style/TextViewNormalGray"
+                android:fontFamily="@font/rotondac"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="8dp"
-                tools:ignore="UseCompoundDrawables">
+                android:text="@string/additional_navigation_order_history" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:padding="4dp"
-                    android:layout_above="@+id/orderHistoryDivider"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/png_order_history"
-                    tools:ignore="ContentDescription" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <View
-                    android:id="@+id/orderHistoryDivider"
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:layout_centerInParent="true" />
+    </androidx.cardview.widget.CardView>
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/TextViewNormalGray"
-                    android:layout_width="match_parent"
-                    android:fontFamily="@font/rotondac"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/orderHistoryDivider"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center"
-                    android:text="@string/additional_navigation_order_history" />
-
-            </RelativeLayout>
-
-        </androidx.cardview.widget.CardView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
