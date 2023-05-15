@@ -38,9 +38,9 @@ class DeliveryZonesManager @Inject constructor(
                 if (response is ResponseEntity.Success) {
                     val data = response.data.mapToUI()
                     val centerPoints =
-                        data.deliveryZoneUIList.filter { it.color == CENTER_COLOR }[0].pointList
+                        data.deliveryZoneUIList.filter { it.color == CENTER_COLOR }.takeIf { it.isNotEmpty() }?.get(0)?.pointList ?: emptyList()
                     val moPoints =
-                        data.deliveryZoneUIList.filter { it.color == MO_COLOR }[0].pointList
+                        data.deliveryZoneUIList.filter { it.color == MO_COLOR }.takeIf { it.isNotEmpty() }?.get(0)?.pointList ?: emptyList()
                     deliveryZonesStateListener.value = DeliveryZonesState(
                         deliveryZonesBundleUI = data,
                         centerPoints = centerPoints,
