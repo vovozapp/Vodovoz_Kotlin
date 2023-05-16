@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail
 
+import android.os.Parcelable
 import android.view.View
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
@@ -7,6 +8,7 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ViewHolderPagerDetailPictureBinding
 import com.vodovoz.app.databinding.ViewHolderSliderDetailPictureBinding
+import kotlinx.parcelize.Parcelize
 
 class DetailPictureFlowPagerViewHolder(
     view: View,
@@ -32,9 +34,10 @@ class DetailPictureFlowPagerViewHolder(
 
 }
 
+@Parcelize
 data class DetailPicturePager(
     val url: String
-): Item {
+): Item, Parcelable {
     override fun getItemViewType(): Int {
         return R.layout.view_holder_pager_detail_picture
     }

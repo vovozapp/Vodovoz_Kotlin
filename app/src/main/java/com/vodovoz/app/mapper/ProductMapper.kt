@@ -1,6 +1,7 @@
 package com.vodovoz.app.mapper
 
 import com.vodovoz.app.data.model.common.ProductEntity
+import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPicturePager
 import com.vodovoz.app.mapper.PriceMapper.mapToUI
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.PriceUI
@@ -39,7 +40,10 @@ object ProductMapper {
         currentPriceStringBuilder = getCurrentPrice(priceList.mapToUI(), isGift),
         oldPriceStringBuilder = getOldPrice(priceList.mapToUI(), isGift),
         minimalPriceStringBuilder = getMinimalPrice(priceList.mapToUI()),
-        haveDiscount = checkHaveDiscount(priceList.mapToUI(), isGift)
+        haveDiscount = checkHaveDiscount(priceList.mapToUI(), isGift),
+        priceConditionStringBuilder = getPriceCondition(priceList.mapToUI()),
+        discountPercentStringBuilder = getDiscountPercent(priceList.mapToUI()),
+        detailPictureListPager = detailPictureList.map { DetailPicturePager(it) }
     )
 
     private fun getCurrentPrice(list: List<PriceUI>, isGift: Boolean, isNegative: Boolean = false) : String {
@@ -81,6 +85,26 @@ object ProductMapper {
             .append("от ")
             .append(minimalPrice)
             .append(" ₽")
+            .toString()
+    }
+
+    private fun getPriceCondition(list: List<PriceUI>) : String {
+        if (list.isEmpty()) return ""
+        val minimalPrice = list.maxByOrNull { it.requiredAmount }?.requiredAmount!!
+        return StringBuilder()
+            .append("При условии покупки от ")
+            .append(minimalPrice)
+            .append(" шт")
+            .toString()
+    }
+
+    private fun getDiscountPercent(list: List<PriceUI>) : String {
+        if (list.isEmpty()) return ""
+        val newPrice = list.first().currentPrice
+        val oldPrice = list.first().oldPrice
+        return StringBuilder()
+            .append((100.0 - ((newPrice.toDouble()/oldPrice.toDouble()) * 100)).toInt())
+            .append("%")
             .toString()
     }
 

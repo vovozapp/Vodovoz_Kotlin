@@ -3,6 +3,7 @@ package com.vodovoz.app.ui.model
 import android.os.Parcelable
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPicturePager
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -32,7 +33,10 @@ data class ProductUI(
     val currentPriceStringBuilder: String = "",
     val oldPriceStringBuilder: String = "",
     val minimalPriceStringBuilder: String = "",
-    val haveDiscount: Boolean = false
+    val haveDiscount: Boolean = false,
+    val priceConditionStringBuilder: String = "",
+    val discountPercentStringBuilder: String = "",
+    val detailPictureListPager: List<DetailPicturePager> = emptyList()
 ) : Parcelable, Item {
 
     companion object {

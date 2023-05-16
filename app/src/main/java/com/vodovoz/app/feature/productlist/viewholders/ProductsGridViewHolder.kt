@@ -177,6 +177,13 @@ class ProductsGridViewHolder(
             }
             productsClickListener.onFavoriteClick(item.id, item.isFavorite)
         }
+
+        RatingBar.OnRatingBarChangeListener { p0, newRating, p2 ->
+            val item = item ?: return@OnRatingBarChangeListener
+            if (newRating != binding.rbRating.rating) {
+                productsClickListener.onChangeRating(item.id, newRating, item.rating)
+            }
+        }.also { binding.rbRating.onRatingBarChangeListener = it }
     }
 
     override fun bind(item: ProductUI) {
@@ -185,14 +192,7 @@ class ProductsGridViewHolder(
         bindFav(item)
 
         binding.tvName.setLimitedText(item.name)
-        binding.rbRating.rating = item.rating.toFloat()
-
-        binding.rbRating.onRatingBarChangeListener =
-            RatingBar.OnRatingBarChangeListener { p0, newRating, p2 ->
-                if (newRating != binding.rbRating.rating) {
-                    productsClickListener.onChangeRating(item.id, newRating, item.rating)
-                }
-            }
+        binding.rbRating.rating = item.rating
 
         binding.amountController.add.isSelected = item.leftItems == 0
 
