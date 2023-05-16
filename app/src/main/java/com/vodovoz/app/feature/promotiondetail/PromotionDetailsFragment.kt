@@ -117,7 +117,8 @@ class PromotionDetailsFragment : BaseFragment() {
                                 containShowAllButton = false,
                                 largeTitle = true
                             ),
-                            HomeProducts.DISCOUNT
+                            HomeProducts.DISCOUNT,
+                            prodList = state.data.items.forYouCategoryDetailUI.productUIList
                         )
                         bestForYouController.submitList(listOf(homeProducts))
                     }

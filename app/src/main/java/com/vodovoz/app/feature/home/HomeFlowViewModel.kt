@@ -58,6 +58,7 @@ import com.vodovoz.app.feature.home.viewholders.hometriplenav.HomeTripleNav
 import com.vodovoz.app.mapper.PopupNewsMapper.mapToUI
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.PopupNewsUI
+import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -270,15 +271,25 @@ class HomeFlowViewModel @Inject constructor(
                 .onEach {
                     val response = it.parseDiscountSliderResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
                         val item =
                             PositionItem(
                                 POSITION_4, HomeProducts(
                                     4,
-                                    response.data.mapToUI(),
+                                    data,
                                     productsType = DISCOUNT,
                                     productsSliderConfig = ProductsSliderConfig(
                                         containShowAllButton = true
-                                    )
+                                    ),
+                                    prodList =  if (data.size > 1) {
+                                        val list = mutableListOf<ProductUI>()
+                                        data.forEach {
+                                            list.addAll(it.productUIList)
+                                        }
+                                        list
+                                    } else {
+                                        data.first().productUIList
+                                    }
                                 )
                             )
 
@@ -375,6 +386,7 @@ class HomeFlowViewModel @Inject constructor(
                 .onEach {
                     val response = it.parseTopSliderResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
                         val item =
                             PositionItem(
                                 POSITION_6, HomeProducts(
@@ -383,7 +395,16 @@ class HomeFlowViewModel @Inject constructor(
                                     productsType = TOP_PROD,
                                     productsSliderConfig = ProductsSliderConfig(
                                         containShowAllButton = true
-                                    )
+                                    ),
+                                    prodList =  if (data.size > 1) {
+                                        val list = mutableListOf<ProductUI>()
+                                        data.forEach {
+                                            list.addAll(it.productUIList)
+                                        }
+                                        list
+                                    } else {
+                                        data.first().productUIList
+                                    }
                                 )
                             )
 
@@ -492,15 +513,25 @@ class HomeFlowViewModel @Inject constructor(
                 .onEach {
                     val response = it.parseNoveltiesSliderResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
                         val item =
                             PositionItem(
                                 POSITION_9, HomeProducts(
                                     9,
-                                    response.data.mapToUI(),
+                                    data,
                                     productsType = NOVELTIES,
                                     productsSliderConfig = ProductsSliderConfig(
                                         containShowAllButton = true
-                                    )
+                                    ),
+                                    prodList =  if (data.size > 1) {
+                                        val list = mutableListOf<ProductUI>()
+                                        data.forEach {
+                                            list.addAll(it.productUIList)
+                                        }
+                                        list
+                                    } else {
+                                        data.first().productUIList
+                                    }
                                 )
                             )
 
@@ -608,15 +639,25 @@ class HomeFlowViewModel @Inject constructor(
                 .onEach {
                     val response = it.parseBottomSliderResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
                         val item =
                             PositionItem(
                                 POSITION_11, HomeProducts(
                                     11,
-                                    response.data.mapToUI(),
+                                    data,
                                     productsType = BOTTOM_PROD,
                                     productsSliderConfig = ProductsSliderConfig(
                                         containShowAllButton = true
-                                    )
+                                    ),
+                                    prodList =  if (data.size > 1) {
+                                        val list = mutableListOf<ProductUI>()
+                                        data.forEach {
+                                            list.addAll(it.productUIList)
+                                        }
+                                        list
+                                    } else {
+                                        data.first().productUIList
+                                    }
                                 )
                             )
 
@@ -758,13 +799,24 @@ class HomeFlowViewModel @Inject constructor(
                     .onEach {
                         val response = it.parseViewedProductsSliderResponse()
                         uiStateListener.value = if (response is ResponseEntity.Success) {
+                            val data = response.data.mapToUI()
                             val item = PositionItem(
                                 POSITION_14, HomeProducts(
-                                    14, response.data.mapToUI(), ProductsSliderConfig(
+                                    14, data, ProductsSliderConfig(
                                         containShowAllButton = false
-                                    ), productsType = VIEWED
+                                    ), productsType = VIEWED,
+                                    prodList =  if (data.size > 1) {
+                                        val list = mutableListOf<ProductUI>()
+                                        data.forEach {
+                                            list.addAll(it.productUIList)
+                                        }
+                                        list
+                                    } else {
+                                        data.first().productUIList
+                                    }
                                 )
                             )
+
 
                             response.data.forEach { categoryDetailEntity ->
                                 categoryDetailEntity.productEntityList.syncFavoriteProducts(

@@ -4,12 +4,14 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryDetailUI
+import com.vodovoz.app.ui.model.ProductUI
 
 data class HomeProducts(
     val id : Int,
     val items: List<CategoryDetailUI>,
     val productsSliderConfig: ProductsSliderConfig,
-    val productsType: Int
+    val productsType: Int,
+    val prodList: List<ProductUI> = emptyList()
 ) : Item {
 
     override fun getItemViewType(): Int {

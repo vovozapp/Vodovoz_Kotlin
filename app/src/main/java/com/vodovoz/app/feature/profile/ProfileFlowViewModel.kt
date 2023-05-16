@@ -31,6 +31,7 @@ import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.mapper.UserDataMapper.mapToUI
 import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
+import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -271,12 +272,22 @@ class ProfileFlowViewModel @Inject constructor(
                 .onEach {
                     val response = it.parseViewedProductsSliderResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
                         val item = PositionItem(
                             POSITION_6,
                             HomeProducts(
-                                14, response.data.mapToUI(), ProductsSliderConfig(
+                                14, data, ProductsSliderConfig(
                                     containShowAllButton = false
-                                ), HomeProducts.VIEWED
+                                ), HomeProducts.VIEWED,
+                                prodList =  if (data.size > 1) {
+                                    val list = mutableListOf<ProductUI>()
+                                    data.forEach {
+                                        list.addAll(it.productUIList)
+                                    }
+                                    list
+                                } else {
+                                    data.first().productUIList
+                                }
                             )
                         )
                         state.copy(

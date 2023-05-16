@@ -27,6 +27,7 @@ import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowCon
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -168,7 +169,8 @@ class FavoriteFragment : BaseFragment() {
                     containShowAllButton = false,
                     largeTitle = true
                 ),
-                HomeProducts.DISCOUNT
+                HomeProducts.DISCOUNT,
+                prodList = state.bestForYouCategoryDetailUI.productUIList
             )
             bestForYouController.submitList(listOf(homeProducts))
             showContainer(false)

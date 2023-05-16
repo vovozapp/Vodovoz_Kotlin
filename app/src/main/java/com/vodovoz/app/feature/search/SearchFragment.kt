@@ -280,7 +280,8 @@ class SearchFragment : BaseFragment() {
                     containShowAllButton = false,
                     largeTitle = true
                 ),
-                HomeProducts.DISCOUNT
+                HomeProducts.DISCOUNT,
+                prodList = state.popularCategoryDetail.productUIList
             )
             bestForYouController.submitList(listOf(homeProducts))
             showContainer(false)

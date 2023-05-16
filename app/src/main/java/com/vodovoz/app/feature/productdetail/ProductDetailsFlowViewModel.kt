@@ -149,7 +149,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                         productUIList = mappedData.recommendProductUIList
                                     )
                                 ),
-                                productsType = DISCOUNT
+                                productsType = DISCOUNT,
+                                prodList = mappedData.recommendProductUIList
                             ),
                             detailPromotions = HomePromotions(
                                 8,
@@ -178,7 +179,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                         productUIList = mappedData.buyWithProductUIList
                                     )
                                 ),
-                                productsType = DISCOUNT
+                                productsType = DISCOUNT,
+                                prodList = mappedData.buyWithProductUIList
                             ),
                             detailComments = DetailComments(
                                 12,

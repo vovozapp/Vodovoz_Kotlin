@@ -224,7 +224,7 @@ class HomeFragment : BaseFragment() {
 
                     if (homeState.data.items.size in (5..HomeFlowViewModel.POSITIONS_COUNT)) {
                         val list =
-                            homeState.data.items.sortedBy { it.position }.mapNotNull { it.item }
+                            homeState.data.items.sortedBy { it.position }.mapNotNull { it.item }.distinct()
                         homeController.submitList(list)
                     }
 

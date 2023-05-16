@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.home.viewholders.homeproducts
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahmadhamwi.tabsync.TabbedListMediator
+import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
@@ -12,7 +13,9 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Compan
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.NOVELTIES
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.TOP_PROD
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.HomeCategoriesInnerAdapter
+import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.HomeProductsInnerAdapter
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
+import com.vodovoz.app.ui.decoration.ProductSliderMarginDecoration
 
 class HomeProductsSliderViewHolder(
     view: View,
@@ -23,13 +26,17 @@ class HomeProductsSliderViewHolder(
 ) : ItemViewHolder<HomeProducts>(view) {
 
     private val binding: FragmentSliderProductBinding = FragmentSliderProductBinding.bind(view)
-    private val homeCategoriesAdapter = HomeCategoriesInnerAdapter(productsClickListener, cartManager, likeManager)
+
+    private val homeProductsAdapter = HomeProductsInnerAdapter(productsClickListener, cartManager, likeManager)
+
+    private var isAddItemDecoration = false
 
     init {
         binding.rvCategories.layoutManager =
             LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
 
-        binding.rvCategories.adapter = homeCategoriesAdapter
+        binding.rvCategories.adapter = homeProductsAdapter
+        binding.rvCategories.setRecycledViewPool(likeManager.fetchViewPool())
 
         binding.tvShowAll.setOnClickListener {
             val items = item ?: return@setOnClickListener
@@ -48,7 +55,18 @@ class HomeProductsSliderViewHolder(
     override fun bind(item: HomeProducts) {
         super.bind(item)
 
-        homeCategoriesAdapter.submitList(item.items)
+        homeProductsAdapter.submitList(item.prodList)
+
+        if (!isAddItemDecoration) {
+            binding.rvCategories.addItemDecoration(
+                ProductSliderMarginDecoration(
+                    space = itemView.context.resources.getDimension(R.dimen.space_16).toInt(),
+                    itemCount = item.items.first().productUIList.size,
+                    isLast = bindingAdapterPosition == (bindingAdapter as? HomeCategoriesInnerAdapter)?.itemCount?.minus(1)
+                )
+            )
+            isAddItemDecoration = true
+        }
         updateCategoryTabs(item)
     }
 
