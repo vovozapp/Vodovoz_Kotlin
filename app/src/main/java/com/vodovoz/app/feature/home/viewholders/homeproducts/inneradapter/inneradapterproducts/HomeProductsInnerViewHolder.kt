@@ -129,17 +129,7 @@ class HomeProductsInnerViewHolder(
     override fun bind(item: ProductUI) {
         super.bind(item)
 
-        //If left items = 0
-        when(item.leftItems == 0) {
-            true -> {
-                binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_gray_circle_normal)
-                binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_alert))
-            }
-            false -> {
-                binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
-                binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_cart))
-            }
-        }
+        binding.amountController.add.isSelected = item.leftItems == 0
 
         //Price per unit / or order quantity
         when(item.pricePerUnit != 0) {
