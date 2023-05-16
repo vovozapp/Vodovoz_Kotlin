@@ -762,7 +762,7 @@ class HomeFlowViewModel @Inject constructor(
                                 POSITION_14, HomeProducts(
                                     14, response.data.mapToUI(), ProductsSliderConfig(
                                         containShowAllButton = false
-                                    ), VIEWED
+                                    ), productsType = VIEWED
                                 )
                             )
 

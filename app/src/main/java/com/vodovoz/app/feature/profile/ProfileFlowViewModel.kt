@@ -289,7 +289,7 @@ class ProfileFlowViewModel @Inject constructor(
                             loadingPage = false,
                             data = state.data.copy(
                                 items = state.data.items + PositionItem(
-                                    POSITION_5,
+                                    POSITION_6,
                                     null
                                 )
                             )
