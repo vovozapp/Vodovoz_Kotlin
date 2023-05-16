@@ -5,6 +5,7 @@ import android.graphics.Paint
 import android.os.CountDownTimer
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
@@ -132,29 +133,21 @@ class HomeProductsInnerViewHolder(
         binding.amountController.add.isSelected = item.leftItems == 0
 
         //Price per unit / or order quantity
-        when(item.pricePerUnit != 0) {
-            true -> {
-                binding.tvPricePerUnit.visibility = View.VISIBLE
-                binding.tvPricePerUnit.setPricePerUnitText(item.pricePerUnit)
-            }
-            false -> binding.tvPricePerUnit.visibility = View.GONE
-        }
+        binding.tvPricePerUnit.isVisible = item.pricePerUnit != 0
+        binding.tvPricePerUnit.text = item.pricePerUnitStringBuilder
 
         //Price
-        var haveDiscount = false
         when(item.priceList.size) {
             1 -> {
-                binding.tvCurrentPrice.setPriceText(item.priceList.first().currentPrice)
-                binding.tvOldPrice.setPriceText(item.priceList.first().oldPrice)
-                if (item.priceList.first().currentPrice < item.priceList.first().oldPrice || item.isGift) haveDiscount = true
+                binding.tvCurrentPrice.text = item.currentPriceStringBuilder
+                binding.tvOldPrice.text = item.oldPriceStringBuilder
             }
             else -> {
-                val minimalPrice = item.priceList.maxByOrNull { it.requiredAmount }!!
-                binding.tvCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice)
+                binding.tvCurrentPrice.text = item.minimalPriceStringBuilder
                 binding.tvPricePerUnit.visibility = View.GONE
             }
         }
-        when(haveDiscount) {
+        when(item.haveDiscount) {
             true -> {
                 binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
                 binding.tvOldPrice.visibility = View.VISIBLE

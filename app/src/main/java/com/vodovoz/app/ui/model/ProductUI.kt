@@ -27,7 +27,12 @@ data class ProductUI(
     val detailPictureList: List<String> = listOf(),
     val replacementProductUIList: List<ProductUI> = listOf(),
     var oldQuantity: Int = 0,
-    var linear: Boolean = true
+    var linear: Boolean = true,
+    val pricePerUnitStringBuilder: String = "",
+    val currentPriceStringBuilder: String = "",
+    val oldPriceStringBuilder: String = "",
+    val minimalPriceStringBuilder: String = "",
+    val haveDiscount: Boolean = false
 ) : Parcelable, Item {
 
     companion object {
