@@ -89,11 +89,11 @@ class HomeFlowViewModel @Inject constructor(
         fetchPopularSlider()
         fetchDiscountsSlider()
         fetchCategoryBannersSlider()
+        fetchTopSlider()
+        fetchOrdersSlider()
     }
 
     fun secondLoad() {
-        fetchTopSlider()
-        fetchOrdersSlider()
         fetchNoveltiesSlider()
         fetchPromotionsSlider()
         fetchBottomSlider()
