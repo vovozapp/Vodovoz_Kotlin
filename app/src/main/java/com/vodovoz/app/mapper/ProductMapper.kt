@@ -85,6 +85,7 @@ object ProductMapper {
     }
 
     private fun checkHaveDiscount(list: List<PriceUI>, isGift: Boolean) : Boolean {
+        if (list.isEmpty()) return false
         return list.first().currentPrice < list.first().oldPrice || isGift
     }
 
