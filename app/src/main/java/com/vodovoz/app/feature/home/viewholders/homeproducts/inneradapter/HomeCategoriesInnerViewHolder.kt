@@ -34,6 +34,7 @@ class HomeCategoriesInnerViewHolder(
         )
 
         binding.rvProducts.adapter = homeProductsAdapter
+        binding.rvProducts.setRecycledViewPool(likeManager.fetchViewPool())
     }
 
     override fun bind(item: CategoryDetailUI) {

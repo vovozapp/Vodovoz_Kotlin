@@ -1,10 +1,12 @@
 package com.vodovoz.app.common.like
 
 import android.content.SharedPreferences
+import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.data.local.LocalData
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.parser.response.favorite.AddToFavoriteResponseJsonParser.parseAddToFavoriteResponse
+import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -27,6 +29,11 @@ class LikeManager @Inject constructor(
 
     private val likes = ConcurrentHashMap<Long, Boolean>()
     private val likesStateListener = MutableSharedFlow<Map<Long, Boolean>>(replay = 1)
+
+    private val viewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool().apply {
+        setMaxRecycledViews(ProductUI.PRODUCT_VIEW_TYPE, 5)
+    }
+    fun fetchViewPool() = viewPool
 
     fun observeLikes() = likesStateListener.asSharedFlow().filter { it.isNotEmpty() }
 
