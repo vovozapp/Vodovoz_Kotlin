@@ -48,7 +48,7 @@ class ProductsGridViewHolder(
     private val amountControllerTimer = object : CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
-            val item = getItemByPosition() ?: return
+            val item = item ?: return
             productsClickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
             hideAmountController(item)
         }
@@ -57,12 +57,12 @@ class ProductsGridViewHolder(
     private val detailPictureFlowPagerAdapter = DetailPictureFlowPagerAdapter(
         clickListener = object : DetailPictureFlowClickListener {
             override fun onDetailPictureClick() {
-                val item = getItemByPosition() ?: return
+                val item = item ?: return
                 productsClickListener.onProductClick(item.id)
             }
 
             override fun onProductClick(id: Long) {
-                val item = getItemByPosition() ?: return
+                val item = item ?: return
                 productsClickListener.onProductClick(item.id)
             }
         }
@@ -110,7 +110,7 @@ class ProductsGridViewHolder(
 
     init {
         binding.pvPictures.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             productsClickListener.onProductClick(item.id)
         }
         binding.pvPictures.orientation = ViewPager2.ORIENTATION_HORIZONTAL
@@ -121,17 +121,17 @@ class ProductsGridViewHolder(
         binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 
         binding.root.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             productsClickListener.onProductClick(item.id)
         }
 
         binding.pvPictures.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             productsClickListener.onProductClick(item.id)
         }
 
         binding.amountController.add.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             if (item.isGift) return@setOnClickListener
             if (item.leftItems == 0) {
                 productsClickListener.onNotifyWhenBeAvailable(item.id, item.name, item.detailPicture)
@@ -145,7 +145,7 @@ class ProductsGridViewHolder(
         }
 
         binding.amountController.reduceAmount.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             item.oldQuantity = item.cartQuantity
             item.cartQuantity--
             if (item.cartQuantity < 0) item.cartQuantity = 0
@@ -155,7 +155,7 @@ class ProductsGridViewHolder(
         }
 
         binding.amountController.increaseAmount.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             item.oldQuantity = item.cartQuantity
             item.cartQuantity++
             amountControllerTimer.cancel()
@@ -164,15 +164,15 @@ class ProductsGridViewHolder(
         }
 
         binding.imgFavoriteStatus.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             when(item.isFavorite) {
                 true -> {
                     item.isFavorite = false
-                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
+                    binding.imgFavoriteStatus.isSelected = false
                 }
                 false -> {
                     item.isFavorite = true
-                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
+                    binding.imgFavoriteStatus.isSelected = true
                 }
             }
             productsClickListener.onFavoriteClick(item.id, item.isFavorite)
@@ -194,17 +194,7 @@ class ProductsGridViewHolder(
                 }
             }
 
-        //If left items = 0
-        when(item.leftItems == 0) {
-            true -> {
-                binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_gray_circle_normal)
-                binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_alert))
-            }
-            false -> {
-                binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
-                binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_cart))
-            }
-        }
+        binding.amountController.add.isSelected = item.leftItems == 0
 
         //Price per unit / or order quantity
         when(item.pricePerUnit != 0) {
@@ -297,10 +287,7 @@ class ProductsGridViewHolder(
     }
 
     private fun bindFav(item: ProductUI) {
-        when(item.isFavorite) {
-            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
-            true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
-        }
+        binding.imgFavoriteStatus.isSelected = item.isFavorite
     }
 
     private fun showAmountController() {
@@ -324,9 +311,5 @@ class ProductsGridViewHolder(
         }
         binding.amountController.amount.text = item.cartQuantity.toString()
         binding.amountController.circleAmount.text = item.cartQuantity.toString()
-    }
-
-    private fun getItemByPosition(): ProductUI? {
-        return (bindingAdapter as? AvailableProductsAdapter)?.getItem(bindingAdapterPosition) as? ProductUI
     }
 }

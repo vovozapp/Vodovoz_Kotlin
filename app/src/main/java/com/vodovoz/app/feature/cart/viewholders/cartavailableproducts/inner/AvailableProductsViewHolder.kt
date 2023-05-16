@@ -162,11 +162,11 @@ class AvailableProductsViewHolder(
             when(item.isFavorite) {
                 true -> {
                     item.isFavorite = false
-                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
+                    binding.imgFavoriteStatus.isSelected = false
                 }
                 false -> {
                     item.isFavorite = true
-                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
+                    binding.imgFavoriteStatus.isSelected = true
                 }
             }
             productsClickListener.onFavoriteClick(item.id, item.isFavorite)
@@ -180,7 +180,7 @@ class AvailableProductsViewHolder(
         binding.cgStatuses.visibility = View.VISIBLE
         binding.clPricesContainer.visibility = View.VISIBLE
         binding.tvOldPrice.visibility = View.VISIBLE
-        binding.rlAmountControllerContainer.visibility = View.VISIBLE
+        binding.amountController.root.visibility = View.VISIBLE
 
         binding.tvName.text = item.name
         binding.rbRating.rating = item.rating
@@ -317,7 +317,7 @@ class AvailableProductsViewHolder(
         //If is not available
         if (!item.isAvailable) {
             binding.imgFavoriteStatus.visibility = View.INVISIBLE
-            binding.rlAmountControllerContainer.visibility = View.INVISIBLE
+            binding.amountController.root.visibility = View.INVISIBLE
         }
 
     }

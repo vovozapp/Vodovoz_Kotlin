@@ -73,7 +73,7 @@
         android:orientation="vertical"
         android:paddingBottom="@dimen/space_8"
         android:layout_marginStart="@dimen/space_8"
-        app:layout_constraintBottom_toTopOf="@+id/rlAmountControllerContainer"
+        app:layout_constraintBottom_toTopOf="@+id/amountController"
         app:layout_constraintEnd_toStartOf="@+id/imgFavoriteStatus"
         app:layout_constraintStart_toEndOf="@+id/vpPictures"
         app:layout_constraintTop_toTopOf="parent">
@@ -156,24 +156,19 @@
         android:id="@+id/imgFavoriteStatus"
         android:layout_width="@dimen/_16sdp"
         android:layout_height="@dimen/_16sdp"
-        android:src="@drawable/ic_favorite_black"
+        android:src="@drawable/selector_fav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
-    <RelativeLayout
-        android:id="@+id/rlAmountControllerContainer"
+    <include
         android:layout_width="@dimen/_100sdp"
         android:translationZ="@dimen/space_16"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <include
-            android:id="@+id/amountController"
-            layout="@layout/view_product_amount_controller" />
-
-    </RelativeLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/amountController"
+        layout="@layout/view_product_amount_controller" />
 
     <LinearLayout
         android:id="@+id/clPricesContainer"
@@ -182,10 +177,10 @@
         android:gravity="bottom"
         android:orientation="vertical"
         android:layout_marginStart="@dimen/space_8"
-        app:layout_constraintBottom_toBottomOf="@+id/rlAmountControllerContainer"
+        app:layout_constraintBottom_toBottomOf="@+id/amountController"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/vpPictures"
-        app:layout_constraintTop_toTopOf="@+id/rlAmountControllerContainer">
+        app:layout_constraintTop_toTopOf="@+id/amountController">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvPricePerUnit"

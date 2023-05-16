@@ -152,7 +152,7 @@ class ProductListViewHolder(
         binding.cgStatuses.visibility = View.VISIBLE
         binding.clPricesContainer.visibility = View.VISIBLE
         binding.tvOldPrice.visibility = View.VISIBLE
-        binding.rlAmountControllerContainer.visibility = View.VISIBLE
+        binding.amountController.root.visibility = View.VISIBLE
 
         binding.tvName.text = productUI.name
         binding.rbRating.rating = productUI.rating.toFloat()
@@ -321,7 +321,7 @@ class ProductListViewHolder(
         //If is not available
         if (!productUI.isAvailable) {
             binding.imgFavoriteStatus.visibility = View.INVISIBLE
-            binding.rlAmountControllerContainer.visibility = View.INVISIBLE
+            binding.amountController.root.visibility = View.INVISIBLE
         }
     }
 

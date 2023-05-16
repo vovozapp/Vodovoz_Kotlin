@@ -1,21 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--new-->
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--new-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
-    android:orientation="horizontal"
+    android:clickable="true"
     android:focusable="true"
-    android:clickable="true">
+    android:orientation="horizontal">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pvPictures"
-        android:layout_marginTop="8dp"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:padding="1dp"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,9 +26,9 @@
         android:layout_width="0dp"
         android:layout_height="10dp"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/pvPictures"
         app:layout_constraintEnd_toEndOf="@+id/pvPictures"
         app:layout_constraintStart_toStartOf="@+id/pvPictures"
-        app:layout_constraintBottom_toBottomOf="@id/pvPictures"
         app:tabBackground="@drawable/selector_pager_indicator"
         app:tabGravity="center"
         app:tabIndicatorHeight="0dp"
@@ -44,10 +42,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingEnd="@dimen/space_16"
+        app:chipSpacingVertical="0dp"
         app:layout_constraintEnd_toStartOf="@+id/imgFavoriteStatus"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:chipSpacingVertical="0dp"
         tools:ignore="RtlSymmetry">
 
         <RelativeLayout
@@ -68,10 +66,10 @@
                     android:id="@+id/tvStatus"
                     style="@style/TextViewSmallWhite"
                     android:layout_width="wrap_content"
-                    android:textSize="12sp"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="@dimen/space_4"
                     android:paddingVertical="@dimen/space_2"
+                    android:textSize="12sp"
                     tools:text="Новинка" />
 
             </androidx.cardview.widget.CardView>
@@ -91,10 +89,10 @@
                 android:id="@+id/tvDiscountPercent"
                 style="@style/TextViewSmallWhite"
                 android:layout_width="wrap_content"
-                android:textSize="12sp"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/space_4"
                 android:paddingVertical="@dimen/space_2"
+                android:textSize="12sp"
                 tools:text="12%" />
 
         </androidx.cardview.widget.CardView>
@@ -105,7 +103,7 @@
         android:id="@+id/imgFavoriteStatus"
         android:layout_width="@dimen/_16sdp"
         android:layout_height="@dimen/_16sdp"
-        android:src="@drawable/ic_favorite_black"
+        android:src="@drawable/selector_fav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
@@ -115,11 +113,12 @@
         style="@style/TextViewNormalBlack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:maxLines="2"
-        android:textSize="16sp"
         android:layout_marginTop="16dp"
         android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="2"
+        android:minLines="2"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tlIndicators"
@@ -129,8 +128,8 @@
         android:id="@+id/llRatingContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="4dp"
+        android:orientation="horizontal"
         android:paddingTop="@dimen/space_2"
         app:layout_constraintStart_toStartOf="@+id/pvPictures"
         app:layout_constraintTop_toBottomOf="@id/tvName">
@@ -138,107 +137,93 @@
         <androidx.appcompat.widget.AppCompatRatingBar
             android:id="@+id/rbRating"
             style="?android:attr/ratingBarStyleSmall"
-            android:theme="@style/RatingBar"
             android:layout_width="wrap_content"
-            android:progressTint="@color/accentPrimary"
             android:layout_height="wrap_content"
             android:isIndicator="true"
             android:numStars="5"
-            android:stepSize="1"/>
+            android:progressTint="@color/accentPrimary"
+            android:stepSize="1"
+            android:theme="@style/RatingBar" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvCommentAmount"
             style="@style/TextViewSmallGray"
             android:layout_width="0dp"
-            android:textColor="#889295"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="bottom"
             android:paddingStart="@dimen/space_4"
             android:singleLine="true"
-            android:gravity="bottom"
-            tools:text="3 отзыва"
-            tools:ignore="RtlSymmetry" />
+            android:textColor="#889295"
+            tools:ignore="RtlSymmetry"
+            tools:text="3 отзыва" />
 
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/llRatingContainer">
+        android:gravity="bottom"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/llRatingContainer"
+        tools:ignore="RtlSymmetry">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvPricePerUnit"
+            style="@style/TextViewSmallLightGray"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="start|bottom"
+            tools:text="510/кг" />
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="bottom"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="RtlSymmetry">
+            android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvPricePerUnit"
-                style="@style/TextViewSmallLightGray"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="start|bottom"
-                tools:text="510/кг" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/tvCurrentPrice"
+                style="@style/TextViewMediumBlackBold"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="bottom"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvCurrentPrice"
-                    style="@style/TextViewMediumBlackBold"
-                    android:layout_width="wrap_content"
-                    android:textSize="18sp"
-                    android:textColor="@color/text_new_black"
-                    android:layout_height="wrap_content"
-                    tools:text="280 Р" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvOldPrice"
-                    style="@style/TextViewSmallLightGrayBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:paddingStart="@dimen/space_4"
-                    android:textSize="16sp"
-                    android:gravity="start|bottom"
-                    tools:ignore="RtlSymmetry"
-                    tools:text="300 Р" />
-
-            </LinearLayout>
+                android:textColor="@color/text_new_black"
+                android:textSize="18sp"
+                tools:text="280 Р" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvPriceCondition"
-                style="@style/TextViewSmallGray"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:id="@+id/tvOldPrice"
+                style="@style/TextViewSmallLightGrayBold"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:gravity="start|bottom"
-                tools:text="При условии покупки от 10 шт" />
+                android:paddingStart="@dimen/space_4"
+                android:textSize="16sp"
+                tools:ignore="RtlSymmetry"
+                tools:text="300 Р" />
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/rlAmountControllerContainer"
-            android:layout_width="wrap_content"
-            android:translationZ="@dimen/space_16"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvPriceCondition"
+            style="@style/TextViewSmallGray"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            android:gravity="start|bottom"
+            android:visibility="gone"
+            tools:text="При условии покупки от 10 шт" />
 
-            <include
-                android:id="@+id/amountController"
-                layout="@layout/view_product_amount_controller" />
+    </LinearLayout>
 
-        </RelativeLayout>
+    <include
+        android:id="@+id/amountController"
+        layout="@layout/view_product_amount_controller"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:translationZ="@dimen/space_16"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -35,8 +35,9 @@
         android:visibility="gone">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="250dp"
-            android:layout_height="300dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="42dp"
             android:layout_centerHorizontal="true"
             android:src="@drawable/png_large_avatar"
             app:layout_constraintBottom_toTopOf="@+id/tvTitle"
@@ -48,7 +49,8 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvTitle"
             style="@style/TextViewMediumBlackBold"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:gravity="center"
             android:layout_height="wrap_content"
             android:text="Вы не авторизованы"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -59,7 +61,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvSubTitle"
             style="@style/TextViewNormalGray"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_marginTop="@dimen/space_4"
@@ -67,7 +69,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
-
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnLoginOrReg"

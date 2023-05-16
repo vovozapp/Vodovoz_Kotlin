@@ -16,7 +16,7 @@ class HomeOrdersInnerViewHolder(
 
     init {
         binding.root.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             clickListener.onOrderClick(item.id)
         }
     }
@@ -42,9 +42,5 @@ class HomeOrdersInnerViewHolder(
             binding.imgStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, item.orderStatusUI.image))
             binding.imgStatus.setColorFilter(ContextCompat.getColor(itemView.context, item.orderStatusUI.color))
         }
-    }
-
-    private fun getItemByPosition(): OrderUI? {
-        return (bindingAdapter as? HomeOrdersInnerAdapter)?.getItem(bindingAdapterPosition) as? OrderUI
     }
 }
