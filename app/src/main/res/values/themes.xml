@@ -37,7 +37,7 @@
     </style>
     
     <style name="Tab" parent="@android:style/TextAppearance.Widget.TabWidget">
-        <item name="android:textSize">@dimen/medium_text_size</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textColor">@drawable/selector_text_menu_tab</item>
         <item name="fontFamily">@font/rotonda_normal</item>
     </style>

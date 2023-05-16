@@ -47,12 +47,17 @@
         android:visibility="visible"
         app:tabIndicatorHeight="0dp"
         app:tabMode="scrollable"
-        app:tabPaddingBottom="0dp"
-        app:tabPaddingEnd="0dp"
-        app:tabPaddingStart="0dp"
-        app:tabPaddingTop="0dp"
+        app:tabPaddingBottom="2dp"
+        app:tabPaddingEnd="16dp"
+        app:tabPaddingStart="16dp"
+        app:tabPaddingTop="2dp"
         app:tabRippleColor="@null"
-        app:tabTextAppearance="@style/Tab" />
+        app:tabTextAppearance="@style/Tab"
+        android:layout_margin="@dimen/_5sdp"
+        app:tabBackground="@drawable/tab_selector"
+        app:tabIndicator="@null"
+        app:tabSelectedTextColor="@color/bluePrimary"
+        app:tabTextColor="@color/black"/>
 
     <androidx.recyclerview.widget.RecyclerView
         app:layout_constraintTop_toBottomOf="@id/tlCategories"
