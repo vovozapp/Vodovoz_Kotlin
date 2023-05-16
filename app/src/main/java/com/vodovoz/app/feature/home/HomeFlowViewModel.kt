@@ -82,11 +82,15 @@ class HomeFlowViewModel @Inject constructor(
 ) : PagingContractViewModel<HomeFlowViewModel.HomeState, HomeFlowViewModel.HomeEvents>(HomeState.idle()) {
 
     private fun loadPage() {
+        updatePopupNews()
         fetchAdvertisingBannersSlider()
         fetchHistoriesSlider()
         fetchPopularSlider()
         fetchDiscountsSlider()
         fetchCategoryBannersSlider()
+    }
+
+    fun secondLoad() {
         fetchTopSlider()
         fetchOrdersSlider()
         fetchNoveltiesSlider()
@@ -96,7 +100,6 @@ class HomeFlowViewModel @Inject constructor(
         fetchCountriesSlider()
         fetchViewedProductsSlider()
         fetchCommentsSlider()
-        updatePopupNews()
     }
 
     fun firstLoad() {
@@ -110,6 +113,7 @@ class HomeFlowViewModel @Inject constructor(
         uiStateListener.value =
             state.copy(loadingPage = true, data = state.data.copy(items = HomeState.idle().items))
         loadPage()
+        secondLoad()
     }
 
     private fun fetchAdvertisingBannersSlider() {

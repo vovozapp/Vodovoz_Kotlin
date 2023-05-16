@@ -210,7 +210,7 @@ class HomeFragment : BaseFragment() {
             flowViewModel.observeUiState()
                 .collect { homeState ->
 
-                    if (homeState.data.items.mapNotNull { it.item }.size < 8) {
+                    if (homeState.data.items.mapNotNull { it.item }.size < 5) {
                         binding.homeRv.isVisible = false
                         showLoaderWithBg(true)
                     } else {
@@ -222,7 +222,7 @@ class HomeFragment : BaseFragment() {
                         showPopUpNews(homeState.data.news)
                     }
 
-                    if (homeState.data.items.size in (HomeFlowViewModel.POSITIONS_COUNT - 8..HomeFlowViewModel.POSITIONS_COUNT)) {
+                    if (homeState.data.items.size in (5..HomeFlowViewModel.POSITIONS_COUNT)) {
                         val list =
                             homeState.data.items.sortedBy { it.position }.mapNotNull { it.item }
                         homeController.submitList(list)
