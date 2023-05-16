@@ -181,10 +181,7 @@ class HomeProductsInnerViewHolder(
             true -> {
                 isNotHaveStatuses = false
                 binding.cwDiscountContainer.visibility = View.VISIBLE
-                binding.tvDiscountPercent.setDiscountPercent(
-                    newPrice = item.priceList.first().currentPrice,
-                    oldPrice = item.priceList.first().oldPrice
-                )
+                binding.tvDiscountPercent.text = item.discountPercentStringBuilder
             }
             false -> binding.cwDiscountContainer.visibility = View.GONE
         }

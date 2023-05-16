@@ -200,29 +200,27 @@ class ProductsGridViewHolder(
         when(item.pricePerUnit != 0) {
             true -> {
                 binding.tvPricePerUnit.visibility = View.VISIBLE
-                binding.tvPricePerUnit.setPricePerUnitText(item.pricePerUnit)
+                binding.tvPricePerUnit.text = item.pricePerUnitStringBuilder
             }
             false -> binding.tvPricePerUnit.visibility = View.GONE
         }
 
         //Price
-        var haveDiscount = false
         when(item.priceList.size) {
             1 -> {
-                binding.tvCurrentPrice.setPriceText(item.priceList.first().currentPrice)
-                binding.tvOldPrice.setPriceText(item.priceList.first().oldPrice)
+                binding.tvCurrentPrice.text = item.currentPriceStringBuilder
+                binding.tvOldPrice.text = item.oldPriceStringBuilder
                 binding.tvPriceCondition.visibility = View.GONE
-                if (item.priceList.first().currentPrice < item.priceList.first().oldPrice || item.isGift) haveDiscount = true
             }
             else -> {
-                val minimalPrice = item.priceList.maxByOrNull { it.requiredAmount }!!
-                binding.tvCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice)
-                binding.tvPriceCondition.setPriceCondition(minimalPrice.requiredAmount)
+                binding.tvCurrentPrice.text = item.minimalPriceStringBuilder
+                binding.tvPriceCondition.text = item.priceConditionStringBuilder
                 binding.tvPriceCondition.visibility = View.VISIBLE
                 binding.tvPricePerUnit.visibility = View.GONE
             }
         }
-        when(haveDiscount) {
+
+        when(item.haveDiscount) {
             true -> {
                 binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
                 binding.tvOldPrice.visibility = View.VISIBLE
@@ -266,10 +264,7 @@ class ProductsGridViewHolder(
             true -> {
                 isNotHaveStatuses = false
                 binding.cwDiscountContainer.visibility = View.VISIBLE
-                binding.tvDiscountPercent.setDiscountPercent(
-                    newPrice = item.priceList.first().currentPrice,
-                    oldPrice = item.priceList.first().oldPrice
-                )
+                binding.tvDiscountPercent.text = item.discountPercentStringBuilder
             }
             false -> binding.cwDiscountContainer.visibility = View.GONE
         }
@@ -282,7 +277,7 @@ class ProductsGridViewHolder(
         //UpdatePictures
         binding.tlIndicators.isVisible = item.detailPictureList.size != 1
 
-        detailPictureFlowPagerAdapter.submitList(item.detailPictureList.map { DetailPicturePager(it) })
+        detailPictureFlowPagerAdapter.submitList(item.detailPictureListPager)
 
     }
 
