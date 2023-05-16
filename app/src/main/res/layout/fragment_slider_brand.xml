@@ -30,13 +30,15 @@
         app:layout_constraintBottom_toBottomOf="@id/tvName"
         android:id="@+id/tvShowAll"
         style="@style/TextViewSmallBlue"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:gravity="center"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="end"
+        android:paddingHorizontal="@dimen/space_16"
+        android:paddingVertical="@dimen/space_8"
+        app:layout_constraintWidth_percent="0.2"
         android:textSize="12sp"
         android:text="@string/show_all"
-        android:paddingVertical="@dimen/space_8"
-        android:paddingHorizontal="@dimen/space_16" />
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvBrands"

@@ -7,7 +7,7 @@
     style="@style/TextViewNormalBlack"
     android:textSize="16sp"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:paddingHorizontal="@dimen/space_8"
     android:paddingVertical="@dimen/space_8"
     android:background="@drawable/bkg_rect_rounded_white"

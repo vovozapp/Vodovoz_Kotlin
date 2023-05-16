@@ -26,11 +26,12 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvStatus"
             style="@style/TextViewMediumBlue"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawablePadding="@dimen/space_4"
             android:layout_marginStart="@dimen/space_4"
+            android:drawablePadding="@dimen/space_4"
             app:layout_constraintBottom_toBottomOf="@+id/imgStatus"
+            app:layout_constraintEnd_toStartOf="@+id/tvPrice"
             app:layout_constraintStart_toEndOf="@+id/imgStatus"
             app:layout_constraintTop_toTopOf="@+id/imgStatus"
             tools:text="Заказ отменен" />
@@ -38,11 +39,14 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvPrice"
             style="@style/TextViewMediumBlackBold"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/rotonda_normal"
             android:layout_marginEnd="@dimen/space_16"
+            app:layout_constraintWidth_percent="0.2"
+            android:gravity="end"
             android:layout_marginTop="@dimen/space_16"
+            app:layout_constraintStart_toEndOf="@id/tvStatus"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="15476 Р" />

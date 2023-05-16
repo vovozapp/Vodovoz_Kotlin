@@ -27,11 +27,12 @@
         app:layout_constraintBottom_toBottomOf="@id/tvName"
         android:id="@+id/tvShowAll"
         style="@style/TextViewSmallBlue"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.3"
         android:layout_height="0dp"
-        android:gravity="center"
+        android:gravity="end"
         android:paddingHorizontal="@dimen/space_16"
-        android:paddingVertical="@dimen/space_8"
+        android:paddingTop="@dimen/_9sdp"
         android:text="@string/show_all"
         android:textSize="12sp" />
 

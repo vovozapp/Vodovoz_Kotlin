@@ -18,8 +18,8 @@
         <androidx.appcompat.widget.AppCompatRatingBar
             android:id="@+id/rbRating"
             style="@style/Widget.AppCompat.RatingBar.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:max="5"
             android:progressTint="#ffa700"
             android:theme="@style/RatingBar"
@@ -31,9 +31,11 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvAuthor"
             style="@style/TextViewSmallBlackBold"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:gravity="end"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/rbRating"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Вадим Енисов" />
 
@@ -55,11 +57,14 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvDate"
             style="@style/TextViewSmallGray"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
             android:layout_marginTop="@dimen/space_8"
+            android:gravity="end"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvComment"
             tools:text="23.05.2022 11:17" />
 

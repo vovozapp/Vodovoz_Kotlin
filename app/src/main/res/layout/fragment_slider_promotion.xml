@@ -24,19 +24,21 @@
         android:paddingHorizontal="@dimen/space_16"/>
 
     <androidx.appcompat.widget.AppCompatTextView
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tvName"
         android:id="@+id/tvShowAll"
         style="@style/TextViewSmallBlue"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="7dp"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:textSize="12sp"
+        android:gravity="end"
+        android:paddingHorizontal="@dimen/space_16"
+        android:paddingTop="@dimen/_8sdp"
         android:text="@string/show_all"
-        android:paddingVertical="@dimen/space_8"
-        android:paddingHorizontal="@dimen/space_16" />
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvName"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.3" />
 
     <androidx.viewpager2.widget.ViewPager2
         app:layout_constraintStart_toStartOf="parent"

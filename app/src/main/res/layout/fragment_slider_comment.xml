@@ -26,9 +26,10 @@
         app:layout_constraintStart_toEndOf="@id/tvName"
         android:id="@+id/tvSendComment"
         style="@style/TextViewSmallBlue"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.4"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:gravity="end"
         android:text="@string/write_comment_btn_text"
         android:paddingVertical="@dimen/space_8"
         android:paddingHorizontal="@dimen/space_16" />
