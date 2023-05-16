@@ -70,12 +70,12 @@ class HomeProductsInnerViewHolder(
     init {
         binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.root.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             clickListener.onProductClick(item.id)
         }
 
         binding.amountController.add.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             if (item.leftItems == 0) {
                 clickListener.onNotifyWhenBeAvailable(item.id, item.name, item.detailPicture)
                 return@setOnClickListener
@@ -90,7 +90,7 @@ class HomeProductsInnerViewHolder(
         }
 
         binding.amountController.reduceAmount.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             item.oldQuantity = item.cartQuantity
             item.cartQuantity--
             if (item.cartQuantity < 0) item.cartQuantity = 0
@@ -101,7 +101,7 @@ class HomeProductsInnerViewHolder(
         }
 
         binding.amountController.increaseAmount.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             item.oldQuantity = item.cartQuantity
             item.cartQuantity++
             amountControllerTimer.cancel()
@@ -111,15 +111,15 @@ class HomeProductsInnerViewHolder(
         }
 
         binding.imgFavoriteStatus.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             when(item.isFavorite) {
                 true -> {
                     item.isFavorite = false
-                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
+                    binding.imgFavoriteStatus.isSelected = false
                 }
                 false -> {
                     item.isFavorite = true
-                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
+                    binding.imgFavoriteStatus.isSelected = true
                 }
             }
             clickListener.onFavoriteClick(item.id, item.isFavorite)
@@ -219,18 +219,11 @@ class HomeProductsInnerViewHolder(
     }
 
     private fun bindFav(item: ProductUI) {
-        when(item.isFavorite) {
-            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
-            true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
-        }
-    }
-
-    private fun getItemByPosition(): ProductUI? {
-        return (bindingAdapter as? HomeProductsInnerAdapter)?.getItem(bindingAdapterPosition) as? ProductUI
+        binding.imgFavoriteStatus.isSelected = item.isFavorite
     }
 
     private fun hideAmountController() {
-        val product = getItemByPosition()
+        val product = item
         product?.let {
             if (product.cartQuantity > 0) {
                 binding.amountController.circleAmount.visibility = View.VISIBLE
