@@ -9,11 +9,11 @@ import com.vodovoz.app.feature.bottom.services.old.AboutServicesViewModel
 import com.vodovoz.app.feature.all.brands.old.AllBrandsViewModel
 import com.vodovoz.app.feature.all.comments.old.AllCommentsByProductViewModel
 import com.vodovoz.app.feature.all.promotions.old.AllPromotionsViewModel
-import com.vodovoz.app.ui.fragment.bottles.AllBottlesViewModel
+import com.vodovoz.app.feature.cart.bottles.AllBottlesViewModel
 import com.vodovoz.app.feature.addresses.add.old.AddAddressViewModel
 import com.vodovoz.app.feature.cart.old.CartViewModel
 import com.vodovoz.app.feature.catalog.old.CatalogViewModel
-import com.vodovoz.app.ui.fragment.concrete_filter.ConcreteFilterViewModel
+import com.vodovoz.app.feature.filters.concrete.ConcreteFilterViewModel
 import com.vodovoz.app.feature.bottom.contacts.old.ContactsViewModel
 import com.vodovoz.app.feature.profile.discountcard.old.DiscountCardViewModel
 import com.vodovoz.app.feature.favorite.old.FavoriteViewModel

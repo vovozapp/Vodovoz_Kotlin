@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.concrete_filter
+package com.vodovoz.app.feature.filters.concrete
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

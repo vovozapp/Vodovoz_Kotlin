@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.view_holder
+package com.vodovoz.app.feature.cart.bottles.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderBottleNameBinding

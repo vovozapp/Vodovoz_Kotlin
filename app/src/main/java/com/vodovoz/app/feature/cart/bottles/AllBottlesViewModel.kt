@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.bottles
+package com.vodovoz.app.feature.cart.bottles
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

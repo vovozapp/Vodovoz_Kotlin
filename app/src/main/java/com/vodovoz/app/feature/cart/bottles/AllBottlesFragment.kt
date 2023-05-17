@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.bottles
+package com.vodovoz.app.feature.cart.bottles
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,16 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.databinding.FragmentAllBottlesBinding
-import com.vodovoz.app.ui.adapter.AllBottlesAdapter
+import com.vodovoz.app.feature.cart.bottles.adapter.AllBottlesAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.BottleDiffUtilCallback
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import dagger.hilt.android.AndroidEntryPoint

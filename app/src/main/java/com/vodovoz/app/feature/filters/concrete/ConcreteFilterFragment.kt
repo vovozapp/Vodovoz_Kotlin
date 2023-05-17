@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.concrete_filter
+package com.vodovoz.app.feature.filters.concrete
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentFilterConcreteBinding
-import com.vodovoz.app.ui.adapter.ProductFilterValuesAdapter
+import com.vodovoz.app.feature.filters.concrete.adapter.ProductFilterValuesAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
 import com.vodovoz.app.ui.diffUtils.FilterValueDiffUtilCallback

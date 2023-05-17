@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.adapter
+package com.vodovoz.app.feature.cart.bottles.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderBottleNameBinding
 import com.vodovoz.app.ui.diffUtils.BottleDiffUtilCallback
 import com.vodovoz.app.ui.model.BottleUI
-import com.vodovoz.app.ui.view_holder.BottleNameViewHolder
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 class AllBottlesAdapter(

@@ -441,7 +441,7 @@
     </dialog>
     <dialog
         android:id="@+id/concreteFilterFragment"
-        android:name="com.vodovoz.app.ui.fragment.concrete_filter.ConcreteFilterFragment"
+        android:name="com.vodovoz.app.feature.filters.concrete.ConcreteFilterFragment"
         android:label="ConcreteFilterFragment">
         <argument
             android:name="categoryId"
@@ -805,7 +805,7 @@
     </dialog>
     <fragment
         android:id="@+id/allBottlesFragment"
-        android:name="com.vodovoz.app.ui.fragment.bottles.AllBottlesFragment"
+        android:name="com.vodovoz.app.feature.cart.bottles.AllBottlesFragment"
         android:label="AllBottlesFragment" />
     <fragment
         android:id="@+id/ordersFiltersDialog"
