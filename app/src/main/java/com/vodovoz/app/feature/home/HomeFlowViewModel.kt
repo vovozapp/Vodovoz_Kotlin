@@ -112,7 +112,7 @@ class HomeFlowViewModel @Inject constructor(
 
     fun refresh() {
         uiStateListener.value =
-            state.copy(loadingPage = true, data = state.data.copy(items = HomeState.idle().items))
+            state.copy(loadingPage = true, data = state.data.copy(items = HomeState.idle().items, itemsInt = HomeState.idle().itemsInt))
         loadPage()
         secondLoad()
     }
