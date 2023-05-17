@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.view_holder
+package com.vodovoz.app.feature.filters.product.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

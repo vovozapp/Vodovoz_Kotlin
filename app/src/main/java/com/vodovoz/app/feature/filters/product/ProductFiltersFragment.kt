@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentFilterListBinding
-import com.vodovoz.app.ui.adapter.ProductFiltersAdapter
+import com.vodovoz.app.feature.filters.product.adapter.ProductFiltersAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration

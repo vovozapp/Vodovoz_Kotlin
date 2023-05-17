@@ -1,11 +1,10 @@
-package com.vodovoz.app.ui.adapter
+package com.vodovoz.app.feature.filters.order.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderOrderStatusBinding
 import com.vodovoz.app.ui.model.OrderStatusUI
-import com.vodovoz.app.ui.view_holder.OrderStatusViewHolder
 
 class OrderStatusesAdapter : RecyclerView.Adapter<OrderStatusViewHolder>() {
 

@@ -809,7 +809,7 @@
         android:label="AllBottlesFragment" />
     <fragment
         android:id="@+id/ordersFiltersDialog"
-        android:name="com.vodovoz.app.ui.fragment.orders_filters.OrdersFiltersFragment"
+        android:name="com.vodovoz.app.feature.filters.order.OrdersFiltersFragment"
         android:label="OrdersFiltersDialog">
         <argument
             android:name="ordersFiltersBundleUI"
