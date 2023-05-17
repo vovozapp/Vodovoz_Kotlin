@@ -89,11 +89,11 @@ class HomeFlowViewModel @Inject constructor(
         fetchPopularSlider()
         fetchDiscountsSlider()
         fetchCategoryBannersSlider()
-        fetchTopSlider()
-        fetchOrdersSlider()
     }
 
     fun secondLoad() {
+        fetchTopSlider()
+        fetchOrdersSlider()
         fetchNoveltiesSlider()
         fetchPromotionsSlider()
         fetchBottomSlider()
@@ -367,7 +367,9 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchTopSlider() {
-        uiStateListener.value = state.copy(loadingPage = true)
+        if (state.data.itemsInt.contains(POSITION_6)) return
+        debugLog { "load POSITION_6" }
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_6))
         viewModelScope.launch {
             flow { emit(repository.fetchTopSlider()) }
                 .catch {
@@ -437,7 +439,9 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchOrdersSlider() {
-        uiStateListener.value = state.copy(loadingPage = true)
+        if (state.data.itemsInt.contains(POSITION_7)) return
+        debugLog { "load POSITION_7" }
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_7))
         viewModelScope.launch {
             val userId = localDataSource.fetchUserId()
             if (userId != null) {
@@ -494,7 +498,9 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchNoveltiesSlider() {
-        uiStateListener.value = state.copy(loadingPage = true)
+        if (state.data.itemsInt.contains(POSITION_9)) return
+        debugLog { "load POSITION_9" }
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_9))
         viewModelScope.launch {
             flow { emit(repository.fetchNoveltiesSlider()) }
                 .catch {
@@ -564,7 +570,9 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchPromotionsSlider() {
-        uiStateListener.value = state.copy(loadingPage = true)
+        if (state.data.itemsInt.contains(POSITION_10)) return
+        debugLog { "load POSITION_10" }
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_10))
         viewModelScope.launch {
             flow { emit(repository.fetchPromotionsSlider()) }
                 .catch {
@@ -620,7 +628,9 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchBottomSlider() {
-        uiStateListener.value = state.copy(loadingPage = true)
+        if (state.data.itemsInt.contains(POSITION_11)) return
+        debugLog { "load POSITION_11" }
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_11))
         viewModelScope.launch {
             flow { emit(repository.fetchBottomSlider()) }
                 .catch {
@@ -690,7 +700,9 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchBrandsSlider() {
-        uiStateListener.value = state.copy(loadingPage = true)
+        if (state.data.itemsInt.contains(POSITION_12)) return
+        debugLog { "load POSITION_12" }
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_12))
         viewModelScope.launch {
             flow { emit(repository.fetchBrandsSlider()) }
                 .catch {
@@ -733,7 +745,9 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchCountriesSlider() {
-        uiStateListener.value = state.copy(loadingPage = true)
+        if (state.data.itemsInt.contains(POSITION_13)) return
+        debugLog { "load POSITION_13" }
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_13))
         viewModelScope.launch {
             flow { emit(repository.fetchCountriesSlider()) }
                 .catch {
@@ -776,7 +790,9 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchViewedProductsSlider() {
-        uiStateListener.value = state.copy(loadingPage = true)
+        if (state.data.itemsInt.contains(POSITION_14)) return
+        debugLog { "load POSITION_14" }
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_14))
         viewModelScope.launch {
             val userId = localDataSource.fetchUserId()
             if (userId != null) {
@@ -859,7 +875,9 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun fetchCommentsSlider() {
-        uiStateListener.value = state.copy(loadingPage = true)
+        if (state.data.itemsInt.contains(POSITION_15)) return
+        debugLog { "load POSITION_15" }
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_15))
         viewModelScope.launch {
             flow { emit(repository.fetchCommentsSlider()) }
                 .catch {
@@ -992,6 +1010,7 @@ class HomeFlowViewModel @Inject constructor(
 
     data class HomeState(
         val items: List<PositionItem>,
+        val itemsInt: List<Int>,
         val news: PopupNewsUI? = null,
         val hasShow: Boolean = false
     ) : State {
@@ -1002,7 +1021,8 @@ class HomeFlowViewModel @Inject constructor(
                     listOf(
                         PositionItem(POSITION_8, HomeTripleNav(8)),
                         PositionItem(POSITION_16, HomeBottomInfo(16))
-                    )
+                    ),
+                    itemsInt = listOf(POSITION_8, POSITION_16)
                 )
             }
         }
