@@ -90,7 +90,7 @@
         android:layout_width="@dimen/_16sdp"
         android:layout_margin="4dp"
         android:layout_height="@dimen/_16sdp"
-        android:src="@drawable/ic_favorite_black"
+        android:src="@drawable/selector_fav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />

@@ -207,8 +207,7 @@ class DetailHeaderViewHolder(
             true -> {
                 when(item.replacementProductsCategoryDetail?.productUIList?.isEmpty()) {
                     true -> {
-                        binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_gray_circle_normal)
-                        binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_alert))
+                        binding.amountController.add.isSelected = true
                     }
                     false -> {
                         binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_orange_circle_normal)
@@ -218,8 +217,7 @@ class DetailHeaderViewHolder(
                 }
             }
             false -> {
-                binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
-                binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_cart))
+                binding.amountController.add.isSelected = false
             }
         }
 

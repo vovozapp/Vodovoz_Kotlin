@@ -45,7 +45,7 @@ class AvailableProductsViewHolder(
     private val amountControllerTimer = object : CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
-            val item = getItemByPosition() ?: return
+            val item = item ?: return
             productsClickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
             hideAmountController(item)
         }
@@ -55,13 +55,13 @@ class AvailableProductsViewHolder(
         clickListener = object : DetailPictureFlowClickListener {
 
             override fun onDetailPictureClick() {
-                val item = getItemByPosition() ?: return
+                val item = item ?: return
                 if (item.priceList.first().currentPrice <= 1) return
                 productsClickListener.onProductClick(item.id)
             }
 
             override fun onProductClick(id: Long) {
-                val item = getItemByPosition() ?: return
+                val item = item ?: return
                 if (item.priceList.first().currentPrice <= 1) return
                 productsClickListener.onProductClick(item.id)
             }
@@ -117,19 +117,19 @@ class AvailableProductsViewHolder(
         binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 
         binding.root.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             if (item.priceList.first().currentPrice <= 1) return@setOnClickListener
             productsClickListener.onProductClick(item.id)
         }
 
         binding.vpPictures.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             if (item.priceList.first().currentPrice <= 1) return@setOnClickListener
             productsClickListener.onProductClick(item.id)
         }
 
         binding.amountController.add.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             if (item.priceList.first().currentPrice <= 1) return@setOnClickListener
 
             item.oldQuantity = item.cartQuantity
@@ -139,7 +139,7 @@ class AvailableProductsViewHolder(
         }
 
         binding.amountController.reduceAmount.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             item.oldQuantity = item.cartQuantity
             item.cartQuantity--
             if (item.cartQuantity < 0) item.cartQuantity = 0
@@ -149,7 +149,7 @@ class AvailableProductsViewHolder(
         }
 
         binding.amountController.increaseAmount.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             item.oldQuantity = item.cartQuantity
             item.cartQuantity++
             amountControllerTimer.cancel()
@@ -158,7 +158,7 @@ class AvailableProductsViewHolder(
         }
 
         binding.imgFavoriteStatus.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             when(item.isFavorite) {
                 true -> {
                     item.isFavorite = false
@@ -193,13 +193,7 @@ class AvailableProductsViewHolder(
                 }
             }
 
-        binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
-        binding.amountController.add.setImageDrawable(
-            ContextCompat.getDrawable(
-                itemView.context,
-                R.drawable.png_cart
-            )
-        )
+        binding.amountController.add.isSelected = false
 
         if (item.pricePerUnit != 0) {
             binding.tvPricePerUnit.visibility = View.VISIBLE
@@ -350,9 +344,5 @@ class AvailableProductsViewHolder(
         }
         binding.amountController.amount.text = item.cartQuantity.toString()
         binding.amountController.circleAmount.text = item.cartQuantity.toString()
-    }
-
-    private fun getItemByPosition(): ProductUI? {
-        return (bindingAdapter as? AvailableProductsAdapter)?.getItem(bindingAdapterPosition) as? ProductUI
     }
 }

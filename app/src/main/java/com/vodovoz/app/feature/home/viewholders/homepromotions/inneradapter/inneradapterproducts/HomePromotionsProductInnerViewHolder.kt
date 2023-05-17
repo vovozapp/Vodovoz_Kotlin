@@ -113,11 +113,11 @@ class HomePromotionsProductInnerViewHolder(
             when(item.isFavorite) {
                 true -> {
                     item.isFavorite = false
-                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
+                    binding.imgFavoriteStatus.isSelected = false
                 }
                 false -> {
                     item.isFavorite = true
-                    binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
+                    binding.imgFavoriteStatus.isSelected = true
                 }
             }
             clickListener.onFavoriteClick(item.id, item.isFavorite)
@@ -129,16 +129,7 @@ class HomePromotionsProductInnerViewHolder(
         binding.tvName.text = item.name
 
         //If left items = 0
-        when(item.leftItems == 0) {
-            true -> {
-                binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_gray_circle_normal)
-                binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_alert))
-            }
-            false -> {
-                binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
-                binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_cart))
-            }
-        }
+        binding.amountController.add.isSelected = item.leftItems == 0
 
         //Price per unit / or order quantity
         when(item.pricePerUnit != 0) {
@@ -218,10 +209,7 @@ class HomePromotionsProductInnerViewHolder(
     }
 
     private fun bindFav(item: ProductUI) {
-        when(item.isFavorite) {
-            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
-            true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
-        }
+        binding.imgFavoriteStatus.isSelected = item.isFavorite
     }
 
     private fun getItemByPosition(): ProductUI? {

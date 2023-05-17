@@ -111,13 +111,7 @@ class ProductDetailFabController(
             true -> {
                 when (header.replacementProductsCategoryDetail?.productUIList?.isEmpty()) {
                     true -> {
-                        addIv.setBackgroundResource(R.drawable.bkg_button_gray_circle_normal)
-                        addIv.setImageDrawable(
-                            ContextCompat.getDrawable(
-                                context,
-                                R.drawable.png_alert
-                            )
-                        )
+                        addIv.isSelected = true
                     }
                     false -> {
                         addIv.setBackgroundResource(R.drawable.bkg_button_orange_circle_normal)
@@ -132,8 +126,7 @@ class ProductDetailFabController(
                 }
             }
             false -> {
-                addIv.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
-                addIv.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_cart))
+                addIv.isSelected = false
             }
         }
 

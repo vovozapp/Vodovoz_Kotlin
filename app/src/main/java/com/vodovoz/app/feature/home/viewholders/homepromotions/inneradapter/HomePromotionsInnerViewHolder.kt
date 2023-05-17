@@ -31,7 +31,7 @@ class HomePromotionsInnerViewHolder(
 
     init {
         binding.root.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             promotionsClickListener.onPromotionClick(item.id)
         }
 
@@ -73,9 +73,5 @@ class HomePromotionsInnerViewHolder(
             .into(binding.imgImage)
 
         homePromotionProductAdapter.submitList(item.productUIList)
-    }
-
-    private fun getItemByPosition(): PromotionUI? {
-        return (bindingAdapter as? HomePromotionsInnerAdapter)?.getItem(bindingAdapterPosition) as? PromotionUI
     }
 }
