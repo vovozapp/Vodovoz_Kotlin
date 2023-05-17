@@ -449,7 +449,7 @@
     </dialog>
     <dialog
         android:id="@+id/productFiltersFragment"
-        android:name="com.vodovoz.app.ui.fragment.product_filters.ProductFiltersFragment"
+        android:name="com.vodovoz.app.feature.filters.product.ProductFiltersFragment"
         android:label="ProductFiltersFragment" >
         <argument
             android:name="defaultFiltersBundle"

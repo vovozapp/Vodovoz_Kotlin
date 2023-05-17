@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,9 +12,8 @@ import com.vodovoz.app.databinding.FragmentFilterConcreteBinding
 import com.vodovoz.app.ui.adapter.ProductFilterValuesAdapter
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import com.vodovoz.app.ui.diffUtils.FilterValueDiffUtilCallback
-import com.vodovoz.app.ui.fragment.product_filters.ProductFiltersFragment
+import com.vodovoz.app.feature.filters.product.ProductFiltersFragment
 import com.vodovoz.app.ui.model.FilterValueUI
 import dagger.hilt.android.AndroidEntryPoint
 

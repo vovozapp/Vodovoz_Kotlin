@@ -28,7 +28,7 @@ import com.vodovoz.app.feature.productlistnofilter.old.PaginatedProductsCatalogW
 import com.vodovoz.app.feature.pastpurchases.old.PastPurchasesViewModel
 import com.vodovoz.app.feature.preorder.old.PreOrderViewModel
 import com.vodovoz.app.feature.productdetail.old.ProductDetailsViewModel
-import com.vodovoz.app.ui.fragment.product_filters.ProductFiltersViewModel
+import com.vodovoz.app.feature.filters.product.ProductFiltersViewModel
 import com.vodovoz.app.feature.onlyproducts.old.ProductsCatalogViewModel
 import com.vodovoz.app.feature.profile.old.ProfileViewModel
 import com.vodovoz.app.feature.promotiondetail.old.PromotionDetailsViewModel

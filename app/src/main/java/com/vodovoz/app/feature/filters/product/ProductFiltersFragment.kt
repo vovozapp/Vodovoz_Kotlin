@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.fragment.product_filters
+package com.vodovoz.app.feature.filters.product
 
 import android.annotation.SuppressLint
 import android.os.Bundle
