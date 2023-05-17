@@ -9,8 +9,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgFavoriteStatus"
-        android:layout_width="@dimen/_16sdp"
-        android:layout_height="@dimen/_16sdp"
+        android:layout_width="@dimen/_17sdp"
+        android:layout_height="@dimen/_17sdp"
         android:background="@drawable/selector_fav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

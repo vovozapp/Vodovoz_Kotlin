@@ -10,8 +10,8 @@
 
     <item
         android:gravity="center"
-        android:width="@dimen/_10sdp"
-        android:height="@dimen/_8sdp"
+        android:width="@dimen/_12sdp"
+        android:height="@dimen/_12sdp"
         android:drawable="@drawable/png_cart"/>
 
 </layer-list>
