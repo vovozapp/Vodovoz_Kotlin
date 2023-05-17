@@ -13,7 +13,7 @@
 
     <item
         android:id="@+id/graph_cart"
-        android:icon="@drawable/png_cart"
+        android:icon="@drawable/png_cart_old"
         android:title="@string/cart" />
 
     <item
