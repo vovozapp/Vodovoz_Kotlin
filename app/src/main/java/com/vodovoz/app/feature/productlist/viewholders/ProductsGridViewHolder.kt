@@ -118,7 +118,7 @@ class ProductsGridViewHolder(
 
         TabLayoutMediator(binding.tlIndicators, binding.pvPictures) { _, _ -> }.attach()
 
-        binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        binding.llPricesContainer.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 
         binding.root.setOnClickListener {
             val item = item ?: return@setOnClickListener
@@ -199,35 +199,35 @@ class ProductsGridViewHolder(
         //Price per unit / or order quantity
         when(item.pricePerUnit != 0) {
             true -> {
-                binding.tvPricePerUnit.visibility = View.VISIBLE
-                binding.tvPricePerUnit.text = item.pricePerUnitStringBuilder
+                binding.llPricesContainer.tvPricePerUnit.visibility = View.VISIBLE
+                binding.llPricesContainer.tvPricePerUnit.text = item.pricePerUnitStringBuilder
             }
-            false -> binding.tvPricePerUnit.visibility = View.GONE
+            false -> binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
         }
 
         //Price
         when(item.priceList.size) {
             1 -> {
-                binding.tvCurrentPrice.text = item.currentPriceStringBuilder
-                binding.tvOldPrice.text = item.oldPriceStringBuilder
-                binding.tvPriceCondition.visibility = View.GONE
+                binding.llPricesContainer.tvCurrentPrice.text = item.currentPriceStringBuilder
+                binding.llPricesContainer.tvOldPrice.text = item.oldPriceStringBuilder
+                binding.llPricesContainer.tvPriceCondition.visibility = View.GONE
             }
             else -> {
-                binding.tvCurrentPrice.text = item.minimalPriceStringBuilder
-                binding.tvPriceCondition.text = item.priceConditionStringBuilder
-                binding.tvPriceCondition.visibility = View.VISIBLE
-                binding.tvPricePerUnit.visibility = View.GONE
+                binding.llPricesContainer.tvCurrentPrice.text = item.minimalPriceStringBuilder
+                binding.llPricesContainer.tvPriceCondition.text = item.priceConditionStringBuilder
+                binding.llPricesContainer.tvPriceCondition.visibility = View.VISIBLE
+                binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
             }
         }
 
         when(item.haveDiscount) {
             true -> {
-                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
-                binding.tvOldPrice.visibility = View.VISIBLE
+                binding.llPricesContainer.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
+                binding.llPricesContainer.tvOldPrice.visibility = View.VISIBLE
             }
             false -> {
-                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_new_black))
-                binding.tvOldPrice.visibility = View.GONE
+                binding.llPricesContainer.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_new_black))
+                binding.llPricesContainer.tvOldPrice.visibility = View.GONE
             }
         }
 
@@ -249,12 +249,12 @@ class ProductsGridViewHolder(
         //Status
         var isNotHaveStatuses = true
         when (item.status.isEmpty()) {
-            true -> binding.rlStatusContainer.visibility = View.GONE
+            true -> binding.cgStatuses.cwStatusContainer.visibility = View.GONE
             false -> {
                 isNotHaveStatuses = false
-                binding.rlStatusContainer.visibility = View.VISIBLE
-                binding.tvStatus.text = item.status
-                binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(item.statusColor))
+                binding.cgStatuses.cwStatusContainer.visibility = View.VISIBLE
+                binding.cgStatuses.tvStatus.text = item.status
+                binding.cgStatuses.cwStatusContainer.setCardBackgroundColor(Color.parseColor(item.statusColor))
             }
         }
 
@@ -263,15 +263,15 @@ class ProductsGridViewHolder(
                 item.priceList.first().currentPrice < item.priceList.first().oldPrice) {
             true -> {
                 isNotHaveStatuses = false
-                binding.cwDiscountContainer.visibility = View.VISIBLE
-                binding.tvDiscountPercent.text = item.discountPercentStringBuilder
+                binding.cgStatuses.cwDiscountContainer.visibility = View.VISIBLE
+                binding.cgStatuses.tvDiscountPercent.text = item.discountPercentStringBuilder
             }
-            false -> binding.cwDiscountContainer.visibility = View.GONE
+            false -> binding.cgStatuses.cwDiscountContainer.visibility = View.GONE
         }
 
         when(isNotHaveStatuses) {
-            true -> binding.cgStatuses.visibility = View.GONE
-            false -> binding.cgStatuses.visibility = View.VISIBLE
+            true -> binding.cgStatuses.root.visibility = View.GONE
+            false -> binding.cgStatuses.root.visibility = View.VISIBLE
         }
 
         //UpdatePictures

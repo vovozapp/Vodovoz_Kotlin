@@ -6,9 +6,6 @@
     android:layout_height="wrap_content"
     android:gravity="bottom"
     android:orientation="vertical"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
     tools:ignore="RtlSymmetry">
 
     <TextView
@@ -48,5 +45,17 @@
         app:layout_constraintTop_toBottomOf="@id/tvPricePerUnit"
         tools:ignore="RtlSymmetry"
         tools:text="300 Р" />
+
+    <TextView
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCurrentPrice"
+        android:id="@+id/tvPriceCondition"
+        style="@style/TextViewSmallGray"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start|bottom"
+        android:visibility="gone"
+        tools:text="При условии покупки от 10 шт" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
