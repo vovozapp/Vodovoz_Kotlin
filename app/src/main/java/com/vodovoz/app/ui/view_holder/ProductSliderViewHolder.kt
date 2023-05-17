@@ -39,7 +39,7 @@ class ProductSliderViewHolder(
     }
 
     init {
-        binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        binding.llPricesContainer.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.root.setOnClickListener {
             onProductClickSubject.onNext(productUI.id)
         }
@@ -101,7 +101,7 @@ class ProductSliderViewHolder(
         binding.amountController.circleAmount.visibility = View.GONE
         binding.amountController.add.visibility = View.GONE
         binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
-        binding.llPricesContainer.visibility = View.INVISIBLE
+        binding.llPricesContainer.root.visibility = View.INVISIBLE
         amountControllerTimer.start()
     }
 
@@ -109,7 +109,7 @@ class ProductSliderViewHolder(
         if (productUI.cartQuantity > 0) {
             binding.amountController.circleAmount.visibility = View.VISIBLE
         }
-        binding.llPricesContainer.visibility = View.VISIBLE
+        binding.llPricesContainer.root.visibility = View.VISIBLE
         binding.amountController.add.visibility = View.VISIBLE
         binding.amountController.amountControllerDeployed.visibility = View.GONE
     }
@@ -132,34 +132,34 @@ class ProductSliderViewHolder(
         //Price per unit / or order quantity
         when(productUI.pricePerUnit != 0) {
             true -> {
-                binding.tvPricePerUnit.visibility = View.VISIBLE
-                binding.tvPricePerUnit.setPricePerUnitText(productUI.pricePerUnit)
+                binding.llPricesContainer.tvPricePerUnit.visibility = View.VISIBLE
+                binding.llPricesContainer.tvPricePerUnit.setPricePerUnitText(productUI.pricePerUnit)
             }
-            false -> binding.tvPricePerUnit.visibility = View.GONE
+            false -> binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
         }
 
         //Price
         var haveDiscount = false
         when(productUI.priceList.size) {
             1 -> {
-                binding.tvCurrentPrice.setPriceText(productUI.priceList.first().currentPrice)
-                binding.tvOldPrice.setPriceText(productUI.priceList.first().oldPrice)
+                binding.llPricesContainer.tvCurrentPrice.setPriceText(productUI.priceList.first().currentPrice)
+                binding.llPricesContainer.tvOldPrice.setPriceText(productUI.priceList.first().oldPrice)
                 if (productUI.priceList.first().currentPrice < productUI.priceList.first().oldPrice || productUI.isGift) haveDiscount = true
             }
             else -> {
                 val minimalPrice = productUI.priceList.maxByOrNull { it.requiredAmount }!!
-                binding.tvCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice)
-                binding.tvPricePerUnit.visibility = View.GONE
+                binding.llPricesContainer.tvCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice)
+                binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
             }
         }
         when(haveDiscount) {
             true -> {
-                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
-                binding.tvOldPrice.visibility = View.VISIBLE
+                binding.llPricesContainer.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
+                binding.llPricesContainer.tvOldPrice.visibility = View.VISIBLE
             }
             false -> {
-                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
-                binding.tvOldPrice.visibility = View.GONE
+                binding.llPricesContainer.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
+                binding.llPricesContainer.tvOldPrice.visibility = View.GONE
             }
         }
 

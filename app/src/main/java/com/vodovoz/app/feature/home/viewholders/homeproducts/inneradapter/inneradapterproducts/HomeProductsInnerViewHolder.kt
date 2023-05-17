@@ -69,7 +69,7 @@ class HomeProductsInnerViewHolder(
     }
 
     init {
-        binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        binding.llPricesContainer.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.root.setOnClickListener {
             val item = item ?: return@setOnClickListener
             clickListener.onProductClick(item.id)
@@ -133,28 +133,28 @@ class HomeProductsInnerViewHolder(
         binding.amountController.add.isSelected = item.leftItems == 0
 
         //Price per unit / or order quantity
-        binding.tvPricePerUnit.isVisible = item.pricePerUnit != 0
-        binding.tvPricePerUnit.text = item.pricePerUnitStringBuilder
+        binding.llPricesContainer.tvPricePerUnit.isVisible = item.pricePerUnit != 0
+        binding.llPricesContainer.tvPricePerUnit.text = item.pricePerUnitStringBuilder
 
         //Price
         when(item.priceList.size) {
             1 -> {
-                binding.tvCurrentPrice.text = item.currentPriceStringBuilder
-                binding.tvOldPrice.text = item.oldPriceStringBuilder
+                binding.llPricesContainer.tvCurrentPrice.text = item.currentPriceStringBuilder
+                binding.llPricesContainer.tvOldPrice.text = item.oldPriceStringBuilder
             }
             else -> {
-                binding.tvCurrentPrice.text = item.minimalPriceStringBuilder
-                binding.tvPricePerUnit.visibility = View.GONE
+                binding.llPricesContainer.tvCurrentPrice.text = item.minimalPriceStringBuilder
+                binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
             }
         }
         when(item.haveDiscount) {
             true -> {
-                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
-                binding.tvOldPrice.visibility = View.VISIBLE
+                binding.llPricesContainer.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
+                binding.llPricesContainer.tvOldPrice.visibility = View.VISIBLE
             }
             false -> {
-                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
-                binding.tvOldPrice.visibility = View.GONE
+                binding.llPricesContainer.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
+                binding.llPricesContainer.tvOldPrice.visibility = View.GONE
             }
         }
 
@@ -210,7 +210,7 @@ class HomeProductsInnerViewHolder(
             }
             binding.amountController.add.visibility = View.VISIBLE
             binding.amountController.amountControllerDeployed.visibility = View.INVISIBLE
-            binding.llPricesContainer.visibility = View.VISIBLE
+            binding.llPricesContainer.root.visibility = View.VISIBLE
         }
     }
 
@@ -231,7 +231,7 @@ class HomeProductsInnerViewHolder(
     }
 
     private fun showAmountController() {
-        binding.llPricesContainer.visibility = View.INVISIBLE
+        binding.llPricesContainer.root.visibility = View.INVISIBLE
         binding.amountController.circleAmount.visibility = View.INVISIBLE
         binding.amountController.add.visibility = View.INVISIBLE
         binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
