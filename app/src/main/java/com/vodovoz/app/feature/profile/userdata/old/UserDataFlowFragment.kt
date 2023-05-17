@@ -186,6 +186,7 @@ class UserDataFlowFragment : BaseFragment() {
 
                             datePickerDialog.show(childFragmentManager, datePickerDialog::class.simpleName)
                         }
+                        else -> {}
                     }
                 }
         }

@@ -187,6 +187,7 @@ class MapFlowFragment : BaseFragment(),
                                 MapDialogFragmentDirections.actionToAddAddressBottomFragment(it.address)
                             )
                         }
+                        else -> {}
                     }
                 }
         }

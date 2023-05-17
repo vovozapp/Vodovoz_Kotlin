@@ -93,6 +93,7 @@ class AddressesFlowFragment : BaseFragment() {
                                 AddressesFragment.SELECTED_ADDRESS, it.address)
                             findNavController().popBackStack()
                         }
+                        else -> {}
                     }
                 }
         }

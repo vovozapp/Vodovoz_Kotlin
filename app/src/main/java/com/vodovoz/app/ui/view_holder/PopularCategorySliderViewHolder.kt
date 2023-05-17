@@ -12,7 +12,7 @@ class PopularCategorySliderViewHolder(
 
     init {
         binding.root.setOnClickListener {
-            onPopularClickSubject.onNext(categoryUI.id)
+            onPopularClickSubject.onNext(categoryUI.id!!)
         }
     }
 
