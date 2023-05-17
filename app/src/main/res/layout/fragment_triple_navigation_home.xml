@@ -29,7 +29,7 @@
             android:padding="8dp"
             tools:ignore="UseCompoundDrawables">
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <ImageView
                 android:id="@+id/appCompatImageView2"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -43,7 +43,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="ContentDescription" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                 android:id="@+id/appCompatTextView2"
                 style="@style/TextViewNormalGray"
                 android:layout_width="match_parent"
@@ -82,7 +82,7 @@
             android:padding="8dp"
             tools:ignore="UseCompoundDrawables">
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <ImageView
                 app:layout_constraintBottom_toTopOf="@+id/appCompatTextView3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -97,7 +97,7 @@
                 app:tint="@color/bluePrimary"
                 tools:ignore="ContentDescription" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                 android:id="@+id/appCompatTextView3"
                 style="@style/TextViewNormalGray"
                 android:fontFamily="@font/rotondac"
@@ -136,7 +136,7 @@
             android:padding="8dp"
             tools:ignore="UseCompoundDrawables">
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <ImageView
                 app:layout_constraintBottom_toTopOf="@+id/appCompatTextView4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -150,7 +150,7 @@
                 android:src="@drawable/png_order_history"
                 tools:ignore="ContentDescription" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                 android:id="@+id/appCompatTextView4"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

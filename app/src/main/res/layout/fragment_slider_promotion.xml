@@ -8,7 +8,7 @@
     android:background="@color/light_bg"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <TextView
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/tvShowAll"
@@ -23,7 +23,7 @@
         android:paddingVertical="@dimen/space_8"
         android:paddingHorizontal="@dimen/space_16"/>
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <TextView
         android:id="@+id/tvShowAll"
         style="@style/TextViewSmallBlue"
         android:layout_width="0dp"

@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <TextView
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/tvSendComment"
@@ -20,7 +20,7 @@
         android:paddingVertical="@dimen/space_8"
         android:paddingHorizontal="@dimen/space_16"/>
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <TextView
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/tvName"

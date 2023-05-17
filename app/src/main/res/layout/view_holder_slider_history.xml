@@ -12,7 +12,7 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <ImageView
         android:id="@+id/imgPicture"
         android:layout_width="@dimen/history_slider_card_width"
         android:layout_height="@dimen/history_slider_card_height"

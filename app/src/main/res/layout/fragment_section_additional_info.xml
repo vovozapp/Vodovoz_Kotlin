@@ -9,7 +9,7 @@
     android:paddingBottom="@dimen/space_8"
     android:layout_marginHorizontal="@dimen/space_16">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <TextView
         android:id="@+id/aboutShop"
         style="@style/TextViewNormalGray"
         android:layout_width="match_parent"

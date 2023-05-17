@@ -5,7 +5,7 @@
     android:layout_width="@dimen/product_slider_card_width"
     android:layout_height="@dimen/product_slider_card_height">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <ImageView
         android:id="@+id/imgFavoriteStatus"
         android:layout_width="@dimen/_17sdp"
         android:layout_height="@dimen/_17sdp"
@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <ImageView
         android:id="@+id/imgPicture"
         android:layout_width="0dp"
         android:layout_height="0dp"

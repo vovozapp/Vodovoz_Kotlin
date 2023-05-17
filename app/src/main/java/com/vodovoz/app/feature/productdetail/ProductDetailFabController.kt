@@ -33,7 +33,7 @@ class ProductDetailFabController(
         header: DetailHeader,
         oldQuantity: Int,
         circleAmountTv: TextView,
-        addIv: AppCompatImageView,
+        addIv: ImageView,
         reduceIv: ImageView,
         increaseIv: ImageView,
         amountDeployed: LinearLayout
@@ -65,7 +65,7 @@ class ProductDetailFabController(
         conditionTv: AppCompatTextView,
         amountTv: TextView,
         circleAmountTv: TextView,
-        addIv: AppCompatImageView,
+        addIv: ImageView,
         reduceIv: ImageView,
         increaseIv: ImageView,
         amountDeployed: LinearLayout
@@ -191,7 +191,7 @@ class ProductDetailFabController(
         header: DetailHeader,
         amountTv: TextView,
         circleAmountTv: TextView,
-        addIv: AppCompatImageView,
+        addIv: ImageView,
         reduceIv: ImageView,
         increaseIv: ImageView,
         amountDeployed: LinearLayout
@@ -231,7 +231,7 @@ class ProductDetailFabController(
         header: DetailHeader,
         amountTv: TextView,
         circleAmountTv: TextView,
-        addIv: AppCompatImageView,
+        addIv: ImageView,
         reduceIv: ImageView,
         increaseIv: ImageView,
         amountDeployed: LinearLayout
@@ -246,7 +246,7 @@ class ProductDetailFabController(
         header: DetailHeader,
         amountTv: TextView,
         circleAmountTv: TextView,
-        addIv: AppCompatImageView,
+        addIv: ImageView,
         reduceIv: ImageView,
         increaseIv: ImageView,
         amountDeployed: LinearLayout
@@ -264,7 +264,7 @@ class ProductDetailFabController(
         header: DetailHeader,
         oldQ: Int,
         circleAmountTv: TextView,
-        addIv: AppCompatImageView,
+        addIv: ImageView,
         reduceIv: ImageView,
         increaseIv: ImageView,
         amountDeployed: LinearLayout
@@ -278,7 +278,7 @@ class ProductDetailFabController(
     private fun hideAmountController(
         header: DetailHeader,
         circleAmountTv: TextView,
-        addIv: AppCompatImageView,
+        addIv: ImageView,
         amountDeployed: LinearLayout
     ) {
         if (header.productDetailUI.cartQuantity > 0) {

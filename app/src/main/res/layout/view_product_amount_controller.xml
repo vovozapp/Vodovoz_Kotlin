@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <ImageView
         android:id="@+id/add"
         android:layout_width="@dimen/_24sdp"
         android:layout_height="@dimen/_24sdp"

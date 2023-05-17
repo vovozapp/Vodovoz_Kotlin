@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:paddingBottom="@dimen/space_8">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <TextView
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/tvName"
@@ -23,7 +23,7 @@
         android:paddingVertical="@dimen/space_8"
         android:paddingHorizontal="@dimen/space_16"/>
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <TextView
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tvName"
         app:layout_constraintStart_toEndOf="@id/tvName"

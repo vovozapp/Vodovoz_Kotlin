@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageView
             android:id="@+id/imgStatus"
             android:layout_width="@dimen/_20sdp"
             android:layout_height="@dimen/_20sdp"
@@ -23,7 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvPrice" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/tvStatus"
             style="@style/TextViewMediumBlue"
             android:layout_width="0dp"
@@ -36,7 +36,7 @@
             app:layout_constraintTop_toTopOf="@+id/imgStatus"
             tools:text="Заказ отменен" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/tvPrice"
             style="@style/TextViewMediumBlackBold"
             android:layout_width="0dp"
@@ -51,7 +51,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="15476 Р" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/tvAddress"
             style="@style/TextViewNormalGray"
             android:layout_width="match_parent"
@@ -65,7 +65,7 @@
             tools:layout_editor_absoluteX="16dp"
             tools:text="Г Балашиха Проспект Ленина дом 32 д кв 313, нидекс 456342, подъезд 5" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/tvAction"
             style="@style/TextViewNormalWhite"
             android:layout_width="match_parent"

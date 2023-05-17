@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <ImageView
                 android:id="@+id/imgImage"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -43,7 +43,7 @@
                 android:layout_marginTop="@dimen/space_8"
                 app:layout_constraintTop_toBottomOf="@id/imgImage">
 
-                <androidx.appcompat.widget.AppCompatTextView
+                <TextView
                     android:id="@+id/tvName"
                     style="@style/TextViewNormalBlackBold"
                     android:layout_width="match_parent"
@@ -58,7 +58,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/detailPicture"
                     tools:text="Скидка 12% на минеральную воду из Грузии" />
 
-                <androidx.appcompat.widget.AppCompatTextView
+                <TextView
                     android:id="@+id/tvTimeLeft"
                     style="@style/TextViewSmallLightGrayBold"
                     android:layout_width="match_parent"
@@ -110,7 +110,7 @@
         app:cardCornerRadius="@dimen/corner_5"
         app:cardElevation="@dimen/elevation_3">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/tvCustomerCategory"
             style="@style/TextViewSmallWhite"
             android:layout_width="match_parent"

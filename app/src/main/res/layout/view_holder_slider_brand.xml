@@ -9,7 +9,7 @@
     app:cardElevation="@dimen/elevation_3"
     app:contentPadding="@dimen/space_8">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <ImageView
         android:id="@+id/imgPicture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

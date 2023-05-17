@@ -15,20 +15,19 @@
         android:orientation="vertical"
         android:padding="@dimen/space_16">
 
-        <androidx.appcompat.widget.AppCompatRatingBar
+        <RatingBar
             android:id="@+id/rbRating"
             style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:max="5"
             android:progressTint="#ffa700"
-            android:theme="@style/RatingBar"
             app:layout_constraintBottom_toBottomOf="@+id/tvAuthor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvAuthor" />
 
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/tvAuthor"
             style="@style/TextViewSmallBlackBold"
             android:layout_width="0dp"
@@ -39,7 +38,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Вадим Енисов" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/tvComment"
             style="@style/TextViewSmallGray"
             android:layout_width="match_parent"
@@ -54,7 +53,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tvAuthor"
             tools:text="mvewpfewpmcewcopwemcpweocmpweocmwecmowemcpwmcwomcpwmcowecmweocmwcmpwemc" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/tvDate"
             style="@style/TextViewSmallGray"
             android:layout_width="match_parent"

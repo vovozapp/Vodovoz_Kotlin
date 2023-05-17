@@ -21,7 +21,7 @@
         app:cardCornerRadius="@dimen/corner_5"
         app:cardElevation="0dp">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/tvStatus"
             style="@style/TextViewSmallWhite"
             android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
         app:cardCornerRadius="@dimen/corner_5"
         app:cardElevation="0dp">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/tvDiscountPercent"
             style="@style/TextViewSmallWhite"
             android:layout_width="wrap_content"
