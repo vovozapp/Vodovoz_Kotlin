@@ -167,9 +167,9 @@ class HomeProductsInnerViewHolder(
         //Status
         var isNotHaveStatuses = true
         when (item.status.isEmpty()) {
-            true -> binding.rlStatusContainer.visibility = View.GONE
+            true -> binding.cwStatusContainer.visibility = View.GONE
             false -> {
-                binding.rlStatusContainer.visibility = View.VISIBLE
+                binding.cwStatusContainer.visibility = View.VISIBLE
                 binding.tvStatus.text = item.status
                 binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(item.statusColor))
             }

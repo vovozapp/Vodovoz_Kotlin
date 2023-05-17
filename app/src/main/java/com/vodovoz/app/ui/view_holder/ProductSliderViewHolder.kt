@@ -181,10 +181,10 @@ class ProductSliderViewHolder(
         //Status
         var isNotHaveStatuses = true
         when (productUI.status.isEmpty()) {
-            true -> binding.rlStatusContainer.visibility = View.GONE
+            true -> binding.cwStatusContainer.visibility = View.GONE
             false -> {
                 isNotHaveStatuses = false
-                binding.rlStatusContainer.visibility = View.VISIBLE
+                binding.cwStatusContainer.visibility = View.VISIBLE
                 binding.tvStatus.text = productUI.status
                 binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(productUI.statusColor))
             }
