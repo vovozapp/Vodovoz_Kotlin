@@ -181,12 +181,12 @@ class ProductSliderViewHolder(
         //Status
         var isNotHaveStatuses = true
         when (productUI.status.isEmpty()) {
-            true -> binding.cwStatusContainer.visibility = View.GONE
+            true -> binding.cgStatuses.cwStatusContainer.visibility = View.GONE
             false -> {
                 isNotHaveStatuses = false
-                binding.cwStatusContainer.visibility = View.VISIBLE
-                binding.tvStatus.text = productUI.status
-                binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(productUI.statusColor))
+                binding.cgStatuses.cwStatusContainer.visibility = View.VISIBLE
+                binding.cgStatuses.tvStatus.text = productUI.status
+                binding.cgStatuses.cwStatusContainer.setCardBackgroundColor(Color.parseColor(productUI.statusColor))
             }
         }
 
@@ -195,18 +195,18 @@ class ProductSliderViewHolder(
                 productUI.priceList.first().currentPrice < productUI.priceList.first().oldPrice) {
             true -> {
                 isNotHaveStatuses = false
-                binding.cwDiscountContainer.visibility = View.VISIBLE
-                binding.tvDiscountPercent.setDiscountPercent(
+                binding.cgStatuses.cwDiscountContainer.visibility = View.VISIBLE
+                binding.cgStatuses.tvDiscountPercent.setDiscountPercent(
                     newPrice = productUI.priceList.first().currentPrice,
                     oldPrice = productUI.priceList.first().oldPrice
                 )
             }
-            false -> binding.cwDiscountContainer.visibility = View.GONE
+            false -> binding.cgStatuses.cwDiscountContainer.visibility = View.GONE
         }
 
         when(isNotHaveStatuses) {
-            true -> binding.cgStatuses.visibility = View.GONE
-            false -> binding.cgStatuses.visibility = View.VISIBLE
+            true -> binding.cgStatuses.root.visibility = View.GONE
+            false -> binding.cgStatuses.root.visibility = View.VISIBLE
         }
 
         //UpdatePictures

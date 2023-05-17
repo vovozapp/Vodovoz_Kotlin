@@ -167,11 +167,11 @@ class HomeProductsInnerViewHolder(
         //Status
         var isNotHaveStatuses = true
         when (item.status.isEmpty()) {
-            true -> binding.cwStatusContainer.visibility = View.GONE
+            true -> binding.cgStatuses.cwStatusContainer.visibility = View.GONE
             false -> {
-                binding.cwStatusContainer.visibility = View.VISIBLE
-                binding.tvStatus.text = item.status
-                binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(item.statusColor))
+                binding.cgStatuses.cwStatusContainer.visibility = View.VISIBLE
+                binding.cgStatuses.tvStatus.text = item.status
+                binding.cgStatuses.cwStatusContainer.setCardBackgroundColor(Color.parseColor(item.statusColor))
             }
         }
 
@@ -180,15 +180,15 @@ class HomeProductsInnerViewHolder(
                 item.priceList.first().currentPrice < item.priceList.first().oldPrice) {
             true -> {
                 isNotHaveStatuses = false
-                binding.cwDiscountContainer.visibility = View.VISIBLE
-                binding.tvDiscountPercent.text = item.discountPercentStringBuilder
+                binding.cgStatuses.cwDiscountContainer.visibility = View.VISIBLE
+                binding.cgStatuses.tvDiscountPercent.text = item.discountPercentStringBuilder
             }
-            false -> binding.cwDiscountContainer.visibility = View.GONE
+            false -> binding.cgStatuses.cwDiscountContainer.visibility = View.GONE
         }
 
         when(isNotHaveStatuses) {
-            true -> binding.cgStatuses.visibility = View.GONE
-            false -> binding.cgStatuses.visibility = View.VISIBLE
+            true -> binding.cgStatuses.root.visibility = View.GONE
+            false -> binding.cgStatuses.root.visibility = View.VISIBLE
         }
 
         //UpdatePictures

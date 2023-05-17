@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.chip.ChipGroup
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingEnd="@dimen/space_16"
+    app:layout_constraintEnd_toStartOf="@+id/imgFavoriteStatus"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:chipSpacingVertical="0dp"
+    tools:ignore="RtlSymmetry"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cwStatusContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_2"
+        app:cardBackgroundColor="@color/bluePrimary"
+        app:cardCornerRadius="@dimen/corner_5"
+        app:cardElevation="0dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvStatus"
+            style="@style/TextViewSmallWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/space_8"
+            android:paddingVertical="@dimen/space_2"
+            tools:text="Новинка" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cwDiscountContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_8"
+        app:cardBackgroundColor="@color/orange"
+        app:cardCornerRadius="@dimen/corner_5"
+        app:cardElevation="0dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvDiscountPercent"
+            style="@style/TextViewSmallWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/space_8"
+            android:paddingVertical="@dimen/space_2"
+            tools:text="12%" />
+
+    </androidx.cardview.widget.CardView>
+
+</com.google.android.material.chip.ChipGroup>

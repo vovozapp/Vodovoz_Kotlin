@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--new-->
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--new-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/product_slider_card_width"
@@ -28,77 +26,34 @@
         app:layout_constraintVertical_bias="0.0"
         tools:ignore="ContentDescription" />
 
-    <com.google.android.material.chip.ChipGroup
+    <include
         android:id="@+id/cgStatuses"
+        layout="@layout/view_holder_slider_product_statuses"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingEnd="@dimen/space_16"
         app:layout_constraintEnd_toStartOf="@+id/imgFavoriteStatus"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:chipSpacingVertical="0dp"
-        tools:ignore="RtlSymmetry">
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cwStatusContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space_2"
-            app:cardBackgroundColor="@color/bluePrimary"
-            app:cardCornerRadius="@dimen/corner_5"
-            app:cardElevation="0dp">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvStatus"
-                style="@style/TextViewSmallWhite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/space_8"
-                android:paddingVertical="@dimen/space_2"
-                tools:text="Новинка" />
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cwDiscountContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space_8"
-            app:cardBackgroundColor="@color/orange"
-            app:cardCornerRadius="@dimen/corner_5"
-            app:cardElevation="0dp">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvDiscountPercent"
-                style="@style/TextViewSmallWhite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/space_8"
-                android:paddingVertical="@dimen/space_2"
-                tools:text="12%" />
-
-        </androidx.cardview.widget.CardView>
-
-    </com.google.android.material.chip.ChipGroup>
+        tools:ignore="RtlSymmetry" />
 
     <include
+        android:id="@+id/amountController"
+        layout="@layout/view_product_amount_controller"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:id="@+id/amountController"
-        layout="@layout/view_product_amount_controller" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <include
         android:id="@+id/llPricesContainer"
+        layout="@layout/view_holder_slider_product_prices"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        layout="@layout/view_holder_slider_product_prices"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="RtlSymmetry"
-        />
+        tools:ignore="RtlSymmetry" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
