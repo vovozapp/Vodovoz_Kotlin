@@ -29,7 +29,7 @@
         android:layout_marginTop="@dimen/space_6"
         android:orientation="horizontal"
         android:src="@drawable/png_cart"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/circleAmount">
@@ -75,7 +75,7 @@
         android:fontFamily="@font/rotonda_normal"
         android:textStyle="bold"
         android:gravity="center"
-        android:visibility="visible"
+        android:visibility="gone"
         android:textColor="@color/white"
         android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
