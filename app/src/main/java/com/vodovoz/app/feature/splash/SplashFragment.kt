@@ -66,7 +66,7 @@ class SplashFragment : BaseFragment() {
                     debugLog {
                         "${state.data.items.map { it.position }}"
                     }
-                    if (state.data.items.size in (5..HomeFlowViewModel.POSITIONS_COUNT)) {
+                    if (state.data.items.size in (HomeFlowViewModel.ENTER_COUNT..HomeFlowViewModel.POSITIONS_COUNT)) {
                         val active = siteStateManager.fetchSiteStateActive()
                         debugLog { "site state active $active" }
                         if (active) {

@@ -37,19 +37,6 @@ class HomeProductsSliderViewHolder(
 
         binding.rvCategories.adapter = homeProductsAdapter
         binding.rvCategories.setRecycledViewPool(likeManager.fetchViewPool())
-
-        binding.tvShowAll.setOnClickListener {
-            val items = item ?: return@setOnClickListener
-            items.items.first().id?.let { categoryId ->
-                when(items.productsType) {
-                    DISCOUNT -> productsShowAllListener.showAllDiscountProducts(categoryId)
-                    TOP_PROD -> productsShowAllListener.showAllTopProducts(categoryId)
-                    NOVELTIES -> productsShowAllListener.showAllNoveltiesProducts(categoryId)
-                    BOTTOM_PROD -> productsShowAllListener.showAllBottomProducts(categoryId)
-                    else -> {}
-                }
-            }
-        }
     }
 
     override fun bind(item: HomeProducts) {
@@ -74,18 +61,9 @@ class HomeProductsSliderViewHolder(
         when(items.items.size) {
             1 -> {
                 binding.tlCategories.visibility = View.GONE
-                binding.tvName.visibility = View.VISIBLE
-                binding.tvShowAll.visibility = View.VISIBLE
-                binding.tvName.text = items.items.first().name
-                when (items.productsSliderConfig.containShowAllButton) {
-                    true -> binding.tvShowAll.visibility = View.VISIBLE
-                    false -> binding.tvShowAll.visibility = View.INVISIBLE
-                }
             }
             else -> {
                 binding.tlCategories.visibility = View.VISIBLE
-                binding.tvName.visibility = View.GONE
-                binding.tvShowAll.visibility = View.GONE
 
                 binding.tlCategories.removeAllTabs()
                 items.items.forEach {

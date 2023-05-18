@@ -103,7 +103,7 @@ class CountriesSliderFragment : BaseHiddenFragment() {
     private fun updateView(countrySliderBundleUI: CountriesSliderBundleUI) {
         updateCountriesRecycler(countrySliderBundleUI.countryUIList)
 
-        binding.tvName.text = countrySliderBundleUI.title
+        //binding.tvName.text = countrySliderBundleUI.title
         Glide.with(requireContext())
             .load(countrySliderBundleUI.backgroundPicture)
             .into(object : CustomTarget<Drawable?>() {

@@ -117,9 +117,9 @@ class ProductsSliderFragment : BaseHiddenFragment() {
     }
 
     private fun initCategoryRecycler() {
-        if (recommend) {
+        /*if (recommend) {
             binding.tvName.textSize = requireContext().sp(6.5f)
-        }
+        }*/
 
         /*when(config.largeTitle) {
             true -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -151,11 +151,11 @@ class ProductsSliderFragment : BaseHiddenFragment() {
     }
 
     private fun initShowAllProductsButtons() {
-        binding.tvShowAll.setOnClickListener {
+        /*binding.tvShowAll.setOnClickListener {
             categoryDetailUIList.first().id?.let { categoryId ->
                 iOnShowAllProductsClick.onShowAllProductsClick(categoryId)
             }
-        }
+        }*/
     }
 
     private fun initTabbedMediator() {
@@ -206,18 +206,18 @@ class ProductsSliderFragment : BaseHiddenFragment() {
         when(categoryDetailUIList.size) {
             1 -> {
                 binding.tlCategories.visibility = View.GONE
-                binding.tvName.visibility = View.VISIBLE
+                /*binding.tvName.visibility = View.VISIBLE
                 binding.tvShowAll.visibility = View.VISIBLE
                 binding.tvName.text = categoryDetailUIList.first().name
                 when (config.containShowAllButton) {
                     true -> binding.tvShowAll.visibility = View.VISIBLE
                     false -> binding.tvShowAll.visibility = View.INVISIBLE
-                }
+                }*/
             }
             else -> {
                 binding.tlCategories.visibility = View.VISIBLE
-                binding.tvName.visibility = View.GONE
-                binding.tvShowAll.visibility = View.GONE
+               /* binding.tvName.visibility = View.GONE
+                binding.tvShowAll.visibility = View.GONE*/
                 for (index in categoryDetailUIList.indices) {
                     binding.tlCategories.newTab().apply {
                         val customTabBinding = ViewCustomTabBinding.inflate(

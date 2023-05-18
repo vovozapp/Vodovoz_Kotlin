@@ -1,46 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--new-->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/llTitleContainer"
+<androidx.viewpager2.widget.ViewPager2 android:id="@+id/vpOrders"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/tvName"
-        style="@style/TextViewMediumBlackBold"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/space_16"
-        android:paddingVertical="@dimen/space_8"
-        android:text="@string/orders_slider_title"
-        app:layout_constraintBottom_toTopOf="@id/vpOrders"
-        app:layout_constraintEnd_toStartOf="@id/tvShowAll"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tvShowAll"
-        style="@style/TextViewSmallBlue"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:gravity="end"
-        android:paddingHorizontal="@dimen/space_16"
-        android:paddingVertical="@dimen/space_8"
-        android:text="@string/show_all"
-        app:layout_constraintBottom_toBottomOf="@id/tvName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tvName"
-        app:layout_constraintTop_toTopOf="@id/tvName"
-        app:layout_constraintWidth_percent="0.3" />
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vpOrders"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvName" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    xmlns:android="http://schemas.android.com/apk/res/android" />

@@ -1,9 +1,12 @@
 package com.vodovoz.app.feature.home.viewholders.hometitle
 
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ViewHolderFlowTitleBinding
+import com.vodovoz.app.util.extensions.color
 
 class HomeTitleViewHolder(
     view: View,
@@ -22,6 +25,12 @@ class HomeTitleViewHolder(
 
     override fun bind(item: HomeTitle) {
         super.bind(item)
+
+        if (item.lightBg) {
+            binding.root.setBackgroundColor(itemView.context.color(R.color.white))
+        } else {
+            binding.root.setBackgroundColor(itemView.context.color(R.color.light_bg))
+        }
 
         binding.tvName.text = item.name
         binding.tvShowAll.isVisible = item.showAll

@@ -79,10 +79,7 @@ class BrandsSliderFragment : BaseHiddenFragment() {
             rect.bottom = space / 2
         }
         
-        binding.tvShowAll.onRenderFinished { width, height ->  }
-        binding.tvShowAll.setOnClickListener {
-            iOnShowAllBrandsClick.onShowAllBrandsClick()
-        }
+
     }
 
     private fun subscribeSubjects() {

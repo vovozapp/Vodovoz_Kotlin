@@ -21,23 +21,13 @@ class HomePromotionsSliderViewHolder(
     private val homePromotionsAdapter = HomePromotionsInnerAdapter(productsClickListener, promotionsClickListener, cartManager, likeManager)
 
     init {
-        binding.tvShowAll.setOnClickListener { promotionsClickListener.onShowAllPromotionsClick() }
-
         binding.vpPromotions.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-
         binding.vpPromotions.adapter = homePromotionsAdapter
     }
 
     override fun bind(item: HomePromotions) {
         super.bind(item)
 
-        binding.tvName.text = item.items.title
-
         homePromotionsAdapter.submitList(item.items.promotionUIList)
-
-        when(item.items.containShowAllButton) {
-            true -> binding.tvShowAll.visibility = View.VISIBLE
-            false -> binding.tvShowAll.visibility = View.INVISIBLE
-        }
     }
 }

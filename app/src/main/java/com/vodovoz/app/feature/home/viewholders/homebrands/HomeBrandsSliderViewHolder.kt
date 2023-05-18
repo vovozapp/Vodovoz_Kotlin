@@ -33,10 +33,6 @@ class HomeBrandsSliderViewHolder(
             rect.top = space / 2
             rect.bottom = space / 2
         }
-
-        binding.tvShowAll.setOnClickListener {
-            clickListener.onShowAllBrandsClick()
-        }
     }
 
     override fun bind(item: HomeBrands) {

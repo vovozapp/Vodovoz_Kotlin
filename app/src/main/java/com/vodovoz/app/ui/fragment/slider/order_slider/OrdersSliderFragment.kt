@@ -89,12 +89,12 @@ class OrdersSliderFragment : BaseHiddenFragment() {
             }
         )
 
-        when(config.containTitleContainer) {
+     /*   when(config.containTitleContainer) {
             true -> binding.llTitleContainer.visibility = View.VISIBLE
             false -> binding.llTitleContainer.visibility = View.GONE
         }
 
-        binding.tvShowAll.setOnClickListener { iOnShowAllOrdersClick.onShowAllOrdersClick() }
+        binding.tvShowAll.setOnClickListener { iOnShowAllOrdersClick.onShowAllOrdersClick() }*/
     }
 
     private fun subscribeSubjects() {

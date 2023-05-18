@@ -1,52 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--new-->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.recyclerview.widget.RecyclerView android:id="@+id/rvBrands"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginTop="8dp"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/space_8">
-
-    <TextView
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/tvName"
-        app:layout_constraintEnd_toStartOf="@id/tvShowAll"
-        app:layout_constraintBottom_toTopOf="@id/rvBrands"
-        style="@style/TextViewMediumBlackBold"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:textSize="16sp"
-        android:layout_height="wrap_content"
-        android:text="@string/brands"
-        android:paddingVertical="@dimen/space_8"
-        android:paddingHorizontal="@dimen/space_16"/>
-
-    <TextView
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvName"
-        app:layout_constraintStart_toEndOf="@id/tvName"
-        app:layout_constraintBottom_toBottomOf="@id/tvName"
-        android:id="@+id/tvShowAll"
-        style="@style/TextViewSmallBlue"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:gravity="end"
-        android:paddingHorizontal="@dimen/space_16"
-        android:paddingVertical="@dimen/space_8"
-        app:layout_constraintWidth_percent="0.2"
-        android:textSize="12sp"
-        android:text="@string/show_all"
-        />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvBrands"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    android:paddingBottom="@dimen/space_8"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

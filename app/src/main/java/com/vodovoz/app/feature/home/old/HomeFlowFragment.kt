@@ -28,6 +28,7 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.util.extensions.debugLog
@@ -178,7 +179,7 @@ class HomeFlowFragment : BaseFragment() {
 
     private fun getTitleClickListener(): HomeTitleClickListener {
         return object : HomeTitleClickListener {
-            override fun onShowAllTitleClick(type: Int) {
+            override fun onShowAllTitleClick(item: HomeTitle) {
 
             }
 

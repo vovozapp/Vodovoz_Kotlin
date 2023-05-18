@@ -21,6 +21,7 @@ import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentMainHomeFlowBinding
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
+import com.vodovoz.app.feature.home.HomeFlowViewModel.Companion.ENTER_COUNT
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.popup.NewsClickListener
 import com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment
@@ -220,7 +221,7 @@ class HomeFragment : BaseFragment() {
             flowViewModel.observeUiState()
                 .collect { homeState ->
 
-                    if (homeState.data.items.mapNotNull { it.item }.size < 5) {
+                    if (homeState.data.items.mapNotNull { it.item }.size < ENTER_COUNT) {
                         binding.homeRv.isVisible = false
                         showLoaderWithBg(true)
                     } else {
@@ -233,7 +234,7 @@ class HomeFragment : BaseFragment() {
                         showPopUpNews(homeState.data.news)
                     }
 
-                    if (homeState.data.items.size in (5..HomeFlowViewModel.POSITIONS_COUNT)) {
+                    if (homeState.data.items.size in (ENTER_COUNT..HomeFlowViewModel.POSITIONS_COUNT)) {
                         val list =
                             homeState.data.items.sortedBy { it.position }.mapNotNull { it.item }
                         homeController.submitList(list)

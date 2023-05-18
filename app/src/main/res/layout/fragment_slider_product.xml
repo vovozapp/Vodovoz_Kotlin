@@ -3,41 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:paddingBottom="@dimen/space_8"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tvShowAll"
-        android:id="@+id/tvName"
-        style="@style/TextViewMediumBlackBold"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:paddingHorizontal="@dimen/space_16"
-        android:paddingVertical="@dimen/space_8"
-        android:textSize="16sp"
-        tools:text="Название категории" />
-
-    <TextView
-        app:layout_constraintStart_toEndOf="@id/tvName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvName"
-        app:layout_constraintBottom_toBottomOf="@id/tvName"
-        android:id="@+id/tvShowAll"
-        style="@style/TextViewSmallBlue"
-        android:layout_width="0dp"
-        app:layout_constraintWidth_percent="0.3"
-        android:layout_height="0dp"
-        android:gravity="end"
-        android:paddingHorizontal="@dimen/space_16"
-        android:paddingTop="@dimen/_9sdp"
-        android:text="@string/show_all"
-        android:textSize="12sp" />
-
     <com.google.android.material.tabs.TabLayout
-        app:layout_constraintTop_toBottomOf="@id/tvName"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/tlCategories"

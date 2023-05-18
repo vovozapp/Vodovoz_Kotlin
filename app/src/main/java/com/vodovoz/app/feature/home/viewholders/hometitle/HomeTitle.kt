@@ -6,10 +6,10 @@ import com.vodovoz.app.common.content.itemadapter.Item
 data class HomeTitle(
     val id: Int,
     val name: String,
-    val showAll: Boolean,
-    val showAllName: String,
+    val showAll: Boolean = false,
+    val showAllName: String = "",
     val type: Int,
-    val categoryId: Long
+    val lightBg: Boolean = true
 ) : Item {
 
     companion object {

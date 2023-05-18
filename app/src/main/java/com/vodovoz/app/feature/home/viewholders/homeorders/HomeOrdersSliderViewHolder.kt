@@ -21,7 +21,6 @@ class HomeOrdersSliderViewHolder(
     private val homeOrdersAdapter = HomeOrdersInnerAdapter(getHomeOrdersSliderClickListener())
 
     init {
-        binding.tvShowAll.setOnClickListener { clickListener.onShowAllOrdersClick() }
 
         binding.vpOrders.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
@@ -51,10 +50,6 @@ class HomeOrdersSliderViewHolder(
 
         homeOrdersAdapter.submitList(item.items)
 
-        when(item.orderSliderConfig.containTitleContainer) {
-            true -> binding.llTitleContainer.visibility = View.VISIBLE
-            false -> binding.llTitleContainer.visibility = View.GONE
-        }
     }
 
     private fun getHomeOrdersSliderClickListener() : HomeOrdersSliderClickListener {

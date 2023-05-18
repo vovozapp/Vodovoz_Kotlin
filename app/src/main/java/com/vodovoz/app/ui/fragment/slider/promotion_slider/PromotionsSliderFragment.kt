@@ -67,9 +67,9 @@ class PromotionsSliderFragment : BaseHiddenFragment() {
     }
 
     private fun initHeader() {
-        binding.tvShowAll.setOnClickListener {
+        /*binding.tvShowAll.setOnClickListener {
             iOnShowAllPromotionsClick.onShowAllPromotionsClick()
-        }
+        }*/
     }
 
     private fun initPromotionPager() {
@@ -119,11 +119,11 @@ class PromotionsSliderFragment : BaseHiddenFragment() {
     }
 
     private fun updateHeader(title: String, containShowAllButton: Boolean) {
-        binding.tvName.text = title
+        /*binding.tvName.text = title
         when(containShowAllButton) {
             true -> binding.tvShowAll.visibility = View.VISIBLE
             false -> binding.tvShowAll.visibility = View.INVISIBLE
-        }
+        }*/
     }
 
     private fun updatePromotionsRecycler(promotionUIList: List<PromotionUI>) {
@@ -131,7 +131,7 @@ class PromotionsSliderFragment : BaseHiddenFragment() {
         promotionsSliderAdapter.promotionUIList = promotionUIList
         promotionsSliderAdapter.notifyDataSetChanged()
         if (promotionUIList.isNotEmpty()) {
-            when (promotionUIList.first().productUIList.isEmpty()) {
+            /*when (promotionUIList.first().productUIList.isEmpty()) {
                 true -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     binding.tvName.setTextAppearance(R.style.TextViewHeaderBlackBold)
                 } else {
@@ -142,7 +142,7 @@ class PromotionsSliderFragment : BaseHiddenFragment() {
                 } else {
                     binding.tvName.setTextAppearance(null, R.style.TextViewMediumBlackBold)
                 }
-            }
+            }*/
         }
 //        val diffUtil = PromotionDiffUtilCallback(
 //            oldList = promotionsSliderAdapter.promotionUIList,

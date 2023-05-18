@@ -50,7 +50,7 @@ class CommentsSliderFragment : BaseHiddenFragment() {
     }
 
     private fun initButtons() {
-        binding.tvSendComment.setOnClickListener { iOnSendCommentAboutShop.sendCommentAboutShop() }
+
     }
 
     private fun initCommentsPager() {

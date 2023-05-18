@@ -20,7 +20,6 @@ class HomeCommentsSliderViewHolder(
     private val homeCommentsInnerAdapter = HomeCommentsInnerAdapter(getHomeCommentsSliderClickListener())
 
     init {
-        binding.tvSendComment.setOnClickListener { clickListener.onSendCommentAboutShop() }
 
         binding.vpComments.addMarginDecoration {  rect, view, parent, state ->
             rect.left = space
