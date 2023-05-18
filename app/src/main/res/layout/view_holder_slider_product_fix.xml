@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?><!--new-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/product_slider_card_width"
+    android:layout_height="@dimen/product_slider_card_height">
+
+    <ImageView
+        android:id="@+id/imgFavoriteStatus"
+        android:layout_width="@dimen/_17sdp"
+        android:layout_height="@dimen/_17sdp"
+        android:background="@drawable/selector_fav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/imgPicture"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/amountController"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgFavoriteStatus"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="ContentDescription" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cwStatusContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/bluePrimary"
+        app:cardCornerRadius="@dimen/corner_5"
+        app:cardElevation="0dp"
+        app:layout_constraintEnd_toStartOf="@+id/cwDiscountContainer"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvStatus"
+            style="@style/TextViewSmallWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/space_8"
+            android:paddingVertical="@dimen/space_2"
+            tools:text="Новинка" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cwDiscountContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/orange"
+        app:cardCornerRadius="@dimen/corner_5"
+        app:cardElevation="0dp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cwStatusContainer"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvDiscountPercent"
+            style="@style/TextViewSmallWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/space_8"
+            android:paddingVertical="@dimen/space_2"
+            tools:text="12%" />
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tvPricePerUnit"
+        style="@style/TextViewSmallLightGray"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/tvCurrentPrice"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="510/кг" />
+
+    <TextView
+        android:id="@+id/tvCurrentPrice"
+        style="@style/TextViewMediumBlackBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/tvPriceCondition"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="280 Р" />
+
+    <TextView
+        android:id="@+id/tvOldPrice"
+        style="@style/TextViewSmallLightGray"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/space_4"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvPriceCondition"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvCurrentPrice"
+        tools:ignore="RtlSymmetry"
+        tools:text="300 Р" />
+
+    <TextView
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/tvPriceCondition"
+        style="@style/TextViewSmallGray"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start|bottom"
+        android:visibility="gone"
+        tools:text="При условии покупки от 10 шт" />
+
+    <include
+        android:id="@+id/amountController"
+        android:visibility="gone"
+        layout="@layout/view_product_amount_controller"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
