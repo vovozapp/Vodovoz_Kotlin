@@ -26,50 +26,34 @@
         app:layout_constraintVertical_bias="0.0"
         tools:ignore="ContentDescription" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cwStatusContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/bluePrimary"
-        app:cardCornerRadius="@dimen/corner_5"
-        app:cardElevation="0dp"
-        app:layout_constraintEnd_toStartOf="@+id/cwDiscountContainer"
+    <TextView
+        android:background="@drawable/bg_round_statuses"
+        android:backgroundTint="@color/bluePrimary"
+        app:layout_constraintEnd_toStartOf="@+id/tvDiscountPercent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/tvStatus"
-            style="@style/TextViewSmallWhite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/space_8"
-            android:paddingVertical="@dimen/space_2"
-            tools:text="Новинка" />
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cwDiscountContainer"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/tvStatus"
+        style="@style/TextViewSmallWhite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/orange"
-        app:cardCornerRadius="@dimen/corner_5"
-        app:cardElevation="0dp"
+        android:paddingHorizontal="@dimen/space_8"
+        android:paddingVertical="@dimen/space_2"
+        tools:text="Новинка" />
+
+    <TextView
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/cwStatusContainer"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/tvDiscountPercent"
-            style="@style/TextViewSmallWhite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/space_8"
-            android:paddingVertical="@dimen/space_2"
-            tools:text="12%" />
-
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintStart_toEndOf="@+id/tvStatus"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/bg_round_statuses"
+        android:backgroundTint="@color/orange"
+        android:id="@+id/tvDiscountPercent"
+        style="@style/TextViewSmallWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/space_8"
+        android:paddingVertical="@dimen/space_2"
+        tools:text="12%" />
 
     <TextView
         android:id="@+id/tvPricePerUnit"
