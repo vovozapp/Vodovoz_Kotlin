@@ -105,10 +105,10 @@
         android:id="@+id/add"
         android:layout_width="@dimen/_24sdp"
         android:layout_height="@dimen/_24sdp"
+        android:layout_marginTop="3dp"
         android:layout_marginEnd="@dimen/space_6"
         android:background="@drawable/amount_selector"
         android:padding="@dimen/space_8"
-        android:layout_marginTop="3dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -117,13 +117,11 @@
         tools:ignore="ContentDescription" />
 
     <TextView
-        app:layout_constraintEnd_toEndOf="@id/add"
-        app:layout_constraintTop_toTopOf="@id/add"
-        android:layout_marginTop="-8dp"
-        android:layout_marginEnd="-8dp"
         android:id="@+id/circleAmount"
         android:layout_width="@dimen/_16sdp"
         android:layout_height="@dimen/_16sdp"
+        android:layout_marginTop="-8dp"
+        android:layout_marginEnd="-8dp"
         android:background="@drawable/bkg_number"
         android:fontFamily="@font/rotonda_normal"
         android:gravity="center"
@@ -131,7 +129,58 @@
         android:textSize="13sp"
         android:textStyle="bold"
         android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/add"
+        app:layout_constraintTop_toTopOf="@id/add"
         tools:ignore="NegativeMargin" />
+
+    <ImageView
+        android:id="@+id/reduceAmount"
+        android:visibility="gone"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_24sdp"
+        android:background="@drawable/bkg_number_controller_part_reduce"
+        android:padding="@dimen/space_6"
+        android:src="@drawable/ic_minus"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/amount"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline"
+        app:layout_constraintWidth_percent="0.333"
+        app:tint="@color/green"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/amount"
+        android:visibility="gone"
+        style="@style/TextViewNormalBlackBold"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_24sdp"
+        android:background="@drawable/bkg_number_controller_part_number"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/increaseAmount"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@id/reduceAmount"
+        app:layout_constraintTop_toTopOf="@id/guideline"
+        app:layout_constraintWidth_percent="0.333"
+        tools:text="1" />
+
+    <ImageView
+        android:id="@+id/increaseAmount"
+        android:layout_width="0dp"
+        android:visibility="gone"
+        android:layout_height="@dimen/_24sdp"
+        android:background="@drawable/bkg_number_controller_part_increase"
+        android:padding="@dimen/space_6"
+        android:src="@drawable/png_cart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/amount"
+        app:layout_constraintTop_toTopOf="@id/guideline"
+        app:layout_constraintWidth_percent="0.333"
+        tools:ignore="ContentDescription" />
 
     <include
         android:id="@+id/amountController"
