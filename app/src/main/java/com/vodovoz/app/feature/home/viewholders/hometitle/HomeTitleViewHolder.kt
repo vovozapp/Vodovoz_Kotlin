@@ -32,7 +32,12 @@ class HomeTitleViewHolder(
             binding.root.setBackgroundColor(itemView.context.color(R.color.light_bg))
         }
 
-        binding.tvName.text = item.name
+        if (item.categoryProductsName.isNotEmpty()) {
+            binding.tvName.text = item.categoryProductsName
+        } else {
+            binding.tvName.text = item.name
+        }
+
         binding.tvShowAll.isVisible = item.showAll
         binding.tvShowAll.text = item.showAllName
 

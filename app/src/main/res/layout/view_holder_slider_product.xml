@@ -29,7 +29,7 @@
     <TextView
         android:id="@+id/tvStatus"
         style="@style/TextViewSmallWhite"
-        android:maxWidth="90dp"
+        android:maxWidth="85dp"
         android:maxLines="1"
         android:ellipsize="end"
         android:layout_width="wrap_content"
@@ -46,7 +46,7 @@
 
     <TextView
         android:id="@+id/tvDiscountPercent"
-        android:maxWidth="60dp"
+        android:maxWidth="55dp"
         android:maxLines="1"
         android:ellipsize="end"
         style="@style/TextViewSmallWhite"

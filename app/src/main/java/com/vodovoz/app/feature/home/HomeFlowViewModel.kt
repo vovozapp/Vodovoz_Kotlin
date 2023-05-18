@@ -226,14 +226,19 @@ class HomeFlowViewModel @Inject constructor(
                 .onEach {
                     val response = it.parseDiscountSliderResponse()
                     val item = if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
                         PositionItemWithTitle(
                             item = PositionItem(
                                 position,
-                                fetchHomeProductsByType(response.data.mapToUI(), DISCOUNT, position)
+                                fetchHomeProductsByType(data, DISCOUNT, position)
                             ),
                             itemTitle = PositionItem(
                                 positionTitle,
-                                HomeTitle(id = positionTitle, type = DISCOUNT_TITLE, name = "Самое выгодное", showAll = true, showAllName = "СМ.ВСЕ")
+                                HomeTitle(id = positionTitle, type = DISCOUNT_TITLE, name = "Самое выгодное", showAll = true, showAllName = "СМ.ВСЕ", categoryProductsName = if (data.size == 1) {
+                                    data.first().name
+                                } else {
+                                    ""
+                                })
                             )
                         )
                     } else {
@@ -363,14 +368,19 @@ class HomeFlowViewModel @Inject constructor(
                 .onEach {
                     val response = it.parseNoveltiesSliderResponse()
                     val item = if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
                         PositionItemWithTitle(
                             item = PositionItem(
                                 position,
-                                fetchHomeProductsByType(response.data.mapToUI(), NOVELTIES, position)
+                                fetchHomeProductsByType(data, NOVELTIES, position)
                             ),
                             itemTitle = PositionItem(
                                 positionTitle,
-                                HomeTitle(id = positionTitle, type = NOVELTIES_TITLE, name = "Новинки", showAll = true, showAllName = "СМ.ВСЕ")
+                                HomeTitle(id = positionTitle, type = NOVELTIES_TITLE, name = "Новинки", showAll = true, showAllName = "СМ.ВСЕ", categoryProductsName = if (data.size == 1) {
+                                    data.first().name
+                                } else {
+                                    ""
+                                })
                             )
                         )
                     } else {
@@ -543,14 +553,19 @@ class HomeFlowViewModel @Inject constructor(
                     .onEach {
                         val response = it.parseViewedProductsSliderResponse()
                         val item = if (response is ResponseEntity.Success) {
+                            val data = response.data.mapToUI()
                             PositionItemWithTitle(
                                 item = PositionItem(
                                     position,
-                                    fetchHomeProductsByType(response.data.mapToUI(), VIEWED, position)
+                                    fetchHomeProductsByType(data, VIEWED, position)
                                 ),
                                 itemTitle = PositionItem(
                                     positionTitle,
-                                    HomeTitle(id = positionTitle, type = VIEWED_TITLE, name = "Вы смотрели", showAll = true, showAllName = "СМ.ВСЕ")
+                                    HomeTitle(id = positionTitle, type = VIEWED_TITLE, name = "Вы смотрели", showAll = true, showAllName = "СМ.ВСЕ", categoryProductsName = if (data.size == 1) {
+                                        data.first().name
+                                    } else {
+                                        ""
+                                    })
                                 )
                             )
                         } else {
