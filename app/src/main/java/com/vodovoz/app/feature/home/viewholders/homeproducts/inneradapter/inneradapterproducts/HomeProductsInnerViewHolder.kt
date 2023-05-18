@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.CountDownTimer
 import android.view.View
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -19,6 +20,7 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
@@ -70,13 +72,13 @@ class HomeProductsInnerViewHolder(
     }
 
     init {
-        binding.llPricesContainer.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.root.setOnClickListener {
             val item = item ?: return@setOnClickListener
             clickListener.onProductClick(item.id)
         }
 
-        binding.amountController.add.setOnClickListener {
+        binding.add.setOnClickListener {
             val item = item ?: return@setOnClickListener
             if (item.leftItems == 0) {
                 clickListener.onNotifyWhenBeAvailable(item.id, item.name, item.detailPicture)
@@ -91,7 +93,7 @@ class HomeProductsInnerViewHolder(
             showAmountController()
         }
 
-        binding.amountController.reduceAmount.setOnClickListener {
+        binding.reduceAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
             item.oldQuantity = item.cartQuantity
             item.cartQuantity--
@@ -102,7 +104,7 @@ class HomeProductsInnerViewHolder(
             updateCartQuantity(item)
         }
 
-        binding.amountController.increaseAmount.setOnClickListener {
+        binding.increaseAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
             item.oldQuantity = item.cartQuantity
             item.cartQuantity++
@@ -131,31 +133,31 @@ class HomeProductsInnerViewHolder(
     override fun bind(item: ProductUI) {
         super.bind(item)
 
-        binding.amountController.add.isSelected = item.leftItems == 0
+        binding.add.isSelected = item.leftItems == 0
 
         //Price per unit / or order quantity
-        binding.llPricesContainer.tvPricePerUnit.isVisible = item.pricePerUnit != 0
-        binding.llPricesContainer.tvPricePerUnit.text = item.pricePerUnitStringBuilder
+        binding.tvPricePerUnit.isVisible = item.pricePerUnit != 0
+        binding.tvPricePerUnit.text = item.pricePerUnitStringBuilder
 
         //Price
         when(item.priceList.size) {
             1 -> {
-                binding.llPricesContainer.tvCurrentPrice.text = item.currentPriceStringBuilder
-                binding.llPricesContainer.tvOldPrice.text = item.oldPriceStringBuilder
+                binding.tvCurrentPrice.text = item.currentPriceStringBuilder
+                binding.tvOldPrice.text = item.oldPriceStringBuilder
             }
             else -> {
-                binding.llPricesContainer.tvCurrentPrice.text = item.minimalPriceStringBuilder
-                binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
+                binding.tvCurrentPrice.text = item.minimalPriceStringBuilder
+                binding.tvPricePerUnit.visibility = View.GONE
             }
         }
         when(item.haveDiscount) {
             true -> {
-                binding.llPricesContainer.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
-                binding.llPricesContainer.tvOldPrice.visibility = View.VISIBLE
+                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
+                binding.tvOldPrice.visibility = View.VISIBLE
             }
             false -> {
-                binding.llPricesContainer.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
-                binding.llPricesContainer.tvOldPrice.visibility = View.GONE
+                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
+                binding.tvOldPrice.visibility = View.GONE
             }
         }
 
@@ -166,13 +168,12 @@ class HomeProductsInnerViewHolder(
         bindFav(item)
 
         //Status
-        var isNotHaveStatuses = true
         when (item.status.isEmpty()) {
-            true -> binding.cgStatuses.cwStatusContainer.visibility = View.GONE
+            true -> binding.tvStatus.visibility = View.GONE
             false -> {
-                binding.cgStatuses.cwStatusContainer.visibility = View.VISIBLE
-                binding.cgStatuses.tvStatus.text = item.status
-                binding.cgStatuses.cwStatusContainer.setCardBackgroundColor(Color.parseColor(item.statusColor))
+                binding.tvStatus.visibility = View.VISIBLE
+                binding.tvStatus.text = item.status
+                binding.tvStatus.background.setTint(Color.parseColor(item.statusColor))
             }
         }
 
@@ -180,16 +181,10 @@ class HomeProductsInnerViewHolder(
         when(item.priceList.size == 1 &&
                 item.priceList.first().currentPrice < item.priceList.first().oldPrice) {
             true -> {
-                isNotHaveStatuses = false
-                binding.cgStatuses.cwDiscountContainer.visibility = View.VISIBLE
-                binding.cgStatuses.tvDiscountPercent.text = item.discountPercentStringBuilder
+                binding.tvDiscountPercent.visibility = View.VISIBLE
+                binding.tvDiscountPercent.text = item.discountPercentStringBuilder
             }
-            false -> binding.cgStatuses.cwDiscountContainer.visibility = View.GONE
-        }
-
-        when(isNotHaveStatuses) {
-            true -> binding.cgStatuses.root.visibility = View.GONE
-            false -> binding.cgStatuses.root.visibility = View.VISIBLE
+            false -> binding.tvDiscountPercent.visibility = View.GONE
         }
 
         //UpdatePictures
@@ -207,35 +202,63 @@ class HomeProductsInnerViewHolder(
         val product = item
         product?.let {
             if (product.cartQuantity > 0) {
-                binding.amountController.circleAmount.visibility = View.VISIBLE
+                binding.circleAmount.visibility = View.VISIBLE
             }
-            binding.amountController.add.visibility = View.VISIBLE
-            binding.amountController.amountControllerDeployed.visibility = View.INVISIBLE
-            binding.llPricesContainer.root.visibility = View.VISIBLE
+            binding.add.visibility = View.VISIBLE
+            changeAmountControllerDeployedVisibility(false)
+            changePricesContainerVisibility(true)
         }
     }
 
-    private fun updateCartQuantity(item: ProductUI) {
+    private fun updateCartQuantity(item: ProductUI, showCircleAmount: Boolean = true) {
         if (item.cartQuantity < 0) {
             item.cartQuantity = 0
         }
 
         if (item.cartQuantity <= 0) {
-            binding.amountController.circleAmount.visibility = View.GONE
+            binding.circleAmount.visibility = View.GONE
         } else {
-            binding.amountController.circleAmount.visibility = View.VISIBLE
+            if (!binding.amount.isVisible) {
+                binding.circleAmount.visibility = View.VISIBLE
+            }
         }
 
 
-        binding.amountController.amount.text = item.cartQuantity.toString()
-        binding.amountController.circleAmount.text = item.cartQuantity.toString()
+        binding.amount.text = item.cartQuantity.toString()
+        binding.circleAmount.text = item.cartQuantity.toString()
     }
 
     private fun showAmountController() {
-        binding.llPricesContainer.root.visibility = View.INVISIBLE
-        binding.amountController.circleAmount.visibility = View.INVISIBLE
-        binding.amountController.add.visibility = View.INVISIBLE
-        binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
+        changePricesContainerVisibility(false)
+        binding.circleAmount.visibility = View.GONE
+        binding.add.visibility = View.GONE
+        changeAmountControllerDeployedVisibility(true)
         amountControllerTimer.start()
+    }
+
+    private fun changePricesContainerVisibility(visible: Boolean) {
+        binding.tvPricePerUnit.changeVisibilityIfNotEmpty(visible)
+        binding.tvCurrentPrice.changeVisibilityIfNotEmpty(visible)
+        binding.tvOldPrice.changeVisibilityIfNotEmpty(visible)
+        binding.tvPriceCondition.changeVisibilityIfNotEmpty(visible)
+    }
+
+    private fun changeAmountControllerDeployedVisibility(visible: Boolean) {
+        binding.increaseAmount.isVisible = visible
+        binding.reduceAmount.isVisible = visible
+        binding.amount.isVisible = visible
+    }
+
+    private fun changeStatusesVisibility(visible: Boolean) {
+        binding.tvStatus.isVisible = visible
+        binding.tvDiscountPercent.isVisible = visible
+    }
+
+    fun TextView.changeVisibilityIfNotEmpty(visible: Boolean) {
+        this.isVisible = if (this.text.isEmpty()) {
+            false
+        } else {
+            visible
+        }
     }
 }

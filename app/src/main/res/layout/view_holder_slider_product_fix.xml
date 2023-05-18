@@ -29,20 +29,26 @@
     <TextView
         android:id="@+id/tvStatus"
         style="@style/TextViewSmallWhite"
+        android:maxWidth="90dp"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
         android:background="@drawable/bg_round_statuses"
         android:backgroundTint="@color/bluePrimary"
         android:paddingHorizontal="@dimen/space_8"
         android:paddingVertical="@dimen/space_2"
         app:layout_constraintEnd_toStartOf="@+id/tvDiscountPercent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Новинка" />
+        app:layout_goneMarginEnd="5dp"
+        tools:text="Новинк4324224а" />
 
     <TextView
         android:id="@+id/tvDiscountPercent"
+        android:maxWidth="60dp"
+        android:maxLines="1"
+        android:ellipsize="end"
         style="@style/TextViewSmallWhite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,8 +56,7 @@
         android:backgroundTint="@color/orange"
         android:paddingHorizontal="@dimen/space_8"
         android:paddingVertical="@dimen/space_2"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvStatus"
+        app:layout_constraintStart_toStartOf="@+id/tvStatus"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="12%" />
 
@@ -120,8 +125,8 @@
         android:id="@+id/circleAmount"
         android:layout_width="@dimen/_16sdp"
         android:layout_height="@dimen/_16sdp"
-        android:layout_marginTop="-8dp"
-        android:layout_marginEnd="-8dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginEnd="-6dp"
         android:background="@drawable/bkg_number"
         android:fontFamily="@font/rotonda_normal"
         android:gravity="center"
@@ -135,12 +140,12 @@
 
     <ImageView
         android:id="@+id/reduceAmount"
-        android:visibility="gone"
         android:layout_width="0dp"
         android:layout_height="@dimen/_24sdp"
         android:background="@drawable/bkg_number_controller_part_reduce"
         android:padding="@dimen/space_6"
         android:src="@drawable/ic_minus"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/amount"
         app:layout_constraintHorizontal_bias="0.5"
@@ -152,12 +157,12 @@
 
     <TextView
         android:id="@+id/amount"
-        android:visibility="gone"
         style="@style/TextViewNormalBlackBold"
         android:layout_width="0dp"
         android:layout_height="@dimen/_24sdp"
         android:background="@drawable/bkg_number_controller_part_number"
         android:gravity="center"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/increaseAmount"
         app:layout_constraintHorizontal_bias="0.5"
@@ -169,11 +174,11 @@
     <ImageView
         android:id="@+id/increaseAmount"
         android:layout_width="0dp"
-        android:visibility="gone"
         android:layout_height="@dimen/_24sdp"
         android:background="@drawable/bkg_number_controller_part_increase"
         android:padding="@dimen/space_6"
         android:src="@drawable/png_cart"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -182,21 +187,11 @@
         app:layout_constraintWidth_percent="0.333"
         tools:ignore="ContentDescription" />
 
-    <include
-        android:id="@+id/amountController"
-        layout="@layout/view_product_amount_controller"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="135dp" />
+        app:layout_constraintGuide_percent="0.8" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

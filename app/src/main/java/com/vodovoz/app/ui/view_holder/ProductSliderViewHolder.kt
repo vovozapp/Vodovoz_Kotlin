@@ -39,7 +39,7 @@ class ProductSliderViewHolder(
     }
 
     init {
-        binding.llPricesContainer.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        /*binding.llPricesContainer.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.root.setOnClickListener {
             onProductClickSubject.onNext(productUI.id)
         }
@@ -72,7 +72,7 @@ class ProductSliderViewHolder(
             amountControllerTimer.start()
             onChangeProductQuantitySubject.onNext(Pair(productUI.id, productUI.cartQuantity))
             updateCartQuantity()
-        }
+        }*/
 
         binding.imgFavoriteStatus.setOnClickListener {
             when(productUI.isFavorite) {
@@ -93,31 +93,31 @@ class ProductSliderViewHolder(
         if (productUI.cartQuantity < 0) {
             productUI.cartQuantity = 0
         }
-        binding.amountController.amount.text = productUI.cartQuantity.toString()
-        binding.amountController.circleAmount.text = productUI.cartQuantity.toString()
+       /* binding.amountController.amount.text = productUI.cartQuantity.toString()
+        binding.amountController.circleAmount.text = productUI.cartQuantity.toString()*/
     }
 
     private fun showAmountController() {
-        binding.amountController.circleAmount.visibility = View.GONE
+        /*binding.amountController.circleAmount.visibility = View.GONE
         binding.amountController.add.visibility = View.GONE
         binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
         binding.llPricesContainer.root.visibility = View.INVISIBLE
-        amountControllerTimer.start()
+        amountControllerTimer.start()*/
     }
 
     private fun hideAmountController() {
-        if (productUI.cartQuantity > 0) {
+       /* if (productUI.cartQuantity > 0) {
             binding.amountController.circleAmount.visibility = View.VISIBLE
         }
         binding.llPricesContainer.root.visibility = View.VISIBLE
         binding.amountController.add.visibility = View.VISIBLE
-        binding.amountController.amountControllerDeployed.visibility = View.GONE
+        binding.amountController.amountControllerDeployed.visibility = View.GONE*/
     }
 
     fun onBind(productUI: ProductUI) {
         this.productUI = productUI
 
-        //If left items = 0
+       /* //If left items = 0
         when(productUI.leftItems == 0) {
             true -> {
                 binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_gray_circle_normal)
@@ -214,6 +214,6 @@ class ProductSliderViewHolder(
             .with(context)
             .load(productUI.detailPicture)
             .into(binding.imgPicture)
-
+*/
     }
 }
