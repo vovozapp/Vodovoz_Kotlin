@@ -1,13 +1,10 @@
 package com.vodovoz.app.feature.home
 
-
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.*
 import com.vodovoz.app.data.DataRepository
-import com.vodovoz.app.data.LocalSyncExtensions.syncCartQuantity
-import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
@@ -38,7 +35,6 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
-import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
 import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfo
 import com.vodovoz.app.feature.home.viewholders.homebrands.HomeBrands
@@ -57,15 +53,12 @@ import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
 import com.vodovoz.app.feature.home.viewholders.hometriplenav.HomeTripleNav
 import com.vodovoz.app.mapper.PopupNewsMapper.mapToUI
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
+import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -84,23 +77,23 @@ class HomeFlowViewModel @Inject constructor(
 
     private fun loadPage() {
         updatePopupNews()
-        fetchAdvertisingBannersSlider()
-        fetchHistoriesSlider()
-        fetchPopularSlider()
-        fetchDiscountsSlider()
-        fetchCategoryBannersSlider()
+        fetchAdvertisingBannersSlider(POSITION_1)
+        fetchHistoriesSlider(POSITION_2)
+        fetchPopularSlider(POSITION_3)
+        fetchDiscountsSlider(POSITION_4)
+        fetchCategoryBannersSlider(POSITION_5)
     }
 
     fun secondLoad() {
-        fetchTopSlider()
-        fetchOrdersSlider()
-        fetchNoveltiesSlider()
-        fetchPromotionsSlider()
-        fetchBottomSlider()
-        fetchBrandsSlider()
-        fetchCountriesSlider()
-        fetchViewedProductsSlider()
-        fetchCommentsSlider()
+        fetchTopSlider(POSITION_6)
+        fetchOrdersSlider(POSITION_7)
+        fetchNoveltiesSlider(POSITION_9)
+        fetchPromotionsSlider(POSITION_10)
+        fetchBottomSlider(POSITION_11)
+        fetchBrandsSlider(POSITION_12)
+        fetchCountriesSlider(POSITION_13)
+        fetchViewedProductsSlider(POSITION_14)
+        fetchCommentsSlider(POSITION_15)
     }
 
     fun firstLoad() {
@@ -117,802 +110,358 @@ class HomeFlowViewModel @Inject constructor(
         secondLoad()
     }
 
-    private fun fetchAdvertisingBannersSlider() {
+    private fun fetchAdvertisingBannersSlider(position: Int) {
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.fetchAdvertisingBannersSlider()) }
                 .catch {
                     debugLog { "fetch adv banners error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(),
-                            loadingPage = false,
-                            data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_1,
-                                    null
-                                )
-                            )
-                        )
+                    updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseAdvertisingBannersSliderResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
-                        val item = PositionItem(
-                            POSITION_1,
-                            HomeBanners(1, response.data.mapToUI(), bannerRatio = 0.41)
-                        )
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
+                    val item = if (response is ResponseEntity.Success) {
+                        PositionItem(position, HomeBanners(position, response.data.mapToUI(), bannerRatio = 0.41))
                     } else {
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_1,
-                                    null
-                                )
-                            )
-                        )
+                        PositionItem(position, null)
                     }
+                    updateStateByPositionItem(item)
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
         }
     }
 
-    private fun fetchHistoriesSlider() {
+    private fun fetchHistoriesSlider(position: Int) {
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.fetchHistoriesSlider()) }
                 .catch {
                     debugLog { "fetch histories error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_2,
-                                    null
-                                )
-                            )
-                        )
+                    updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseHistoriesSliderResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
-                        val item =
-                            PositionItem(POSITION_2, HomeHistories(2, response.data.mapToUI()))
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
+                    val item = if (response is ResponseEntity.Success) {
+                        PositionItem(position, HomeHistories(position, response.data.mapToUI()))
                     } else {
-                        state.copy(
-                            loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_2,
-                                    null
-                                )
-                            )
-                        )
+                        PositionItem(position, null)
                     }
+                    updateStateByPositionItem(item)
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
         }
     }
 
-    private fun fetchPopularSlider() {
+    private fun fetchPopularSlider(position: Int) {
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.fetchPopularSlider()) }
                 .catch {
                     debugLog { "fetch populars error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_3,
-                                    null
-                                )
-                            )
-                        )
+                    updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parsePopularSliderResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
-                        val item =
-                            PositionItem(POSITION_3, HomePopulars(3, response.data.mapToUI()))
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
+                    val item = if (response is ResponseEntity.Success) {
+                        PositionItem(position, HomePopulars(position, response.data.mapToUI()))
                     } else {
-                        state.copy(
-                            loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_3,
-                                    null
-                                )
-                            )
-                        )
+                        PositionItem(position, null)
                     }
+                    updateStateByPositionItem(item)
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
         }
     }
 
-    private fun fetchDiscountsSlider() {
+    private fun fetchDiscountsSlider(position: Int) {
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.fetchDiscountsSlider()) }
                 .catch {
                     debugLog { "fetch discount slider error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_4,
-                                    null
-                                )
-                            )
-                        )
+                    updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseDiscountSliderResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        val item =
-                            PositionItem(
-                                POSITION_4, HomeProducts(
-                                    4,
-                                    data,
-                                    productsType = DISCOUNT,
-                                    productsSliderConfig = ProductsSliderConfig(
-                                        containShowAllButton = true
-                                    ),
-                                    prodList =  if (data.size > 1) {
-                                        val list = mutableListOf<ProductUI>()
-                                        data.forEach {
-                                            list.addAll(it.productUIList)
-                                        }
-                                        list
-                                    } else {
-                                        data.first().productUIList
-                                    }
-                                )
-                            )
-
-                        response.data.forEach { categoryDetailEntity ->
-                            categoryDetailEntity.productEntityList.syncFavoriteProducts(
-                                localDataSource
-                            )
-                            categoryDetailEntity.productEntityList.syncCartQuantity(localDataSource)
-                        }
-
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
+                    val item = if (response is ResponseEntity.Success) {
+                        PositionItem(position, fetchHomeProductsByType(response.data.mapToUI(), DISCOUNT, position))
                     } else {
-                        state.copy(
-                            loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_4,
-                                    null
-                                )
-                            )
-                        )
+                        PositionItem(position, null)
                     }
+                    updateStateByPositionItem(item)
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
         }
     }
 
-    private fun fetchCategoryBannersSlider() {
+    private fun fetchCategoryBannersSlider(position: Int) {
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.fetchCategoryBannersSlider()) }
                 .catch {
                     debugLog { "fetch category banners error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_5,
-                                    null
-                                )
-                            )
-                        )
+                    updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseCategoryBannersSliderResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
-                        val item = PositionItem(
-                            POSITION_5,
-                            HomeBanners(5, response.data.mapToUI(), bannerRatio = 0.5)
-                        )
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
+                    val item = if (response is ResponseEntity.Success) {
+                        PositionItem(position, HomeBanners(position, response.data.mapToUI(), bannerRatio = 0.5))
                     } else {
-                        state.copy(
-                            loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_5,
-                                    null
-                                )
-                            )
-                        )
+                        PositionItem(position, null)
                     }
+                    updateStateByPositionItem(item)
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
         }
     }
 
-    private fun fetchTopSlider() {
-        if (state.data.itemsInt.contains(POSITION_6)) return
+    private fun fetchTopSlider(position: Int) {
+        if (state.data.itemsInt.contains(position)) return
         debugLog { "load POSITION_6" }
-        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_6))
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + position))
         viewModelScope.launch {
             flow { emit(repository.fetchTopSlider()) }
                 .catch {
                     debugLog { "fetch top slider error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_6,
-                                    null
-                                )
-                            )
-                        )
+                    updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseTopSliderResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        val item =
-                            PositionItem(
-                                POSITION_6, HomeProducts(
-                                    6,
-                                    response.data.mapToUI(),
-                                    productsType = TOP_PROD,
-                                    productsSliderConfig = ProductsSliderConfig(
-                                        containShowAllButton = true
-                                    ),
-                                    prodList =  if (data.size > 1) {
-                                        val list = mutableListOf<ProductUI>()
-                                        data.forEach {
-                                            list.addAll(it.productUIList)
-                                        }
-                                        list
-                                    } else {
-                                        data.first().productUIList
-                                    }
-                                )
-                            )
-
-                        response.data.forEach { categoryDetailEntity ->
-                            categoryDetailEntity.productEntityList.syncFavoriteProducts(
-                                localDataSource
-                            )
-                            categoryDetailEntity.productEntityList.syncCartQuantity(localDataSource)
-                        }
-
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
+                    val item = if (response is ResponseEntity.Success) {
+                        PositionItem(position, fetchHomeProductsByType(response.data.mapToUI(), TOP_PROD, position))
                     } else {
-                        state.copy(
-                            loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_6,
-                                    null
-                                )
-                            )
-                        )
+                        PositionItem(position, null)
                     }
+                    updateStateByPositionItem(item)
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
         }
     }
 
-    private fun fetchOrdersSlider() {
-        if (state.data.itemsInt.contains(POSITION_7)) return
+    private fun fetchOrdersSlider(position: Int) {
+        if (state.data.itemsInt.contains(position)) return
         debugLog { "load POSITION_7" }
-        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_7))
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + position))
         viewModelScope.launch {
             val userId = localDataSource.fetchUserId()
             if (userId != null) {
                 flow { emit(repository.fetchOrdersSlider(userId)) }
                     .catch {
                         debugLog { "fetch orders slider error ${it.localizedMessage}" }
-                        uiStateListener.value =
-                            state.copy(
-                                error = it.toErrorState(),
-                                loadingPage = false,
-                                data = state.data.copy(
-                                    items = state.data.items + PositionItem(
-                                        POSITION_7,
-                                        null
-                                    )
-                                )
-                            )
+                        updateStateByThrowableAndPosition(it, position)
                     }
                     .flowOn(Dispatchers.IO)
                     .onEach {
                         val response = it.parseOrderSliderResponse()
-                        uiStateListener.value = if (response is ResponseEntity.Success) {
-                            val item =
-                                PositionItem(POSITION_7, HomeOrders(7, response.data.mapToUI()))
-                            state.copy(
-                                loadingPage = false,
-                                data = state.data.copy(items = state.data.items + item),
-                                error = null
-                            )
+                        val item = if (response is ResponseEntity.Success) {
+                            PositionItem(position, HomeOrders(position, response.data.mapToUI()))
                         } else {
-                            state.copy(
-                                loadingPage = false, data = state.data.copy(
-                                    items = state.data.items + PositionItem(
-                                        POSITION_7,
-                                        null
-                                    )
-                                )
-                            )
+                            PositionItem(position, null)
                         }
+                        updateStateByPositionItem(item)
                     }
                     .flowOn(Dispatchers.Default)
                     .collect()
             } else {
-                uiStateListener.value = state.copy(
-                    loadingPage = false, data = state.data.copy(
-                        items = state.data.items + PositionItem(
-                            POSITION_7,
-                            null
-                        )
-                    )
-                )
+                updateStateByPositionItem(PositionItem(position, null))
             }
         }
     }
 
-    private fun fetchNoveltiesSlider() {
-        if (state.data.itemsInt.contains(POSITION_9)) return
+    private fun fetchNoveltiesSlider(position: Int) {
+        if (state.data.itemsInt.contains(position)) return
         debugLog { "load POSITION_9" }
-        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_9))
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + position))
         viewModelScope.launch {
             flow { emit(repository.fetchNoveltiesSlider()) }
                 .catch {
                     debugLog { "fetch novelties error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_9,
-                                    null
-                                )
-                            )
-                        )
+                    updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseNoveltiesSliderResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        val item =
-                            PositionItem(
-                                POSITION_9, HomeProducts(
-                                    9,
-                                    data,
-                                    productsType = NOVELTIES,
-                                    productsSliderConfig = ProductsSliderConfig(
-                                        containShowAllButton = true
-                                    ),
-                                    prodList =  if (data.size > 1) {
-                                        val list = mutableListOf<ProductUI>()
-                                        data.forEach {
-                                            list.addAll(it.productUIList)
-                                        }
-                                        list
-                                    } else {
-                                        data.first().productUIList
-                                    }
-                                )
-                            )
-
-                        response.data.forEach { categoryDetailEntity ->
-                            categoryDetailEntity.productEntityList.syncFavoriteProducts(
-                                localDataSource
-                            )
-                            categoryDetailEntity.productEntityList.syncCartQuantity(localDataSource)
-                        }
-
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
+                    val item = if (response is ResponseEntity.Success) {
+                        PositionItem(position, fetchHomeProductsByType(response.data.mapToUI(), NOVELTIES, position))
                     } else {
-                        state.copy(
-                            loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_9,
-                                    null
-                                )
-                            )
-                        )
+                        PositionItem(position, null)
                     }
+                    updateStateByPositionItem(item)
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
         }
     }
 
-    private fun fetchPromotionsSlider() {
-        if (state.data.itemsInt.contains(POSITION_10)) return
+    private fun fetchPromotionsSlider(position: Int) {
+        if (state.data.itemsInt.contains(position)) return
         debugLog { "load POSITION_10" }
-        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_10))
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + position))
         viewModelScope.launch {
             flow { emit(repository.fetchPromotionsSlider()) }
                 .catch {
                     debugLog { "fetch promotions slider error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_10,
-                                    null
-                                )
-                            )
-                        )
+                    updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parsePromotionSliderResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
-                        val item = PositionItem(
-                            POSITION_10, HomePromotions(
-                                10, PromotionsSliderBundleUI(
+                    val item = if (response is ResponseEntity.Success) {
+                        PositionItem(
+                            position, HomePromotions(
+                                position, PromotionsSliderBundleUI(
                                     title = "Акции",
                                     containShowAllButton = true,
                                     promotionUIList = response.data.mapToUI()
                                 )
                             )
                         )
-
-                        response.data.forEach { promotionEntity ->
-                            promotionEntity.productEntityList.syncFavoriteProducts(localDataSource)
-                            promotionEntity.productEntityList.syncCartQuantity(localDataSource)
-                        }
-
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
                     } else {
-                        state.copy(
-                            loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_10,
-                                    null
-                                )
-                            )
-                        )
+                        PositionItem(position, null)
                     }
+                    updateStateByPositionItem(item)
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
         }
     }
 
-    private fun fetchBottomSlider() {
-        if (state.data.itemsInt.contains(POSITION_11)) return
+    private fun fetchBottomSlider(position: Int) {
+        if (state.data.itemsInt.contains(position)) return
         debugLog { "load POSITION_11" }
-        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_11))
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + position))
         viewModelScope.launch {
             flow { emit(repository.fetchBottomSlider()) }
                 .catch {
                     debugLog { "fetch bottom slider error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_11,
-                                    null
-                                )
-                            )
-                        )
+                    updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseBottomSliderResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        val item =
-                            PositionItem(
-                                POSITION_11, HomeProducts(
-                                    11,
-                                    data,
-                                    productsType = BOTTOM_PROD,
-                                    productsSliderConfig = ProductsSliderConfig(
-                                        containShowAllButton = true
-                                    ),
-                                    prodList =  if (data.size > 1) {
-                                        val list = mutableListOf<ProductUI>()
-                                        data.forEach {
-                                            list.addAll(it.productUIList)
-                                        }
-                                        list
-                                    } else {
-                                        data.first().productUIList
-                                    }
-                                )
-                            )
-
-                        response.data.forEach { categoryDetailEntity ->
-                            categoryDetailEntity.productEntityList.syncFavoriteProducts(
-                                localDataSource
-                            )
-                            categoryDetailEntity.productEntityList.syncCartQuantity(localDataSource)
-                        }
-
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
+                    val item = if (response is ResponseEntity.Success) {
+                        PositionItem(position, fetchHomeProductsByType(response.data.mapToUI(), BOTTOM_PROD, position))
                     } else {
-                        state.copy(
-                            loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_11,
-                                    null
-                                )
-                            )
-                        )
+                        PositionItem(position, null)
                     }
+                    updateStateByPositionItem(item)
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
         }
     }
 
-    private fun fetchBrandsSlider() {
-        if (state.data.itemsInt.contains(POSITION_12)) return
+    private fun fetchBrandsSlider(position: Int) {
+        if (state.data.itemsInt.contains(position)) return
         debugLog { "load POSITION_12" }
-        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_12))
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + position))
         viewModelScope.launch {
             flow { emit(repository.fetchBrandsSlider()) }
                 .catch {
                     debugLog { "fetch brands slider error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_12,
-                                    null
-                                )
-                            )
-                        )
+                    updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseBrandsSliderResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
-                        val item =
-                            PositionItem(POSITION_12, HomeBrands(12, response.data.mapToUI()))
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
+                    val item = if (response is ResponseEntity.Success) {
+                        PositionItem(position, HomeBrands(position, response.data.mapToUI()))
                     } else {
-                        state.copy(
-                            loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_12,
-                                    null
-                                )
-                            )
-                        )
+                        PositionItem(position, null)
                     }
+                    updateStateByPositionItem(item)
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
         }
     }
 
-    private fun fetchCountriesSlider() {
-        if (state.data.itemsInt.contains(POSITION_13)) return
+    private fun fetchCountriesSlider(position: Int) {
+        if (state.data.itemsInt.contains(position)) return
         debugLog { "load POSITION_13" }
-        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_13))
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + position))
         viewModelScope.launch {
             flow { emit(repository.fetchCountriesSlider()) }
                 .catch {
                     debugLog { "fetch countries slider error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_13,
-                                    null
-                                )
-                            )
-                        )
+                    updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseCountriesSliderResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
-                        val item =
-                            PositionItem(POSITION_13, HomeCountries(13, response.data.mapToUI()))
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
+                    val item = if (response is ResponseEntity.Success) {
+                        PositionItem(position, HomeCountries(position, response.data.mapToUI()))
                     } else {
-                        state.copy(
-                            loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_13,
-                                    null
-                                )
-                            )
-                        )
+                        PositionItem(position, null)
                     }
+                    updateStateByPositionItem(item)
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
         }
     }
 
-    private fun fetchViewedProductsSlider() {
-        if (state.data.itemsInt.contains(POSITION_14)) return
+    private fun fetchViewedProductsSlider(position: Int) {
+        if (state.data.itemsInt.contains(position)) return
         debugLog { "load POSITION_14" }
-        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_14))
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + position))
         viewModelScope.launch {
             val userId = localDataSource.fetchUserId()
             if (userId != null) {
                 flow { emit(repository.fetchViewedProductsSlider(userId)) }
                     .catch {
                         debugLog { "fetch viewed products slider error ${it.localizedMessage}" }
-                        uiStateListener.value =
-                            state.copy(
-                                error = it.toErrorState(),
-                                loadingPage = false,
-                                data = state.data.copy(
-                                    items = state.data.items + PositionItem(
-                                        POSITION_14,
-                                        null
-                                    )
-                                )
-                            )
+                        updateStateByThrowableAndPosition(it, position)
                     }
                     .flowOn(Dispatchers.IO)
                     .onEach {
                         val response = it.parseViewedProductsSliderResponse()
-                        uiStateListener.value = if (response is ResponseEntity.Success) {
-                            val data = response.data.mapToUI()
-                            val item = PositionItem(
-                                POSITION_14, HomeProducts(
-                                    14, data, ProductsSliderConfig(
-                                        containShowAllButton = false
-                                    ), productsType = VIEWED,
-                                    prodList =  if (data.size > 1) {
-                                        val list = mutableListOf<ProductUI>()
-                                        data.forEach {
-                                            list.addAll(it.productUIList)
-                                        }
-                                        list
-                                    } else {
-                                        data.first().productUIList
-                                    }
-                                )
-                            )
-
-
-                            response.data.forEach { categoryDetailEntity ->
-                                categoryDetailEntity.productEntityList.syncFavoriteProducts(
-                                    localDataSource
-                                )
-                                categoryDetailEntity.productEntityList.syncCartQuantity(
-                                    localDataSource
-                                )
-                            }
-
-                            state.copy(
-                                loadingPage = false,
-                                data = state.data.copy(items = state.data.items + item),
-                                error = null
-                            )
+                        val item = if (response is ResponseEntity.Success) {
+                            PositionItem(position, fetchHomeProductsByType(response.data.mapToUI(), VIEWED, position))
                         } else {
-                            state.copy(
-                                loadingPage = false, data = state.data.copy(
-                                    items = state.data.items + PositionItem(
-                                        POSITION_14,
-                                        null
-                                    )
-                                )
-                            )
+                            PositionItem(position, null)
                         }
+                        updateStateByPositionItem(item)
                     }
                     .flowOn(Dispatchers.Default)
                     .collect()
             } else {
-                uiStateListener.value = state.copy(
-                    loadingPage = false, data = state.data.copy(
-                        items = state.data.items + PositionItem(
-                            POSITION_14,
-                            null
-                        )
-                    )
-                )
+                updateStateByPositionItem(PositionItem(POSITION_14, null))
             }
         }
     }
 
-    private fun fetchCommentsSlider() {
-        if (state.data.itemsInt.contains(POSITION_15)) return
+    private fun fetchCommentsSlider(position: Int) {
+        if (state.data.itemsInt.contains(position)) return
         debugLog { "load POSITION_15" }
-        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + POSITION_15))
+        uiStateListener.value = state.copy(loadingPage = true, data = state.data.copy(itemsInt = state.data.itemsInt + position))
         viewModelScope.launch {
             flow { emit(repository.fetchCommentsSlider()) }
                 .catch {
                     debugLog { "fetch comments slider error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(), loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_15,
-                                    null
-                                )
-                            )
-                        )
+                    updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseCommentsSliderResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
-                        val item =
-                            PositionItem(POSITION_15, HomeComments(15, response.data.mapToUI()))
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
+                    val item = if (response is ResponseEntity.Success) {
+                        PositionItem(position, HomeComments(position, response.data.mapToUI()))
                     } else {
-                        state.copy(
-                            loadingPage = false, data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_15,
-                                    null
-                                )
-                            )
-                        )
+                        PositionItem(position, null)
                     }
+                    updateStateByPositionItem(item)
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
@@ -944,6 +493,48 @@ class HomeFlowViewModel @Inject constructor(
                 .flowOn(Dispatchers.Default)
                 .collect()
         }
+    }
+
+    private fun updateStateByPositionItem(positionItem: PositionItem) {
+        uiStateListener.value = state.copy(
+            loadingPage = false,
+            data = state.data.copy(items = state.data.items + positionItem),
+            error = null
+        )
+    }
+
+    private fun updateStateByThrowableAndPosition(it: Throwable, position: Int) {
+        uiStateListener.value =
+            state.copy(
+                error = it.toErrorState(),
+                loadingPage = false,
+                data = state.data.copy(
+                    items = state.data.items + PositionItem(
+                        position,
+                        null
+                    )
+                )
+            )
+    }
+
+    private fun fetchHomeProductsByType(data: List<CategoryDetailUI>, type: Int, position: Int): HomeProducts {
+        return HomeProducts(
+            position,
+            data,
+            productsType = type,
+            productsSliderConfig = ProductsSliderConfig(
+                containShowAllButton = true
+            ),
+            prodList =  if (data.size > 1) {
+                val list = mutableListOf<ProductUI>()
+                data.forEach {
+                    list.addAll(it.productUIList)
+                }
+                list
+            } else {
+                data.first().productUIList
+            }
+        )
     }
 
     fun onPreOrderClick(id: Long, name: String, detailPicture: String) {
@@ -1019,8 +610,8 @@ class HomeFlowViewModel @Inject constructor(
             fun idle(): HomeState {
                 return HomeState(
                     listOf(
-                        PositionItem(POSITION_8, HomeTripleNav(8)),
-                        PositionItem(POSITION_16, HomeBottomInfo(16))
+                        PositionItem(POSITION_8, HomeTripleNav(POSITION_8)),
+                        PositionItem(POSITION_16, HomeBottomInfo(POSITION_16))
                     ),
                     itemsInt = listOf(POSITION_8, POSITION_16)
                 )

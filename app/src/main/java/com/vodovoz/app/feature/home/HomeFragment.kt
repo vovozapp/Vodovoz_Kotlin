@@ -53,7 +53,7 @@ class HomeFragment : BaseFragment() {
         )
     }
 
-    private val flowViewModel: HomeFlowViewModel by activityViewModels()
+    internal val flowViewModel: HomeFlowViewModel by activityViewModels()
     private val rateBottomViewModel: RateBottomViewModel by activityViewModels()
 
     @Inject
@@ -447,7 +447,7 @@ class HomeFragment : BaseFragment() {
         }
     }
 
-    private fun ActionEntity.invoke(
+    internal fun ActionEntity.invoke(
         navController: NavController = findNavController(),
         activity: FragmentActivity = requireActivity()
     ) {
