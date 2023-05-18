@@ -15,8 +15,7 @@ class HomeTitleViewHolder(
     init {
         binding.tvShowAll.setOnClickListener {
             val item = item ?:return@setOnClickListener
-
-            homeTitleClickListener.onShowAllTitleClick(item.type)
+            homeTitleClickListener.onShowAllTitleClick(item)
         }
 
     }

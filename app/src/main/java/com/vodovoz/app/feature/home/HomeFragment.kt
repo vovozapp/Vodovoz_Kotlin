@@ -28,6 +28,14 @@ import com.vodovoz.app.feature.home.ratebottom.RateBottomFragment
 import com.vodovoz.app.feature.home.ratebottom.RateBottomViewModel
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.BRANDS_TITLE
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.COMMENTS_TITLE
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.DISCOUNT_TITLE
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.NOVELTIES_TITLE
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.ORDERS_TITLE
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.PROMOTIONS_TITLE
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.VIEWED_TITLE
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
@@ -319,8 +327,42 @@ class HomeFragment : BaseFragment() {
 
     private fun getTitleClickListener(): HomeTitleClickListener {
         return object : HomeTitleClickListener {
-            override fun onShowAllTitleClick(type: Int) {
+            override fun onShowAllTitleClick(item: HomeTitle) {
+                when(item.type) {
+                    DISCOUNT_TITLE -> {
+                        findNavController().navigate(
+                            HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
+                            )
+                        )
+                    }
+                    ORDERS_TITLE -> {
+                        findNavController().navigate(HomeFragmentDirections.actionToAllOrdersFragment())
+                    }
+                    NOVELTIES_TITLE -> {
+                        findNavController().navigate(
+                            HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
+                            )
+                        )
+                    }
+                    PROMOTIONS_TITLE -> {
+                        findNavController().navigate(
+                            HomeFragmentDirections.actionToAllPromotionsFragment(
+                                AllPromotionsFragment.DataSource.All()
+                            )
+                        )
+                    }
+                    BRANDS_TITLE -> {
+                        findNavController().navigate(HomeFragmentDirections.actionToAllBrandsFragment())
+                    }
+                    VIEWED_TITLE -> {
 
+                    }
+                    COMMENTS_TITLE -> {
+                        flowViewModel.onSendCommentClick()
+                    }
+                }
             }
 
         }
