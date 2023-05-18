@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/tvName"
+        style="@style/TextViewMediumBlackBold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/space_16"
+        android:paddingVertical="@dimen/space_8"
+        android:textSize="16sp"
+        tools:text="Название категории" />
+
+    <TextView
+        android:id="@+id/tvShowAll"
+        style="@style/TextViewSmallBlue"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:paddingHorizontal="@dimen/space_16"
+        android:paddingTop="@dimen/_9sdp"
+        android:text="@string/show_all"
+        android:textSize="12sp" />
+</FrameLayout>

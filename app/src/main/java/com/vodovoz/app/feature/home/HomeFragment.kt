@@ -28,6 +28,7 @@ import com.vodovoz.app.feature.home.ratebottom.RateBottomFragment
 import com.vodovoz.app.feature.home.ratebottom.RateBottomViewModel
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
@@ -76,7 +77,8 @@ class HomeFragment : BaseFragment() {
             listener = getMainClickListener(),
             productsShowAllListener = getProductsShowClickListener(),
             productsClickListener = getProductsClickListener(),
-            promotionsClickListener = getPromotionsClickListener()
+            promotionsClickListener = getPromotionsClickListener(),
+            homeTitleClickListener = getTitleClickListener()
         ) {
             if (siteStateManager.showRateBottom != null) {
                 if (!siteStateManager.showRateBottom!!) {
@@ -312,6 +314,15 @@ class HomeFragment : BaseFragment() {
                     )
                 )
             }
+        }
+    }
+
+    private fun getTitleClickListener(): HomeTitleClickListener {
+        return object : HomeTitleClickListener {
+            override fun onShowAllTitleClick(type: Int) {
+
+            }
+
         }
     }
 

@@ -22,6 +22,8 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllList
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotionsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleViewHolder
 import com.vodovoz.app.feature.home.viewholders.hometriplenav.HomeTripleNavViewHolder
 
 class HomeMainAdapter(
@@ -30,7 +32,8 @@ class HomeMainAdapter(
     private val likeManager: LikeManager,
     private val productsShowAllListener: ProductsShowAllListener,
     private val productsClickListener: ProductsClickListener,
-    private val promotionsClickListener: PromotionsClickListener
+    private val promotionsClickListener: PromotionsClickListener,
+    private val homeTitleClickListener: HomeTitleClickListener
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
@@ -71,6 +74,9 @@ class HomeMainAdapter(
             }
             R.layout.fragment_triple_navigation_home -> {
                 HomeTripleNavViewHolder(getViewFromInflater(viewType, parent), clickListener)
+            }
+            R.layout.view_holder_flow_title -> {
+                HomeTitleViewHolder(getViewFromInflater(viewType, parent), homeTitleClickListener)
             }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")
