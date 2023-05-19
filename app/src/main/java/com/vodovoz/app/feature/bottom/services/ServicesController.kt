@@ -34,25 +34,6 @@ class ServicesController(
         with(recyclerView) {
             adapter = servicesAdapter
             layoutManager = LinearLayoutManager(context)
-            addItemDecoration(
-                    object : RecyclerView.ItemDecoration() {
-                        override fun getItemOffsets(
-                            outRect: Rect,
-                            view: View,
-                            parent: RecyclerView,
-                            state: RecyclerView.State
-                        ) {
-                            with(outRect) {
-                                if (parent.getChildAdapterPosition(view) == 0) {
-                                    top = space
-                                }
-                                bottom = space
-                                left = space
-                                right = space
-                            }
-                        }
-                    }
-                )
         }
     }
 }
