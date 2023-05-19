@@ -1,21 +1,21 @@
-package com.vodovoz.app.feature.home.viewholders.homepopulars.inneradapter
+package com.vodovoz.app.feature.home.viewholders.homeproductstabs.inneradapter
 
 import android.view.View
-import com.vodovoz.app.databinding.ViewHolderSliderPopularCategoryBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.databinding.ViewHolderSliderPopularCategoryBinding
+import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeTabsClickListener
 import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.util.extensions.debugLog
 
-class HomePopularsInnerViewHolder(
+class HomeTabsViewHolder(
     view: View,
-    private val clickListener: HomePopularCategoriesSliderClickListener
+    private val clickListener: HomeTabsClickListener
 ) : ItemViewHolder<CategoryUI>(view) {
 
     private val binding: ViewHolderSliderPopularCategoryBinding = ViewHolderSliderPopularCategoryBinding.bind(view)
 
     init {
         binding.root.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             clickListener.onCategoryClick(item.id)
         }
     }
@@ -25,7 +25,4 @@ class HomePopularsInnerViewHolder(
         binding.tvName.text = item.name
     }
 
-    private fun getItemByPosition(): CategoryUI? {
-        return (bindingAdapter as? HomePopularsInnerAdapter)?.getItem(bindingAdapterPosition) as? CategoryUI
-    }
 }

@@ -1,15 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--new-->
-<TextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--new-->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tvName"
-    style="@style/TextViewNormalBlack"
-    android:textSize="16sp"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:paddingHorizontal="@dimen/space_8"
-    android:paddingVertical="@dimen/space_8"
-    android:background="@drawable/bkg_rect_rounded_white"
-    android:translationZ="@dimen/elevation_3"
-    tools:text="Name" />
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/corner_5"
+    app:cardElevation="@dimen/elevation_3">
+
+    <TextView
+        android:id="@+id/tvName"
+        style="@style/TextViewNormalBlack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/tab_background_cat"
+        android:paddingHorizontal="@dimen/space_10"
+        android:paddingVertical="@dimen/space_8"
+        android:textSize="16sp"
+        tools:text="Name" />
+
+</androidx.cardview.widget.CardView>
