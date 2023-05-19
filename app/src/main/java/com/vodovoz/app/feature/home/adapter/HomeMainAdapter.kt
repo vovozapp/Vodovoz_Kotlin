@@ -19,6 +19,8 @@ import com.vodovoz.app.feature.home.viewholders.homeorders.HomeOrdersSliderViewH
 import com.vodovoz.app.feature.home.viewholders.homepopulars.HomePopularCategoriesSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProductsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
+import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeProductsTabsViewHolder
+import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeTabsClickListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotionsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
@@ -33,7 +35,8 @@ class HomeMainAdapter(
     private val productsShowAllListener: ProductsShowAllListener,
     private val productsClickListener: ProductsClickListener,
     private val promotionsClickListener: PromotionsClickListener,
-    private val homeTitleClickListener: HomeTitleClickListener
+    private val homeTitleClickListener: HomeTitleClickListener,
+    private val homeTabsClickListener: HomeTabsClickListener
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
@@ -77,6 +80,9 @@ class HomeMainAdapter(
             }
             R.layout.view_holder_flow_title -> {
                 HomeTitleViewHolder(getViewFromInflater(viewType, parent), homeTitleClickListener)
+            }
+            R.layout.view_holder_products_tabs -> {
+                HomeProductsTabsViewHolder(getViewFromInflater(viewType, parent), homeTabsClickListener)
             }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")

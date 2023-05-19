@@ -28,6 +28,7 @@ import com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment
 import com.vodovoz.app.feature.home.ratebottom.RateBottomFragment
 import com.vodovoz.app.feature.home.ratebottom.RateBottomViewModel
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
+import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeTabsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.BRANDS_TITLE
@@ -87,7 +88,8 @@ class HomeFragment : BaseFragment() {
             productsShowAllListener = getProductsShowClickListener(),
             productsClickListener = getProductsClickListener(),
             promotionsClickListener = getPromotionsClickListener(),
-            homeTitleClickListener = getTitleClickListener()
+            homeTitleClickListener = getTitleClickListener(),
+            homeTabsClickListener = getHomeTabsClickListener()
         ) {
             if (siteStateManager.showRateBottom != null) {
                 if (!siteStateManager.showRateBottom!!) {
@@ -366,6 +368,14 @@ class HomeFragment : BaseFragment() {
                 }
             }
 
+        }
+    }
+
+    private fun getHomeTabsClickListener() : HomeTabsClickListener {
+        return object : HomeTabsClickListener {
+            override fun onCategoryClick(categoryId: Long?) {
+
+            }
         }
     }
 

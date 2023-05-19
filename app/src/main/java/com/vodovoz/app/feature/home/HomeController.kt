@@ -10,6 +10,7 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.home.adapter.HomeMainAdapter
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
+import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeTabsClickListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
@@ -23,9 +24,19 @@ class HomeController(
     productsClickListener: ProductsClickListener,
     promotionsClickListener: PromotionsClickListener,
     homeTitleClickListener: HomeTitleClickListener,
+    homeTabsClickListener: HomeTabsClickListener,
     private val showRateBottomSheetFragment: () -> Unit
 ) {
-    private val homeMainAdapter = HomeMainAdapter(listener, cartManager, likeManager, productsShowAllListener, productsClickListener, promotionsClickListener, homeTitleClickListener)
+    private val homeMainAdapter = HomeMainAdapter(
+        clickListener = listener,
+        cartManager = cartManager,
+        likeManager = likeManager,
+        productsShowAllListener = productsShowAllListener,
+        productsClickListener = productsClickListener,
+        promotionsClickListener = promotionsClickListener,
+        homeTitleClickListener = homeTitleClickListener,
+        homeTabsClickListener = homeTabsClickListener
+    )
 
     fun bind(recyclerView: RecyclerView, refresh: SwipeRefreshLayout) {
         initList(recyclerView)

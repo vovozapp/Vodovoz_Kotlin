@@ -28,6 +28,7 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
+import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeTabsClickListener
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
@@ -64,8 +65,18 @@ class HomeFlowFragment : BaseFragment() {
             productsShowAllListener = getProductsShowClickListener(),
             productsClickListener = getProductsClickListener(),
             promotionsClickListener = getPromotionsClickListener(),
-            homeTitleClickListener = getTitleClickListener()
+            homeTitleClickListener = getTitleClickListener(),
+            homeTabsClickListener = getHomeTabsClickListener()
         ) {}
+    }
+
+    private fun getHomeTabsClickListener() : HomeTabsClickListener {
+        return object : HomeTabsClickListener {
+            override fun onCategoryClick(categoryId: Long?) {
+
+            }
+
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
