@@ -13,6 +13,8 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllList
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotionsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailbrandproductlist.DetailBrandListViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailcatandbrand.DetailCatAndBrandViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailcomments.DetailCommentsViewHolder
@@ -89,6 +91,11 @@ class ProductDetailsAdapter(
             //Comments
             R.layout.fragment_product_details_comments -> {
                 DetailCommentsViewHolder(getViewFromInflater(viewType, parent), clickListener)
+            }
+
+            //Products sliders title
+            R.layout.view_holder_flow_title -> {
+                HomeTitleViewHolder(getViewFromInflater(viewType, parent))
             }
 
             else -> {

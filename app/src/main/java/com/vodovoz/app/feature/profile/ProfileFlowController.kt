@@ -32,8 +32,7 @@ class ProfileFlowController(
         ratingProductManager,
         productsShowAllListener,
         productsClickListener,
-        homeOrdersSliderClickListener,
-        homeTitleClickListener = object : HomeTitleClickListener {}
+        homeOrdersSliderClickListener
     )
 
     fun bind(recyclerView: RecyclerView, refresh: SwipeRefreshLayout) {

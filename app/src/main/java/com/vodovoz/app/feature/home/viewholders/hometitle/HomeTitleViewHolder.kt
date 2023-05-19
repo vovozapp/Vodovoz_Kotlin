@@ -10,7 +10,7 @@ import com.vodovoz.app.util.extensions.color
 
 class HomeTitleViewHolder(
     view: View,
-    homeTitleClickListener: HomeTitleClickListener
+    homeTitleClickListener: HomeTitleClickListener? = null
 ) : ItemViewHolder<HomeTitle>(view) {
 
     private val binding: ViewHolderFlowTitleBinding = ViewHolderFlowTitleBinding.bind(view)
@@ -18,7 +18,7 @@ class HomeTitleViewHolder(
     init {
         binding.tvShowAll.setOnClickListener {
             val item = item ?:return@setOnClickListener
-            homeTitleClickListener.onShowAllTitleClick(item)
+            homeTitleClickListener?.onShowAllTitleClick(item)
         }
 
     }

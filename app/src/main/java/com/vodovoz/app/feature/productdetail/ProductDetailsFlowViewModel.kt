@@ -23,7 +23,9 @@ import com.vodovoz.app.data.parser.response.paginatedProducts.SomeProductsByBran
 import com.vodovoz.app.data.parser.response.product.ProductDetailsResponseJsonParser.parseProductDetailsResponse
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.DISCOUNT
+import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.VIEWED
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.productdetail.viewholders.detailbrandproductlist.DetailBrandList
 import com.vodovoz.app.feature.productdetail.viewholders.detailcatandbrand.DetailCatAndBrand
 import com.vodovoz.app.feature.productdetail.viewholders.detailcomments.DetailComments
@@ -136,6 +138,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                 mappedData.categoryUI,
                                 mappedData.productDetailUI.brandUI
                             ),
+                            detailRecommendsProductsTitle = HomeTitle(141, showAll = false, name = "Рекомендуем также", type = VIEWED),
                             detailRecommendsProducts = HomeProducts(
                                 7,
                                 productsSliderConfig = ProductsSliderConfig(
@@ -166,6 +169,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                     SearchWordItem(it)
                                 }
                             ),
+                            detailBuyWithTitle = HomeTitle(141, showAll = false, name = "С этим товаром покупают", type = VIEWED),
                             detailBuyWith = HomeProducts(
                                 11,
                                 productsSliderConfig = ProductsSliderConfig(
@@ -381,9 +385,11 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val detailCatAndBrand: DetailCatAndBrand? = null,
         val detailBrandList: DetailBrandList = DetailBrandList(6),
         val detailMaybeLikeProducts: DetailMaybeLike = DetailMaybeLike(9),
+        val detailRecommendsProductsTitle: HomeTitle? = null,
         val detailRecommendsProducts: HomeProducts? = null,
         val detailPromotions: HomePromotions? = null,
         val detailSearchWord: DetailSearchWord? = null,
+        val detailBuyWithTitle: HomeTitle? = null,
         val detailBuyWith: HomeProducts? = null,
         val detailComments: DetailComments? = null,
         val error: ErrorState? = null,

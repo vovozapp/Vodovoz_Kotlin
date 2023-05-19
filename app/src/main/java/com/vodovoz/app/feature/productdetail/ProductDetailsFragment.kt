@@ -157,10 +157,12 @@ class ProductDetailsFragment : BaseFragment() {
                             detailState.detailTabs,
                             detailState.detailCatAndBrand,
                             detailState.detailBrandList.takeIf { it.productUiList.isNotEmpty() },
+                            detailState.detailRecommendsProductsTitle.takeIf { detailState.detailRecommendsProducts?.items?.first()?.productUIList?.size != 0 },
                             detailState.detailRecommendsProducts.takeIf { it?.items?.first()?.productUIList?.size != 0 },
                             detailState.detailPromotions.takeIf { it?.items?.promotionUIList?.size != 0 },
                             detailState.detailMaybeLikeProducts.takeIf { it.productUiList.isNotEmpty() },
                             detailState.detailSearchWord.takeIf { it?.searchWordList?.size != 0 },
+                            detailState.detailBuyWithTitle.takeIf { detailState.detailBuyWith?.items?.first()?.productUIList?.size != 0 },
                             detailState.detailBuyWith.takeIf { it?.items?.first()?.productUIList?.size != 0 },
                             detailState.detailComments
                         )

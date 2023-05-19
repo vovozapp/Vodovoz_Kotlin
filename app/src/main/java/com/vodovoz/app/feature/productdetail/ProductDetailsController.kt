@@ -52,13 +52,13 @@ class ProductDetailsController(
             adapter = productDetailsAdapter
             layoutManager = LinearLayoutManager(context)
 
-            val divider = MaterialDividerItemDecoration(
+            /*val divider = MaterialDividerItemDecoration(
                 context,
                 MaterialDividerItemDecoration.VERTICAL
             )
             divider.dividerThickness = 24
             divider.dividerColor = ContextCompat.getColor(context, R.color.light_gray)
-            recyclerView.addItemDecoration(divider)
+            recyclerView.addItemDecoration(divider)*/
 
             addOnScrollListener(object : OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

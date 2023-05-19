@@ -23,8 +23,7 @@ class ProfileFlowAdapter(
     private val ratingProductManager: RatingProductManager,
     private val productsShowAllListener: ProductsShowAllListener,
     private val productsClickListener: ProductsClickListener,
-    private val homeOrdersSliderClickListener: HomeOrdersSliderClickListener,
-    private val homeTitleClickListener: HomeTitleClickListener
+    private val homeOrdersSliderClickListener: HomeOrdersSliderClickListener
 ) : ItemAdapter()  {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
@@ -52,7 +51,7 @@ class ProfileFlowAdapter(
                 ProfileBlockViewHolder(getViewFromInflater(viewType, parent))
             }
             R.layout.view_holder_flow_title -> {
-                HomeTitleViewHolder(getViewFromInflater(viewType, parent), homeTitleClickListener)
+                HomeTitleViewHolder(getViewFromInflater(viewType, parent))
             }
 
             else -> {
