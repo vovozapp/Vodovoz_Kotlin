@@ -8,7 +8,8 @@ data class CategoryDetailUI(
     val name: String,
     val productAmount: Int,
     val productUIList: List<ProductUI>,
-    val isSelected: Boolean = false
+    val isSelected: Boolean = false,
+    val position: Int? = null
 ) : Item {
 
     override fun getItemViewType(): Int {

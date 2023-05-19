@@ -72,7 +72,7 @@ class HomeFlowFragment : BaseFragment() {
 
     private fun getHomeTabsClickListener() : HomeTabsClickListener {
         return object : HomeTabsClickListener {
-            override fun onCategoryClick(categoryId: Long?) {
+            override fun onCategoryClick(categoryId: Long?, position: Int?) {
 
             }
 

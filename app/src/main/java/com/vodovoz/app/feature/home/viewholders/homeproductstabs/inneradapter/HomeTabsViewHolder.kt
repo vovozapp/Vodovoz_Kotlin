@@ -19,7 +19,7 @@ class HomeTabsViewHolder(
     init {
         binding.root.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            clickListener.onCategoryClick(item.id)
+            clickListener.onCategoryClick(item.id, item.position)
         }
     }
 

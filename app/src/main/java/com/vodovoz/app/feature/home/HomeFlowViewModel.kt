@@ -166,16 +166,24 @@ class HomeFlowViewModel @Inject constructor(
                     val response = it.parseHistoriesSliderResponse()
                     val item = if (response is ResponseEntity.Success) {
                         PositionItemWithTitle(
-                            item = PositionItem(position, HomeHistories(position, response.data.mapToUI())),
+                            item = PositionItem(
+                                position,
+                                HomeHistories(position, response.data.mapToUI())
+                            ),
                             itemTitle = PositionItem(
                                 positionTitle,
-                                HomeTitle(id = positionTitle, type = HISTORIES_TITLE, name = "Истории")
+                                HomeTitle(
+                                    id = positionTitle,
+                                    type = HISTORIES_TITLE,
+                                    name = "Истории"
+                                )
                             )
                         )
                     } else {
                         PositionItemWithTitle(
                             item = PositionItem(position, null),
-                            itemTitle = PositionItem(positionTitle, null))
+                            itemTitle = PositionItem(positionTitle, null)
+                        )
                     }
                     updateStateByPositionItem(item)
                 }
@@ -197,16 +205,24 @@ class HomeFlowViewModel @Inject constructor(
                     val response = it.parsePopularSliderResponse()
                     val item = if (response is ResponseEntity.Success) {
                         PositionItemWithTitle(
-                            item = PositionItem(position, HomePopulars(position, response.data.mapToUI())),
+                            item = PositionItem(
+                                position,
+                                HomePopulars(position, response.data.mapToUI())
+                            ),
                             itemTitle = PositionItem(
                                 positionTitle,
-                                HomeTitle(id = positionTitle, type = POPULARS_TITLE, name = "Популярные разделы")
+                                HomeTitle(
+                                    id = positionTitle,
+                                    type = POPULARS_TITLE,
+                                    name = "Популярные разделы"
+                                )
                             )
                         )
                     } else {
                         PositionItemWithTitle(
                             item = PositionItem(position, null),
-                            itemTitle = PositionItem(positionTitle, null))
+                            itemTitle = PositionItem(positionTitle, null)
+                        )
                     }
                     updateStateByPositionItem(item)
                 }
@@ -235,17 +251,25 @@ class HomeFlowViewModel @Inject constructor(
                             ),
                             itemTitle = PositionItem(
                                 positionTitle,
-                                HomeTitle(id = positionTitle, type = DISCOUNT_TITLE, name = "Самое выгодное", showAll = true, showAllName = "СМ.ВСЕ", categoryProductsName = if (data.size == 1) {
-                                    data.first().name
-                                } else {
-                                    ""
-                                })
+                                HomeTitle(
+                                    id = positionTitle,
+                                    type = DISCOUNT_TITLE,
+                                    name = "Самое выгодное",
+                                    showAll = true,
+                                    showAllName = "СМ.ВСЕ",
+                                    categoryProductsName = if (data.size == 1) {
+                                        data.first().name
+                                    } else {
+                                        ""
+                                    }
+                                )
                             )
                         )
                     } else {
                         PositionItemWithTitle(
                             item = PositionItem(position, null),
-                            itemTitle = PositionItem(positionTitle, null))
+                            itemTitle = PositionItem(positionTitle, null)
+                        )
                     }
                     updateStateByPositionItem(item)
                 }
@@ -307,9 +331,9 @@ class HomeFlowViewModel @Inject constructor(
                                 positionTab,
                                 HomeProductsTabs(id = positionTab, data.mapIndexed { index, cat ->
                                     if (index == 0) {
-                                        cat.copy(isSelected = true)
+                                        cat.copy(isSelected = true, position = positionTab)
                                     } else {
-                                        cat.copy(isSelected = false)
+                                        cat.copy(isSelected = false, position = positionTab)
                                     }
                                 })
                             )
@@ -317,7 +341,8 @@ class HomeFlowViewModel @Inject constructor(
                     } else {
                         PositionItemWithTabs(
                             item = PositionItem(position, null),
-                            itemTabs = PositionItem(positionTab, null))
+                            itemTabs = PositionItem(positionTab, null)
+                        )
                     }
                     updateStateByPositionItem(item)
                 }
@@ -346,16 +371,26 @@ class HomeFlowViewModel @Inject constructor(
                         val response = it.parseOrderSliderResponse()
                         val item = if (response is ResponseEntity.Success) {
                             PositionItemWithTitle(
-                                item = PositionItem(position, HomeOrders(position, response.data.mapToUI())),
+                                item = PositionItem(
+                                    position,
+                                    HomeOrders(position, response.data.mapToUI())
+                                ),
                                 itemTitle = PositionItem(
                                     positionTitle,
-                                    HomeTitle(id = positionTitle, type = ORDERS_TITLE, name = "Мои заказы", showAll = true, showAllName = "СМ.ВСЕ")
+                                    HomeTitle(
+                                        id = positionTitle,
+                                        type = ORDERS_TITLE,
+                                        name = "Мои заказы",
+                                        showAll = true,
+                                        showAllName = "СМ.ВСЕ"
+                                    )
                                 )
                             )
                         } else {
                             PositionItemWithTitle(
                                 item = PositionItem(position, null),
-                                itemTitle = PositionItem(positionTitle, null))
+                                itemTitle = PositionItem(positionTitle, null)
+                            )
                         }
                         updateStateByPositionItem(item)
                     }
@@ -364,8 +399,9 @@ class HomeFlowViewModel @Inject constructor(
             } else {
                 updateStateByPositionItem(
                     PositionItemWithTitle(
-                    item = PositionItem(position, null),
-                    itemTitle = PositionItem(positionTitle, null))
+                        item = PositionItem(position, null),
+                        itemTitle = PositionItem(positionTitle, null)
+                    )
                 )
             }
         }
@@ -396,17 +432,25 @@ class HomeFlowViewModel @Inject constructor(
                             ),
                             itemTitle = PositionItem(
                                 positionTitle,
-                                HomeTitle(id = positionTitle, type = NOVELTIES_TITLE, name = "Новинки", showAll = true, showAllName = "СМ.ВСЕ", categoryProductsName = if (data.size == 1) {
-                                    data.first().name
-                                } else {
-                                    ""
-                                })
+                                HomeTitle(
+                                    id = positionTitle,
+                                    type = NOVELTIES_TITLE,
+                                    name = "Новинки",
+                                    showAll = true,
+                                    showAllName = "СМ.ВСЕ",
+                                    categoryProductsName = if (data.size == 1) {
+                                        data.first().name
+                                    } else {
+                                        ""
+                                    }
+                                )
                             )
                         )
                     } else {
                         PositionItemWithTitle(
                             item = PositionItem(position, null),
-                            itemTitle = PositionItem(positionTitle, null))
+                            itemTitle = PositionItem(positionTitle, null)
+                        )
                     }
                     updateStateByPositionItem(item)
                 }
@@ -444,13 +488,21 @@ class HomeFlowViewModel @Inject constructor(
                             ),
                             itemTitle = PositionItem(
                                 positionTitle,
-                                HomeTitle(id = positionTitle, type = PROMOTIONS_TITLE, name = "Акции", showAll = true, showAllName = "СМ.ВСЕ", lightBg = false)
+                                HomeTitle(
+                                    id = positionTitle,
+                                    type = PROMOTIONS_TITLE,
+                                    name = "Акции",
+                                    showAll = true,
+                                    showAllName = "СМ.ВСЕ",
+                                    lightBg = false
+                                )
                             )
                         )
                     } else {
                         PositionItemWithTitle(
                             item = PositionItem(position, null),
-                            itemTitle = PositionItem(positionTitle, null))
+                            itemTitle = PositionItem(positionTitle, null)
+                        )
                     }
                     updateStateByPositionItem(item)
                 }
@@ -480,15 +532,19 @@ class HomeFlowViewModel @Inject constructor(
                         PositionItemWithTabs(
                             item = PositionItem(
                                 position,
-                                fetchHomeProductsByType(response.data.mapToUI(), BOTTOM_PROD, position)
+                                fetchHomeProductsByType(
+                                    response.data.mapToUI(),
+                                    BOTTOM_PROD,
+                                    position
+                                )
                             ),
                             itemTabs = PositionItem(
                                 positionTab,
                                 HomeProductsTabs(id = positionTab, data.mapIndexed { index, cat ->
                                     if (index == 0) {
-                                        cat.copy(isSelected = true)
+                                        cat.copy(isSelected = true, position = positionTab)
                                     } else {
-                                        cat.copy(isSelected = false)
+                                        cat.copy(isSelected = false, position = positionTab)
                                     }
                                 })
                             )
@@ -496,7 +552,8 @@ class HomeFlowViewModel @Inject constructor(
                     } else {
                         PositionItemWithTabs(
                             item = PositionItem(position, null),
-                            itemTabs = PositionItem(positionTab, null))
+                            itemTabs = PositionItem(positionTab, null)
+                        )
                     }
                     updateStateByPositionItem(item)
                 }
@@ -523,16 +580,26 @@ class HomeFlowViewModel @Inject constructor(
                     val response = it.parseBrandsSliderResponse()
                     val item = if (response is ResponseEntity.Success) {
                         PositionItemWithTitle(
-                            item = PositionItem(position, HomeBrands(position, response.data.mapToUI())),
+                            item = PositionItem(
+                                position,
+                                HomeBrands(position, response.data.mapToUI())
+                            ),
                             itemTitle = PositionItem(
                                 positionTitle,
-                                HomeTitle(id = positionTitle, type = BRANDS_TITLE, name = "Бренды", showAll = true, showAllName = "СМ.ВСЕ")
+                                HomeTitle(
+                                    id = positionTitle,
+                                    type = BRANDS_TITLE,
+                                    name = "Бренды",
+                                    showAll = true,
+                                    showAllName = "СМ.ВСЕ"
+                                )
                             )
                         )
                     } else {
                         PositionItemWithTitle(
                             item = PositionItem(position, null),
-                            itemTitle = PositionItem(positionTitle, null))
+                            itemTitle = PositionItem(positionTitle, null)
+                        )
                     }
                     updateStateByPositionItem(item)
                 }
@@ -596,17 +663,25 @@ class HomeFlowViewModel @Inject constructor(
                                 ),
                                 itemTitle = PositionItem(
                                     positionTitle,
-                                    HomeTitle(id = positionTitle, type = VIEWED_TITLE, name = "Вы смотрели", showAll = true, showAllName = "СМ.ВСЕ", categoryProductsName = if (data.size == 1) {
-                                        data.first().name
-                                    } else {
-                                        ""
-                                    })
+                                    HomeTitle(
+                                        id = positionTitle,
+                                        type = VIEWED_TITLE,
+                                        name = "Вы смотрели",
+                                        showAll = true,
+                                        showAllName = "СМ.ВСЕ",
+                                        categoryProductsName = if (data.size == 1) {
+                                            data.first().name
+                                        } else {
+                                            ""
+                                        }
+                                    )
                                 )
                             )
                         } else {
                             PositionItemWithTitle(
                                 item = PositionItem(position, null),
-                                itemTitle = PositionItem(positionTitle, null))
+                                itemTitle = PositionItem(positionTitle, null)
+                            )
                         }
                         updateStateByPositionItem(item)
                     }
@@ -616,7 +691,8 @@ class HomeFlowViewModel @Inject constructor(
                 updateStateByPositionItem(
                     PositionItemWithTitle(
                         item = PositionItem(position, null),
-                        itemTitle = PositionItem(positionTitle, null))
+                        itemTitle = PositionItem(positionTitle, null)
+                    )
                 )
             }
         }
@@ -640,16 +716,26 @@ class HomeFlowViewModel @Inject constructor(
                     val response = it.parseCommentsSliderResponse()
                     val item = if (response is ResponseEntity.Success) {
                         PositionItemWithTitle(
-                            item = PositionItem(position, HomeComments(position, response.data.mapToUI())),
+                            item = PositionItem(
+                                position,
+                                HomeComments(position, response.data.mapToUI())
+                            ),
                             itemTitle = PositionItem(
                                 positionTitle,
-                                HomeTitle(id = positionTitle, type = COMMENTS_TITLE, name = "Отзывы", showAll = true, showAllName = "Написать отзыв")
+                                HomeTitle(
+                                    id = positionTitle,
+                                    type = COMMENTS_TITLE,
+                                    name = "Отзывы",
+                                    showAll = true,
+                                    showAllName = "Написать отзыв"
+                                )
                             )
                         )
                     } else {
                         PositionItemWithTitle(
                             item = PositionItem(position, null),
-                            itemTitle = PositionItem(positionTitle, null))
+                            itemTitle = PositionItem(positionTitle, null)
+                        )
                     }
                     updateStateByPositionItem(item)
                 }
@@ -735,16 +821,52 @@ class HomeFlowViewModel @Inject constructor(
             productsSliderConfig = ProductsSliderConfig(
                 containShowAllButton = true
             ),
-            prodList = if (data.size > 1) {
-                val list = mutableListOf<ProductUI>()
-                data.forEach {
-                    list.addAll(it.productUIList)
-                }
-                list
-            } else {
-                data.first().productUIList
-            }
+            prodList = data.first().productUIList
         )
+    }
+
+    private fun updateStateByTabAndProductPositions(positionTab:Int, position: Int, categoryId: Long) {
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                items = state.data.items.map {
+                    when (it.position) {
+                        position -> {
+                            it.copy(
+                                item = (it.item as HomeProducts).copy(
+                                    prodList = it.item.items.find { it.id == categoryId }?.productUIList
+                                        ?: it.item.prodList
+                                )
+                            )
+                        }
+
+                        positionTab -> {
+                            it.copy(
+                                item = (it.item as HomeProductsTabs).copy(
+                                    tabsNames = it.item.tabsNames.map{cat ->
+                                        if (cat.id == categoryId) {
+                                            cat.copy(isSelected = true)
+                                        } else {
+                                            cat.copy(isSelected = false)
+                                        }
+                                    }
+                                )
+                            )
+                        }
+                        else -> {
+                            it
+                        }
+                    }
+
+                }
+            )
+        )
+    }
+
+    fun updateProductsSliderByCategory(position: Int, categoryId: Long) {
+        when(position) {
+            POSITION_9_TAB -> updateStateByTabAndProductPositions(POSITION_9_TAB, POSITION_10, categoryId)
+            POSITION_18_TAB -> updateStateByTabAndProductPositions(POSITION_18_TAB, POSITION_19, categoryId)
+        }
     }
 
     fun onPreOrderClick(id: Long, name: String, detailPicture: String) {
@@ -805,12 +927,12 @@ class HomeFlowViewModel @Inject constructor(
 
     data class PositionItemWithTitle(
         val item: PositionItem,
-        val itemTitle: PositionItem
+        val itemTitle: PositionItem,
     )
 
     data class PositionItemWithTabs(
         val item: PositionItem,
-        val itemTabs: PositionItem
+        val itemTabs: PositionItem,
     )
 
     sealed class HomeEvents : Event {

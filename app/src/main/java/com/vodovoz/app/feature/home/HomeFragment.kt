@@ -373,8 +373,10 @@ class HomeFragment : BaseFragment() {
 
     private fun getHomeTabsClickListener() : HomeTabsClickListener {
         return object : HomeTabsClickListener {
-            override fun onCategoryClick(categoryId: Long?) {
+            override fun onCategoryClick(categoryId: Long?, position: Int?) {
+                if (categoryId == null || position == null) return
 
+                flowViewModel.updateProductsSliderByCategory(position, categoryId)
             }
         }
     }
