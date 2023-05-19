@@ -21,9 +21,9 @@ import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.pars
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
-import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.home.viewholders.homeorders.HomeOrders
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.profile.viewholders.models.*
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
@@ -31,6 +31,7 @@ import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.mapper.UserDataMapper.mapToUI
 import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
+import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -62,14 +63,14 @@ class ProfileFlowViewModel @Inject constructor(
     }
 
     private fun loadPage() {
-        fetchProfileData()
-        fetchOrdersSlider()
-        fetchViewedProductsSlider()
-        fetchPersonalProducts()
-        fetchProfileCategories()
+        fetchProfileData(POSITION_1)
+        fetchOrdersSlider(POSITION_3)
+        fetchViewedProductsSlider(POSITION_6_TITLE, POSITION_7)
+        fetchPersonalProducts(POSITION_8)
+        fetchProfileCategories(POSITION_2, POSITION_4)
     }
 
-    fun fetchProfileData() {
+    fun fetchProfileData(position: Int) {
         uiStateListener.value = state.copy(loadingPage = true)
         val userId = dataRepository.fetchUserId()
         if (userId == null) {
@@ -86,7 +87,7 @@ class ProfileFlowViewModel @Inject constructor(
                             loadingPage = false,
                             data = state.data.copy(
                                 items = state.data.items + PositionItem(
-                                    POSITION_1,
+                                    position,
                                     null
                                 )
                             )
@@ -97,7 +98,7 @@ class ProfileFlowViewModel @Inject constructor(
                     val response = it.parseUserDataResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val item = PositionItem(
-                            POSITION_1,
+                            position,
                             ProfileHeader(data = response.data.mapToUI())
                         )
                         state.copy(
@@ -110,7 +111,7 @@ class ProfileFlowViewModel @Inject constructor(
                             loadingPage = false,
                             data = state.data.copy(
                                 items = state.data.items + PositionItem(
-                                    POSITION_1,
+                                    position,
                                     null
                                 )
                             )
@@ -122,7 +123,7 @@ class ProfileFlowViewModel @Inject constructor(
         }
     }
 
-    private fun fetchOrdersSlider() {
+    private fun fetchOrdersSlider(position: Int) {
         uiStateListener.value = state.copy(loadingPage = true)
         val userId = dataRepository.fetchUserId()
         if (userId == null) {
@@ -139,7 +140,7 @@ class ProfileFlowViewModel @Inject constructor(
                             loadingPage = false,
                             data = state.data.copy(
                                 items = state.data.items + PositionItem(
-                                    POSITION_3,
+                                    position,
                                     null
                                 )
                             )
@@ -150,7 +151,7 @@ class ProfileFlowViewModel @Inject constructor(
                     val response = it.parseOrderSliderResponse()
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val item = PositionItem(
-                            POSITION_3,
+                            position,
                             ProfileOrders(data = response.data.mapToUI())
                         )
                         state.copy(
@@ -163,7 +164,7 @@ class ProfileFlowViewModel @Inject constructor(
                             loadingPage = false,
                             data = state.data.copy(
                                 items = state.data.items + PositionItem(
-                                    POSITION_3,
+                                    position,
                                     null
                                 )
                             )
@@ -175,7 +176,7 @@ class ProfileFlowViewModel @Inject constructor(
         }
     }
 
-    private fun fetchProfileCategories() {
+    private fun fetchProfileCategories(positionBlock: Int, position: Int) {
         uiStateListener.value = state.copy(loadingPage = true)
         val userId = dataRepository.fetchUserId()
         if (userId == null) {
@@ -193,7 +194,7 @@ class ProfileFlowViewModel @Inject constructor(
                             loadingPage = false,
                             data = state.data.copy(
                                 items = state.data.items + PositionItem(
-                                    POSITION_4,
+                                    position,
                                     null
                                 )
                             )
@@ -204,19 +205,19 @@ class ProfileFlowViewModel @Inject constructor(
                     uiStateListener.value = if (it.status != null && it.status == "Success") {
                         val mapped = it.fetchProfileCategoryUIList()
                         val item = PositionItem(
-                            POSITION_4,
+                            position,
                             ProfileMain(items = mapped.list)
                         )
 
                         val blockList = it.block
                         val itemBlock = if (!blockList.isNullOrEmpty()) {
                             PositionItem(
-                                POSITION_2,
+                                positionBlock,
                                 ProfileBlock(data = blockList)
                             )
                         } else {
                             PositionItem(
-                                POSITION_2,
+                                positionBlock,
                                 null
                             )
                         }
@@ -233,7 +234,7 @@ class ProfileFlowViewModel @Inject constructor(
                             loadingPage = false,
                             data = state.data.copy(
                                 items = state.data.items + PositionItem(
-                                    POSITION_4,
+                                    position,
                                     null
                                 )
                             )
@@ -245,7 +246,7 @@ class ProfileFlowViewModel @Inject constructor(
         }
     }
 
-    private fun fetchViewedProductsSlider() {
+    private fun fetchViewedProductsSlider(positionTitle: Int, position: Int) {
         uiStateListener.value = state.copy(loadingPage = true)
         val userId = dataRepository.fetchUserId()
         if (userId == null) {
@@ -262,7 +263,7 @@ class ProfileFlowViewModel @Inject constructor(
                             loadingPage = false,
                             data = state.data.copy(
                                 items = state.data.items + PositionItem(
-                                    POSITION_6,
+                                    position,
                                     null
                                 )
                             )
@@ -271,48 +272,75 @@ class ProfileFlowViewModel @Inject constructor(
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseViewedProductsSliderResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
+                    val item = if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
-                        val item = PositionItem(
-                            POSITION_6,
-                            HomeProducts(
-                                14, data, ProductsSliderConfig(
-                                    containShowAllButton = false
-                                ), HomeProducts.VIEWED,
-                                prodList =  if (data.size > 1) {
-                                    val list = mutableListOf<ProductUI>()
-                                    data.forEach {
-                                        list.addAll(it.productUIList)
+                        PositionItemWithTitle(
+                            item = PositionItem(
+                                position,
+                                fetchHomeProductsByType(data, HomeProducts.VIEWED, position)
+                            ),
+                            itemTitle = PositionItem(
+                                positionTitle,
+                                HomeTitle(
+                                    id = positionTitle,
+                                    type = HomeTitle.VIEWED_TITLE,
+                                    name = "Вы смотрели",
+                                    showAll = false,
+                                    showAllName = "СМ.ВСЕ",
+                                    categoryProductsName = if (data.size == 1) {
+                                        data.first().name
+                                    } else {
+                                        ""
                                     }
-                                    list
-                                } else {
-                                    data.first().productUIList
-                                }
-                            )
-                        )
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
-                    } else {
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    POSITION_6,
-                                    null
                                 )
                             )
                         )
+                    } else {
+                        PositionItemWithTitle(
+                            item = PositionItem(position, null),
+                            itemTitle = PositionItem(positionTitle, null)
+                        )
                     }
+                    updateStateByPositionItem(item)
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
         }
     }
 
-    private fun fetchPersonalProducts() {
+    private fun fetchHomeProductsByType(
+        data: List<CategoryDetailUI>,
+        type: Int,
+        position: Int,
+    ): HomeProducts {
+        return HomeProducts(
+            position,
+            data,
+            productsType = type,
+            productsSliderConfig = ProductsSliderConfig(
+                containShowAllButton = true
+            ),
+            prodList = if (data.size > 1) {
+                val list = mutableListOf<ProductUI>()
+                data.forEach {
+                    list.addAll(it.productUIList)
+                }
+                list
+            } else {
+                data.first().productUIList
+            }
+        )
+    }
+
+    private fun updateStateByPositionItem(positionItemWithTitle: PositionItemWithTitle) {
+        uiStateListener.value = state.copy(
+            loadingPage = false,
+            data = state.data.copy(items = state.data.items + positionItemWithTitle.itemTitle + positionItemWithTitle.item),
+            error = null
+        )
+    }
+
+    private fun fetchPersonalProducts(position: Int) {
         uiStateListener.value = state.copy(loadingPage = true)
         val userId = dataRepository.fetchUserId()
         if (userId == null) {
@@ -329,7 +357,7 @@ class ProfileFlowViewModel @Inject constructor(
                             loadingPage = false,
                             data = state.data.copy(
                                 items = state.data.items + PositionItem(
-                                    POSITION_7,
+                                    position,
                                     null
                                 )
                             )
@@ -341,7 +369,7 @@ class ProfileFlowViewModel @Inject constructor(
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         val item = PositionItem(
-                            POSITION_7,
+                            position,
                             ProfileBestForYou(data = data.copy(
                                 productUIList = FavoritesMapper.mapFavoritesListByManager("grid", data.productUIList)
                             ))
@@ -356,7 +384,7 @@ class ProfileFlowViewModel @Inject constructor(
                             loadingPage = false,
                             data = state.data.copy(
                                 items = state.data.items + PositionItem(
-                                    POSITION_7,
+                                    position,
                                     null
                                 )
                             )
@@ -451,15 +479,22 @@ class ProfileFlowViewModel @Inject constructor(
         val item: Item?
     )
 
+    data class PositionItemWithTitle(
+        val item: PositionItem,
+        val itemTitle: PositionItem
+    )
+
     companion object {
         const val POSITION_1 = 1
         const val POSITION_2 = 2
         const val POSITION_3 = 3
         const val POSITION_4 = 4
         const val POSITION_5 = 5
-        const val POSITION_6 = 6
+        const val POSITION_6_TITLE = 6
         const val POSITION_7 = 7
+        const val POSITION_8 = 8
 
-        const val POSITIONS_COUNT = 7
+
+        const val POSITIONS_COUNT = 8
     }
 }

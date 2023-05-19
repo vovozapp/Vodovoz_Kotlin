@@ -11,6 +11,8 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.home.viewholders.homeorders.inneradapter.HomeOrdersSliderClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProductsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleViewHolder
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.profile.viewholders.*
 
@@ -21,7 +23,8 @@ class ProfileFlowAdapter(
     private val ratingProductManager: RatingProductManager,
     private val productsShowAllListener: ProductsShowAllListener,
     private val productsClickListener: ProductsClickListener,
-    private val homeOrdersSliderClickListener: HomeOrdersSliderClickListener
+    private val homeOrdersSliderClickListener: HomeOrdersSliderClickListener,
+    private val homeTitleClickListener: HomeTitleClickListener
 ) : ItemAdapter()  {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
@@ -47,6 +50,9 @@ class ProfileFlowAdapter(
             }
             R.layout.item_profile_block -> {
                 ProfileBlockViewHolder(getViewFromInflater(viewType, parent))
+            }
+            R.layout.view_holder_flow_title -> {
+                HomeTitleViewHolder(getViewFromInflater(viewType, parent), homeTitleClickListener)
             }
 
             else -> {

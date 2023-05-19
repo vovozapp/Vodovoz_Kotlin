@@ -17,6 +17,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.media.ImagePickerFragment
 import com.vodovoz.app.databinding.FragmentUserDataFlowBinding
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel
+import com.vodovoz.app.feature.profile.ProfileFlowViewModel.Companion.POSITION_1
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
@@ -397,7 +398,7 @@ class UserDataFragment : BaseFragment() {
                             datePickerDialog.show(childFragmentManager, datePickerDialog::class.simpleName)
                         }
                         is UserDataFlowViewModel.UserDataEvents.UpdateProfile -> {
-                            profileViewModel.fetchProfileData()
+                            profileViewModel.fetchProfileData(POSITION_1)
                         }
                     }
                 }
