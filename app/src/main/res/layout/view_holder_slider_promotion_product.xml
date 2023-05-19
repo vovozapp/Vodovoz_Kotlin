@@ -59,13 +59,13 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:paddingEnd="@dimen/space_8"
-        android:paddingBottom="@dimen/space_8"
+        android:ellipsize="end"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toStartOf="@+id/imgFavoriteStatus"
         app:layout_constraintStart_toEndOf="@+id/imgPicture"
         app:layout_constraintTop_toBottomOf="@id/imgFavoriteStatus"
         tools:ignore="RtlSymmetry"
-        tools:text="Какое-то интересное не короткое название какой-т вкусное воды, еще что-то и еще" />
+        tools:text="Какое-то интересное не короткое название какой-т то интересное не короткое название какой-т вкусное воды, ещ то интересное не короткое название какой-т вкусное воды, ещвкусное воды, еще что-то и еще" />
 
     <ImageView
         android:id="@+id/imgFavoriteStatus"
