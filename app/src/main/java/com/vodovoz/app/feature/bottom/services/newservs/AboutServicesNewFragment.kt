@@ -6,11 +6,13 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.databinding.FragmentAboutServicesFlowNewBinding
+import com.vodovoz.app.feature.bottom.services.AboutServicesDialogFragmentDirections
 import com.vodovoz.app.feature.bottom.services.ServicesController
 import com.vodovoz.app.feature.bottom.services.adapter.ServicesClickListener
 import com.vodovoz.app.feature.bottom.services.newservs.model.ServiceNew
@@ -97,7 +99,8 @@ class AboutServicesNewFragment : BaseFragment() {
     private fun getServicesClickListener(): ServicesClickListener {
         return object : ServicesClickListener {
             override fun onItemClick(item: ServiceNew) {
-
+                val id = item.id ?: return
+                findNavController().navigate(AboutServicesDialogFragmentDirections.actionToServiceDetailNewFragment(id))
             }
         }
     }
