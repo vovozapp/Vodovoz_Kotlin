@@ -13,6 +13,7 @@ import com.vodovoz.app.feature.cart.viewholders.cartempty.CartEmptyViewHolder
 import com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts.CartNotAvailableProductsViewHolder
 import com.vodovoz.app.feature.cart.viewholders.carttotal.CartTotalViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.HomeCategoriesInnerViewHolder
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleViewHolder
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 
 class CartMainAdapter(
@@ -39,6 +40,9 @@ class CartMainAdapter(
             }
             R.layout.item_cart_empty -> {
                 CartEmptyViewHolder(getViewFromInflater(viewType, parent), clickListener)
+            }
+            R.layout.view_holder_flow_title -> {
+                HomeTitleViewHolder(getViewFromInflater(viewType, parent))
             }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")

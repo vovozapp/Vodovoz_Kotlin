@@ -19,6 +19,7 @@ import com.vodovoz.app.feature.cart.viewholders.cartempty.CartEmpty
 import com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts.CartNotAvailableProducts
 import com.vodovoz.app.feature.cart.viewholders.carttotal.CartTotal
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.custom.CartBundleUI
@@ -130,6 +131,14 @@ class CartFlowViewModel @Inject constructor(
                                     mappedData.notAvailableProductUIList
                                 ),
                                 total = CartTotal(CART_TOTAL_ID, calculatedPrices),
+                                bestForYouTitle = HomeTitle(
+                                    id = 1,
+                                    type = HomeTitle.VIEWED_TITLE,
+                                    name = "Лучшее для вас",
+                                    showAll = false,
+                                    showAllName = "СМ.ВСЕ",
+                                    categoryProductsName = mappedData.bestForYouCategoryDetailUI?.name ?: ""
+                                ),
                                 bestForYouProducts = mappedData.bestForYouCategoryDetailUI
                             ),
                             loadingPage = false,
@@ -248,6 +257,7 @@ class CartFlowViewModel @Inject constructor(
         val availableProducts: CartAvailableProducts? = null,
         val notAvailableProducts: CartNotAvailableProducts? = null,
         val total: CartTotal? = null,
+        val bestForYouTitle: HomeTitle? = null,
         val bestForYouProducts: CategoryDetailUI? = null,
         val cartEmpty: CartEmpty = CartEmpty(CART_EMPTY_ID)
     ) : State

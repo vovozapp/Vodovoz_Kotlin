@@ -204,6 +204,7 @@ class CartFragment : BaseFragment() {
                             cartController.submitList(
                                 listOfNotNull(
                                     cartState.data.cartEmpty,
+                                    cartState.data.bestForYouTitle,
                                     cartState.data.bestForYouProducts
                                 )
                             )
