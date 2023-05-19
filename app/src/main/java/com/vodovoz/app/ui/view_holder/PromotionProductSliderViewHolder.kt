@@ -41,7 +41,7 @@ class PromotionProductSliderViewHolder(
             onProductClickSubject.onNext(productUI.id)
         }
 
-        binding.amountController.add.setOnClickListener {
+       /* binding.amountController.add.setOnClickListener {
             if (productUI.leftItems == 0) {
                 onNotifyWhenBeAvailable(productUI.id, productUI.name, productUI.detailPicture)
                 return@setOnClickListener
@@ -69,7 +69,7 @@ class PromotionProductSliderViewHolder(
             amountControllerTimer.start()
             onChangeProductQuantitySubject.onNext(Pair(productUI.id, productUI.cartQuantity))
             updateCartQuantity()
-        }
+        }*/
 
         binding.imgFavoriteStatus.setOnClickListener {
             when(productUI.isFavorite) {
@@ -90,23 +90,23 @@ class PromotionProductSliderViewHolder(
         if (productUI.cartQuantity < 0) {
             productUI.cartQuantity = 0
         }
-        binding.amountController.amount.text = productUI.cartQuantity.toString()
-        binding.amountController.circleAmount.text = productUI.cartQuantity.toString()
+      //  binding.amountController.amount.text = productUI.cartQuantity.toString()
+      //  binding.amountController.circleAmount.text = productUI.cartQuantity.toString()
     }
 
     private fun showAmountController() {
-        binding.amountController.circleAmount.visibility = View.INVISIBLE
-        binding.amountController.add.visibility = View.INVISIBLE
-        binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
+     //   binding.amountController.circleAmount.visibility = View.INVISIBLE
+     //   binding.amountController.add.visibility = View.INVISIBLE
+     //   binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
         amountControllerTimer.start()
     }
 
     private fun hideAmountController() {
         if (productUI.cartQuantity > 0) {
-            binding.amountController.circleAmount.visibility = View.VISIBLE
+          //  binding.amountController.circleAmount.visibility = View.VISIBLE
         }
-        binding.amountController.add.visibility = View.VISIBLE
-        binding.amountController.amountControllerDeployed.visibility = View.INVISIBLE
+      //  binding.amountController.add.visibility = View.VISIBLE
+     //   binding.amountController.amountControllerDeployed.visibility = View.INVISIBLE
     }
 
     private lateinit var productUI: ProductUI
@@ -117,7 +117,7 @@ class PromotionProductSliderViewHolder(
         binding.tvName.text = productUI.name
 
         //If left items = 0
-        when(productUI.leftItems == 0) {
+        /*when(productUI.leftItems == 0) {
             true -> {
                 binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_gray_circle_normal)
                 binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_alert))
@@ -126,7 +126,7 @@ class PromotionProductSliderViewHolder(
                 binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_green_circle_normal)
                 binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_cart))
             }
-        }
+        }*/
 
         //Price per unit / or order quantity
         when(productUI.pricePerUnit != 0) {
@@ -162,14 +162,14 @@ class PromotionProductSliderViewHolder(
             }
         }
 
-        //Cart amount
+      /*  //Cart amount
         binding.amountController.circleAmount.text = productUI.cartQuantity.toString()
         binding.amountController.amount.text = productUI.cartQuantity.toString()
 
         when (productUI.cartQuantity > 0) {
             true -> binding.amountController.circleAmount.visibility = View.VISIBLE
             false -> binding.amountController.circleAmount.visibility = View.GONE
-        }
+        }*/
 
         //Favorite
         when(productUI.isFavorite) {
@@ -177,7 +177,7 @@ class PromotionProductSliderViewHolder(
             true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
         }
 
-        //Status
+       /* //Status
         var isNotHaveStatuses = true
         when (productUI.status.isEmpty()) {
             true -> binding.cwStatusContainer.visibility = View.GONE
@@ -205,8 +205,8 @@ class PromotionProductSliderViewHolder(
         when(isNotHaveStatuses) {
             true -> binding.cgStatuses.visibility = View.GONE
             false -> binding.cgStatuses.visibility = View.VISIBLE
-        }
-
+        }`
+*/
         //UpdatePictures
         Glide
             .with(context)

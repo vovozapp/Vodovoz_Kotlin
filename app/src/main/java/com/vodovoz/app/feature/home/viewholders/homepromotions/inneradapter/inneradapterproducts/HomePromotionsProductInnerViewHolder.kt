@@ -4,7 +4,9 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.CountDownTimer
 import android.view.View
+import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
@@ -68,12 +70,12 @@ class HomePromotionsProductInnerViewHolder(
     init {
         binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.root.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             clickListener.onProductClick(item.id)
         }
 
-        binding.amountController.add.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+        binding.add.setOnClickListener {
+            val item = item ?: return@setOnClickListener
             if (item.leftItems == 0) {
                 clickListener.onNotifyWhenBeAvailable(item.id, item.name, item.detailPicture)
                 return@setOnClickListener
@@ -87,8 +89,8 @@ class HomePromotionsProductInnerViewHolder(
             showAmountController()
         }
 
-        binding.amountController.reduceAmount.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+        binding.reduceAmount.setOnClickListener {
+            val item = item ?: return@setOnClickListener
             item.oldQuantity = item.cartQuantity
             item.cartQuantity--
             if (item.cartQuantity < 0) item.cartQuantity = 0
@@ -98,8 +100,8 @@ class HomePromotionsProductInnerViewHolder(
             updateCartQuantity(item)
         }
 
-        binding.amountController.increaseAmount.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+        binding.increaseAmount.setOnClickListener {
+            val item = item ?: return@setOnClickListener
             item.oldQuantity = item.cartQuantity
             item.cartQuantity++
             amountControllerTimer.cancel()
@@ -109,7 +111,7 @@ class HomePromotionsProductInnerViewHolder(
         }
 
         binding.imgFavoriteStatus.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
+            val item = item ?: return@setOnClickListener
             when(item.isFavorite) {
                 true -> {
                     item.isFavorite = false
@@ -129,32 +131,29 @@ class HomePromotionsProductInnerViewHolder(
         binding.tvName.text = item.name
 
         //If left items = 0
-        binding.amountController.add.isSelected = item.leftItems == 0
+        binding.add.isSelected = item.leftItems == 0
 
         //Price per unit / or order quantity
         when(item.pricePerUnit != 0) {
             true -> {
                 binding.tvPricePerUnit.visibility = View.VISIBLE
-                binding.tvPricePerUnit.setPricePerUnitText(item.pricePerUnit)
+                binding.tvPricePerUnit.text = item.pricePerUnitStringBuilder
             }
             false -> binding.tvPricePerUnit.visibility = View.GONE
         }
 
         //Price
-        var haveDiscount = false
         when(item.priceList.size) {
             1 -> {
-                binding.tvCurrentPrice.setPriceText(item.priceList.first().currentPrice)
-                binding.tvOldPrice.setPriceText(item.priceList.first().oldPrice)
-                if (item.priceList.first().currentPrice < item.priceList.first().oldPrice || item.isGift) haveDiscount = true
+                binding.tvCurrentPrice.text = item.currentPriceStringBuilder
+                binding.tvOldPrice.text = item.oldPriceStringBuilder
             }
             else -> {
-                val minimalPrice = item.priceList.maxByOrNull { it.requiredAmount }!!
-                binding.tvCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice)
+                binding.tvCurrentPrice.text = item.minimalPriceStringBuilder
                 binding.tvPricePerUnit.visibility = View.GONE
             }
         }
-        when(haveDiscount) {
+        when(item.haveDiscount) {
             true -> {
                 binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
                 binding.tvOldPrice.visibility = View.VISIBLE
@@ -172,13 +171,12 @@ class HomePromotionsProductInnerViewHolder(
         bindFav(item)
 
         //Status
-        var isNotHaveStatuses = true
         when (item.status.isEmpty()) {
-            true -> binding.cwStatusContainer.visibility = View.GONE
+            true -> binding.tvStatus.visibility = View.GONE
             false -> {
-                binding.cwStatusContainer.visibility = View.VISIBLE
+                binding.tvStatus.visibility = View.VISIBLE
                 binding.tvStatus.text = item.status
-                binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(item.statusColor))
+                binding.tvStatus.background.setTint(Color.parseColor(item.statusColor))
             }
         }
 
@@ -186,19 +184,13 @@ class HomePromotionsProductInnerViewHolder(
         when(item.priceList.size == 1 &&
                 item.priceList.first().currentPrice < item.priceList.first().oldPrice) {
             true -> {
-                isNotHaveStatuses = false
-                binding.cwDiscountContainer.visibility = View.VISIBLE
+                binding.tvDiscountPercent.visibility = View.VISIBLE
                 binding.tvDiscountPercent.setDiscountPercent(
                     newPrice = item.priceList.first().currentPrice,
                     oldPrice = item.priceList.first().oldPrice
                 )
             }
-            false -> binding.cwDiscountContainer.visibility = View.GONE
-        }
-
-        when(isNotHaveStatuses) {
-            true -> binding.cgStatuses.visibility = View.GONE
-            false -> binding.cgStatuses.visibility = View.VISIBLE
+            false -> binding.tvDiscountPercent.visibility = View.GONE
         }
 
         //UpdatePictures
@@ -212,19 +204,14 @@ class HomePromotionsProductInnerViewHolder(
         binding.imgFavoriteStatus.isSelected = item.isFavorite
     }
 
-    private fun getItemByPosition(): ProductUI? {
-        return (bindingAdapter as? HomePromotionsProductInnerAdapter)?.getItem(bindingAdapterPosition) as? ProductUI
-    }
-
     private fun hideAmountController() {
-        val product = getItemByPosition()
-        product?.let {
-            if (product.cartQuantity > 0) {
-                binding.amountController.circleAmount.visibility = View.VISIBLE
-            }
-            binding.amountController.add.visibility = View.VISIBLE
-            binding.amountController.amountControllerDeployed.visibility = View.INVISIBLE
+        val product = item ?: return
+        if (product.cartQuantity > 0) {
+            binding.circleAmount.visibility = View.VISIBLE
         }
+        binding.add.visibility = View.VISIBLE
+        changeAmountControllerDeployedVisibility(false)
+        changePricesContainerVisibility(true)
     }
 
     private fun updateCartQuantity(item: ProductUI) {
@@ -233,20 +220,49 @@ class HomePromotionsProductInnerViewHolder(
         }
 
         if (item.cartQuantity <= 0) {
-            binding.amountController.circleAmount.visibility = View.GONE
+            binding.circleAmount.visibility = View.GONE
         } else {
-            binding.amountController.circleAmount.visibility = View.VISIBLE
+            if (!binding.amount.isVisible) {
+                binding.circleAmount.visibility = View.VISIBLE
+            }
         }
 
 
-        binding.amountController.amount.text = item.cartQuantity.toString()
-        binding.amountController.circleAmount.text = item.cartQuantity.toString()
+        binding.amount.text = item.cartQuantity.toString()
+        binding.circleAmount.text = item.cartQuantity.toString()
     }
 
     private fun showAmountController() {
-        binding.amountController.circleAmount.visibility = View.INVISIBLE
-        binding.amountController.add.visibility = View.INVISIBLE
-        binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
+        changePricesContainerVisibility(false)
+        binding.circleAmount.visibility = View.GONE
+        binding.add.visibility = View.GONE
+        changeAmountControllerDeployedVisibility(true)
         amountControllerTimer.start()
+    }
+
+    private fun changePricesContainerVisibility(visible: Boolean) {
+        binding.tvPricePerUnit.changeVisibilityIfNotEmpty(visible)
+        binding.tvCurrentPrice.changeVisibilityIfNotEmpty(visible)
+        binding.tvOldPrice.changeVisibilityIfNotEmpty(visible)
+        binding.tvPriceCondition.changeVisibilityIfNotEmpty(visible)
+    }
+
+    private fun changeAmountControllerDeployedVisibility(visible: Boolean) {
+        binding.increaseAmount.isVisible = visible
+        binding.reduceAmount.isVisible = visible
+        binding.amount.isVisible = visible
+    }
+
+    private fun changeStatusesVisibility(visible: Boolean) {
+        binding.tvStatus.isVisible = visible
+        binding.tvDiscountPercent.isVisible = visible
+    }
+
+    fun TextView.changeVisibilityIfNotEmpty(visible: Boolean) {
+        this.isVisible = if (this.text.isEmpty()) {
+            false
+        } else {
+            visible
+        }
     }
 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <ImageView
         android:id="@+id/imgPicture"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -16,151 +16,199 @@
         app:layout_constraintWidth_percent="0.40"
         tools:ignore="ContentDescription" />
 
-    <LinearLayout
-        android:id="@+id/llStatusesAndNameContainer"
+    <TextView
+        android:id="@+id/tvStatus"
+        style="@style/TextViewSmallWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_round_statuses"
+        android:backgroundTint="@color/bluePrimary"
+        android:ellipsize="end"
+        android:maxWidth="120dp"
+        android:maxLines="1"
+        android:paddingHorizontal="@dimen/space_8"
+        android:paddingVertical="@dimen/space_2"
+        tools:text="Нет в наличии"
+        app:layout_constraintStart_toEndOf="@id/imgPicture"
+        app:layout_constraintEnd_toStartOf="@id/tvDiscountPercent"
+        app:layout_constraintBottom_toBottomOf="@id/imgFavoriteStatus"
+        app:layout_constraintTop_toTopOf="@id/imgFavoriteStatus"
+        />
+
+    <TextView
+        android:id="@+id/tvDiscountPercent"
+        style="@style/TextViewSmallWhite"
+        android:layout_width="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/tvStatus"
+        android:layout_marginStart="@dimen/space_8"
+        app:layout_constraintBottom_toBottomOf="@id/imgFavoriteStatus"
+        app:layout_constraintTop_toTopOf="@id/imgFavoriteStatus"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_round_statuses"
+        android:backgroundTint="@color/orange"
+        android:ellipsize="end"
+        android:maxWidth="55dp"
+        android:maxLines="1"
+        android:paddingHorizontal="@dimen/space_8"
+        android:paddingVertical="@dimen/space_2"
+        tools:text="12%" />
+
+    <TextView
+        android:id="@+id/tvName"
+        style="@style/TextViewNormalBlack"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:orientation="vertical"
+        android:paddingEnd="@dimen/space_8"
         android:paddingBottom="@dimen/space_8"
-        app:layout_constraintBottom_toTopOf="@+id/rlAmountControllerContainer"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toStartOf="@+id/imgFavoriteStatus"
         app:layout_constraintStart_toEndOf="@+id/imgPicture"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/imgFavoriteStatus"
+        tools:ignore="RtlSymmetry"
+        tools:text="Какое-то интересное не короткое название какой-т вкусное воды, еще что-то и еще" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/cgStatuses"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_20sdp"
-            android:paddingEnd="@dimen/space_16"
-            tools:ignore="RtlSymmetry">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cwDiscountContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/orange"
-                app:cardCornerRadius="@dimen/corner_5"
-                app:cardElevation="0dp">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvDiscountPercent"
-                    style="@style/TextViewSmallWhite"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/space_4"
-                    android:paddingVertical="@dimen/space_2"
-                    tools:text="12%" />
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cwStatusContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/bluePrimary"
-                app:cardCornerRadius="@dimen/corner_5"
-                app:cardElevation="0dp">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvStatus"
-                    style="@style/TextViewSmallWhite"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/space_4"
-                    android:paddingVertical="@dimen/space_2"
-                    tools:text="Новинка" />
-
-            </androidx.cardview.widget.CardView>
-
-        </com.google.android.material.chip.ChipGroup>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvName"
-            style="@style/TextViewNormalBlack"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/space_8"
-            tools:ignore="RtlSymmetry"
-            tools:text="Какое-то интересное не короткое название какой-т вкусное воды, еще что-то и еще" />
-
-    </LinearLayout>
-
-    <androidx.appcompat.widget.AppCompatImageView
+    <ImageView
         android:id="@+id/imgFavoriteStatus"
-        android:layout_width="@dimen/_16sdp"
-        android:layout_margin="4dp"
-        android:layout_height="@dimen/_16sdp"
+        android:layout_width="@dimen/_17sdp"
+        android:layout_height="@dimen/_17sdp"
+        android:layout_margin="2dp"
         android:src="@drawable/selector_fav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
-    <RelativeLayout
-        android:id="@+id/rlAmountControllerContainer"
-        android:layout_width="@dimen/_100sdp"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/add"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="@dimen/space_6"
+        android:background="@drawable/amount_selector"
+        android:padding="@dimen/space_8"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <include
-            android:id="@+id/amountController"
-            layout="@layout/view_product_amount_controller" />
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/clPricesContainer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:gravity="bottom"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/rlAmountControllerContainer"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imgPicture"
-        app:layout_constraintTop_toTopOf="@+id/rlAmountControllerContainer">
+        app:layout_constraintTop_toBottomOf="@+id/guideline"
+        app:tint="@color/white"
+        tools:ignore="ContentDescription" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvPricePerUnit"
-            style="@style/TextViewSmallGray"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="start|bottom"
-            app:layout_constraintBottom_toTopOf="@+id/price"
-            app:layout_constraintStart_toEndOf="@+id/vpPictures"
-            tools:text="510/кг" />
+    <TextView
+        android:id="@+id/circleAmount"
+        android:layout_width="@dimen/_16sdp"
+        android:layout_height="@dimen/_16sdp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginEnd="-6dp"
+        android:background="@drawable/bkg_number"
+        android:fontFamily="@font/rotonda_normal"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/add"
+        app:layout_constraintTop_toTopOf="@id/add"
+        tools:ignore="NegativeMargin" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/reduceAmount"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_24sdp"
+        android:background="@drawable/bkg_number_controller_part_reduce"
+        android:padding="@dimen/space_6"
+        android:src="@drawable/ic_minus"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/amount"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@id/imgPicture"
+        app:layout_constraintTop_toBottomOf="@id/guideline"
+        app:layout_constraintWidth_percent="0.2"
+        app:tint="@color/green"
+        tools:ignore="ContentDescription" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvCurrentPrice"
-                style="@style/TextViewMediumBlackBold"
-                android:layout_width="wrap_content"
-                android:textSize="16sp"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="88888 Р" />
+    <TextView
+        android:id="@+id/amount"
+        style="@style/TextViewNormalBlackBold"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_24sdp"
+        android:background="@drawable/bkg_number_controller_part_number"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/increaseAmount"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@id/reduceAmount"
+        app:layout_constraintTop_toTopOf="@id/guideline"
+        app:layout_constraintWidth_percent="0.2"
+        tools:text="1" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvOldPrice"
-                style="@style/TextViewNormalGrayBold"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:gravity="bottom"
-                android:textSize="16sp"
-                android:paddingStart="@dimen/space_4"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tvCurrentPrice"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="RtlSymmetry"
-                tools:text="88888 Р" />
+    <ImageView
+        android:id="@+id/increaseAmount"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_24sdp"
+        android:background="@drawable/bkg_number_controller_part_increase"
+        android:padding="@dimen/space_6"
+        android:src="@drawable/png_cart"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/amount"
+        app:layout_constraintTop_toTopOf="@id/guideline"
+        app:layout_constraintWidth_percent="0.2"
+        tools:ignore="ContentDescription" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.75" />
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tvPricePerUnit"
+        style="@style/TextViewSmallLightGray"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/tvCurrentPrice"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/imgPicture"
+        tools:text="510/кг" />
+
+    <TextView
+        android:id="@+id/tvCurrentPrice"
+        style="@style/TextViewMediumBlackBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/tvPriceCondition"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@id/imgPicture"
+        tools:text="280 Р" />
+
+    <TextView
+        android:id="@+id/tvOldPrice"
+        style="@style/TextViewSmallLightGray"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/space_4"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvPriceCondition"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvCurrentPrice"
+        tools:ignore="RtlSymmetry"
+        tools:text="300 Р" />
+
+    <TextView
+        android:id="@+id/tvPriceCondition"
+        style="@style/TextViewSmallGray"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="start|bottom"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/imgPicture"
+        tools:text="При условии покупки от 10 шт" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
