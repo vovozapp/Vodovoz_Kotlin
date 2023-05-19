@@ -558,7 +558,7 @@ interface MainApi {
     suspend fun fetchServicesNewDetailsResponse(
         @Query("action") action: String? = null,
         @Query("id") id: String? = null,
-    ): ServiceDetailsModel
+    ): ResponseBody
 
     @GET("http://szorinvodovoz.tw1.ru/local/components/semap/delivery.calc/order.php")
     suspend fun sendTestMapRequest(

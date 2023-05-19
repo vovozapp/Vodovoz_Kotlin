@@ -60,8 +60,8 @@ class ServiceDetailNewFragment : BaseFragment() {
                         hideLoader()
                     }
 
-                    val description = state.data.item?.aboutServicesData?.description ?: ""
-                    val title = state.data.item?.aboutServicesData?.title ?: resources.getString(R.string.services_title)
+                    val description = state.data.detailItem?.description ?: ""
+                    val title = state.data.detailItem?.name ?: ""
 
                     initWebView(description)
 
@@ -75,13 +75,13 @@ class ServiceDetailNewFragment : BaseFragment() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView(url: String) {
-        /*binding.descriptionTv.settings.javaScriptEnabled = true
+        binding.serviceDetailWebView.settings.javaScriptEnabled = true
 
         try {
-            binding.descriptionTv.loadDataWithBaseURL(null, url, "text/html", "utf-8", null)
+            binding.serviceDetailWebView.loadDataWithBaseURL(null, url, "text/html", "utf-8", null)
         } catch (e: Throwable) {
             showError(e.toErrorState())
-        }*/
+        }
     }
 
 }
