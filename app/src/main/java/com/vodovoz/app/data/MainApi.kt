@@ -1,7 +1,6 @@
 package com.vodovoz.app.data
 
 import com.vodovoz.app.common.product.rating.RatingResponse
-import com.vodovoz.app.feature.bottom.services.detail.model.ServiceDetailsModel
 import com.vodovoz.app.feature.bottom.services.newservs.model.AboutServicesNew
 import com.vodovoz.app.feature.home.ratebottom.model.RateBottomModel
 import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
