@@ -1,12 +1,10 @@
 package com.vodovoz.app.data
 
 import com.vodovoz.app.common.product.rating.RatingResponse
-import com.vodovoz.app.feature.bottom.services.new.model.AboutServicesNew
+import com.vodovoz.app.feature.bottom.services.newservs.model.AboutServicesNew
 import com.vodovoz.app.feature.home.ratebottom.model.RateBottomModel
-import com.vodovoz.app.feature.map.test.model.MapTestResponse
 import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
 import com.vodovoz.app.feature.profile.cats.ProfileCategoriesModel
-import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -550,7 +548,7 @@ interface MainApi {
         @Query("action") action: String? = null,
     ): ResponseBody
 
-    @GET("/newmobile/glavnaya/uslygi/uslygi_new.php")
+    @GET("http://mvodovoz.tw1.ru/newmobile/glavnaya/uslygi/uslygi_new.php")
     suspend fun fetchServicesNewResponse(
         @Query("action") action: String? = null,
     ): AboutServicesNew

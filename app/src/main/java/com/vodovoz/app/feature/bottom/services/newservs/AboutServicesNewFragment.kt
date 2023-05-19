@@ -1,5 +1,6 @@
-package com.vodovoz.app.feature.bottom.services.new
+package com.vodovoz.app.feature.bottom.services.newservs
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
@@ -7,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.databinding.FragmentAboutServicesFlowNewBinding
 import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,13 +61,24 @@ class AboutServicesNewFragment : BaseFragment() {
                     val description = state.data.item?.aboutServicesData?.description ?: ""
                     val title = state.data.item?.aboutServicesData?.title ?: resources.getString(R.string.services_title)
 
-                    binding.descriptionTv.text = description.fromHtml()
+                    initWebView(description)
 
                     initToolbar(title)
 
                     showError(state.error)
 
                 }
+        }
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun initWebView(url: String) {
+        binding.descriptionTv.settings.javaScriptEnabled = true
+
+        try {
+            binding.descriptionTv.loadDataWithBaseURL(null, url, "text/html", "utf-8", null)
+        } catch (e: Throwable) {
+            showError(e.toErrorState())
         }
     }
 

@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.bottom.services.new
+package com.vodovoz.app.feature.bottom.services.newservs
 
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.content.Event
@@ -6,7 +6,7 @@ import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.MainRepository
-import com.vodovoz.app.feature.bottom.services.new.model.AboutServicesNew
+import com.vodovoz.app.feature.bottom.services.newservs.model.AboutServicesNew
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
