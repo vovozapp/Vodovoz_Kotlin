@@ -15,7 +15,7 @@ class HomeTabsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
 
         return when(viewType) {
-            CategoryUI.CATEGORY_UI_VIEW_TYPE -> {
+            R.layout.view_holder_slider_product_category -> {
                 HomeTabsViewHolder(getViewFromInflater(R.layout.view_holder_slider_popular_category, parent), clickListener)
             }
             else -> {

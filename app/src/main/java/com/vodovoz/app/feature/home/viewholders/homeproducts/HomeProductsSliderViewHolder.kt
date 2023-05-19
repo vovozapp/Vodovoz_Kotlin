@@ -54,29 +54,5 @@ class HomeProductsSliderViewHolder(
             )
             isAddItemDecoration = true
         }
-        updateCategoryTabs(item)
     }
-
-    private fun updateCategoryTabs(items: HomeProducts) {
-        when(items.items.size) {
-            1 -> {
-                binding.tlCategories.visibility = View.GONE
-            }
-            else -> {
-                binding.tlCategories.visibility = View.VISIBLE
-
-                binding.tlCategories.removeAllTabs()
-                items.items.forEach {
-                    binding.tlCategories.addTab(binding.tlCategories.newTab().setText(it.name))
-                }
-
-                TabbedListMediator(
-                    binding.rvCategories,
-                    binding.tlCategories,
-                    items.items.indices.toList()
-                ).attach()
-            }
-        }
-    }
-
 }

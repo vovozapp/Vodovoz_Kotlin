@@ -159,15 +159,15 @@ class ProductsSliderFragment : BaseHiddenFragment() {
     }
 
     private fun initTabbedMediator() {
-        tabbedListMediator = TabbedListMediator(
+       /* tabbedListMediator = TabbedListMediator(
             binding.rvCategories,
             binding.tlCategories,
             listOf()
-        )
+        )*/
     }
 
     private fun initTabLayout() {
-        binding.tlCategories.addOnTabSelectedListener(
+        /*binding.tlCategories.addOnTabSelectedListener(
             object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     tab?.view?.findViewById<TextView>(R.id.name)?.setTextColor(
@@ -183,7 +183,7 @@ class ProductsSliderFragment : BaseHiddenFragment() {
                 }
                 override fun onTabReselected(tab: TabLayout.Tab?) {}
             }
-        )
+        )*/
     }
 
 
@@ -205,7 +205,7 @@ class ProductsSliderFragment : BaseHiddenFragment() {
     private fun updateCategoryTabs(categoryDetailUIList: List<CategoryDetailUI>) {
         when(categoryDetailUIList.size) {
             1 -> {
-                binding.tlCategories.visibility = View.GONE
+             //   binding.tlCategories.visibility = View.GONE
                 /*binding.tvName.visibility = View.VISIBLE
                 binding.tvShowAll.visibility = View.VISIBLE
                 binding.tvName.text = categoryDetailUIList.first().name
@@ -215,11 +215,11 @@ class ProductsSliderFragment : BaseHiddenFragment() {
                 }*/
             }
             else -> {
-                binding.tlCategories.visibility = View.VISIBLE
+              //  binding.tlCategories.visibility = View.VISIBLE
                /* binding.tvName.visibility = View.GONE
                 binding.tvShowAll.visibility = View.GONE*/
                 for (index in categoryDetailUIList.indices) {
-                    binding.tlCategories.newTab().apply {
+                    /*binding.tlCategories.newTab().apply {
                         val customTabBinding = ViewCustomTabBinding.inflate(
                             LayoutInflater.from(requireContext()), null, false
                         )
@@ -257,7 +257,7 @@ class ProductsSliderFragment : BaseHiddenFragment() {
                         customTabBinding.name.text = categoryDetailUIList[index].name
                         customView = customTabBinding.root
                         binding.tlCategories.addTab(this)
-                    }
+                    }*/
                 }
                 tabbedListMediator.updateMediatorWithNewIndices(categoryDetailUIList.indices.toList())
                 if (!tabbedListMediator.isAttached()) tabbedListMediator.attach()

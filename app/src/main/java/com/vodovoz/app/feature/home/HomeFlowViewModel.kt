@@ -49,6 +49,7 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Compan
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.NOVELTIES
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.TOP_PROD
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.VIEWED
+import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeProductsTabs
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.BRANDS_TITLE
@@ -95,15 +96,15 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     fun secondLoad() {
-        fetchTopSlider(POSITION_9)
-        fetchOrdersSlider(POSITION_10_TITLE, POSITION_11)
-        fetchNoveltiesSlider(POSITION_13_TITLE, POSITION_14)
-        fetchPromotionsSlider(POSITION_15_TITLE, POSITION_16)
-        fetchBottomSlider(POSITION_17)
-        fetchBrandsSlider(POSITION_18_TITLE, POSITION_19)
-        fetchCountriesSlider(POSITION_20)
-        fetchViewedProductsSlider(POSITION_21_TITLE, POSITION_22)
-        fetchCommentsSlider(POSITION_23_TITLE, POSITION_24)
+        fetchTopSlider(POSITION_9_TAB, POSITION_10)
+        fetchOrdersSlider(POSITION_11_TITLE, POSITION_12)
+        fetchNoveltiesSlider(POSITION_14_TITLE, POSITION_15)
+        fetchPromotionsSlider(POSITION_16_TITLE, POSITION_17)
+        fetchBottomSlider(POSITION_18_TAB, POSITION_19)
+        fetchBrandsSlider(POSITION_20_TITLE, POSITION_21)
+        fetchCountriesSlider(POSITION_22)
+        fetchViewedProductsSlider(POSITION_23_TITLE, POSITION_24)
+        fetchCommentsSlider(POSITION_25_TITLE, POSITION_26)
     }
 
     fun firstLoad() {
@@ -279,9 +280,9 @@ class HomeFlowViewModel @Inject constructor(
         }
     }
 
-    private fun fetchTopSlider(position: Int) {
+    private fun fetchTopSlider(positionTab: Int, position: Int) {
         if (state.data.itemsInt.contains(position)) return
-        debugLog { "load POSITION_6" }
+        debugLog { "load $position" }
         uiStateListener.value = state.copy(
             loadingPage = true,
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
@@ -296,12 +297,21 @@ class HomeFlowViewModel @Inject constructor(
                 .onEach {
                     val response = it.parseTopSliderResponse()
                     val item = if (response is ResponseEntity.Success) {
-                        PositionItem(
-                            position,
-                            fetchHomeProductsByType(response.data.mapToUI(), TOP_PROD, position)
+                        val data = response.data.mapToUI()
+                        PositionItemWithTabs(
+                            item = PositionItem(
+                                position,
+                                fetchHomeProductsByType(response.data.mapToUI(), TOP_PROD, position)
+                            ),
+                            itemTabs = PositionItem(
+                                positionTab,
+                                HomeProductsTabs(id = positionTab, data)
+                            )
                         )
                     } else {
-                        PositionItem(position, null)
+                        PositionItemWithTabs(
+                            item = PositionItem(position, null),
+                            itemTabs = PositionItem(positionTab, null))
                     }
                     updateStateByPositionItem(item)
                 }
@@ -312,7 +322,7 @@ class HomeFlowViewModel @Inject constructor(
 
     private fun fetchOrdersSlider(positionTitle: Int, position: Int) {
         if (state.data.itemsInt.contains(position)) return
-        debugLog { "load POSITION_7" }
+        debugLog { "load $position" }
         uiStateListener.value = state.copy(
             loadingPage = true,
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
@@ -346,14 +356,18 @@ class HomeFlowViewModel @Inject constructor(
                     .flowOn(Dispatchers.Default)
                     .collect()
             } else {
-                updateStateByPositionItem(PositionItem(position, null))
+                updateStateByPositionItem(
+                    PositionItemWithTitle(
+                    item = PositionItem(position, null),
+                    itemTitle = PositionItem(positionTitle, null))
+                )
             }
         }
     }
 
     private fun fetchNoveltiesSlider(positionTitle: Int, position: Int) {
         if (state.data.itemsInt.contains(position)) return
-        debugLog { "load POSITION_9" }
+        debugLog { "load $position" }
         uiStateListener.value = state.copy(
             loadingPage = true,
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
@@ -397,7 +411,7 @@ class HomeFlowViewModel @Inject constructor(
 
     private fun fetchPromotionsSlider(positionTitle: Int, position: Int) {
         if (state.data.itemsInt.contains(position)) return
-        debugLog { "load POSITION_10" }
+        debugLog { "load $position" }
         uiStateListener.value = state.copy(
             loadingPage = true,
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
@@ -439,9 +453,9 @@ class HomeFlowViewModel @Inject constructor(
         }
     }
 
-    private fun fetchBottomSlider(position: Int) {
+    private fun fetchBottomSlider(positionTab: Int, position: Int) {
         if (state.data.itemsInt.contains(position)) return
-        debugLog { "load POSITION_11" }
+        debugLog { "load $position" }
         uiStateListener.value = state.copy(
             loadingPage = true,
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
@@ -456,12 +470,21 @@ class HomeFlowViewModel @Inject constructor(
                 .onEach {
                     val response = it.parseBottomSliderResponse()
                     val item = if (response is ResponseEntity.Success) {
-                        PositionItem(
-                            position,
-                            fetchHomeProductsByType(response.data.mapToUI(), BOTTOM_PROD, position)
+                        val data = response.data.mapToUI()
+                        PositionItemWithTabs(
+                            item = PositionItem(
+                                position,
+                                fetchHomeProductsByType(response.data.mapToUI(), BOTTOM_PROD, position)
+                            ),
+                            itemTabs = PositionItem(
+                                positionTab,
+                                HomeProductsTabs(id = positionTab, data)
+                            )
                         )
                     } else {
-                        PositionItem(position, null)
+                        PositionItemWithTabs(
+                            item = PositionItem(position, null),
+                            itemTabs = PositionItem(positionTab, null))
                     }
                     updateStateByPositionItem(item)
                 }
@@ -472,7 +495,7 @@ class HomeFlowViewModel @Inject constructor(
 
     private fun fetchBrandsSlider(positionTitle: Int, position: Int) {
         if (state.data.itemsInt.contains(position)) return
-        debugLog { "load POSITION_12" }
+        debugLog { "load $position" }
         uiStateListener.value = state.copy(
             loadingPage = true,
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
@@ -508,7 +531,7 @@ class HomeFlowViewModel @Inject constructor(
 
     private fun fetchCountriesSlider(position: Int) {
         if (state.data.itemsInt.contains(position)) return
-        debugLog { "load POSITION_13" }
+        debugLog { "load $position" }
         uiStateListener.value = state.copy(
             loadingPage = true,
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
@@ -536,7 +559,7 @@ class HomeFlowViewModel @Inject constructor(
 
     private fun fetchViewedProductsSlider(positionTitle: Int, position: Int) {
         if (state.data.itemsInt.contains(position)) return
-        debugLog { "load POSITION_14" }
+        debugLog { "load $position" }
         uiStateListener.value = state.copy(
             loadingPage = true,
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
@@ -578,14 +601,18 @@ class HomeFlowViewModel @Inject constructor(
                     .flowOn(Dispatchers.Default)
                     .collect()
             } else {
-                updateStateByPositionItem(PositionItem(POSITION_14, null))
+                updateStateByPositionItem(
+                    PositionItemWithTitle(
+                        item = PositionItem(position, null),
+                        itemTitle = PositionItem(positionTitle, null))
+                )
             }
         }
     }
 
     private fun fetchCommentsSlider(positionTitle: Int, position: Int) {
         if (state.data.itemsInt.contains(position)) return
-        debugLog { "load POSITION_15" }
+        debugLog { "load $position" }
         uiStateListener.value = state.copy(
             loadingPage = true,
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
@@ -658,6 +685,14 @@ class HomeFlowViewModel @Inject constructor(
         uiStateListener.value = state.copy(
             loadingPage = false,
             data = state.data.copy(items = state.data.items + positionItemWithTitle.itemTitle + positionItemWithTitle.item),
+            error = null
+        )
+    }
+
+    private fun updateStateByPositionItem(positionItemWithTabs: PositionItemWithTabs) {
+        uiStateListener.value = state.copy(
+            loadingPage = false,
+            data = state.data.copy(items = state.data.items + positionItemWithTabs.itemTabs + positionItemWithTabs.item),
             error = null
         )
     }
@@ -761,6 +796,11 @@ class HomeFlowViewModel @Inject constructor(
         val itemTitle: PositionItem
     )
 
+    data class PositionItemWithTabs(
+        val item: PositionItem,
+        val itemTabs: PositionItem
+    )
+
     sealed class HomeEvents : Event {
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
             HomeEvents()
@@ -780,10 +820,10 @@ class HomeFlowViewModel @Inject constructor(
             fun idle(): HomeState {
                 return HomeState(
                     listOf(
-                        PositionItem(POSITION_12, HomeTripleNav(POSITION_12)),
-                        PositionItem(POSITION_25, HomeBottomInfo(POSITION_25))
+                        PositionItem(POSITION_13, HomeTripleNav(POSITION_13)),
+                        PositionItem(POSITION_27, HomeBottomInfo(POSITION_27))
                     ),
-                    itemsInt = listOf(POSITION_12, POSITION_12)
+                    itemsInt = listOf(POSITION_13, POSITION_13)
                 )
             }
         }
@@ -798,25 +838,27 @@ class HomeFlowViewModel @Inject constructor(
         const val POSITION_6_TITLE = 6
         const val POSITION_7 = 7
         const val POSITION_8 = 8
-        const val POSITION_9 = 9
-        const val POSITION_10_TITLE = 10
-        const val POSITION_11 = 11
+        const val POSITION_9_TAB = 9
+        const val POSITION_10 = 10
+        const val POSITION_11_TITLE = 11
         const val POSITION_12 = 12
-        const val POSITION_13_TITLE = 13
-        const val POSITION_14 = 14
-        const val POSITION_15_TITLE = 15
-        const val POSITION_16 = 16
+        const val POSITION_13 = 13
+        const val POSITION_14_TITLE = 14
+        const val POSITION_15 = 15
+        const val POSITION_16_TITLE = 16
         const val POSITION_17 = 17
-        const val POSITION_18_TITLE = 18
+        const val POSITION_18_TAB = 18
         const val POSITION_19 = 19
-        const val POSITION_20 = 20
-        const val POSITION_21_TITLE = 21
+        const val POSITION_20_TITLE = 20
+        const val POSITION_21 = 21
         const val POSITION_22 = 22
         const val POSITION_23_TITLE = 23
         const val POSITION_24 = 24
-        const val POSITION_25 = 25
+        const val POSITION_25_TITLE = 25
+        const val POSITION_26 = 26
+        const val POSITION_27 = 27
 
         const val ENTER_COUNT = 8
-        const val POSITIONS_COUNT = 25
+        const val POSITIONS_COUNT = 27
     }
 }
