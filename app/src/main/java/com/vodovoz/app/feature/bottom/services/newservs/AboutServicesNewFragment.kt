@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -22,7 +23,7 @@ class AboutServicesNewFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_about_services_flow_new
 
-    private val viewModel: AboutServicesNewViewModel by activityViewModels()
+    private val viewModel: AboutServicesNewViewModel by viewModels()
 
     private val binding: FragmentAboutServicesFlowNewBinding by viewBinding {
         FragmentAboutServicesFlowNewBinding.bind(

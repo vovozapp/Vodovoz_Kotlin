@@ -1,11 +1,13 @@
 package com.vodovoz.app.feature.bottom.services.newservs
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.content.Event
 import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.MainRepository
+import com.vodovoz.app.feature.bottom.services.detail.model.ServiceDetailsModel
 import com.vodovoz.app.feature.bottom.services.newservs.model.AboutServicesNew
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,8 +18,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AboutServicesNewViewModel @Inject constructor(
-    private val repository: MainRepository
+    private val repository: MainRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : PagingContractViewModel<AboutServicesNewViewModel.AboutServicesState, AboutServicesNewViewModel.AboutServicesEvents>(AboutServicesState()) {
+
+    private val serviceId = savedStateHandle.get<String>("serviceId")
 
     fun firstLoadSorted() {
         if (!state.isFirstLoad) {
@@ -56,8 +61,8 @@ class AboutServicesNewViewModel @Inject constructor(
         }
     }
 
-    private fun fetchServiceDetailsData(id: String?) {
-        if (id == null) return
+    fun fetchServiceDetailsData() {
+        val id = serviceId ?: return
         viewModelScope.launch {
             flow { emit(repository.fetchServicesNewDetails("details", id)) }
                 .catch {
@@ -69,7 +74,7 @@ class AboutServicesNewViewModel @Inject constructor(
                 .onEach {
                     uiStateListener.value = state.copy(
                         data = state.data.copy(
-                            item = it
+                            detailItem = it
                         ),
                         loadingPage = false,
                         error = null
@@ -86,5 +91,6 @@ class AboutServicesNewViewModel @Inject constructor(
 
     data class AboutServicesState(
         val item: AboutServicesNew? = null,
+        val detailItem: ServiceDetailsModel? = null
     ) : State
 }

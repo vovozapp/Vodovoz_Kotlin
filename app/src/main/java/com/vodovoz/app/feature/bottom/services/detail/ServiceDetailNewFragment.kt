@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -21,12 +22,17 @@ class ServiceDetailNewFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_service_details_flow_new
 
-    private val viewModel: AboutServicesNewViewModel by activityViewModels()
+    private val viewModel: AboutServicesNewViewModel by viewModels()
 
     private val binding: FragmentServiceDetailsFlowNewBinding by viewBinding {
         FragmentServiceDetailsFlowNewBinding.bind(
             contentView
         )
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.fetchServiceDetailsData()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
