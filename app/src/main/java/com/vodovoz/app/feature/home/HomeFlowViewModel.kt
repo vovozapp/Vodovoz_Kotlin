@@ -667,7 +667,7 @@ class HomeFlowViewModel @Inject constructor(
                                         id = positionTitle,
                                         type = VIEWED_TITLE,
                                         name = "Вы смотрели",
-                                        showAll = true,
+                                        showAll = false,
                                         showAllName = "СМ.ВСЕ",
                                         categoryProductsName = if (data.size == 1) {
                                             data.first().name

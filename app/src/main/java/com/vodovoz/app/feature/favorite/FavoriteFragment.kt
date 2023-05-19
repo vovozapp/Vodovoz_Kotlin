@@ -24,6 +24,7 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryUI
@@ -163,7 +164,7 @@ class FavoriteFragment : BaseFragment() {
 
         if (state.bestForYouCategoryDetailUI != null) {
             val homeProducts = HomeProducts(
-                1,
+                2,
                 listOf(state.bestForYouCategoryDetailUI),
                 ProductsSliderConfig(
                     containShowAllButton = false,
@@ -172,7 +173,15 @@ class FavoriteFragment : BaseFragment() {
                 HomeProducts.DISCOUNT,
                 prodList = state.bestForYouCategoryDetailUI.productUIList
             )
-            bestForYouController.submitList(listOf(homeProducts))
+            val homeTitle = HomeTitle(
+                id = 1,
+                type = HomeTitle.VIEWED_TITLE,
+                name = "Лучшее для вас",
+                showAll = false,
+                showAllName = "СМ.ВСЕ",
+                categoryProductsName = state.bestForYouCategoryDetailUI.name
+            )
+            bestForYouController.submitList(listOf(homeTitle, homeProducts))
             showContainer(false)
         }
 

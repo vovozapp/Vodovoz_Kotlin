@@ -22,6 +22,7 @@ import com.vodovoz.app.databinding.FragmentPromotionDetailFlowBinding
 import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.PromotionDetailUI
@@ -120,7 +121,15 @@ class PromotionDetailsFragment : BaseFragment() {
                             HomeProducts.DISCOUNT,
                             prodList = state.data.items.forYouCategoryDetailUI.productUIList
                         )
-                        bestForYouController.submitList(listOf(homeProducts))
+                        val homeTitle = HomeTitle(
+                            id = 1,
+                            type = HomeTitle.VIEWED_TITLE,
+                            name = "Лучшее для вас",
+                            showAll = false,
+                            showAllName = "СМ.ВСЕ",
+                            categoryProductsName = state.data.items.forYouCategoryDetailUI.name
+                        )
+                        bestForYouController.submitList(listOf(homeTitle, homeProducts))
                     }
 
                     when(state.data.items?.promotionCategoryDetailUI) {

@@ -9,6 +9,7 @@ import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProductsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleViewHolder
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 
 class BestForYouAdapter(
@@ -23,6 +24,9 @@ class BestForYouAdapter(
         return when (viewType) {
             R.layout.fragment_slider_product -> {
                 HomeProductsSliderViewHolder(getViewFromInflater(viewType, parent), productsShowAllListener, productsClickListener, cartManager, likeManager)
+            }
+            R.layout.view_holder_flow_title -> {
+                HomeTitleViewHolder(getViewFromInflater(viewType, parent))
             }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")

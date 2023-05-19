@@ -32,6 +32,7 @@ import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowCli
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.pastpurchases.PastPurchasesFlowViewModel
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
@@ -283,7 +284,15 @@ class SearchFragment : BaseFragment() {
                 HomeProducts.DISCOUNT,
                 prodList = state.popularCategoryDetail.productUIList
             )
-            bestForYouController.submitList(listOf(homeProducts))
+            val homeTitle = HomeTitle(
+                id = 1,
+                type = HomeTitle.VIEWED_TITLE,
+                name = "Популярные товары",
+                showAll = false,
+                showAllName = "СМ.ВСЕ",
+                categoryProductsName = state.popularCategoryDetail.name
+            )
+            bestForYouController.submitList(listOf(homeTitle, homeProducts))
             showContainer(false)
         }
 
