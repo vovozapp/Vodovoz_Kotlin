@@ -10,6 +10,10 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.databinding.FragmentAboutServicesFlowNewBinding
+import com.vodovoz.app.feature.bottom.services.ServicesController
+import com.vodovoz.app.feature.bottom.services.adapter.ServicesClickListener
+import com.vodovoz.app.feature.bottom.services.newservs.model.ServiceNew
+import com.vodovoz.app.ui.model.ServiceUI
 import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,6 +30,10 @@ class AboutServicesNewFragment : BaseFragment() {
         )
     }
 
+    private val servicesController by lazy {
+        ServicesController(getServicesClickListener(), requireContext())
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.firstLoadSorted()
@@ -34,6 +42,7 @@ class AboutServicesNewFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        servicesController.bind(binding.rvServices)
         bindErrorRefresh { viewModel.refreshSorted() }
         observeUiState()
         observeEvents()
@@ -65,6 +74,8 @@ class AboutServicesNewFragment : BaseFragment() {
 
                     initToolbar(title)
 
+                    servicesController.submitList(state.data.item?.aboutServicesData?.servicesList ?: emptyList())
+
                     showError(state.error)
 
                 }
@@ -79,6 +90,14 @@ class AboutServicesNewFragment : BaseFragment() {
             binding.descriptionTv.loadDataWithBaseURL(null, url, "text/html", "utf-8", null)
         } catch (e: Throwable) {
             showError(e.toErrorState())
+        }
+    }
+
+    private fun getServicesClickListener(): ServicesClickListener {
+        return object : ServicesClickListener {
+            override fun onItemClick(item: ServiceNew) {
+
+            }
         }
     }
 

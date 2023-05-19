@@ -17,6 +17,9 @@ class ServicesAdapter(
             ServiceUI.SERVICE_VIEW_TYPE -> {
                 ServicesViewHolder(getViewFromInflater(R.layout.view_holder_service_detail, parent), clickListener)
             }
+            R.layout.view_holder_service_detail_new -> {
+                ServicesNewViewHolder(getViewFromInflater(R.layout.view_holder_service_detail_new, parent), clickListener)
+            }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")
             }
