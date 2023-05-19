@@ -305,7 +305,13 @@ class HomeFlowViewModel @Inject constructor(
                             ),
                             itemTabs = PositionItem(
                                 positionTab,
-                                HomeProductsTabs(id = positionTab, data)
+                                HomeProductsTabs(id = positionTab, data.mapIndexed { index, cat ->
+                                    if (index == 0) {
+                                        cat.copy(isSelected = true)
+                                    } else {
+                                        cat.copy(isSelected = false)
+                                    }
+                                })
                             )
                         )
                     } else {
@@ -478,7 +484,13 @@ class HomeFlowViewModel @Inject constructor(
                             ),
                             itemTabs = PositionItem(
                                 positionTab,
-                                HomeProductsTabs(id = positionTab, data)
+                                HomeProductsTabs(id = positionTab, data.mapIndexed { index, cat ->
+                                    if (index == 0) {
+                                        cat.copy(isSelected = true)
+                                    } else {
+                                        cat.copy(isSelected = false)
+                                    }
+                                })
                             )
                         )
                     } else {
