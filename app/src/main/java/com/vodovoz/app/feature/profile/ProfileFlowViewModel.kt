@@ -21,6 +21,7 @@ import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.pars
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
+import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.home.viewholders.homeorders.HomeOrders
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
@@ -81,17 +82,7 @@ class ProfileFlowViewModel @Inject constructor(
             flow { emit(repository.fetchUserData(userId)) }
                 .catch {
                     debugLog { "fetch profile data error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(),
-                            loadingPage = false,
-                            data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    position,
-                                    null
-                                )
-                            )
-                        )
+                    updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
@@ -134,17 +125,7 @@ class ProfileFlowViewModel @Inject constructor(
             flow { emit(repository.fetchOrdersSlider(userId)) }
                 .catch {
                     debugLog { "fetch profile orders slider error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(),
-                            loadingPage = false,
-                            data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    position,
-                                    null
-                                )
-                            )
-                        )
+                    updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
@@ -188,17 +169,7 @@ class ProfileFlowViewModel @Inject constructor(
             flow { emit(repository.fetchProfileCategories(userId, isTablet)) }
                 .catch {
                     debugLog { "fetch profile categories error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(),
-                            loadingPage = false,
-                            data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    position,
-                                    null
-                                )
-                            )
-                        )
+                    updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
@@ -257,17 +228,7 @@ class ProfileFlowViewModel @Inject constructor(
             flow { emit(repository.fetchViewedProductsSlider(userId)) }
                 .catch {
                     debugLog { "fetch profile viewed products error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(),
-                            loadingPage = false,
-                            data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    position,
-                                    null
-                                )
-                            )
-                        )
+                    updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
@@ -351,17 +312,7 @@ class ProfileFlowViewModel @Inject constructor(
             flow { emit(repository.fetchPersonalProducts(userId, 1)) }
                 .catch {
                     debugLog { "fetch profile personal products error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(),
-                            loadingPage = false,
-                            data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    position,
-                                    null
-                                )
-                            )
-                        )
+                    updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
                 .onEach {
@@ -452,6 +403,20 @@ class ProfileFlowViewModel @Inject constructor(
         }
     }
 
+    private fun updateStateByThrowableAndPosition(it: Throwable, position: Int) {
+        uiStateListener.value =
+            state.copy(
+                error = it.toErrorState(),
+                loadingPage = false,
+                data = state.data.copy(
+                    items = state.data.items + PositionItem(
+                        position,
+                        null
+                    )
+                )
+            )
+    }
+
     data class ProfileState(
         val items: List<PositionItem>,
         val isLogin: Boolean = true
@@ -493,7 +458,6 @@ class ProfileFlowViewModel @Inject constructor(
         const val POSITION_6_TITLE = 6
         const val POSITION_7 = 7
         const val POSITION_8 = 8
-
 
         const val POSITIONS_COUNT = 8
     }
