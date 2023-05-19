@@ -901,6 +901,11 @@ class MainRepository @Inject constructor(
         action = action
     )
 
+    //Общая информация о предоставляемых услугах
+    suspend fun fetchAboutServicesNew(action: String) = api.fetchServicesNewResponse(
+        action = action
+    )
+
     suspend fun fetchTestMapResponse(
         address: String,
         latitude: String,

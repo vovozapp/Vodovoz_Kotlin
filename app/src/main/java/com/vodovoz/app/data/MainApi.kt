@@ -1,6 +1,7 @@
 package com.vodovoz.app.data
 
 import com.vodovoz.app.common.product.rating.RatingResponse
+import com.vodovoz.app.feature.bottom.services.new.model.AboutServicesNew
 import com.vodovoz.app.feature.home.ratebottom.model.RateBottomModel
 import com.vodovoz.app.feature.map.test.model.MapTestResponse
 import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
@@ -548,6 +549,11 @@ interface MainApi {
     suspend fun fetchServicesResponse(
         @Query("action") action: String? = null,
     ): ResponseBody
+
+    @GET("/newmobile/glavnaya/uslygi/uslygi_new.php")
+    suspend fun fetchServicesNewResponse(
+        @Query("action") action: String? = null,
+    ): AboutServicesNew
 
     @GET("http://szorinvodovoz.tw1.ru/local/components/semap/delivery.calc/order.php")
     suspend fun sendTestMapRequest(
