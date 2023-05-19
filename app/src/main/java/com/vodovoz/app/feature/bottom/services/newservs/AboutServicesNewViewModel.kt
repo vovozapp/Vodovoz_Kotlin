@@ -56,6 +56,30 @@ class AboutServicesNewViewModel @Inject constructor(
         }
     }
 
+    private fun fetchServiceDetailsData(id: String?) {
+        if (id == null) return
+        viewModelScope.launch {
+            flow { emit(repository.fetchServicesNewDetails("details", id)) }
+                .catch {
+                    debugLog { "fetch about services details error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
+                .flowOn(Dispatchers.IO)
+                .onEach {
+                    uiStateListener.value = state.copy(
+                        data = state.data.copy(
+                            item = it
+                        ),
+                        loadingPage = false,
+                        error = null
+                    )
+                }
+                .flowOn(Dispatchers.Default)
+                .collect()
+        }
+    }
+
     sealed class AboutServicesEvents : Event {
 
     }

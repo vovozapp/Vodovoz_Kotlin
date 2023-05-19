@@ -553,6 +553,12 @@ interface MainApi {
         @Query("action") action: String? = null,
     ): AboutServicesNew
 
+    @GET("http://mvodovoz.tw1.ru/newmobile/glavnaya/uslygi/uslygi_new.php")
+    suspend fun fetchServicesNewDetailsResponse(
+        @Query("action") action: String? = null,
+        @Query("id") id: String? = null,
+    ): AboutServicesNew
+
     @GET("http://szorinvodovoz.tw1.ru/local/components/semap/delivery.calc/order.php")
     suspend fun sendTestMapRequest(
         @Query("SOURCE") sourse: String,
