@@ -510,6 +510,9 @@
         <action
             android:id="@+id/action_to_serviceDetailFragment"
             app:destination="@id/serviceDetailFragment" />
+        <action
+            android:id="@+id/action_to_serviceDetailNewFragment"
+            app:destination="@id/serviceDetailNewFragment" />
     </dialog>
     <fragment
         android:id="@+id/mapDialogFragment"
@@ -861,5 +864,14 @@
         android:id="@+id/imagePickerFragment"
         android:name="com.vodovoz.app.common.media.ImagePickerFragment"
         android:label="ImagePickerFragment" />
+
+    <fragment
+        android:id="@+id/serviceDetailNewFragment"
+        android:name="com.vodovoz.app.feature.bottom.services.detail.ServiceDetailNewFragment"
+        android:label="ServiceDetailNewFragment" >
+        <argument
+            android:name="serviceId"
+            app:argType="string" />
+    </fragment>
 
 </navigation>
