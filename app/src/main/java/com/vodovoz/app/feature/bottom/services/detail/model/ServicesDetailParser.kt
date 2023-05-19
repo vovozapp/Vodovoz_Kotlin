@@ -36,7 +36,7 @@ object ServicesDetailParser {
         return when(responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 ServiceDetailEntity(
-                    dataEntity = responseJson.parseServiceDetailData()
+                    dataEntity = responseJson.getJSONObject("data").parseServiceDetailData()
                 )
             )
             else -> ResponseEntity.Error("Неправильный запрос")
@@ -47,7 +47,7 @@ object ServicesDetailParser {
         id = safeString("ID"),
         name = safeString("NAME"),
         description = safeString("DETAIL_TEXT"),
-        preview = parseImagePathMapper(getString("PREVIEW_PICTURE")),
+        preview = parseImagePathMapper(safeString("PREVIEW_PICTURE")),
         blocksList = when(isNull("TOVARY")) {
             true -> listOf()
             false -> getJSONArray("TOVARY").parseServiceDetailBlockList()
@@ -66,7 +66,7 @@ object ServicesDetailParser {
         extProductId = safeString("DOPTOVAR"),
         productEntityList = when(isNull("TOVARY")) {
             true -> listOf()
-            false -> getJSONArray("TOVAR").parseProductEntityList()
+            false -> getJSONArray("TOVARY").parseProductEntityList()
         }
     )
 

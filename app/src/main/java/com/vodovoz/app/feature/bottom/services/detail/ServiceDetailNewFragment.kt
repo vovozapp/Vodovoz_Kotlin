@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.toErrorState
@@ -15,6 +16,7 @@ import com.vodovoz.app.databinding.FragmentServiceDetailsFlowBinding
 import com.vodovoz.app.databinding.FragmentServiceDetailsFlowNewBinding
 import com.vodovoz.app.feature.bottom.services.AboutServicesFlowViewModel
 import com.vodovoz.app.feature.bottom.services.newservs.AboutServicesNewViewModel
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -62,6 +64,12 @@ class ServiceDetailNewFragment : BaseFragment() {
 
                     val description = state.data.detailItem?.description ?: ""
                     val title = state.data.detailItem?.name ?: ""
+
+                    Glide.with(requireContext())
+                        .load(state.data.detailItem?.preview)
+                        .placeholder(R.drawable.placeholderimageproduits)
+                        .error(R.drawable.placeholderimageproduits)
+                        .into(binding.avatar)
 
                     initWebView(description)
 

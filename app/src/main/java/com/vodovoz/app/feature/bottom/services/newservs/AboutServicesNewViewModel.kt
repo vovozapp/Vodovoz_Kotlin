@@ -73,7 +73,7 @@ class AboutServicesNewViewModel @Inject constructor(
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseServiceDetail()
-                    uiStateListener.value =  if (response is ResponseEntity.Success) {
+                    uiStateListener.value = if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         state.copy(
                             data = state.data.copy(
