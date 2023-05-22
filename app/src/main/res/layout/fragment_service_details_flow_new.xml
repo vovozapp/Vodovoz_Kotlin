@@ -10,6 +10,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:paddingBottom="60dp"
         android:layout_height="match_parent">
 
         <ImageView
@@ -47,8 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#F5F5F5"
-            android:paddingBottom="60dp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
