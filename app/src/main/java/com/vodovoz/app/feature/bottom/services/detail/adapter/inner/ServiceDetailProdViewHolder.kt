@@ -50,7 +50,8 @@ class ServiceDetailProdViewHolder(
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
             val item = item ?: return
-            productsClickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
+            val giftId = item.serviceGiftId ?: return
+            productsClickListener.onChangeProductQuantityServiceDetails(item.id, item.cartQuantity, item.oldQuantity, giftId)
             hideAmountController(item)
         }
     }
@@ -130,22 +131,26 @@ class ServiceDetailProdViewHolder(
 
         binding.amountController.add.setOnClickListener {
             val item = item ?: return@setOnClickListener
+            val coef = item.serviceDetailCoef ?: return@setOnClickListener
             if (item.isGift) return@setOnClickListener
             if (item.leftItems == 0) {
                 productsClickListener.onNotifyWhenBeAvailable(item.id, item.name, item.detailPicture)
                 return@setOnClickListener
             }
 
-            item.oldQuantity = item.cartQuantity
-            item.cartQuantity++
-            updateCartQuantity(item)
+            if (item.cartQuantity == 0) {
+                item.oldQuantity = item.cartQuantity
+                item.cartQuantity = item.cartQuantity + coef
+                updateCartQuantity(item)
+            }
             showAmountController()
         }
 
         binding.amountController.reduceAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
+            val coef = item.serviceDetailCoef ?: return@setOnClickListener
             item.oldQuantity = item.cartQuantity
-            item.cartQuantity--
+            item.cartQuantity = item.cartQuantity - coef
             if (item.cartQuantity < 0) item.cartQuantity = 0
             amountControllerTimer.cancel()
             amountControllerTimer.start()
@@ -154,8 +159,9 @@ class ServiceDetailProdViewHolder(
 
         binding.amountController.increaseAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
+            val coef = item.serviceDetailCoef ?: return@setOnClickListener
             item.oldQuantity = item.cartQuantity
-            item.cartQuantity++
+            item.cartQuantity = item.cartQuantity + coef
             amountControllerTimer.cancel()
             amountControllerTimer.start()
             updateCartQuantity(item)

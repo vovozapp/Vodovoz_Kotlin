@@ -79,4 +79,34 @@ class CartManager @Inject constructor(
         cartsStateListener.emit(carts)
     }
 
+    //Service Details Products
+
+    suspend fun addWithGift(id: Long, oldCount: Int, newCount: Int, withUpdate: Boolean = true, repeat: Boolean = false, giftId: String?) {
+        val isInCart = if (repeat) { true } else { oldCount == 0 }
+        val plus = newCount >= oldCount
+
+        updateCarts(id, newCount)
+
+        runCatching {
+            actionWithGift(id = id, count = newCount, isInCart = isInCart, plus)
+            updateCartListState(withUpdate)
+        }.onFailure {
+            tabManager.loadingAddToCart(false, plus = true)
+            updateCarts(id, newCount)
+        }
+    }
+
+    private suspend fun actionWithGift(id: Long, count: Int, isInCart: Boolean, plus: Boolean) {
+        return if (!isInCart) {
+            tabManager.loadingAddToCart(true, plus = plus)
+            repository.changeProductsQuantityInCart(id, count)
+            updateCarts(id, count)
+        } else {
+            tabManager.loadingAddToCart(true, plus = true)
+            repository.addProductToCart(id, count)
+            updateCarts(id, count)
+        }
+    }
+
+
 }

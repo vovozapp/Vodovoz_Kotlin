@@ -150,7 +150,7 @@ class ServiceDetailNewFragment : BaseFragment() {
             }
 
             override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
-                viewModel.changeCart(id, cartQuantity, oldQuantity)
+
             }
 
             override fun onFavoriteClick(id: Long, isFavorite: Boolean) {
@@ -161,6 +161,14 @@ class ServiceDetailNewFragment : BaseFragment() {
                 viewModel.changeRating(id, rating, oldRating)
             }
 
+            override fun onChangeProductQuantityServiceDetails(
+                id: Long,
+                cartQuantity: Int,
+                oldQuantity: Int,
+                giftId: String
+            ) {
+                viewModel.changeCart(id, cartQuantity, oldQuantity, giftId)
+            }
         }
     }
 
