@@ -130,177 +130,65 @@ class HomeFlowViewModel @Inject constructor(
     private fun fetchAdvertisingBannersSlider(position: Int) {
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
-            flow { emit(repository.fetchAdvertisingBannersSlider()) }
+            flow { emit(repository.fetchAdvertisingBannersSlider(position)) }
                 .catch {
                     debugLog { "fetch adv banners error ${it.localizedMessage}" }
                     updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseAdvertisingBannersSliderResponse()
-                    val item = if (response is ResponseEntity.Success) {
-                        PositionItem(
-                            position,
-                            HomeBanners(position, response.data.mapToUI(), bannerRatio = 0.41)
-                        )
-                    } else {
-                        PositionItem(position, null)
-                    }
-                    updateStateByPositionItem(item)
-                }
-                .flowOn(Dispatchers.Default)
-                .collect()
+                .collect { updateStateByPositionItem(it) }
         }
     }
 
     private fun fetchHistoriesSlider(positionTitle: Int, position: Int) {
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
-            flow { emit(repository.fetchHistoriesSlider()) }
+            flow { emit(repository.fetchHistoriesSlider(positionTitle, position)) }
                 .catch {
                     debugLog { "fetch histories error ${it.localizedMessage}" }
                     updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseHistoriesSliderResponse()
-                    val item = if (response is ResponseEntity.Success) {
-                        PositionItemWithTitle(
-                            item = PositionItem(
-                                position,
-                                HomeHistories(position, response.data.mapToUI())
-                            ),
-                            itemTitle = PositionItem(
-                                positionTitle,
-                                HomeTitle(
-                                    id = positionTitle,
-                                    type = HISTORIES_TITLE,
-                                    name = "Истории"
-                                )
-                            )
-                        )
-                    } else {
-                        PositionItemWithTitle(
-                            item = PositionItem(position, null),
-                            itemTitle = PositionItem(positionTitle, null)
-                        )
-                    }
-                    updateStateByPositionItem(item)
-                }
-                .flowOn(Dispatchers.Default)
-                .collect()
+                .collect { updateStateByPositionItem(it) }
         }
     }
 
     private fun fetchPopularSlider(positionTitle: Int, position: Int) {
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
-            flow { emit(repository.fetchPopularSlider()) }
+            flow { emit(repository.fetchPopularSlider(positionTitle, position)) }
                 .catch {
                     debugLog { "fetch populars error ${it.localizedMessage}" }
                     updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parsePopularSliderResponse()
-                    val item = if (response is ResponseEntity.Success) {
-                        PositionItemWithTitle(
-                            item = PositionItem(
-                                position,
-                                HomePopulars(position, response.data.mapToUI())
-                            ),
-                            itemTitle = PositionItem(
-                                positionTitle,
-                                HomeTitle(
-                                    id = positionTitle,
-                                    type = POPULARS_TITLE,
-                                    name = "Популярные разделы"
-                                )
-                            )
-                        )
-                    } else {
-                        PositionItemWithTitle(
-                            item = PositionItem(position, null),
-                            itemTitle = PositionItem(positionTitle, null)
-                        )
-                    }
-                    updateStateByPositionItem(item)
-                }
-                .flowOn(Dispatchers.Default)
-                .collect()
+                .collect { updateStateByPositionItem(it) }
         }
     }
 
     private fun fetchDiscountsSlider(positionTitle: Int, position: Int) {
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
-            flow { emit(repository.fetchDiscountsSlider()) }
+            flow { emit(repository.fetchDiscountsSlider(positionTitle, position)) }
                 .catch {
                     debugLog { "fetch discount slider error ${it.localizedMessage}" }
                     updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseDiscountSliderResponse()
-                    val item = if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        PositionItemWithTitle(
-                            item = PositionItem(
-                                position,
-                                fetchHomeProductsByType(data, DISCOUNT, position)
-                            ),
-                            itemTitle = PositionItem(
-                                positionTitle,
-                                HomeTitle(
-                                    id = positionTitle,
-                                    type = DISCOUNT_TITLE,
-                                    name = "Самое выгодное",
-                                    showAll = true,
-                                    showAllName = "СМ.ВСЕ",
-                                    categoryProductsName = if (data.size == 1) {
-                                        data.first().name
-                                    } else {
-                                        ""
-                                    }
-                                )
-                            )
-                        )
-                    } else {
-                        PositionItemWithTitle(
-                            item = PositionItem(position, null),
-                            itemTitle = PositionItem(positionTitle, null)
-                        )
-                    }
-                    updateStateByPositionItem(item)
-                }
-                .flowOn(Dispatchers.Default)
-                .collect()
+                .collect{ updateStateByPositionItem(it) }
         }
     }
 
     private fun fetchCategoryBannersSlider(position: Int) {
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
-            flow { emit(repository.fetchCategoryBannersSlider()) }
+            flow { emit(repository.fetchCategoryBannersSlider(position)) }
                 .catch {
                     debugLog { "fetch category banners error ${it.localizedMessage}" }
                     updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseCategoryBannersSliderResponse()
-                    val item = if (response is ResponseEntity.Success) {
-                        PositionItem(
-                            position,
-                            HomeBanners(position, response.data.mapToUI(), bannerRatio = 0.5)
-                        )
-                    } else {
-                        PositionItem(position, null)
-                    }
-                    updateStateByPositionItem(item)
-                }
-                .flowOn(Dispatchers.Default)
-                .collect()
+                .collect {updateStateByPositionItem(it)}
         }
     }
 

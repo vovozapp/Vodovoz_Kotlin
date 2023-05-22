@@ -1,100 +1,170 @@
 package com.vodovoz.app.data
 
-import android.net.Uri
-import android.os.Build
 import androidx.core.net.toUri
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.product.rating.RatingResponse
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.config.ShippingAlertConfig
-import com.vodovoz.app.data.model.common.*
-import com.vodovoz.app.data.model.features.*
-import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.parseAllBrandsResponse
-import com.vodovoz.app.data.parser.response.category.AllFiltersByCategoryResponseJsonParser.parseAllFiltersByCategoryResponse
-import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
-import com.vodovoz.app.data.parser.response.comment.SendCommentAboutProductResponseJsonParser.parseSendCommentAboutProductResponse
-import com.vodovoz.app.data.parser.response.contacts.ContactsBundleResponseJsonParser.parseContactsBundleResponse
-import com.vodovoz.app.data.parser.response.contacts.SendMailResponseJsonParser.parseSendMailResponse
-import com.vodovoz.app.data.parser.response.discount_card.ActivateDiscountCardInfoJsonParser.parseActivateDiscountCardInfoResponse
-import com.vodovoz.app.data.parser.response.discount_card.ActivateDiscountCardJsonParser.parseActivateDiscountCardResponse
-import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
-import com.vodovoz.app.data.parser.response.map.AddAddressResponseJsonParser.parseAddAddressResponse
-import com.vodovoz.app.data.parser.response.map.AddressByGeocodeResponseJsonParser.parseAddressByGeocodeResponse
-import com.vodovoz.app.data.parser.response.map.DeleteAddressResponseJsonParser.parseDeleteAddressResponse
-import com.vodovoz.app.data.parser.response.map.DeliveryZonesBundleResponseJsonParser.parseDeliveryZonesBundleResponse
-import com.vodovoz.app.data.parser.response.map.FetchAddressesSavedResponseJsonParser.parseFetchAddressesSavedResponse
-import com.vodovoz.app.data.parser.response.map.UpdateAddressResponseJsonParser.parseUpdateAddressResponse
-import com.vodovoz.app.data.parser.response.order.CancelOrderResponseJsonParser.parseCancelOrderResponse
-import com.vodovoz.app.data.parser.response.order.OrderDetailsResponseJsonParser.parseOrderDetailsResponse
-import com.vodovoz.app.data.parser.response.ordering.RegOrderResponseJsonParser.parseRegOrderResponse
-import com.vodovoz.app.data.parser.response.past_purchases.PastPurchasesHeaderResponseJsonParser.parsePastPurchasesHeaderResponse
-import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
-import com.vodovoz.app.data.parser.response.pre_order.PreOrderFormDataResponseJsonParser.parsePreOrderFormDataResponse
-import com.vodovoz.app.data.parser.response.pre_order.PreOrderProductResponseJsonParser.parsePreOrderProductResponse
-import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonParser.parseAllPromotionsResponse
-import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
-import com.vodovoz.app.data.parser.response.promotion.PromotionsByBannerResponseJsonParser.parsePromotionsByBannerResponse
-import com.vodovoz.app.data.parser.response.service.AboutServicesResponseJsonParser.parseAboutServicesResponse
-import com.vodovoz.app.data.parser.response.shipping.FreeShippingDaysResponseJsonParser.parseFreeShippingDaysResponse
-import com.vodovoz.app.data.parser.response.shipping.ShippingInfoResponseJsonParser.parseShippingInfoResponse
-import com.vodovoz.app.data.parser.response.user.AuthByPhoneJsonParser.parseAuthByPhoneResponse
-import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
-import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
-import com.vodovoz.app.data.parser.response.user.RecoverPasswordJsonParser.parseRecoverPasswordResponse
-import com.vodovoz.app.data.parser.response.user.RegisterResponseJsonParser.parseRegisterResponse
-import com.vodovoz.app.data.parser.response.user.UpdateUserDataResponseJsonParser.parseUpdateUserDataResponse
-import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
+import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.response.banner.AdvertisingBannersSliderResponseJsonParser.parseAdvertisingBannersSliderResponse
+import com.vodovoz.app.data.parser.response.banner.CategoryBannersSliderResponseJsonParser.parseCategoryBannersSliderResponse
+import com.vodovoz.app.data.parser.response.discount.DiscountSliderResponseParser.parseDiscountSliderResponse
+import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonParser.parseHistoriesSliderResponse
+import com.vodovoz.app.data.parser.response.popular.PopularSliderResponseJsonParser.parsePopularSliderResponse
+import com.vodovoz.app.feature.home.HomeFlowViewModel
+import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
+import com.vodovoz.app.feature.home.viewholders.homehistories.HomeHistories
+import com.vodovoz.app.feature.home.viewholders.homepopulars.HomePopulars
+import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.map.api.MapKitFlowApi
-import com.vodovoz.app.feature.map.test.model.MapTestResponse
-import io.reactivex.rxjava3.core.Single
-import kotlinx.coroutines.rx3.rxSingle
+import com.vodovoz.app.mapper.BannerMapper.mapToUI
+import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
+import com.vodovoz.app.mapper.CategoryMapper.mapToUI
+import com.vodovoz.app.mapper.HistoryMapper.mapToUI
+import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
+import com.vodovoz.app.ui.model.CategoryDetailUI
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Query
 import java.io.File
-import java.net.URL
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
     private val api: MainApi,
-    private val mapKitApi: MapKitFlowApi
+    private val mapKitApi: MapKitFlowApi,
 ) {
 
     //Слайдер рекламных баннеров на главной странице
-    suspend fun fetchAdvertisingBannersSlider(): ResponseBody {
-        return api.fetchAdvBanners(action = "slayder")
+    suspend fun fetchAdvertisingBannersSlider(position: Int): HomeFlowViewModel.PositionItem {
+        val response =
+            api.fetchAdvBanners(action = "slayder").parseAdvertisingBannersSliderResponse()
+        return if (response is ResponseEntity.Success) {
+            HomeFlowViewModel.PositionItem(
+                position,
+                HomeBanners(position, response.data.mapToUI(), bannerRatio = 0.41)
+            )
+        } else {
+            HomeFlowViewModel.PositionItem(position, null)
+        }
+
     }
 
     //Слайдер историй на главное странице
-    suspend fun fetchHistoriesSlider(): ResponseBody {
-        return api.fetchHistories(
+    suspend fun fetchHistoriesSlider(
+        positionTitle: Int,
+        position: Int,
+    ): HomeFlowViewModel.PositionItemWithTitle {
+        val response = api.fetchHistories(
             blockId = 12,
             action = "stories",
             platform = "android"
-        )
+        ).parseHistoriesSliderResponse()
+        return if (response is ResponseEntity.Success) {
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(
+                    position,
+                    HomeHistories(position, response.data.mapToUI())
+                ),
+                itemTitle = HomeFlowViewModel.PositionItem(
+                    positionTitle,
+                    HomeTitle(
+                        id = positionTitle,
+                        type = HomeTitle.HISTORIES_TITLE,
+                        name = "Истории"
+                    )
+                )
+            )
+        } else {
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(position, null),
+                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
+            )
+        }
     }
 
     //Слайдер популярных разделов на главной странице
-    suspend fun fetchPopularSlider(): ResponseBody {
-        return api.fetchPopulars(action = "popylrazdel")
+    suspend fun fetchPopularSlider(
+        positionTitle: Int,
+        position: Int,
+    ): HomeFlowViewModel.PositionItemWithTitle {
+        val response = api.fetchPopulars(action = "popylrazdel").parsePopularSliderResponse()
+        return if (response is ResponseEntity.Success) {
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(
+                    position,
+                    HomePopulars(position, response.data.mapToUI())
+                ),
+                itemTitle = HomeFlowViewModel.PositionItem(
+                    positionTitle,
+                    HomeTitle(
+                        id = positionTitle,
+                        type = HomeTitle.POPULARS_TITLE,
+                        name = "Популярные разделы"
+                    )
+                )
+            )
+        } else {
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(position, null),
+                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
+            )
+        }
     }
 
     //Слайдер баннеров категорий на главной странице
-    suspend fun fetchCategoryBannersSlider(): ResponseBody {
-        return api.fetchCategoryBanners(
+    suspend fun fetchCategoryBannersSlider(position: Int): HomeFlowViewModel.PositionItem {
+        val response = api.fetchCategoryBanners(
             action = "slayder",
             androidVersion = BuildConfig.VERSION_NAME
-        )
+        ).parseCategoryBannersSliderResponse()
+        return if (response is ResponseEntity.Success) {
+            HomeFlowViewModel.PositionItem(
+                position,
+                HomeBanners(position, response.data.mapToUI(), bannerRatio = 0.5)
+            )
+        } else {
+            HomeFlowViewModel.PositionItem(position, null)
+        }
     }
 
     //Слайдер самых выгодных продуктов на главной странице
-    suspend fun fetchDiscountsSlider(): ResponseBody {
-        return api.fetchNovelties(action = "specpredlosh")
+    suspend fun fetchDiscountsSlider(
+        positionTitle: Int,
+        position: Int,
+    ): HomeFlowViewModel.PositionItemWithTitle {
+        val response = api.fetchNovelties(action = "specpredlosh").parseDiscountSliderResponse()
+        return if (response is ResponseEntity.Success) {
+            val data = response.data.mapToUI()
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(
+                    position,
+                    fetchHomeProductsByType(data, HomeProducts.DISCOUNT, position)
+                ),
+                itemTitle = HomeFlowViewModel.PositionItem(
+                    positionTitle,
+                    HomeTitle(
+                        id = positionTitle,
+                        type = HomeTitle.DISCOUNT_TITLE,
+                        name = "Самое выгодное",
+                        showAll = true,
+                        showAllName = "СМ.ВСЕ",
+                        categoryProductsName = if (data.size == 1) {
+                            data.first().name
+                        } else {
+                            ""
+                        }
+                    )
+                )
+            )
+        } else {
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(position, null),
+                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
+            )
+        }
     }
 
     //Верхний слайдер на главной странице
@@ -186,7 +256,7 @@ class MainRepository @Inject constructor(
     //Добавить в избранное для авторизованного пользователя
     suspend fun addToFavorite(
         productIdList: List<Long>,
-        userId: Long
+        userId: Long,
     ): ResponseBody {
         return api.fetchChangeFavoriteResponse(
             blockId = 12,
@@ -203,7 +273,7 @@ class MainRepository @Inject constructor(
     //Удалить из избранного для авторизованного пользователя
     suspend fun removeFromFavorite(
         productId: Long,
-        userId: Long
+        userId: Long,
     ): ResponseBody {
         return api.fetchChangeFavoriteResponse(
             blockId = 12,
@@ -216,7 +286,7 @@ class MainRepository @Inject constructor(
     //Основная информация об избранных продуктах
     suspend fun fetchFavoriteProducts(
         userId: Long?,
-        productIdListStr: String?
+        productIdListStr: String?,
     ): ResponseBody {
         return api.fetchFavoriteResponse(
             userId = userId,
@@ -264,7 +334,7 @@ class MainRepository @Inject constructor(
         action: String? = null,
         userId: Long? = null,
         coupon: String? = null,
-        amount: Int? = null
+        amount: Int? = null,
     ): ResponseBody {
         return api.fetchCartResponse(
             action = action,
@@ -299,7 +369,7 @@ class MainRepository @Inject constructor(
     //Продукт
     suspend fun fetchProductResponse(
         blockId: Int = 1,
-        productId: Long
+        productId: Long,
     ): ResponseBody {
         return api.fetchProductResponse(blockId, productId)
     }
@@ -309,21 +379,21 @@ class MainRepository @Inject constructor(
         blockId: Int = 12,
         productId: Long,
         brandId: Long,
-        page: Int
+        page: Int,
     ): ResponseBody {
         return api.fetchProductsByBrandResponse(blockId, productId, brandId, page)
     }
 
     //Продукты могут понравиться
     suspend fun fetchMaybeLikeProductsResponse(
-        page: Int
+        page: Int,
     ): ResponseBody {
         return api.fetchNovelties(action = "details", page = page)
     }
 
     //Главная информация о категории
     suspend fun fetchCategoryHeader(
-        categoryId: Long
+        categoryId: Long,
     ): ResponseBody {
         return api.fetchCategoryResponse(
             blockId = 1,
@@ -340,7 +410,7 @@ class MainRepository @Inject constructor(
         filterValue: String,
         priceFrom: Int,
         priceTo: Int,
-        page: Int?
+        page: Int?,
     ): ResponseBody {
         return api.fetchCategoryResponse(
             blockId = 1,
@@ -377,7 +447,7 @@ class MainRepository @Inject constructor(
         categoryId: Long?,
         sort: String,
         orientation: String,
-        page: Int?
+        page: Int?,
     ): ResponseBody {
         return api.fetchSearchResponse(
             action = "search",
@@ -402,7 +472,7 @@ class MainRepository @Inject constructor(
      */
 
     suspend fun fetchBrandHeader(
-        brandId: Long
+        brandId: Long,
     ): ResponseBody {
         return api.fetchBrandResponse(
             action = "detail",
@@ -416,7 +486,7 @@ class MainRepository @Inject constructor(
         categoryId: Long?,
         sort: String?,
         orientation: String?,
-        page: Int?
+        page: Int?,
     ): ResponseBody {
         return api.fetchBrandResponse(
             action = "detail",
@@ -430,7 +500,7 @@ class MainRepository @Inject constructor(
     }
 
     suspend fun fetchCountryHeader(
-        countryId: Long
+        countryId: Long,
     ): ResponseBody {
         return api.fetchCountryResponse(
             action = "details",
@@ -466,7 +536,7 @@ class MainRepository @Inject constructor(
         categoryId: Long?,
         sort: String?,
         orientation: String?,
-        page: Int?
+        page: Int?,
     ): ResponseBody {
         return api.fetchNoveltiesResponse(
             action = "specpredlosh",
@@ -488,7 +558,7 @@ class MainRepository @Inject constructor(
         categoryId: Long?,
         sort: String?,
         orientation: String?,
-        page: Int?
+        page: Int?,
     ): ResponseBody {
         return api.fetchNoveltiesResponse(
             action = "novinki",
@@ -500,7 +570,7 @@ class MainRepository @Inject constructor(
     }
 
     suspend fun fetchDoubleSliderHeader(
-        categoryId: Long
+        categoryId: Long,
     ): ResponseBody {
         return api.fetchDoubleSlider(
             action = "details",
@@ -513,7 +583,7 @@ class MainRepository @Inject constructor(
         categoryId: Long?,
         page: Int?,
         sort: String?,
-        orientation: String?
+        orientation: String?,
     ): ResponseBody {
         return api.fetchDoubleSlider(
             action = "details",
@@ -548,7 +618,7 @@ class MainRepository @Inject constructor(
 
     //Информация о всех акциях
     suspend fun fetchAllPromotions(
-        filterId: Long
+        filterId: Long,
     ): ResponseBody = api.fetchPromotionResponse(
         action = "akcii",
         filterId = filterId
@@ -563,7 +633,7 @@ class MainRepository @Inject constructor(
 
     //Все бренды
     suspend fun fetchAllBrands(
-        brandIdList: List<Long>
+        brandIdList: List<Long>,
     ): ResponseBody =
         api.fetchBrandResponse(
             action = "brand",
@@ -587,7 +657,7 @@ class MainRepository @Inject constructor(
      */
 
     suspend fun fetchPreOrderFormData(
-        userId: Long?
+        userId: Long?,
     ): ResponseBody = api.fetchPreOrderResponse(
         action = "predzakaz",
         userId = userId
@@ -598,7 +668,7 @@ class MainRepository @Inject constructor(
         productId: Long?,
         name: String?,
         email: String?,
-        phone: String?
+        phone: String?,
     ): ResponseBody = api.fetchPreOrderResponse(
         action = "otpravka",
         userId = userId,
@@ -614,7 +684,7 @@ class MainRepository @Inject constructor(
 
     suspend fun rateProduct(
         productId: Long,
-        ratingValue: Float
+        ratingValue: Float,
     ): RatingResponse {
         return api.rateProduct(
             productId = productId,
@@ -629,7 +699,7 @@ class MainRepository @Inject constructor(
     //Все отзывы о продукте
     suspend fun fetchAllCommentsByProduct(
         productId: Long,
-        page: Int?
+        page: Int?,
     ) = api.fetchCommentsResponse(
         action = "detail",
         productId = productId,
@@ -645,7 +715,7 @@ class MainRepository @Inject constructor(
         productId: Long,
         rating: Int,
         comment: String,
-        userId: Long
+        userId: Long,
     ) = api.fetchCommentsResponse(
         blockId = 12,
         action = "add",
@@ -657,7 +727,7 @@ class MainRepository @Inject constructor(
 
     suspend fun dontCommentProduct(
         productId: Long,
-        userId: Long
+        userId: Long,
     ) = api.dontCommentProduct(
         action = "addblock",
         productId = productId,
@@ -669,7 +739,7 @@ class MainRepository @Inject constructor(
      */
 
     suspend fun fetchPastPurchasesHeader(
-        userId: Long?
+        userId: Long?,
     ) = api.fetchPastPurchasesResponse(
         action = "getLastFifty",
         userId = userId,
@@ -707,7 +777,7 @@ class MainRepository @Inject constructor(
         appVersion: String?,
         orderId: Long?,
         status: String?,
-        page: Int?
+        page: Int?,
     ) = api.fetchOrdersHistoryResponse(
         userId = userId,
         appVersion = appVersion,
@@ -725,7 +795,7 @@ class MainRepository @Inject constructor(
     suspend fun fetchOrderDetailsResponse(
         userId: Long?,
         appVersion: String?,
-        orderId: Long?
+        orderId: Long?,
     ) = api.fetchOrdersResponse(
         action = "detail",
         userId = userId,
@@ -735,7 +805,7 @@ class MainRepository @Inject constructor(
 
     //Отмена заказа
     suspend fun cancelOrder(
-        orderId: Long?
+        orderId: Long?,
     ) = api.cancelOrder(
         orderId = orderId
     )
@@ -745,7 +815,7 @@ class MainRepository @Inject constructor(
      */
     //Все филтры по продуктам для выбранной категории
     suspend fun fetchAllFiltersByCategory(
-        categoryId: Long
+        categoryId: Long,
     ) = api.fetchFilterBundleResponse(categoryId = categoryId)
 
     /**
@@ -760,7 +830,7 @@ class MainRepository @Inject constructor(
     //Адрес по координатам
     suspend fun fetchAddressByGeocodeResponse(
         latitude: Double,
-        longitude: Double
+        longitude: Double,
     ) = mapKitApi.fetchAddressByGeocodeResponse(
         apiKey = "346ef353-b4b2-44b3-b597-210d62eeb66b",
         geocode = "$longitude,$latitude",
@@ -773,7 +843,7 @@ class MainRepository @Inject constructor(
 
     //Информация о пользователе
     suspend fun fetchUserData(
-        userId: Long
+        userId: Long,
     ) = api.fetchProfileResponse(
         action = "details",
         userId = userId
@@ -782,7 +852,7 @@ class MainRepository @Inject constructor(
     //Информация о пользователе
     suspend fun fetchProfileCategories(
         userId: Long,
-        isTablet: Boolean
+        isTablet: Boolean,
     ) = api.fetchProfileCategoriesResponse(
         action = "glav",
         userId = userId,
@@ -792,7 +862,7 @@ class MainRepository @Inject constructor(
 
     suspend fun fetchPersonalProducts(
         userId: Long?,
-        page: Int?
+        page: Int?,
     ) = api.fetchPersonalProducts(
         action = "tovarchik",
         userId = userId,
@@ -806,7 +876,7 @@ class MainRepository @Inject constructor(
     //Авторизация
     suspend fun authByEmail(
         email: String,
-        password: String
+        password: String,
     ) = api.fetchLoginResponse(
         email = email,
         password = password
@@ -815,7 +885,7 @@ class MainRepository @Inject constructor(
     suspend fun authByPhone(
         phone: String?,
         url: String,
-        code: String?
+        code: String?,
     ): ResponseBody {
 
         val uri = ApiConfig.VODOVOZ_URL
@@ -833,7 +903,7 @@ class MainRepository @Inject constructor(
 
     suspend fun requestCode(
         phone: String?,
-        url: String
+        url: String,
     ): ResponseBody {
 
         val uri = ApiConfig.VODOVOZ_URL
@@ -853,7 +923,7 @@ class MainRepository @Inject constructor(
      */
 
     suspend fun recoverPassword(
-        email: String?
+        email: String?,
     ) = api.recoverPassword(
         forgotPassword = "yes",
         email = email
@@ -887,7 +957,7 @@ class MainRepository @Inject constructor(
     suspend fun sendFirebaseToken(
         action: String = "token",
         userId: Long? = null,
-        token: String
+        token: String,
     ) = api.sendFirebaseToken(
         action = action, userId = userId, token = token
     )
@@ -907,18 +977,19 @@ class MainRepository @Inject constructor(
     )
 
     //Детальная информация о предоставляемых услугах
-    suspend fun fetchServicesNewDetails(action: String, id: String) = api.fetchServicesNewDetailsResponse(
-        action = action,
-        id = id
-    )
+    suspend fun fetchServicesNewDetails(action: String, id: String) =
+        api.fetchServicesNewDetailsResponse(
+            action = action,
+            id = id
+        )
 
     suspend fun fetchTestMapResponse(
         address: String,
         latitude: String,
         longitude: String,
         length: String,
-        date: String
-    ) : ResponseBody {
+        date: String,
+    ): ResponseBody {
         return api.sendTestMapRequest(
             sourse = "API",
             address = address,
@@ -946,7 +1017,7 @@ class MainRepository @Inject constructor(
         name: String?,
         phone: String?,
         email: String?,
-        comment: String?
+        comment: String?,
     ) = api.sendMail(
         name = name,
         phone = phone,
@@ -961,7 +1032,7 @@ class MainRepository @Inject constructor(
     //Получить сохраненные адреса
     suspend fun fetchAddressesSaved(
         userId: Long?,
-        type: Int?
+        type: Int?,
     ) = api.fetchAddressResponse(
         blockId = 102,
         action = "get",
@@ -972,7 +1043,7 @@ class MainRepository @Inject constructor(
     //Удалить адресс
     suspend fun deleteAddress(
         addressId: Long?,
-        userId: Long?
+        userId: Long?,
     ) = api.fetchAddressResponse(
         addressId = addressId,
         userid = userId,
@@ -994,7 +1065,7 @@ class MainRepository @Inject constructor(
         lat: String,
         longitude: String,
         length: String,
-        fullAddress: String
+        fullAddress: String,
     ) = api.fetchAddressResponse(
         locality = locality,
         street = street,
@@ -1027,7 +1098,7 @@ class MainRepository @Inject constructor(
         lat: String,
         longitude: String,
         length: String,
-        fullAddress: String
+        fullAddress: String,
     ) = api.fetchAddressResponse(
         locality = locality,
         street = street,
@@ -1053,7 +1124,7 @@ class MainRepository @Inject constructor(
     suspend fun fetchShippingInfo(
         userId: Long?,
         addressId: Long?,
-        date: String?
+        date: String?,
     ) = api.fetchInfoAboutOrderingResponse(
         userId = userId,
         addressId = addressId,
@@ -1088,7 +1159,7 @@ class MainRepository @Inject constructor(
         shippingIntervalId: Long?, //id Интервал доставки
         overMoney: Int?, //?
         parking: Int?, // числовое значение
-    )  = api.fetchRegOrderResponse(
+    ) = api.fetchRegOrderResponse(
         orderType = orderType,
         device = device,
         addressId = addressId,
@@ -1145,7 +1216,7 @@ class MainRepository @Inject constructor(
     }
 
     suspend fun fetchActivateDiscountCardInfo(
-        userId: Long?
+        userId: Long?,
     ) = api.fetchDiscountCardBaseRequest(
         action = "glav",
         userId = userId
@@ -1168,10 +1239,26 @@ class MainRepository @Inject constructor(
     )
 
     suspend fun addProductFromServiceDetails(
-        idWithGift: String
+        idWithGift: String,
     ) = api.addProductFromServiceDetails(
         "addtoqua",
         idWithGift = idWithGift
     )
+
+    private fun fetchHomeProductsByType(
+        data: List<CategoryDetailUI>,
+        type: Int,
+        position: Int,
+    ): HomeProducts {
+        return HomeProducts(
+            position,
+            data,
+            productsType = type,
+            productsSliderConfig = ProductsSliderConfig(
+                containShowAllButton = true
+            ),
+            prodList = data.first().productUIList
+        )
+    }
 
 }
