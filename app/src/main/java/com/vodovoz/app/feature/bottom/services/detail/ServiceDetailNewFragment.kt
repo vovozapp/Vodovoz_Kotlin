@@ -46,7 +46,7 @@ class ServiceDetailNewFragment : BaseFragment() {
     @Inject
     lateinit var likeManager: LikeManager
 
-    private val serviceDetailController by lazy { ServiceDetailController(cartManager, likeManager, getProductsClickListener(), getServiceDetailsClickListener()) }
+    private val serviceDetailController by lazy { ServiceDetailController(cartManager, likeManager, getProductsClickListener()) }
 
     private val binding: FragmentServiceDetailsFlowNewBinding by viewBinding {
         FragmentServiceDetailsFlowNewBinding.bind(
@@ -110,8 +110,6 @@ class ServiceDetailNewFragment : BaseFragment() {
 
                     Glide.with(requireContext())
                         .load(preview)
-                        .placeholder(R.drawable.placeholderimageproduits)
-                        .error(R.drawable.placeholderimageproduits)
                         .into(binding.avatar)
 
                     serviceDetailController.submitList(blockList ?: emptyList())
@@ -177,12 +175,6 @@ class ServiceDetailNewFragment : BaseFragment() {
             override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
                 TODO("Not yet implemented")
             }
-
-        }
-    }
-
-    private fun getServiceDetailsClickListener(): ServiceDetailClickListener {
-        return object : ServiceDetailClickListener {
 
         }
     }

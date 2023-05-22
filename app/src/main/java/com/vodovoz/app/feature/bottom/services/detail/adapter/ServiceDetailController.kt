@@ -11,10 +11,9 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 class ServiceDetailController(
     cartManager: CartManager,
     likeManager: LikeManager,
-    productsClickListener: ProductsClickListener,
-    clickListener: ServiceDetailClickListener
+    productsClickListener: ProductsClickListener
 ) {
-    private val serviceDetailAdapter = ServiceDetailAdapter(cartManager, likeManager, productsClickListener, clickListener)
+    private val serviceDetailAdapter = ServiceDetailAdapter(cartManager, likeManager, productsClickListener)
 
     fun bind(recyclerView: RecyclerView) {
         initList(recyclerView)
