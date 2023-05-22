@@ -132,7 +132,7 @@ class ServiceDetailNewFragment : BaseFragment() {
     private fun getProductsClickListener(): ProductsClickListener {
         return object : ProductsClickListener {
 
-            /*override fun onProductClick(id: Long) {
+            override fun onProductClick(id: Long) {
                 findNavController().navigate(FavoriteFragmentDirections.actionToProductDetailFragment(id))
             }
 
@@ -159,25 +159,6 @@ class ServiceDetailNewFragment : BaseFragment() {
 
             override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
                 viewModel.changeRating(id, rating, oldRating)
-            }*/
-            override fun onProductClick(id: Long) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onFavoriteClick(id: Long, isFavorite: Boolean) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
-                TODO("Not yet implemented")
             }
 
         }

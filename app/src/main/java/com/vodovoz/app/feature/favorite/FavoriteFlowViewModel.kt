@@ -227,7 +227,7 @@ class FavoriteFlowViewModel @Inject constructor(
         return categoryUI
     }
 
-    fun isLoginAlready() = dataRepository.isAlreadyLogin()
+    fun isLoginAlready() = accountManager.isAlreadyLogin()
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
         viewModelScope.launch {

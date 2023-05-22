@@ -115,7 +115,7 @@ class AllCommentsFlowViewModel @Inject constructor(
         }
     }
 
-    fun isLoginAlready() = dataRepository.isAlreadyLogin()
+    fun isLoginAlready() = accountManager.isAlreadyLogin()
 
     sealed class AllCommentsEvents : Event {
         object SendComment: AllCommentsEvents()

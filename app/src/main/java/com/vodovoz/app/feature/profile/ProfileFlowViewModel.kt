@@ -383,7 +383,7 @@ class ProfileFlowViewModel @Inject constructor(
         }
     }
 
-    fun isLoginAlready() = dataRepository.isAlreadyLogin()
+    fun isLoginAlready() = accountManager.isAlreadyLogin()
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
         viewModelScope.launch {

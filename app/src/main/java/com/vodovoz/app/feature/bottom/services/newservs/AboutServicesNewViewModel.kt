@@ -2,7 +2,11 @@ package com.vodovoz.app.feature.bottom.services.newservs
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.account.data.AccountManager
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.*
+import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.feature.bottom.services.detail.model.ServicesDetailParser.mapToUI
@@ -19,6 +23,10 @@ import javax.inject.Inject
 @HiltViewModel
 class AboutServicesNewViewModel @Inject constructor(
     private val repository: MainRepository,
+    private val cartManager: CartManager,
+    private val likeManager: LikeManager,
+    private val ratingProductManager: RatingProductManager,
+    private val accountManager: AccountManager,
     private val savedStateHandle: SavedStateHandle
 ) : PagingContractViewModel<AboutServicesNewViewModel.AboutServicesState, AboutServicesNewViewModel.AboutServicesEvents>(AboutServicesState()) {
 
@@ -91,6 +99,26 @@ class AboutServicesNewViewModel @Inject constructor(
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
+        }
+    }
+
+    fun isLoginAlready() = accountManager.isAlreadyLogin()
+
+    fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
+        viewModelScope.launch {
+            cartManager.add(id = productId, oldCount = oldQuan, newCount = quantity)
+        }
+    }
+
+    fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
+        viewModelScope.launch {
+            likeManager.like(productId, !isFavorite)
+        }
+    }
+
+    fun changeRating(productId: Long, rating: Float, oldRating: Float) {
+        viewModelScope.launch {
+            ratingProductManager.rate(productId, rating = rating, oldRating = oldRating)
         }
     }
 
