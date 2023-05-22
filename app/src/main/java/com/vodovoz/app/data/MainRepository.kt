@@ -8,22 +8,43 @@ import com.vodovoz.app.data.config.ShippingAlertConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.banner.AdvertisingBannersSliderResponseJsonParser.parseAdvertisingBannersSliderResponse
 import com.vodovoz.app.data.parser.response.banner.CategoryBannersSliderResponseJsonParser.parseCategoryBannersSliderResponse
+import com.vodovoz.app.data.parser.response.brand.BrandsSliderResponseJsonParser.parseBrandsSliderResponse
+import com.vodovoz.app.data.parser.response.comment.CommentsSliderResponseJsonParser.parseCommentsSliderResponse
+import com.vodovoz.app.data.parser.response.country.CountrySliderResponseJsonParser.parseCountriesSliderResponse
 import com.vodovoz.app.data.parser.response.discount.DiscountSliderResponseParser.parseDiscountSliderResponse
+import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseBottomSliderResponse
+import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseTopSliderResponse
 import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonParser.parseHistoriesSliderResponse
+import com.vodovoz.app.data.parser.response.novelties.NoveltiesSliderResponseParser.parseNoveltiesSliderResponse
+import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
 import com.vodovoz.app.data.parser.response.popular.PopularSliderResponseJsonParser.parsePopularSliderResponse
+import com.vodovoz.app.data.parser.response.promotion.PromotionSliderResponseJsonParser.parsePromotionSliderResponse
+import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
 import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
+import com.vodovoz.app.feature.home.viewholders.homebrands.HomeBrands
+import com.vodovoz.app.feature.home.viewholders.homecomments.HomeComments
+import com.vodovoz.app.feature.home.viewholders.homecountries.HomeCountries
 import com.vodovoz.app.feature.home.viewholders.homehistories.HomeHistories
+import com.vodovoz.app.feature.home.viewholders.homeorders.HomeOrders
 import com.vodovoz.app.feature.home.viewholders.homepopulars.HomePopulars
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
+import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeProductsTabs
+import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.map.api.MapKitFlowApi
 import com.vodovoz.app.mapper.BannerMapper.mapToUI
+import com.vodovoz.app.mapper.BrandMapper.mapToUI
 import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
+import com.vodovoz.app.mapper.CommentMapper.mapToUI
+import com.vodovoz.app.mapper.CountriesSliderBundleMapper.mapToUI
 import com.vodovoz.app.mapper.HistoryMapper.mapToUI
+import com.vodovoz.app.mapper.OrderMapper.mapToUI
+import com.vodovoz.app.mapper.PromotionMapper.mapToUI
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryDetailUI
+import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -168,58 +189,259 @@ class MainRepository @Inject constructor(
     }
 
     //Верхний слайдер на главной странице
-    suspend fun fetchTopSlider(): ResponseBody {
-        return api.fetchDoubleSlider(
+    suspend fun fetchTopSlider(
+        positionTab: Int,
+        position: Int,
+    ): HomeFlowViewModel.PositionItemWithTabs {
+        val response = api.fetchDoubleSlider(
             action = "topglav",
             arg = "new"
-        )
+        ).parseTopSliderResponse()
+        return if (response is ResponseEntity.Success) {
+            val data = response.data.mapToUI()
+            HomeFlowViewModel.PositionItemWithTabs(
+                item = HomeFlowViewModel.PositionItem(
+                    position,
+                    fetchHomeProductsByType(
+                        response.data.mapToUI(),
+                        HomeProducts.TOP_PROD,
+                        position
+                    )
+                ),
+                itemTabs = HomeFlowViewModel.PositionItem(
+                    positionTab,
+                    HomeProductsTabs(id = positionTab, data.mapIndexed { index, cat ->
+                        if (index == 0) {
+                            cat.copy(isSelected = true, position = positionTab)
+                        } else {
+                            cat.copy(isSelected = false, position = positionTab)
+                        }
+                    })
+                )
+            )
+        } else {
+            HomeFlowViewModel.PositionItemWithTabs(
+                item = HomeFlowViewModel.PositionItem(position, null),
+                itemTabs = HomeFlowViewModel.PositionItem(positionTab, null)
+            )
+        }
     }
 
     //Информация о слайдере заказов на главной странице
+
     suspend fun fetchOrdersSlider(userId: Long): ResponseBody {
         return api.fetchOrderSlider(userId)
     }
 
+    suspend fun fetchOrdersSlider(
+        userId: Long?,
+        positionTitle: Int,
+        position: Int,
+    ): HomeFlowViewModel.PositionItemWithTitle {
+
+        if (userId == null) {
+            return HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(position, null),
+                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
+            )
+        }
+
+        val response = api.fetchOrderSlider(userId).parseOrderSliderResponse()
+        return if (response is ResponseEntity.Success) {
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(
+                    position,
+                    HomeOrders(position, response.data.mapToUI())
+                ),
+                itemTitle = HomeFlowViewModel.PositionItem(
+                    positionTitle,
+                    HomeTitle(
+                        id = positionTitle,
+                        type = HomeTitle.ORDERS_TITLE,
+                        name = "Мои заказы",
+                        showAll = true,
+                        showAllName = "СМ.ВСЕ"
+                    )
+                )
+            )
+        } else {
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(position, null),
+                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
+            )
+        }
+    }
+
     //Слайдер новинок на главной странице
-    suspend fun fetchNoveltiesSlider(): ResponseBody {
-        return api.fetchNovelties(
+    suspend fun fetchNoveltiesSlider(
+        positionTitle: Int,
+        position: Int,
+    ): HomeFlowViewModel.PositionItemWithTitle {
+        val response = api.fetchNovelties(
             action = "novinki"
-        )
+        ).parseNoveltiesSliderResponse()
+        return if (response is ResponseEntity.Success) {
+            val data = response.data.mapToUI()
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(
+                    position,
+                    fetchHomeProductsByType(data, HomeProducts.NOVELTIES, position)
+                ),
+                itemTitle = HomeFlowViewModel.PositionItem(
+                    positionTitle,
+                    HomeTitle(
+                        id = positionTitle,
+                        type = HomeTitle.NOVELTIES_TITLE,
+                        name = "Новинки",
+                        showAll = true,
+                        showAllName = "СМ.ВСЕ",
+                        categoryProductsName = if (data.size == 1) {
+                            data.first().name
+                        } else {
+                            ""
+                        }
+                    )
+                )
+            )
+        } else {
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(position, null),
+                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
+            )
+        }
     }
 
     //Слайдер акций на главной странице
-    suspend fun fetchPromotionsSlider(): ResponseBody {
-        return api.fetchPromotions(
+    suspend fun fetchPromotionsSlider(
+        positionTitle: Int,
+        position: Int,
+    ): HomeFlowViewModel.PositionItemWithTitle {
+        val response = api.fetchPromotions(
             action = "akcii",
             limit = 10,
             platform = "android"
-        )
+        ).parsePromotionSliderResponse()
+        return if (response is ResponseEntity.Success) {
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(
+                    position, HomePromotions(
+                        position, PromotionsSliderBundleUI(
+                            title = "Акции",
+                            containShowAllButton = true,
+                            promotionUIList = response.data.mapToUI()
+                        )
+                    )
+                ),
+                itemTitle = HomeFlowViewModel.PositionItem(
+                    positionTitle,
+                    HomeTitle(
+                        id = positionTitle,
+                        type = HomeTitle.PROMOTIONS_TITLE,
+                        name = "Акции",
+                        showAll = true,
+                        showAllName = "СМ.ВСЕ",
+                        lightBg = false
+                    )
+                )
+            )
+        } else {
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(position, null),
+                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
+            )
+        }
     }
 
     //Нижний слйдер на главнйо странице
-    suspend fun fetchBottomSlider(): ResponseBody {
-        return api.fetchDoubleSlider(
+    suspend fun fetchBottomSlider(
+        positionTab: Int,
+        position: Int,
+    ): HomeFlowViewModel.PositionItemWithTabs {
+        val response = api.fetchDoubleSlider(
             action = "topglav",
             arg = "new"
-        )
+        ).parseBottomSliderResponse()
+        return if (response is ResponseEntity.Success) {
+            val data = response.data.mapToUI()
+            HomeFlowViewModel.PositionItemWithTabs(
+                item = HomeFlowViewModel.PositionItem(
+                    position,
+                    fetchHomeProductsByType(
+                        response.data.mapToUI(),
+                        HomeProducts.BOTTOM_PROD,
+                        position
+                    )
+                ),
+                itemTabs = HomeFlowViewModel.PositionItem(
+                    positionTab,
+                    HomeProductsTabs(id = positionTab, data.mapIndexed { index, cat ->
+                        if (index == 0) {
+                            cat.copy(isSelected = true, position = positionTab)
+                        } else {
+                            cat.copy(isSelected = false, position = positionTab)
+                        }
+                    })
+                )
+            )
+        } else {
+            HomeFlowViewModel.PositionItemWithTabs(
+                item = HomeFlowViewModel.PositionItem(position, null),
+                itemTabs = HomeFlowViewModel.PositionItem(positionTab, null)
+            )
+        }
     }
 
     //Слайдер брендов на главной странице
-    suspend fun fetchBrandsSlider(): ResponseBody {
-        return api.fetchBrands(
+    suspend fun fetchBrandsSlider(
+        positionTitle: Int,
+        position: Int,
+    ): HomeFlowViewModel.PositionItemWithTitle {
+        val response = api.fetchBrands(
             action = "brand",
             limit = 10
-        )
+        ).parseBrandsSliderResponse()
+        return if (response is ResponseEntity.Success) {
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(
+                    position,
+                    HomeBrands(position, response.data.mapToUI())
+                ),
+                itemTitle = HomeFlowViewModel.PositionItem(
+                    positionTitle,
+                    HomeTitle(
+                        id = positionTitle,
+                        type = HomeTitle.BRANDS_TITLE,
+                        name = "Бренды",
+                        showAll = true,
+                        showAllName = "СМ.ВСЕ"
+                    )
+                )
+            )
+        } else {
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(position, null),
+                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
+            )
+        }
     }
 
     //Слайдер стран на главной странице
-    suspend fun fetchCountriesSlider(): ResponseBody {
-        return api.fetchCountries(
+    suspend fun fetchCountriesSlider(position: Int): HomeFlowViewModel.PositionItem {
+        val response = api.fetchCountries(
             action = "glav"
-        )
+        ).parseCountriesSliderResponse()
+        return if (response is ResponseEntity.Success) {
+            HomeFlowViewModel.PositionItem(
+                position,
+                HomeCountries(position, response.data.mapToUI())
+            )
+        } else {
+            HomeFlowViewModel.PositionItem(position, null)
+        }
     }
 
     //Слайдер ранее просмотренных продуктов
+
     suspend fun fetchViewedProductsSlider(userId: Long?): ResponseBody {
         return api.fetchViewedProducts(
             action = "viewed",
@@ -227,12 +449,86 @@ class MainRepository @Inject constructor(
         )
     }
 
+    suspend fun fetchViewedProductsSlider(
+        userId: Long?,
+        positionTitle: Int,
+        position: Int,
+    ): HomeFlowViewModel.PositionItemWithTitle {
+
+        if (userId == null) {
+            return HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(position, null),
+                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
+            )
+        }
+
+        val response = api.fetchViewedProducts(
+            action = "viewed",
+            userId = userId
+        ).parseViewedProductsSliderResponse()
+        return if (response is ResponseEntity.Success) {
+            val data = response.data.mapToUI()
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(
+                    position,
+                    fetchHomeProductsByType(data, HomeProducts.VIEWED, position)
+                ),
+                itemTitle = HomeFlowViewModel.PositionItem(
+                    positionTitle,
+                    HomeTitle(
+                        id = positionTitle,
+                        type = HomeTitle.VIEWED_TITLE,
+                        name = "Вы смотрели",
+                        showAll = false,
+                        showAllName = "СМ.ВСЕ",
+                        categoryProductsName = if (data.size == 1) {
+                            data.first().name
+                        } else {
+                            ""
+                        }
+                    )
+                )
+            )
+        } else {
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(position, null),
+                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
+            )
+        }
+    }
+
     //Слайдер комментариев на главной странице
-    suspend fun fetchCommentsSlider(): ResponseBody {
-        return api.fetchComments(
+    suspend fun fetchCommentsSlider(
+        positionTitle: Int,
+        position: Int,
+    ): HomeFlowViewModel.PositionItemWithTitle {
+        val response = api.fetchComments(
             action = "otzivy",
             limit = 10
-        )
+        ).parseCommentsSliderResponse()
+        return if (response is ResponseEntity.Success) {
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(
+                    position,
+                    HomeComments(position, response.data.mapToUI())
+                ),
+                itemTitle = HomeFlowViewModel.PositionItem(
+                    positionTitle,
+                    HomeTitle(
+                        id = positionTitle,
+                        type = HomeTitle.COMMENTS_TITLE,
+                        name = "Отзывы",
+                        showAll = true,
+                        showAllName = "Написать отзыв"
+                    )
+                )
+            )
+        } else {
+            HomeFlowViewModel.PositionItemWithTitle(
+                item = HomeFlowViewModel.PositionItem(position, null),
+                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
+            )
+        }
     }
 
     //Добавление продукта в корзину

@@ -175,7 +175,7 @@ class HomeFlowViewModel @Inject constructor(
                     updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
-                .collect{ updateStateByPositionItem(it) }
+                .collect { updateStateByPositionItem(it) }
         }
     }
 
@@ -188,7 +188,7 @@ class HomeFlowViewModel @Inject constructor(
                     updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
-                .collect {updateStateByPositionItem(it)}
+                .collect { updateStateByPositionItem(it) }
         }
     }
 
@@ -200,42 +200,13 @@ class HomeFlowViewModel @Inject constructor(
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
         )
         viewModelScope.launch {
-            flow { emit(repository.fetchTopSlider()) }
+            flow { emit(repository.fetchTopSlider(positionTab, position)) }
                 .catch {
                     debugLog { "fetch top slider error ${it.localizedMessage}" }
                     updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseTopSliderResponse()
-                    val item = if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        PositionItemWithTabs(
-                            item = PositionItem(
-                                position,
-                                fetchHomeProductsByType(response.data.mapToUI(), TOP_PROD, position)
-                            ),
-                            itemTabs = PositionItem(
-                                positionTab,
-                                HomeProductsTabs(id = positionTab, data.mapIndexed { index, cat ->
-                                    if (index == 0) {
-                                        cat.copy(isSelected = true, position = positionTab)
-                                    } else {
-                                        cat.copy(isSelected = false, position = positionTab)
-                                    }
-                                })
-                            )
-                        )
-                    } else {
-                        PositionItemWithTabs(
-                            item = PositionItem(position, null),
-                            itemTabs = PositionItem(positionTab, null)
-                        )
-                    }
-                    updateStateByPositionItem(item)
-                }
-                .flowOn(Dispatchers.Default)
-                .collect()
+                .collect { updateStateByPositionItem(it) }
         }
     }
 
@@ -247,51 +218,14 @@ class HomeFlowViewModel @Inject constructor(
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
         )
         viewModelScope.launch {
-            val userId = localDataSource.fetchUserId()
-            if (userId != null) {
-                flow { emit(repository.fetchOrdersSlider(userId)) }
-                    .catch {
-                        debugLog { "fetch orders slider error ${it.localizedMessage}" }
-                        updateStateByThrowableAndPosition(it, position)
-                    }
-                    .flowOn(Dispatchers.IO)
-                    .onEach {
-                        val response = it.parseOrderSliderResponse()
-                        val item = if (response is ResponseEntity.Success) {
-                            PositionItemWithTitle(
-                                item = PositionItem(
-                                    position,
-                                    HomeOrders(position, response.data.mapToUI())
-                                ),
-                                itemTitle = PositionItem(
-                                    positionTitle,
-                                    HomeTitle(
-                                        id = positionTitle,
-                                        type = ORDERS_TITLE,
-                                        name = "Мои заказы",
-                                        showAll = true,
-                                        showAllName = "СМ.ВСЕ"
-                                    )
-                                )
-                            )
-                        } else {
-                            PositionItemWithTitle(
-                                item = PositionItem(position, null),
-                                itemTitle = PositionItem(positionTitle, null)
-                            )
-                        }
-                        updateStateByPositionItem(item)
-                    }
-                    .flowOn(Dispatchers.Default)
-                    .collect()
-            } else {
-                updateStateByPositionItem(
-                    PositionItemWithTitle(
-                        item = PositionItem(position, null),
-                        itemTitle = PositionItem(positionTitle, null)
-                    )
-                )
-            }
+            val userId = accountManager.fetchAccountId()
+            flow { emit(repository.fetchOrdersSlider(userId, positionTitle, position)) }
+                .catch {
+                    debugLog { "fetch orders slider error ${it.localizedMessage}" }
+                    updateStateByThrowableAndPosition(it, position)
+                }
+                .flowOn(Dispatchers.IO)
+                .collect { updateStateByPositionItem(it) }
         }
     }
 
@@ -303,47 +237,13 @@ class HomeFlowViewModel @Inject constructor(
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
         )
         viewModelScope.launch {
-            flow { emit(repository.fetchNoveltiesSlider()) }
+            flow { emit(repository.fetchNoveltiesSlider(positionTitle, position)) }
                 .catch {
                     debugLog { "fetch novelties error ${it.localizedMessage}" }
                     updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseNoveltiesSliderResponse()
-                    val item = if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        PositionItemWithTitle(
-                            item = PositionItem(
-                                position,
-                                fetchHomeProductsByType(data, NOVELTIES, position)
-                            ),
-                            itemTitle = PositionItem(
-                                positionTitle,
-                                HomeTitle(
-                                    id = positionTitle,
-                                    type = NOVELTIES_TITLE,
-                                    name = "Новинки",
-                                    showAll = true,
-                                    showAllName = "СМ.ВСЕ",
-                                    categoryProductsName = if (data.size == 1) {
-                                        data.first().name
-                                    } else {
-                                        ""
-                                    }
-                                )
-                            )
-                        )
-                    } else {
-                        PositionItemWithTitle(
-                            item = PositionItem(position, null),
-                            itemTitle = PositionItem(positionTitle, null)
-                        )
-                    }
-                    updateStateByPositionItem(item)
-                }
-                .flowOn(Dispatchers.Default)
-                .collect()
+                .collect { updateStateByPositionItem(it) }
         }
     }
 
@@ -355,47 +255,13 @@ class HomeFlowViewModel @Inject constructor(
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
         )
         viewModelScope.launch {
-            flow { emit(repository.fetchPromotionsSlider()) }
+            flow { emit(repository.fetchPromotionsSlider(positionTitle, position)) }
                 .catch {
                     debugLog { "fetch promotions slider error ${it.localizedMessage}" }
                     updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parsePromotionSliderResponse()
-                    val item = if (response is ResponseEntity.Success) {
-                        PositionItemWithTitle(
-                            item = PositionItem(
-                                position, HomePromotions(
-                                    position, PromotionsSliderBundleUI(
-                                        title = "Акции",
-                                        containShowAllButton = true,
-                                        promotionUIList = response.data.mapToUI()
-                                    )
-                                )
-                            ),
-                            itemTitle = PositionItem(
-                                positionTitle,
-                                HomeTitle(
-                                    id = positionTitle,
-                                    type = PROMOTIONS_TITLE,
-                                    name = "Акции",
-                                    showAll = true,
-                                    showAllName = "СМ.ВСЕ",
-                                    lightBg = false
-                                )
-                            )
-                        )
-                    } else {
-                        PositionItemWithTitle(
-                            item = PositionItem(position, null),
-                            itemTitle = PositionItem(positionTitle, null)
-                        )
-                    }
-                    updateStateByPositionItem(item)
-                }
-                .flowOn(Dispatchers.Default)
-                .collect()
+                .collect { updateStateByPositionItem(it) }
         }
     }
 
@@ -407,46 +273,13 @@ class HomeFlowViewModel @Inject constructor(
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
         )
         viewModelScope.launch {
-            flow { emit(repository.fetchBottomSlider()) }
+            flow { emit(repository.fetchBottomSlider(positionTab, position)) }
                 .catch {
                     debugLog { "fetch bottom slider error ${it.localizedMessage}" }
                     updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseBottomSliderResponse()
-                    val item = if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        PositionItemWithTabs(
-                            item = PositionItem(
-                                position,
-                                fetchHomeProductsByType(
-                                    response.data.mapToUI(),
-                                    BOTTOM_PROD,
-                                    position
-                                )
-                            ),
-                            itemTabs = PositionItem(
-                                positionTab,
-                                HomeProductsTabs(id = positionTab, data.mapIndexed { index, cat ->
-                                    if (index == 0) {
-                                        cat.copy(isSelected = true, position = positionTab)
-                                    } else {
-                                        cat.copy(isSelected = false, position = positionTab)
-                                    }
-                                })
-                            )
-                        )
-                    } else {
-                        PositionItemWithTabs(
-                            item = PositionItem(position, null),
-                            itemTabs = PositionItem(positionTab, null)
-                        )
-                    }
-                    updateStateByPositionItem(item)
-                }
-                .flowOn(Dispatchers.Default)
-                .collect()
+                .collect { updateStateByPositionItem(it) }
         }
     }
 
@@ -458,41 +291,13 @@ class HomeFlowViewModel @Inject constructor(
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
         )
         viewModelScope.launch {
-            flow { emit(repository.fetchBrandsSlider()) }
+            flow { emit(repository.fetchBrandsSlider(positionTitle, position)) }
                 .catch {
                     debugLog { "fetch brands slider error ${it.localizedMessage}" }
                     updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseBrandsSliderResponse()
-                    val item = if (response is ResponseEntity.Success) {
-                        PositionItemWithTitle(
-                            item = PositionItem(
-                                position,
-                                HomeBrands(position, response.data.mapToUI())
-                            ),
-                            itemTitle = PositionItem(
-                                positionTitle,
-                                HomeTitle(
-                                    id = positionTitle,
-                                    type = BRANDS_TITLE,
-                                    name = "Бренды",
-                                    showAll = true,
-                                    showAllName = "СМ.ВСЕ"
-                                )
-                            )
-                        )
-                    } else {
-                        PositionItemWithTitle(
-                            item = PositionItem(position, null),
-                            itemTitle = PositionItem(positionTitle, null)
-                        )
-                    }
-                    updateStateByPositionItem(item)
-                }
-                .flowOn(Dispatchers.Default)
-                .collect()
+                .collect { updateStateByPositionItem(it) }
         }
     }
 
@@ -504,23 +309,13 @@ class HomeFlowViewModel @Inject constructor(
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
         )
         viewModelScope.launch {
-            flow { emit(repository.fetchCountriesSlider()) }
+            flow { emit(repository.fetchCountriesSlider(position)) }
                 .catch {
                     debugLog { "fetch countries slider error ${it.localizedMessage}" }
                     updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseCountriesSliderResponse()
-                    val item = if (response is ResponseEntity.Success) {
-                        PositionItem(position, HomeCountries(position, response.data.mapToUI()))
-                    } else {
-                        PositionItem(position, null)
-                    }
-                    updateStateByPositionItem(item)
-                }
-                .flowOn(Dispatchers.Default)
-                .collect()
+                .collect { updateStateByPositionItem(it) }
         }
     }
 
@@ -532,57 +327,14 @@ class HomeFlowViewModel @Inject constructor(
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
         )
         viewModelScope.launch {
-            val userId = localDataSource.fetchUserId()
-            if (userId != null) {
-                flow { emit(repository.fetchViewedProductsSlider(userId)) }
-                    .catch {
-                        debugLog { "fetch viewed products slider error ${it.localizedMessage}" }
-                        updateStateByThrowableAndPosition(it, position)
-                    }
-                    .flowOn(Dispatchers.IO)
-                    .onEach {
-                        val response = it.parseViewedProductsSliderResponse()
-                        val item = if (response is ResponseEntity.Success) {
-                            val data = response.data.mapToUI()
-                            PositionItemWithTitle(
-                                item = PositionItem(
-                                    position,
-                                    fetchHomeProductsByType(data, VIEWED, position)
-                                ),
-                                itemTitle = PositionItem(
-                                    positionTitle,
-                                    HomeTitle(
-                                        id = positionTitle,
-                                        type = VIEWED_TITLE,
-                                        name = "Вы смотрели",
-                                        showAll = false,
-                                        showAllName = "СМ.ВСЕ",
-                                        categoryProductsName = if (data.size == 1) {
-                                            data.first().name
-                                        } else {
-                                            ""
-                                        }
-                                    )
-                                )
-                            )
-                        } else {
-                            PositionItemWithTitle(
-                                item = PositionItem(position, null),
-                                itemTitle = PositionItem(positionTitle, null)
-                            )
-                        }
-                        updateStateByPositionItem(item)
-                    }
-                    .flowOn(Dispatchers.Default)
-                    .collect()
-            } else {
-                updateStateByPositionItem(
-                    PositionItemWithTitle(
-                        item = PositionItem(position, null),
-                        itemTitle = PositionItem(positionTitle, null)
-                    )
-                )
-            }
+            val userId = accountManager.fetchAccountId()
+            flow { emit(repository.fetchViewedProductsSlider(userId, positionTitle, position)) }
+                .catch {
+                    debugLog { "fetch viewed products slider error ${it.localizedMessage}" }
+                    updateStateByThrowableAndPosition(it, position)
+                }
+                .flowOn(Dispatchers.IO)
+                .collect {updateStateByPositionItem(it)}
         }
     }
 
@@ -594,41 +346,13 @@ class HomeFlowViewModel @Inject constructor(
             data = state.data.copy(itemsInt = state.data.itemsInt + position)
         )
         viewModelScope.launch {
-            flow { emit(repository.fetchCommentsSlider()) }
+            flow { emit(repository.fetchCommentsSlider(positionTitle, position)) }
                 .catch {
                     debugLog { "fetch comments slider error ${it.localizedMessage}" }
                     updateStateByThrowableAndPosition(it, position)
                 }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseCommentsSliderResponse()
-                    val item = if (response is ResponseEntity.Success) {
-                        PositionItemWithTitle(
-                            item = PositionItem(
-                                position,
-                                HomeComments(position, response.data.mapToUI())
-                            ),
-                            itemTitle = PositionItem(
-                                positionTitle,
-                                HomeTitle(
-                                    id = positionTitle,
-                                    type = COMMENTS_TITLE,
-                                    name = "Отзывы",
-                                    showAll = true,
-                                    showAllName = "Написать отзыв"
-                                )
-                            )
-                        )
-                    } else {
-                        PositionItemWithTitle(
-                            item = PositionItem(position, null),
-                            itemTitle = PositionItem(positionTitle, null)
-                        )
-                    }
-                    updateStateByPositionItem(item)
-                }
-                .flowOn(Dispatchers.Default)
-                .collect()
+                .collect {updateStateByPositionItem(it)}
         }
     }
 
@@ -713,7 +437,11 @@ class HomeFlowViewModel @Inject constructor(
         )
     }
 
-    private fun updateStateByTabAndProductPositions(positionTab:Int, position: Int, categoryId: Long) {
+    private fun updateStateByTabAndProductPositions(
+        positionTab: Int,
+        position: Int,
+        categoryId: Long,
+    ) {
         uiStateListener.value = state.copy(
             data = state.data.copy(
                 items = state.data.items.map {
@@ -730,7 +458,7 @@ class HomeFlowViewModel @Inject constructor(
                         positionTab -> {
                             it.copy(
                                 item = (it.item as HomeProductsTabs).copy(
-                                    tabsNames = it.item.tabsNames.map{cat ->
+                                    tabsNames = it.item.tabsNames.map { cat ->
                                         if (cat.id == categoryId) {
                                             cat.copy(isSelected = true)
                                         } else {
@@ -751,9 +479,17 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     fun updateProductsSliderByCategory(position: Int, categoryId: Long) {
-        when(position) {
-            POSITION_9_TAB -> updateStateByTabAndProductPositions(POSITION_9_TAB, POSITION_10, categoryId)
-            POSITION_18_TAB -> updateStateByTabAndProductPositions(POSITION_18_TAB, POSITION_19, categoryId)
+        when (position) {
+            POSITION_9_TAB -> updateStateByTabAndProductPositions(
+                POSITION_9_TAB,
+                POSITION_10,
+                categoryId
+            )
+            POSITION_18_TAB -> updateStateByTabAndProductPositions(
+                POSITION_18_TAB,
+                POSITION_19,
+                categoryId
+            )
         }
     }
 
