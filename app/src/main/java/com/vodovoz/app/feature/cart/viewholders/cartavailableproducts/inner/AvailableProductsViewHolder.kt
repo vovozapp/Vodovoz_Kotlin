@@ -112,7 +112,7 @@ class AvailableProductsViewHolder(
         binding.vpPictures.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.vpPictures.adapter = detailPictureFlowPagerAdapter
 
-        TabLayoutMediator(binding.tlIndicators, binding.vpPictures) { _, _ -> }.attach()
+        binding.tlIndicators.attachTo(binding.vpPictures)
 
         binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 

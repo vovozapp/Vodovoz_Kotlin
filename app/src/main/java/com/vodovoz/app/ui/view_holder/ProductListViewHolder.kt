@@ -55,7 +55,7 @@ class ProductListViewHolder(
         binding.vpPictures.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.vpPictures.adapter = detailPicturePagerAdapter
 
-        TabLayoutMediator(binding.tlIndicators, binding.vpPictures) { _, _ -> }.attach()
+  //      TabLayoutMediator(binding.tlIndicators, binding.vpPictures) { _, _ -> }.attach()
 
         binding.amountController.add.setOnClickListener {
             if (productUI.isGift) return@setOnClickListener
