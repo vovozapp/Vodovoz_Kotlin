@@ -133,19 +133,19 @@ class ServiceDetailNewFragment : BaseFragment() {
         return object : ProductsClickListener {
 
             override fun onProductClick(id: Long) {
-                findNavController().navigate(FavoriteFragmentDirections.actionToProductDetailFragment(id))
+                findNavController().navigate(ServiceDetailNewFragmentDirections.actionToProductDetailFragment(id))
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
                 when (viewModel.isLoginAlready()) {
                     true -> findNavController().navigate(
-                        FavoriteFragmentDirections.actionToPreOrderBS(
+                        ServiceDetailNewFragmentDirections.actionToPreOrderBS(
                             id,
                             name,
                             detailPicture
                         )
                     )
-                    false -> findNavController().navigate(FavoriteFragmentDirections.actionToProfileFragment())
+                    false -> findNavController().navigate(ServiceDetailNewFragmentDirections.actionToProfileFragment())
                 }
             }
 

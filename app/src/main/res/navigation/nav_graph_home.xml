@@ -882,6 +882,15 @@
         <argument
             android:name="serviceId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_to_preOrderBS"
+            app:destination="@id/preOrderBS" />
+        <action
+            android:id="@+id/action_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
 
 </navigation>
