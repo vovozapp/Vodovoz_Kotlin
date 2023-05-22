@@ -17,6 +17,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.FragmentServiceDetailsFlowBinding
 import com.vodovoz.app.databinding.FragmentServiceDetailsFlowNewBinding
 import com.vodovoz.app.feature.bottom.services.AboutServicesFlowViewModel
@@ -46,7 +47,10 @@ class ServiceDetailNewFragment : BaseFragment() {
     @Inject
     lateinit var likeManager: LikeManager
 
-    private val serviceDetailController by lazy { ServiceDetailController(cartManager, likeManager, getProductsClickListener()) }
+    @Inject
+    lateinit var ratingProductManager: RatingProductManager
+
+    private val serviceDetailController by lazy { ServiceDetailController(cartManager, likeManager, ratingProductManager, getProductsClickListener()) }
 
     private val binding: FragmentServiceDetailsFlowNewBinding by viewBinding {
         FragmentServiceDetailsFlowNewBinding.bind(

@@ -5,15 +5,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 
 class ServiceDetailController(
     cartManager: CartManager,
     likeManager: LikeManager,
+    ratingProductManager: RatingProductManager,
     productsClickListener: ProductsClickListener
 ) {
-    private val serviceDetailAdapter = ServiceDetailAdapter(cartManager, likeManager, productsClickListener)
+    private val serviceDetailAdapter = ServiceDetailAdapter(cartManager, likeManager, ratingProductManager, productsClickListener)
 
     fun bind(recyclerView: RecyclerView) {
         initList(recyclerView)

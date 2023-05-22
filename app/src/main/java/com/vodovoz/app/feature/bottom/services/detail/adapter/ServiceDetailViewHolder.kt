@@ -8,6 +8,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.ItemServiceDetailBinding
 import com.vodovoz.app.feature.bottom.services.detail.model.ServiceDetailBlockUI
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
@@ -16,12 +17,13 @@ class ServiceDetailViewHolder(
     view: View,
     cartManager: CartManager,
     likeManager: LikeManager,
+    ratingProductManager: RatingProductManager,
     productsClickListener: ProductsClickListener
 ) : ItemViewHolder<ServiceDetailBlockUI>(view) {
 
     private val binding: ItemServiceDetailBinding = ItemServiceDetailBinding.bind(view)
 
-    private val serviceDetailProductsAdapter = ServiceDetailAdapter(cartManager, likeManager, productsClickListener)
+    private val serviceDetailProductsAdapter = ServiceDetailAdapter(cartManager, likeManager, ratingProductManager, productsClickListener)
 
     private val space = itemView.context.resources.getDimension(R.dimen.space_16).toInt()
 
