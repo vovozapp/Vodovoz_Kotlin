@@ -14,13 +14,6 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         />
 
-    <View
-        android:id="@+id/progressBg"
-        android:background="@color/white"
-        android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="match_parent"/>
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbarLayout"
         android:layout_width="match_parent"
@@ -79,6 +72,13 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/fragment_base_error_flow" android:id="@+id/error"/>
+
+    <View
+        android:id="@+id/progressBg"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="match_parent"/>
 
     <ProgressBar
         app:layout_constraintStart_toStartOf="parent"

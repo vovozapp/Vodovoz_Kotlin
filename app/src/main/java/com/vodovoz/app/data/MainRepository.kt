@@ -45,6 +45,8 @@ import com.vodovoz.app.mapper.PromotionMapper.mapToUI
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -59,50 +61,52 @@ class MainRepository @Inject constructor(
 ) {
 
     //Слайдер рекламных баннеров на главной странице
-    suspend fun fetchAdvertisingBannersSlider(position: Int): HomeFlowViewModel.PositionItem {
-        val response =
-            api.fetchAdvBanners(action = "slayder").parseAdvertisingBannersSliderResponse()
-        return if (response is ResponseEntity.Success) {
-            HomeFlowViewModel.PositionItem(
-                position,
-                HomeBanners(position, response.data.mapToUI(), bannerRatio = 0.41)
-            )
-        } else {
-            HomeFlowViewModel.PositionItem(position, null)
+    suspend fun fetchAdvertisingBannersSlider(position: Int): List<HomeFlowViewModel.PositionItem> {
+        return coroutineScope {
+            val response =
+                api.fetchAdvBanners(action = "slayder").parseAdvertisingBannersSliderResponse()
+            if (response is ResponseEntity.Success) {
+                listOf(
+                    HomeFlowViewModel.PositionItem(
+                        position,
+                        HomeBanners(position, response.data.mapToUI(), bannerRatio = 0.41)
+                    )
+                )
+            } else {
+                emptyList()
+            }
         }
-
     }
 
     //Слайдер историй на главное странице
     suspend fun fetchHistoriesSlider(
         positionTitle: Int,
         position: Int,
-    ): HomeFlowViewModel.PositionItemWithTitle {
-        val response = api.fetchHistories(
-            blockId = 12,
-            action = "stories",
-            platform = "android"
-        ).parseHistoriesSliderResponse()
-        return if (response is ResponseEntity.Success) {
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(
-                    position,
-                    HomeHistories(position, response.data.mapToUI())
-                ),
-                itemTitle = HomeFlowViewModel.PositionItem(
-                    positionTitle,
-                    HomeTitle(
-                        id = positionTitle,
-                        type = HomeTitle.HISTORIES_TITLE,
-                        name = "Истории"
+    ): List<HomeFlowViewModel.PositionItem> {
+        return coroutineScope {
+            val response = api.fetchHistories(
+                blockId = 12,
+                action = "stories",
+                platform = "android"
+            ).parseHistoriesSliderResponse()
+            if (response is ResponseEntity.Success) {
+                listOf(
+                    HomeFlowViewModel.PositionItem(
+                        position,
+                        HomeHistories(position, response.data.mapToUI())
+                    ),
+                    HomeFlowViewModel.PositionItem(
+                        positionTitle,
+                        HomeTitle(
+                            id = positionTitle,
+                            type = HomeTitle.HISTORIES_TITLE,
+                            name = "Истории"
+                        )
                     )
                 )
-            )
-        } else {
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(position, null),
-                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
-            )
+            } else {
+                emptyList()
+            }
         }
     }
 
@@ -110,44 +114,47 @@ class MainRepository @Inject constructor(
     suspend fun fetchPopularSlider(
         positionTitle: Int,
         position: Int,
-    ): HomeFlowViewModel.PositionItemWithTitle {
-        val response = api.fetchPopulars(action = "popylrazdel").parsePopularSliderResponse()
-        return if (response is ResponseEntity.Success) {
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(
-                    position,
-                    HomePopulars(position, response.data.mapToUI())
-                ),
-                itemTitle = HomeFlowViewModel.PositionItem(
-                    positionTitle,
-                    HomeTitle(
-                        id = positionTitle,
-                        type = HomeTitle.POPULARS_TITLE,
-                        name = "Популярные разделы"
+    ): List<HomeFlowViewModel.PositionItem> {
+        return coroutineScope {
+            val response = api.fetchPopulars(action = "popylrazdel").parsePopularSliderResponse()
+            if (response is ResponseEntity.Success) {
+                listOf(
+                    HomeFlowViewModel.PositionItem(
+                        position,
+                        HomePopulars(position, response.data.mapToUI())
+                    ),
+                    HomeFlowViewModel.PositionItem(
+                        positionTitle,
+                        HomeTitle(
+                            id = positionTitle,
+                            type = HomeTitle.POPULARS_TITLE,
+                            name = "Популярные разделы"
+                        )
                     )
                 )
-            )
-        } else {
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(position, null),
-                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
-            )
+            } else {
+                emptyList()
+            }
         }
     }
 
     //Слайдер баннеров категорий на главной странице
-    suspend fun fetchCategoryBannersSlider(position: Int): HomeFlowViewModel.PositionItem {
-        val response = api.fetchCategoryBanners(
-            action = "slayder",
-            androidVersion = BuildConfig.VERSION_NAME
-        ).parseCategoryBannersSliderResponse()
-        return if (response is ResponseEntity.Success) {
-            HomeFlowViewModel.PositionItem(
-                position,
-                HomeBanners(position, response.data.mapToUI(), bannerRatio = 0.5)
-            )
-        } else {
-            HomeFlowViewModel.PositionItem(position, null)
+    suspend fun fetchCategoryBannersSlider(position: Int): List<HomeFlowViewModel.PositionItem> {
+        return coroutineScope {
+            val response = api.fetchCategoryBanners(
+                action = "slayder",
+                androidVersion = BuildConfig.VERSION_NAME
+            ).parseCategoryBannersSliderResponse()
+            if (response is ResponseEntity.Success) {
+                listOf(
+                    HomeFlowViewModel.PositionItem(
+                        position,
+                        HomeBanners(position, response.data.mapToUI(), bannerRatio = 0.5)
+                    )
+                )
+            } else {
+                emptyList()
+            }
         }
     }
 
@@ -155,36 +162,35 @@ class MainRepository @Inject constructor(
     suspend fun fetchDiscountsSlider(
         positionTitle: Int,
         position: Int,
-    ): HomeFlowViewModel.PositionItemWithTitle {
-        val response = api.fetchNovelties(action = "specpredlosh").parseDiscountSliderResponse()
-        return if (response is ResponseEntity.Success) {
-            val data = response.data.mapToUI()
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(
-                    position,
-                    fetchHomeProductsByType(data, HomeProducts.DISCOUNT, position)
-                ),
-                itemTitle = HomeFlowViewModel.PositionItem(
-                    positionTitle,
-                    HomeTitle(
-                        id = positionTitle,
-                        type = HomeTitle.DISCOUNT_TITLE,
-                        name = "Самое выгодное",
-                        showAll = true,
-                        showAllName = "СМ.ВСЕ",
-                        categoryProductsName = if (data.size == 1) {
-                            data.first().name
-                        } else {
-                            ""
-                        }
+    ): List<HomeFlowViewModel.PositionItem> {
+        return coroutineScope {
+            val response = api.fetchNovelties(action = "specpredlosh").parseDiscountSliderResponse()
+            if (response is ResponseEntity.Success) {
+                val data = response.data.mapToUI()
+                listOf(
+                    HomeFlowViewModel.PositionItem(
+                        position,
+                        fetchHomeProductsByType(data, HomeProducts.DISCOUNT, position)
+                    ),
+                    HomeFlowViewModel.PositionItem(
+                        positionTitle,
+                        HomeTitle(
+                            id = positionTitle,
+                            type = HomeTitle.DISCOUNT_TITLE,
+                            name = "Самое выгодное",
+                            showAll = true,
+                            showAllName = "СМ.ВСЕ",
+                            categoryProductsName = if (data.size == 1) {
+                                data.first().name
+                            } else {
+                                ""
+                            }
+                        )
                     )
                 )
-            )
-        } else {
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(position, null),
-                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
-            )
+            } else {
+                emptyList()
+            }
         }
     }
 
@@ -192,38 +198,37 @@ class MainRepository @Inject constructor(
     suspend fun fetchTopSlider(
         positionTab: Int,
         position: Int,
-    ): HomeFlowViewModel.PositionItemWithTabs {
-        val response = api.fetchDoubleSlider(
-            action = "topglav",
-            arg = "new"
-        ).parseTopSliderResponse()
-        return if (response is ResponseEntity.Success) {
-            val data = response.data.mapToUI()
-            HomeFlowViewModel.PositionItemWithTabs(
-                item = HomeFlowViewModel.PositionItem(
-                    position,
-                    fetchHomeProductsByType(
-                        response.data.mapToUI(),
-                        HomeProducts.TOP_PROD,
-                        position
+    ): List<HomeFlowViewModel.PositionItem> {
+        return coroutineScope {
+            val response = api.fetchDoubleSlider(
+                action = "topglav",
+                arg = "new"
+            ).parseTopSliderResponse()
+            if (response is ResponseEntity.Success) {
+                val data = response.data.mapToUI()
+                listOf(
+                    HomeFlowViewModel.PositionItem(
+                        position,
+                        fetchHomeProductsByType(
+                            response.data.mapToUI(),
+                            HomeProducts.TOP_PROD,
+                            position
+                        )
+                    ),
+                    HomeFlowViewModel.PositionItem(
+                        positionTab,
+                        HomeProductsTabs(id = positionTab, data.mapIndexed { index, cat ->
+                            if (index == 0) {
+                                cat.copy(isSelected = true, position = positionTab)
+                            } else {
+                                cat.copy(isSelected = false, position = positionTab)
+                            }
+                        })
                     )
-                ),
-                itemTabs = HomeFlowViewModel.PositionItem(
-                    positionTab,
-                    HomeProductsTabs(id = positionTab, data.mapIndexed { index, cat ->
-                        if (index == 0) {
-                            cat.copy(isSelected = true, position = positionTab)
-                        } else {
-                            cat.copy(isSelected = false, position = positionTab)
-                        }
-                    })
                 )
-            )
-        } else {
-            HomeFlowViewModel.PositionItemWithTabs(
-                item = HomeFlowViewModel.PositionItem(position, null),
-                itemTabs = HomeFlowViewModel.PositionItem(positionTab, null)
-            )
+            } else {
+                emptyList()
+            }
         }
     }
 
@@ -237,38 +242,33 @@ class MainRepository @Inject constructor(
         userId: Long?,
         positionTitle: Int,
         position: Int,
-    ): HomeFlowViewModel.PositionItemWithTitle {
+    ): List<HomeFlowViewModel.PositionItem> {
+        return coroutineScope {
+            if (userId == null) {
+                return@coroutineScope emptyList()
+            }
 
-        if (userId == null) {
-            return HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(position, null),
-                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
-            )
-        }
-
-        val response = api.fetchOrderSlider(userId).parseOrderSliderResponse()
-        return if (response is ResponseEntity.Success) {
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(
-                    position,
-                    HomeOrders(position, response.data.mapToUI())
-                ),
-                itemTitle = HomeFlowViewModel.PositionItem(
-                    positionTitle,
-                    HomeTitle(
-                        id = positionTitle,
-                        type = HomeTitle.ORDERS_TITLE,
-                        name = "Мои заказы",
-                        showAll = true,
-                        showAllName = "СМ.ВСЕ"
+            val response = api.fetchOrderSlider(userId).parseOrderSliderResponse()
+            if (response is ResponseEntity.Success) {
+                listOf(
+                    HomeFlowViewModel.PositionItem(
+                        position,
+                        HomeOrders(position, response.data.mapToUI())
+                    ),
+                    HomeFlowViewModel.PositionItem(
+                        positionTitle,
+                        HomeTitle(
+                            id = positionTitle,
+                            type = HomeTitle.ORDERS_TITLE,
+                            name = "Мои заказы",
+                            showAll = true,
+                            showAllName = "СМ.ВСЕ"
+                        )
                     )
                 )
-            )
-        } else {
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(position, null),
-                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
-            )
+            } else {
+                emptyList()
+            }
         }
     }
 
@@ -276,38 +276,37 @@ class MainRepository @Inject constructor(
     suspend fun fetchNoveltiesSlider(
         positionTitle: Int,
         position: Int,
-    ): HomeFlowViewModel.PositionItemWithTitle {
-        val response = api.fetchNovelties(
-            action = "novinki"
-        ).parseNoveltiesSliderResponse()
-        return if (response is ResponseEntity.Success) {
-            val data = response.data.mapToUI()
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(
-                    position,
-                    fetchHomeProductsByType(data, HomeProducts.NOVELTIES, position)
-                ),
-                itemTitle = HomeFlowViewModel.PositionItem(
-                    positionTitle,
-                    HomeTitle(
-                        id = positionTitle,
-                        type = HomeTitle.NOVELTIES_TITLE,
-                        name = "Новинки",
-                        showAll = true,
-                        showAllName = "СМ.ВСЕ",
-                        categoryProductsName = if (data.size == 1) {
-                            data.first().name
-                        } else {
-                            ""
-                        }
+    ): List<HomeFlowViewModel.PositionItem> {
+        return coroutineScope {
+            val response = api.fetchNovelties(
+                action = "novinki"
+            ).parseNoveltiesSliderResponse()
+            if (response is ResponseEntity.Success) {
+                val data = response.data.mapToUI()
+                listOf(
+                    HomeFlowViewModel.PositionItem(
+                        position,
+                        fetchHomeProductsByType(data, HomeProducts.NOVELTIES, position)
+                    ),
+                    HomeFlowViewModel.PositionItem(
+                        positionTitle,
+                        HomeTitle(
+                            id = positionTitle,
+                            type = HomeTitle.NOVELTIES_TITLE,
+                            name = "Новинки",
+                            showAll = true,
+                            showAllName = "СМ.ВСЕ",
+                            categoryProductsName = if (data.size == 1) {
+                                data.first().name
+                            } else {
+                                ""
+                            }
+                        )
                     )
                 )
-            )
-        } else {
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(position, null),
-                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
-            )
+            } else {
+                emptyList()
+            }
         }
     }
 
@@ -315,40 +314,39 @@ class MainRepository @Inject constructor(
     suspend fun fetchPromotionsSlider(
         positionTitle: Int,
         position: Int,
-    ): HomeFlowViewModel.PositionItemWithTitle {
-        val response = api.fetchPromotions(
-            action = "akcii",
-            limit = 10,
-            platform = "android"
-        ).parsePromotionSliderResponse()
-        return if (response is ResponseEntity.Success) {
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(
-                    position, HomePromotions(
-                        position, PromotionsSliderBundleUI(
-                            title = "Акции",
-                            containShowAllButton = true,
-                            promotionUIList = response.data.mapToUI()
+    ): List<HomeFlowViewModel.PositionItem> {
+        return coroutineScope {
+            val response = api.fetchPromotions(
+                action = "akcii",
+                limit = 10,
+                platform = "android"
+            ).parsePromotionSliderResponse()
+            if (response is ResponseEntity.Success) {
+                listOf(
+                    HomeFlowViewModel.PositionItem(
+                        position, HomePromotions(
+                            position, PromotionsSliderBundleUI(
+                                title = "Акции",
+                                containShowAllButton = true,
+                                promotionUIList = response.data.mapToUI()
+                            )
+                        )
+                    ),
+                    HomeFlowViewModel.PositionItem(
+                        positionTitle,
+                        HomeTitle(
+                            id = positionTitle,
+                            type = HomeTitle.PROMOTIONS_TITLE,
+                            name = "Акции",
+                            showAll = true,
+                            showAllName = "СМ.ВСЕ",
+                            lightBg = false
                         )
                     )
-                ),
-                itemTitle = HomeFlowViewModel.PositionItem(
-                    positionTitle,
-                    HomeTitle(
-                        id = positionTitle,
-                        type = HomeTitle.PROMOTIONS_TITLE,
-                        name = "Акции",
-                        showAll = true,
-                        showAllName = "СМ.ВСЕ",
-                        lightBg = false
-                    )
                 )
-            )
-        } else {
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(position, null),
-                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
-            )
+            } else {
+                emptyList()
+            }
         }
     }
 
@@ -356,38 +354,37 @@ class MainRepository @Inject constructor(
     suspend fun fetchBottomSlider(
         positionTab: Int,
         position: Int,
-    ): HomeFlowViewModel.PositionItemWithTabs {
-        val response = api.fetchDoubleSlider(
-            action = "topglav",
-            arg = "new"
-        ).parseBottomSliderResponse()
-        return if (response is ResponseEntity.Success) {
-            val data = response.data.mapToUI()
-            HomeFlowViewModel.PositionItemWithTabs(
-                item = HomeFlowViewModel.PositionItem(
-                    position,
-                    fetchHomeProductsByType(
-                        response.data.mapToUI(),
-                        HomeProducts.BOTTOM_PROD,
-                        position
+    ): List<HomeFlowViewModel.PositionItem> {
+        return coroutineScope {
+            val response = api.fetchDoubleSlider(
+                action = "topglav",
+                arg = "new"
+            ).parseBottomSliderResponse()
+            if (response is ResponseEntity.Success) {
+                val data = response.data.mapToUI()
+                listOf(
+                    HomeFlowViewModel.PositionItem(
+                        position,
+                        fetchHomeProductsByType(
+                            response.data.mapToUI(),
+                            HomeProducts.BOTTOM_PROD,
+                            position
+                        )
+                    ),
+                    HomeFlowViewModel.PositionItem(
+                        positionTab,
+                        HomeProductsTabs(id = positionTab, data.mapIndexed { index, cat ->
+                            if (index == 0) {
+                                cat.copy(isSelected = true, position = positionTab)
+                            } else {
+                                cat.copy(isSelected = false, position = positionTab)
+                            }
+                        })
                     )
-                ),
-                itemTabs = HomeFlowViewModel.PositionItem(
-                    positionTab,
-                    HomeProductsTabs(id = positionTab, data.mapIndexed { index, cat ->
-                        if (index == 0) {
-                            cat.copy(isSelected = true, position = positionTab)
-                        } else {
-                            cat.copy(isSelected = false, position = positionTab)
-                        }
-                    })
                 )
-            )
-        } else {
-            HomeFlowViewModel.PositionItemWithTabs(
-                item = HomeFlowViewModel.PositionItem(position, null),
-                itemTabs = HomeFlowViewModel.PositionItem(positionTab, null)
-            )
+            } else {
+                emptyList()
+            }
         }
     }
 
@@ -395,52 +392,55 @@ class MainRepository @Inject constructor(
     suspend fun fetchBrandsSlider(
         positionTitle: Int,
         position: Int,
-    ): HomeFlowViewModel.PositionItemWithTitle {
-        val response = api.fetchBrands(
-            action = "brand",
-            limit = 10
-        ).parseBrandsSliderResponse()
-        return if (response is ResponseEntity.Success) {
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(
-                    position,
-                    HomeBrands(position, response.data.mapToUI())
-                ),
-                itemTitle = HomeFlowViewModel.PositionItem(
-                    positionTitle,
-                    HomeTitle(
-                        id = positionTitle,
-                        type = HomeTitle.BRANDS_TITLE,
-                        name = "Бренды",
-                        showAll = true,
-                        showAllName = "СМ.ВСЕ"
+    ): List<HomeFlowViewModel.PositionItem> {
+        return coroutineScope {
+            val response = api.fetchBrands(
+                action = "brand",
+                limit = 10
+            ).parseBrandsSliderResponse()
+            if (response is ResponseEntity.Success) {
+                listOf(
+                    HomeFlowViewModel.PositionItem(
+                        position,
+                        HomeBrands(position, response.data.mapToUI())
+                    ),
+                    HomeFlowViewModel.PositionItem(
+                        positionTitle,
+                        HomeTitle(
+                            id = positionTitle,
+                            type = HomeTitle.BRANDS_TITLE,
+                            name = "Бренды",
+                            showAll = true,
+                            showAllName = "СМ.ВСЕ"
+                        )
                     )
                 )
-            )
-        } else {
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(position, null),
-                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
-            )
+            } else {
+                emptyList()
+            }
         }
     }
 
     //Слайдер стран на главной странице
-    suspend fun fetchCountriesSlider(position: Int): HomeFlowViewModel.PositionItem {
-        val response = api.fetchCountries(
-            action = "glav"
-        ).parseCountriesSliderResponse()
-        return if (response is ResponseEntity.Success) {
-            HomeFlowViewModel.PositionItem(
-                position,
-                HomeCountries(position, response.data.mapToUI())
-            )
-        } else {
-            HomeFlowViewModel.PositionItem(position, null)
+    suspend fun fetchCountriesSlider(position: Int): List<HomeFlowViewModel.PositionItem> {
+        return coroutineScope {
+            val response = api.fetchCountries(
+                action = "glav"
+            ).parseCountriesSliderResponse()
+            if (response is ResponseEntity.Success) {
+                listOf(
+                    HomeFlowViewModel.PositionItem(
+                        position,
+                        HomeCountries(position, response.data.mapToUI())
+                    )
+                )
+            } else {
+                emptyList()
+            }
         }
     }
 
-    //Слайдер ранее просмотренных продуктов
+//Слайдер ранее просмотренных продуктов
 
     suspend fun fetchViewedProductsSlider(userId: Long?): ResponseBody {
         return api.fetchViewedProducts(
@@ -453,47 +453,42 @@ class MainRepository @Inject constructor(
         userId: Long?,
         positionTitle: Int,
         position: Int,
-    ): HomeFlowViewModel.PositionItemWithTitle {
+    ): List<HomeFlowViewModel.PositionItem> {
+        return coroutineScope {
+            if (userId == null) {
+                return@coroutineScope emptyList()
+            }
 
-        if (userId == null) {
-            return HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(position, null),
-                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
-            )
-        }
-
-        val response = api.fetchViewedProducts(
-            action = "viewed",
-            userId = userId
-        ).parseViewedProductsSliderResponse()
-        return if (response is ResponseEntity.Success) {
-            val data = response.data.mapToUI()
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(
-                    position,
-                    fetchHomeProductsByType(data, HomeProducts.VIEWED, position)
-                ),
-                itemTitle = HomeFlowViewModel.PositionItem(
-                    positionTitle,
-                    HomeTitle(
-                        id = positionTitle,
-                        type = HomeTitle.VIEWED_TITLE,
-                        name = "Вы смотрели",
-                        showAll = false,
-                        showAllName = "СМ.ВСЕ",
-                        categoryProductsName = if (data.size == 1) {
-                            data.first().name
-                        } else {
-                            ""
-                        }
+            val response = api.fetchViewedProducts(
+                action = "viewed",
+                userId = userId
+            ).parseViewedProductsSliderResponse()
+            if (response is ResponseEntity.Success) {
+                val data = response.data.mapToUI()
+                listOf(
+                    HomeFlowViewModel.PositionItem(
+                        position,
+                        fetchHomeProductsByType(data, HomeProducts.VIEWED, position)
+                    ),
+                    HomeFlowViewModel.PositionItem(
+                        positionTitle,
+                        HomeTitle(
+                            id = positionTitle,
+                            type = HomeTitle.VIEWED_TITLE,
+                            name = "Вы смотрели",
+                            showAll = false,
+                            showAllName = "СМ.ВСЕ",
+                            categoryProductsName = if (data.size == 1) {
+                                data.first().name
+                            } else {
+                                ""
+                            }
+                        )
                     )
                 )
-            )
-        } else {
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(position, null),
-                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
-            )
+            } else {
+                emptyList()
+            }
         }
     }
 
@@ -501,33 +496,32 @@ class MainRepository @Inject constructor(
     suspend fun fetchCommentsSlider(
         positionTitle: Int,
         position: Int,
-    ): HomeFlowViewModel.PositionItemWithTitle {
-        val response = api.fetchComments(
-            action = "otzivy",
-            limit = 10
-        ).parseCommentsSliderResponse()
-        return if (response is ResponseEntity.Success) {
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(
-                    position,
-                    HomeComments(position, response.data.mapToUI())
-                ),
-                itemTitle = HomeFlowViewModel.PositionItem(
-                    positionTitle,
-                    HomeTitle(
-                        id = positionTitle,
-                        type = HomeTitle.COMMENTS_TITLE,
-                        name = "Отзывы",
-                        showAll = true,
-                        showAllName = "Написать отзыв"
+    ): List<HomeFlowViewModel.PositionItem> {
+        return coroutineScope {
+            val response = api.fetchComments(
+                action = "otzivy",
+                limit = 10
+            ).parseCommentsSliderResponse()
+            if (response is ResponseEntity.Success) {
+                listOf(
+                    HomeFlowViewModel.PositionItem(
+                        position,
+                        HomeComments(position, response.data.mapToUI())
+                    ),
+                    HomeFlowViewModel.PositionItem(
+                        positionTitle,
+                        HomeTitle(
+                            id = positionTitle,
+                            type = HomeTitle.COMMENTS_TITLE,
+                            name = "Отзывы",
+                            showAll = true,
+                            showAllName = "Написать отзыв"
+                        )
                     )
                 )
-            )
-        } else {
-            HomeFlowViewModel.PositionItemWithTitle(
-                item = HomeFlowViewModel.PositionItem(position, null),
-                itemTitle = HomeFlowViewModel.PositionItem(positionTitle, null)
-            )
+            } else {
+                emptyList()
+            }
         }
     }
 
@@ -625,7 +619,7 @@ class MainRepository @Inject constructor(
      * Корзина
      * **/
 
-    //Корзина
+//Корзина
     suspend fun fetchCartResponse(
         action: String? = null,
         userId: Long? = null,
@@ -640,8 +634,8 @@ class MainRepository @Inject constructor(
         )
     }
 
-    //Добавление в корзину addProductToCart
-    //Изменение колличества товаров в корзине changeProductsQuantityInCart
+//Добавление в корзину addProductToCart
+//Изменение колличества товаров в корзине changeProductsQuantityInCart
 
     //удаление из корзины
     suspend fun fetchDeleteProductResponse(
@@ -662,7 +656,7 @@ class MainRepository @Inject constructor(
      * Продукт
      */
 
-    //Продукт
+//Продукт
     suspend fun fetchProductResponse(
         blockId: Int = 1,
         productId: Long,
@@ -895,7 +889,7 @@ class MainRepository @Inject constructor(
      * only products
      */
 
-    //Продукты по баннеру
+//Продукты по баннеру
     suspend fun fetchProductsByBanner(categoryId: Long): ResponseBody = api.fetchMainSliderResponse(
         action = "detailtovar",
         categoryId = categoryId
@@ -912,7 +906,7 @@ class MainRepository @Inject constructor(
      * all promotions
      */
 
-    //Информация о всех акциях
+//Информация о всех акциях
     suspend fun fetchAllPromotions(
         filterId: Long,
     ): ResponseBody = api.fetchPromotionResponse(
@@ -992,7 +986,7 @@ class MainRepository @Inject constructor(
      * all comments by products
      */
 
-    //Все отзывы о продукте
+//Все отзывы о продукте
     suspend fun fetchAllCommentsByProduct(
         productId: Long,
         page: Int?,
@@ -1006,7 +1000,7 @@ class MainRepository @Inject constructor(
      * send comment by product
      */
 
-    //Отправить отзыв о продукте
+//Отправить отзыв о продукте
     suspend fun sendCommentAboutProduct(
         productId: Long,
         rating: Int,
@@ -1067,7 +1061,7 @@ class MainRepository @Inject constructor(
      * all orders
      */
 
-    //Постраничная загрузка всех заказов
+//Постраничная загрузка всех заказов
     suspend fun fetchAllOrders(
         userId: Long?,
         appVersion: String?,
@@ -1087,7 +1081,7 @@ class MainRepository @Inject constructor(
      * repeat order
      */
 
-    //Детальная информация о заказе
+//Детальная информация о заказе
     suspend fun fetchOrderDetailsResponse(
         userId: Long?,
         appVersion: String?,
@@ -1109,7 +1103,7 @@ class MainRepository @Inject constructor(
     /**
      * products filters
      */
-    //Все филтры по продуктам для выбранной категории
+//Все филтры по продуктам для выбранной категории
     suspend fun fetchAllFiltersByCategory(
         categoryId: Long,
     ) = api.fetchFilterBundleResponse(categoryId = categoryId)
@@ -1118,7 +1112,7 @@ class MainRepository @Inject constructor(
      * map
      */
 
-    //Информация о зонах доставки
+//Информация о зонах доставки
     suspend fun fetchDeliveryZonesResponse(): ResponseBody = api.fetchMapResponse(
         action = "tochkakarta"
     )
@@ -1137,7 +1131,7 @@ class MainRepository @Inject constructor(
      * profile
      */
 
-    //Информация о пользователе
+//Информация о пользователе
     suspend fun fetchUserData(
         userId: Long,
     ) = api.fetchProfileResponse(
@@ -1169,7 +1163,7 @@ class MainRepository @Inject constructor(
      * auth
      */
 
-    //Авторизация
+//Авторизация
     suspend fun authByEmail(
         email: String,
         password: String,
@@ -1228,13 +1222,15 @@ class MainRepository @Inject constructor(
     /**
      * site state
      */
-    suspend fun fetchSiteState() = api.fetchSiteState(action = "saitosnova")
+    suspend fun fetchSiteState() = coroutineScope {
+        api.fetchSiteState(action = "saitosnova")
+    }
 
     /**
      * registration
      */
 
-    //Регистрация нового пользователя
+//Регистрация нового пользователя
     suspend fun register(
         firstName: String,
         secondName: String,
@@ -1262,7 +1258,7 @@ class MainRepository @Inject constructor(
      * Services
      */
 
-    //Общая информация о предоставляемых услугах
+//Общая информация о предоставляемых услугах
     suspend fun fetchAboutServices(action: String) = api.fetchServicesResponse(
         action = action
     )
@@ -1325,7 +1321,7 @@ class MainRepository @Inject constructor(
      * Addresses
      */
 
-    //Получить сохраненные адреса
+//Получить сохраненные адреса
     suspend fun fetchAddressesSaved(
         userId: Long?,
         type: Int?,

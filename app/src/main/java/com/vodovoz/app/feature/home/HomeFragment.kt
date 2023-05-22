@@ -14,6 +14,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
@@ -21,7 +22,6 @@ import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentMainHomeFlowBinding
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
-import com.vodovoz.app.feature.home.HomeFlowViewModel.Companion.ENTER_COUNT
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.popup.NewsClickListener
 import com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment
@@ -45,6 +45,7 @@ import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWitho
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.extensions.addOnBackPressedCallback
+import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -223,11 +224,10 @@ class HomeFragment : BaseFragment() {
             flowViewModel.observeUiState()
                 .collect { homeState ->
 
-                    if (homeState.data.items.mapNotNull { it.item }.size < ENTER_COUNT) {
+                    if (homeState.loadingPage) {
                         binding.homeRv.isVisible = false
                         showLoaderWithBg(true)
                     } else {
-                        flowViewModel.secondLoad()
                         binding.homeRv.isVisible = true
                         showLoaderWithBg(false)
                     }
@@ -236,11 +236,13 @@ class HomeFragment : BaseFragment() {
                         showPopUpNews(homeState.data.news)
                     }
 
-                    if (homeState.data.items.size in (ENTER_COUNT..HomeFlowViewModel.POSITIONS_COUNT)) {
-                        val list =
-                            homeState.data.items.sortedBy { it.position }.mapNotNull { it.item }
-                        homeController.submitList(list)
+                    val list = homeState.data.items.sortedBy { it.position }.map { it.item }
+                    val progressList = if (homeState.loadMore) {
+                        list + BottomProgressItem()
+                    } else {
+                        list
                     }
+                    homeController.submitList(progressList)
 
                     showError(homeState.error)
 

@@ -46,6 +46,7 @@ class SplashFragment : BaseFragment() {
         }
         viewModel.sendFirebaseToken()
         flowViewModel.firstLoad()
+        flowViewModel.secondLoad()
         catalogViewModel.firstLoad()
         cartFlowViewModel.firstLoad()
         favoriteViewModel.firstLoad()
@@ -66,11 +67,10 @@ class SplashFragment : BaseFragment() {
                     debugLog {
                         "${state.data.items.map { it.position }}"
                     }
-                    if (state.data.items.size in (HomeFlowViewModel.ENTER_COUNT..HomeFlowViewModel.POSITIONS_COUNT)) {
+                    if (state.isFirstLoad) {
                         val active = siteStateManager.fetchSiteStateActive()
                         debugLog { "site state active $active" }
                         if (active) {
-                            flowViewModel.secondLoad()
                             findNavController().navigate(R.id.mainFragment)
                         } else {
                             findNavController().navigate(R.id.blockAppFragment)

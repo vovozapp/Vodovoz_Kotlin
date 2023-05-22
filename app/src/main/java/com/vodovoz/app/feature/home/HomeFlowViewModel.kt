@@ -4,75 +4,24 @@ import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.*
+import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.banner.AdvertisingBannersSliderResponseJsonParser.parseAdvertisingBannersSliderResponse
-import com.vodovoz.app.data.parser.response.banner.CategoryBannersSliderResponseJsonParser.parseCategoryBannersSliderResponse
-import com.vodovoz.app.data.parser.response.brand.BrandsSliderResponseJsonParser.parseBrandsSliderResponse
-import com.vodovoz.app.data.parser.response.comment.CommentsSliderResponseJsonParser.parseCommentsSliderResponse
-import com.vodovoz.app.data.parser.response.country.CountrySliderResponseJsonParser.parseCountriesSliderResponse
-import com.vodovoz.app.data.parser.response.discount.DiscountSliderResponseParser.parseDiscountSliderResponse
-import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseBottomSliderResponse
-import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseTopSliderResponse
-import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonParser.parseHistoriesSliderResponse
-import com.vodovoz.app.data.parser.response.novelties.NoveltiesSliderResponseParser.parseNoveltiesSliderResponse
-import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
-import com.vodovoz.app.data.parser.response.popular.PopularSliderResponseJsonParser.parsePopularSliderResponse
-import com.vodovoz.app.data.parser.response.promotion.PromotionSliderResponseJsonParser.parsePromotionSliderResponse
-import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
-import com.vodovoz.app.mapper.BannerMapper.mapToUI
-import com.vodovoz.app.mapper.BrandMapper.mapToUI
-import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
-import com.vodovoz.app.mapper.CategoryMapper.mapToUI
-import com.vodovoz.app.mapper.CommentMapper.mapToUI
-import com.vodovoz.app.mapper.CountriesSliderBundleMapper.mapToUI
-import com.vodovoz.app.mapper.HistoryMapper.mapToUI
-import com.vodovoz.app.mapper.OrderMapper.mapToUI
-import com.vodovoz.app.mapper.PromotionMapper.mapToUI
-import com.vodovoz.app.common.content.itemadapter.Item
-import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
-import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
 import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfo
-import com.vodovoz.app.feature.home.viewholders.homebrands.HomeBrands
-import com.vodovoz.app.feature.home.viewholders.homecomments.HomeComments
-import com.vodovoz.app.feature.home.viewholders.homecountries.HomeCountries
-import com.vodovoz.app.feature.home.viewholders.homehistories.HomeHistories
-import com.vodovoz.app.feature.home.viewholders.homeorders.HomeOrders
-import com.vodovoz.app.feature.home.viewholders.homepopulars.HomePopulars
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.BOTTOM_PROD
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.DISCOUNT
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.NOVELTIES
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.TOP_PROD
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.VIEWED
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeProductsTabs
-import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.BRANDS_TITLE
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.COMMENTS_TITLE
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.DISCOUNT_TITLE
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.HISTORIES_TITLE
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.NOVELTIES_TITLE
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.ORDERS_TITLE
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.POPULARS_TITLE
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.PROMOTIONS_TITLE
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.VIEWED_TITLE
 import com.vodovoz.app.feature.home.viewholders.hometriplenav.HomeTripleNav
 import com.vodovoz.app.mapper.PopupNewsMapper.mapToUI
-import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
-import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.PopupNewsUI
-import com.vodovoz.app.ui.model.ProductUI
-import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -86,31 +35,37 @@ class HomeFlowViewModel @Inject constructor(
     private val accountManager: AccountManager,
 ) : PagingContractViewModel<HomeFlowViewModel.HomeState, HomeFlowViewModel.HomeEvents>(HomeState.idle()) {
 
-    private fun loadPage() {
-        updatePopupNews()
-        fetchAdvertisingBannersSlider(POSITION_1)
-        fetchHistoriesSlider(POSITION_2_TITLE, POSITION_3)
-        fetchPopularSlider(POSITION_4_TITLE, POSITION_5)
-        fetchDiscountsSlider(POSITION_6_TITLE, POSITION_7)
-        fetchCategoryBannersSlider(POSITION_8)
+    fun firstLoad() {
+        if (!state.isFirstLoad) {
+            uiStateListener.value = state.copy(loadingPage = true)
+
+            viewModelScope.launch {
+                updatePopupNews()
+                val tasks = firstLoadTasks()
+                val start = System.currentTimeMillis()
+                val result = awaitAll(*tasks).flatten()
+                debugLog { "first load task ${System.currentTimeMillis() - start}" }
+                uiStateListener.value = state.copy(
+                    loadingPage = false,
+                    data = state.data.copy(items = state.data.items + result),
+                    isFirstLoad = true,
+                    loadMore = true,
+                    error = null
+                )
+            }
+        }
     }
 
     fun secondLoad() {
-        fetchTopSlider(POSITION_9_TAB, POSITION_10)
-        fetchOrdersSlider(POSITION_11_TITLE, POSITION_12)
-        fetchNoveltiesSlider(POSITION_14_TITLE, POSITION_15)
-        fetchPromotionsSlider(POSITION_16_TITLE, POSITION_17)
-        fetchBottomSlider(POSITION_18_TAB, POSITION_19)
-        fetchBrandsSlider(POSITION_20_TITLE, POSITION_21)
-        fetchCountriesSlider(POSITION_22)
-        fetchViewedProductsSlider(POSITION_23_TITLE, POSITION_24)
-        fetchCommentsSlider(POSITION_25_TITLE, POSITION_26)
-    }
-
-    fun firstLoad() {
-        if (!state.isFirstLoad) {
-            uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
-            loadPage()
+        viewModelScope.launch {
+            val tasks = secondLoadTasks()
+            val result = awaitAll(*tasks).flatten() + HomeState.fetchStaticItems()
+            uiStateListener.value = state.copy(
+                loadingPage = false,
+                data = state.data.copy(items = state.data.items + result),
+                loadMore = false,
+                error = null
+            )
         }
     }
 
@@ -119,240 +74,135 @@ class HomeFlowViewModel @Inject constructor(
             state.copy(
                 loadingPage = true,
                 data = state.data.copy(
-                    items = HomeState.idle().items,
-                    itemsInt = HomeState.idle().itemsInt
+                    items = HomeState.idle().items
                 )
             )
-        loadPage()
-        secondLoad()
-    }
-
-    private fun fetchAdvertisingBannersSlider(position: Int) {
-        uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
-            flow { emit(repository.fetchAdvertisingBannersSlider(position)) }
-                .catch {
-                    debugLog { "fetch adv banners error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .flowOn(Dispatchers.IO)
-                .collect { updateStateByPositionItem(it) }
+            val tasks = firstLoadTasks() + secondLoadTasks()
+            val result = awaitAll(*tasks).flatten() + HomeState.fetchStaticItems()
+            uiStateListener.value = state.copy(
+                loadingPage = false,
+                data = state.data.copy(items = state.data.items + result),
+                error = null
+            )
         }
     }
 
-    private fun fetchHistoriesSlider(positionTitle: Int, position: Int) {
-        uiStateListener.value = state.copy(loadingPage = true)
-        viewModelScope.launch {
-            flow { emit(repository.fetchHistoriesSlider(positionTitle, position)) }
-                .catch {
-                    debugLog { "fetch histories error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .flowOn(Dispatchers.IO)
-                .collect { updateStateByPositionItem(it) }
-        }
+    private fun CoroutineScope.firstLoadTasks() = arrayOf(
+        async(Dispatchers.IO) { fetchAdvBannerSlider(POSITION_1) },
+        async(Dispatchers.IO) { fetchHisSlider(POSITION_2_TITLE, POSITION_3) },
+        async(Dispatchers.IO) { fetchPopSlider(POSITION_4_TITLE, POSITION_5) },
+        async(Dispatchers.IO) { fetchDiscSlider(POSITION_6_TITLE, POSITION_7) },
+        async(Dispatchers.IO) { fetchCatBannerSlider(POSITION_8) }
+    )
+
+    private fun CoroutineScope.secondLoadTasks() = arrayOf(
+        async(Dispatchers.IO) { fetchTSlider(POSITION_9_TAB, POSITION_10) },
+        async(Dispatchers.IO) { fetchOrdSlider(POSITION_11_TITLE, POSITION_12) },
+        async(Dispatchers.IO) { fetchNovSlider(POSITION_14_TITLE, POSITION_15) },
+        async(Dispatchers.IO) { fetchPromSlider(POSITION_16_TITLE, POSITION_17) },
+        async(Dispatchers.IO) { fetchBSlider(POSITION_18_TAB, POSITION_19) },
+        async(Dispatchers.IO) { fetchBrSlider(POSITION_20_TITLE, POSITION_21) },
+        async(Dispatchers.IO) { fetchCountrSlider(POSITION_22) },
+        async(Dispatchers.IO) { fetchViSlider(POSITION_23_TITLE, POSITION_24) },
+        async(Dispatchers.IO) { fetchCommSlider(POSITION_25_TITLE, POSITION_26) }
+    )
+
+    private suspend fun fetchAdvBannerSlider(position: Int): List<PositionItem> {
+        return runCatching { repository.fetchAdvertisingBannersSlider(position) }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
     }
 
-    private fun fetchPopularSlider(positionTitle: Int, position: Int) {
-        uiStateListener.value = state.copy(loadingPage = true)
-        viewModelScope.launch {
-            flow { emit(repository.fetchPopularSlider(positionTitle, position)) }
-                .catch {
-                    debugLog { "fetch populars error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .flowOn(Dispatchers.IO)
-                .collect { updateStateByPositionItem(it) }
-        }
+    private suspend fun fetchHisSlider(positionTitle: Int, position: Int): List<PositionItem> {
+        return runCatching { repository.fetchHistoriesSlider(positionTitle, position) }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
     }
 
-    private fun fetchDiscountsSlider(positionTitle: Int, position: Int) {
-        uiStateListener.value = state.copy(loadingPage = true)
-        viewModelScope.launch {
-            flow { emit(repository.fetchDiscountsSlider(positionTitle, position)) }
-                .catch {
-                    debugLog { "fetch discount slider error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .flowOn(Dispatchers.IO)
-                .collect { updateStateByPositionItem(it) }
-        }
+    private suspend fun fetchPopSlider(positionTitle: Int, position: Int): List<PositionItem> {
+        return runCatching { repository.fetchPopularSlider(positionTitle, position) }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
     }
 
-    private fun fetchCategoryBannersSlider(position: Int) {
-        uiStateListener.value = state.copy(loadingPage = true)
-        viewModelScope.launch {
-            flow { emit(repository.fetchCategoryBannersSlider(position)) }
-                .catch {
-                    debugLog { "fetch category banners error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .flowOn(Dispatchers.IO)
-                .collect { updateStateByPositionItem(it) }
-        }
+    private suspend fun fetchDiscSlider(positionTitle: Int, position: Int): List<PositionItem> {
+        return runCatching { repository.fetchDiscountsSlider(positionTitle, position) }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
     }
 
-    private fun fetchTopSlider(positionTab: Int, position: Int) {
-        if (state.data.itemsInt.contains(position)) return
-        debugLog { "load $position" }
-        uiStateListener.value = state.copy(
-            loadingPage = true,
-            data = state.data.copy(itemsInt = state.data.itemsInt + position)
-        )
-        viewModelScope.launch {
-            flow { emit(repository.fetchTopSlider(positionTab, position)) }
-                .catch {
-                    debugLog { "fetch top slider error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .flowOn(Dispatchers.IO)
-                .collect { updateStateByPositionItem(it) }
-        }
+    private suspend fun fetchCatBannerSlider(position: Int): List<PositionItem> {
+        return runCatching { repository.fetchCategoryBannersSlider(position) }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
     }
 
-    private fun fetchOrdersSlider(positionTitle: Int, position: Int) {
-        if (state.data.itemsInt.contains(position)) return
-        debugLog { "load $position" }
-        uiStateListener.value = state.copy(
-            loadingPage = true,
-            data = state.data.copy(itemsInt = state.data.itemsInt + position)
-        )
-        viewModelScope.launch {
+    private suspend fun fetchTSlider(positionTab: Int, position: Int): List<PositionItem> {
+        return runCatching { repository.fetchTopSlider(positionTab, position) }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
+    }
+
+    private suspend fun fetchOrdSlider(positionTitle: Int, position: Int): List<PositionItem> {
+        return runCatching {
             val userId = accountManager.fetchAccountId()
-            flow { emit(repository.fetchOrdersSlider(userId, positionTitle, position)) }
-                .catch {
-                    debugLog { "fetch orders slider error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .flowOn(Dispatchers.IO)
-                .collect { updateStateByPositionItem(it) }
+            repository.fetchOrdersSlider(userId, positionTitle, position)
         }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
     }
 
-    private fun fetchNoveltiesSlider(positionTitle: Int, position: Int) {
-        if (state.data.itemsInt.contains(position)) return
-        debugLog { "load $position" }
-        uiStateListener.value = state.copy(
-            loadingPage = true,
-            data = state.data.copy(itemsInt = state.data.itemsInt + position)
-        )
-        viewModelScope.launch {
-            flow { emit(repository.fetchNoveltiesSlider(positionTitle, position)) }
-                .catch {
-                    debugLog { "fetch novelties error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .flowOn(Dispatchers.IO)
-                .collect { updateStateByPositionItem(it) }
-        }
+    private suspend fun fetchNovSlider(positionTitle: Int, position: Int): List<PositionItem> {
+        return runCatching { repository.fetchNoveltiesSlider(positionTitle, position) }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
     }
 
-    private fun fetchPromotionsSlider(positionTitle: Int, position: Int) {
-        if (state.data.itemsInt.contains(position)) return
-        debugLog { "load $position" }
-        uiStateListener.value = state.copy(
-            loadingPage = true,
-            data = state.data.copy(itemsInt = state.data.itemsInt + position)
-        )
-        viewModelScope.launch {
-            flow { emit(repository.fetchPromotionsSlider(positionTitle, position)) }
-                .catch {
-                    debugLog { "fetch promotions slider error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .flowOn(Dispatchers.IO)
-                .collect { updateStateByPositionItem(it) }
-        }
+    private suspend fun fetchPromSlider(positionTitle: Int, position: Int): List<PositionItem> {
+        return runCatching { repository.fetchPromotionsSlider(positionTitle, position) }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
     }
 
-    private fun fetchBottomSlider(positionTab: Int, position: Int) {
-        if (state.data.itemsInt.contains(position)) return
-        debugLog { "load $position" }
-        uiStateListener.value = state.copy(
-            loadingPage = true,
-            data = state.data.copy(itemsInt = state.data.itemsInt + position)
-        )
-        viewModelScope.launch {
-            flow { emit(repository.fetchBottomSlider(positionTab, position)) }
-                .catch {
-                    debugLog { "fetch bottom slider error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .flowOn(Dispatchers.IO)
-                .collect { updateStateByPositionItem(it) }
-        }
+    private suspend fun fetchBSlider(positionTab: Int, position: Int): List<PositionItem> {
+        return runCatching { repository.fetchBottomSlider(positionTab, position) }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
     }
 
-    private fun fetchBrandsSlider(positionTitle: Int, position: Int) {
-        if (state.data.itemsInt.contains(position)) return
-        debugLog { "load $position" }
-        uiStateListener.value = state.copy(
-            loadingPage = true,
-            data = state.data.copy(itemsInt = state.data.itemsInt + position)
-        )
-        viewModelScope.launch {
-            flow { emit(repository.fetchBrandsSlider(positionTitle, position)) }
-                .catch {
-                    debugLog { "fetch brands slider error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .flowOn(Dispatchers.IO)
-                .collect { updateStateByPositionItem(it) }
-        }
+
+    private suspend fun fetchBrSlider(positionTitle: Int, position: Int): List<PositionItem> {
+        return runCatching { repository.fetchBrandsSlider(positionTitle, position) }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
     }
 
-    private fun fetchCountriesSlider(position: Int) {
-        if (state.data.itemsInt.contains(position)) return
-        debugLog { "load $position" }
-        uiStateListener.value = state.copy(
-            loadingPage = true,
-            data = state.data.copy(itemsInt = state.data.itemsInt + position)
-        )
-        viewModelScope.launch {
-            flow { emit(repository.fetchCountriesSlider(position)) }
-                .catch {
-                    debugLog { "fetch countries slider error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .flowOn(Dispatchers.IO)
-                .collect { updateStateByPositionItem(it) }
-        }
+    private suspend fun fetchCountrSlider(position: Int): List<PositionItem> {
+        return runCatching { repository.fetchCountriesSlider(position) }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
     }
 
-    private fun fetchViewedProductsSlider(positionTitle: Int, position: Int) {
-        if (state.data.itemsInt.contains(position)) return
-        debugLog { "load $position" }
-        uiStateListener.value = state.copy(
-            loadingPage = true,
-            data = state.data.copy(itemsInt = state.data.itemsInt + position)
-        )
-        viewModelScope.launch {
+    private suspend fun fetchViSlider(positionTitle: Int, position: Int): List<PositionItem> {
+        return runCatching {
             val userId = accountManager.fetchAccountId()
-            flow { emit(repository.fetchViewedProductsSlider(userId, positionTitle, position)) }
-                .catch {
-                    debugLog { "fetch viewed products slider error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .flowOn(Dispatchers.IO)
-                .collect {updateStateByPositionItem(it)}
+            repository.fetchViewedProductsSlider(userId, positionTitle, position)
         }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
     }
 
-    private fun fetchCommentsSlider(positionTitle: Int, position: Int) {
-        if (state.data.itemsInt.contains(position)) return
-        debugLog { "load $position" }
-        uiStateListener.value = state.copy(
-            loadingPage = true,
-            data = state.data.copy(itemsInt = state.data.itemsInt + position)
-        )
-        viewModelScope.launch {
-            flow { emit(repository.fetchCommentsSlider(positionTitle, position)) }
-                .catch {
-                    debugLog { "fetch comments slider error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .flowOn(Dispatchers.IO)
-                .collect {updateStateByPositionItem(it)}
+    private suspend fun fetchCommSlider(positionTitle: Int, position: Int): List<PositionItem> {
+        return runCatching { repository.fetchCommentsSlider(positionTitle, position) }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
+    }
+
+    private fun showNetworkError(throwable: Throwable) {
+        val error = throwable.toErrorState()
+        if (error is ErrorState.NetworkError) {
+            uiStateListener.value = state.copy(error = error)
         }
     }
 
@@ -366,75 +216,17 @@ class HomeFlowViewModel @Inject constructor(
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         state.copy(
-                            loadingPage = false,
-                            error = null,
                             data = state.data.copy(
                                 news = data
                             )
                         )
                     } else {
-                        state.copy(
-                            loadingPage = false
-                        )
+                        state
                     }
                 }
                 .flowOn(Dispatchers.Default)
                 .collect()
         }
-    }
-
-    private fun updateStateByPositionItem(positionItem: PositionItem) {
-        uiStateListener.value = state.copy(
-            loadingPage = false,
-            data = state.data.copy(items = state.data.items + positionItem),
-            error = null
-        )
-    }
-
-    private fun updateStateByPositionItem(positionItemWithTitle: PositionItemWithTitle) {
-        uiStateListener.value = state.copy(
-            loadingPage = false,
-            data = state.data.copy(items = state.data.items + positionItemWithTitle.itemTitle + positionItemWithTitle.item),
-            error = null
-        )
-    }
-
-    private fun updateStateByPositionItem(positionItemWithTabs: PositionItemWithTabs) {
-        uiStateListener.value = state.copy(
-            loadingPage = false,
-            data = state.data.copy(items = state.data.items + positionItemWithTabs.itemTabs + positionItemWithTabs.item),
-            error = null
-        )
-    }
-
-    private fun updateStateByThrowableAndPosition(it: Throwable, position: Int) {
-        uiStateListener.value =
-            state.copy(
-                error = it.toErrorState(),
-                loadingPage = false,
-                data = state.data.copy(
-                    items = state.data.items + PositionItem(
-                        position,
-                        null
-                    )
-                )
-            )
-    }
-
-    private fun fetchHomeProductsByType(
-        data: List<CategoryDetailUI>,
-        type: Int,
-        position: Int,
-    ): HomeProducts {
-        return HomeProducts(
-            position,
-            data,
-            productsType = type,
-            productsSliderConfig = ProductsSliderConfig(
-                containShowAllButton = true
-            ),
-            prodList = data.first().productUIList
-        )
     }
 
     private fun updateStateByTabAndProductPositions(
@@ -546,17 +338,7 @@ class HomeFlowViewModel @Inject constructor(
 
     data class PositionItem(
         val position: Int,
-        val item: Item?,
-    )
-
-    data class PositionItemWithTitle(
-        val item: PositionItem,
-        val itemTitle: PositionItem,
-    )
-
-    data class PositionItemWithTabs(
-        val item: PositionItem,
-        val itemTabs: PositionItem,
+        val item: Item,
     )
 
     sealed class HomeEvents : Event {
@@ -569,19 +351,27 @@ class HomeFlowViewModel @Inject constructor(
 
     data class HomeState(
         val items: List<PositionItem>,
-        val itemsInt: List<Int>,
         val news: PopupNewsUI? = null,
-        val hasShow: Boolean = false,
+        val hasShow: Boolean = false
     ) : State {
 
         companion object {
             fun idle(): HomeState {
                 return HomeState(
-                    listOf(
-                        PositionItem(POSITION_13, HomeTripleNav(POSITION_13)),
-                        PositionItem(POSITION_27, HomeBottomInfo(POSITION_27))
+                    items = emptyList()
+                )
+            }
+
+            fun fetchStaticItems() : List<PositionItem> {
+                return listOf(
+                    PositionItem(
+                        POSITION_13,
+                        HomeTripleNav(POSITION_13)
                     ),
-                    itemsInt = listOf(POSITION_13, POSITION_13)
+                    PositionItem(
+                        POSITION_27,
+                        HomeBottomInfo(POSITION_27)
+                    )
                 )
             }
         }
@@ -616,7 +406,6 @@ class HomeFlowViewModel @Inject constructor(
         const val POSITION_26 = 26
         const val POSITION_27 = 27
 
-        const val ENTER_COUNT = 8
         const val POSITIONS_COUNT = 27
     }
 }

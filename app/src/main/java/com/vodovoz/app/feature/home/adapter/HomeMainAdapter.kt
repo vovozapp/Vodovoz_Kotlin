@@ -6,6 +6,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressViewHolder
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners.Companion.BANNER_LARGE
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners.Companion.BANNER_SMALL
@@ -83,6 +84,9 @@ class HomeMainAdapter(
             }
             R.layout.view_holder_products_tabs -> {
                 HomeProductsTabsViewHolder(getViewFromInflater(viewType, parent), homeTabsClickListener)
+            }
+            R.layout.item_progress -> {
+                BottomProgressViewHolder(getViewFromInflater(viewType, parent))
             }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")
