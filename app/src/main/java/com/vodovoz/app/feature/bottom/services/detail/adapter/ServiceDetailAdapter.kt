@@ -8,6 +8,7 @@ import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.feature.bottom.services.detail.adapter.inner.ServiceDetailProdViewHolder
 import com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter.inneradapterproducts.HomePromotionsProductInnerViewHolder
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlist.viewholders.ProdListViewHolder
@@ -27,7 +28,7 @@ class ServiceDetailAdapter(
                 ServiceDetailViewHolder(getViewFromInflater(viewType, parent), cartManager, likeManager, ratingProductManager, productsClickListener)
             }
             ProductUI.PRODUCT_VIEW_TYPE -> {
-                ProdListViewHolder(getViewFromInflater(R.layout.view_holder_product_list, parent), productsClickListener, likeManager, cartManager, ratingProductManager)
+                ServiceDetailProdViewHolder(getViewFromInflater(R.layout.view_holder_product_list_service_detail, parent), productsClickListener, likeManager, cartManager, ratingProductManager)
             }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")
