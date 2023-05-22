@@ -1167,4 +1167,11 @@ class MainRepository @Inject constructor(
         userId = userId
     )
 
+    suspend fun addProductFromServiceDetails(
+        idWithGift: String
+    ) = api.addProductFromServiceDetails(
+        "addtoqua",
+        idWithGift = idWithGift
+    )
+
 }

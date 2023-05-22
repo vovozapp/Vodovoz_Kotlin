@@ -80,15 +80,13 @@ class CartManager @Inject constructor(
     }
 
     //Service Details Products
-
-    suspend fun addWithGift(id: Long, oldCount: Int, newCount: Int, withUpdate: Boolean = true, repeat: Boolean = false, giftId: String?) {
-        val isInCart = if (repeat) { true } else { oldCount == 0 }
+    suspend fun addWithGift(id: Long, oldCount: Int, newCount: Int, withUpdate: Boolean = true, repeat: Boolean = false, giftId: String) {
         val plus = newCount >= oldCount
 
         updateCarts(id, newCount)
 
         runCatching {
-            actionWithGift(id = id, count = newCount, isInCart = isInCart, plus)
+            actionWithGift(id = id, count = newCount, plus, giftId)
             updateCartListState(withUpdate)
         }.onFailure {
             tabManager.loadingAddToCart(false, plus = true)
@@ -96,17 +94,11 @@ class CartManager @Inject constructor(
         }
     }
 
-    private suspend fun actionWithGift(id: Long, count: Int, isInCart: Boolean, plus: Boolean) {
-        return if (!isInCart) {
-            tabManager.loadingAddToCart(true, plus = plus)
-            repository.changeProductsQuantityInCart(id, count)
-            updateCarts(id, count)
-        } else {
-            tabManager.loadingAddToCart(true, plus = true)
-            repository.addProductToCart(id, count)
-            updateCarts(id, count)
-        }
+    private suspend fun actionWithGift(id: Long, count: Int, plus: Boolean, giftId: String) {
+        val idWithGift = "$id-$count;$giftId"
+        tabManager.loadingAddToCart(true, plus = plus)
+        repository.addProductFromServiceDetails(idWithGift)
+        updateCarts(id, count)
     }
-
 
 }
