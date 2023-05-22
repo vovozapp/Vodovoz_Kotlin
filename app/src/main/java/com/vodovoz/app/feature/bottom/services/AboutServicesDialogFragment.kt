@@ -3,7 +3,8 @@ package com.vodovoz.app.feature.bottom.services
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.activityViewModels
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -11,13 +12,10 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.toErrorState
-import com.vodovoz.app.databinding.FragmentAboutServicesFlowBinding
 import com.vodovoz.app.databinding.FragmentAboutServicesFlowNewBinding
 import com.vodovoz.app.feature.bottom.services.adapter.ServicesClickListener
 import com.vodovoz.app.feature.bottom.services.newservs.AboutServicesNewViewModel
 import com.vodovoz.app.feature.bottom.services.newservs.model.ServiceNew
-import com.vodovoz.app.ui.model.ServiceUI
-import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -67,7 +65,7 @@ class AboutServicesDialogFragment : BaseFragment() {
                     if (state.loadingPage) {
                         showLoader()
                     } else {
-                        hideLoader()
+                      //  hideLoader()
                     }
 
                     val description = state.data.item?.aboutServicesData?.description ?: ""
@@ -88,6 +86,14 @@ class AboutServicesDialogFragment : BaseFragment() {
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView(url: String) {
         binding.descriptionTv.settings.javaScriptEnabled = true
+
+        binding.descriptionTv.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView, url: String) {
+                if (view.progress == 100) {
+                    hideLoader()
+                }
+            }
+        }
 
         try {
             binding.descriptionTv.loadDataWithBaseURL(null, url, "text/html", "utf-8", null)

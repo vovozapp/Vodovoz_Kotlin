@@ -3,6 +3,8 @@ package com.vodovoz.app.feature.bottom.services.newservs
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -67,7 +69,7 @@ class AboutServicesNewFragment : BaseFragment() {
                     if (state.loadingPage) {
                         showLoader()
                     } else {
-                        hideLoader()
+                       // hideLoader()
                     }
 
                     val description = state.data.item?.aboutServicesData?.description ?: ""
@@ -88,6 +90,14 @@ class AboutServicesNewFragment : BaseFragment() {
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView(url: String) {
         binding.descriptionTv.settings.javaScriptEnabled = true
+
+        binding.descriptionTv.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView, url: String) {
+                if (view.progress == 100) {
+                    hideLoader()
+                }
+            }
+        }
 
         try {
             binding.descriptionTv.loadDataWithBaseURL(null, url, "text/html", "utf-8", null)

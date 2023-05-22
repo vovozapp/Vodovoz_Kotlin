@@ -3,6 +3,8 @@ package com.vodovoz.app.feature.bottom.services.detail
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +20,7 @@ import com.vodovoz.app.feature.bottom.services.AboutServicesFlowViewModel
 import com.vodovoz.app.feature.bottom.services.newservs.AboutServicesNewViewModel
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
 class ServiceDetailNewFragment : BaseFragment() {
@@ -59,19 +62,13 @@ class ServiceDetailNewFragment : BaseFragment() {
                     if (state.loadingPage) {
                         showLoader()
                     } else {
-                        hideLoader()
+                      //  hideLoader()
                     }
 
                     val description = state.data.detailItem?.description ?: ""
                     val title = state.data.detailItem?.name ?: ""
 
-                    Glide.with(requireContext())
-                        .load(state.data.detailItem?.preview)
-                        .placeholder(R.drawable.placeholderimageproduits)
-                        .error(R.drawable.placeholderimageproduits)
-                        .into(binding.avatar)
-
-                    initWebView(description)
+                    initWebView(description, state.data.detailItem?.preview)
 
                     initToolbar(title)
 
@@ -82,8 +79,22 @@ class ServiceDetailNewFragment : BaseFragment() {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun initWebView(url: String) {
+    private fun initWebView(url: String, preview: String?) {
         binding.serviceDetailWebView.settings.javaScriptEnabled = true
+        binding.serviceDetailWebView.webViewClient = object : WebViewClient() {
+
+            override fun onPageFinished(view: WebView, url: String) {
+                if (view.progress == 100) {
+                    hideLoader()
+
+                    Glide.with(requireContext())
+                        .load(preview)
+                        .placeholder(R.drawable.placeholderimageproduits)
+                        .error(R.drawable.placeholderimageproduits)
+                        .into(binding.avatar)
+                }
+            }
+        }
 
         try {
             binding.serviceDetailWebView.loadDataWithBaseURL(null, url, "text/html", "utf-8", null)
