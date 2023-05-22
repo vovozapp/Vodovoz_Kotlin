@@ -117,7 +117,6 @@ class ServiceDetailProdViewHolder(
         binding.vpPictures.adapter = detailPictureFlowPagerAdapter
         binding.tlIndicators.attachTo(binding.vpPictures)
 
-        binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 
         binding.root.setOnClickListener {
             val item = item ?: return@setOnClickListener
@@ -215,7 +214,11 @@ class ServiceDetailProdViewHolder(
         when(item.priceList.size) {
             1 -> {
                 binding.tvPrice.setPriceText(item.priceList.first().currentPrice, itCanBeGift = true)
-                binding.tvOldPrice.setPriceText(item.priceList.first().oldPrice)
+                if (item.serviceDetailCoef != null) {
+                    binding.tvOldPrice.text =
+                        "x ${item.serviceDetailCoef} = ${item.priceList.first().currentPrice * item.serviceDetailCoef} ₽"
+                }
+
                 binding.tvPriceCondition.visibility = View.GONE
                 if (item.priceList.first().currentPrice < item.priceList.first().oldPrice || item.isGift) haveDiscount = true
             }
@@ -223,13 +226,19 @@ class ServiceDetailProdViewHolder(
                 val minimalPrice = item.priceList.sortedBy { it.requiredAmount }.find { it.requiredAmount >= item.cartQuantity }
                 minimalPrice?.let {
                     binding.tvPrice.setPriceText(minimalPrice.currentPrice)
+                    if (item.serviceDetailCoef != null) {
+                        binding.tvOldPrice.text =
+                            "x ${item.serviceDetailCoef} = ${item.priceList.first().currentPrice * item.serviceDetailCoef} ₽"
+                    }
                     binding.tvPriceCondition.visibility = View.GONE
                 }
                 binding.tvPricePerUnit.visibility = View.GONE
             }
         }
 
-        when(haveDiscount) {
+
+
+       /* when(haveDiscount) {
             true -> {
                 binding.tvPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
                 binding.tvOldPrice.visibility = View.VISIBLE
@@ -238,7 +247,7 @@ class ServiceDetailProdViewHolder(
                 binding.tvPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_new_black))
                 binding.tvOldPrice.visibility = View.GONE
             }
-        }
+        }*/
 
         binding.amountController.circleAmount.text = item.cartQuantity.toString()
         binding.amountController.amount.text = item.cartQuantity.toString()
@@ -307,12 +316,12 @@ class ServiceDetailProdViewHolder(
             binding.clPricesContainer.visibility = View.GONE
         }
 
-        //If is gift
+        /*//If is gift
         if (item.isGift) {
             binding.imgFavoriteStatus.visibility = View.INVISIBLE
             binding.cgStatuses.visibility = View.GONE
             if (item.isGift) binding.tvOldPrice.visibility = View.GONE
-        }
+        }*/
 
         //If is not available
         if (!item.isAvailable) {
