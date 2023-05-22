@@ -30,7 +30,8 @@ object ServicesDetailParser {
         extProductId = this.extProductId,
         productList = this.productEntityList.mapToUI().map {
             it.copy(
-                serviceDetailCoef = this.coef
+                serviceDetailCoef = this.coef,
+                serviceGiftId = this.extProductId
             )
         }
     )

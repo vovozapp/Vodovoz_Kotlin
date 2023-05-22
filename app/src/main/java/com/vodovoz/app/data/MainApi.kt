@@ -672,4 +672,11 @@ interface MainApi {
         @Query("action") action: String? = null,
         @Query("userid") userId: Long? = null,
     ): RateBottomModel
+
+    //Добавление в корзину из списка услуг
+    @GET("/newmobile/korzina/function/add/index.php")
+    suspend fun addProductFromServiceDetails(
+        @Query("action") action: String? = null,
+        @Query("idquanit") idWithGift: String? = null
+    ): ResponseBody
 }
