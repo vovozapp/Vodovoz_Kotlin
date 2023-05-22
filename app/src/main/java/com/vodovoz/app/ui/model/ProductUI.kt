@@ -36,7 +36,8 @@ data class ProductUI(
     val haveDiscount: Boolean = false,
     val priceConditionStringBuilder: String = "",
     val discountPercentStringBuilder: String = "",
-    val detailPictureListPager: List<DetailPicturePager> = emptyList()
+    val detailPictureListPager: List<DetailPicturePager> = emptyList(),
+    val serviceDetailCoef: Int? = null
 ) : Parcelable, Item {
 
     companion object {

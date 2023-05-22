@@ -28,7 +28,11 @@ object ServicesDetailParser {
         blockTitle = this.blockTitle,
         coef = this.coef,
         extProductId = this.extProductId,
-        productList = this.productEntityList.mapToUI()
+        productList = this.productEntityList.mapToUI().map {
+            it.copy(
+                serviceDetailCoef = this.coef
+            )
+        }
     )
 
     fun ResponseBody.parseServiceDetail(): ResponseEntity<ServiceDetailEntity> {
