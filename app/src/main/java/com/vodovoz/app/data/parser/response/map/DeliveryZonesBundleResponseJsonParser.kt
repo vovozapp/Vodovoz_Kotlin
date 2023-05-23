@@ -32,7 +32,8 @@ object DeliveryZonesBundleResponseJsonParser {
     private fun JSONObject.parseDeliveryZoneEntity() = DeliveryZoneEntity(
         deliveryTime = getString("TEXT"),
         color = getString("COLOR"),
-        pointEntityList = getJSONArray("TOCHKA").parsePointEntityList()
+        pointEntityList = getJSONArray("TOCHKA").parsePointEntityList(),
+        isCenter = getBoolean("MKAD")
     )
 
     private fun JSONArray.parsePointEntityList(): List<PointEntity> = mutableListOf<PointEntity>().also { list ->

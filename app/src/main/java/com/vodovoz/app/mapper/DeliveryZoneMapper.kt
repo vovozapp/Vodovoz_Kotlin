@@ -17,6 +17,7 @@ object DeliveryZoneMapper {
             pointEntityList.forEach { pointEntity ->
                 add(Point(pointEntity.latitude!!, pointEntity.longitude!!))
             }
-        }.toList()
+        }.toList(),
+        isCenter = isCenter
     )
 }

@@ -29,16 +29,13 @@ class DeliveryZonesManager @Inject constructor(
 
     suspend fun fetchDeliveryZonesBundle() {
         flow { emit(repository.fetchDeliveryZonesResponse()) }
-            .catch {
-                debugLog { "fetch delivery zones error ${it.localizedMessage}" }
-            }
             .flowOn(Dispatchers.IO)
             .onEach {
                 val response = it.parseDeliveryZonesBundleResponse()
                 if (response is ResponseEntity.Success) {
                     val data = response.data.mapToUI()
                     val centerPoints =
-                        data.deliveryZoneUIList.filter { it.color == CENTER_COLOR }.takeIf { it.isNotEmpty() }?.get(0)?.pointList ?: emptyList()
+                        data.deliveryZoneUIList.filter { it.isCenter }.takeIf { it.isNotEmpty() }?.get(0)?.pointList ?: emptyList()
                     val moPoints =
                         data.deliveryZoneUIList.filter { it.color == MO_COLOR }.takeIf { it.isNotEmpty() }?.get(0)?.pointList ?: emptyList()
                     deliveryZonesStateListener.value = DeliveryZonesState(
@@ -53,6 +50,7 @@ class DeliveryZonesManager @Inject constructor(
                 }
             }
             .flowOn(Dispatchers.Default)
+            .catch { debugLog { "fetch delivery zones error ${it.localizedMessage}" } }
             .collect()
     }
 
