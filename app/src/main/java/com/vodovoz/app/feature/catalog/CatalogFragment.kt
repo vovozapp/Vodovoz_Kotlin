@@ -14,6 +14,7 @@ import com.vodovoz.app.databinding.FragmentMainCatalogFlowBinding
 import com.vodovoz.app.feature.catalog.adapter.CatalogFlowAdapter
 import com.vodovoz.app.feature.catalog.adapter.CatalogFlowClickListener
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

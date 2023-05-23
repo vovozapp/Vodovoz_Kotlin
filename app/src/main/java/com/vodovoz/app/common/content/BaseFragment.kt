@@ -91,7 +91,7 @@ abstract class BaseFragment : Fragment() {
                 icon.setImageDrawable(ContextCompat.getDrawable(requireContext(), error.iconDrawable))
             }
             viewBinding.appbarLayout.isEnabled = false
-            showLoaderWithBg(false)
+            //showLoaderWithBg(false)
         } else {
             viewBinding.error.root.isVisible = false
 

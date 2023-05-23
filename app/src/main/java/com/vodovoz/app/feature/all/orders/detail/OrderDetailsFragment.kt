@@ -59,6 +59,7 @@ class OrderDetailsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         orderDetailsController.bind(binding.rvProducts)
+        bindErrorRefresh { viewModel.refreshSorted() }
         initButtons()
         observeUiState()
         observeGoToCart()
