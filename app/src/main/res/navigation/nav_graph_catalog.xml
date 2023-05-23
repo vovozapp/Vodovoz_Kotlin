@@ -877,6 +877,10 @@
             android:id="@+id/action_to_profileFragment"
             app:destination="@id/profileFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/qrCodeFragment2"
+        android:name="com.vodovoz.app.feature.search.qrcode.QrCodeFragment"
+        android:label="QrCodeFragment" />
 
 
 </navigation>
