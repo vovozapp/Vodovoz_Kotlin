@@ -45,11 +45,6 @@ class RegFlowViewModel @Inject constructor(
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.register(firstName, secondName, email, password, phone)) }
-                .catch {
-                    debugLog { "register error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     when(val response = it.parseRegisterResponse()) {
@@ -77,6 +72,11 @@ class RegFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "register error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

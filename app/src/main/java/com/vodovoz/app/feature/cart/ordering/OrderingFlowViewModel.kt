@@ -132,11 +132,6 @@ class OrderingFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .catch {
-                    debugLog { "reg order error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseRegOrderResponse()
@@ -161,6 +156,11 @@ class OrderingFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "reg order error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
 
         }
@@ -271,11 +271,6 @@ class OrderingFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .catch {
-                    debugLog { "fetch shipping info error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseShippingInfoResponse()
@@ -330,6 +325,11 @@ class OrderingFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch shipping info error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -337,11 +337,6 @@ class OrderingFlowViewModel @Inject constructor(
     fun fetchFreeShippingDaysInfo() {
         viewModelScope.launch {
             flow { emit(repository.fetchFreeShippingDaysInfoResponse()) }
-                .catch {
-                    debugLog { "fetch free shipping days error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseFreeShippingDaysResponse()
@@ -364,6 +359,11 @@ class OrderingFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch free shipping days error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

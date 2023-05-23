@@ -80,10 +80,6 @@ class ProfileFlowViewModel @Inject constructor(
         }
         viewModelScope.launch {
             flow { emit(repository.fetchUserData(userId)) }
-                .catch {
-                    debugLog { "fetch profile data error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseUserDataResponse()
@@ -110,6 +106,10 @@ class ProfileFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch profile data error ${it.localizedMessage}" }
+                    updateStateByThrowableAndPosition(it, position)
+                }
                 .collect()
         }
     }
@@ -123,10 +123,6 @@ class ProfileFlowViewModel @Inject constructor(
         }
         viewModelScope.launch {
             flow { emit(repository.fetchOrdersSlider(userId)) }
-                .catch {
-                    debugLog { "fetch profile orders slider error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseOrderSliderResponse()
@@ -153,6 +149,10 @@ class ProfileFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch profile orders slider error ${it.localizedMessage}" }
+                    updateStateByThrowableAndPosition(it, position)
+                }
                 .collect()
         }
     }
@@ -167,10 +167,6 @@ class ProfileFlowViewModel @Inject constructor(
         val isTablet = application.isTablet()
         viewModelScope.launch {
             flow { emit(repository.fetchProfileCategories(userId, isTablet)) }
-                .catch {
-                    debugLog { "fetch profile categories error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     uiStateListener.value = if (it.status != null && it.status == "Success") {
@@ -213,6 +209,10 @@ class ProfileFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch profile categories error ${it.localizedMessage}" }
+                    updateStateByThrowableAndPosition(it, position)
+                }
                 .collect()
         }
     }
@@ -226,10 +226,6 @@ class ProfileFlowViewModel @Inject constructor(
         }
         viewModelScope.launch {
             flow { emit(repository.fetchViewedProductsSlider(userId)) }
-                .catch {
-                    debugLog { "fetch profile viewed products error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseViewedProductsSliderResponse()
@@ -265,6 +261,10 @@ class ProfileFlowViewModel @Inject constructor(
                     updateStateByPositionItem(item)
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch profile viewed products error ${it.localizedMessage}" }
+                    updateStateByThrowableAndPosition(it, position)
+                }
                 .collect()
         }
     }
@@ -310,10 +310,6 @@ class ProfileFlowViewModel @Inject constructor(
         }
         viewModelScope.launch {
             flow { emit(repository.fetchPersonalProducts(userId, 1)) }
-                .catch {
-                    debugLog { "fetch profile personal products error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parsePersonalProductsResponse()
@@ -343,6 +339,10 @@ class ProfileFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch profile personal products error ${it.localizedMessage}" }
+                    updateStateByThrowableAndPosition(it, position)
+                }
                 .collect()
         }
     }

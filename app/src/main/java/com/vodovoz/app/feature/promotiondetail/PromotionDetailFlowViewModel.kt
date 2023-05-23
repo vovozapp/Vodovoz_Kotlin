@@ -42,11 +42,6 @@ class PromotionDetailFlowViewModel @Inject constructor(
         viewModelScope.launch {
             val promoId = promotionId ?: return@launch
             flow { emit(repository.fetchPromotionDetails(promoId)) }
-                .catch {
-                    debugLog { "fetch promotion details sorted error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parsePromotionDetailResponse()
@@ -70,6 +65,11 @@ class PromotionDetailFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch promotion details sorted error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

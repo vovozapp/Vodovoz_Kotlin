@@ -33,11 +33,6 @@ class AllCommentsFlowViewModel @Inject constructor(
         if (productId == null) return
         viewModelScope.launch {
             flow { emit(repository.fetchAllCommentsByProduct(productId = productId, page = state.page)) }
-                .catch {
-                    debugLog { "fetch all comments sorted error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseAllCommentsByProductResponse()
@@ -79,6 +74,11 @@ class AllCommentsFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch all comments sorted error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

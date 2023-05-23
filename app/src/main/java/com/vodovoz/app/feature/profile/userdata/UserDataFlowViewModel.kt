@@ -53,6 +53,14 @@ class UserDataFlowViewModel @Inject constructor(
         val userId = accountManager.fetchAccountId() ?: return
         viewModelScope.launch {
             flow { emit(repository.addAvatar(userId, image)) }
+                .flowOn(Dispatchers.IO)
+                .onEach {
+                    if (!it.isSuccessful) {
+                        clearAvatarState()
+                    } else {
+                        eventListener.emit(UserDataEvents.UpdateProfile)
+                    }
+                }
                 .catch {
                     debugLog { "add avatar error ${it.localizedMessage}" }
                     clearAvatarState()
@@ -64,14 +72,8 @@ class UserDataFlowViewModel @Inject constructor(
                             bottomItem = null
                         )
                 }
-                .flowOn(Dispatchers.IO)
-                .collect {
-                    if (!it.isSuccessful) {
-                        clearAvatarState()
-                    } else {
-                        eventListener.emit(UserDataEvents.UpdateProfile)
-                    }
-                }
+
+                .collect()
         }
     }
 
@@ -94,11 +96,6 @@ class UserDataFlowViewModel @Inject constructor(
             val userId = accountManager.fetchAccountId() ?: return@launch
 
             flow { emit(repository.fetchUserData(userId)) }
-                .catch {
-                    debugLog { "fetch user data error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseUserDataResponse()
@@ -120,6 +117,11 @@ class UserDataFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch user data error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -150,11 +152,6 @@ class UserDataFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .catch {
-                    debugLog { "update user data error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseUpdateUserDataResponse()
@@ -187,6 +184,11 @@ class UserDataFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "update user data error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

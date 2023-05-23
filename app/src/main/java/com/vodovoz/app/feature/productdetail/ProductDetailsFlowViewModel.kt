@@ -90,11 +90,6 @@ class ProductDetailsFlowViewModel @Inject constructor(
         viewModelScope.launch {
             uiStateListener.value = state.copy(loadingPage = true)
             flow { emit(mainRepository.fetchProductResponse(productId = productId ?: return@flow)) }
-                .catch {
-                    debugLog { "fetch detail error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseProductDetailsResponse()
@@ -199,6 +194,11 @@ class ProductDetailsFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch detail error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -214,7 +214,6 @@ class ProductDetailsFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .catch { debugLog { "fetch brands error ${it.localizedMessage}" } }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseSomeProductsByBrandResponse()
@@ -242,6 +241,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch { debugLog { "fetch brands error ${it.localizedMessage}" } }
                 .collect()
         }
     }
@@ -249,7 +249,6 @@ class ProductDetailsFlowViewModel @Inject constructor(
     private fun fetchMaybeLikeProducts() {
         viewModelScope.launch {
             flow { emit(mainRepository.fetchMaybeLikeProductsResponse(page = state.detailMaybeLikeProducts.pageIndex)) }
-                .catch { debugLog { "fetch maybe like products error ${it.localizedMessage}" } }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseMaybeLikeProductsResponse()
@@ -281,6 +280,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch { debugLog { "fetch maybe like products error ${it.localizedMessage}" } }
                 .collect()
         }
     }

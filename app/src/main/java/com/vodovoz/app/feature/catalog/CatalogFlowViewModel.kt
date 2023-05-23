@@ -40,12 +40,6 @@ class CatalogFlowViewModel @Inject constructor(
     private fun fetchCatalog() {
         viewModelScope.launch {
             flow { emit(mainRepository.fetchCatalogResponse()) }
-                .catch {
-                    debugLog { "fetch catalog response error ${it.localizedMessage}" }
-
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseCatalogResponse()
@@ -66,6 +60,12 @@ class CatalogFlowViewModel @Inject constructor(
                             catalogManager.saveCatalog(catalog)
                         }
                     }
+                }
+                .catch {
+                    debugLog { "fetch catalog response error ${it.localizedMessage}" }
+
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
                 }
                 .collect()
         }

@@ -54,11 +54,6 @@ class AddressesFlowViewModel @Inject constructor(
         }
         viewModelScope.launch {
             flow { emit(repository.fetchAddressesSaved(userId, type)) }
-                .catch {
-                    debugLog { "fetch addresses error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseFetchAddressesSavedResponse()
@@ -103,6 +98,11 @@ class AddressesFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch addresses error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -111,11 +111,6 @@ class AddressesFlowViewModel @Inject constructor(
         val userId = accountManager.fetchAccountId() ?: return
         viewModelScope.launch {
             flow { emit(repository.deleteAddress(addressId = addressId, userId = userId)) }
-                .catch {
-                    debugLog { "fetch addresses error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
 
@@ -153,6 +148,11 @@ class AddressesFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch addresses error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

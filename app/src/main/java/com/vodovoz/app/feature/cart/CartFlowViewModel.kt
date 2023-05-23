@@ -84,11 +84,6 @@ class CartFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .catch {
-                    debugLog { "fetch cart error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseCartResponse()
@@ -149,26 +144,20 @@ class CartFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch cart error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
 
     fun clearCart() {
         viewModelScope.launch {
-            flow {
-                emit(
-                    repository.fetchClearCartResponse(
-                        action = "delkorzina"
-                    )
-                )
-            }
-                .catch {
-                    debugLog { "clear cart error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
+            flow { emit(repository.fetchClearCartResponse(action = "delkorzina")) }
                 .flowOn(Dispatchers.IO)
-                .collect {
+                .onEach {
                     val response = it.parseClearCartResponse()
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(data = CartState(), false)
@@ -178,6 +167,13 @@ class CartFlowViewModel @Inject constructor(
                         uiStateListener.value = state.copy(loadingPage = false)
                     }
                 }
+                .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "clear cart error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
+                .collect()
         }
     }
 

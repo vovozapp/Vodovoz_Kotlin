@@ -78,11 +78,6 @@ class FavoriteFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.fetchFavoriteProducts(userId = userId, productIdListStr = productIdListStr)) }
-                .catch {
-                    debugLog { "fetch favorite products error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseFavoriteProductsHeaderBundleResponse()
@@ -104,6 +99,11 @@ class FavoriteFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch favorite products error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -159,11 +159,6 @@ class FavoriteFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .catch {
-                    debugLog { "fetch favorite products sorted error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseFavoriteProductsResponse()
@@ -206,6 +201,11 @@ class FavoriteFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch favorite products sorted error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

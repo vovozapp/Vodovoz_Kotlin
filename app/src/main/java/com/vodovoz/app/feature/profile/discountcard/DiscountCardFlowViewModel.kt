@@ -47,14 +47,6 @@ class DiscountCardFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.fetchActivateDiscountCardInfo(userId)) }
-                .catch {
-                    debugLog { "fetch card info error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(),
-                            loadingPage = false
-                        )
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseActivateDiscountCardInfoResponse()
@@ -73,6 +65,14 @@ class DiscountCardFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch card info error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(
+                            error = it.toErrorState(),
+                            loadingPage = false
+                        )
+                }
                 .collect()
         }
     }
@@ -112,14 +112,6 @@ class DiscountCardFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.activateDiscountCard(userId, valueBuilder.toString())) }
-                .catch {
-                    debugLog { "activate card error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(),
-                            loadingPage = false
-                        )
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseActivateDiscountCardResponse()
@@ -139,6 +131,14 @@ class DiscountCardFlowViewModel @Inject constructor(
                     uiStateListener.value = state.copy(loadingPage = false)
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "activate card error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(
+                            error = it.toErrorState(),
+                            loadingPage = false
+                        )
+                }
                 .collect()
         }
 

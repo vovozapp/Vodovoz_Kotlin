@@ -47,11 +47,6 @@ class AllOrdersFlowViewModel @Inject constructor(
                     state.data.ordersFiltersBundleUI.orderStatusUIList.forEach { append(it.id).append(",") }
                 }.toString()
             )) }
-                .catch {
-                    debugLog { "fetch all orders sorted error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseAllOrdersSliderResponse()
@@ -93,6 +88,11 @@ class AllOrdersFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch all orders sorted error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -138,11 +138,6 @@ class AllOrdersFlowViewModel @Inject constructor(
                 appVersion = BuildConfig.VERSION_NAME,
                 orderId = orderId
             )) }
-                .catch {
-                    debugLog { "repeat order error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseOrderDetailsResponse()
@@ -171,6 +166,11 @@ class AllOrdersFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "repeat order error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

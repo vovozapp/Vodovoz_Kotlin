@@ -36,7 +36,6 @@ class SendCommentAboutProductFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.sendCommentAboutProduct(productId, rating, comment, userId)) }
-                .catch { debugLog { "send comment error ${it.localizedMessage}" } }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseSendCommentAboutProductResponse()
@@ -47,6 +46,7 @@ class SendCommentAboutProductFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch { debugLog { "send comment error ${it.localizedMessage}" } }
                 .collect()
         }
     }

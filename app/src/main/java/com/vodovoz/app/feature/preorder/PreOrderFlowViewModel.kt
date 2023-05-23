@@ -38,11 +38,6 @@ class PreOrderFlowViewModel @Inject constructor(
         val userId = dataRepository.fetchUserId() ?: return
         viewModelScope.launch {
             flow { emit(repository.fetchPreOrderFormData(userId)) }
-                .catch {
-                    debugLog { "fetch pre order form data error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parsePreOrderFormDataResponse()
@@ -62,6 +57,11 @@ class PreOrderFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch pre order form data error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -74,7 +74,6 @@ class PreOrderFlowViewModel @Inject constructor(
         val userId = dataRepository.fetchUserId() ?: return
         viewModelScope.launch {
             flow { emit(repository.preOrderProduct(userId, productId, name, email, phone)) }
-                .catch { debugLog { "pre order product error ${it.localizedMessage}" } }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parsePreOrderProductResponse()
@@ -93,6 +92,7 @@ class PreOrderFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch { debugLog { "pre order product error ${it.localizedMessage}" } }
                 .collect()
         }
     }

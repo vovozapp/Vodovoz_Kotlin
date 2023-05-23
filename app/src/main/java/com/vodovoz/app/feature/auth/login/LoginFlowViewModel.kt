@@ -102,11 +102,6 @@ class LoginFlowViewModel @Inject constructor(
         )
         viewModelScope.launch {
             flow { emit(repository.authByEmail(email, password)) }
-                .catch {
-                    debugLog { "auth by email error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     when (val response = it.parseLoginResponse()) {
@@ -137,6 +132,11 @@ class LoginFlowViewModel @Inject constructor(
 
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "auth by email error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -146,11 +146,6 @@ class LoginFlowViewModel @Inject constructor(
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.authByPhone(phone, code, url)) }
-                .catch {
-                    debugLog { "auth by phone error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     when (val response = it.parseAuthByPhoneResponse()) {
@@ -179,6 +174,11 @@ class LoginFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "auth by phone error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -188,11 +188,6 @@ class LoginFlowViewModel @Inject constructor(
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.requestCode(phone, url)) }
-                .catch {
-                    debugLog { "request code error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     when (val response = it.parseRequestCodeResponse()) {
@@ -224,6 +219,11 @@ class LoginFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "request code error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -261,11 +261,6 @@ class LoginFlowViewModel @Inject constructor(
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.recoverPassword(email)) }
-                .catch {
-                    debugLog { "recover password error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseRecoverPasswordResponse()
@@ -280,6 +275,11 @@ class LoginFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "recover password error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

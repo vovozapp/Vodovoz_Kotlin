@@ -16,9 +16,7 @@ import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -211,12 +209,13 @@ class HomeFlowViewModel @Inject constructor(
             val userId = accountManager.fetchAccountId() ?: return@launch
             flow { emit(repository.fetchPopupNews(userId)) }
                 .flowOn(Dispatchers.IO)
-                .catch { debugLog { "fetch popup news error ${it.localizedMessage}" } }
-                .collect {
+                .onEach {
                     if (it != null) {
                         uiStateListener.value = state.copy(data = state.data.copy(news = it))
                     }
                 }
+                .catch { debugLog { "fetch popup news error ${it.localizedMessage}" } }
+                .collect()
         }
     }
 

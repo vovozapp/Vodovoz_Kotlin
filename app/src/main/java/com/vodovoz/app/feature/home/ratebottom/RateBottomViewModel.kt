@@ -42,14 +42,6 @@ class RateBottomViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.fetchRateBottomData(userId)) }
-                .catch {
-                    debugLog { "fetch rate data error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(
-                            error = it.toErrorState(),
-                            loadingPage = false
-                        )
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     uiStateListener.value = if (it.status == "Success") {
@@ -70,6 +62,14 @@ class RateBottomViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch rate data error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(
+                            error = it.toErrorState(),
+                            loadingPage = false
+                        )
+                }
                 .collect()
         }
     }

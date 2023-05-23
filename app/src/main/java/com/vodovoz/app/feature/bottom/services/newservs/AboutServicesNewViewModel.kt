@@ -49,11 +49,6 @@ class AboutServicesNewViewModel @Inject constructor(
     private fun fetchServicesData() {
         viewModelScope.launch {
             flow { emit(repository.fetchAboutServicesNew("spisok")) }
-                .catch {
-                    debugLog { "fetch about services error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     uiStateListener.value = state.copy(
@@ -65,6 +60,11 @@ class AboutServicesNewViewModel @Inject constructor(
                     )
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch about services error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -73,11 +73,6 @@ class AboutServicesNewViewModel @Inject constructor(
         val id = serviceId ?: return
         viewModelScope.launch {
             flow { emit(repository.fetchServicesNewDetails("details", id)) }
-                .catch {
-                    debugLog { "fetch about services details error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseServiceDetail()
@@ -98,6 +93,11 @@ class AboutServicesNewViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch about services details error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

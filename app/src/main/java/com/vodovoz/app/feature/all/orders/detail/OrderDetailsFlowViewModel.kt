@@ -54,11 +54,6 @@ class OrderDetailsFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .catch {
-                    debugLog { "fetch order details error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseOrderDetailsResponse()
@@ -78,6 +73,11 @@ class OrderDetailsFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch order details error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
 
         }
@@ -92,11 +92,6 @@ class OrderDetailsFlowViewModel @Inject constructor(
                 appVersion = BuildConfig.VERSION_NAME,
                 orderId = id
             )) }
-                .catch {
-                    debugLog { "repeat order error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseOrderDetailsResponse()
@@ -125,6 +120,11 @@ class OrderDetailsFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "repeat order error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -134,11 +134,6 @@ class OrderDetailsFlowViewModel @Inject constructor(
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.cancelOrder(id)) }
-                .catch {
-                    debugLog { "repeat order error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseCancelOrderResponse()
@@ -151,6 +146,11 @@ class OrderDetailsFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "repeat order error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

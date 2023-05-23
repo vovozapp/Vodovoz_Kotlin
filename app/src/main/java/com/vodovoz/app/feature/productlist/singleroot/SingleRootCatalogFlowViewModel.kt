@@ -44,12 +44,6 @@ class SingleRootCatalogFlowViewModel @Inject constructor(
                 )
             } else {
                 flow { emit(repository.fetchCatalogResponse()) }
-                    .catch {
-                        debugLog { "fetch catalog response error ${it.localizedMessage}" }
-
-                        uiStateListener.value =
-                            state.copy(error = it.toErrorState(), loadingPage = false)
-                    }
                     .flowOn(Dispatchers.IO)
                     .onEach {
                         val response = it.parseCatalogResponse()
@@ -74,6 +68,12 @@ class SingleRootCatalogFlowViewModel @Inject constructor(
                                 )
                             }
                         }
+                    }
+                    .catch {
+                        debugLog { "fetch catalog response error ${it.localizedMessage}" }
+
+                        uiStateListener.value =
+                            state.copy(error = it.toErrorState(), loadingPage = false)
                     }
                     .collect()
             }

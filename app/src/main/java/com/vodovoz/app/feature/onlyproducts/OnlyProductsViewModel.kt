@@ -43,11 +43,6 @@ class OnlyProductsViewModel @Inject constructor(
                     is ProductsCatalogFragment.DataSource.BannerProducts -> emit(repository.fetchProductsByBanner(dataSource.categoryId))
                 }
             }
-                .catch {
-                    debugLog { "fetch products by data source sorted error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = when (dataSource) {
@@ -93,6 +88,11 @@ class OnlyProductsViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch products by data source sorted error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

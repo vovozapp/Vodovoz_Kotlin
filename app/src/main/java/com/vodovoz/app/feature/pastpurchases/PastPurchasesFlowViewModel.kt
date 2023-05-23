@@ -71,11 +71,6 @@ class PastPurchasesFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.fetchPastPurchasesHeader(userId = userId)) }
-                .catch {
-                    debugLog { "fetch past purchases error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parsePastPurchasesHeaderResponse()
@@ -98,6 +93,11 @@ class PastPurchasesFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch past purchases error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -151,11 +151,6 @@ class PastPurchasesFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .catch {
-                    debugLog { "fetch past purchases sorted error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseFavoriteProductsResponse()
@@ -198,6 +193,11 @@ class PastPurchasesFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch past purchases sorted error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

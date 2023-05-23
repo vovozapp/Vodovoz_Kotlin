@@ -76,11 +76,6 @@ class SearchFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.fetchSearchDefaultData()) }
-                .catch {
-                    debugLog { "fetch default search data error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseDefaultSearchDataResponse()
@@ -99,6 +94,11 @@ class SearchFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch default search data error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -111,11 +111,6 @@ class SearchFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.fetchProductsByQueryHeader(query = state.data.query)) }
-                .catch {
-                    debugLog { "fetch products by query error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseProductsByQueryHeaderResponse()
@@ -134,6 +129,11 @@ class SearchFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch products by query error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -186,11 +186,6 @@ class SearchFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .catch {
-                    debugLog { "fetch products by query sorted error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseProductsByQueryResponse()
@@ -233,6 +228,11 @@ class SearchFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch products by query sorted error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

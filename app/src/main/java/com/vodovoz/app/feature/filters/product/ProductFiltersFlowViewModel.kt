@@ -38,11 +38,6 @@ class ProductFiltersFlowViewModel @Inject constructor(
         val id = categoryId ?: return
         viewModelScope.launch {
             flow { emit(repository.fetchAllFiltersByCategory(id)) }
-                .catch {
-                    debugLog { "fetch all filters by category error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseAllFiltersByCategoryResponse()
@@ -64,6 +59,11 @@ class ProductFiltersFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch all filters by category error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

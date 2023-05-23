@@ -70,11 +70,6 @@ class MapFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.fetchAddressByGeocodeResponse(latitude, longitude)) }
-                .catch {
-                    debugLog { "fetch address by geocode error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseAddressByGeocodeResponse()
@@ -97,6 +92,11 @@ class MapFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch address by geocode error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -337,11 +337,6 @@ class MapFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .catch {
-                    debugLog { "add address error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseAddAddressResponse()
@@ -356,6 +351,11 @@ class MapFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "add address error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -399,11 +399,6 @@ class MapFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .catch {
-                    debugLog { "update address error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseUpdateAddressResponse()
@@ -430,6 +425,11 @@ class MapFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "update address error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

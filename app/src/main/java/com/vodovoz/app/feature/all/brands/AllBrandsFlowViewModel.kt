@@ -34,11 +34,6 @@ class AllBrandsFlowViewModel @Inject constructor(
             val list = dataSource?.toList() ?: emptyList()
 
             flow { emit(repository.fetchAllBrands(list)) }
-                .catch {
-                    debugLog { "fetch all brands error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseAllBrandsResponse()
@@ -65,6 +60,11 @@ class AllBrandsFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch all brands error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

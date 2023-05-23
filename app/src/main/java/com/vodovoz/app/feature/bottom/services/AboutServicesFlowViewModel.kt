@@ -44,11 +44,6 @@ class AboutServicesFlowViewModel @Inject constructor(
     private fun fetchServicesData() {
         viewModelScope.launch {
             flow { emit(repository.fetchAboutServices("glav")) }
-                .catch {
-                    debugLog { "fetch about services error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseAboutServicesResponse()
@@ -72,6 +67,11 @@ class AboutServicesFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch about services error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -93,11 +93,6 @@ class AboutServicesFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.fetchAboutServices(type)) }
-                .catch {
-                    debugLog { "fetch service by type error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseServiceByIdResponse(type)
@@ -123,6 +118,11 @@ class AboutServicesFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch service by type error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

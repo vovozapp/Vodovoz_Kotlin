@@ -67,11 +67,6 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                     is DataSource.Slider -> emit(repository.fetchDoubleSliderHeader(dataSource.categoryId))
                 }
             }
-                .catch {
-                    debugLog { "fetch header error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = when (dataSource) {
@@ -98,6 +93,11 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch header error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -167,11 +167,6 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                     )
                 }
             }
-                .catch {
-                    debugLog { "fetch products by data source sorted error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = when (dataSource) {
@@ -225,6 +220,11 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch products by data source sorted error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }

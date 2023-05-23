@@ -29,11 +29,6 @@ class ContactsFlowViewModel @Inject constructor(
     fun fetchContacts() {
         viewModelScope.launch {
             flow { emit(repository.fetchContacts()) }
-                .catch {
-                    debugLog { "fetch contacts error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseContactsBundleResponse()
@@ -57,6 +52,11 @@ class ContactsFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch contacts error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
@@ -80,11 +80,6 @@ class ContactsFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .catch {
-                    debugLog { "send mail error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseSendMailResponse()
@@ -107,6 +102,11 @@ class ContactsFlowViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "send mail error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
                 .collect()
         }
     }
