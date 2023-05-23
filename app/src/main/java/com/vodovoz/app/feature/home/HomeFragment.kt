@@ -103,7 +103,6 @@ class HomeFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        flowViewModel.firstLoad()
         rateBottomViewModel.firstLoad()
     }
 
@@ -237,7 +236,7 @@ class HomeFragment : BaseFragment() {
                     }
 
                     val list = homeState.data.items.sortedBy { it.position }.map { it.item }
-                    val progressList = if (homeState.loadMore) {
+                    val progressList = if (!homeState.data.isSecondLoad) {
                         list + BottomProgressItem()
                     } else {
                         list

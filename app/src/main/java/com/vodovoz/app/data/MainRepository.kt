@@ -18,6 +18,7 @@ import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonP
 import com.vodovoz.app.data.parser.response.novelties.NoveltiesSliderResponseParser.parseNoveltiesSliderResponse
 import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
 import com.vodovoz.app.data.parser.response.popular.PopularSliderResponseJsonParser.parsePopularSliderResponse
+import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionSliderResponseJsonParser.parsePromotionSliderResponse
 import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
 import com.vodovoz.app.feature.home.HomeFlowViewModel
@@ -41,9 +42,11 @@ import com.vodovoz.app.mapper.CommentMapper.mapToUI
 import com.vodovoz.app.mapper.CountriesSliderBundleMapper.mapToUI
 import com.vodovoz.app.mapper.HistoryMapper.mapToUI
 import com.vodovoz.app.mapper.OrderMapper.mapToUI
+import com.vodovoz.app.mapper.PopupNewsMapper.mapToUI
 import com.vodovoz.app.mapper.PromotionMapper.mapToUI
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryDetailUI
+import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
@@ -936,11 +939,21 @@ class MainRepository @Inject constructor(
         )
 
     //Всплывающая новость
-    suspend fun fetchPopupNews(userId: Long?): ResponseBody = api.fetchNewsResponse(
-        action = "okno",
-        userId = userId,
-        platform = "android"
-    )
+    suspend fun fetchPopupNews(userId: Long?): PopupNewsUI? {
+        return coroutineScope {
+            val response = api.fetchNewsResponse(
+                action = "okno",
+                userId = userId,
+                platform = "android"
+            ).parsePopupNewsResponse()
+
+            if (response is ResponseEntity.Success) {
+                response.data.mapToUI()
+            } else {
+                null
+            }
+        }
+    }
 
     /**
      * pre order

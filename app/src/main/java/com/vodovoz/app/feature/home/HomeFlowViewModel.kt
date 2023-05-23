@@ -49,7 +49,6 @@ class HomeFlowViewModel @Inject constructor(
                     loadingPage = false,
                     data = state.data.copy(items = state.data.items + result),
                     isFirstLoad = true,
-                    loadMore = true,
                     error = null
                 )
             }
@@ -59,11 +58,12 @@ class HomeFlowViewModel @Inject constructor(
     fun secondLoad() {
         viewModelScope.launch {
             val tasks = secondLoadTasks()
+            val start = System.currentTimeMillis()
             val result = awaitAll(*tasks).flatten() + HomeState.fetchStaticItems()
+            debugLog { "second load task ${System.currentTimeMillis() - start}" }
             uiStateListener.value = state.copy(
                 loadingPage = false,
-                data = state.data.copy(items = state.data.items + result),
-                loadMore = false,
+                data = state.data.copy(items = state.data.items + result, isSecondLoad = true),
                 error = null
             )
         }
@@ -208,24 +208,15 @@ class HomeFlowViewModel @Inject constructor(
 
     private fun updatePopupNews() {
         viewModelScope.launch {
-            flow { emit(repository.fetchPopupNews(localDataSource.fetchUserId())) }
-                .catch { debugLog { "fetch popup news error ${it.localizedMessage}" } }
+            val userId = accountManager.fetchAccountId() ?: return@launch
+            flow { emit(repository.fetchPopupNews(userId)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parsePopupNewsResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        state.copy(
-                            data = state.data.copy(
-                                news = data
-                            )
-                        )
-                    } else {
-                        state
+                .catch { debugLog { "fetch popup news error ${it.localizedMessage}" } }
+                .collect {
+                    if (it != null) {
+                        uiStateListener.value = state.copy(data = state.data.copy(news = it))
                     }
                 }
-                .flowOn(Dispatchers.Default)
-                .collect()
         }
     }
 
@@ -352,7 +343,8 @@ class HomeFlowViewModel @Inject constructor(
     data class HomeState(
         val items: List<PositionItem>,
         val news: PopupNewsUI? = null,
-        val hasShow: Boolean = false
+        val hasShow: Boolean = false,
+        val isSecondLoad: Boolean = false
     ) : State {
 
         companion object {
