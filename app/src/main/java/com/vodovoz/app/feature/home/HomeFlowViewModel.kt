@@ -39,7 +39,7 @@ class HomeFlowViewModel @Inject constructor(
                 val tasks = firstLoadTasks()
                 val start = System.currentTimeMillis()
                 val result = awaitAll(*tasks).flatten()
-                debugLog { "first load task ${System.currentTimeMillis() - start} result size $result" }
+                debugLog { "first load task ${System.currentTimeMillis() - start} result size ${result.size}" }
                 uiStateListener.value = state.copy(
                     loadingPage = false,
                     data = state.data.copy(items = state.data.items + result),
@@ -55,7 +55,7 @@ class HomeFlowViewModel @Inject constructor(
             val tasks = secondLoadTasks()
             val start = System.currentTimeMillis()
             val result = awaitAll(*tasks).flatten() + HomeState.fetchStaticItems()
-            debugLog { "second load task ${System.currentTimeMillis() - start} result size $result" }
+            debugLog { "second load task ${System.currentTimeMillis() - start} result size ${result.size}" }
             uiStateListener.value = state.copy(
                 loadingPage = false,
                 data = state.data.copy(items = state.data.items + result, isSecondLoad = true),
