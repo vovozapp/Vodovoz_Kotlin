@@ -48,6 +48,7 @@ class CartManager @Inject constructor(
     suspend fun clearCart() {
         carts.clear()
         cartsStateListener.emit(carts)
+        updateCartListState(true)
         tabManager.clearBottomNavCartState()
     }
 
