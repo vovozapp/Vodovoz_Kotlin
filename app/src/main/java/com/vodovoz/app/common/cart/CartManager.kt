@@ -86,9 +86,11 @@ class CartManager @Inject constructor(
         updateCarts(id, newCount)
 
         runCatching {
+            debugLog { "add with gift" }
             actionWithGift(id = id, count = newCount, plus, giftId)
             updateCartListState(withUpdate)
         }.onFailure {
+            debugLog { "add with gift error ${it.localizedMessage}" }
             tabManager.loadingAddToCart(false, plus = true)
             updateCarts(id, newCount)
         }
@@ -96,6 +98,7 @@ class CartManager @Inject constructor(
 
     private suspend fun actionWithGift(id: Long, count: Int, plus: Boolean, giftId: String) {
         val idWithGift = "$id-$count;$giftId"
+        debugLog { "action add with gift $idWithGift" }
         tabManager.loadingAddToCart(true, plus = plus)
         repository.addProductFromServiceDetails(idWithGift)
         updateCarts(id, count)

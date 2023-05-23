@@ -70,14 +70,28 @@ object ProductJsonParser {
                     90L -> true
                     else -> false
                 }
-                false -> false
+                false -> {
+                    if (has("IBLOCK_ID")) {
+                        val idBlock = getLong("IBLOCK_ID")
+                        idBlock == 90L
+                    } else {
+                        false
+                    }
+                }
             },
             isGift = when(has("CATALOG")) {
                 true -> when(getJSONObject("CATALOG").getLong("IBLOCK_ID")) {
                     26L -> true
                     else -> false
                 }
-                false -> false
+                false -> {
+                    if (has("IBLOCK_ID")) {
+                        val idBlock = getLong("IBLOCK_ID")
+                        idBlock == 26L
+                    } else {
+                        false
+                    }
+                }
             },
             leftItems = when(has("CATALOG_QUANTITY")) {
                 true -> safeInt("CATALOG_QUANTITY")

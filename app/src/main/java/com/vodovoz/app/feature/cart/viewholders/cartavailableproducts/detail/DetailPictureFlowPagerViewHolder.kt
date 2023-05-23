@@ -29,6 +29,8 @@ class DetailPictureFlowPagerViewHolder(
         Glide
             .with(itemView.context)
             .load(item.url)
+            .placeholder(R.drawable.placeholderimageproduits)
+            .error(R.drawable.placeholderimageproduits)
             .into(binding.imgPicture)
     }
 
@@ -79,6 +81,8 @@ class DetailPictureFlowSliderViewHolder(
         Glide
             .with(itemView.context)
             .load(item.url)
+            .placeholder(R.drawable.placeholderimageproduits)
+            .error(R.drawable.placeholderimageproduits)
             .into(binding.imgPicture)
 
     }

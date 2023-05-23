@@ -677,6 +677,6 @@ interface MainApi {
     @GET("/newmobile/korzina/function/add/index.php")
     suspend fun addProductFromServiceDetails(
         @Query("action") action: String? = null,
-        @Query("idquanit") idWithGift: String? = null
+        @Query("idquanit", encoded = true) idWithGift: String? = null
     ): ResponseBody
 }
