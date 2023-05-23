@@ -5,6 +5,8 @@ import com.vodovoz.app.feature.bottom.services.newservs.model.AboutServicesNew
 import com.vodovoz.app.feature.home.ratebottom.model.RateBottomModel
 import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
 import com.vodovoz.app.feature.profile.cats.ProfileCategoriesModel
+import com.vodovoz.app.feature.search.qrcode.model.QrCodeModel
+import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -679,4 +681,10 @@ interface MainApi {
         @Query("action") action: String? = null,
         @Query("idquanit", encoded = true) idWithGift: String? = null
     ): ResponseBody
+
+    @GET("newmobile/el.php")
+    suspend fun fetchSearchDataByQrCode(
+        @Query("iblock_id") blockId: Int,
+        @Query("search") searchText: String? = null,
+    ): QrCodeModel
 }

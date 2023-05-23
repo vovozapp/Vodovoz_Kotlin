@@ -133,6 +133,9 @@ dependencies {
     //ImagePicker
     implementation 'com.github.dhaval2404:imagepicker:2.1'
 
+    //CodeBar
+    implementation 'me.dm7.barcodescanner:zxing:1.9'
+
 
     //Test
     testImplementation 'junit:junit:4.13.2'

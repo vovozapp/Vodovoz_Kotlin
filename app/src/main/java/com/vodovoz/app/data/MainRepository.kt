@@ -34,6 +34,7 @@ import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeProductsTab
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.map.api.MapKitFlowApi
+import com.vodovoz.app.feature.search.qrcode.model.QrCodeModel
 import com.vodovoz.app.mapper.BannerMapper.mapToUI
 import com.vodovoz.app.mapper.BrandMapper.mapToUI
 import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
@@ -57,6 +58,8 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
+import retrofit2.http.GET
+import retrofit2.http.Query
 import java.io.File
 import javax.inject.Inject
 
@@ -1581,4 +1584,10 @@ class MainRepository @Inject constructor(
         )
     }
 
+    suspend fun fetchSearchDataByQrCode(searchText: String) = coroutineScope {
+        api.fetchSearchDataByQrCode(
+            blockId = 12,
+            searchText = searchText
+        )
+    }
 }
