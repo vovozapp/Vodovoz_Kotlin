@@ -17,7 +17,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.common.permissions.LocationController
+import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentProductsFlowBinding
@@ -288,12 +288,12 @@ class ProductsListFlowFragment : BaseFragment() {
         }
     }
 
-    private val locationController by lazy {
-        LocationController(requireContext())
+    private val permissionsController by lazy {
+        PermissionsController(requireContext())
     }
 
     private fun navigateToQrCodeFragment() {
-        locationController.methodRequiresCameraPermission(requireActivity()) {
+        permissionsController.methodRequiresCameraPermission(requireActivity()) {
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.CAMERA

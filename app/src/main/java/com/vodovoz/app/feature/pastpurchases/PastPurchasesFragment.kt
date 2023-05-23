@@ -17,7 +17,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.common.permissions.LocationController
+import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.model.common.SortType
@@ -26,13 +26,10 @@ import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFragmentDirections
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
-import com.vodovoz.app.feature.home.HomeFlowViewModel
-import com.vodovoz.app.feature.home.HomeFragmentDirections
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -315,12 +312,12 @@ class PastPurchasesFragment : BaseFragment() {
         )
     }
 
-    private val locationController by lazy {
-        LocationController(requireContext())
+    private val permissionsController by lazy {
+        PermissionsController(requireContext())
     }
 
     private fun navigateToQrCodeFragment() {
-        locationController.methodRequiresCameraPermission(requireActivity()) {
+        permissionsController.methodRequiresCameraPermission(requireActivity()) {
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.CAMERA

@@ -17,27 +17,21 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
-import com.vodovoz.app.common.permissions.LocationController
+import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.feature.map.adapter.AddressResult
 import com.vodovoz.app.feature.map.adapter.AddressResultClickListener
 import com.vodovoz.app.feature.map.adapter.AddressResultFlowAdapter
 import com.vodovoz.app.ui.extensions.ColorExtensions.getColorWithAlpha
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.ui.model.DeliveryZoneUI
-import com.vodovoz.app.util.extensions.debugLog
-import com.vodovoz.app.util.extensions.whenCreated
-import com.vodovoz.app.util.extensions.whenStarted
 import com.yandex.mapkit.*
 import com.yandex.mapkit.directions.DirectionsFactory
 import com.yandex.mapkit.directions.driving.*
@@ -74,8 +68,8 @@ class MapController(
         context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
     }
 
-    private val locationController by lazy {
-        LocationController(context)
+    private val permissionsController by lazy {
+        PermissionsController(context)
     }
 
     private val fusedLocationClient by lazy {
@@ -169,7 +163,7 @@ class MapController(
                 }
             }
 
-            locationController.methodRequiresTwoPermission(activity) {
+            permissionsController.methodRequiresLocationsPermission(activity) {
                 moveToLastLocation()
             }
         }
@@ -550,7 +544,7 @@ class MapController(
     fun onStart(address: AddressUI?) {
         if (address == null) {
             if (detectGps()) {
-                locationController.methodRequiresTwoPermission(activity) {
+                permissionsController.methodRequiresLocationsPermission(activity) {
                     moveToLastLocation()
                 }
             } else {

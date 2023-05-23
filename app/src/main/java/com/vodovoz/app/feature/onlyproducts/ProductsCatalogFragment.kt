@@ -1,42 +1,25 @@
 package com.vodovoz.app.feature.onlyproducts
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.graphics.Rect
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.common.permissions.LocationController
+import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.FragmentFixAmountProductsBinding
-import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.ui.adapter.LinearProductsAdapter
-import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.base.ViewStateBaseFragment
-import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
-import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.subjects.PublishSubject
 import java.io.Serializable
 import javax.inject.Inject
 
@@ -170,12 +153,12 @@ class ProductsCatalogFragment : BaseFragment() {
         }
     }
 
-    private val locationController by lazy {
-        LocationController(requireContext())
+    private val permissionsController by lazy {
+        PermissionsController(requireContext())
     }
 
     private fun navigateToQrCodeFragment() {
-        locationController.methodRequiresCameraPermission(requireActivity()) {
+        permissionsController.methodRequiresCameraPermission(requireActivity()) {
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.CAMERA

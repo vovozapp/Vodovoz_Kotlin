@@ -6,12 +6,12 @@ import androidx.fragment.app.FragmentActivity
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 
-class LocationController(
+class PermissionsController(
     val context: Context
 ) {
 
     @AfterPermissionGranted(LOCATION_CONSTANTS.REQUEST_LOCATION_PERMISSION)
-    fun methodRequiresTwoPermission(activity: FragmentActivity, failure: () -> Unit = {}, success: () -> Unit = {}) {
+    fun methodRequiresLocationsPermission(activity: FragmentActivity, failure: () -> Unit = {}, success: () -> Unit = {}) {
         val perms = arrayOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION

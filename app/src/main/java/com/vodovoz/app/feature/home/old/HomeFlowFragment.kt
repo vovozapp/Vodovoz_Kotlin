@@ -20,7 +20,7 @@ import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentMainHomeFlowBinding
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.common.permissions.LocationController
+import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
 import com.vodovoz.app.feature.home.HomeController
@@ -37,7 +37,6 @@ import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.util.extensions.debugLog
-import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -368,12 +367,12 @@ class HomeFlowFragment : BaseFragment() {
         }
     }
 
-    private val locationController by lazy {
-        LocationController(requireContext())
+    private val permissionsController by lazy {
+        PermissionsController(requireContext())
     }
 
     private fun navigateToQrCodeFragment() {
-        locationController.methodRequiresCameraPermission(requireActivity()) {
+        permissionsController.methodRequiresCameraPermission(requireActivity()) {
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.CAMERA

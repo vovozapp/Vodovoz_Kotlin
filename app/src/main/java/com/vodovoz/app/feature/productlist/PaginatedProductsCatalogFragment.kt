@@ -15,14 +15,12 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.common.permissions.LocationController
+import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentProductsFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
-import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragmentDirections
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlist.brand.BrandFlowClickListener
 import com.vodovoz.app.feature.productlist.brand.BrandFlowController
@@ -288,12 +286,12 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
         }
     }
 
-    private val locationController by lazy {
-        LocationController(requireContext())
+    private val permissionsController by lazy {
+        PermissionsController(requireContext())
     }
 
     private fun navigateToQrCodeFragment() {
-        locationController.methodRequiresCameraPermission(requireActivity()) {
+        permissionsController.methodRequiresCameraPermission(requireActivity()) {
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.CAMERA

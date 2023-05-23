@@ -10,11 +10,10 @@ import androidx.navigation.Navigation
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.common.permissions.LocationController
+import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.navigation.setupWithNavController
 import com.vodovoz.app.databinding.FragmentMainBinding
-import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -25,8 +24,8 @@ class MainFragment : BaseFragment() {
     lateinit var tabManager: TabManager
 
 
-    private val locationController by lazy {
-        LocationController(requireContext())
+    private val permissionsController by lazy {
+        PermissionsController(requireContext())
     }
 
     private val viewModel: MainViewModel by viewModels()
@@ -133,7 +132,7 @@ class MainFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        locationController.methodRequiresTwoPermission(requireActivity())
+        permissionsController.methodRequiresLocationsPermission(requireActivity())
     }
 
     /**
