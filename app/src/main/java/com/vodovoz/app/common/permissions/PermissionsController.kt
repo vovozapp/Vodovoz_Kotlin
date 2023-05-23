@@ -42,4 +42,20 @@ class PermissionsController(
             failure.invoke()
         }
     }
+
+    @AfterPermissionGranted(LOCATION_CONSTANTS.REQUEST_RECORD_AUDIO_PERMISSION)
+    fun methodRequiresRecordAudioPermission(activity: FragmentActivity, failure: () -> Unit = {}, success: () -> Unit = {}) {
+        val perms = arrayOf(
+            Manifest.permission.RECORD_AUDIO,
+        )
+        if (EasyPermissions.hasPermissions(context, *perms)) {
+            success.invoke()
+        } else {
+            EasyPermissions.requestPermissions(
+                activity, "Необходимы разрешения, чтобы использовать приложение.",
+                LOCATION_CONSTANTS.REQUEST_RECORD_AUDIO_PERMISSION, *perms
+            )
+            failure.invoke()
+        }
+    }
 }

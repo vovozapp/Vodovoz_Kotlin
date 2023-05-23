@@ -5,8 +5,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.speech.RecognitionListener
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
 import android.view.View
 import androidx.core.app.ActivityCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -19,6 +23,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
+import com.vodovoz.app.common.speechrecognizer.SpeechController
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
@@ -48,8 +53,10 @@ import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWitho
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.extensions.addOnBackPressedCallback
+import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -114,7 +121,8 @@ class HomeFragment : BaseFragment() {
         initSearchToolbar(
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
-            { navigateToQrCodeFragment() }
+            { navigateToQrCodeFragment() },
+            { startSpeechRecognizer() }
         )
         bindErrorRefresh { flowViewModel.refresh() }
         observeUiState()
@@ -516,7 +524,7 @@ class HomeFragment : BaseFragment() {
 
     internal fun ActionEntity.invoke(
         navController: NavController = findNavController(),
-        activity: FragmentActivity = requireActivity()
+        activity: FragmentActivity = requireActivity(),
     ) {
         val navDirect = when (this) {
             is ActionEntity.Brand ->
@@ -616,6 +624,32 @@ class HomeFragment : BaseFragment() {
             }
 
             findNavController().navigate(R.id.qrCodeFragment)
+
+        }
+    }
+
+    private val speechController by lazy {
+        SpeechController(requireContext()) {
+            debugLog { "speech result $it" }
+            if (it.isEmpty()) {
+                requireActivity().snack("Пожалуйста, повторите.")
+            } else {
+                findNavController().navigate(R.id.searchFragment, bundleOf("query" to it))
+            }
+        }
+    }
+
+    private fun startSpeechRecognizer() {
+        permissionsController.methodRequiresRecordAudioPermission(requireActivity()) {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.RECORD_AUDIO
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresRecordAudioPermission
+            }
+
+            speechController.start()
 
         }
     }

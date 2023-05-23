@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -19,6 +20,7 @@ import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.common.speechrecognizer.SpeechController
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentProductsWithoutFiltersFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
@@ -30,6 +32,8 @@ import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWitho
 import com.vodovoz.app.feature.productlistnofilter.ProductsListNoFilterFlowController
 import com.vodovoz.app.feature.productlistnofilter.ProductsListNoFilterFlowViewModel
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.Serializable
 import javax.inject.Inject
@@ -107,6 +111,7 @@ class ProductsListNoFilterFlowFragment : BaseFragment() {
             { findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToSearchFragment()) },
             { findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToSearchFragment()) },
             { navigateToQrCodeFragment() },
+            { startSpeechRecognizer() },
             true
         )
     }
@@ -298,6 +303,32 @@ class ProductsListNoFilterFlowFragment : BaseFragment() {
             }
 
             findNavController().navigate(R.id.qrCodeFragment)
+
+        }
+    }
+
+    private val speechController by lazy {
+        SpeechController(requireContext()) {
+            debugLog { "speech result $it" }
+            if (it.isEmpty()) {
+                requireActivity().snack("Пожалуйста, повторите.")
+            } else {
+                findNavController().navigate(R.id.searchFragment, bundleOf("query" to it))
+            }
+        }
+    }
+
+    private fun startSpeechRecognizer() {
+        permissionsController.methodRequiresRecordAudioPermission(requireActivity()) {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.RECORD_AUDIO
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresRecordAudioPermission
+            }
+
+            speechController.start()
 
         }
     }

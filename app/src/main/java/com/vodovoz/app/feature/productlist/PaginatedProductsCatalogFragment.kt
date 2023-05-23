@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +19,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.common.speechrecognizer.SpeechController
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentProductsFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
@@ -27,6 +29,8 @@ import com.vodovoz.app.feature.productlist.brand.BrandFlowController
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.FilterValueUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
+import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -93,6 +97,7 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
             { findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment()) },
             { findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment()) },
             { navigateToQrCodeFragment() },
+            { startSpeechRecognizer() },
             true
         )
     }
@@ -301,6 +306,32 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
             }
 
             findNavController().navigate(R.id.qrCodeFragment)
+
+        }
+    }
+
+    private val speechController by lazy {
+        SpeechController(requireContext()) {
+            debugLog { "speech result $it" }
+            if (it.isEmpty()) {
+                requireActivity().snack("Пожалуйста, повторите.")
+            } else {
+                findNavController().navigate(R.id.searchFragment, bundleOf("query" to it))
+            }
+        }
+    }
+
+    private fun startSpeechRecognizer() {
+        permissionsController.methodRequiresRecordAudioPermission(requireActivity()) {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.RECORD_AUDIO
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresRecordAudioPermission
+            }
+
+            speechController.start()
 
         }
     }

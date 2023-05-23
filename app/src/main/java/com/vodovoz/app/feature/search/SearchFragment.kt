@@ -316,12 +316,6 @@ class SearchFragment : BaseFragment() {
             }
         }
 
-        SearchFragmentArgs.fromBundle(requireArguments()).query.let { query ->
-            if (query.isNotEmpty()) {
-                updateProductsByQuery(query)
-            }
-        }
-
         if (state.matchesQuery.isEmpty()) {
             binding.matchesQueriesContainer.visibility = View.GONE
         } else {

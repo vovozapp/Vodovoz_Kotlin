@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.search
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
@@ -40,8 +41,21 @@ class SearchFlowViewModel @Inject constructor(
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
-    private val accountManager: AccountManager
+    private val accountManager: AccountManager,
+    private val savedState: SavedStateHandle
 ) : PagingContractViewModel<SearchFlowViewModel.SearchState, SearchFlowViewModel.SearchEvents>(SearchState()){
+
+    private val query = savedState.get<String>("query")
+
+    init {
+        viewModelScope.launch {
+            val q = query ?: return@launch
+            debugLog { "query $q" }
+            if (q.isNotEmpty()) {
+                updateQuery(q)
+            }
+        }
+    }
 
     private val changeLayoutManager = MutableStateFlow(LINEAR)
     fun observeChangeLayoutManager() = changeLayoutManager.asStateFlow()
