@@ -41,6 +41,10 @@ class SplashFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        firstLoad()
+    }
+
+    private fun firstLoad() {
         lifecycleScope.launchWhenStarted {
             siteStateManager.requestSiteState()
         }
@@ -55,9 +59,25 @@ class SplashFragment : BaseFragment() {
         accountManager.fetchAccountId()
     }
 
+    private fun refreshLoad() {
+        lifecycleScope.launchWhenStarted {
+            siteStateManager.requestSiteState()
+        }
+        viewModel.sendFirebaseToken()
+        flowViewModel.refresh()
+        catalogViewModel.refresh()
+        cartFlowViewModel.refreshIdle()
+        favoriteViewModel.refreshIdle()
+        profileViewModel.refreshIdle()
+        accountManager.fetchAccountId()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeFlowViewModel()
+        bindErrorRefresh {
+            refreshLoad()
+        }
     }
 
     private fun observeFlowViewModel() {
@@ -68,18 +88,24 @@ class SplashFragment : BaseFragment() {
                         "${state.data.items.map { it.position }}"
                     }
                     if (state.isFirstLoad) {
-                        val active = siteStateManager.fetchSiteStateActive()
-                        debugLog { "site state active $active" }
-                        if (active) {
-                            findNavController().navigate(R.id.mainFragment)
+                        if (state.error is ErrorState.NetworkError) {
+                            showError(state.error)
                         } else {
-                            findNavController().navigate(R.id.blockAppFragment)
+                            checkSiteStateWithNavigate()
                         }
                     }
-                    if (state.error is ErrorState.NetworkError) {
-                        showError(state.error)
-                    }
+
                 }
+        }
+    }
+
+    private suspend fun checkSiteStateWithNavigate() {
+        val active = siteStateManager.fetchSiteStateActive()
+        debugLog { "site state active $active" }
+        if (active) {
+            findNavController().navigate(R.id.mainFragment)
+        } else {
+            findNavController().navigate(R.id.blockAppFragment)
         }
     }
 }

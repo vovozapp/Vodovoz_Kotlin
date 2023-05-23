@@ -42,7 +42,11 @@ class HomeFlowViewModel @Inject constructor(
                     loadingPage = false,
                     data = state.data.copy(items = state.data.items + result),
                     isFirstLoad = true,
-                    error = null
+                    error = if (result.isNotEmpty()) {
+                        null
+                    } else {
+                        state.error
+                    }
                 )
             }
         }
@@ -52,12 +56,21 @@ class HomeFlowViewModel @Inject constructor(
         viewModelScope.launch {
             val tasks = secondLoadTasks()
             val start = System.currentTimeMillis()
-            val result = awaitAll(*tasks).flatten() + HomeState.fetchStaticItems()
-            debugLog { "second load task ${System.currentTimeMillis() - start} result size ${result.size}" }
+            val result = awaitAll(*tasks).flatten()
+            val mappedResult = if (result.isNotEmpty()) {
+                result + HomeState.fetchStaticItems()
+            } else {
+                result
+            }
+            debugLog { "second load task ${System.currentTimeMillis() - start} result size ${mappedResult.size}" }
             uiStateListener.value = state.copy(
                 loadingPage = false,
-                data = state.data.copy(items = state.data.items + result, isSecondLoad = true),
-                error = null
+                data = state.data.copy(items = state.data.items + mappedResult, isSecondLoad = true),
+                error = if (mappedResult.isNotEmpty()) {
+                    null
+                } else {
+                    state.error
+                }
             )
         }
     }
@@ -67,8 +80,10 @@ class HomeFlowViewModel @Inject constructor(
             state.copy(
                 loadingPage = true,
                 data = state.data.copy(
-                    items = HomeState.idle().items
-                )
+                    items = HomeState.idle().items,
+                    isSecondLoad = false
+                ),
+                isFirstLoad = false
             )
         viewModelScope.launch {
             val tasks = firstLoadTasks() + secondLoadTasks()
@@ -80,8 +95,13 @@ class HomeFlowViewModel @Inject constructor(
             }
             uiStateListener.value = state.copy(
                 loadingPage = false,
-                data = state.data.copy(items = state.data.items + mappedResult),
-                error = null
+                data = state.data.copy(items = state.data.items + mappedResult, isSecondLoad = true),
+                error = if (mappedResult.isNotEmpty()) {
+                    null
+                } else {
+                    state.error
+                },
+                isFirstLoad = true
             )
         }
     }
