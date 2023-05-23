@@ -1263,9 +1263,11 @@ class MainRepository @Inject constructor(
         action: String = "token",
         userId: Long? = null,
         token: String,
-    ) = api.sendFirebaseToken(
-        action = action, userId = userId, token = token
-    )
+    ) = coroutineScope {
+        api.sendFirebaseToken(
+            action = action, userId = userId, token = token
+        )
+    }
 
     /**
      * Services

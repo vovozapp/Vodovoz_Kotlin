@@ -22,7 +22,9 @@ class SplashViewModel @Inject constructor(
 
     fun sendFirebaseToken() {
         viewModelScope.launch {
-            accountManager.sendFirebaseToken()
+            kotlin.runCatching {
+                accountManager.sendFirebaseToken()
+            }
         }
     }
 

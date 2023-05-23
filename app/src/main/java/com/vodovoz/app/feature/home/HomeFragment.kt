@@ -224,10 +224,8 @@ class HomeFragment : BaseFragment() {
                 .collect { homeState ->
 
                     if (homeState.loadingPage) {
-                        binding.homeRv.isVisible = false
                         showLoaderWithBg(true)
                     } else {
-                        binding.homeRv.isVisible = true
                         showLoaderWithBg(false)
                     }
 

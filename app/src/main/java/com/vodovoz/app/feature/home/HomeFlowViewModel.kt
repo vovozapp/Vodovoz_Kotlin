@@ -7,28 +7,23 @@ import com.vodovoz.app.common.content.*
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
-import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
-import com.vodovoz.app.data.local.LocalDataSource
-import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
 import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfo
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeProductsTabs
 import com.vodovoz.app.feature.home.viewholders.hometriplenav.HomeTripleNav
-import com.vodovoz.app.mapper.PopupNewsMapper.mapToUI
 import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeFlowViewModel @Inject constructor(
     private val repository: MainRepository,
-    private val localDataSource: LocalDataSource,
-    private val dataRepository: DataRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
@@ -44,7 +39,7 @@ class HomeFlowViewModel @Inject constructor(
                 val tasks = firstLoadTasks()
                 val start = System.currentTimeMillis()
                 val result = awaitAll(*tasks).flatten()
-                debugLog { "first load task ${System.currentTimeMillis() - start}" }
+                debugLog { "first load task ${System.currentTimeMillis() - start} result size $result" }
                 uiStateListener.value = state.copy(
                     loadingPage = false,
                     data = state.data.copy(items = state.data.items + result),
@@ -60,7 +55,7 @@ class HomeFlowViewModel @Inject constructor(
             val tasks = secondLoadTasks()
             val start = System.currentTimeMillis()
             val result = awaitAll(*tasks).flatten() + HomeState.fetchStaticItems()
-            debugLog { "second load task ${System.currentTimeMillis() - start}" }
+            debugLog { "second load task ${System.currentTimeMillis() - start} result size $result" }
             uiStateListener.value = state.copy(
                 loadingPage = false,
                 data = state.data.copy(items = state.data.items + result, isSecondLoad = true),
@@ -79,10 +74,15 @@ class HomeFlowViewModel @Inject constructor(
             )
         viewModelScope.launch {
             val tasks = firstLoadTasks() + secondLoadTasks()
-            val result = awaitAll(*tasks).flatten() + HomeState.fetchStaticItems()
+            val result = awaitAll(*tasks).flatten()
+            val mappedResult = if (result.isNotEmpty()) {
+                result + HomeState.fetchStaticItems()
+            } else {
+                result
+            }
             uiStateListener.value = state.copy(
                 loadingPage = false,
-                data = state.data.copy(items = state.data.items + result),
+                data = state.data.copy(items = state.data.items + mappedResult),
                 error = null
             )
         }

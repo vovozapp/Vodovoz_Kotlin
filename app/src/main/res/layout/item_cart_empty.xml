@@ -12,7 +12,7 @@
         android:id="@+id/appCompatImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/png_cart"
+        android:src="@drawable/png_cart_old"
         android:layout_marginTop="@dimen/space_32"
         android:layout_marginBottom="@dimen/space_8"
         app:layout_constraintTop_toTopOf="parent"
