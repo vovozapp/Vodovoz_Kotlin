@@ -1,9 +1,12 @@
 package com.vodovoz.app.feature.home.old
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +20,7 @@ import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentMainHomeFlowBinding
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.permissions.LocationController
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
 import com.vodovoz.app.feature.home.HomeController
@@ -91,7 +95,8 @@ class HomeFlowFragment : BaseFragment() {
         homeController.bind(binding.homeRv, binding.refreshContainer)
         initSearchToolbar(
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
-            { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) }
+            { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
+            { navigateToQrCodeFragment() }
         )
     }
 
@@ -360,6 +365,25 @@ class HomeFlowFragment : BaseFragment() {
         when(flowViewModel.isLoginAlready()) {
             true -> findNavController().navigate(HomeFragmentDirections.actionToPreOrderBS(id, name, picture))
             false -> findNavController().navigate(HomeFragmentDirections.actionToProfileFragment())
+        }
+    }
+
+    private val locationController by lazy {
+        LocationController(requireContext())
+    }
+
+    private fun navigateToQrCodeFragment() {
+        locationController.methodRequiresCameraPermission(requireActivity()) {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresCameraPermission
+            }
+
+            findNavController().navigate(R.id.qrCodeFragment)
+
         }
     }
 }

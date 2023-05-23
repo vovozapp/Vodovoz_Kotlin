@@ -110,7 +110,7 @@ abstract class BaseFragment : Fragment() {
         _viewBinding = null
     }
 
-    protected fun initSearchToolbar(onContainerClick: () -> Unit, bindEt: () -> Unit, showBackBtn: Boolean = false) {
+    protected fun initSearchToolbar(onContainerClick: () -> Unit, bindEt: () -> Unit, onQrCodeClick: () -> Unit = {}, showBackBtn: Boolean = false) {
         viewBinding.appbarLayout.isVisible = true
         viewBinding.searchAppBar.isVisible = true
         viewBinding.imgBack.setOnClickListener { findNavController().popBackStack() }
@@ -124,6 +124,10 @@ abstract class BaseFragment : Fragment() {
             if (isFocusable) {
                 bindEt.invoke()
             }
+        }
+
+        viewBinding.searchContainer.imgQr.setOnClickListener {
+            onQrCodeClick.invoke()
         }
     }
 

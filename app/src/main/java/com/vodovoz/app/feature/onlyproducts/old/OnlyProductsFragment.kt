@@ -1,8 +1,11 @@
 package com.vodovoz.app.feature.onlyproducts.old
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -12,6 +15,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.permissions.LocationController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.FragmentFixAmountProductsBinding
 import com.vodovoz.app.feature.onlyproducts.OnlyProductsController
@@ -77,6 +81,7 @@ class OnlyProductsFragment : BaseFragment() {
         initSearchToolbar(
             { findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment()) },
             { findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment()) },
+            { navigateToQrCodeFragment() },
             true
         )
     }
@@ -149,6 +154,25 @@ class OnlyProductsFragment : BaseFragment() {
             override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
                 viewModel.changeRating(id, rating, oldRating)
             }
+        }
+    }
+
+    private val locationController by lazy {
+        LocationController(requireContext())
+    }
+
+    private fun navigateToQrCodeFragment() {
+        locationController.methodRequiresCameraPermission(requireActivity()) {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresCameraPermission
+            }
+
+            findNavController().navigate(R.id.qrCodeFragment)
+
         }
     }
 

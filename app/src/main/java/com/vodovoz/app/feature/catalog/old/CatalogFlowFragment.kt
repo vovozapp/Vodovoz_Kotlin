@@ -1,6 +1,9 @@
 package com.vodovoz.app.feature.catalog.old
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -9,6 +12,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentMainCatalogBinding
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.permissions.LocationController
 import com.vodovoz.app.databinding.FragmentMainCatalogFlowBinding
 import com.vodovoz.app.feature.catalog.CatalogFlowViewModel
 import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
@@ -52,7 +56,8 @@ class CatalogFlowFragment : BaseFragment() {
     private fun initSearch() {
         initSearchToolbar(
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
-            { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) }
+            { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
+            { navigateToQrCodeFragment() }
         )
     }
 
@@ -83,4 +88,22 @@ class CatalogFlowFragment : BaseFragment() {
         }
     }
 
+    private val locationController by lazy {
+        LocationController(requireContext())
+    }
+
+    private fun navigateToQrCodeFragment() {
+        locationController.methodRequiresCameraPermission(requireActivity()) {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresCameraPermission
+            }
+
+            findNavController().navigate(R.id.qrCodeFragment)
+
+        }
+    }
 }

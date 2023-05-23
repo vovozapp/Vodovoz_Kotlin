@@ -1,7 +1,10 @@
 package com.vodovoz.app.feature.favorite.old
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -14,6 +17,7 @@ import com.vodovoz.app.databinding.FragmentMainFavoriteFlowBinding
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.permissions.LocationController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
@@ -279,8 +283,28 @@ class FavoriteFlowFragment : BaseFragment() {
     private fun initSearch() {
         initSearchToolbar(
             { findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment()) },
-            { findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment()) }
+            { findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment()) },
+            { navigateToQrCodeFragment() }
         )
+    }
+
+    private val locationController by lazy {
+        LocationController(requireContext())
+    }
+
+    private fun navigateToQrCodeFragment() {
+        locationController.methodRequiresCameraPermission(requireActivity()) {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresCameraPermission
+            }
+
+            findNavController().navigate(R.id.qrCodeFragment)
+
+        }
     }
 
 }

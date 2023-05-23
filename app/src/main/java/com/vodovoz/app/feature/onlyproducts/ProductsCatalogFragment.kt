@@ -1,12 +1,15 @@
 package com.vodovoz.app.feature.onlyproducts
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -19,6 +22,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.permissions.LocationController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.FragmentFixAmountProductsBinding
 import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
@@ -89,7 +93,8 @@ class ProductsCatalogFragment : BaseFragment() {
         initSearchToolbar(
             { findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment()) },
             { findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment()) },
-            true
+            { navigateToQrCodeFragment() },
+           true
         )
     }
 
@@ -165,141 +170,22 @@ class ProductsCatalogFragment : BaseFragment() {
         }
     }
 
-    sealed class DataSource : Serializable {
-        class BannerProducts(val categoryId: Long) : DataSource()
+    private val locationController by lazy {
+        LocationController(requireContext())
     }
 
-}
-/*
-@AndroidEntryPoint
-class ProductsCatalogFragment : ViewStateBaseFragment() {
-
-    private lateinit var binding: FragmentFixAmountProductsBinding
-    private val viewModel: ProductsCatalogViewModel by viewModels()
-
-    private val compositeDisposable = CompositeDisposable()
-
-    private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
-    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
-    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
-
-    private val linearProductsAdapter =  LinearProductsAdapter(
-        onProductClick = {
-            findNavController().navigate(ProductsCatalogFragmentDirections.actionToProductDetailFragment(it))
-        },
-        onChangeFavoriteStatus = { productId, status ->
-            viewModel.changeFavoriteStatus(productId, status)
-        },
-        onChangeCartQuantity = { productId, quantity ->
-            viewModel.changeCart(productId, quantity)
-        },
-        onNotAvailableMore = {},
-        onNotifyWhenBeAvailable = { id, name, picture ->
-            findNavController().navigate(ProductsCatalogFragmentDirections.actionToPreOrderBS(
-                id, name, picture
-            ))
-        },
-    )
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        getArgs()
-        subscribeSubjects()
-    }
-
-    private fun getArgs() {
-        viewModel.updateArgs(ProductsCatalogFragmentArgs.fromBundle(requireArguments()).dataSource)
-    }
-
-    private fun subscribeSubjects() {
-        onChangeProductQuantitySubject.subscribeBy { pair ->
-            viewModel.changeCart(pair.first, pair.second)
-        }.addTo(compositeDisposable)
-        onFavoriteClickSubject.subscribeBy { pair ->
-            viewModel.changeFavoriteStatus(pair.first, pair.second)
-        }.addTo(compositeDisposable)
-        onProductClickSubject.subscribeBy { productId ->
-            findNavController().navigate(
-                ProductsCatalogFragmentDirections.actionToProductDetailFragment(productId)
-            )
-        }.addTo(compositeDisposable)
-    }
-
-    override fun setContentView(
-        inflater: LayoutInflater,
-        container: ViewGroup
-    ) = FragmentFixAmountProductsBinding.inflate(
-        inflater,
-        container,
-        false
-    ).apply { binding = this }.root
-
-    override fun initView() {
-        initProductRecycler()
-        initAppBar()
-        initSearch()
-        observeViewModel()
-    }
-
-    private fun initAppBar() {
-        binding.imgBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
-    }
-
-    private fun initProductRecycler() {
-        binding.productRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.productRecycler.adapter = linearProductsAdapter
-        binding.productRecycler.setScrollElevation(binding.appBar)
-        binding.productRecycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
-        val space = resources.getDimension(R.dimen.space_16).toInt()
-        binding.productRecycler.addItemDecoration(
-            object : RecyclerView.ItemDecoration() {
-                override fun getItemOffsets(
-                    outRect: Rect,
-                    view: View,
-                    parent: RecyclerView,
-                    state: RecyclerView.State
-                ) {
-                    with(outRect) {
-                        top = space
-                        bottom = space
-                        right = space
-                    }
-                }
+    private fun navigateToQrCodeFragment() {
+        locationController.methodRequiresCameraPermission(requireActivity()) {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresCameraPermission
             }
-        )
-    }
 
-    private fun initSearch() {
-        binding.incSearch.clSearchContainer.setOnClickListener {
-            findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment())
-        }
-        binding.incSearch.etSearch.setOnFocusChangeListener { _, isFocusable ->
-            if (isFocusable) {
-                findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment())
-            }
-        }
-    }
+            findNavController().navigate(R.id.qrCodeFragment)
 
-    override fun update() {
-        viewModel.updateData()
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun observeViewModel() {
-        viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
-            when(state) {
-                is ViewState.Error -> onStateError(state.errorMessage)
-                is ViewState.Loading -> onStateLoading()
-                is ViewState.Hide -> onStateHide()
-                is ViewState.Success -> onStateSuccess()
-            }
-        }
-
-        viewModel.productUIListLD.observe(viewLifecycleOwner) { productUIList ->
-            linearProductsAdapter.productUIList = productUIList
-            linearProductsAdapter.notifyDataSetChanged()
         }
     }
 
@@ -307,9 +193,4 @@ class ProductsCatalogFragment : ViewStateBaseFragment() {
         class BannerProducts(val categoryId: Long) : DataSource()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.dispose()
-    }
-
-}*/
+}

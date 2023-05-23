@@ -1,9 +1,12 @@
 package com.vodovoz.app.feature.home
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
@@ -16,6 +19,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.permissions.LocationController
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
@@ -112,7 +116,8 @@ class HomeFragment : BaseFragment() {
         homeController.bind(binding.homeRv, binding.refreshContainer)
         initSearchToolbar(
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
-            { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) }
+            { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
+            { navigateToQrCodeFragment() }
         )
         bindErrorRefresh { flowViewModel.refresh() }
         observeUiState()
@@ -596,6 +601,25 @@ class HomeFragment : BaseFragment() {
             } else {
                 requireActivity().finish()
             }
+        }
+    }
+
+    private val locationController by lazy {
+        LocationController(requireContext())
+    }
+
+    private fun navigateToQrCodeFragment() {
+        locationController.methodRequiresCameraPermission(requireActivity()) {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresCameraPermission
+            }
+
+            findNavController().navigate(R.id.qrCodeFragment)
+
         }
     }
 }

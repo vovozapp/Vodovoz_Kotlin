@@ -26,4 +26,20 @@ class LocationController(
             failure.invoke()
         }
     }
+
+    @AfterPermissionGranted(LOCATION_CONSTANTS.REQUEST_CAMERA_PERMISSION)
+    fun methodRequiresCameraPermission(activity: FragmentActivity, failure: () -> Unit = {}, success: () -> Unit = {}) {
+        val perms = arrayOf(
+            Manifest.permission.CAMERA,
+        )
+        if (EasyPermissions.hasPermissions(context, *perms)) {
+            success.invoke()
+        } else {
+            EasyPermissions.requestPermissions(
+                activity, "Необходимы разрешения, чтобы использовать приложение.",
+                LOCATION_CONSTANTS.REQUEST_CAMERA_PERMISSION, *perms
+            )
+            failure.invoke()
+        }
+    }
 }

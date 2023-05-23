@@ -1,9 +1,12 @@
 package com.vodovoz.app.feature.productlistnofilter
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +17,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.permissions.LocationController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentProductsWithoutFiltersFlowBinding
@@ -102,6 +106,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
         initSearchToolbar(
             { findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToSearchFragment()) },
             { findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToSearchFragment()) },
+            { navigateToQrCodeFragment() },
             true
         )
     }
@@ -276,6 +281,25 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
         }
     }
 
+    private val locationController by lazy {
+        LocationController(requireContext())
+    }
+
+    private fun navigateToQrCodeFragment() {
+        locationController.methodRequiresCameraPermission(requireActivity()) {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresCameraPermission
+            }
+
+            findNavController().navigate(R.id.qrCodeFragment)
+
+        }
+    }
+
     sealed class DataSource : Serializable {
         class Brand(val brandId: Long) : DataSource()
         class Country(val countryId: Long) : DataSource()
@@ -285,367 +309,3 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
     }
 
 }
-/*
-@AndroidEntryPoint
-class PaginatedProductsCatalogWithoutFiltersFragment : ViewStateBaseFragment() {
-
-    companion object {
-        const val CATEGORY_ID = "CATEGORY_ID"
-        const val SORT_TYPE = "SORT_TYPE"
-    }
-
-    private lateinit var binding: FragmentProductsWithoutFiltersBinding
-    private val viewModel: PaginatedProductsCatalogWithoutFiltersViewModel by viewModels()
-
-    private var viewMode: ViewMode = ViewMode.LIST
-
-    private val compositeDisposable = CompositeDisposable()
-
-    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
-    private val updateSubject: PublishSubject<Boolean> = PublishSubject.create()
-    private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
-    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
-
-    private var productAdapter: PagingProductsAdapter = PagingProductsAdapter(
-        onProductClick = {
-            findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToProductDetailFragment(it))
-        },
-        onChangeFavoriteStatus = { productId, status ->
-            viewModel.changeFavoriteStatus(productId, status)
-        },
-        onChangeCartQuantity = { productId, quantity ->
-            viewModel.changeCart(productId, quantity)
-        },
-        onNotAvailableMore = {},
-        onNotifyWhenBeAvailable = { id, name, picture ->
-            findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToPreOrderBS(
-                id, name, picture
-            ))
-        },
-        productDiffItemCallback = ProductDiffItemCallback(),
-        viewMode = viewMode
-    )
-
-    private val onCategoryClickSubject: PublishSubject<Long> = PublishSubject.create()
-    private val categoryTabsAdapter = CategoryTabsAdapter(onCategoryClickSubject)
-
-    private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
-
-    private lateinit var categoriesLinearLayoutManager: LinearLayoutManager
-
-    //Linear
-    private val linearLayoutManager: LinearLayoutManager by lazy {
-        LinearLayoutManager(requireContext())
-    }
-    private val linearMarginDecoration: ListMarginDecoration by lazy {
-        ListMarginDecoration(space)
-    }
-    private val linearDividerItemDecoration: DividerItemDecoration by lazy {
-        DividerItemDecoration(requireContext(), linearLayoutManager.orientation)
-    }
-
-    //Grid
-    private val gridLayoutManager: GridLayoutManager by lazy {
-        GridLayoutManager(requireContext(), 2).apply {
-            spanSizeLookup =  object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    return if (position == productAdapter.itemCount && productAdapter.itemCount > 0) 2
-                    else 1
-                }
-            }
-        }
-    }
-    private val gridMarginDecoration: GridMarginDecoration by lazy {
-        GridMarginDecoration(space)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        getArgs()
-        subscribeSubjects()
-    }
-
-    private fun getArgs() {
-        viewModel.updateArgs(PaginatedProductsCatalogWithoutFiltersFragmentArgs.fromBundle(requireArguments()).dataSource)
-    }
-
-    private fun subscribeSubjects() {
-        onProductClickSubject.subscribeBy { productId ->
-            findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToProductDetailFragment(productId))
-        }.addTo(compositeDisposable)
-        onFavoriteClickSubject.subscribeBy { pair ->
-            viewModel.changeFavoriteStatus(pair.first, pair.second)
-        }.addTo(compositeDisposable)
-        onChangeProductQuantitySubject.subscribeBy { pair ->
-            viewModel.changeCart(pair.first, pair.second)
-        }.addTo(compositeDisposable)
-    }
-
-    override fun setContentView(
-        inflater: LayoutInflater,
-        container: ViewGroup
-    ) = FragmentProductsWithoutFiltersBinding.inflate(
-        inflater,
-        container,
-        false
-    ).apply { binding = this }.root
-
-    override fun initView() {
-        setHasOptionsMenu(true)
-        initProductRecycler()
-        initBackButton()
-        observeResultLiveData()
-        initHeader()
-        initSearch()
-        initShare()
-        initBrandRecycler()
-        observeViewModel()
-    }
-
-    override fun update() { viewModel.updateCategoryHeader() }
-
-    private fun initBackButton() {
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    findNavController().popBackStack()
-                }
-            }
-        )
-    }
-
-    private fun initShare() {
-        binding.imgShare.setOnClickListener {
-            Intent.createChooser(
-                Intent(Intent.ACTION_SEND).apply {
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_TEXT, viewModel.categoryHeader!!.shareUrl)
-                },
-                "Shearing Option"
-            ).let { startActivity(it) }
-        }
-    }
-
-    private fun initSearch() {
-        binding.incAppBar.incSearch.clSearchContainer.setOnClickListener {
-            findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
-        }
-        binding.incAppBar.incSearch.etSearch.setOnFocusChangeListener { _, isFocusable ->
-            if (isFocusable) {
-                findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment())
-            }
-        }
-    }
-
-    private fun initHeader() {
-        binding.imgViewMode.setOnClickListener { changeViewMode() }
-        binding.tvSort.setOnClickListener { showBottomSortSettings() }
-        binding.imgCategories.setOnClickListener { showMiniCatalog() }
-        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
-    }
-
-    private fun initBrandRecycler() {
-        categoriesLinearLayoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.categoriesRecycler.layoutManager = categoriesLinearLayoutManager
-        binding.categoriesRecycler.adapter = categoryTabsAdapter
-        binding.categoriesRecycler.addItemDecoration(CategoryTabsMarginDecoration(space/2))
-        onCategoryClickSubject.subscribe { categoryId ->
-            viewModel.updateCategoryId(categoryId)
-        }
-    }
-
-    private fun initProductRecycler() {
-        changeViewMode()
-        updateSubject.subscribeBy { productAdapter.retry() }
-        binding.productRecycler.addOnScrollListener(
-            object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    binding.appBar.elevation =
-                        if (binding.productRecycler.canScrollVertically(-1)) 16f
-                        else 0f
-                }
-            }
-        )
-    }
-
-    private fun observeResultLiveData() {
-        findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<Long>(CATEGORY_ID)?.observe(viewLifecycleOwner) { categoryId ->
-                viewModel.updateCategoryId(categoryId)
-            }
-
-        findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<String>(SORT_TYPE)?.observe(viewLifecycleOwner) { sortType ->
-                viewModel.updateSortType(SortType.valueOf(sortType))
-                binding.tvSort.text = SortType.valueOf(sortType).sortName
-            }
-    }
-
-    private fun observeViewModel() {
-        viewModel.sortTypeLD.observe(viewLifecycleOwner) { sortType ->
-            binding.tvSort.text = sortType.sortName
-        }
-
-        viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
-            when(state) {
-                is ViewState.Loading -> onStateLoading()
-                is ViewState.Error -> onStateError(state.errorMessage)
-                is ViewState.Success -> {}
-                is ViewState.Hide -> onStateHide()
-            }
-        }
-
-        viewModel.categoryUILD.observe(viewLifecycleOwner) { categoryUI ->
-            updateHeader(categoryUI)
-            updatePager()
-        }
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun updateHeader(categoryUI: CategoryUI) {
-        binding.tvCategoryName.text = categoryUI.name
-        binding.tvProductAmount.text = categoryUI.productAmount.toString()
-
-        when(categoryUI.shareUrl.isEmpty()) {
-            true -> binding.imgShare.visibility = View.INVISIBLE
-            false -> binding.imgShare.visibility = View.VISIBLE
-        }
-
-        when(categoryUI.categoryUIList.isNotEmpty()) {
-            true -> {
-                binding.categoriesRecycler.visibility = View.VISIBLE
-                binding.imgCategories.visibility = View.VISIBLE
-            }
-            else -> {
-                binding.imgCategories.visibility = View.GONE
-                binding.categoriesRecycler.visibility = View.GONE
-            }
-        }
-
-        categoryTabsAdapter.categoryUIList = categoryUI.categoryUIList
-        categoryTabsAdapter.selectedId = viewModel.categoryId
-        categoryTabsAdapter.notifyDataSetChanged()
-
-        val index = viewModel.categoryUIList.indexOfFirst { it.id == viewModel.categoryId }
-        categoriesLinearLayoutManager.scrollToPosition(index)
-    }
-
-    private fun updatePager() {
-        productAdapter = PagingProductsAdapter(
-            onProductClick = {
-                findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToProductDetailFragment(it))
-            },
-            onChangeFavoriteStatus = { productId, status ->
-                viewModel.changeFavoriteStatus(productId, status)
-            },
-            onChangeCartQuantity = { productId, quantity ->
-                viewModel.changeCart(productId, quantity)
-            },
-            onNotAvailableMore = {},
-            onNotifyWhenBeAvailable = { id, name, picture ->
-                findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToPreOrderBS(
-                    id, name, picture
-                ))
-            },
-            productDiffItemCallback = ProductDiffItemCallback(),
-            viewMode = viewMode
-        )
-
-        productAdapter.addLoadStateListener { state ->
-            when (state.refresh) {
-                is LoadState.Loading -> {}
-                is LoadState.Error -> onStateError((state.refresh as LoadState.Error).error.message)
-                is LoadState.NotLoading -> onStateSuccess()
-            }
-        }
-
-        binding.productRecycler.adapter = productAdapter.withLoadStateHeaderAndFooter(
-            header = LoadStateAdapter(updateSubject),
-            footer = LoadStateAdapter(updateSubject)
-        )
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.updateProducts().collectLatest { productList ->
-                productAdapter.submitData(productList)
-            }
-        }
-    }
-
-    private fun updateProductRecyclerDecorationByViewMode() {
-        with(binding.productRecycler) {
-            when (viewMode) {
-                ViewMode.GRID -> {
-                    removeItemDecoration(linearMarginDecoration)
-                    removeItemDecoration(linearDividerItemDecoration)
-                    addItemDecoration(gridMarginDecoration)
-                }
-                ViewMode.LIST -> {
-                    removeItemDecoration(gridMarginDecoration)
-                    addItemDecoration(linearMarginDecoration)
-                    addItemDecoration(linearDividerItemDecoration)
-                }
-            }
-        }
-    }
-
-    private fun changeViewMode() {
-        var firstVisiblePosition = -1
-        var lastVisiblePosition = -1
-
-        when (viewMode) {
-            ViewMode.GRID -> {
-                viewMode = ViewMode.LIST
-                binding.imgViewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_list))
-                firstVisiblePosition = gridLayoutManager.findFirstVisibleItemPosition()
-                lastVisiblePosition = gridLayoutManager.findLastVisibleItemPosition()
-                binding.productRecycler.layoutManager = linearLayoutManager
-            }
-            ViewMode.LIST -> {
-                viewMode = ViewMode.GRID
-                binding.imgViewMode.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.png_table))
-                firstVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition()
-                lastVisiblePosition = linearLayoutManager.findLastVisibleItemPosition()
-                binding.productRecycler.layoutManager = gridLayoutManager
-            }
-        }
-        productAdapter.viewMode = viewMode
-        updateProductRecyclerDecorationByViewMode()
-
-        for (position in firstVisiblePosition..lastVisiblePosition) {
-            productAdapter.notifyItemChanged(position)
-        }
-
-        linearLayoutManager.scrollToPositionWithOffset(firstVisiblePosition, 0)
-        gridLayoutManager.scrollToPositionWithOffset(firstVisiblePosition, 0)
-    }
-
-    private fun showBottomSortSettings() = findNavController().navigate(
-        PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToSortProductsSettingsBottomFragment(viewModel.sortType.name)
-    )
-
-    private fun showMiniCatalog() = findNavController().navigate(
-        PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToMiniCatalogBottomFragment(
-            viewModel.categoryUIList.toTypedArray(),
-            viewModel.categoryId!!
-        )
-    )
-
-    override fun onStop() {
-        super.onStop()
-        binding.productRecycler.layoutManager = null
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.dispose()
-    }
-
-    sealed class DataSource : Serializable {
-        class Brand(val brandId: Long) : DataSource()
-        class Country(val countryId: Long) : DataSource()
-        class Discount: DataSource()
-        class Novelties : DataSource()
-        class Slider(val categoryId: Long) : DataSource()
-    }
-}*/
