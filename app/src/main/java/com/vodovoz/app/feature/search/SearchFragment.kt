@@ -13,6 +13,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.chip.Chip
 import com.vodovoz.app.R
@@ -88,6 +89,8 @@ class SearchFragment : BaseFragment() {
         SearchFlowController(viewModel, cartManager, likeManager, getProductsClickListener(), requireContext(), ratingProductManager)
     }
 
+    private val args: SearchFragmentArgs by navArgs()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.firstLoad()
@@ -100,6 +103,11 @@ class SearchFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (args.query.isNotEmpty()) {
+            binding.incAppBar.incSearch.etSearch.setText(args.query)
+            viewModel.fetchMatchesQueries(args.query)
+        }
 
         categoryTabsController.bind(binding.categoriesRecycler, space)
         bestForYouController.bind(binding.bestForYouRv)
