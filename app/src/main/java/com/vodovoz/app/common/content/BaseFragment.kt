@@ -1,6 +1,7 @@
 package com.vodovoz.app.common.content
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
+import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
@@ -23,6 +25,7 @@ import com.vodovoz.app.databinding.FragmentBasePageBinding
 import com.vodovoz.app.databinding.ViewSearchBinding
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setDrawableColor
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.drawable
 
 abstract class BaseFragment : Fragment() {
 
@@ -213,6 +216,16 @@ abstract class BaseFragment : Fragment() {
     fun showHideDefToolbarItem(itemId: Int, show: Boolean) {
         val menuItem = viewBinding.appBarDef.tbToolbar.menu.findItem(itemId)
         menuItem.isVisible = show
+    }
+
+    fun setMicroEnabled(enabled: Boolean) {
+        if (enabled) {
+            viewBinding.searchContainer.imgMicro.background = requireContext().drawable(R.drawable.green_oval)
+            ImageViewCompat.setImageTintList(viewBinding.searchContainer.imgMicro, ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white)))
+        } else {
+            viewBinding.searchContainer.imgMicro.background = null
+            ImageViewCompat.setImageTintList(viewBinding.searchContainer.imgMicro, ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.micro)))
+        }
     }
 
     override fun onResume() {

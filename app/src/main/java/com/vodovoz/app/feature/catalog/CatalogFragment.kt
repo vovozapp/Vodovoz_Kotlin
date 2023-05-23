@@ -136,6 +136,7 @@ class CatalogFragment : BaseFragment() {
 
     private val speechController by lazy {
         SpeechController(requireContext()) {
+            setMicroEnabled(false)
             debugLog { "speech result $it" }
             if (it.isEmpty()) {
                 requireActivity().snack("Пожалуйста, повторите.")
@@ -154,7 +155,7 @@ class CatalogFragment : BaseFragment() {
             ) {
                 return@methodRequiresRecordAudioPermission
             }
-
+            setMicroEnabled(true)
             speechController.start()
 
         }

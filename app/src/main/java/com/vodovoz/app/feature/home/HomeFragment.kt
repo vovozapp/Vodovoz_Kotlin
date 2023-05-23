@@ -631,6 +631,7 @@ class HomeFragment : BaseFragment() {
     private val speechController by lazy {
         SpeechController(requireContext()) {
             debugLog { "speech result $it" }
+            setMicroEnabled(false)
             if (it.isEmpty()) {
                 requireActivity().snack("Пожалуйста, повторите.")
             } else {
@@ -649,6 +650,7 @@ class HomeFragment : BaseFragment() {
                 return@methodRequiresRecordAudioPermission
             }
 
+            setMicroEnabled(true)
             speechController.start()
 
         }

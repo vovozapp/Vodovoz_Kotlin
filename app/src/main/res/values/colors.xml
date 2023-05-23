@@ -21,7 +21,9 @@
     <color name="color_transparent">#00000000</color>
 
     <color name="orange">#FF8D00</color>
+    <color name="green_new">#179500</color>
     <color name="green">#7CBA00</color>
+    <color name="micro">#889295</color>
     <color name="red">#ED4842</color>
     <color name="yellow">#ffd600</color>
 
