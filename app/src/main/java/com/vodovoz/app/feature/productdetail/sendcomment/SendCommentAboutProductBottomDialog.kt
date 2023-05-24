@@ -1,27 +1,32 @@
 package com.vodovoz.app.feature.productdetail.sendcomment
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.RatingBar
-import android.widget.RatingBar.OnRatingBarChangeListener
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.imageview.ShapeableImageView
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
+import com.vodovoz.app.common.media.ImagePickerFragment
+import com.vodovoz.app.common.media.MediaManager
 import com.vodovoz.app.databinding.BsSendCommentBinding
-import com.vodovoz.app.feature.home.popup.NewsClickListener
-import com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment
-import com.vodovoz.app.ui.model.PopupNewsUI
+import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.util.FieldValidationsSettings
+import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
@@ -29,7 +34,7 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
     companion object {
         fun newInstance(
             productId: Long,
-            rate: Int
+            rate: Int,
         ) = SendCommentAboutProductBottomDialog().apply {
             arguments = bundleOf("productId" to productId, "rate" to rate)
         }
@@ -44,8 +49,19 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
 
     private val args: SendCommentAboutProductBottomDialogArgs by navArgs()
 
+    @Inject
+    lateinit var siteStateManager: SiteStateManager
+
+    @Inject
+    lateinit var mediaManager: MediaManager
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        debugLog { "init onViewCreated $this" }
+
+        observeSiteState()
+        observeMediaManager()
 
         if (args.rate != -4) {
             binding.rbRating.rating = args.rate.toFloat()
@@ -59,8 +75,88 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
             binding.errorTv.isVisible = false
         }
 
-        binding.rbRating.onRatingBarChangeListener =  RatingBar.OnRatingBarChangeListener { p0, newRating, p2 ->
-            binding.errorTv.isVisible = false
+        binding.rbRating.onRatingBarChangeListener =
+            RatingBar.OnRatingBarChangeListener { p0, newRating, p2 ->
+                binding.errorTv.isVisible = false
+            }
+
+        binding.images.plusImagePreview.setOnClickListener {
+            findNavController().navigate(SendCommentAboutProductBottomDialogDirections.actionToImagePickerFragment(ImagePickerFragment.CREATE))
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        debugLog { "init onDestroy $this" }
+    }
+
+    private fun observeMediaManager() {
+        lifecycleScope.launchWhenStarted {
+            mediaManager
+                .observePublicationImage()
+                .collect {list ->
+                    if (list != null) {
+                        if (list.size >= 5) {
+                            binding.images.plusImagePreview.visibility = View.GONE
+                        }
+                        list.forEachIndexed { index, file ->
+                            when (index) {
+                                0 -> {
+                                    setImage(file.path, binding.images.previewImage1)
+                                    if (list.size == 1) {
+                                        binding.images.previewImage2.visibility = View.GONE
+                                        binding.images.previewImage3.visibility = View.GONE
+                                        binding.images.previewImage4.visibility = View.GONE
+                                        binding.images.previewImage5.visibility = View.GONE
+                                    }
+                                }
+                                1 -> {
+                                    setImage(file.path, binding.images.previewImage2)
+                                    if (list.size == 2) {
+                                        binding.images.previewImage3.visibility = View.GONE
+                                        binding.images.previewImage4.visibility = View.GONE
+                                        binding.images.previewImage5.visibility = View.GONE
+                                    }
+                                }
+                                2 -> {
+                                    setImage(file.path, binding.images.previewImage3)
+                                    if (list.size == 3) {
+                                        binding.images.previewImage4.visibility = View.GONE
+                                        binding.images.previewImage5.visibility = View.GONE
+                                    }
+                                }
+                                3 -> {
+                                    setImage(file.path, binding.images.previewImage4)
+                                    if (list.size == 4) {
+                                        binding.images.previewImage5.visibility = View.GONE
+                                    }
+                                }
+                                4 -> setImage(file.path, binding.images.previewImage5)
+                            }
+                        }
+
+                        mediaManager.removePublicationImage()
+                    }
+                }
+        }
+    }
+
+    private fun setImage(uri: String, target: ShapeableImageView) {
+        target.visibility = View.VISIBLE
+        Glide.with(requireContext())
+            .load(uri)
+            .placeholder(R.drawable.placeholderimageproduits)
+            .into(target)
+    }
+
+    private fun observeSiteState() {
+        lifecycleScope.launchWhenStarted {
+            siteStateManager
+                .observeSiteState()
+                .collect {
+                    val showComment = it?.showComments ?: false
+                    binding.images.root.isVisible = showComment
+                }
         }
     }
 
@@ -93,14 +189,15 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
     private fun initSendButton() {
         binding.btnSend.setOnClickListener {
 
-            if(binding.rbRating.rating.toInt() == 0) {
+            if (binding.rbRating.rating.toInt() == 0) {
                 binding.errorTv.text = "Поставьте оценку от 1 до 5"
                 binding.errorTv.isVisible = true
                 return@setOnClickListener
             }
 
             if (binding.etComment.text.toString().length < FieldValidationsSettings.MIN_COMMENT_LENGTH) {
-                binding.errorTv.text = "Длина отзыва должа быть не менее ${FieldValidationsSettings.MIN_COMMENT_LENGTH} символов"
+                binding.errorTv.text =
+                    "Длина отзыва должа быть не менее ${FieldValidationsSettings.MIN_COMMENT_LENGTH} символов"
                 binding.errorTv.isVisible = true
                 return@setOnClickListener
             }
@@ -114,83 +211,3 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
     }
 
 }
-
-/*
-@AndroidEntryPoint
-class SendCommentAboutProductBottomDialog : ViewStateBaseBottomFragment() {
-
-    private lateinit var binding: BsSendCommentBinding
-    private val viewModel: SendCommentAboutProductViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-        getArgs()
-    }
-
-    private fun getArgs() {
-        viewModel.updateArgs(SendCommentAboutProductBottomDialogArgs.fromBundle(requireArguments()).productId)
-    }
-
-    override fun setContentView(
-        inflater: LayoutInflater,
-        container: ViewGroup
-    ) = BsSendCommentBinding.inflate(
-        inflater,
-        container,
-        false
-    ).apply { binding = this }.root
-
-    override fun initView() {
-        onStateSuccess()
-        initHeader()
-        initDialog()
-        initSendButton()
-        observeViewModel()
-    }
-
-    override fun update() {}
-
-    private fun initHeader() {
-        binding.incHeader.imgClose.setOnClickListener { dialog?.dismiss() }
-        binding.incHeader.tvTitle.text = getString(R.string.new_comment_title)
-    }
-
-    private fun initDialog() {
-        dialog?.let {
-            val behavior = (dialog as BottomSheetDialog).behavior
-            behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        }
-    }
-
-    private fun initSendButton() {
-        binding.btnSend.setOnClickListener {
-            viewModel.validate(
-                comment = binding.etComment.text.toString(),
-                rating = binding.rbRating.rating.toInt()
-            )
-        }
-    }
-
-    private fun observeViewModel() {
-        viewModel.errorLD.observe(viewLifecycleOwner) { errorMessage ->
-            Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_SHORT).show()
-        }
-
-        viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
-            when(state) {
-                is ViewState.Loading -> onStateLoading()
-                is ViewState.Hide -> onStateHide()
-                is ViewState.Error -> {
-                    onStateSuccess()
-                    Snackbar.make(binding.root, state.errorMessage, Snackbar.LENGTH_SHORT).show()
-                }
-                is ViewState.Success -> {
-                    dialog?.cancel()
-                    Snackbar.make(binding.root, "Отзыв успешно доавблен!", Snackbar.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-}*/

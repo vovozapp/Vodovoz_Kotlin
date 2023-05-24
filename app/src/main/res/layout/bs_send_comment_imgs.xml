@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView android:scrollbarSize="0dp"
+    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/previewImage1"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_margin="4dp"
+            app:shapeAppearanceOverlay="@style/RoundedImagePlusComment"
+            tools:src="@tools:sample/avatars"
+            android:layout_width="@dimen/_45sdp"
+            android:layout_height="@dimen/_45sdp"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/previewImage2"
+            android:layout_margin="4dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:shapeAppearanceOverlay="@style/RoundedImagePlusComment"
+            tools:src="@tools:sample/avatars"
+            android:layout_width="@dimen/_45sdp"
+            android:layout_height="@dimen/_45sdp"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/previewImage3"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_margin="4dp"
+            app:shapeAppearanceOverlay="@style/RoundedImagePlusComment"
+            tools:src="@tools:sample/avatars"
+            android:layout_width="@dimen/_45sdp"
+            android:layout_height="@dimen/_45sdp"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/previewImage4"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_margin="4dp"
+            app:shapeAppearanceOverlay="@style/RoundedImagePlusComment"
+            tools:src="@tools:sample/avatars"
+            android:layout_width="@dimen/_45sdp"
+            android:layout_height="@dimen/_45sdp"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/previewImage5"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_margin="4dp"
+            app:shapeAppearanceOverlay="@style/RoundedImagePlusComment"
+            tools:src="@tools:sample/avatars"
+            android:layout_width="@dimen/_45sdp"
+            android:layout_height="@dimen/_45sdp"/>
+
+        <TextView
+            android:text="+"
+            android:background="@drawable/back_comment_plus"
+            android:textSize="@dimen/_30sdp"
+            android:layout_margin="4dp"
+            android:id="@+id/plusImagePreview"
+            android:paddingBottom="8dp"
+            android:gravity="center"
+            android:layout_width="@dimen/_45sdp"
+            android:layout_height="@dimen/_45sdp"/>
+
+    </LinearLayout>
+</HorizontalScrollView>

@@ -31,9 +31,10 @@
             android:id="@+id/rbRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/space_16"
+            android:layout_margin="@dimen/space_8"
             android:numStars="5"
             android:progressTint="@color/accentPrimary"
+            app:layout_constraintBottom_toTopOf="@id/guideline2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/mtDivider" />
@@ -41,17 +42,18 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_marginHorizontal="@dimen/space_16"
             android:textColor="@color/red"
             android:paddingStart="8dp"
             android:visibility="gone"
+            android:textSize="13sp"
             android:id="@+id/errorTv"
             tools:visibility="visible"
             tools:text="fasasfasfasfasfasf"
             app:layout_constraintBottom_toTopOf="@id/etComment"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rbRating" />
+            />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/etComment"
@@ -66,7 +68,21 @@
             android:padding="@dimen/space_16"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/guideline2" />
+            app:layout_constraintTop_toBottomOf="@id/guideline2"
+            app:layout_constraintBottom_toTopOf="@id/guideline3"/>
+
+        <include
+            android:id="@+id/images"
+            android:layout_marginStart="@dimen/space_16"
+            android:visibility="gone"
+            tools:visibility="visible"
+            layout="@layout/bs_send_comment_imgs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guideline3"
+            />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnSend"
@@ -78,14 +94,22 @@
             android:text="@string/send_comment_btn_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etComment" />
+            app:layout_constraintTop_toBottomOf="@id/images"
+             />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="150dp" />
+            app:layout_constraintGuide_begin="130dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="550dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

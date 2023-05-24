@@ -371,4 +371,10 @@
         <item name="android:fontFamily">@font/rotonda_normal</item>
     </style>
 
+    <style name="RoundedImagePlusComment" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+
 </resources>

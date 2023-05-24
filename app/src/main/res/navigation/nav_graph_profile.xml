@@ -502,6 +502,9 @@
             android:name="rate"
             android:defaultValue="-4"
             app:argType="integer"/>
+        <action android:id="@+id/action_to_imagePickerFragment"
+            app:destination="@id/imagePickerFragment"
+            />
     </dialog>
     <dialog
         android:id="@+id/aboutServicesDialogFragment"
@@ -863,7 +866,11 @@
     <fragment
         android:id="@+id/imagePickerFragment"
         android:name="com.vodovoz.app.common.media.ImagePickerFragment"
-        android:label="ImagePickerFragment" />
+        android:label="ImagePickerFragment">
+        <argument
+            android:name="image picker receiver"
+            app:argType="long" />
+    </fragment>
 
     <fragment
         android:id="@+id/serviceDetailNewFragment"

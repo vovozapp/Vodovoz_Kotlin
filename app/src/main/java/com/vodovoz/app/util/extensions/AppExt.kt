@@ -189,6 +189,14 @@ fun intArgs(key: String): ReadOnlyProperty<Fragment, Int> {
     }
 }
 
+fun longArgs(key: String): ReadOnlyProperty<Fragment, Long> {
+    return ReadOnlyProperty { thisRef, _ ->
+        val args = thisRef.requireArguments()
+        require(args.containsKey(key)) { "Arguments don't contain key $key" }
+        requireNotNull(args.getLong(key))
+    }
+}
+
 fun stringArgs(key: String): ReadOnlyProperty<Fragment, String> {
     return ReadOnlyProperty { thisRef, _ ->
         val args = thisRef.requireArguments()

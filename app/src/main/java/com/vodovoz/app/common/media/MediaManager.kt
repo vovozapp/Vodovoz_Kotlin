@@ -9,7 +9,8 @@ import javax.inject.Singleton
 
 @Singleton
 class MediaManager @Inject constructor() {
-    private val publicationImageListener = MutableStateFlow<File?>(null)
+
+    private val publicationImageListener = MutableStateFlow<List<File>?>(null)
     private val avatarImageListener = MutableStateFlow<File?>(null)
 
     fun observePublicationImage() = publicationImageListener.asStateFlow()
@@ -23,8 +24,8 @@ class MediaManager @Inject constructor() {
         avatarImageListener.value = null
     }
 
-    fun savePublicationImage(imageFile: File) {
-        publicationImageListener.value = imageFile
+    fun savePublicationImage(files: List<File>) {
+        publicationImageListener.value = files
     }
 
     fun removePublicationImage() {
