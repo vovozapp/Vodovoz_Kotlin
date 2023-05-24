@@ -915,4 +915,8 @@
             app:argType="long" />
     </fragment>
 
+    <fragment
+        android:id="@+id/notificationSettingsFragment"
+        android:name="com.vodovoz.app.feature.profile.notificationsettings.NotificationSettingsFragment"
+        android:label="NotificationSettingsFragment" />
 </navigation>
