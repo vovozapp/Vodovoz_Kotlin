@@ -40,7 +40,7 @@ data class NotSettingsItem(
     override fun areItemsTheSame(item: Item): Boolean {
         if (item !is NotSettingsItem) return false
 
-        return this == item
+        return this.id == item.id
     }
 
 }

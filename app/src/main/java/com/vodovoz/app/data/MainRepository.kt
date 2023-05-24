@@ -1592,20 +1592,7 @@ class MainRepository @Inject constructor(
         )
     }
 
-    suspend fun fetchNotificationSettingsData(action:String, userId: Long, key: String? = null, value: String? = null) = coroutineScope {
-        val uri = ApiConfig.VODOVOZ_URL
-            .toUri()
-            .buildUpon()
-            .encodedPath("newmobile/uvedomleniya_new.php")
-            .appendQueryParameter("action", action)
-            .appendQueryParameter("userid", userId.toString())
-            .apply {
-                if (key != null && value != null) {
-                    appendQueryParameter(key, value)
-                }
-            }
-            .build()
-            .toString()
+    suspend fun fetchNotificationSettingsData(uri: String) = coroutineScope {
         api.fetchNotificationSettingsData(uri)
     }
 }
