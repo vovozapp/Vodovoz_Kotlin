@@ -22,6 +22,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.media.MediaManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.speechrecognizer.SpeechController
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
@@ -49,6 +50,7 @@ import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.PR
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.VIEWED_TITLE
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
+import com.vodovoz.app.feature.productdetail.ProductDetailsFragmentDirections
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.feature.sitestate.SiteStateManager
@@ -88,6 +90,9 @@ class HomeFragment : BaseFragment() {
 
     @Inject
     lateinit var siteStateManager: SiteStateManager
+
+    @Inject
+    lateinit var mediaManager: MediaManager
 
     private val homeController by lazy {
         HomeController(
@@ -131,6 +136,7 @@ class HomeFragment : BaseFragment() {
         observeEvents()
         bindBackPressed()
         observeSiteState()
+        observeMediaManager()
     }
 
     private fun observeSiteState() {
@@ -641,6 +647,27 @@ class HomeFragment : BaseFragment() {
 
             SpeechDialogFragment().show(childFragmentManager, "TAG")
 
+        }
+    }
+
+    private fun observeMediaManager() {
+        lifecycleScope.launchWhenStarted {
+            mediaManager
+                .observeCommentData()
+                .collect {
+                    if(it != null && it.show) {
+                        mediaManager.dontShow()
+                        if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutProductFragment) {
+                            findNavController().popBackStack()
+                        }
+                        findNavController().navigate(
+                            HomeFragmentDirections.actionToSendCommentAboutProductFragment(
+                                it.productId,
+                                it.rate
+                            )
+                        )
+                    }
+                }
         }
     }
 }
