@@ -137,8 +137,8 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
                             }
                         }
 
-                        mediaManager.removePublicationImage()
-                        mediaManager.removeCommentData()
+                     // mediaManager.removePublicationImage() //todo
+                     // mediaManager.removeCommentData() //todo
                     }
                 }
         }

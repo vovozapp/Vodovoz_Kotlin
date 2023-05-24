@@ -27,7 +27,7 @@ class MediaManager @Inject constructor() {
     }
 
     fun savePublicationImage(files: List<File>) {
-        publicationImageListener.value = files
+        publicationImageListener.value = publicationImageListener.value?.plus(files) ?: files
     }
 
     fun removePublicationImage() {
