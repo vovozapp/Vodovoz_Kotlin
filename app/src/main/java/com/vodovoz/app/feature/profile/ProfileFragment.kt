@@ -208,7 +208,8 @@ class ProfileFragment : BaseFragment() {
             }
 
             override fun onNotificationsClick() {
-                openNotificationSettingsForApp(requireContext())
+             //   openNotificationSettingsForApp(requireContext())
+                findNavController().navigate(R.id.notificationSettingsFragment)
             }
 
             override fun onAboutDeliveryClick() {
