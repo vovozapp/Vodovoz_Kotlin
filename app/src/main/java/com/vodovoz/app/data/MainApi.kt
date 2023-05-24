@@ -5,6 +5,7 @@ import com.vodovoz.app.feature.bottom.services.newservs.model.AboutServicesNew
 import com.vodovoz.app.feature.home.ratebottom.model.RateBottomModel
 import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
 import com.vodovoz.app.feature.profile.cats.ProfileCategoriesModel
+import com.vodovoz.app.feature.profile.notificationsettings.model.NotificationSettingsModel
 import com.vodovoz.app.feature.search.qrcode.model.QrCodeModel
 import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
@@ -687,4 +688,9 @@ interface MainApi {
         @Query("iblock_id") blockId: Int,
         @Query("search") searchText: String? = null,
     ): QrCodeModel
+
+    @GET
+    suspend fun fetchNotificationSettingsData(
+        @Url url: String
+    ): NotificationSettingsModel
 }

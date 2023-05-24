@@ -34,6 +34,7 @@ import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeProductsTab
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.map.api.MapKitFlowApi
+import com.vodovoz.app.feature.profile.notificationsettings.model.NotificationSettingsModel
 import com.vodovoz.app.feature.search.qrcode.model.QrCodeModel
 import com.vodovoz.app.mapper.BannerMapper.mapToUI
 import com.vodovoz.app.mapper.BrandMapper.mapToUI
@@ -1589,5 +1590,22 @@ class MainRepository @Inject constructor(
             blockId = 12,
             searchText = searchText
         )
+    }
+
+    suspend fun fetchNotificationSettingsData(action:String, userId: Long, key: String? = null, value: String? = null) = coroutineScope {
+        val uri = ApiConfig.VODOVOZ_URL
+            .toUri()
+            .buildUpon()
+            .encodedPath("newmobile/uvedomleniya_new.php")
+            .appendQueryParameter("action", action)
+            .appendQueryParameter("userid", userId.toString())
+            .apply {
+                if (key != null && value != null) {
+                    appendQueryParameter(key, value)
+                }
+            }
+            .build()
+            .toString()
+        api.fetchNotificationSettingsData(uri)
     }
 }
