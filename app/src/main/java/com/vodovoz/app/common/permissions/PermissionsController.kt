@@ -10,7 +10,7 @@ class PermissionsController(
     val context: Context
 ) {
 
-    @AfterPermissionGranted(LOCATION_CONSTANTS.REQUEST_LOCATION_PERMISSION)
+    @AfterPermissionGranted(PermissionsConstants.REQUEST_LOCATION_PERMISSION)
     fun methodRequiresLocationsPermission(activity: FragmentActivity, failure: () -> Unit = {}, success: () -> Unit = {}) {
         val perms = arrayOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -21,13 +21,13 @@ class PermissionsController(
         } else {
             EasyPermissions.requestPermissions(
                 activity, "Необходимы разрешения, чтобы использовать приложение.",
-                LOCATION_CONSTANTS.REQUEST_LOCATION_PERMISSION, *perms
+                PermissionsConstants.REQUEST_LOCATION_PERMISSION, *perms
             )
             failure.invoke()
         }
     }
 
-    @AfterPermissionGranted(LOCATION_CONSTANTS.REQUEST_CAMERA_PERMISSION)
+    @AfterPermissionGranted(PermissionsConstants.REQUEST_CAMERA_PERMISSION)
     fun methodRequiresCameraPermission(activity: FragmentActivity, failure: () -> Unit = {}, success: () -> Unit = {}) {
         val perms = arrayOf(
             Manifest.permission.CAMERA,
@@ -37,13 +37,13 @@ class PermissionsController(
         } else {
             EasyPermissions.requestPermissions(
                 activity, "Необходимы разрешения, чтобы использовать приложение.",
-                LOCATION_CONSTANTS.REQUEST_CAMERA_PERMISSION, *perms
+                PermissionsConstants.REQUEST_CAMERA_PERMISSION, *perms
             )
             failure.invoke()
         }
     }
 
-    @AfterPermissionGranted(LOCATION_CONSTANTS.REQUEST_RECORD_AUDIO_PERMISSION)
+    @AfterPermissionGranted(PermissionsConstants.REQUEST_RECORD_AUDIO_PERMISSION)
     fun methodRequiresRecordAudioPermission(activity: FragmentActivity, failure: () -> Unit = {}, success: () -> Unit = {}) {
         val perms = arrayOf(
             Manifest.permission.RECORD_AUDIO,
@@ -53,7 +53,7 @@ class PermissionsController(
         } else {
             EasyPermissions.requestPermissions(
                 activity, "Необходимы разрешения, чтобы использовать приложение.",
-                LOCATION_CONSTANTS.REQUEST_RECORD_AUDIO_PERMISSION, *perms
+                PermissionsConstants.REQUEST_RECORD_AUDIO_PERMISSION, *perms
             )
             failure.invoke()
         }
