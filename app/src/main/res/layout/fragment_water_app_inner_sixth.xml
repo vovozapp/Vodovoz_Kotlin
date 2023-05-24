@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:gravity="center">
+
+        <LinearLayout
+            android:id="@+id/llLowContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_50sdp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:src="@drawable/ic_sport_low"
+                android:layout_marginEnd="@dimen/_3sdp"/>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cwLowContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/_3sdp"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="@dimen/_30sdp"
+                app:cardBackgroundColor="@color/bluePrimary">
+
+                <LinearLayout
+                    android:layout_width="@dimen/_190sdp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:fontFamily="@font/rotonda_bold"
+                        android:textColor="@color/white"
+                        android:layout_weight="1"
+                        android:textSize="@dimen/_20ssp"
+                        android:gravity="center"
+                        android:text="Мало"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:fontFamily="@font/rotondac"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_13ssp"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:text="Не занимаюсь спортом"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+
+        <LinearLayout
+            android:id="@+id/llMediumContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_50sdp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:src="@drawable/ic_sport_medium"
+                android:layout_marginEnd="@dimen/_3sdp"/>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cwMediumContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/_3sdp"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="@dimen/_30sdp"
+                app:cardBackgroundColor="#f1f1f1">
+
+                <LinearLayout
+                    android:layout_width="@dimen/_190sdp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_height="0dp"
+                        android:fontFamily="@font/rotonda_bold"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_20ssp"
+                        android:gravity="center"
+                        android:text="Средне"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:fontFamily="@font/rotondac"
+                        android:layout_weight="1"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_13ssp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:text="Иногда тренируюсь"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+
+        <LinearLayout
+            android:id="@+id/llHighContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_50sdp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:src="@drawable/ic_sport_high"
+                android:layout_marginEnd="@dimen/_3sdp"/>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cwHighContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/_3sdp"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="@dimen/_30sdp"
+                app:cardBackgroundColor="#f1f1f1">
+
+                <LinearLayout
+                    android:layout_width="@dimen/_190sdp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:fontFamily="@font/rotonda_bold"
+                        android:textColor="@color/white"
+                        android:layout_weight="1"
+                        android:textSize="@dimen/_20ssp"
+                        android:gravity="center"
+                        android:text="Много"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:fontFamily="@font/rotondac"
+                        android:textColor="@color/white"
+                        android:layout_weight="1"
+                        android:textSize="@dimen/_13ssp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:text="Занимаюсь спортом"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

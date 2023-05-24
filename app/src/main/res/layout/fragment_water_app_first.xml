@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_20sdp"
+        android:fontFamily="@font/bold_title"
+        android:lineSpacingExtra="@dimen/_18sdp"
+        android:text="ВЛИВАЙСЯ\nВ ЗДОРОВЫЙ\nПОТОК"
+        android:textColor="@color/bluePrimary"
+        android:textSize="@dimen/_35ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_20sdp"
+        android:fontFamily="@font/rotondac"
+        android:lineSpacingExtra="@dimen/_6ssp"
+        android:text="Пей чистую воду и заботься\nо своем здоровье"
+        android:textColor="@color/bluePrimary"
+        android:textSize="@dimen/_20ssp"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/appCompatImageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/new_1_screen_bottom_water"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/new_1_screen_logo"
+        app:layout_constraintBottom_toTopOf="@id/cwNext"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSubtitle"
+        app:layout_constraintWidth_percent="0.8" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cwNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_16sdp"
+        app:cardCornerRadius="@dimen/_26sdp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_20ssp"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_6sdp"
+            android:fontFamily="@font/rotonda_bold"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="5dp"
+            android:text="Начать"
+            android:textColor="@color/bluePrimary"
+            android:textSize="@dimen/_20ssp" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="220dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

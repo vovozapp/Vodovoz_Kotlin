@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bluePrimary">
+
+    <View
+        android:id="@+id/vAdditionalHeight"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_40sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:fontFamily="@font/rotonda_bold"
+        android:text="Интервал\nуведомлений"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_25ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:background="@drawable/bkg_water_reminder"
+        app:layout_constraintBottom_toTopOf="@+id/appCompatImageView3"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle">
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:layout_marginTop="16dp"
+            android:id="@+id/sw"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:trackTint="#997E7D7D"
+            android:text="Включить уведомления"
+            android:checked="true"
+            android:textColor="@color/bluePrimary"
+            android:textSize="@dimen/_18ssp"
+            android:fontFamily="@font/rotonda_bold"
+            app:thumbTint="@color/thumb_selector"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvItems"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:paddingHorizontal="@dimen/_10sdp"
+            tools:listitem="@layout/item_water_app_duration"
+            app:layout_constraintBottom_toTopOf="@+id/tvConfirm"
+            app:layout_constraintTop_toBottomOf="@id/sw" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_40sdp"
+            android:background="@drawable/bkg_blue_button"
+            android:fontFamily="@font/rotonda_bold"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/_45sdp"
+            android:paddingTop="8dp"
+            android:elevation="3dp"
+            android:paddingBottom="8dp"
+            android:text="Сохранить"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_19ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/appCompatImageView3"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_65sdp"
+        android:scaleType="fitXY"
+        android:src="@drawable/wave_test"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

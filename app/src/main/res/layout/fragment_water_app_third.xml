@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bluePrimary">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_40sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:fontFamily="@font/rotonda_bold"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_26ssp"
+        android:text="Ваш пол"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_52sdp"
+        android:layout_margin="@dimen/_20sdp"
+        app:cardCornerRadius="@dimen/_26sdp"
+        app:cardElevation="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_marginHorizontal="10dp"
+                android:background="@color/bluePrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/_8sdp"
+                android:gravity="center_vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgStepGender"
+                    android:layout_width="@dimen/_36sdp"
+                    android:layout_height="@dimen/_36sdp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_step_gender_white" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgStepHeight"
+                    android:layout_width="@dimen/_36sdp"
+                    android:layout_height="@dimen/_36sdp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_step_height_white" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgStepWeight"
+                    android:layout_width="@dimen/_36sdp"
+                    android:layout_height="@dimen/_36sdp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_step_weight_white" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgStepSleepTime"
+                    android:layout_width="@dimen/_36sdp"
+                    android:layout_height="@dimen/_36sdp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_step_sleep_white" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgStepWakeUp"
+                    android:layout_width="@dimen/_36sdp"
+                    android:layout_height="@dimen/_36sdp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_step_wake_up_white" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgStepSport"
+                    android:layout_width="@dimen/_36sdp"
+                    android:layout_height="@dimen/_36sdp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_step_sport_white" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/bkg_water_reminder"
+        android:layout_marginTop="@dimen/_20sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vpSteps"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginVertical="@dimen/_20sdp"
+            app:layout_constraintBottom_toTopOf="@+id/imgBack"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgBack"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_margin="@dimen/_20sdp"
+            android:background="@drawable/bkg_round_blue_button"
+            android:padding="@dimen/_4sdp"
+            android:elevation="4dp"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintBottom_toTopOf="@+id/appCompatImageView2"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvNext"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_40sdp"
+            android:background="@drawable/bkg_blue_button"
+            android:fontFamily="@font/rotonda_bold"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/_35sdp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="Далее"
+            android:textColor="@color/white"
+            android:elevation="4dp"
+            android:textSize="@dimen/_20ssp"
+            android:layout_margin="@dimen/_20sdp"
+            app:layout_constraintBottom_toTopOf="@+id/appCompatImageView2"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/appCompatImageView2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_65sdp"
+            android:src="@drawable/wave_test"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

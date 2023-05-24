@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bluePrimary">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_40sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:fontFamily="@font/rotonda_bold"
+        android:text="Настройки"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_25ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/bkg_water_reminder"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:paddingTop="@dimen/_20sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgBack"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_margin="@dimen/_20sdp"
+            android:background="@drawable/bkg_round_blue_button"
+            android:padding="@dimen/_4sdp"
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintBottom_toTopOf="@+id/appCompatImageView2"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/appCompatImageView2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_65sdp"
+            android:src="@drawable/wave_test"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvResetRate"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_margin="@dimen/_20sdp"
+            android:background="@drawable/bkg_blue_button"
+            android:fontFamily="@font/rotonda_bold"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/_20sdp"
+            android:text="Сбросить данные"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_18ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvAlertSettings"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:background="@drawable/bkg_blue_button"
+            android:fontFamily="@font/rotonda_bold"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/_20sdp"
+            android:text="Настройки уведомлений"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_18ssp"
+            android:minHeight="@dimen/_45sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvResetRate" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

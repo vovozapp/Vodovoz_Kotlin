@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bluePrimary">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_40sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:fontFamily="@font/rotonda_bold"
+        android:text="Ваша норма"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_25ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/bkg_water_reminder"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_20sdp"
+            android:fontFamily="@font/rotondac"
+            android:gravity="center"
+            android:lineSpacingExtra="@dimen/_6sdp"
+            android:text="Ваше правильное\nежедневное\nпотребление воды"
+            android:textColor="@color/bluePrimary"
+            android:textSize="@dimen/_20ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvYourRate"
+            android:layout_width="@dimen/_180sdp"
+            android:layout_height="@dimen/_180sdp"
+            android:background="@drawable/ic_water_round"
+            android:fontFamily="@font/rotonda_bold"
+            android:gravity="center"
+            android:paddingBottom="@dimen/_60sdp"
+            android:text="2500мл"
+            android:textColor="@color/bluePrimary"
+            android:textSize="@dimen/_40ssp"
+            app:layout_constraintBottom_toTopOf="@+id/cwStart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvSubtitle" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cwStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            app:cardCornerRadius="@dimen/_23sdp"
+            app:cardElevation="2dp"
+            app:layout_constraintBottom_toTopOf="@+id/appCompatImageView2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" >
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvStart"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_40sdp"
+                android:background="@drawable/bkg_blue_button"
+                android:fontFamily="@font/rotonda_bold"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/_45sdp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="Начать"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_19ssp"
+                app:layout_constraintBottom_toTopOf="@+id/appCompatImageView2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/appCompatImageView2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_65sdp"
+            android:src="@drawable/wave_test"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

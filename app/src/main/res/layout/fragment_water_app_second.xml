@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/ivTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_v_new"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/_24sdp"
+        android:layout_marginHorizontal="@dimen/_24sdp"
+        android:layout_height="120dp"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/rotondac"
+        android:lineSpacingExtra="@dimen/_6ssp"
+        android:text="Пей чистую воду и заботься\nо своем здоровье"
+        android:textColor="@color/bluePrimary"
+        android:textSize="@dimen/_20ssp"
+        android:layout_marginTop="@dimen/_24sdp"
+        app:layout_constraintStart_toStartOf="@id/ivTitle"
+        app:layout_constraintTop_toBottomOf="@+id/ivTitle" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/appCompatImageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/new_1_screen_bottom_water"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cwNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_16sdp"
+        app:cardCornerRadius="@dimen/_26sdp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_20ssp"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_6sdp"
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="12dp"
+            android:fontFamily="@font/rotonda_bold"
+            android:text="Начать"
+            android:textColor="@color/bluePrimary"
+            android:textSize="@dimen/_20ssp" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="240dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

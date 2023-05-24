@@ -136,6 +136,8 @@ dependencies {
     //CodeBar
     implementation 'me.dm7.barcodescanner:zxing:1.9'
 
+    //Lottie
+    implementation 'com.airbnb.android:lottie:5.2.0'
 
     //Test
     testImplementation 'junit:junit:4.13.2'

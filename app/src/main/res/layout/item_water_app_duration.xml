@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tvValue"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_40sdp"
+    android:text="45 минут"
+    android:gravity="center"
+    android:textColor="@color/white"
+    android:fontFamily="@font/rotonda_bold"
+    android:textSize="@dimen/_16ssp"
+    android:layout_margin="@dimen/_4sdp"
+    android:background="@drawable/bkg_blue_button"/>
