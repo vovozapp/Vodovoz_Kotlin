@@ -81,6 +81,7 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
             }
 
         binding.images.plusImagePreview.setOnClickListener {
+            mediaManager.saveCommentData(MediaManager.CommentData(args.productId, binding.rbRating.rating.toInt(), binding.etComment.text.toString()))
             findNavController().navigate(SendCommentAboutProductBottomDialogDirections.actionToImagePickerFragment(ImagePickerFragment.CREATE))
         }
     }
@@ -95,6 +96,7 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
             mediaManager
                 .observePublicationImage()
                 .collect {list ->
+                    debugLog { "list ${list?.size}" }
                     if (list != null) {
                         if (list.size >= 5) {
                             binding.images.plusImagePreview.visibility = View.GONE
@@ -136,6 +138,7 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
                         }
 
                         mediaManager.removePublicationImage()
+                        mediaManager.removeCommentData()
                     }
                 }
         }

@@ -15,10 +15,7 @@ import androidx.fragment.app.viewModels
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.util.extensions.intArgs
-import com.vodovoz.app.util.extensions.longArgs
-import com.vodovoz.app.util.extensions.millisToItemDate
-import com.vodovoz.app.util.extensions.snack
+import com.vodovoz.app.util.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
@@ -61,22 +58,32 @@ class ImagePickerFragment : BaseFragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val resultCode = result.resultCode
             val clipData = result.data?.clipData
-            if (resultCode == Activity.RESULT_OK && clipData != null && clipData.itemCount > 0) {
+            debugLog { "before result itemCount ${clipData?.itemCount}" }
+            if (resultCode == Activity.RESULT_OK) {
+                if (clipData != null && clipData.itemCount > 0) {
+                    if (clipData.itemCount > 5) {
+                        requireActivity().snack("Максимум 5 изображений")
+                        navigateUp()
+                        return@registerForActivityResult
+                    }
 
-                if (clipData.itemCount > 5) {
-                    requireActivity().snack("Максимум 5 изображений")
-                    navigateUp()
-                    return@registerForActivityResult
+                    val filesList = mutableListOf<File>()
+                    for (i in 0 until clipData.itemCount) {
+                        debugLog { "itemCount ${clipData.itemCount} i $i" }
+                        val file = saveFileFromGallery(clipData.getItemAt(i).uri)
+                        filesList.add(file)
+                    }
+
+                    viewModel.savePublicationImage(filesList)
+                } else {
+                    val uri = result?.data?.data
+                    if (uri != null) {
+                        val file = saveFileFromGallery(uri)
+                        viewModel.savePublicationImage(listOf(file))
+                    }
                 }
-
-                val filesList = mutableListOf<File>()
-                for (i in 0 until clipData.itemCount){
-                    val file = saveFileFromGallery(clipData.getItemAt(i).uri)
-                    filesList.add(file)
-                }
-
-                viewModel.savePublicationImage(filesList)
             }
+            viewModel.show()
             navigateUp()
         }
 

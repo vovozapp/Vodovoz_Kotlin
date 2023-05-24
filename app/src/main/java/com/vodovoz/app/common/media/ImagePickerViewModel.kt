@@ -19,4 +19,8 @@ class ImagePickerViewModel @Inject constructor(
         mediaManager.saveAvatarImage(imageFile)
     }
 
+    fun show() {
+        mediaManager.showComment()
+    }
+
 }
