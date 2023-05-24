@@ -887,4 +887,11 @@
             app:destination="@id/productDetailFragment" />
     </fragment>
 
+    <dialog
+        android:id="@+id/speechDialogFragment"
+        android:name="com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment"
+        android:label="SpeechDialogFragment" >
+        <action android:id="@+id/action_to_searchFragment"
+            app:destination="@+id/searchFragment"/>
+    </dialog>
 </navigation>

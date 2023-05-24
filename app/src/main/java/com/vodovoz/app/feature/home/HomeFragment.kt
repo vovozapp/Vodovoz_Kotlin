@@ -24,6 +24,7 @@ import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.speechrecognizer.SpeechController
+import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
@@ -122,7 +123,7 @@ class HomeFragment : BaseFragment() {
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
             { navigateToQrCodeFragment() },
-            { startSpeechRecognizer() }
+            { SpeechDialogFragment().show(childFragmentManager, "TAG") }
         )
         bindErrorRefresh { flowViewModel.refresh() }
         observeUiState()
