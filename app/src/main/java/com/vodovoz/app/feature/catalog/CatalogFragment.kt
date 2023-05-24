@@ -14,6 +14,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.speechrecognizer.SpeechController
+import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentMainCatalogFlowBinding
 import com.vodovoz.app.feature.catalog.adapter.CatalogFlowAdapter
@@ -134,18 +135,6 @@ class CatalogFragment : BaseFragment() {
         }
     }
 
-    private val speechController by lazy {
-        SpeechController(requireContext()) {
-            setMicroEnabled(false)
-            debugLog { "speech result $it" }
-            if (it.isEmpty()) {
-                requireActivity().snack("Пожалуйста, повторите.")
-            } else {
-                findNavController().navigate(R.id.searchFragment, bundleOf("query" to it))
-            }
-        }
-    }
-
     private fun startSpeechRecognizer() {
         permissionsController.methodRequiresRecordAudioPermission(requireActivity()) {
             if (ActivityCompat.checkSelfPermission(
@@ -155,8 +144,7 @@ class CatalogFragment : BaseFragment() {
             ) {
                 return@methodRequiresRecordAudioPermission
             }
-            setMicroEnabled(true)
-            speechController.start()
+            SpeechDialogFragment().show(childFragmentManager, "TAG")
 
         }
     }

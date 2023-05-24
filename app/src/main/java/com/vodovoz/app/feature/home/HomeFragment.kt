@@ -123,7 +123,7 @@ class HomeFragment : BaseFragment() {
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
             { navigateToQrCodeFragment() },
-            { SpeechDialogFragment().show(childFragmentManager, "TAG") }
+            { startSpeechRecognizer() }
         )
         bindErrorRefresh { flowViewModel.refresh() }
         observeUiState()
@@ -629,18 +629,6 @@ class HomeFragment : BaseFragment() {
         }
     }
 
-    private val speechController by lazy {
-        SpeechController(requireContext()) {
-            debugLog { "speech result $it" }
-            setMicroEnabled(false)
-            if (it.isEmpty()) {
-                requireActivity().snack("Пожалуйста, повторите.")
-            } else {
-                findNavController().navigate(R.id.searchFragment, bundleOf("query" to it))
-            }
-        }
-    }
-
     private fun startSpeechRecognizer() {
         permissionsController.methodRequiresRecordAudioPermission(requireActivity()) {
             if (ActivityCompat.checkSelfPermission(
@@ -651,8 +639,7 @@ class HomeFragment : BaseFragment() {
                 return@methodRequiresRecordAudioPermission
             }
 
-            setMicroEnabled(true)
-            speechController.start()
+            SpeechDialogFragment().show(childFragmentManager, "TAG")
 
         }
     }

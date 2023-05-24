@@ -21,6 +21,7 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechController
+import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentProductsFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
@@ -312,18 +313,6 @@ class ProductsListFlowFragment : BaseFragment() {
         }
     }
 
-    private val speechController by lazy {
-        SpeechController(requireContext()) {
-            setMicroEnabled(false)
-            debugLog { "speech result $it" }
-            if (it.isEmpty()) {
-                requireActivity().snack("Пожалуйста, повторите.")
-            } else {
-                findNavController().navigate(R.id.searchFragment, bundleOf("query" to it))
-            }
-        }
-    }
-
     private fun startSpeechRecognizer() {
         permissionsController.methodRequiresRecordAudioPermission(requireActivity()) {
             if (ActivityCompat.checkSelfPermission(
@@ -334,8 +323,7 @@ class ProductsListFlowFragment : BaseFragment() {
                 return@methodRequiresRecordAudioPermission
             }
 
-            setMicroEnabled(true)
-            speechController.start()
+            SpeechDialogFragment().show(childFragmentManager, "TAG")
 
         }
     }
