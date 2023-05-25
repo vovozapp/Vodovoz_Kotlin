@@ -51,8 +51,8 @@ class WaterAppFragment : BaseFragment() {
     @Inject
     lateinit var waterAppHelper: WaterAppHelper
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onStart() {
+        super.onStart()
         tabManager.changeTabVisibility(false)
     }
 
