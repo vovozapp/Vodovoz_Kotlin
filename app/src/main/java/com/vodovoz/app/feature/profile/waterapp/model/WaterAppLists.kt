@@ -2,6 +2,10 @@ package com.vodovoz.app.feature.profile.waterapp.model
 
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.feature.profile.waterapp.model.inner.*
+import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.model.PickerHeight
+import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.model.PickerSleepTime
+import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.model.PickerWakeTime
+import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.model.PickerWeight
 
 object WaterAppLists {
 
@@ -34,6 +38,22 @@ object WaterAppLists {
         WaterAppModelInnerFive(),
         WaterAppModelInnerSix(),
     )
+
+    val listOfHeight = (9..201).map {
+        PickerHeight(it)
+    }
+
+    val listOfWeight = (9..201).map {
+        PickerWeight(it)
+    }
+
+    val listOfSleepTime = (-10..1440).step(10).map {
+        PickerSleepTime(it)
+    }
+
+    val listOfWakeTimeTime = (-10..1440).step(10).map {
+        PickerWakeTime(it)
+    }
 
     data class IconWithPosition(
         val id: Int,

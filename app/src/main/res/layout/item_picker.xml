@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tvValue"
+    android:layout_width="@dimen/_140sdp"
+    android:layout_height="@dimen/_60sdp"
+    tools:text="170 см"
+    android:gravity="center"
+    android:textColor="@color/gray_unselected"
+    android:fontFamily="@font/rotonda_bold"
+    android:textSize="@dimen/_30ssp" />
