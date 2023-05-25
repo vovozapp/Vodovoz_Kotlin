@@ -144,16 +144,18 @@
                 android:background="@color/white"
                 android:paddingVertical="@dimen/space_8"/>
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:background="@color/light_bg"
-                android:id="@+id/vpPromotions"
-                android:layout_width="match_parent"
-                android:paddingBottom="16dp"
-                android:layout_height="wrap_content"
-                xmlns:android="http://schemas.android.com/apk/res/android" />
+
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:background="@color/light_bg"
+        android:id="@+id/vpPromotions"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:paddingBottom="16dp"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
@@ -23,7 +25,10 @@ import com.vodovoz.app.databinding.FragmentPromotionDetailFlowBinding
 import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
+import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
+import com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter.HomePromotionsInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
+import com.vodovoz.app.feature.productdetail.ProductDetailsFragmentDirections
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.PromotionDetailUI
@@ -65,6 +70,10 @@ class PromotionDetailsFragment : BaseFragment() {
         )
     }
 
+    private val homePromotionsAdapter by lazy {
+        HomePromotionsInnerAdapter(getProductsClickListener(), getPromotionsClickListener(), cartManager, likeManager)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -76,6 +85,8 @@ class PromotionDetailsFragment : BaseFragment() {
 
         productsController.bind(binding.productRecycler, null)
         bestForYouController.bind(binding.fcvProductSliderRv)
+        binding.vpPromotions.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.vpPromotions.adapter = homePromotionsAdapter
 
         observeUiState()
         initBackButton()
@@ -154,7 +165,8 @@ class PromotionDetailsFragment : BaseFragment() {
 
     private fun bindHeader(promotionDetailUI: PromotionDetailUI?) {
         if (promotionDetailUI == null) return
-
+        binding.contentContainer.isVisible = true
+        binding.vpPromotions.isVisible = false
         initToolbar(titleText = promotionDetailUI.name)
         binding.customerCategoryCard.setCardBackgroundColor(Color.parseColor(promotionDetailUI.statusColor))
         binding.customerCategory.text = promotionDetailUI.status
@@ -169,6 +181,9 @@ class PromotionDetailsFragment : BaseFragment() {
         if (promotionDetailErrorUI == null) return
 
         initToolbar(titleText = promotionDetailErrorUI.title)
+        binding.contentContainer.isVisible = false
+        binding.vpPromotions.isVisible = true
+        homePromotionsAdapter.submitList(promotionDetailErrorUI.promotionUIList)
     }
 
     private fun getProductsClickListener(): ProductsClickListener {
@@ -215,194 +230,16 @@ class PromotionDetailsFragment : BaseFragment() {
         }
     }
 
-}
-/*
-@AndroidEntryPoint
-class PromotionDetailsFragment : ViewStateBaseFragment() {
-
-    private lateinit var binding: FragmentPromotionDetailBinding
-    private val viewModel: PromotionDetailsViewModel by viewModels()
-
-    private val bestForYouProductsSliderFragment: ProductsSliderFragment by lazy {
-        ProductsSliderFragment.newInstance(ProductsSliderConfig(
-            containShowAllButton = false
-        ), true) }
-
-    private val compositeDisposable = CompositeDisposable()
-
-    private val onProductClickSubject: PublishSubject<Long> = PublishSubject.create()
-    private val onChangeProductQuantitySubject: PublishSubject<Pair<Long, Int>> = PublishSubject.create()
-    private val onFavoriteClickSubject: PublishSubject<Pair<Long, Boolean>> = PublishSubject.create()
-
-    private val linearProductAdapter = LinearProductsAdapter(
-        onProductClick = {
-            findNavController().navigate(PromotionDetailsFragmentDirections.actionToProductDetailFragment(it))
-        },
-        onChangeFavoriteStatus = { productId, status ->
-            viewModel.changeFavoriteStatus(productId, status)
-        },
-        onChangeCartQuantity = { productId, quantity ->
-            viewModel.changeCart(productId, quantity)
-        },
-        onNotAvailableMore = {},
-        onNotifyWhenBeAvailable = { id, name, picture ->
-            findNavController().navigate(PromotionDetailsFragmentDirections.actionToPreOrderBS(
-                id, name, picture
-            ))
-        }
-    )
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        getArgs()
-        subscribeSubjects()
-    }
-
-    private fun subscribeSubjects() {
-        onProductClickSubject.subscribeBy { productId ->
-            findNavController().navigate(PromotionDetailsFragmentDirections.actionToProductDetailFragment(productId))
-        }.addTo(compositeDisposable)
-        onChangeProductQuantitySubject.subscribeBy { pair ->
-            viewModel.changeCart(pair.first, pair.second)
-        }.addTo(compositeDisposable)
-        onFavoriteClickSubject.subscribeBy { pair ->
-            viewModel.changeFavoriteStatus(pair.first, pair.second)
-        }.addTo(compositeDisposable)
-    }
-
-    private fun getArgs() {
-        viewModel.updateArgs(PromotionDetailsFragmentArgs.fromBundle(requireArguments()).promotionId)
-    }
-
-    override fun setContentView(
-        inflater: LayoutInflater,
-        container: ViewGroup
-    ) = FragmentPromotionDetailBinding.inflate(
-        inflater,
-        container,
-        false
-    ).apply { binding = this }.root
-
-    override fun initView() {
-        initActionBar()
-        initPromotionProductRecycler()
-        initBestForYouProductsSliderFragment()
-        observeViewModel()
-    }
-
-    private fun initActionBar() {
-        binding.incAppBar.imgBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
-    }
-
-    private val linearDividerItemDecoration: DividerItemDecoration by lazy {
-        DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
-    }
-
-    private fun initPromotionProductRecycler() {
-        binding.productRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.productRecycler.adapter = linearProductAdapter
-        binding.contentContainer.setScrollElevation(binding.incAppBar.root)
-        binding.productRecycler.addItemDecoration(ListMarginDecoration(
-            resources.getDimension(R.dimen.space_16).toInt()
-        ))
-        binding.productRecycler.addItemDecoration(linearDividerItemDecoration)
-    }
-
-    private fun initBestForYouProductsSliderFragment() {
-        bestForYouProductsSliderFragment.initCallbacks(
-            iOnProductClick = { productId -> onProductClickSubject.onNext(productId) },
-            iOnChangeProductQuantity = { pair -> onChangeProductQuantitySubject.onNext(pair) },
-            iOnFavoriteClick = { pair -> onFavoriteClickSubject.onNext(pair) },
-            iOnShowAllProductsClick = {
-                findNavController().navigate(HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
-                ))
-            },
-            onNotAvailableMore = {},
-            onNotifyWhenBeAvailable = { id, name, picture ->
-                when(viewModel.isAlreadyLogin()) {
-                    true -> findNavController().navigate(PromotionDetailsFragmentDirections.actionToPreOrderBS(id, name, picture))
-                    false -> findNavController().navigate(PromotionDetailsFragmentDirections.actionToProfileFragment())
-                }
-            }
-        )
-
-        childFragmentManager.beginTransaction().replace(
-            R.id.fcvProductSlider,
-            bestForYouProductsSliderFragment
-        ).commit()
-
-    }
-
-    override fun update() {
-        viewModel.updateData()
-    }
-
-    private fun observeViewModel() {
-        viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
-            when(state) {
-                is ViewState.Loading -> onStateLoading()
-                is ViewState.Hide -> onStateHide()
-                is ViewState.Error -> onStateError(state.errorMessage)
-                is ViewState.Success -> onStateSuccess()
-            }
-        }
-
-        viewModel.promotionDetailUILD.observe(viewLifecycleOwner) { promotionDetailUI ->
-            fillView(promotionDetailUI)
-        }
-
-        viewModel.errorLD.observe(viewLifecycleOwner) { errorMessage ->
-            Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun fillView(promotionDetailUI: PromotionDetailUI) {
-        fillPromotionHeader(promotionDetailUI)
-        fillPromotionProductRecycler(promotionDetailUI.promotionCategoryDetailUI)
-        fillForYouProductSlider(promotionDetailUI.forYouCategoryDetailUI)
-    }
-
-    private fun fillPromotionHeader(promotionDetailUI: PromotionDetailUI) {
-        binding.incAppBar.tvTitle.text = promotionDetailUI.name
-        binding.customerCategoryCard.setCardBackgroundColor(Color.parseColor(promotionDetailUI.statusColor))
-        binding.customerCategory.text = promotionDetailUI.status
-        binding.timeLeft.text = promotionDetailUI.timeLeft
-        binding.detail.text = HtmlCompat.fromHtml(promotionDetailUI.detailText, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
-        Glide.with(requireContext())
-            .load(promotionDetailUI.detailPicture)
-            .into(binding.image)
-    }
-
-    private fun fillForYouProductSlider(categoryDetailUI: CategoryDetailUI) {
-        bestForYouProductsSliderFragment.updateData(listOf(categoryDetailUI))
-    }
-
-    private fun fillPromotionProductRecycler(categoryDetailUI: CategoryDetailUI?) {
-        when(categoryDetailUI) {
-            null -> {
-                binding.promotionProductsTitle.visibility = View.GONE
-                binding.productRecycler.visibility = View.GONE
-            }
-            else -> {
-                val diffUtil = ProductDiffUtilCallback(
-                    oldList = linearProductAdapter.productUIList,
-                    newList = categoryDetailUI.productUIList
+    private fun getPromotionsClickListener(): PromotionsClickListener {
+        return object : PromotionsClickListener {
+            override fun onPromotionClick(id: Long) {
+                findNavController().navigate(
+                    R.id.promotionDetailFragment, bundleOf("promotionId" to id)
                 )
-
-                DiffUtil.calculateDiff(diffUtil).let { diffResult ->
-                    linearProductAdapter.productUIList = categoryDetailUI.productUIList
-                    diffResult.dispatchUpdatesTo(linearProductAdapter)
-                }
             }
+
+            override fun onShowAllPromotionsClick() {}
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.dispose()
-    }
-
-}*/
+}
