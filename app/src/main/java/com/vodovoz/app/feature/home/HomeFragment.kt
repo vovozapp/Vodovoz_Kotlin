@@ -17,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
@@ -246,8 +247,16 @@ class HomeFragment : BaseFragment() {
                         showLoaderWithBg(false)
                     }
 
-                    if (homeState.data.news != null && !homeState.data.hasShow) {
-                        showPopUpNews(homeState.data.news)
+                    if (homeState.data.news?.androidVersion.isNullOrEmpty()) {
+                        if (homeState.data.news != null && !homeState.data.hasShow) {
+                            showPopUpNews(homeState.data.news)
+                        }
+                    } else {
+                        if (homeState.data.news?.androidVersion != BuildConfig.VERSION_NAME) {
+                            if (homeState.data.news != null) {
+                                showPopUpNews(homeState.data.news)
+                            }
+                        }
                     }
 
                     val list = homeState.data.items.sortedBy { it.position }.map { it.item }

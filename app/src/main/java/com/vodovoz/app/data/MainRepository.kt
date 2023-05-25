@@ -154,7 +154,7 @@ class MainRepository @Inject constructor(
     //Слайдер баннеров категорий на главной странице
     suspend fun fetchCategoryBannersSlider(position: Int): List<HomeFlowViewModel.PositionItem> {
         return coroutineScope {
-            val responseBody = api.fetchCategoryBanners(action = "slayder", androidVersion = BuildConfig.VERSION_NAME)
+            val responseBody = api.fetchCategoryBanners(action = "slayder", androidVersion = "1.4.84")
             withContext(Dispatchers.Default) {
                 val response = responseBody.parseCategoryBannersSliderResponse()
                 if (response is ResponseEntity.Success) {
@@ -1176,7 +1176,7 @@ class MainRepository @Inject constructor(
     ) = api.fetchProfileCategoriesResponse(
         action = "glav",
         userId = userId,
-        appVersion = "1.5.07",
+        appVersion = "1.5.10",
         isTablet = isTablet
     ) //todo Build.VERSION.RELEASE
 
@@ -1330,7 +1330,7 @@ class MainRepository @Inject constructor(
 
     suspend fun fetchContacts() = api.fetchContactsResponse(
         action = "dannyesvyazi",
-        appVersion = "1.5.07"
+        appVersion = "1.5.10"
     ) //todo Build.VERSION.RELEASE
 
     /**

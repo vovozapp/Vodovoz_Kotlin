@@ -245,7 +245,7 @@ class ProfileFragment : BaseFragment() {
             }
 
             override fun onNewWaterApp() {
-                TODO("Not yet implemented")
+                findNavController().navigate(R.id.waterAppFragment)
             }
 
             override fun onFetchDiscount() {

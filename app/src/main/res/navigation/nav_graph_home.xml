@@ -926,5 +926,9 @@
         android:id="@+id/notificationSettingsFragment"
         android:name="com.vodovoz.app.feature.profile.notificationsettings.NotificationSettingsFragment"
         android:label="NotificationSettingsFragment" />
+    <fragment
+        android:id="@+id/waterAppFragment"
+        android:name="com.vodovoz.app.feature.profile.waterapp.WaterAppFragment"
+        android:label="WaterAppFragment" />
 
 </navigation>
