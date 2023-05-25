@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/rotondac"
             android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/bluePrimary"
             android:textSize="@dimen/_18ssp"
             android:text="Мужчина"
             android:layout_marginTop="@dimen/_26sdp"/>

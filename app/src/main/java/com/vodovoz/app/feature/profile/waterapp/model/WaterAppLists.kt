@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.profile.waterapp.model
 
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.feature.profile.waterapp.model.inner.*
 
 object WaterAppLists {
 
@@ -23,5 +24,14 @@ object WaterAppLists {
         WaterAppModelFive(5),
         WaterAppModelSix(6),
         WaterAppModelSeven(7)
+    )
+
+    val innerList = listOf(
+        WaterAppModelInnerOne(),
+        WaterAppModelInnerTwo(),
+        WaterAppModelInnerThree(),
+        WaterAppModelInnerFour(),
+        WaterAppModelInnerFive(),
+        WaterAppModelInnerSix(),
     )
 }
