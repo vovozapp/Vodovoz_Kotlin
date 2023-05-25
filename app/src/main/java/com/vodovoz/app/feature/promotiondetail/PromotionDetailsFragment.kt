@@ -18,6 +18,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser
 import com.vodovoz.app.databinding.FragmentPromotionDetailFlowBinding
 import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
@@ -109,6 +110,7 @@ class PromotionDetailsFragment : BaseFragment() {
                     }
 
                     bindHeader(state.data.items)
+                    bindErrorHeader(state.data.errorItem)
 
                     if (state.data.items?.forYouCategoryDetailUI != null) {
                         val homeProducts = HomeProducts(
@@ -161,6 +163,12 @@ class PromotionDetailsFragment : BaseFragment() {
         Glide.with(requireContext())
             .load(promotionDetailUI.detailPicture)
             .into(binding.image)
+    }
+
+    private fun bindErrorHeader(promotionDetailErrorUI: PromotionDetailResponseJsonParser.PromotionDetailErrorUI?) {
+        if (promotionDetailErrorUI == null) return
+
+        initToolbar(titleText = promotionDetailErrorUI.title)
     }
 
     private fun getProductsClickListener(): ProductsClickListener {

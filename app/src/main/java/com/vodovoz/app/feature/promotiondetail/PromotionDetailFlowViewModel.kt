@@ -15,7 +15,9 @@ import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.banner.ProductsByBannerResponseJsonParser.parseProductsByBannerResponse
+import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
+import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponseBundle
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.mapper.PromotionDetailMapper.mapToUI
 import com.vodovoz.app.ui.model.PromotionDetailUI
@@ -44,13 +46,15 @@ class PromotionDetailFlowViewModel @Inject constructor(
             flow { emit(repository.fetchPromotionDetails(promoId)) }
                 .flowOn(Dispatchers.IO)
                 .onEach {
-                    val response = it.parsePromotionDetailResponse()
+                    val response = it.parsePromotionDetailResponseBundle()
                     if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
+                        val data = response.data.detail?.mapToUI()
+                        val dataError = response.data.detailError?.mapToUI()
 
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
-                                items = data
+                                items = data,
+                                errorItem = dataError
                             ),
                             loadingPage = false,
                             error = null
@@ -109,6 +113,7 @@ class PromotionDetailFlowViewModel @Inject constructor(
     }
 
     data class PromotionDetailFlowState(
-        val items: PromotionDetailUI? = null
+        val items: PromotionDetailUI? = null,
+        val errorItem: PromotionDetailResponseJsonParser.PromotionDetailErrorUI? = null
     ) : State
 }
