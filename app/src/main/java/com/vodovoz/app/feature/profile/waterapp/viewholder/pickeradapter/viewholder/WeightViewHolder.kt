@@ -32,21 +32,18 @@ class WeightViewHolder(
         super.attach()
 
         launch {
-            launch {
-                waterAppHelper
-                    .observeWaterAppUserData()
-                    .collect {
-                        if (it == null || it.weight.isEmpty()) return@collect
-                        debugLog { "weight ${it.weight} id ${item?.id}" }
+            waterAppHelper
+                .observeWaterAppUserData()
+                .collect {
+                    if (it == null || it.weight.isEmpty()) return@collect
+                    debugLog { "weight ${it.weight} id ${item?.id}" }
 
-                        if (item?.id == it.weight.toInt()) {
-                            binding.tvValue.setTextColor(ContextCompat.getColor(itemView.context, R.color.bluePrimary))
-                        } else {
-                            binding.tvValue.setTextColor(ContextCompat.getColor(itemView.context, R.color.gray_unselected))
-                        }
+                    if (item?.id == it.weight.toInt()) {
+                        binding.tvValue.setTextColor(ContextCompat.getColor(itemView.context, R.color.bluePrimary))
+                    } else {
+                        binding.tvValue.setTextColor(ContextCompat.getColor(itemView.context, R.color.gray_unselected))
                     }
-            }
-
+                }
         }
     }
 

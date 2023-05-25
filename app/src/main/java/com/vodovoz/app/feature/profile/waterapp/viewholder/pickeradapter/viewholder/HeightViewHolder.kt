@@ -29,21 +29,18 @@ class HeightViewHolder(
         super.attach()
 
         launch {
-            launch {
-                waterAppHelper
-                    .observeWaterAppUserData()
-                    .collect {
-                        if (it == null || it.height.isEmpty()) return@collect
-                        debugLog { "height ${it.height} id ${item?.id}" }
+            waterAppHelper
+                .observeWaterAppUserData()
+                .collect {
+                    if (it == null || it.height.isEmpty()) return@collect
+                    debugLog { "height ${it.height} id ${item?.id}" }
 
-                        if (item?.id == it.height.toInt()) {
-                            binding.tvValue.setTextColor(ContextCompat.getColor(itemView.context, R.color.bluePrimary))
-                        } else {
-                            binding.tvValue.setTextColor(ContextCompat.getColor(itemView.context, R.color.gray_unselected))
-                        }
+                    if (item?.id == it.height.toInt()) {
+                        binding.tvValue.setTextColor(ContextCompat.getColor(itemView.context, R.color.bluePrimary))
+                    } else {
+                        binding.tvValue.setTextColor(ContextCompat.getColor(itemView.context, R.color.gray_unselected))
                     }
-            }
-
+                }
         }
     }
 

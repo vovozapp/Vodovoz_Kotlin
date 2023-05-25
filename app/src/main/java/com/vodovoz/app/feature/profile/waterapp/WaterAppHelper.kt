@@ -95,7 +95,7 @@ class WaterAppHelper @Inject constructor(
         val gender: String = "man",
         val height: String = "160",
         val weight: String = "50",
-        val sleepTime: String = "",
+        val sleepTime: String = "138",
         val wakeUpTime: String = "",
         val sport: String = ""
     )
