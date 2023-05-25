@@ -50,4 +50,5 @@
     <color name="old_gray_bk">#F5F5F5</color>
     <color name="color_search">#889295</color>
 
+    <color name="gray_unselected">#f1f1f1</color>
 </resources>

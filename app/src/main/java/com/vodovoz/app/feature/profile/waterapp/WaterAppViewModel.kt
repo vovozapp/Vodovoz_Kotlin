@@ -1,14 +1,13 @@
 package com.vodovoz.app.feature.profile.waterapp
 
-import android.content.SharedPreferences
-import com.squareup.moshi.Json
+import androidx.lifecycle.viewModelScope
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.addAdapter
 import com.vodovoz.app.common.content.Event
 import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,10 +18,27 @@ class WaterAppViewModel @Inject constructor(
     WaterAppState()
 ) {
 
+    init {
+
+        waterAppHelper.fetchWaterAppUserData()
+
+        viewModelScope.launch {
+            waterAppHelper
+                .observeWaterAppUserData()
+                .collect {
+                    uiStateListener.value = state.copy(
+                        data = state.data.copy(
+                            userData = it
+                        )
+                    )
+                }
+        }
+    }
+
     fun saveGender(gender: String) {
         uiStateListener.value = state.copy(
             data = state.data.copy(
-                userData = state.data.userData?.copy(
+                userData = state.data.userData.copy(
                     gender = gender
                 )
             )
@@ -32,7 +48,7 @@ class WaterAppViewModel @Inject constructor(
     fun saveHeight(height: String) {
         uiStateListener.value = state.copy(
             data = state.data.copy(
-                userData = state.data.userData?.copy(
+                userData = state.data.userData.copy(
                     height = height
                 )
             )
@@ -42,7 +58,7 @@ class WaterAppViewModel @Inject constructor(
     fun saveWeight(weight: String) {
         uiStateListener.value = state.copy(
             data = state.data.copy(
-                userData = state.data.userData?.copy(
+                userData = state.data.userData.copy(
                     weight = weight
                 )
             )
@@ -52,7 +68,7 @@ class WaterAppViewModel @Inject constructor(
     fun saveSleepTime(sleepTime: String) {
         uiStateListener.value = state.copy(
             data = state.data.copy(
-                userData = state.data.userData?.copy(
+                userData = state.data.userData.copy(
                     sleepTime = sleepTime
                 )
             )
@@ -62,7 +78,7 @@ class WaterAppViewModel @Inject constructor(
     fun saveWakeUpTime(wakeUpTime: String) {
         uiStateListener.value = state.copy(
             data = state.data.copy(
-                userData = state.data.userData?.copy(
+                userData = state.data.userData.copy(
                     wakeUpTime = wakeUpTime
                 )
             )
@@ -72,7 +88,7 @@ class WaterAppViewModel @Inject constructor(
     fun saveSport(sport: String) {
         uiStateListener.value = state.copy(
             data = state.data.copy(
-                userData = state.data.userData?.copy(
+                userData = state.data.userData.copy(
                     sport = sport
                 )
             )
@@ -80,13 +96,11 @@ class WaterAppViewModel @Inject constructor(
     }
 
     fun saveWaterAppUserData() {
-        val adapter = moshi.adapter(WaterAppUserData::class.java)
-        val json = adapter.toJson(state.data.userData)
-        debugLog { "spasibo ${json}" }
+        waterAppHelper.saveWaterAppUserData(state.data.userData)
     }
 
     data class WaterAppState(
-        val userData: WaterAppUserData? = null,
+        val userData: WaterAppUserData = WaterAppUserData()
     ): State
 
     sealed class WaterAppEvents : Event
