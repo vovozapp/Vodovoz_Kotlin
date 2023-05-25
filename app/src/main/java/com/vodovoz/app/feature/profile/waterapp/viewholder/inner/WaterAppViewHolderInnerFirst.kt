@@ -30,6 +30,16 @@ class WaterAppViewHolderInnerFirst(
         innerClickListener.onChangePosition(item.id)
     }
 
+    override fun bind(item: WaterAppModelInnerOne) {
+        super.bind(item)
+
+        if (item.gender == "man") {
+            selectMan()
+        } else {
+            selectWoman()
+        }
+    }
+
     private fun selectMan() {
         binding.tvMan.setTextColor(itemView.context.color(R.color.bluePrimary))
         binding.tvWoman.setTextColor(itemView.context.color(R.color.gray_unselected))
