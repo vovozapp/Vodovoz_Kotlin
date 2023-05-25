@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.profile.waterapp
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -25,6 +26,8 @@ class WaterAppFragment : BaseFragment() {
         FragmentWaterAppBinding.bind(contentView)
     }
 
+    private val viewModel: WaterAppViewModel by viewModels()
+
     private val waterAppAdapter: WaterAppAdapter by lazy {
         WaterAppAdapter(
             waterAppHelper,
@@ -33,8 +36,37 @@ class WaterAppFragment : BaseFragment() {
                     binding.vpWater.currentItem = currentPosition
                 }
 
+                override fun onNextClick(currentPosition: Int, saveData: Boolean) {
+                    binding.vpWater.currentItem = currentPosition
+                    viewModel.saveWaterAppUserData()
+                }
+
                 override fun onPrevClick(currentPosition: Int) {
                     binding.vpWater.currentItem = currentPosition - 2
+                }
+
+                override fun saveGender(gender: String) {
+                    viewModel.saveGender(gender)
+                }
+
+                override fun saveHeight(height: String) {
+                    viewModel.saveHeight(height)
+                }
+
+                override fun saveWeight(weight: String) {
+                    viewModel.saveWeight(weight)
+                }
+
+                override fun saveSleepTime(sleepTime: String) {
+                    viewModel.saveSleepTime(sleepTime)
+                }
+
+                override fun saveWakeUpTime(wakeUpTime: String) {
+                    viewModel.saveWakeUpTime(wakeUpTime)
+                }
+
+                override fun saveSport(sport: String) {
+                    viewModel.saveSport(sport)
                 }
 
             },

@@ -26,7 +26,7 @@ class WaterAppViewHolderThird(
     init {
         binding.tvNext.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            clickListener.onNextClick(item.id)
+            clickListener.onNextClick(item.id, true)
         }
 
         binding.imgBack.setOnClickListener {
