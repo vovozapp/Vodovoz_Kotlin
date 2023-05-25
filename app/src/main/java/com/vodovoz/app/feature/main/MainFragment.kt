@@ -45,6 +45,7 @@ class MainFragment : BaseFragment() {
         observeCartState()
         observeProfileState()
         observeCartLoading()
+        observeTabVisibility()
     }
 
     override fun onStart() {
@@ -72,6 +73,16 @@ class MainFragment : BaseFragment() {
                         binding.circleAmount.isVisible = true
                         binding.nvNavigation.menu.getItem(2).title = "..."
                     }
+                }
+        }
+    }
+
+    private fun observeTabVisibility() {
+        lifecycleScope.launchWhenStarted {
+            tabManager
+                .observeTabVisibility()
+                .collect {
+                    binding.nvNavigation.isVisible = it
                 }
         }
     }

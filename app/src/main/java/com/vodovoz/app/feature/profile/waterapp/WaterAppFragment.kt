@@ -6,6 +6,7 @@ import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentWaterAppBinding
 import com.vodovoz.app.feature.productdetail.fullscreen.adapter.FullScreenDetailPicturesAdapter
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppAdapter
@@ -38,9 +39,21 @@ class WaterAppFragment : BaseFragment() {
             }
         )
     }
+    @Inject
+    lateinit var tabManager: TabManager
 
     @Inject
     lateinit var waterAppHelper: WaterAppHelper
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        tabManager.changeTabVisibility(false)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        tabManager.changeTabVisibility(true)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

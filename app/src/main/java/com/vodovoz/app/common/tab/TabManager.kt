@@ -38,6 +38,9 @@ class TabManager @Inject constructor() {
     private val addressesRefreshListener = MutableStateFlow(ADDRESSES_DEFAULT_STATE)
     fun observeAddressesRefresh() = addressesRefreshListener.asStateFlow()
 
+    private val tabVisibilityListener = MutableStateFlow(true)
+    fun observeTabVisibility() = tabVisibilityListener.asStateFlow()
+
     fun setAddressesRefreshState(refresh: Boolean) {
         addressesRefreshListener.value = refresh
     }
@@ -66,6 +69,10 @@ class TabManager @Inject constructor() {
 
     fun saveBottomNavProfileState(amount: Int?) {
         bottomNavProfileStateListener.value = amount
+    }
+
+    fun changeTabVisibility(vis: Boolean) {
+        tabVisibilityListener.value = vis
     }
 
     fun loadingAddToCart(load: Boolean, plus: Boolean) {
