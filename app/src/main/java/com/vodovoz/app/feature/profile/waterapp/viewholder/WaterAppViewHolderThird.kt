@@ -44,6 +44,8 @@ class WaterAppViewHolderThird(
         super.bind(item)
 
         waterAppAdapter.submitList(WaterAppLists.innerList)
+        binding.tvNext.isEnabled = false
+        binding.tvNext.isSelected = false
     }
 
     internal fun mapIconsByPosition(position: Int) {
@@ -57,7 +59,7 @@ class WaterAppViewHolderThird(
         }
 
         if (position == 2) {
-            binding.imgStepGender.isSelected = false
+            binding.imgStepGender.isSelected = true
             binding.imgStepHeight.isSelected = true
             binding.imgStepWeight.isSelected = false
             binding.imgStepWakeUp.isSelected = false
@@ -66,8 +68,8 @@ class WaterAppViewHolderThird(
         }
 
         if (position == 3) {
-            binding.imgStepGender.isSelected = false
-            binding.imgStepHeight.isSelected = false
+            binding.imgStepGender.isSelected = true
+            binding.imgStepHeight.isSelected = true
             binding.imgStepWeight.isSelected = true
             binding.imgStepWakeUp.isSelected = false
             binding.imgStepSleepTime.isSelected = false
@@ -75,30 +77,32 @@ class WaterAppViewHolderThird(
         }
 
         if (position == 4) {
-            binding.imgStepGender.isSelected = false
-            binding.imgStepHeight.isSelected = false
-            binding.imgStepWeight.isSelected = false
+            binding.imgStepGender.isSelected = true
+            binding.imgStepHeight.isSelected = true
+            binding.imgStepWeight.isSelected = true
             binding.imgStepWakeUp.isSelected = false
             binding.imgStepSleepTime.isSelected = true
             binding.imgStepSport.isSelected = false
         }
 
         if (position == 5) {
-            binding.imgStepGender.isSelected = false
-            binding.imgStepHeight.isSelected = false
-            binding.imgStepWeight.isSelected = false
+            binding.imgStepGender.isSelected = true
+            binding.imgStepHeight.isSelected = true
+            binding.imgStepWeight.isSelected = true
             binding.imgStepWakeUp.isSelected = true
-            binding.imgStepSleepTime.isSelected = false
+            binding.imgStepSleepTime.isSelected = true
             binding.imgStepSport.isSelected = false
         }
 
         if (position == 6) {
-            binding.imgStepGender.isSelected = false
-            binding.imgStepHeight.isSelected = false
-            binding.imgStepWeight.isSelected = false
-            binding.imgStepWakeUp.isSelected = false
-            binding.imgStepSleepTime.isSelected = false
+            binding.imgStepGender.isSelected = true
+            binding.imgStepHeight.isSelected = true
+            binding.imgStepWeight.isSelected = true
+            binding.imgStepWakeUp.isSelected = true
+            binding.imgStepSleepTime.isSelected = true
             binding.imgStepSport.isSelected = true
+            binding.tvNext.isEnabled = true
+            binding.tvNext.isSelected = true
         }
     }
 

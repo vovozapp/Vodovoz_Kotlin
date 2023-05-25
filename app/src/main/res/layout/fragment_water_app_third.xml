@@ -158,7 +158,7 @@
             android:id="@+id/tvNext"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_40sdp"
-            android:background="@drawable/bkg_blue_button"
+            android:background="@drawable/ic_next_btn_selector"
             android:fontFamily="@font/rotonda_bold"
             android:gravity="center"
             android:paddingHorizontal="@dimen/_35sdp"
