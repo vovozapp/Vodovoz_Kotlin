@@ -34,4 +34,20 @@ object WaterAppLists {
         WaterAppModelInnerFive(),
         WaterAppModelInnerSix(),
     )
+
+    val innerListIcons = listOf(
+        IconWithPosition(1, true),
+        IconWithPosition(2, false),
+        IconWithPosition(3, false),
+        IconWithPosition(4, false),
+        IconWithPosition(5, false),
+        IconWithPosition(6, false)
+    )
+
+    data class IconWithPosition(
+        val id: Int,
+        val isSelected: Boolean
+    )
+
+
 }

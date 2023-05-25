@@ -7,6 +7,7 @@ import com.vodovoz.app.databinding.FragmentWaterAppInnerFirstBinding
 import com.vodovoz.app.databinding.FragmentWaterAppInnerSixthBinding
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
+import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppInnerClickListener
 import com.vodovoz.app.feature.profile.waterapp.model.WaterAppModelOne
 import com.vodovoz.app.feature.profile.waterapp.model.inner.WaterAppModelInnerOne
 import com.vodovoz.app.feature.profile.waterapp.model.inner.WaterAppModelInnerSix
@@ -14,13 +15,16 @@ import com.vodovoz.app.feature.profile.waterapp.model.inner.WaterAppModelInnerSi
 class WaterAppViewHolderInnerSixth(
     view: View,
     clickListener: WaterAppClickListener,
-    waterAppHelper: WaterAppHelper
+    waterAppHelper: WaterAppHelper,
+    private val innerClickListener: WaterAppInnerClickListener
 ) : ItemViewHolder<WaterAppModelInnerSix>(view) {
 
     private val binding: FragmentWaterAppInnerSixthBinding = FragmentWaterAppInnerSixthBinding.bind(view)
 
-    init {
-
+    override fun attach() {
+        super.attach()
+        val item = item ?: return
+        innerClickListener.onChangePosition(item.id)
     }
 
     override fun bind(item: WaterAppModelInnerSix) {

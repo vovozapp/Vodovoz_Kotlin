@@ -56,7 +56,7 @@
                     android:layout_width="@dimen/_36sdp"
                     android:layout_height="@dimen/_36sdp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_step_gender_white" />
+                    android:src="@drawable/ic_step_gender_selector" />
 
                 <View
                     android:layout_width="0dp"
@@ -68,7 +68,7 @@
                     android:layout_width="@dimen/_36sdp"
                     android:layout_height="@dimen/_36sdp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_step_height_white" />
+                    android:src="@drawable/ic_step_height_selector" />
 
                 <View
                     android:layout_width="0dp"
@@ -80,7 +80,7 @@
                     android:layout_width="@dimen/_36sdp"
                     android:layout_height="@dimen/_36sdp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_step_weight_white" />
+                    android:src="@drawable/ic_step_weight_selector" />
 
                 <View
                     android:layout_width="0dp"
@@ -92,7 +92,7 @@
                     android:layout_width="@dimen/_36sdp"
                     android:layout_height="@dimen/_36sdp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_step_sleep_white" />
+                    android:src="@drawable/ic_step_sleep_selector" />
 
                 <View
                     android:layout_width="0dp"
@@ -104,7 +104,7 @@
                     android:layout_width="@dimen/_36sdp"
                     android:layout_height="@dimen/_36sdp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_step_wake_up_white" />
+                    android:src="@drawable/ic_step_wake_up_selector" />
 
                 <View
                     android:layout_width="0dp"
@@ -116,7 +116,7 @@
                     android:layout_width="@dimen/_36sdp"
                     android:layout_height="@dimen/_36sdp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_step_sport_white" />
+                    android:src="@drawable/ic_step_sport_selector" />
 
             </LinearLayout>
 

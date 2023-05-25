@@ -11,6 +11,7 @@ import com.vodovoz.app.databinding.FragmentWaterAppBinding
 import com.vodovoz.app.feature.productdetail.fullscreen.adapter.FullScreenDetailPicturesAdapter
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppAdapter
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
+import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppInnerClickListener
 import com.vodovoz.app.feature.profile.waterapp.model.WaterAppLists
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -36,6 +37,11 @@ class WaterAppFragment : BaseFragment() {
                     binding.vpWater.currentItem = currentPosition - 2
                 }
 
+            },
+            object : WaterAppInnerClickListener {
+                override fun onChangePosition(position: Int) {
+
+                }
             }
         )
     }
