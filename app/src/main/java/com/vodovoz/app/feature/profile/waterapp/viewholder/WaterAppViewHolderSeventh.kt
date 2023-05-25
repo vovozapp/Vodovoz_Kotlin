@@ -15,6 +15,17 @@ class WaterAppViewHolderSeventh(
 
     private val binding: FragmentWaterAppSeventhBinding = FragmentWaterAppSeventhBinding.bind(view)
 
+    init {
+        binding.tvConfirm.setOnClickListener {
+            val item = item ?: return@setOnClickListener
+            if (item.id == 5) {
+                clickListener.onNextClick(item.id)
+            } else {
+                clickListener.onPrevClick(item.id)
+            }
+        }
+    }
+
     override fun bind(item: WaterAppModelSeven) {
         super.bind(item)
 

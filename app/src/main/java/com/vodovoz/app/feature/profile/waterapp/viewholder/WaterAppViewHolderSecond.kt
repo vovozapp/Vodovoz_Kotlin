@@ -17,6 +17,13 @@ class WaterAppViewHolderSecond(
 
     private val binding: FragmentWaterAppSecondBinding = FragmentWaterAppSecondBinding.bind(view)
 
+    init {
+        binding.cwNext.setOnClickListener {
+            val item = item ?: return@setOnClickListener
+            clickListener.onNextClick(item.id)
+        }
+    }
+
     override fun bind(item: WaterAppModelTwo) {
         super.bind(item)
 

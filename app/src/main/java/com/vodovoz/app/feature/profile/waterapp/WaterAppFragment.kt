@@ -27,6 +27,13 @@ class WaterAppFragment : BaseFragment() {
         WaterAppAdapter(
             waterAppHelper,
             object : WaterAppClickListener {
+                override fun onNextClick(currentPosition: Int) {
+                    binding.vpWater.currentItem = currentPosition
+                }
+
+                override fun onPrevClick(currentPosition: Int) {
+                    binding.vpWater.currentItem = currentPosition - 2
+                }
 
             }
         )

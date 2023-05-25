@@ -17,6 +17,13 @@ class WaterAppViewHolderFifth(
 
     private val binding: FragmentWaterAppFifthBinding = FragmentWaterAppFifthBinding.bind(view)
 
+    init {
+        binding.imgSettings.setOnClickListener {
+            val item = item ?: return@setOnClickListener
+            clickListener.onNextClick(item.id)
+        }
+    }
+
     override fun bind(item: WaterAppModelFive) {
         super.bind(item)
 

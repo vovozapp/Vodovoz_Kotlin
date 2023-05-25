@@ -17,6 +17,13 @@ class WaterAppViewHolderFourth(
 
     private val binding: FragmentWaterAppFourthBinding = FragmentWaterAppFourthBinding.bind(view)
 
+    init {
+        binding.cwStart.setOnClickListener {
+            val item = item ?: return@setOnClickListener
+            clickListener.onNextClick(item.id)
+        }
+    }
+
     override fun bind(item: WaterAppModelFour) {
         super.bind(item)
 

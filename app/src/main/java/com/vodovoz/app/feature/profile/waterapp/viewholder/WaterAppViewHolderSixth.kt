@@ -17,6 +17,19 @@ class WaterAppViewHolderSixth(
 
     private val binding: FragmentWaterAppSixthBinding = FragmentWaterAppSixthBinding.bind(view)
 
+    init {
+        binding.imgBack.setOnClickListener {
+            val item = item ?: return@setOnClickListener
+            clickListener.onPrevClick(item.id)
+        }
+
+        binding.tvAlertSettings.setOnClickListener {
+            val item = item ?: return@setOnClickListener
+            clickListener.onNextClick(item.id)
+        }
+
+    }
+
     override fun bind(item: WaterAppModelSix) {
         super.bind(item)
 

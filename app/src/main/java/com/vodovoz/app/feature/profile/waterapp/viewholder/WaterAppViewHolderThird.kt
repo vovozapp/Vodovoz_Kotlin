@@ -17,6 +17,18 @@ class WaterAppViewHolderThird(
 
     private val binding: FragmentWaterAppThirdBinding = FragmentWaterAppThirdBinding.bind(view)
 
+    init {
+        binding.tvNext.setOnClickListener {
+            val item = item ?: return@setOnClickListener
+            clickListener.onNextClick(item.id)
+        }
+
+        binding.imgBack.setOnClickListener {
+            val item = item ?: return@setOnClickListener
+            clickListener.onPrevClick(item.id)
+        }
+    }
+
     override fun bind(item: WaterAppModelThree) {
         super.bind(item)
 

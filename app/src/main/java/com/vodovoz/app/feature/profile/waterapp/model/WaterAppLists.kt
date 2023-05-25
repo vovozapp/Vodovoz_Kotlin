@@ -5,23 +5,23 @@ import com.vodovoz.app.common.content.itemadapter.Item
 object WaterAppLists {
 
     val firstList = listOf(
-        WaterAppModelOne(),
-        WaterAppModelTwo(),
-        WaterAppModelThree(),
-        WaterAppModelFour(),
-        WaterAppModelSeven(),
-        WaterAppModelFive(),
-        WaterAppModelSix(),
-        WaterAppModelSeven()
+        WaterAppModelOne(1),
+        WaterAppModelTwo(2),
+        WaterAppModelThree(3),
+        WaterAppModelFour(4),
+        WaterAppModelSeven(5),
+        WaterAppModelFive(6),
+        WaterAppModelSix(7),
+        WaterAppModelSeven(8)
     )
 
     val notificationShownList = listOf(
-        WaterAppModelOne(),
-        WaterAppModelTwo(),
-        WaterAppModelThree(),
-        WaterAppModelFour(),
-        WaterAppModelFive(),
-        WaterAppModelSix(),
-        WaterAppModelSeven()
+        WaterAppModelOne(1),
+        WaterAppModelTwo(2),
+        WaterAppModelThree(3),
+        WaterAppModelFour(4),
+        WaterAppModelFive(5),
+        WaterAppModelSix(6),
+        WaterAppModelSeven(7)
     )
 }
