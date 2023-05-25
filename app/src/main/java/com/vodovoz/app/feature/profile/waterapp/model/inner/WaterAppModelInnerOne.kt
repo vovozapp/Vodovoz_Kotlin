@@ -5,8 +5,7 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 
 data class WaterAppModelInnerOne(
-    val id: Int = 1,
-    val gender: String = "man"
+    val id: Int = 1
 ) : Item {
     override fun getItemViewType(): Int {
         return R.layout.fragment_water_app_inner_first

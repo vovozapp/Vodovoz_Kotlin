@@ -38,35 +38,11 @@ class WaterAppFragment : BaseFragment() {
 
                 override fun onNextClick(currentPosition: Int, saveData: Boolean) {
                     binding.vpWater.currentItem = currentPosition
-                    viewModel.saveWaterAppUserData()
+                    waterAppHelper.saveWaterAppUserData()
                 }
 
                 override fun onPrevClick(currentPosition: Int) {
                     binding.vpWater.currentItem = currentPosition - 2
-                }
-
-                override fun saveGender(gender: String) {
-                    viewModel.saveGender(gender)
-                }
-
-                override fun saveHeight(height: String) {
-                    viewModel.saveHeight(height)
-                }
-
-                override fun saveWeight(weight: String) {
-                    viewModel.saveWeight(weight)
-                }
-
-                override fun saveSleepTime(sleepTime: String) {
-                    viewModel.saveSleepTime(sleepTime)
-                }
-
-                override fun saveWakeUpTime(wakeUpTime: String) {
-                    viewModel.saveWakeUpTime(wakeUpTime)
-                }
-
-                override fun saveSport(sport: String) {
-                    viewModel.saveSport(sport)
                 }
 
             },
@@ -82,6 +58,11 @@ class WaterAppFragment : BaseFragment() {
 
     @Inject
     lateinit var waterAppHelper: WaterAppHelper
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        waterAppHelper.fetchWaterAppUserData()
+    }
 
     override fun onStart() {
         super.onStart()

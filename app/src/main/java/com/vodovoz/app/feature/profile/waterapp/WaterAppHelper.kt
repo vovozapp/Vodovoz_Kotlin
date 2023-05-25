@@ -18,24 +18,32 @@ class WaterAppHelper @Inject constructor(
         const val WATER_APP_USER_DATA = "water app user data"
     }
 
-    private val adapter = moshi.adapter(WaterAppViewModel.WaterAppUserData::class.java)
+    private val adapter = moshi.adapter(WaterAppUserData::class.java)
 
-    private val waterAppUserDataListener = MutableStateFlow(
-        WaterAppViewModel.WaterAppUserData()
+    private val waterAppUserDataListener = MutableStateFlow<WaterAppUserData?>(
+        null
     )
     fun observeWaterAppUserData() = waterAppUserDataListener.asStateFlow()
 
     fun fetchWaterAppUserData() {
         if(sharedPrefs.contains(WATER_APP_USER_DATA)) {
             val json = sharedPrefs.getString(WATER_APP_USER_DATA, "")
+            debugLog { "json contains $json" }
             if (!json.isNullOrEmpty()) {
                 val data = adapter.fromJson(json) ?: return
+                debugLog { "data contains $json" }
                 waterAppUserDataListener.value = data
+            } else {
+                waterAppUserDataListener.value = WaterAppUserData()
             }
+        } else {
+            waterAppUserDataListener.value = WaterAppUserData()
         }
     }
 
-    fun saveWaterAppUserData(data: WaterAppViewModel.WaterAppUserData) {
+    fun saveWaterAppUserData() {
+
+        val data = waterAppUserDataListener.value
 
         val json = adapter.toJson(data)
 
@@ -46,4 +54,49 @@ class WaterAppHelper @Inject constructor(
             .putString(WATER_APP_USER_DATA, json)
             .apply()
     }
+
+    fun saveGender(gender: String) {
+        waterAppUserDataListener.value = waterAppUserDataListener.value?.copy(
+            gender = gender
+        )
+    }
+
+    fun saveHeight(height: String) {
+        waterAppUserDataListener.value = waterAppUserDataListener.value?.copy(
+            height = height
+        )
+    }
+
+    fun saveWeight(weight: String) {
+        waterAppUserDataListener.value = waterAppUserDataListener.value?.copy(
+            weight = weight
+        )
+    }
+
+    fun saveSleepTime(sleepTime: String) {
+        waterAppUserDataListener.value = waterAppUserDataListener.value?.copy(
+            sleepTime = sleepTime
+        )
+    }
+
+    fun saveWakeUpTime(wakeUpTime: String) {
+        waterAppUserDataListener.value = waterAppUserDataListener.value?.copy(
+            wakeUpTime = wakeUpTime
+        )
+    }
+
+    fun saveSport(sport: String) {
+        waterAppUserDataListener.value = waterAppUserDataListener.value?.copy(
+            sport = sport
+        )
+    }
+
+    data class WaterAppUserData(
+        val gender: String = "man",
+        val height: String = "",
+        val weight: String = "",
+        val sleepTime: String = "",
+        val wakeUpTime: String = "",
+        val sport: String = ""
+    )
 }
