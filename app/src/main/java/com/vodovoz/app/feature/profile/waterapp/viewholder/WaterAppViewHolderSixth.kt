@@ -28,6 +28,11 @@ class WaterAppViewHolderSixth(
             clickListener.onNextClick(item.id)
         }
 
+        binding.tvResetRate.setOnClickListener {
+            waterAppHelper.clearData()
+            clickListener.clearData()
+        }
+
     }
 
     override fun bind(item: WaterAppModelSix) {

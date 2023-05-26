@@ -5,4 +5,5 @@ interface WaterAppClickListener {
     fun onNextClick(currentPosition: Int)
     fun onNextClick(currentPosition: Int, saveData: Boolean)
     fun onPrevClick(currentPosition: Int)
+    fun clearData()
 }

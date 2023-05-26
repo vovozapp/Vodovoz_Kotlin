@@ -47,6 +47,11 @@ class WaterAppFragment : BaseFragment() {
                     binding.vpWater.currentItem = currentPosition - 2
                 }
 
+                override fun clearData() {
+                    waterAppAdapter.submitList(WaterAppLists.firstList)
+                    binding.vpWater.currentItem = 1
+                }
+
             },
             object : WaterAppInnerClickListener {
                 override fun onChangePosition(position: Int) {

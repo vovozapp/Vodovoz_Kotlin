@@ -194,6 +194,12 @@ class WaterAppHelper @Inject constructor(
         }
     }
 
+    fun clearData() {
+        sharedPrefs.edit().remove(WATER_APP_NOTIFICATION_DATA).remove(WATER_APP_USER_DATA).apply()
+        fetchWaterAppUserData()
+        fetchWaterAppNotificationData()
+    }
+
     data class WaterAppNotificationData(
         val firstShow: Boolean = false,
         val switch: Boolean = true,
