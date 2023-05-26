@@ -22,16 +22,16 @@ class WaterAppHelper @Inject constructor(
 
     private val adapter = moshi.adapter(WaterAppUserData::class.java)
     private val adapterNotification = moshi.adapter(WaterAppNotificationData::class.java)
+    private val adapterRate = moshi.adapter(WaterAppRateData::class.java)
 
-    private val waterAppUserDataListener = MutableStateFlow<WaterAppUserData?>(
-        null
-    )
+    private val waterAppUserDataListener = MutableStateFlow<WaterAppUserData?>(null)
     fun observeWaterAppUserData() = waterAppUserDataListener.asStateFlow()
 
-    private val waterAppNotificationDataListener = MutableStateFlow<WaterAppNotificationData?>(
-        null
-    )
+    private val waterAppNotificationDataListener = MutableStateFlow<WaterAppNotificationData?>(null)
     fun observeWaterAppNotificationData() = waterAppNotificationDataListener.asStateFlow()
+
+    private val waterAppRateDataListener = MutableStateFlow<WaterAppRateData?>(null)
+    fun observeWaterAppRateData() = waterAppRateDataListener.asStateFlow()
 
     fun fetchWaterAppUserData() {
         if(sharedPrefs.contains(WATER_APP_USER_DATA)) {
@@ -107,20 +107,39 @@ class WaterAppHelper @Inject constructor(
 
     fun saveRate() : Int {
         val rate = calculateRate()
-        debugLog { "save rate $rate" }
-        sharedPrefs
-            .edit()
-            .putInt(WATER_APP_RATE, rate)
-            .apply()
+        waterAppRateDataListener.value = waterAppRateDataListener.value?.copy(rate = rate)
+        saveWaterAppRateData()
         return rate
     }
 
-    fun fetchRate(): Int {
-        return if (!sharedPrefs.contains(WATER_APP_RATE)) {
-            saveRate()
+    fun fetchWaterAppRateData() {
+        if(sharedPrefs.contains(WATER_APP_RATE)) {
+            val json = sharedPrefs.getString(WATER_APP_RATE, "")
+            debugLog { "json contains $json" }
+            if (!json.isNullOrEmpty()) {
+                val data = adapterRate.fromJson(json) ?: return
+                debugLog { "data contains $json" }
+                waterAppRateDataListener.value = data
+            } else {
+                waterAppRateDataListener.value = WaterAppRateData()
+            }
         } else {
-            sharedPrefs.getInt(WATER_APP_RATE, 2300)
+            waterAppRateDataListener.value = WaterAppRateData()
         }
+    }
+
+    fun saveWaterAppRateData() {
+
+        val data = waterAppRateDataListener.value
+
+        val json = adapterRate.toJson(data)
+
+        debugLog { "json $json" }
+
+        sharedPrefs
+            .edit()
+            .putString(WATER_APP_RATE, json)
+            .apply()
     }
 
     private fun calculateRate(): Int {
@@ -214,5 +233,11 @@ class WaterAppHelper @Inject constructor(
         val sleepTime: String = "138",
         val wakeUpTime: String = "42",
         val sport: String = "0.25",
+    )
+
+    data class WaterAppRateData(
+        val rate: Int = 2300,
+        val currentLevel: Int = 0,
+        val currentDate: Long = 0
     )
 }

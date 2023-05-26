@@ -8,6 +8,8 @@ import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
 import com.vodovoz.app.feature.profile.waterapp.model.WaterAppModelFour
 import com.vodovoz.app.feature.profile.waterapp.model.WaterAppModelOne
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class WaterAppViewHolderFourth(
     view: View,
@@ -27,9 +29,16 @@ class WaterAppViewHolderFourth(
 
     override fun attach() {
         super.attach()
-        val rate = waterAppHelper.fetchRate()
+        launch {
+            waterAppHelper
+                .observeWaterAppRateData()
+                .collect {
+                    if (it == null) return@collect
+                    binding.tvYourRate.text = "${it.rate} мл"
 
-        binding.tvYourRate.text = "$rate мл"
+                }
+        }
+
     }
 
     override fun bind(item: WaterAppModelFour) {
