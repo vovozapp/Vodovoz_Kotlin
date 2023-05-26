@@ -62,6 +62,7 @@ class WaterAppFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         waterAppHelper.fetchWaterAppUserData()
+        waterAppHelper.fetchWaterAppNotificationData()
     }
 
     override fun onStart() {
