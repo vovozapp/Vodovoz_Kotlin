@@ -1,6 +1,9 @@
 package com.vodovoz.app.feature.profile.waterapp
 
 import android.content.SharedPreferences
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
 import com.squareup.moshi.Moshi
 import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -128,6 +131,34 @@ class WaterAppHelper @Inject constructor(
         }
     }
 
+    fun tryToChangeWaterLevel(step: Int) {
+
+        val rateState = waterAppRateDataListener.value ?: return
+
+        debugLog { "try to change $step rateState $rateState currentLevel ${rateState.currentLevel} canFill ${rateState.canFill}" }
+
+        if (rateState.currentLevel == rateState.rate) {
+            waterAppRateDataListener.value = waterAppRateDataListener.value?.copy(
+                canFill = false
+            )
+            return
+        }
+
+        if (step + rateState.currentLevel > rateState.rate) {
+            val newStep = rateState.rate - rateState.currentLevel
+
+            waterAppRateDataListener.value = waterAppRateDataListener.value?.copy(
+                canFill = true,
+                currentLevel = rateState.currentLevel + newStep
+            )
+        } else {
+            waterAppRateDataListener.value = waterAppRateDataListener.value?.copy(
+                canFill = true,
+                currentLevel = rateState.currentLevel + step
+            )
+        }
+    }
+
     fun saveWaterAppRateData() {
 
         val data = waterAppRateDataListener.value
@@ -223,7 +254,7 @@ class WaterAppHelper @Inject constructor(
         val firstShow: Boolean = false,
         val switch: Boolean = true,
         val time: String = "60",
-        val started: Boolean = false
+        val started: Boolean = false,
     )
 
     data class WaterAppUserData(
@@ -238,6 +269,7 @@ class WaterAppHelper @Inject constructor(
     data class WaterAppRateData(
         val rate: Int = 2300,
         val currentLevel: Int = 0,
-        val currentDate: Long = 0
+        val currentDate: Long = 0,
+        val canFill: Boolean = true
     )
 }

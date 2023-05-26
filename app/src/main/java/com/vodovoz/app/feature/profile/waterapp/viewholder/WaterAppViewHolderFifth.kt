@@ -1,11 +1,17 @@
 package com.vodovoz.app.feature.profile.waterapp.viewholder
 
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.View
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.FragmentWaterAppFifthBinding
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
 import com.vodovoz.app.feature.profile.waterapp.model.WaterAppModelFive
+import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.launch
 
 class WaterAppViewHolderFifth(
@@ -17,6 +23,8 @@ class WaterAppViewHolderFifth(
     private val binding: FragmentWaterAppFifthBinding = FragmentWaterAppFifthBinding.bind(view)
     private var step: Int = 200
     private var changeStep: Int = 50
+    private var bottleHeight: Int = 0
+    private var canFill: Boolean = true
 
     init {
         binding.imgSettings.setOnClickListener {
@@ -37,7 +45,7 @@ class WaterAppViewHolderFifth(
         }
 
         binding.imgFill.setOnClickListener {
-            fill()
+            waterAppHelper.tryToChangeWaterLevel(step)
         }
 
     }
@@ -50,13 +58,23 @@ class WaterAppViewHolderFifth(
                 .observeWaterAppRateData()
                 .collect {
                     if (it == null) return@collect
-
-                    binding.tvRate.text = "${it.currentLevel}/${it.rate} мл"
-
+                    canFill = it.canFill
+                    if (!canFill) {
+                        Toast.makeText(itemView.context, "Вы уже выпили вашу норму", Toast.LENGTH_SHORT).show()
+                    }
+                    fill(it.currentLevel, it.rate)
 
                 }
         }
 
+        animView()
+
+    }
+
+    override fun detach() {
+        super.detach()
+        debugLog { "save water rate" }
+        waterAppHelper.saveWaterAppRateData()
     }
 
     override fun bind(item: WaterAppModelFive) {
@@ -72,7 +90,22 @@ class WaterAppViewHolderFifth(
         }
     }
 
-    private fun fill() {
-
+    private fun fill(currentLevel: Int, rate: Int) {
+        binding.imgWaterBottle.post {
+            bottleHeight = binding.imgWaterBottle.height
+            val percent: Double = currentLevel.toDouble() / rate.toDouble()
+            val height: Int = (percent * bottleHeight.toDouble()).toInt()
+            val lavParams = binding.lavAnimation.layoutParams as ConstraintLayout.LayoutParams
+            lavParams.height = height
+            binding.lavAnimation.layoutParams = lavParams
+            val vParams = binding.vWaterBackground.layoutParams as ConstraintLayout.LayoutParams
+            if (height > bottleHeight) {
+                vParams.height = bottleHeight
+            } else {
+                vParams.height = height - 3
+            }
+            binding.vWaterBackground.layoutParams = vParams
+            binding.tvRate.text = "${currentLevel}/${rate} мл"
+        }
     }
 }

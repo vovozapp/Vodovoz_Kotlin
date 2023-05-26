@@ -15,6 +15,7 @@ import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppAdapter
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppInnerClickListener
 import com.vodovoz.app.feature.profile.waterapp.model.WaterAppLists
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
@@ -80,6 +81,8 @@ class WaterAppFragment : BaseFragment() {
 
     override fun onStop() {
         super.onStop()
+        debugLog { "save water rate" }
+        waterAppHelper.saveWaterAppRateData()
         tabManager.changeTabVisibility(true)
     }
 
@@ -101,6 +104,5 @@ class WaterAppFragment : BaseFragment() {
             waterAppAdapter.submitList(WaterAppLists.startedList)
         }
     }
-
 
 }
