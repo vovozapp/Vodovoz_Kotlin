@@ -7,6 +7,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ViewHolderCommentWithAvatarBinding
 import com.vodovoz.app.ui.model.CommentUI
+import com.vodovoz.app.util.extensions.fromHtml
 
 class CommentsWithAvatarFlowViewHolder(
     view: View
@@ -19,7 +20,7 @@ class CommentsWithAvatarFlowViewHolder(
 
         binding.date.text = item.date
         binding.tvAuthor.text = item.author
-        binding.tvComment.text = item.text
+        binding.tvComment.text = item.text.fromHtml()
 
         Glide.with(itemView.context)
             .load(item.authorPhoto)
