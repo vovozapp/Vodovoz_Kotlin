@@ -28,6 +28,13 @@ object ProductDetailsResponseJsonParser {
                     ),
                     categoryEntity = responseJson.getJSONArray("razdel")
                         .getJSONObject(0).parseCategoryEntity(),
+                    commentImages = when(responseJson.isNull("comments")) {
+                        true -> listOf()
+                        else -> when(responseJson.getJSONObject("comments").isNull("KARTINKI")) {
+                            true -> listOf()
+                            else ->  responseJson.getJSONObject("comments").getJSONArray("KARTINKI").parseCommentImageEntityList()
+                        }
+                    },
                     commentEntityList = when(responseJson.isNull("comments")) {
                         true -> listOf()
                         else -> responseJson.getJSONObject("comments")
