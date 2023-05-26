@@ -6,11 +6,12 @@ import com.vodovoz.app.databinding.FragmentWaterAppFifthBinding
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
 import com.vodovoz.app.feature.profile.waterapp.model.WaterAppModelFive
+import kotlinx.coroutines.launch
 
 class WaterAppViewHolderFifth(
     view: View,
     clickListener: WaterAppClickListener,
-    waterAppHelper: WaterAppHelper,
+    private val waterAppHelper: WaterAppHelper,
 ) : ItemViewHolder<WaterAppModelFive>(view) {
 
     private val binding: FragmentWaterAppFifthBinding = FragmentWaterAppFifthBinding.bind(view)
@@ -20,6 +21,19 @@ class WaterAppViewHolderFifth(
             val item = item ?: return@setOnClickListener
             clickListener.onNextClick(item.id)
         }
+    }
+
+    override fun attach() {
+        super.attach()
+        launch {
+            waterAppHelper
+                .observeWaterAppRateData()
+                .collect {
+                    if (it == null) return@collect
+
+                }
+        }
+
     }
 
     override fun bind(item: WaterAppModelFive) {
