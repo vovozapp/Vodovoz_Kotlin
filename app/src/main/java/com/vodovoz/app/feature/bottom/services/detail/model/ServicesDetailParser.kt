@@ -1,5 +1,7 @@
 package com.vodovoz.app.feature.bottom.services.detail.model
 
+import com.vodovoz.app.core.network.ApiConfig
+import com.vodovoz.app.core.network.ApiConfig.VODOVOZ_URL
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
 import com.vodovoz.app.data.parser.common.safeInt
@@ -78,7 +80,7 @@ object ServicesDetailParser {
     private fun parseImagePathMapper(string: String?): String {
         if (string == null) return ""
         return StringBuilder()
-            .append("http://mvodovoz.tw1.ru/")
+            .append(VODOVOZ_URL)
             .append(string.replace("\"", ""))
             .toString()
     }

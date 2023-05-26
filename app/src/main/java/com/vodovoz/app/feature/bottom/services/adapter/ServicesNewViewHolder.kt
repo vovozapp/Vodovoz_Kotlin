@@ -5,6 +5,7 @@ import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.core.network.ApiConfig
+import com.vodovoz.app.core.network.ApiConfig.VODOVOZ_URL
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import com.vodovoz.app.databinding.ViewHolderServiceDetailBinding
 import com.vodovoz.app.databinding.ViewHolderServiceDetailNewBinding
@@ -39,7 +40,7 @@ class ServicesNewViewHolder(
     }
 
     fun parseImagePath(string: String?) = StringBuilder()
-        .append("http://mvodovoz.tw1.ru/")
+        .append(VODOVOZ_URL)
         .append(string?.replace("\"", ""))
         .toString()
 }

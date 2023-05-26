@@ -12,6 +12,7 @@ import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppInnerClickListen
 import com.vodovoz.app.feature.profile.waterapp.model.WaterAppLists
 import com.vodovoz.app.feature.profile.waterapp.model.WaterAppModelOne
 import com.vodovoz.app.feature.profile.waterapp.model.WaterAppModelThree
+import com.vodovoz.app.util.extensions.debugLog
 
 class WaterAppViewHolderThird(
     view: View,
@@ -26,6 +27,7 @@ class WaterAppViewHolderThird(
     init {
         binding.tvNext.setOnClickListener {
             val item = item ?: return@setOnClickListener
+            waterAppHelper.saveRate()
             clickListener.onNextClick(item.id, true)
         }
 
@@ -56,6 +58,7 @@ class WaterAppViewHolderThird(
             binding.imgStepWakeUp.isSelected = false
             binding.imgStepSleepTime.isSelected = false
             binding.imgStepSport.isSelected = false
+            binding.tvTitle.text = "Ваш пол"
         }
 
         if (position == 2) {
@@ -65,6 +68,7 @@ class WaterAppViewHolderThird(
             binding.imgStepWakeUp.isSelected = false
             binding.imgStepSleepTime.isSelected = false
             binding.imgStepSport.isSelected = false
+            binding.tvTitle.text = "Ваш рост"
         }
 
         if (position == 3) {
@@ -74,6 +78,7 @@ class WaterAppViewHolderThird(
             binding.imgStepWakeUp.isSelected = false
             binding.imgStepSleepTime.isSelected = false
             binding.imgStepSport.isSelected = false
+            binding.tvTitle.text = "Ваш вес"
         }
 
         if (position == 4) {
@@ -83,6 +88,7 @@ class WaterAppViewHolderThird(
             binding.imgStepWakeUp.isSelected = false
             binding.imgStepSleepTime.isSelected = true
             binding.imgStepSport.isSelected = false
+            binding.tvTitle.text = "Время для сна"
         }
 
         if (position == 5) {
@@ -92,6 +98,7 @@ class WaterAppViewHolderThird(
             binding.imgStepWakeUp.isSelected = true
             binding.imgStepSleepTime.isSelected = true
             binding.imgStepSport.isSelected = false
+            binding.tvTitle.text = "Время пробуждения"
         }
 
         if (position == 6) {
@@ -103,6 +110,7 @@ class WaterAppViewHolderThird(
             binding.imgStepSport.isSelected = true
             binding.tvNext.isEnabled = true
             binding.tvNext.isSelected = true
+            binding.tvTitle.text = "Уровень активности"
         }
     }
 

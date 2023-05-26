@@ -11,11 +11,12 @@ import javax.inject.Singleton
 @Singleton
 class WaterAppHelper @Inject constructor(
     private val sharedPrefs: SharedPreferences,
-    private val moshi: Moshi
+    private val moshi: Moshi,
 ) {
 
     companion object {
         const val WATER_APP_USER_DATA = "water app user data"
+        const val WATER_APP_RATE = "water app rate"
     }
 
     private val adapter = moshi.adapter(WaterAppUserData::class.java)
@@ -91,12 +92,37 @@ class WaterAppHelper @Inject constructor(
         )
     }
 
+    fun saveRate() : Int {
+        val rate = calculateRate()
+        debugLog { "save rate $rate" }
+        sharedPrefs
+            .edit()
+            .putInt(WATER_APP_RATE, rate)
+            .apply()
+        return rate
+    }
+
+    fun fetchRate(): Int {
+        return if (!sharedPrefs.contains(WATER_APP_RATE)) {
+            saveRate()
+        } else {
+            sharedPrefs.getInt(WATER_APP_RATE, 2300)
+        }
+    }
+
+    private fun calculateRate(): Int {
+        val weight = waterAppUserDataListener.value?.weight?.toDouble() ?: 50.0
+        val sport = waterAppUserDataListener.value?.sport?.toDouble() ?: 0.25
+        debugLog { "calculate rate weight $weight sport $sport" }
+        return ((1.5 + (weight - 20) * 0.02 + sport) * 1000).toInt()
+    }
+
     data class WaterAppUserData(
         val gender: String = "man",
         val height: String = "160",
         val weight: String = "50",
         val sleepTime: String = "138",
         val wakeUpTime: String = "42",
-        val sport: String = "0.25"
+        val sport: String = "0.25",
     )
 }
