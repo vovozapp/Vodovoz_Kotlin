@@ -2,6 +2,7 @@ package com.vodovoz.app.ui.model
 
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.feature.all.comments.model.CommentImage
 
 data class CommentUI(
     val id: Long? = null,
@@ -9,7 +10,8 @@ data class CommentUI(
     val author: String? = null,
     val authorPhoto: String? = null,
     val date: String? = null,
-    val rating: Int? = null
+    val rating: Int? = null,
+    val commentImages: List<CommentImage>? = null
 ) : Item {
 
     override fun getItemViewType(): Int {

@@ -4,8 +4,8 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
 
 data class CommentImage(
-    val id: Long,
-    val url: String
+    val id: String?,
+    val url: String?
 ): Item {
 
     override fun getItemViewType(): Int {
