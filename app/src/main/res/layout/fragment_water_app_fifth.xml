@@ -110,7 +110,7 @@
                 android:layout_marginTop="@dimen/_47sdp"
                 android:fontFamily="@font/rotonda_bold"
                 android:gravity="center"
-                android:text="2500/2500 мл"
+                tools:text="2500/2500 мл"
                 android:textColor="@color/bluePrimary"
                 android:textSize="@dimen/_15ssp"
                 app:layout_constraintEnd_toEndOf="parent"
