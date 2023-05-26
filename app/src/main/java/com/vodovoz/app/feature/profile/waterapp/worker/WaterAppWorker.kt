@@ -21,7 +21,7 @@ class WaterAppWorker(
     override fun doWork(): Result {
         val pendingIntent = NavDeepLinkBuilder(applicationContext)
             .setGraph(R.navigation.nav_graph)
-            .setDestination(R.id.graph_profile)
+            .setDestination(R.id.splashFragment)
             .createPendingIntent()
 
         val notification =
