@@ -41,7 +41,7 @@ object AllCommentsByProductResponseJsonParser {
         date = getString("DATA"),
         authorPhoto = getString("USER_PHOTO").parseImagePath(),
         images = when(has("IMAGES") && !isNull("IMAGES") ) {
-            false -> listOf()
+            false -> null
             true -> getJSONArray("IMAGES").parseCommentImageEntityList()
         }
     )
