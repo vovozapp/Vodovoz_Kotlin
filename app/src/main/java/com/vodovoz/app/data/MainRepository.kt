@@ -1176,9 +1176,9 @@ class MainRepository @Inject constructor(
     ) = api.fetchProfileCategoriesResponse(
         action = "glav",
         userId = userId,
-        appVersion = "1.5.10",
+        appVersion = BuildConfig.VERSION_NAME,
         isTablet = isTablet
-    ) //todo Build.VERSION.RELEASE
+    )
 
     suspend fun fetchPersonalProducts(
         userId: Long?,

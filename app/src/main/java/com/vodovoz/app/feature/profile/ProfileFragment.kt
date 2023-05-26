@@ -157,8 +157,7 @@ class ProfileFragment : BaseFragment() {
             }
 
             override fun logout() {
-                findNavController().navigate(R.id.waterAppFragment)
-               // viewModel.logout()
+                viewModel.logout()
             }
 
             override fun onAddressesClick() {
