@@ -6,6 +6,7 @@ import android.os.Looper
 import android.widget.Toast
 import com.squareup.moshi.Moshi
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.fetchCurrentDayInTimeMillis
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
@@ -116,18 +117,31 @@ class WaterAppHelper @Inject constructor(
     }
 
     fun fetchWaterAppRateData() {
+        val currentDate = fetchCurrentDayInTimeMillis()
         if(sharedPrefs.contains(WATER_APP_RATE)) {
             val json = sharedPrefs.getString(WATER_APP_RATE, "")
             debugLog { "json contains $json" }
             if (!json.isNullOrEmpty()) {
                 val data = adapterRate.fromJson(json) ?: return
                 debugLog { "data contains $json" }
-                waterAppRateDataListener.value = data
+
+                if (data.lastSavedDate == 0L) {
+                    waterAppRateDataListener.value = data.copy(
+                        lastSavedDate = currentDate
+                    )
+                } else {
+                    if (data.lastSavedDate != currentDate) {
+                        waterAppRateDataListener.value = data.copy(
+                            lastSavedDate = currentDate,
+                            currentLevel = 0
+                        )
+                    }
+                }
             } else {
-                waterAppRateDataListener.value = WaterAppRateData()
+                waterAppRateDataListener.value = WaterAppRateData(lastSavedDate = currentDate)
             }
         } else {
-            waterAppRateDataListener.value = WaterAppRateData()
+            waterAppRateDataListener.value = WaterAppRateData(lastSavedDate = currentDate)
         }
     }
 
@@ -275,7 +289,7 @@ class WaterAppHelper @Inject constructor(
     data class WaterAppRateData(
         val rate: Int = 2300,
         val currentLevel: Int = 0,
-        val currentDate: Long = 0,
+        val lastSavedDate: Long = 0,
         val canFill: Boolean = true
     )
 }
