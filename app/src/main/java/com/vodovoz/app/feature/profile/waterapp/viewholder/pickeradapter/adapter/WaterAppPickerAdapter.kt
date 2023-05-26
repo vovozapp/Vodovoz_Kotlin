@@ -10,10 +10,7 @@ import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppInnerClickListener
 import com.vodovoz.app.feature.profile.waterapp.viewholder.*
 import com.vodovoz.app.feature.profile.waterapp.viewholder.inner.*
-import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.viewholder.HeightViewHolder
-import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.viewholder.SleepTimeViewHolder
-import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.viewholder.WakeTimeViewHolder
-import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.viewholder.WeightViewHolder
+import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.viewholder.*
 
 class WaterAppPickerAdapter(
     private val waterAppHelper: WaterAppHelper,
@@ -27,6 +24,7 @@ class WaterAppPickerAdapter(
             2 -> { WeightViewHolder(getViewFromInflater(R.layout.item_picker, parent), clickListener, waterAppHelper, innerClickListener) }
             3 -> { SleepTimeViewHolder(getViewFromInflater(R.layout.item_picker, parent), clickListener, waterAppHelper, innerClickListener) }
             4 -> { WakeTimeViewHolder(getViewFromInflater(R.layout.item_picker, parent), clickListener, waterAppHelper, innerClickListener) }
+            5 -> { DurationViewHolder(getViewFromInflater(R.layout.item_water_app_duration, parent), clickListener, waterAppHelper, innerClickListener) }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")
             }
