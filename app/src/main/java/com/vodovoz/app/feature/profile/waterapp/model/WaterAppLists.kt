@@ -27,6 +27,12 @@ object WaterAppLists {
         WaterAppModelSeven(7)
     )
 
+    val startedList = listOf(
+        WaterAppModelFive(1),
+        WaterAppModelSix(2),
+        WaterAppModelSeven(3)
+    )
+
     val innerList = listOf(
         WaterAppModelInnerOne(),
         WaterAppModelInnerTwo(),

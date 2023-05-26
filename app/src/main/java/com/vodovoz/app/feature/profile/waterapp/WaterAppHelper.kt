@@ -99,6 +99,12 @@ class WaterAppHelper @Inject constructor(
         )
     }
 
+    fun saveStart(started: Boolean) {
+        waterAppNotificationDataListener.value = waterAppNotificationDataListener.value?.copy(
+            started = started
+        )
+    }
+
     fun saveRate() : Int {
         val rate = calculateRate()
         debugLog { "save rate $rate" }
@@ -172,10 +178,27 @@ class WaterAppHelper @Inject constructor(
             .apply()
     }
 
+    fun fetchAppNotificationData(): WaterAppNotificationData {
+        if(sharedPrefs.contains(WATER_APP_NOTIFICATION_DATA)) {
+            val json = sharedPrefs.getString(WATER_APP_NOTIFICATION_DATA, "")
+            debugLog { "json contains $json" }
+            if (!json.isNullOrEmpty()) {
+                val data = adapterNotification.fromJson(json) ?: return WaterAppNotificationData()
+                debugLog { "data contains $json" }
+                return data
+            } else {
+                return WaterAppNotificationData()
+            }
+        } else {
+            return WaterAppNotificationData()
+        }
+    }
+
     data class WaterAppNotificationData(
         val firstShow: Boolean = false,
         val switch: Boolean = true,
-        val time: String = "60"
+        val time: String = "60",
+        val started: Boolean = false
     )
 
     data class WaterAppUserData(

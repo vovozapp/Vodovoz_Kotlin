@@ -84,25 +84,15 @@ class WaterAppFragment : BaseFragment() {
         binding.vpWater.isUserInputEnabled = false
         binding.vpWater.adapter = waterAppAdapter
 
-        observeWaterAppNotificationState()
-
-    }
-
-    private fun observeWaterAppNotificationState() {
-        lifecycleScope.launchWhenStarted {
-            waterAppHelper
-                .observeWaterAppNotificationData()
-                .collect {
-                    if (it != null) {
-                        if (it.firstShow) {
-                            waterAppAdapter.submitList(WaterAppLists.notificationShownList)
-                        } else {
-                            waterAppAdapter.submitList(WaterAppLists.firstList)
-                        }
-                    } else {
-                        waterAppAdapter.submitList(WaterAppLists.firstList)
-                    }
-                }
+        val data = waterAppHelper.fetchAppNotificationData()
+        if (!data.started) {
+            if (data.firstShow) {
+                waterAppAdapter.submitList(WaterAppLists.notificationShownList)
+            } else {
+                waterAppAdapter.submitList(WaterAppLists.firstList)
+            }
+        } else {
+            waterAppAdapter.submitList(WaterAppLists.startedList)
         }
     }
 

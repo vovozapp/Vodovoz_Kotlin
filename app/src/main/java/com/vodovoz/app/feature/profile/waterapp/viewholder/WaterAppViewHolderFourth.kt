@@ -20,6 +20,7 @@ class WaterAppViewHolderFourth(
     init {
         binding.cwStart.setOnClickListener {
             val item = item ?: return@setOnClickListener
+            waterAppHelper.saveStart(true)
             clickListener.onNextClick(item.id)
         }
     }
