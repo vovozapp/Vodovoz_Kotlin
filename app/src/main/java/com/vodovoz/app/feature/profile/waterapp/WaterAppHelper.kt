@@ -1,14 +1,21 @@
 package com.vodovoz.app.feature.profile.waterapp
 
+import android.app.Application
 import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.squareup.moshi.Moshi
+import com.vodovoz.app.feature.profile.waterapp.worker.WaterAppWorker
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.fetchCurrentDayInTimeMillis
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,6 +23,7 @@ import javax.inject.Singleton
 class WaterAppHelper @Inject constructor(
     private val sharedPrefs: SharedPreferences,
     private val moshi: Moshi,
+    private val applicationContext: Application
 ) {
 
     companion object {
@@ -230,7 +238,27 @@ class WaterAppHelper @Inject constructor(
 
     fun saveWaterAppNotificationData() {
 
-        val data = waterAppNotificationDataListener.value
+        val data = waterAppNotificationDataListener.value ?: return
+
+        if (data.switch) {
+            WorkManager.getInstance(applicationContext).cancelAllWorkByTag("water")
+            val work = PeriodicWorkRequest.Builder(
+                WaterAppWorker::class.java,
+                data.time.toLong(),
+                TimeUnit.MINUTES
+            )
+                .setConstraints(Constraints.NONE)
+                .setInitialDelay(data.time.toLong(), TimeUnit.MINUTES)
+                .addTag("water")
+                .build()
+            WorkManager
+                .getInstance(applicationContext)
+                .enqueueUniquePeriodicWork("water", ExistingPeriodicWorkPolicy.REPLACE, work)
+        } else {
+            WorkManager
+                .getInstance(applicationContext)
+                .cancelAllWorkByTag("water")
+        }
 
         val json = adapterNotification.toJson(data)
 
@@ -272,7 +300,7 @@ class WaterAppHelper @Inject constructor(
 
     data class WaterAppNotificationData(
         val firstShow: Boolean = false,
-        val switch: Boolean = true,
+        val switch: Boolean = false,
         val time: String = "60",
         val started: Boolean = false,
     )

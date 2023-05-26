@@ -18,7 +18,7 @@ class WaterAppViewHolderSeventh(
     view: View,
     clickListener: WaterAppClickListener,
     private val waterAppHelper: WaterAppHelper,
-    innerClickListener: WaterAppInnerClickListener
+    innerClickListener: WaterAppInnerClickListener,
 ) : ItemViewHolder<WaterAppModelSeven>(view) {
 
     private val binding: FragmentWaterAppSeventhBinding = FragmentWaterAppSeventhBinding.bind(view)
