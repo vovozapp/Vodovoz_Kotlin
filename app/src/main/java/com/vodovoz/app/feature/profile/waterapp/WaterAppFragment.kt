@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.profile.waterapp
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -15,6 +16,7 @@ import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppInnerClickListener
 import com.vodovoz.app.feature.profile.waterapp.model.WaterAppLists
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -82,8 +84,26 @@ class WaterAppFragment : BaseFragment() {
         binding.vpWater.isUserInputEnabled = false
         binding.vpWater.adapter = waterAppAdapter
 
-        waterAppAdapter.submitList(WaterAppLists.firstList)
+        observeWaterAppNotificationState()
 
+    }
+
+    private fun observeWaterAppNotificationState() {
+        lifecycleScope.launchWhenStarted {
+            waterAppHelper
+                .observeWaterAppNotificationData()
+                .collect {
+                    if (it != null) {
+                        if (it.firstShow) {
+                            waterAppAdapter.submitList(WaterAppLists.notificationShownList)
+                        } else {
+                            waterAppAdapter.submitList(WaterAppLists.firstList)
+                        }
+                    } else {
+                        waterAppAdapter.submitList(WaterAppLists.firstList)
+                    }
+                }
+        }
     }
 
 
