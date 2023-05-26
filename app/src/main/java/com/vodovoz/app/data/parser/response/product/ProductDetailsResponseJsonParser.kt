@@ -4,6 +4,8 @@ import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.parser.common.BrandJsonParser.parserBrandEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
 import com.vodovoz.app.data.parser.common.safeInt
+import com.vodovoz.app.data.parser.common.safeString
+import com.vodovoz.app.data.parser.response.comment.AllCommentsByProductResponseJsonParser
 import com.vodovoz.app.data.remote.ResponseStatus
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import okhttp3.ResponseBody
@@ -188,8 +190,32 @@ object ProductDetailsResponseJsonParser {
         author = getString("NAME"),
         text = getString("TEXT"),
         date = getString("DATA"),
-        authorPhoto = getString("USER_PHOTO").parseImagePath()
+        authorPhoto = getString("USER_PHOTO").parseImagePath(),
+        images = when(has("IMAGES") && !isNull("IMAGES") ) {
+            false -> listOf()
+            true -> getJSONArray("IMAGES").parseCommentImageEntityList()
+        }
     )
+
+    private fun JSONArray.parseCommentImageEntityList(): List<AllCommentsByProductResponseJsonParser.CommentImageEntity> =
+        mutableListOf<AllCommentsByProductResponseJsonParser.CommentImageEntity>().apply {
+            for (index in 0 until length()) {
+                add(getJSONObject(index).parseCommentImageEntity())
+            }
+        }
+
+    private fun JSONObject.parseCommentImageEntity() =
+        AllCommentsByProductResponseJsonParser.CommentImageEntity(
+            ID = safeString("ID"),
+            FILE_ID = safeString("FILE_ID"),
+            POST_ID = safeString("POST_ID"),
+            BLOG_ID = safeString("BLOG_ID"),
+            USER_ID = safeString("USER_ID"),
+            TITLE = safeString("TITLE"),
+            TIMESTAMP_X = safeString("TIMESTAMP_X"),
+            IMAGE_SIZE = getString("IMAGE_SIZE"),
+            SRC = getString("SRC").parseImagePath()
+        )
 
     //Promotion
     private fun JSONArray.parsePromotionEntityList(): List<PromotionEntity> = mutableListOf<PromotionEntity>().apply {
