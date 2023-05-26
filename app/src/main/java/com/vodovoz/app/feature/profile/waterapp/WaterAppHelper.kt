@@ -245,9 +245,15 @@ class WaterAppHelper @Inject constructor(
     }
 
     fun clearData() {
-        sharedPrefs.edit().remove(WATER_APP_NOTIFICATION_DATA).remove(WATER_APP_USER_DATA).apply()
+        sharedPrefs.edit()
+            .remove(WATER_APP_NOTIFICATION_DATA)
+            .remove(WATER_APP_USER_DATA)
+            .remove(WATER_APP_RATE)
+            .apply()
+
         fetchWaterAppUserData()
         fetchWaterAppNotificationData()
+        fetchWaterAppRateData()
     }
 
     data class WaterAppNotificationData(
