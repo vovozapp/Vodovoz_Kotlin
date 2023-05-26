@@ -104,6 +104,10 @@ object ProductJsonParser {
             replacementProductEntityList = when(has("nettovar") && !isNull("nettovar")) {
                 false -> listOf()
                 true -> getJSONObject("nettovar").getJSONArray("data").parseProductEntityList()
+            },
+            chipsBan = when(has("ZAPRET_FISHKAM")) {
+                true -> safeInt("ZAPRET_FISHKAM")
+                false -> null
             }
         )
     }

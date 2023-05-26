@@ -38,7 +38,8 @@ data class ProductUI(
     val discountPercentStringBuilder: String = "",
     val detailPictureListPager: List<DetailPicturePager> = emptyList(),
     val serviceDetailCoef: Int? = null,
-    val serviceGiftId: String? = null
+    val serviceGiftId: String? = null,
+    val chipsBan: Int? = null
 ) : Parcelable, Item {
 
     companion object {

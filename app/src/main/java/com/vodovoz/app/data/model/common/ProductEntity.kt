@@ -19,5 +19,6 @@ class ProductEntity(
     var isAvailable: Boolean = true,
     val priceList: List<PriceEntity> = listOf(),
     val detailPictureList: List<String> = listOf(),
-    val replacementProductEntityList: List<ProductEntity> = listOf()
+    val replacementProductEntityList: List<ProductEntity> = listOf(),
+    val chipsBan: Int? = null
 )
