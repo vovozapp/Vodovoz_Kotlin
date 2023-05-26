@@ -184,7 +184,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
                             detailComments = DetailComments(
                                 12,
                                 commentUIList = mappedData.commentUIList,
-                                productId = mappedData.productDetailUI.id
+                                productId = mappedData.productDetailUI.id,
+                                commentImages = mappedData.commentImages
                             ),
                             error = null,
                             loadingPage = false
