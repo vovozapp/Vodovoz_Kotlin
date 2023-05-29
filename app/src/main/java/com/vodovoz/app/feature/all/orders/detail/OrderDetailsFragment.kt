@@ -121,7 +121,7 @@ class OrderDetailsFragment : BaseFragment() {
                     }
 
                     val data = state.data
-                    fillOrderData(data.orderDetailsUI)
+                    fillOrderData(data)
 
                     val products = data.orderDetailsUI?.productUIList
                     if (products != null) {
@@ -134,8 +134,8 @@ class OrderDetailsFragment : BaseFragment() {
         }
     }
 
-    private fun fillOrderData(orderDetailsUI: OrderDetailsUI?) {
-        if (orderDetailsUI == null) return
+    private fun fillOrderData(data: OrderDetailsFlowViewModel.OrderDetailsState) {
+        val orderDetailsUI: OrderDetailsUI = data.orderDetailsUI ?: return
         with(binding) {
             binding.tvTitle.text = StringBuilder()
                 .append("Заказ от ")
@@ -170,7 +170,15 @@ class OrderDetailsFragment : BaseFragment() {
             }
 
             when(orderDetailsUI.status?.id) {
-                "E" -> binding.btnTraceOrder.isVisible = true
+                "E" -> {
+                    if (data.ifDriverExists && orderDetailsUI.driverName != null) {
+                        binding.btnTraceOrder.isVisible = true
+                        binding.btnTraceOrder.text = orderDetailsUI.driverName
+                    } else {
+                        binding.btnTraceOrder.isVisible = false
+                    }
+
+                }
                 "R" -> binding.payedStatus.isVisible = false
             } //todo
 

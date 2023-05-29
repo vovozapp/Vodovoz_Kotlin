@@ -66,6 +66,9 @@ class OrderDetailsFlowViewModel @Inject constructor(
                     val response = it.parseOrderDetailsResponse()
                     if (response is ResponseEntity.Success) {
                         val orderDetails = response.data.mapToUI()
+                        if (orderDetails.status?.id == "E" && orderDetails.driverId != null) {
+                            checkIfDriverExists(orderDetails.driverId)
+                        }
                         uiStateListener.value = state.copy(
                             data = state.data.copy(orderDetailsUI = orderDetails),
                             loadingPage = false,
@@ -188,7 +191,7 @@ class OrderDetailsFlowViewModel @Inject constructor(
         }
     }
 
-    fun checkIfDriverExists(driverId: String) {
+    private fun checkIfDriverExists(driverId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 firebaseDatabase.child(driverId).addListenerForSingleValueEvent(object : ValueEventListener {
@@ -201,6 +204,13 @@ class OrderDetailsFlowViewModel @Inject constructor(
 
                         val isExists = list.find { it?.OrderNumber == orderId.toString() }
 
+                        if (isExists != null) {
+                            uiStateListener.value = state.copy(
+                                data = state.data.copy(
+                                    ifDriverExists = true
+                                )
+                            )
+                        }
                     }
 
                     override fun onCancelled(error: DatabaseError) {
@@ -213,5 +223,6 @@ class OrderDetailsFlowViewModel @Inject constructor(
 
     data class OrderDetailsState(
         val orderDetailsUI: OrderDetailsUI? = null,
+        val ifDriverExists: Boolean = false
     ) : State
 }
