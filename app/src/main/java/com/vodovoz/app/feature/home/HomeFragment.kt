@@ -259,7 +259,7 @@ class HomeFragment : BaseFragment() {
                         }
                     }
 
-                    val list = homeState.data.items.sortedBy { it.position }.map { it.item }
+                    val list = homeState.data.items.map { it.item }
                     val progressList = if (!homeState.data.isSecondLoad) {
                         list + BottomProgressItem()
                     } else {

@@ -50,7 +50,6 @@ class SplashFragment : BaseFragment() {
         }
         viewModel.sendFirebaseToken()
         flowViewModel.firstLoad()
-        flowViewModel.secondLoad()
         catalogViewModel.firstLoad()
         cartFlowViewModel.firstLoad()
         favoriteViewModel.firstLoad()

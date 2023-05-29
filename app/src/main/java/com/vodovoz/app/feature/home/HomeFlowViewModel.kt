@@ -40,7 +40,7 @@ class HomeFlowViewModel @Inject constructor(
                 debugLog { "first load task ${System.currentTimeMillis() - start} result size ${result.size}" }
                 uiStateListener.value = state.copy(
                     loadingPage = false,
-                    data = state.data.copy(items = state.data.items + result),
+                    data = state.data.copy(items = (state.data.items + result).sortedBy { it.position }),
                     isFirstLoad = true,
                     error = if (result.isNotEmpty()) {
                         null
@@ -49,10 +49,12 @@ class HomeFlowViewModel @Inject constructor(
                     }
                 )
             }
+
+            secondLoad()
         }
     }
 
-    fun secondLoad() {
+    private fun secondLoad() {
         viewModelScope.launch {
             val tasks = secondLoadTasks()
             val start = System.currentTimeMillis()
@@ -65,7 +67,7 @@ class HomeFlowViewModel @Inject constructor(
             debugLog { "second load task ${System.currentTimeMillis() - start} result size ${mappedResult.size}" }
             uiStateListener.value = state.copy(
                 loadingPage = false,
-                data = state.data.copy(items = state.data.items + mappedResult, isSecondLoad = true),
+                data = state.data.copy(items = (state.data.items + mappedResult).sortedBy { it.position }, isSecondLoad = true),
                 error = if (mappedResult.isNotEmpty()) {
                     null
                 } else {
@@ -95,7 +97,7 @@ class HomeFlowViewModel @Inject constructor(
             }
             uiStateListener.value = state.copy(
                 loadingPage = false,
-                data = state.data.copy(items = state.data.items + mappedResult, isSecondLoad = true),
+                data = state.data.copy(items = (state.data.items + mappedResult).sortedBy { it.position }, isSecondLoad = true),
                 error = if (mappedResult.isNotEmpty()) {
                     null
                 } else {
