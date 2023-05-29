@@ -17,5 +17,7 @@ class OrderDetailsUI(
     val payUri: String = "",
     val status: OrderStatusUI? = null,
     val address: String = "",
-    val productUIList: List<ProductUI> = listOf()
+    val productUIList: List<ProductUI> = listOf(),
+    val driverId: String? = null,
+    val driverName: String? = null
 )

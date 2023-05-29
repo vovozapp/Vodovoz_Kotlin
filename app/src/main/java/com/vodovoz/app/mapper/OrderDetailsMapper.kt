@@ -24,7 +24,9 @@ object OrderDetailsMapper {
         payUri = payUri,
         status = status?.mapToUI(),
         address = address,
-        productUIList = productEntityList.mapToUI()
+        productUIList = productEntityList.mapToUI(),
+        driverId = driverId,
+        driverName = driverName
     )
 
 }

@@ -2,6 +2,7 @@ package com.vodovoz.app.data.parser.response.order
 
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.parser.common.safeInt
+import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.parser.common.safeStringConvertToBoolean
 import com.vodovoz.app.data.remote.ResponseStatus
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
@@ -45,7 +46,13 @@ object OrderDetailsResponseJsonParser {
             false -> ""
         },
         payMethod = getJSONObject("PAYSISTEM").getString("NAME"),
-        productEntityList = getJSONArray("ITEMS").parseProductEntityList()
+        productEntityList = getJSONArray("ITEMS").parseProductEntityList(),
+        driverId = if (has("VODILA") && !isNull("VODILA")) {
+            getJSONObject("VODILA").safeString("IDVODILA")
+        } else null,
+        driverName = if (has("VODILA") && !isNull("VODILA")) {
+            getJSONObject("VODILA").safeString("NAME")
+        } else null,
     )
 
     private fun JSONArray.parseProductEntityList(): List<ProductEntity> = mutableListOf<ProductEntity>().apply {

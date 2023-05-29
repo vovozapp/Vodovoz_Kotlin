@@ -2,8 +2,10 @@ package com.vodovoz.app.feature.all.orders.detail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.ValueEventListener
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.ErrorState
@@ -16,6 +18,7 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.order.CancelOrderResponseJsonParser.parseCancelOrderResponse
 import com.vodovoz.app.data.parser.response.order.OrderDetailsResponseJsonParser.parseOrderDetailsResponse
+import com.vodovoz.app.feature.all.orders.detail.model.DriverPointsEntity
 import com.vodovoz.app.mapper.OrderDetailsMapper.mapToUI
 import com.vodovoz.app.ui.model.OrderDetailsUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -32,7 +35,7 @@ class OrderDetailsFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val dataRepository: DataRepository,
     private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    private val likeManager: LikeManager,
 ) : PagingStateViewModel<OrderDetailsFlowViewModel.OrderDetailsState>(OrderDetailsState()) {
 
     private val firebaseDatabase = FirebaseDatabase.getInstance().reference
@@ -185,11 +188,30 @@ class OrderDetailsFlowViewModel @Inject constructor(
         }
     }
 
-    fun checkIfDriverExists() {
+    fun checkIfDriverExists(driverId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                firebaseDatabase.child(driverId).addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val list = mutableListOf<DriverPointsEntity?>()
+                        snapshot.child("ListTochki").children.forEach {
+                            val driverPointsEntity = it.getValue(DriverPointsEntity::class.java)
+                            list.add(driverPointsEntity)
+                        }
 
+                        val isExists = list.find { it?.OrderNumber == orderId.toString() }
+
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+
+                    }
+                })
+            }
+        }
     }
 
     data class OrderDetailsState(
-        val orderDetailsUI: OrderDetailsUI? = null
+        val orderDetailsUI: OrderDetailsUI? = null,
     ) : State
 }

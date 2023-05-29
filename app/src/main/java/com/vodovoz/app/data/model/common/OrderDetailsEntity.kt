@@ -17,5 +17,7 @@ class OrderDetailsEntity(
     val payUri: String = "",
     val status: OrderStatusEntity? = null,
     val address: String = "",
-    val productEntityList: List<ProductEntity> = listOf()
+    val productEntityList: List<ProductEntity> = listOf(),
+    val driverId: String? = null,
+    val driverName: String? = null
 )
