@@ -38,9 +38,10 @@ class HomeFlowViewModel @Inject constructor(
                 val start = System.currentTimeMillis()
                 val result = awaitAll(*tasks).flatten()
                 debugLog { "first load task ${System.currentTimeMillis() - start} result size ${result.size}" }
+                val positionItemsSorted = (state.data.positionItems + result).sortedBy { it.position }
                 uiStateListener.value = state.copy(
                     loadingPage = false,
-                    data = state.data.copy(items = (state.data.items + result).sortedBy { it.position }),
+                    data = state.data.copy(positionItems = positionItemsSorted, items = positionItemsSorted.map { it.item }),
                     isFirstLoad = true,
                     error = if (result.isNotEmpty()) {
                         null
@@ -65,9 +66,10 @@ class HomeFlowViewModel @Inject constructor(
                 result
             }
             debugLog { "second load task ${System.currentTimeMillis() - start} result size ${mappedResult.size}" }
+            val positionItemsSorted = (state.data.positionItems + mappedResult).sortedBy { it.position }
             uiStateListener.value = state.copy(
                 loadingPage = false,
-                data = state.data.copy(items = (state.data.items + mappedResult).sortedBy { it.position }, isSecondLoad = true),
+                data = state.data.copy(positionItems = positionItemsSorted, items = positionItemsSorted.map { it.item }, isSecondLoad = true),
                 error = if (mappedResult.isNotEmpty()) {
                     null
                 } else {
@@ -95,9 +97,10 @@ class HomeFlowViewModel @Inject constructor(
             } else {
                 result
             }
+            val positionItemsSorted = (state.data.positionItems + mappedResult).sortedBy { it.position }
             uiStateListener.value = state.copy(
                 loadingPage = false,
-                data = state.data.copy(items = (state.data.items + mappedResult).sortedBy { it.position }, isSecondLoad = true),
+                data = state.data.copy(positionItems = positionItemsSorted, items = positionItemsSorted.map { it.item }, isSecondLoad = true),
                 error = if (mappedResult.isNotEmpty()) {
                     null
                 } else {
@@ -246,38 +249,40 @@ class HomeFlowViewModel @Inject constructor(
         position: Int,
         categoryId: Long,
     ) {
+        val positionItems = state.data.positionItems.map {
+            when (it.position) {
+                position -> {
+                    it.copy(
+                        item = (it.item as HomeProducts).copy(
+                            prodList = it.item.items.find { it.id == categoryId }?.productUIList
+                                ?: it.item.prodList
+                        )
+                    )
+                }
+
+                positionTab -> {
+                    it.copy(
+                        item = (it.item as HomeProductsTabs).copy(
+                            tabsNames = it.item.tabsNames.map { cat ->
+                                if (cat.id == categoryId) {
+                                    cat.copy(isSelected = true)
+                                } else {
+                                    cat.copy(isSelected = false)
+                                }
+                            }
+                        )
+                    )
+                }
+                else -> {
+                    it
+                }
+            }
+        }
+
         uiStateListener.value = state.copy(
             data = state.data.copy(
-                items = state.data.items.map {
-                    when (it.position) {
-                        position -> {
-                            it.copy(
-                                item = (it.item as HomeProducts).copy(
-                                    prodList = it.item.items.find { it.id == categoryId }?.productUIList
-                                        ?: it.item.prodList
-                                )
-                            )
-                        }
-
-                        positionTab -> {
-                            it.copy(
-                                item = (it.item as HomeProductsTabs).copy(
-                                    tabsNames = it.item.tabsNames.map { cat ->
-                                        if (cat.id == categoryId) {
-                                            cat.copy(isSelected = true)
-                                        } else {
-                                            cat.copy(isSelected = false)
-                                        }
-                                    }
-                                )
-                            )
-                        }
-                        else -> {
-                            it
-                        }
-                    }
-
-                }
+                items = positionItems.map { it.item },
+                positionItems = positionItems
             )
         )
     }
@@ -362,7 +367,8 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     data class HomeState(
-        val items: List<PositionItem>,
+        val positionItems: List<PositionItem>,
+        val items: List<Item>,
         val news: PopupNewsUI? = null,
         val hasShow: Boolean = false,
         val isSecondLoad: Boolean = false
@@ -371,6 +377,7 @@ class HomeFlowViewModel @Inject constructor(
         companion object {
             fun idle(): HomeState {
                 return HomeState(
+                    positionItems = emptyList(),
                     items = emptyList()
                 )
             }

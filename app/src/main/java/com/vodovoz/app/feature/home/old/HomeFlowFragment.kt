@@ -110,13 +110,13 @@ class HomeFlowFragment : BaseFragment() {
                         hideLoader()
                     }
 
-                    if (homeState.data.items.size in (HomeFlowViewModel.POSITIONS_COUNT - 2..HomeFlowViewModel.POSITIONS_COUNT)) {
+                    /*if (homeState.data.items.size in (HomeFlowViewModel.POSITIONS_COUNT - 2..HomeFlowViewModel.POSITIONS_COUNT)) {
                         val list =
                             homeState.data.items.sortedBy { it.position }.mapNotNull { it.item }
                         homeController.submitList(list)
                     }
 
-                    debugLog { "${homeState.data.items.map { it.position }.sorted()}" }
+                    debugLog { "${homeState.data.items.map { it.position }.sorted()}" }*/
                 }
         }
     }

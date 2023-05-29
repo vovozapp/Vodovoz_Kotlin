@@ -83,9 +83,6 @@ class SplashFragment : BaseFragment() {
         lifecycleScope.launchWhenStarted {
             flowViewModel.observeUiState()
                 .collect { state ->
-                    debugLog {
-                        "${state.data.items.map { it.position }}"
-                    }
                     if (state.isFirstLoad) {
                         if (state.error is ErrorState.NetworkError) {
                             showError(state.error)
