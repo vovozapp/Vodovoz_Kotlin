@@ -10,4 +10,6 @@ interface CartMainClickListener {
     fun onApplyPromoCodeClick(code: String)
 
     fun onGoToCatalogClick()
+
+    fun showSnack(message: String)
 }

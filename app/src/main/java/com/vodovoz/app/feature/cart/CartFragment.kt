@@ -89,6 +89,10 @@ class CartFragment : BaseFragment() {
                 tabManager.selectTab(R.id.graph_catalog)
             }
 
+            override fun showSnack(message: String) {
+                requireActivity().snack(message)
+            }
+
         }
     }
 

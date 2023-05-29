@@ -84,7 +84,11 @@ class CartAvailableProductsViewHolder(
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
                 super.onSwiped(viewHolder, i)
                 val item = productsAdapter.getItem(viewHolder.bindingAdapterPosition) as? ProductUI ?: return
-                showDeleteProductDialog(item.id, item.cartQuantity)
+                if (item.chipsBan == 5 || item.chipsBan == 4) {
+                    clickListener.showSnack("Товар невозможно удалить из корзины.")
+                } else {
+                    showDeleteProductDialog(item.id, item.cartQuantity)
+                }
             }
         }).attachToRecyclerView(recyclerView)
     }
