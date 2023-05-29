@@ -83,23 +83,12 @@
                 app:layout_scrollFlags="enterAlways|scroll">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imgStatus2"
-                    android:visibility="gone"
+                    android:id="@+id/payedStatus"
+                    android:visibility="visible"
                     android:layout_width="@dimen/_40sdp"
                     android:layout_marginEnd="@dimen/space_8"
                     android:layout_height="@dimen/_40sdp"
                     android:src="@drawable/ic_order_in_processing"
-                    android:background="@drawable/bkg_order_status_image"
-                    android:padding="@dimen/space_4"
-                    app:tint="@color/white"/>
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imgStatus3"
-                    android:layout_width="@dimen/_40sdp"
-                    android:visibility="gone"
-                    android:layout_marginEnd="@dimen/space_8"
-                    android:layout_height="@dimen/_40sdp"
-                    android:src="@drawable/ic_check_round"
                     android:background="@drawable/bkg_order_status_image"
                     android:padding="@dimen/space_4"
                     app:tint="@color/white"/>
@@ -123,6 +112,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingTop="@dimen/space_8"
+                app:layout_scrollFlags="enterAlways|scroll"
                 tools:text="2123 Р"/>
 
             <LinearLayout

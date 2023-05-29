@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.all.orders.detail
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -20,6 +21,7 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
 import com.vodovoz.app.ui.model.OrderDetailsUI
 import com.vodovoz.app.ui.model.OrderStatusUI
+import com.vodovoz.app.util.extensions.drawable
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -149,10 +151,12 @@ class OrderDetailsFragment : BaseFragment() {
                 OrderStatusUI.CANCELED -> binding.tvCancelOrder.visibility = View.INVISIBLE
                 else -> binding.tvCancelOrder.visibility = View.VISIBLE
             }
+
             when(orderDetailsUI.isPayed) {
                 true -> {
                     binding.tvPayStatus.text = "Оплачен"
                     binding.llPayOrder.visibility = View.GONE
+                    binding.payedStatus.isVisible = false
                 }
                 false -> {
                     when(orderDetailsUI.payUri.isEmpty()) {
@@ -160,8 +164,15 @@ class OrderDetailsFragment : BaseFragment() {
                         false -> binding.llPayOrder.visibility = View.VISIBLE
                     }
                     binding.tvPayStatus.text = "Не оплачен"
+                    binding.payedStatus.isVisible = true
+                    binding.payedStatus.setImageDrawable(requireContext().drawable(R.drawable.ic_order_in_processing))
                 }
             }
+
+            when(orderDetailsUI.status?.id) {
+                "E" -> binding.btnTraceOrder.isVisible = true
+                "R" -> binding.payedStatus.isVisible = false
+            } //todo
 
             llStatusContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), orderDetailsUI.status!!.color))
             llActionsContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), orderDetailsUI.status.color))
