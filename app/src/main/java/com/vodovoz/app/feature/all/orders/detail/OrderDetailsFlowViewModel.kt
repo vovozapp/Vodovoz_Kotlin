@@ -2,6 +2,8 @@ package com.vodovoz.app.feature.all.orders.detail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.ErrorState
@@ -32,6 +34,8 @@ class OrderDetailsFlowViewModel @Inject constructor(
     private val cartManager: CartManager,
     private val likeManager: LikeManager
 ) : PagingStateViewModel<OrderDetailsFlowViewModel.OrderDetailsState>(OrderDetailsState()) {
+
+    private val firebaseDatabase = FirebaseDatabase.getInstance().reference
 
     private val orderId = savedState.get<Long>("orderId")
 
@@ -179,6 +183,10 @@ class OrderDetailsFlowViewModel @Inject constructor(
         viewModelScope.launch {
             likeManager.like(productId, !isFavorite)
         }
+    }
+
+    fun checkIfDriverExists() {
+
     }
 
     data class OrderDetailsState(

@@ -59,6 +59,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:29.2.1')
     implementation 'com.google.firebase:firebase-messaging-ktx:23.0.7'
     implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-database:20.2.1'
 
     //RxJava
     implementation 'io.reactivex.rxjava3:rxjava:3.0.6'
