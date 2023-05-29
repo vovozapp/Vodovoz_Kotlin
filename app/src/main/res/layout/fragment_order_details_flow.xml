@@ -243,13 +243,24 @@
                     app:layout_constraintTop_toBottomOf="@+id/tvStatus"
                     tools:text="Наличные курьеру" />
 
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnTraceOrder"
+                    style="@style/PurpleButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_normal_height"
+                    android:layout_margin="@dimen/space_16"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    tools:text="Перейти к покупкам"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPayMethod" />
+
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/mdDividerAfterMainInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_16"
                     app:dividerColor="@color/divider_gray_color"
-                    app:layout_constraintTop_toBottomOf="@+id/tvPayMethod"/>
+                    app:layout_constraintTop_toBottomOf="@+id/btnTraceOrder"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvAddressTitle"

@@ -87,6 +87,9 @@ class CartFlowFragment : BaseFragment() {
                 findNavController().navigate(R.id.catalogFragment)
             }
 
+            override fun showSnack(message: String) {
+            }
+
         }
     }
 
