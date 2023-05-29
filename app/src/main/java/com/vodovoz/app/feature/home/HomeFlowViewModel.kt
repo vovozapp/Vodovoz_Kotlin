@@ -85,6 +85,7 @@ class HomeFlowViewModel @Inject constructor(
                 loadingPage = true,
                 data = state.data.copy(
                     items = HomeState.idle().items,
+                    positionItems = HomeState.idle().positionItems,
                     isSecondLoad = false
                 ),
                 isFirstLoad = false
