@@ -2,7 +2,10 @@ package com.vodovoz.app.feature.cart.viewholders.cartavailableproducts
 
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
@@ -13,12 +16,16 @@ import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
+import com.vodovoz.app.ui.model.AddressUI
+import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.view.Divider
+import com.vodovoz.app.util.SwipeToRemoveCallback
+import com.vodovoz.app.util.extensions.debugLog
 
 class CartAvailableProductsViewHolder(
     view: View,
     val clickListener: CartMainClickListener,
-    productsClickListener: ProductsClickListener,
+    private val productsClickListener: ProductsClickListener,
     likeManager: LikeManager,
     cartManager: CartManager,
     ratingProductManager: RatingProductManager
@@ -54,6 +61,8 @@ class CartAvailableProductsViewHolder(
             rect.right = space
             rect.left = space/2
         }
+
+        bindSwipeToRemove(binding.rvAvailableProductRecycler)
     }
 
     override fun bind(item: CartAvailableProducts) {
@@ -68,5 +77,29 @@ class CartAvailableProductsViewHolder(
 
         productsAdapter.submitList(item.items)
 
+    }
+
+    private fun bindSwipeToRemove(recyclerView: RecyclerView) {
+        ItemTouchHelper(object : SwipeToRemoveCallback(itemView.context) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
+                super.onSwiped(viewHolder, i)
+                val item = productsAdapter.getItem(viewHolder.bindingAdapterPosition) as? ProductUI ?: return
+                showDeleteProductDialog(item.id, item.cartQuantity)
+            }
+        }).attachToRecyclerView(recyclerView)
+    }
+
+    private fun showDeleteProductDialog(productId: Long, oldQ: Int) {
+        MaterialAlertDialogBuilder(itemView.context)
+            .setMessage("Вы уверены, что хотите удалить?")
+            .setNegativeButton("НЕТ") { dialog, which ->
+                productsAdapter.notifyDataSetChanged()
+                dialog.cancel()
+            }
+            .setPositiveButton("ДА") { dialog, which ->
+                productsClickListener.onChangeProductQuantity(productId, 0, oldQ)
+                dialog.cancel()
+            }
+            .show()
     }
 }
