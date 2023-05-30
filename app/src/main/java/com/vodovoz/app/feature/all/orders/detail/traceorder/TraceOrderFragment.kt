@@ -20,11 +20,13 @@ import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.databinding.FragmentTraceOrderBinding
+import com.vodovoz.app.feature.all.orders.detail.traceorder.bottom.TraceOrderBottomSheetFragment
 import com.vodovoz.app.util.extensions.drawable
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKit
@@ -100,7 +102,7 @@ class TraceOrderFragment : BaseFragment(), InputListener,
         initMap()
         initTraffic()
         observeUiState()
-
+        TraceOrderBottomSheetFragment().show(childFragmentManager, "TAG")
     }
 
     private fun initTraffic() {

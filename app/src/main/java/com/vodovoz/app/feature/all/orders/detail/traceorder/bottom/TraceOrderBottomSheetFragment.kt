@@ -9,6 +9,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.FragmentTraceOrderBottomBinding
@@ -31,6 +33,15 @@ class TraceOrderBottomSheetFragment : BaseBottomSheetFragment() {
         super.onViewCreated(view, savedInstanceState)
         observeUiState()
         bindButtons()
+        initBottomSheetCallback()
+    }
+
+    private fun initBottomSheetCallback() {
+        val behavior = (dialog as? BottomSheetDialog)?.behavior
+        val density = requireContext().resources.displayMetrics.density
+        behavior?.peekHeight = (160 * density).toInt()
+        behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+        behavior?.isHideable = false
     }
 
     private fun bindButtons() {
