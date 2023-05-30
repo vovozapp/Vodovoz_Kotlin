@@ -120,6 +120,7 @@
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/plusFrame"
             android:layout_width="36dp"
+            android:padding="2dp"
             android:layout_height="36dp"
             android:src="@drawable/ic_plus"
             android:tint="@color/bluePrimary" />
@@ -129,6 +130,7 @@
             android:layout_width="36dp"
             android:layout_marginTop="8dp"
             android:layout_height="36dp"
+            android:padding="2dp"
             android:src="@drawable/ic_minus"
             android:tint="@color/bluePrimary" />
 
