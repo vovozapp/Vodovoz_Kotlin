@@ -39,7 +39,7 @@ class TraceOrderBottomSheetFragment : BaseBottomSheetFragment() {
     private fun initBottomSheetCallback() {
         val behavior = (dialog as? BottomSheetDialog)?.behavior
         val density = requireContext().resources.displayMetrics.density
-        behavior?.peekHeight = (160 * density).toInt()
+        behavior?.peekHeight = (90 * density).toInt()
         behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         behavior?.isHideable = false
     }

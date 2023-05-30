@@ -102,7 +102,9 @@ class TraceOrderFragment : BaseFragment(), InputListener,
         initMap()
         initTraffic()
         observeUiState()
-        TraceOrderBottomSheetFragment().show(childFragmentManager, "TAG")
+        TraceOrderBottomSheetFragment().apply {
+            isCancelable = false
+        }.show(childFragmentManager, "TAG")
     }
 
     private fun initTraffic() {
