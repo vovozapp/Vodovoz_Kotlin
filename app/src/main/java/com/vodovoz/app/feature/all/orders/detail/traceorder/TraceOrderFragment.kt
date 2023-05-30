@@ -9,17 +9,22 @@ import android.graphics.Color
 import android.graphics.PointF
 import android.graphics.drawable.Drawable
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
@@ -27,6 +32,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.databinding.FragmentTraceOrderBinding
 import com.vodovoz.app.feature.all.orders.detail.traceorder.bottom.TraceOrderBottomSheetFragment
+import com.vodovoz.app.feature.all.orders.detail.traceorder.bottom.TraceOrderBottomSheetFragmentDirections
 import com.vodovoz.app.util.extensions.drawable
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKit
@@ -102,9 +108,31 @@ class TraceOrderFragment : BaseFragment(), InputListener,
         initMap()
         initTraffic()
         observeUiState()
-        TraceOrderBottomSheetFragment().apply {
-            isCancelable = false
-        }.show(childFragmentManager, "TAG")
+        initBottomSheetCallback()
+        bindBottomSheetBtns()
+    }
+
+    private fun bindBottomSheetBtns() {
+        binding.traceOrderBs.callUsBtn.setOnClickListener {
+            val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", "+74959213434", null))
+            startActivity(intent)
+        }
+
+        binding.traceOrderBs.chatUsBtn.setOnClickListener {
+            findNavController().navigate(
+                TraceOrderFragmentDirections.actionToWebViewFragment(
+                    "http://jivo.chat/mk31km1IlP",
+                    "Чат"
+                ))
+        }
+    }
+
+    private fun initBottomSheetCallback() {
+        val behavior = BottomSheetBehavior.from(binding.traceOrderBs.root)
+        val density = requireContext().resources.displayMetrics.density
+        behavior.peekHeight = (85 * density).toInt()
+        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        behavior.isHideable = false
     }
 
     private fun initTraffic() {
@@ -134,6 +162,24 @@ class TraceOrderFragment : BaseFragment(), InputListener,
                         if (!lat.isNullOrEmpty() && !lon.isNullOrEmpty()) {
                             placeMark(Point(lat.toDouble(), lon.toDouble()), it.data.homeBitmap)
                         }
+                    }
+
+                    binding.traceOrderBs.driverNameTv.text = it.data.name ?: ""
+                    binding.traceOrderBs.carNumberTv.text = it.data.car ?: ""
+
+                    if (driverEntity != null) {
+                        if (driverEntity.DriverDirection == "TRUE") {
+                            binding.traceOrderBs.timeTv.isVisible = false
+                            binding.traceOrderBs.commentTv.isVisible = true
+                            binding.traceOrderBs.commentTv.text = "Водитель выехал и направляется к Вам."
+                        } else {
+                            binding.traceOrderBs.timeTv.isVisible = true
+                            binding.traceOrderBs.commentTv.isVisible = false
+                            binding.traceOrderBs.commentTv.text = "Ориентировочное время прибытия: ${it.data.driverPointsEntity.Priblizitelnoe_vremya}"
+                        }
+                    } else {
+                        binding.traceOrderBs.timeTv.isVisible = false
+                        binding.traceOrderBs.commentTv.isVisible = false
                     }
                 }
         }

@@ -935,6 +935,9 @@
         <argument
             android:name="orderId"
             app:argType="string" />
+
+        <action android:id="@+id/action_to_webViewFragment"
+            app:destination="@+id/webViewFragment"/>
     </fragment>
     <dialog
         android:id="@+id/traceOrderBottomSheetFragment"

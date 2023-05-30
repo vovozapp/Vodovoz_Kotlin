@@ -1,95 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
-    <com.yandex.mapkit.mapview.MapView
-        android:id="@+id/mapView"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/trafficFrame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/bg_with_ripple_rouned"
-        android:elevation="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        <com.yandex.mapkit.mapview.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/trafficIv"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_margin="4dp"
-            android:src="@drawable/icon_traffic_light_green" />
-
-        <TextView
-            android:id="@+id/trafficTv"
+        <FrameLayout
+            android:id="@+id/trafficFrame"
             android:layout_width="wrap_content"
-            tools:text="9"
-            android:layout_gravity="center"
-            android:textColor="@color/white"
-            android:layout_height="wrap_content"/>
-    </FrameLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_with_ripple_rouned"
+            android:elevation="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="4dp"
-        android:background="@drawable/bg_with_ripple_rouned"
-        android:elevation="10dp"
-        android:orientation="vertical"
-        android:padding="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/trafficIv"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_margin="4dp"
+                android:src="@drawable/icon_traffic_light_green" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/plusFrame"
-            android:layout_width="36dp"
-            android:padding="2dp"
-            android:layout_height="36dp"
-            android:src="@drawable/ic_plus"
-            android:tint="@color/bluePrimary" />
+            <TextView
+                android:id="@+id/trafficTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                tools:text="9" />
+        </FrameLayout>
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/minusFrame"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:padding="2dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_minus"
-            android:tint="@color/bluePrimary" />
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/bg_with_ripple_rouned"
+            android:elevation="10dp"
+            android:orientation="vertical"
+            android:padding="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </LinearLayout>
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/plusFrame"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:padding="2dp"
+                android:src="@drawable/ic_plus"
+                android:tint="@color/bluePrimary" />
 
-    <FrameLayout
-        android:id="@+id/geoFrame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/bg_with_ripple"
-        android:elevation="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/minusFrame"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="8dp"
+                android:padding="2dp"
+                android:src="@drawable/ic_minus"
+                android:tint="@color/bluePrimary" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/geoIv"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_margin="4dp"
-            android:src="@drawable/png_gps_w"
-            app:shapeAppearanceOverlay="@style/RoundedImageCircle"
-            app:tint="@color/bluePrimary" />
-    </FrameLayout>
+        </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <FrameLayout
+            android:id="@+id/geoFrame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_with_ripple"
+            android:elevation="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/geoIv"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_margin="4dp"
+                android:src="@drawable/png_gps_w"
+                app:shapeAppearanceOverlay="@style/RoundedImageCircle"
+                app:tint="@color/bluePrimary" />
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        android:id="@+id/traceOrderBs"
+        layout="@layout/fragment_trace_order_bottom" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
