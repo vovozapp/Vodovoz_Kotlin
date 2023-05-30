@@ -229,6 +229,9 @@ class HomeFragment : BaseFragment() {
                             tabManager.selectTab(R.id.graph_profile)
                         }
                         is HomeFlowViewModel.HomeEvents.SendComment -> {
+                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutShopBottomDialog) {
+                                findNavController().popBackStack()
+                            }
                             findNavController().navigate(HomeFragmentDirections.actionToSendCommentAboutShopBottomDialog())
                         }
                     }
