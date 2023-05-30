@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.PointF
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
@@ -11,6 +13,7 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.gms.location.LocationServices
@@ -30,14 +33,15 @@ import com.yandex.mapkit.layers.ObjectEvent
 import com.yandex.mapkit.location.Location
 import com.yandex.mapkit.location.LocationListener
 import com.yandex.mapkit.location.LocationStatus
-import com.yandex.mapkit.map.CameraPosition
-import com.yandex.mapkit.map.InputListener
+import com.yandex.mapkit.map.*
 import com.yandex.mapkit.map.Map
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.mapkit.user_location.UserLocationLayer
 import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
+import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class TraceOrderFragment : BaseFragment(), InputListener,
@@ -84,8 +88,17 @@ class TraceOrderFragment : BaseFragment(), InputListener,
 
         initToolbar("Где мой заказ?")
         initMap()
+        observeUiState()
 
+    }
 
+    private fun observeUiState() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.observeUiState()
+                .collect {
+
+                }
+        }
     }
 
     private fun initMap() {
@@ -185,7 +198,36 @@ class TraceOrderFragment : BaseFragment(), InputListener,
 
     override fun onMapTap(p0: Map, p1: Point) {}
     override fun onMapLongTap(p0: Map, p1: Point) {}
-    override fun onObjectAdded(p0: UserLocationView) {}
+    override fun onObjectAdded(userLocationView: UserLocationView) {
+        userLocationView.arrow.setIcon(
+            ImageProvider.fromResource(
+                context, com.vodovoz.app.R.drawable.png_gps_1
+            ), IconStyle().setScale(0.1f).setRotationType(RotationType.ROTATE).setZIndex(1f)
+        )
+
+        val pinIcon: CompositeIcon = userLocationView.pin.useCompositeIcon()
+
+        pinIcon.setIcon(
+            "icon",
+            ImageProvider.fromResource(context, com.vodovoz.app.R.drawable.search_result),
+            IconStyle().setAnchor(PointF(0.5f, 0.5f))
+                .setRotationType(RotationType.ROTATE)
+                .setZIndex(0f)
+                .setScale(0.5f)
+        )
+
+        pinIcon.setIcon(
+            "pin",
+            ImageProvider.fromResource(context, com.vodovoz.app.R.drawable.search_result),
+            IconStyle()
+                .setAnchor(PointF(0.5f, 0.5f))
+                .setRotationType(RotationType.ROTATE)
+                .setZIndex(1f)
+                .setScale(0.5f)
+        )
+
+        userLocationView.accuracyCircle.fillColor = Color.BLUE and -0x66000001
+    }
     override fun onObjectRemoved(p0: UserLocationView) {}
     override fun onObjectUpdated(p0: UserLocationView, p1: ObjectEvent) {}
 }
