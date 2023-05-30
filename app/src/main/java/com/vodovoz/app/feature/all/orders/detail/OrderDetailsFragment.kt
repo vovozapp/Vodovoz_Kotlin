@@ -174,6 +174,14 @@ class OrderDetailsFragment : BaseFragment() {
                     if (data.ifDriverExists && orderDetailsUI.driverName != null) {
                         binding.btnTraceOrder.isVisible = true
                         binding.btnTraceOrder.text = orderDetailsUI.driverName
+
+                        binding.btnTraceOrder.setOnClickListener {
+                            if (orderDetailsUI.driverId == null || orderDetailsUI.id == null) return@setOnClickListener
+                            findNavController().navigate(OrderDetailsFragmentDirections.actionToTraceOrderFragment(
+                                orderDetailsUI.driverId, orderDetailsUI.driverName, orderDetailsUI.id.toString()
+                            ))
+                        }
+
                     } else {
                         binding.btnTraceOrder.isVisible = false
                     }
