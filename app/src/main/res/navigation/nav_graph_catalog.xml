@@ -940,6 +940,11 @@
     <dialog
         android:id="@+id/traceOrderBottomSheetFragment"
         android:name="com.vodovoz.app.feature.all.orders.detail.traceorder.bottom.TraceOrderBottomSheetFragment"
-        android:label="TraceOrderBottomSheetFragment" />
+        android:label="TraceOrderBottomSheetFragment">
+
+        <action android:id="@+id/action_to_webViewFragment"
+            app:destination="@+id/webViewFragment"/>
+
+    </dialog>
 
 </navigation>
