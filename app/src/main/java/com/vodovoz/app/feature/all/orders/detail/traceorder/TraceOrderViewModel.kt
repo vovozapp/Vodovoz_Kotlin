@@ -26,6 +26,8 @@ class TraceOrderViewModel @Inject constructor(
 ) {
 
     private val driverId = savedState.get<String>("driverId")
+    private val driverName = savedState.get<String>("driverName")
+    private val orderId = savedState.get<String>("orderId")
 
     private val firebaseDatabase = FirebaseDatabase.getInstance().reference
 
