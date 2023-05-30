@@ -4,17 +4,21 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PointF
+import android.graphics.drawable.Drawable
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.bumptech.glide.Glide
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
@@ -63,6 +67,7 @@ class TraceOrderFragment : BaseFragment(), InputListener,
     private val center = Point(55.75, 37.62)
     private val traffic by lazy { mapKit.createTrafficLayer(binding.mapView.mapWindow) }
     private enum class TrafficState { LOADING, STARTED, EXPIRED }
+    private var lastPlaceMark: PlacemarkMapObject? = null
 
     override fun onStart() {
         super.onStart()
@@ -81,6 +86,11 @@ class TraceOrderFragment : BaseFragment(), InputListener,
         binding.mapView.onStop()
         mapKit.onStop()
         super.onStop()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.fetchDriverData()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -107,8 +117,30 @@ class TraceOrderFragment : BaseFragment(), InputListener,
             viewModel.observeUiState()
                 .collect {
 
+                    if (it.data.driverPoint != null && it.data.autoBitmap != null) {
+                        moveCamera(it.data.driverPoint)
+                        placeMark(it.data.driverPoint, it.data.autoBitmap)
+                    }
+
+                    if (it.data.homeBitmap != null) {
+                       // placeMark()
+                    }
                 }
         }
+    }
+
+    private fun placeMark(point: Point, bitmap: Bitmap) {
+        lastPlaceMark?.let {
+            try {
+                binding.mapView.map.mapObjects.remove(it)
+            } catch (_: Throwable) {
+
+            }
+        }
+        lastPlaceMark = binding.mapView.map.mapObjects.addPlacemark(
+            point,
+            ImageProvider.fromBitmap(bitmap)
+        )
     }
 
     private fun initMap() {
