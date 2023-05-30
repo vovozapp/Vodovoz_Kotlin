@@ -595,6 +595,9 @@
         <action
             android:id="@+id/action_to_preOrderBS"
             app:destination="@id/preOrderBS" />
+        <action
+            android:id="@+id/action_to_traceOrderFragment"
+            app:destination="@+id/traceOrderFragment" />
     </fragment>
     <fragment
         android:id="@+id/webViewFragment"
@@ -919,5 +922,24 @@
         android:id="@+id/waterAppFragment"
         android:name="com.vodovoz.app.feature.profile.waterapp.WaterAppFragment"
         android:label="WaterAppFragment" />
+
+    <fragment
+        android:id="@+id/traceOrderFragment"
+        android:name="com.vodovoz.app.feature.all.orders.detail.traceorder.TraceOrderFragment"
+        android:label="TraceOrderFragment">
+        <argument
+            android:name="driverId"
+            app:argType="string" />
+        <argument
+            android:name="driverName"
+            app:argType="string" />
+        <argument
+            android:name="orderId"
+            app:argType="string" />
+    </fragment>
+    <dialog
+        android:id="@+id/traceOrderBottomSheetFragment"
+        android:name="com.vodovoz.app.feature.all.orders.detail.traceorder.bottom.TraceOrderBottomSheetFragment"
+        android:label="TraceOrderBottomSheetFragment" />
 
 </navigation>
