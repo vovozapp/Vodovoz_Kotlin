@@ -10,7 +10,6 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
-import android.widget.FrameLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -18,13 +17,11 @@ import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.imageview.ShapeableImageView
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.databinding.FragmentTraceOrderBinding
-import com.vodovoz.app.databinding.FragmentTraceOrderBottomBinding
-import com.vodovoz.app.feature.map.MapDialogFragmentArgs
+import com.vodovoz.app.util.extensions.drawable
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
@@ -35,17 +32,18 @@ import com.yandex.mapkit.location.LocationListener
 import com.yandex.mapkit.location.LocationStatus
 import com.yandex.mapkit.map.*
 import com.yandex.mapkit.map.Map
-import com.yandex.mapkit.mapview.MapView
+import com.yandex.mapkit.traffic.TrafficColor
+import com.yandex.mapkit.traffic.TrafficLevel
+import com.yandex.mapkit.traffic.TrafficListener
 import com.yandex.mapkit.user_location.UserLocationLayer
 import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class TraceOrderFragment : BaseFragment(), InputListener,
-    UserLocationObjectListener {
+    UserLocationObjectListener, TrafficListener {
 
     override fun layout(): Int = R.layout.fragment_trace_order
 
@@ -63,6 +61,8 @@ class TraceOrderFragment : BaseFragment(), InputListener,
     private val fusedLocationClient by lazy { LocationServices.getFusedLocationProviderClient(requireActivity()) }
     private val locationManager by lazy { requireContext().getSystemService(Context.LOCATION_SERVICE) as? LocationManager }
     private val center = Point(55.75, 37.62)
+    private val traffic by lazy { mapKit.createTrafficLayer(binding.mapView.mapWindow) }
+    private enum class TrafficState { LOADING, STARTED, EXPIRED }
 
     override fun onStart() {
         super.onStart()
@@ -88,8 +88,18 @@ class TraceOrderFragment : BaseFragment(), InputListener,
 
         initToolbar("Где мой заказ?")
         initMap()
+        initTraffic()
         observeUiState()
 
+    }
+
+    private fun initTraffic() {
+        traffic.isTrafficVisible = true
+        traffic.addTrafficListener(this)
+        binding.trafficFrame.setOnClickListener {
+            traffic.isTrafficVisible = !traffic.isTrafficVisible
+            updateLevel(TrafficState.LOADING)
+        }
     }
 
     private fun observeUiState() {
@@ -228,6 +238,42 @@ class TraceOrderFragment : BaseFragment(), InputListener,
 
         userLocationView.accuracyCircle.fillColor = Color.BLUE and -0x66000001
     }
+
     override fun onObjectRemoved(p0: UserLocationView) {}
     override fun onObjectUpdated(p0: UserLocationView, p1: ObjectEvent) {}
+
+    override fun onTrafficChanged(p0: TrafficLevel?) { updateLevel(TrafficState.STARTED, p0) }
+    override fun onTrafficLoading() { updateLevel(TrafficState.LOADING) }
+    override fun onTrafficExpired() { updateLevel(TrafficState.EXPIRED) }
+
+    private fun updateLevel(state: TrafficState, level: TrafficLevel? = null) {
+
+        if (!traffic.isTrafficVisible) {
+            binding.trafficIv.setImageDrawable(requireContext().drawable(R.drawable.icon_traffic_light_dark))
+            return
+        }
+
+        when(state) {
+            TrafficState.LOADING -> {
+                binding.trafficIv.setImageDrawable(requireContext().drawable(R.drawable.icon_traffic_light_grey))
+            }
+            TrafficState.STARTED -> {
+                if (level == null) {
+                    binding.trafficIv.setImageDrawable(requireContext().drawable(R.drawable.icon_traffic_light_grey))
+                } else {
+                    val icon = when (level.color) {
+                        TrafficColor.RED -> R.drawable.icon_traffic_light_red
+                        TrafficColor.GREEN -> R.drawable.icon_traffic_light_green
+                        TrafficColor.YELLOW -> R.drawable.icon_traffic_light_yellow
+                        else -> R.drawable.icon_traffic_light_grey
+                    }
+                    binding.trafficIv.setImageDrawable(requireContext().drawable(icon))
+                    binding.trafficTv.text = level.level.toString()
+                }
+            }
+            TrafficState.EXPIRED -> {
+                binding.trafficIv.setImageDrawable(requireContext().drawable(R.drawable.icon_traffic_light_blue))
+            }
+        }
+    }
 }
