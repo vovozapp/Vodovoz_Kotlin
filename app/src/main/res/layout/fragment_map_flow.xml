@@ -104,49 +104,35 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/plusFrame"
+    <LinearLayout
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="4dp"
         android:elevation="10dp"
-        android:background="@drawable/bg_with_ripple"
-        app:layout_constraintBottom_toTopOf="@id/minusFrame"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed">
+        android:padding="4dp"
+        android:background="@drawable/bg_with_ripple_rouned"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/plusIv"
+            android:id="@+id/plusFrame"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_margin="4dp"
             android:src="@drawable/ic_plus"
             android:tint="@color/bluePrimary" />
 
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/minusFrame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:elevation="10dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/bg_with_ripple"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/plusFrame">
-
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/minusIv"
+            android:id="@+id/minusFrame"
             android:layout_width="36dp"
+            android:layout_marginTop="8dp"
             android:layout_height="36dp"
-            android:layout_margin="4dp"
             android:src="@drawable/ic_minus"
             android:tint="@color/bluePrimary" />
 
-    </FrameLayout>
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/infoFrame"

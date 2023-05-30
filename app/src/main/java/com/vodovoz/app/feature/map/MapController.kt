@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.imageview.ShapeableImageView
 import com.vodovoz.app.R
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.feature.map.adapter.AddressResult
@@ -117,8 +118,8 @@ class MapController(
 
     fun initMap(
         mapView: MapView,
-        plusFrame: FrameLayout? = null,
-        minusFrame: FrameLayout? = null,
+        plusFrame: ShapeableImageView? = null,
+        minusFrame: ShapeableImageView? = null,
         infoFrame: FrameLayout? = null,
         geoFrame: FrameLayout? = null
     ) {
