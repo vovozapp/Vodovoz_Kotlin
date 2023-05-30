@@ -14,6 +14,7 @@ import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.data.MainRepository
+import com.vodovoz.app.feature.all.orders.detail.model.DriverPointsEntity
 import com.yandex.mapkit.geometry.Point
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -129,11 +130,20 @@ class TraceOrderViewModel @Inject constructor(
                                 null
                             }
 
+                        val list = mutableListOf<DriverPointsEntity?>()
+                        snapshot.child("ListTochki").children.forEach {
+                            val driverPointsEntity = it.getValue(DriverPointsEntity::class.java)
+                            list.add(driverPointsEntity)
+                        }
+
+                        val driverPointsEntity = list.find { it?.OrderNumber == orderId.toString() }
+
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
                                 name = nameBuilder.toString(),
                                 car = carBuilder.toString(),
-                                driverPoint = point
+                                driverPoint = point,
+                                driverPointsEntity = driverPointsEntity
                             )
                         )
 
@@ -154,6 +164,7 @@ class TraceOrderViewModel @Inject constructor(
         val driverPoint: Point? = null,
         val autoBitmap: Bitmap? = null,
         val homeBitmap: Bitmap? = null,
+        val driverPointsEntity: DriverPointsEntity? = null
     ) : State
 
     sealed class TraceOrderEvents : Event

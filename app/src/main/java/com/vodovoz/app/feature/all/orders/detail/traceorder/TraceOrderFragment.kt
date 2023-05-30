@@ -122,8 +122,14 @@ class TraceOrderFragment : BaseFragment(), InputListener,
                         placeMark(it.data.driverPoint, it.data.autoBitmap)
                     }
 
-                    if (it.data.homeBitmap != null) {
-                       // placeMark()
+                    val driverEntity = it.data.driverPointsEntity
+
+                    if (driverEntity != null && it.data.homeBitmap != null) {
+                        val lat = driverEntity.Position?.Latitude
+                        val lon = driverEntity.Position?.Longitude
+                        if (!lat.isNullOrEmpty() && !lon.isNullOrEmpty()) {
+                            placeMark(Point(lat.toDouble(), lon.toDouble()), it.data.homeBitmap)
+                        }
                     }
                 }
         }
