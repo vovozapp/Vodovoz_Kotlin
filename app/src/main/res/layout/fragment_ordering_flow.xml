@@ -309,7 +309,7 @@
                 android:drawableEnd="@drawable/baseline_arrow_right_24"
                 android:gravity="center_vertical"
                 android:background="@color/white"
-                android:hint="Позвоните мне. Если не отвечу, замените"/>
+                android:hint="Выберите необходимое действие"/>
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/scOperatorCall"
