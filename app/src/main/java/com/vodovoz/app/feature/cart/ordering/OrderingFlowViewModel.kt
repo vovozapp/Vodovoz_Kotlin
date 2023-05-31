@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.cart.ordering
 import android.app.Application
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.*
@@ -90,6 +91,11 @@ class OrderingFlowViewModel @Inject constructor(
                 return@launch
             }
 
+            if (state.data.checkDeliveryValue == 0) {
+                eventListener.emit(OrderingEvents.ChooseCheckDeliveryError)
+                return@launch
+            }
+
             val needCall = when (state.data.needOperatorCall) {
                 true -> "Y"
                 false -> "N"
@@ -128,7 +134,9 @@ class OrderingFlowViewModel @Inject constructor(
                             inputCash.toInt()
                         },
                         parking = state.data.shippingInfoBundleUI?.parkingPrice,
-                        userId = userId
+                        userId = userId,
+                        appVerision = BuildConfig.VERSION_NAME,
+                        checkDeliveryValue = state.data.checkDeliveryValue
                     )
                 )
             }
@@ -475,6 +483,7 @@ class OrderingFlowViewModel @Inject constructor(
         data class ChooseDateError(val message: String) : OrderingEvents()
         data class ChooseIntervalError(val message: String) : OrderingEvents()
         data class ChoosePayMethodError(val message: String) : OrderingEvents()
+        object ChooseCheckDeliveryError : OrderingEvents()
 
         data class ShowCheckDeliveryBs(val value: Int) : OrderingEvents()
 

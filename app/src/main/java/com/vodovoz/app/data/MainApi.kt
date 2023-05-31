@@ -653,7 +653,9 @@ interface MainApi {
         @Query("kupon") coupon: String?, // передавать из корзины
         @Query("indos") shippingIntervalId: Long?, //id Интервал доставки
         @Query("sdacha") overMoney: Int?, //?
-        @Query("parkovka") parking: Int?, // числовое значение
+        @Query("parkovka") parking: Int?, // числовое значение,
+        @Query("versiyaan") appVersion: String?,
+        @Query("nettovar") checkDeliveryValue: Int?
     ): ResponseBody
 
     @Multipart

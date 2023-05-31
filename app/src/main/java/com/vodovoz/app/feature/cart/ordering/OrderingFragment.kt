@@ -232,6 +232,10 @@ class OrderingFragment : BaseFragment() {
                             binding.nsvContent.scrollViewToTop()
                             binding.tvNameDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
                         }
+                        is OrderingFlowViewModel.OrderingEvents.ChooseCheckDeliveryError -> {
+                            binding.nsvContent.scrollViewToTop()
+                            binding.tvNameCheckDelivery.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                        }
                         is OrderingFlowViewModel.OrderingEvents.ClearFields -> {
                             clearFields()
                         }

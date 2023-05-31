@@ -1483,6 +1483,8 @@ class MainRepository @Inject constructor(
         shippingIntervalId: Long?, //id Интервал доставки
         overMoney: Int?, //?
         parking: Int?, // числовое значение
+        appVerision: String?,
+        checkDeliveryValue: Int?
     ) = api.fetchRegOrderResponse(
         orderType = orderType,
         device = device,
@@ -1507,7 +1509,9 @@ class MainRepository @Inject constructor(
         coupon = coupon,
         shippingIntervalId = shippingIntervalId,
         overMoney = overMoney,
-        parking = parking
+        parking = parking,
+        appVersion = appVerision,
+        checkDeliveryValue = checkDeliveryValue
     )
 
     fun fetchShippingAlertEntityList() = ShippingAlertConfig.shippingAlertEntityList
