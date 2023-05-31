@@ -234,6 +234,7 @@ class OrderingFlowFragment : BaseFragment() {
                         is OrderingFlowViewModel.OrderingEvents.ClearFields -> {
                             clearFields()
                         }
+                        else -> {}
                     }
                 }
         }

@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.cart.ordering.intervals
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
@@ -11,6 +12,7 @@ import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsCheckDeliveryActionsBinding
 import com.vodovoz.app.feature.cart.ordering.OrderingFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.parcelize.Parcelize
 
 @AndroidEntryPoint
 class CheckDeliveryActionsBS : BaseBottomSheetFragment() {
@@ -103,7 +105,8 @@ class CheckDeliveryActionsBS : BaseBottomSheetFragment() {
 
 }
 
+@Parcelize
 data class CheckDeliveryUI(
     val value: Int,
     val text: String
-)
+) : Parcelable

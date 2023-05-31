@@ -407,6 +407,20 @@ class OrderingFlowViewModel @Inject constructor(
         }
     }
 
+    fun onCheckDeliveryClick() {
+        viewModelScope.launch {
+            eventListener.emit(OrderingEvents.ShowCheckDeliveryBs(state.data.checkDeliveryValue))
+        }
+    }
+
+    fun setCheckDelivery(value: Int) {
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                checkDeliveryValue = value
+            )
+        )
+    }
+
     data class OrderingState(
         val full: Int? = null,
         val deposit: Int? = null,
@@ -431,7 +445,8 @@ class OrderingFlowViewModel @Inject constructor(
         val shippingAlertList: List<ShippingAlertUI> = ShippingAlertConfig.shippingAlertEntityListUI,
         val shippingDaysInfoBundleUi: FreeShippingDaysInfoBundleUI? = null,
 
-        val orderingCompletedInfoBundleUI: OrderingCompletedInfoBundleUI? = null
+        val orderingCompletedInfoBundleUI: OrderingCompletedInfoBundleUI? = null,
+        val checkDeliveryValue: Int = 0
     ) : State
 
     sealed class OrderingEvents : Event {
@@ -460,6 +475,8 @@ class OrderingFlowViewModel @Inject constructor(
         data class ChooseDateError(val message: String) : OrderingEvents()
         data class ChooseIntervalError(val message: String) : OrderingEvents()
         data class ChoosePayMethodError(val message: String) : OrderingEvents()
+
+        data class ShowCheckDeliveryBs(val value: Int) : OrderingEvents()
 
         object ClearFields : OrderingEvents()
     }
