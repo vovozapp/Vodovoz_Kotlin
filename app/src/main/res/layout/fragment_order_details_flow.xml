@@ -88,7 +88,7 @@
                     android:layout_width="@dimen/_40sdp"
                     android:layout_marginEnd="@dimen/space_8"
                     android:layout_height="@dimen/_40sdp"
-                    android:src="@drawable/ic_order_in_processing"
+                    android:src="@drawable/ic_check_round"
                     android:background="@drawable/bkg_order_status_image"
                     android:padding="@dimen/space_4"
                     app:tint="@color/white"/>

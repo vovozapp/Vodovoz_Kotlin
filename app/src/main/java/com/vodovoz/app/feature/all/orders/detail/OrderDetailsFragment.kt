@@ -155,6 +155,7 @@ class OrderDetailsFragment : BaseFragment() {
             when(orderDetailsUI.isPayed) {
                 true -> {
                     binding.tvPayStatus.text = "Оплачен"
+                    binding.payedStatus.isVisible = true
                     binding.llPayOrder.visibility = View.GONE
                     binding.payedStatus.isVisible = false
                 }
@@ -164,8 +165,7 @@ class OrderDetailsFragment : BaseFragment() {
                         false -> binding.llPayOrder.visibility = View.VISIBLE
                     }
                     binding.tvPayStatus.text = "Не оплачен"
-                    binding.payedStatus.isVisible = true
-                    binding.payedStatus.setImageDrawable(requireContext().drawable(R.drawable.ic_order_in_processing))
+                    binding.payedStatus.isVisible = false
                 }
             }
 
