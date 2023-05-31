@@ -105,9 +105,10 @@ class CartFlowViewModel @Inject constructor(
                             localDataSource.fetchCart()
                         }
                         val mappedData = response.data.mapUoUI()
-                        val calculatedPrices = calculatePrice(mappedData.availableProductUIList)
+                        val availableProducts = mappedData.availableProductUIList.reversed()
+                        val calculatedPrices = calculatePrice(availableProducts)
                         cartManager.syncCart(
-                            mappedData.availableProductUIList,
+                            availableProducts,
                             calculatedPrices.total
                         )
                         state.copy(
@@ -117,8 +118,8 @@ class CartFlowViewModel @Inject constructor(
                                 giftProductUIList = mappedData.giftProductUIList,
                                 availableProducts = CartAvailableProducts(
                                     CART_AVAILABLE_PRODUCTS_ID,
-                                    mappedData.availableProductUIList,
-                                    showCheckForm = mappedData.availableProductUIList.any { it.depositPrice != 0 },
+                                    availableProducts,
+                                    showCheckForm = availableProducts.any { it.depositPrice != 0 },
                                     showReturnBottleBtn = false
                                 ),
                                 notAvailableProducts = CartNotAvailableProducts(
