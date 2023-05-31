@@ -80,35 +80,42 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     fun refresh() {
-        uiStateListener.value =
-            state.copy(
-                loadingPage = true,
-                data = state.data.copy(
-                    items = HomeState.idle().items,
-                    positionItems = HomeState.idle().positionItems,
-                    isSecondLoad = false
-                ),
-                isFirstLoad = false
-            )
-        viewModelScope.launch {
-            val tasks = firstLoadTasks() + secondLoadTasks()
-            val result = awaitAll(*tasks).flatten()
-            val mappedResult = if (result.isNotEmpty()) {
-                result + HomeState.fetchStaticItems()
-            } else {
-                result
-            }
-            val positionItemsSorted = (state.data.positionItems + mappedResult).sortedBy { it.position }
-            uiStateListener.value = state.copy(
-                loadingPage = false,
-                data = state.data.copy(positionItems = positionItemsSorted, items = positionItemsSorted.map { it.item }, isSecondLoad = true),
-                error = if (mappedResult.isNotEmpty()) {
-                    null
+        if (!state.loadingPage) {
+            uiStateListener.value =
+                state.copy(
+                    loadingPage = true,
+                    data = state.data.copy(
+                        items = HomeState.idle().items,
+                        positionItems = HomeState.idle().positionItems,
+                        isSecondLoad = false
+                    ),
+                    isFirstLoad = false
+                )
+            viewModelScope.launch {
+                val tasks = firstLoadTasks() + secondLoadTasks()
+                val result = awaitAll(*tasks).flatten()
+                val mappedResult = if (result.isNotEmpty()) {
+                    result + HomeState.fetchStaticItems()
                 } else {
-                    state.error
-                },
-                isFirstLoad = true
-            )
+                    result
+                }
+                val positionItemsSorted =
+                    (state.data.positionItems + mappedResult).sortedBy { it.position }
+                uiStateListener.value = state.copy(
+                    loadingPage = false,
+                    data = state.data.copy(
+                        positionItems = positionItemsSorted,
+                        items = positionItemsSorted.map { it.item },
+                        isSecondLoad = true
+                    ),
+                    error = if (mappedResult.isNotEmpty()) {
+                        null
+                    } else {
+                        state.error
+                    },
+                    isFirstLoad = true
+                )
+            }
         }
     }
 
