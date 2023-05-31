@@ -3,6 +3,8 @@ package com.vodovoz.app.feature.cart.bottles
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.mapper.BottleMapper.mapToUI
@@ -15,11 +17,13 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AllBottlesViewModel @Inject constructor(
-    private val dataRepository: DataRepository
+    private val dataRepository: DataRepository,
+    private val cartManager: CartManager
 ) : ViewModel() {
 
     private val viewStateMLD = MutableLiveData<ViewState>()
@@ -56,19 +60,11 @@ class AllBottlesViewModel @Inject constructor(
     }
 
     fun addBottleToCart(bottleId: Long) {
-        dataRepository
-            .changeCart(
-                productId = bottleId,
-                quantity = 1
-            )
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-                onComplete = { addBottleCompletedMLD.value = true },
-                onError = { throwable ->
-                    errorMLD.value = throwable.message ?: "Неизвестная ошибка"
-                }
-            )
+        viewModelScope.launch {
+            runCatching { cartManager.add(bottleId, 0, 1) }
+                .onSuccess { addBottleCompletedMLD.value = true }
+                .onFailure { errorMLD.value = it.message ?: "Неизвестная ошибка" }
+        }
     }
 
     override fun onCleared() {

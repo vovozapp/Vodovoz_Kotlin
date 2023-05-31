@@ -209,9 +209,9 @@ class ViewModelFactory(
             return OrderingViewModel(dataRepository) as T
         }
 
-        if (modelClass.isAssignableFrom(AllBottlesViewModel::class.java)){
+        /*if (modelClass.isAssignableFrom(AllBottlesViewModel::class.java)){
             return AllBottlesViewModel(dataRepository) as T
-        }
+        }*/
 
         if (modelClass.isAssignableFrom(ReplacementProductsSelectionViewModel::class.java)){
             return ReplacementProductsSelectionViewModel(dataRepository) as T
