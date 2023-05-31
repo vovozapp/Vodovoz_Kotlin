@@ -178,14 +178,14 @@ class MapFlowViewModel @Inject constructor(
             if (deliveryZonesManager.containsInCenterPolygon(endPoint)) {
                 amountControllerTimer.cancel()
                 savePointData(
-                    latitude = startPoint.latitude.toString(),
-                    longitude = startPoint.longitude.toString(),
+                    latitude = endPoint.latitude.toString(),
+                    longitude = endPoint.longitude.toString(),
                     length = "0",
                     distance = 0.0
                 )
                 tryToUpdate(
-                    lat = startPoint.longitude.toString(),
-                    long = startPoint.longitude.toString(),
+                    lat = endPoint.longitude.toString(),
+                    long = endPoint.longitude.toString(),
                     length = "0",
                     polyline = null
                 )
