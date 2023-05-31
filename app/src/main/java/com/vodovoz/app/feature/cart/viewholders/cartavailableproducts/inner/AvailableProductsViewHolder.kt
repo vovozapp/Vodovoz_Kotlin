@@ -132,7 +132,8 @@ class AvailableProductsViewHolder(
 
         binding.amountController.add.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            if (item.priceList.first().currentPrice <= 1 || item.isGift || item.isBottle ) return@setOnClickListener
+            debugLog { "isgift ${item.isGift} isBottle ${item.isBottle}" }
+            if (item.isGift) return@setOnClickListener
 
             item.oldQuantity = item.cartQuantity
             item.cartQuantity++
@@ -300,11 +301,14 @@ class AvailableProductsViewHolder(
         if (item.isBottle) {
             binding.imgFavoriteStatus.visibility = View.INVISIBLE
             binding.cgStatuses.visibility = View.GONE
-            if (item.priceList.first().currentPrice > 0) {
+            binding.clPricesContainer.visibility = View.GONE
+            binding.tvDepositPrice.visibility = View.VISIBLE
+            binding.tvDepositPrice.setDepositPriceText(item.priceList.first().currentPrice)
+            /*if (item.priceList.first().currentPrice > 0) {
                 binding.clPricesContainer.visibility = View.VISIBLE
             } else {
                 binding.clPricesContainer.visibility = View.GONE
-            }
+            }*/ //todo
         }
 
         //If is gift
