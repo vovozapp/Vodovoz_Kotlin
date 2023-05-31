@@ -374,6 +374,7 @@ class ProfileFlowViewModel @Inject constructor(
             cartManager.clearCart()
             accountManager.removeUserId()
             eventListener.emit(ProfileEvents.Logout)
+            localDataSource.removeCookieSessionId()
         }
     }
 

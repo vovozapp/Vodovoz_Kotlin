@@ -558,17 +558,19 @@ class MapController(
     }
 
     fun drawDeliveryZones(deliveryZoneUIList: List<DeliveryZoneUI>?) {
-        if (deliveryZoneUIList == null) return
+        runCatching {
+            if (deliveryZoneUIList == null) return
 
-        deliveryZoneUIList.forEach { deliveryZoneUI ->
-            val zone = mapView.map.mapObjects.addPolygon(
-                Polygon(LinearRing(deliveryZoneUI.pointList), ArrayList())
-            )
-            zone.fillColor = Color.parseColor(deliveryZoneUI.color).getColorWithAlpha(0.4f)
-            zone.strokeWidth = 0.0f
-            zone.zIndex = 100.0f
+            deliveryZoneUIList.forEach { deliveryZoneUI ->
+                val zone = mapView.map.mapObjects.addPolygon(
+                    Polygon(LinearRing(deliveryZoneUI.pointList), ArrayList())
+                )
+                zone.fillColor = Color.parseColor(deliveryZoneUI.color).getColorWithAlpha(0.4f)
+                zone.strokeWidth = 0.0f
+                zone.zIndex = 100.0f
+            }
+            viewModel.updateZones(true)
         }
-        viewModel.updateZones(true)
     }
 
     private fun detectGps(): Boolean {
