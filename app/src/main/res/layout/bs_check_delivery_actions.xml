@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="22dp"
+            android:text="Что делать при отсутствии товара?"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F5F5F5" />
+
+        <LinearLayout
+            android:id="@+id/callMeChangeLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/callMeChangeHeaderTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="Позвоните мне. Если не отвечу, замените"
+                android:textAllCaps="false"
+                android:textColor="#00a5dd"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:fontFamily="@font/rotondac" />
+
+            <TextView
+                android:id="@+id/callMeChangeDescTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="start"
+                android:text="Сборщик самостоятельно подберет аналог товару, если не сможет дозвониться"
+                android:textAllCaps="false"
+                android:textColor="#999FA7"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:fontFamily="@font/rotondac" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#F5F5F5" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/callMeDontChangeLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/callMeDontChangeHeaderTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="Позвоните мне. Если не отвечу, уберите"
+                android:textAllCaps="false"
+                android:textColor="#00a5dd"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:fontFamily="@font/rotondac" />
+
+            <TextView
+                android:id="@+id/callMeDontChangeDescTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="start"
+                android:text="Сборщик удалит отсутствующие товары, если не сможет дозвониться"
+                android:textAllCaps="false"
+                android:textColor="#999FA7"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:fontFamily="@font/rotondac" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#F5F5F5" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dontCallMeChangeLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/dontCallMeChangeHeaderTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="Не звоните. Замените на аналогичный"
+                android:textAllCaps="false"
+                android:textColor="#00a5dd"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:fontFamily="@font/rotondac" />
+
+            <TextView
+                android:id="@+id/dontCallMeChangeDescTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="start"
+                android:text="Сборщик заменит выбранные товары на аналогичные без дополнительного звонка"
+                android:textAllCaps="false"
+                android:textColor="#999FA7"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:fontFamily="@font/rotondac" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#F5F5F5" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dontCallMeDontChangeLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/dontCallMeDontChangeHeaderTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="Не звоните. Уберите из заказа"
+                android:textAllCaps="false"
+                android:textColor="#00a5dd"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:fontFamily="@font/rotondac" />
+
+            <TextView
+                android:id="@+id/dontCallMeDontChangeDescTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="start"
+                android:text="Сборщик удалит остутсвующие товары без дополнительного звонка"
+                android:textAllCaps="false"
+                android:textColor="#999FA7"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:fontFamily="@font/rotondac" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#F5F5F5" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/cancelWarnBs"
+            style="@style/BlueButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:text="Закрыть"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:fontFamily="@font/rotondac" />
+    </LinearLayout>
+</RelativeLayout>

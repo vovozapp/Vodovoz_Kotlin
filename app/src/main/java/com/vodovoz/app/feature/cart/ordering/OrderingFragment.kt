@@ -23,6 +23,7 @@ import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
 import com.vodovoz.app.feature.addresses.AddressesFragment
 import com.vodovoz.app.feature.addresses.OpenMode
+import com.vodovoz.app.feature.cart.ordering.intervals.CheckDeliveryUI
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.ui.model.FreeShippingDaysInfoBundleUI
 import com.vodovoz.app.ui.model.PayMethodUI
@@ -45,6 +46,7 @@ class OrderingFragment : BaseFragment() {
         const val SELECTED_PAY_METHOD = "SELECTED_PAY_METHOD"
         const val SELECTED_SHIPPING_INTERVAL = "SELECTED_SHIPPING_INTERVAL"
         const val SELECTED_SHIPPING_ALERT = "SELECTED_SHIPPING_ALERT"
+        const val SELECTED_CHECK_DELIVERY_ACTION = "SELECTED_CHECK_DELIVERY_ACTION"
     }
 
     override fun layout(): Int = R.layout.fragment_ordering_flow
@@ -497,6 +499,11 @@ class OrderingFragment : BaseFragment() {
                 //viewModel.clearData()
                 clearFields()
                 viewModel.setSelectedAddress(addressUI)
+            }
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<CheckDeliveryUI>(SELECTED_CHECK_DELIVERY_ACTION)
+            ?.observe(viewLifecycleOwner) {
+
             }
     }
 

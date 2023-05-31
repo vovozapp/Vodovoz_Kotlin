@@ -746,6 +746,10 @@
         <action
             android:id="@+id/action_to_shippingAlertsSelectionBS"
             app:destination="@id/shippingAlertsSelectionBS" />
+        <action
+            android:id="@+id/action_to_checkActionDeliveryBS"
+            app:destination="@id/checkDeliveryActionsBS" />
+
         <argument
             android:name="total"
             app:argType="integer" />
@@ -960,5 +964,16 @@
             app:destination="@+id/webViewFragment"/>
 
     </dialog>
+    <dialog
+        android:id="@+id/checkDeliveryActionsBS"
+        android:name="com.vodovoz.app.feature.cart.ordering.intervals.CheckDeliveryActionsBS"
+        android:label="CheckDeliveryActionsBS">
+
+        <argument
+            android:name="deliveryAction"
+            app:argType="integer" />
+
+    </dialog>
+
 
 </navigation>
