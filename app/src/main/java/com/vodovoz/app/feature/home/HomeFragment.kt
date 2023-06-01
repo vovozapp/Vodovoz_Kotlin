@@ -261,8 +261,8 @@ class HomeFragment : BaseFragment() {
                             showPopUpNews(homeState.data.news)
                         }
                     } else {
-                        if (homeState.data.news?.androidVersion != BuildConfig.VERSION_NAME) {
-                            if (homeState.data.news != null) {
+                        if (homeState.data.news?.androidVersion != null) {
+                            if (homeState.data.news.androidVersion > BuildConfig.VERSION_NAME) {
                                 showPopUpNews(homeState.data.news)
                             }
                         }

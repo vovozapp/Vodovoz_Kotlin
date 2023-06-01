@@ -239,7 +239,7 @@ class HomeFlowViewModel @Inject constructor(
 
     private fun updatePopupNews() {
         viewModelScope.launch {
-            val userId = accountManager.fetchAccountId() ?: return@launch
+            val userId = accountManager.fetchAccountId()
             flow { emit(repository.fetchPopupNews(userId)) }
                 .flowOn(Dispatchers.IO)
                 .onEach {
