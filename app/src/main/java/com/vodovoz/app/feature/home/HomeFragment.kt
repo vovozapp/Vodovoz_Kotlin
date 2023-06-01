@@ -199,6 +199,9 @@ class HomeFragment : BaseFragment() {
                         "gl" -> {
                             siteStateManager.clearDeepLinkListener()
                         }
+                        "kankulyator_vody" -> {
+                            findNavController().navigate(HomeFragmentDirections.actionToWaterAppFragment())
+                        }
                         null -> {
                             siteStateManager.clearDeepLinkListener()
                         }

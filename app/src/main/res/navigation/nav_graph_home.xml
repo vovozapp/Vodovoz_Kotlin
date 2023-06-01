@@ -83,6 +83,8 @@
         <action
             android:id="@+id/action_to_sendCommentAboutProductFragment"
             app:destination="@id/sendCommentAboutProductFragment" />
+        <action android:id="@+id/action_to_waterAppFragment"
+            app:destination="@+id/waterAppFragment"/>
     </fragment>
     <fragment
         android:id="@+id/catalogFragment"
