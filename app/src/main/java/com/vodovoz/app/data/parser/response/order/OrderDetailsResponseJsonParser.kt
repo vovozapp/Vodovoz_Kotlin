@@ -100,8 +100,40 @@ object OrderDetailsResponseJsonParser {
             },
             detailPictureList = parseDetailPictureList(detailPicture),
             depositPrice = 0,
+            isBottle = when(has("CATALOG")) {
+                true -> when(getJSONObject("CATALOG").getLong("IBLOCK_ID")) {
+                    90L -> true
+                    else -> false
+                }
+                false -> {
+                    if (has("IBLOCK_ID")) {
+                        val idBlock = getLong("IBLOCK_ID")
+                        idBlock == 90L
+                    } else {
+                        false
+                    }
+                }
+            },
+            isGift = when(has("CATALOG")) {
+                true -> when(getJSONObject("CATALOG").getLong("IBLOCK_ID")) {
+                    26L -> true
+                    else -> false
+                }
+                false -> {
+                    if (has("IBLOCK_ID")) {
+                        val idBlock = getLong("IBLOCK_ID")
+                        idBlock == 26L
+                    } else {
+                        false
+                    }
+                }
+            },
+            chipsBan = when(has("ZAPRET_FISHKAM")) {
+                true -> safeInt("ZAPRET_FISHKAM")
+                false -> null
+            },
             leftItems = safeInt("CATALOG_QUANTITY"),
-            isAvailable = safeStringConvertToBoolean("ACTIVE")
+            isAvailable = safeStringConvertToBoolean("ACTIVE"),
         )
     }
 

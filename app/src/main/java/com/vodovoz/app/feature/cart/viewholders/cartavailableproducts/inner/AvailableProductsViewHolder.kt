@@ -303,7 +303,7 @@ class AvailableProductsViewHolder(
         if (item.isBottle) {
             binding.imgFavoriteStatus.visibility = View.INVISIBLE
             binding.cgStatuses.visibility = View.GONE
-            binding.clPricesContainer.visibility = View.GONE
+            binding.bottomPrContainer.visibility = View.GONE
             binding.tvDepositPrice.visibility = View.VISIBLE
             binding.tvDepositPrice.setDepositPriceText(item.priceList.first().currentPrice)
             /*if (item.priceList.first().currentPrice > 0) {
