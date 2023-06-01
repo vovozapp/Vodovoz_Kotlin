@@ -196,6 +196,8 @@ class AvailableProductsViewHolder(
                 }
             }
 
+        binding.rbRating.isVisible = !item.isBottle
+
         binding.amountController.add.isSelected = false
 
         if (item.pricePerUnit != 0) {

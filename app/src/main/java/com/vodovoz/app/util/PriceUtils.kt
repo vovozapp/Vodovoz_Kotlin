@@ -1,6 +1,7 @@
 package com.vodovoz.app.util
 
 import com.vodovoz.app.ui.model.ProductUI
+import timber.log.Timber
 
 fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
     var fullPrice = 0
@@ -9,7 +10,7 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
     var bottlesPrice = 0
     productUIList.forEach { productUI ->
         if (productUI.isBottle) {
-            bottlesPrice += productUI.priceList.first().currentPrice * productUI.cartQuantity
+            bottlesPrice += productUI.depositPrice * productUI.cartQuantity
         } else {
             if (productUI.depositPrice != 0) {
                 deposit += productUI.depositPrice * productUI.cartQuantity
@@ -39,6 +40,12 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
             }
         }
     }
+
+    Timber.d("" +
+            "fullPrice $fullPrice\n" +
+            "discountPrice $discountPrice\n" +
+            "deposit $deposit\n" +
+            "bottlesPrice $bottlesPrice\n")
 
     deposit -= bottlesPrice
     if (deposit < 0) deposit = 0
