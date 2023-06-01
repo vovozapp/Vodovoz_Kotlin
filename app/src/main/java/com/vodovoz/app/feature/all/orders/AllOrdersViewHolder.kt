@@ -54,6 +54,7 @@ class AllOrdersViewHolder(
 
         binding.tvStatus.text = item.orderStatusUI?.statusName
         binding.tvAddress.text = item.address
+        binding.tvDate.text = "N° ${item.id} от ${item.date}"
         binding.tvPrice.setPriceText(item.price)
         binding.tvStatus.setTextColor(itemView.context.color(item.orderStatusUI?.color?: R.color.color_transparent))
         binding.imgStatus.setImageDrawable(item.orderStatusUI?.image?.let { ContextCompat.getDrawable(itemView.context, it) })

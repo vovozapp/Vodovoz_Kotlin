@@ -35,6 +35,7 @@ object AllOrdersResponseJsonParser {
         price = getInt("PRICE"),
         status = OrderStatusEntity.fromId(getString("STATUS_ID")),
         address = getString("ADDRESS"),
+        date = getString("DATE_INSERT"),
         productEntityList = getJSONArray("ITEMS").parseProductEntityList()
     )
 

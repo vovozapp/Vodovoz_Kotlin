@@ -25,8 +25,9 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvStatus"
-            style="@style/TextViewMediumBlue"
+            style="@style/TextViewHeaderBlue"
             android:layout_width="wrap_content"
+            android:textSize="16sp"
             android:layout_height="wrap_content"
             android:drawablePadding="@dimen/space_4"
             android:layout_marginStart="@dimen/space_4"
@@ -37,7 +38,8 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvPrice"
-            style="@style/TextViewMediumBlackBold"
+            style="@style/TextViewHeaderBlackBold"
+            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/space_16"
@@ -47,7 +49,7 @@
             tools:text="15476 Р" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvAddress"
+            android:id="@+id/tvDate"
             style="@style/TextViewNormalGray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,6 +57,17 @@
             android:layout_marginHorizontal="@dimen/space_16"
             android:maxLines="2"
             app:layout_constraintTop_toBottomOf="@+id/imgStatus"
+            tools:layout_editor_absoluteX="16dp"
+            tools:text="Г Балашиха Проспект Ленина дом 32 д кв 313, нидекс 456342, подъезд 5" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvAddress"
+            style="@style/TextViewNormalGray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:maxLines="2"
+            app:layout_constraintTop_toBottomOf="@+id/tvDate"
             tools:layout_editor_absoluteX="16dp"
             tools:text="Г Балашиха Проспект Ленина дом 32 д кв 313, нидекс 456342, подъезд 5" />
 
