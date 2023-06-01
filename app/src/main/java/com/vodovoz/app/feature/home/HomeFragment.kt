@@ -196,10 +196,13 @@ class HomeFragment : BaseFragment() {
                             findNavController().navigate(HomeFragmentDirections.actionToContactsFragment())
                             siteStateManager.clearDeepLinkListener()
                         }
+                        "basket" -> {
+                            tabManager.selectTab(R.id.graph_cart)
+                        }
                         "gl" -> {
                             siteStateManager.clearDeepLinkListener()
                         }
-                        "kankulyator_vody" -> {
+                        "kalkulyator_vody" -> {
                             findNavController().navigate(HomeFragmentDirections.actionToWaterAppFragment())
                         }
                         null -> {
