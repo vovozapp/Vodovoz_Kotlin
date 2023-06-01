@@ -133,7 +133,7 @@ class AvailableProductsViewHolder(
         binding.amountController.add.setOnClickListener {
             val item = item ?: return@setOnClickListener
             debugLog { "isgift ${item.isGift} isBottle ${item.isBottle}" }
-            if (item.isGift) return@setOnClickListener
+            if (item.isGift || item.chipsBan == 2 || item.chipsBan == 3 || item.chipsBan == 5) return@setOnClickListener
 
             item.oldQuantity = item.cartQuantity
             item.cartQuantity++
@@ -195,8 +195,6 @@ class AvailableProductsViewHolder(
                     productsClickListener.onChangeRating(item.id, newRating, item.rating)
                 }
             }
-
-        binding.rbRating.isVisible = !item.isBottle
 
         binding.amountController.add.isSelected = false
 
@@ -306,6 +304,7 @@ class AvailableProductsViewHolder(
             binding.bottomPrContainer.visibility = View.GONE
             binding.tvDepositPrice.visibility = View.VISIBLE
             binding.tvDepositPrice.setDepositPriceText(item.priceList.first().currentPrice)
+            binding.rbRating.isVisible = false
             /*if (item.priceList.first().currentPrice > 0) {
                 binding.clPricesContainer.visibility = View.VISIBLE
             } else {
@@ -314,11 +313,14 @@ class AvailableProductsViewHolder(
         }
 
         //If is gift
-        if (item.priceList.first().currentPrice <= 1) {
+        if (item.isGift) {
             binding.imgFavoriteStatus.visibility = View.INVISIBLE
             binding.cgStatuses.visibility = View.GONE
             binding.tvOldPrice.visibility = View.GONE
+            binding.rbRating.isVisible = false
         }
+
+        binding.imgFavoriteStatus.isVisible = !(item.chipsBan == 1 || item.chipsBan == 3 || item.chipsBan == 5)
 
         //If is not available
         if (!item.isAvailable) {
