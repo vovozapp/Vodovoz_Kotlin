@@ -57,6 +57,10 @@ class OrderingFlowViewModel @Inject constructor(
     private val lastActualCart = savedStateHandle.get<String>("lastActualCart")
     private val coupon = savedStateHandle.get<String>("coupon") ?: ""
 
+    init {
+        //accountManager.reportYandexMetrica("Зашел на экран оформления заказа") //todo релиз
+    }
+
     fun regOrder(
         comment: String = "",
         name: String = "",

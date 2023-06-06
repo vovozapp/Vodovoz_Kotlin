@@ -11,6 +11,7 @@ import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
@@ -21,7 +22,7 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
 import com.vodovoz.app.ui.model.OrderDetailsUI
 import com.vodovoz.app.ui.model.OrderStatusUI
-import com.vodovoz.app.util.extensions.drawable
+import com.yandex.metrica.YandexMetrica
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -44,6 +45,9 @@ class OrderDetailsFragment : BaseFragment() {
 
     @Inject
     lateinit var likeManager: LikeManager
+
+    @Inject
+    lateinit var accountManager: AccountManager
 
     @Inject
     lateinit var ratingProductManager: RatingProductManager
@@ -148,7 +152,8 @@ class OrderDetailsFragment : BaseFragment() {
             when(orderDetailsUI.status) {
                 OrderStatusUI.COMPLETED,
                 OrderStatusUI.DELIVERED,
-                OrderStatusUI.CANCELED -> binding.tvCancelOrder.visibility = View.INVISIBLE
+                OrderStatusUI.CANCELED,
+                -> binding.tvCancelOrder.visibility = View.INVISIBLE
                 else -> binding.tvCancelOrder.visibility = View.VISIBLE
             }
 
@@ -177,6 +182,9 @@ class OrderDetailsFragment : BaseFragment() {
 
                         binding.btnTraceOrder.setOnClickListener {
                             if (orderDetailsUI.driverId == null || orderDetailsUI.id == null) return@setOnClickListener
+                            val eventParameters = "{\"ZakazNumber\":\"${orderDetailsUI.id}\"}"
+                            //accountManager.reportYandexMetrica("Где мой заказ", eventParameters) //todo релиз
+
                             findNavController().navigate(OrderDetailsFragmentDirections.actionToTraceOrderFragment(
                                 orderDetailsUI.driverId, orderDetailsUI.driverName, orderDetailsUI.id.toString()
                             ))
