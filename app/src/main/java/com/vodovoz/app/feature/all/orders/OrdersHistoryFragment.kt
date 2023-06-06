@@ -140,7 +140,8 @@ class OrdersHistoryFragment : BaseFragment() {
     private fun getAllClickListener(): AllClickListener {
         return object : AllClickListener {
             override fun onMoreDetailClick(orderId: Long, sendReport: Boolean) {
-                //if (sendReport) accountManager.reportYandexMetrica("Зашел в заказ, статус в пути") //todo релиз
+                //val eventParameters = "{\"ZakazID\":\"$orderId\"}"
+                //if (sendReport) accountManager.reportYandexMetrica("Зашел в заказ, статус в пути", eventParameters) //todo релиз
                 findNavController().navigate(OrdersHistoryFragmentDirections.actionToOrderDetailsFragment(orderId))
             }
 
