@@ -13,6 +13,7 @@ import com.vodovoz.app.util.extensions.snack
 import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -38,12 +39,23 @@ class MainActivity : AppCompatActivity() {
         observeRatingSnackbar()
 
         handleIntent(intent)
+        handlePushIntent(intent)
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
         handleIntent(intent)
+        handlePushIntent(intent)
+    }
+
+    private fun handlePushIntent(intent: Intent) {
+        val extra = intent.getStringExtra("push")
+        if (!extra.isNullOrEmpty()) {
+            lifecycleScope.launchWhenStarted {
+                siteStateManager.savePushData(JSONObject(extra))
+            }
+        }
     }
 
     private fun handleIntent(intent: Intent) {

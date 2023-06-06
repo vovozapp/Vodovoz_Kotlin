@@ -54,7 +54,7 @@ class NotificationManager : FirebaseMessagingService() {
     private fun showLargeIconNotification(not: RemoteMessage.Notification, data: JSONObject) {
         val pendingIntent = NavDeepLinkBuilder(applicationContext)
             .setGraph(R.navigation.nav_graph)
-            .setArguments(bundleOf("push" to data))
+            .setArguments(bundleOf("push" to data.toString()))
             .setDestination(R.id.splashFragment)
             .createPendingIntent()
 
@@ -91,7 +91,7 @@ class NotificationManager : FirebaseMessagingService() {
     private fun showSmallIconNotification(not: RemoteMessage.Notification, data: JSONObject) {
         val pendingIntent = NavDeepLinkBuilder(applicationContext)
             .setGraph(R.navigation.nav_graph)
-            .setArguments(bundleOf("push" to data))
+            .setArguments(bundleOf("push" to data.toString()))
             .setDestination(R.id.splashFragment)
             .createPendingIntent()
 

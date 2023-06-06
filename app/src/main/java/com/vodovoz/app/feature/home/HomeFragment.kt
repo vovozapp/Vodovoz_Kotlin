@@ -136,11 +136,43 @@ class HomeFragment : BaseFragment() {
         observeTabReselect()
         observeEvents()
         bindBackPressed()
-        observeSiteState()
+        observeDeepLinkFromSiteState()
         observeMediaManager()
+        observePushFromSiteState()
     }
 
-    private fun observeSiteState() {
+    private fun observePushFromSiteState() {
+        lifecycleScope.launchWhenStarted {
+            siteStateManager
+                .observePush()
+                .collect {
+                    when(it?.path) {
+                        "AKCII" -> {}
+                        "TOVAR" -> {}
+                        "RAZDEL" -> {}
+                        "Karta" -> {}
+                        "vsenovinki" -> {}
+                        "vseskidki" -> {}
+                        "BRAND" -> {}
+                        "BRANDY" -> {}
+                        "about" -> {}
+                        "dostavka" -> {}
+                        "service" -> {}
+                        "remont_kulerov" -> {}
+                        "feedback" -> {}
+                        "TOVARY" -> {}
+                        "ACTIONS" -> {}
+                        "vseakcii" -> {}
+                        "URL" -> {}
+                        null -> {
+                            siteStateManager.clearPushListener()
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun observeDeepLinkFromSiteState() {
         lifecycleScope.launchWhenStarted {
             siteStateManager
                 .observeDeepLinkPath()
