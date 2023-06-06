@@ -88,7 +88,7 @@ class AllOrdersFlowFragment : BaseFragment() {
 
     private fun getAllClickListener(): AllClickListener {
         return object : AllClickListener {
-            override fun onMoreDetailClick(orderId: Long) {
+            override fun onMoreDetailClick(orderId: Long, sendReport: Boolean) {
                 findNavController().navigate(OrdersHistoryFragmentDirections.actionToOrderDetailsFragment(orderId))
             }
 

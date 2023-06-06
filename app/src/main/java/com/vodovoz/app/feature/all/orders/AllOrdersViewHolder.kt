@@ -32,12 +32,14 @@ class AllOrdersViewHolder(
     init {
         binding.root.setOnClickListener {
             val itemId = item?.id ?: return@setOnClickListener
-            allClickListener.onMoreDetailClick(itemId)
+            val item = item ?: return@setOnClickListener
+            allClickListener.onMoreDetailClick(itemId, item.orderStatusUI?.statusName == "Передан в службу доставки")
         }
 
         binding.tvMoreDetails.setOnClickListener {
             val itemId = item?.id ?: return@setOnClickListener
-            allClickListener.onMoreDetailClick(itemId)
+            val item = item ?: return@setOnClickListener
+            allClickListener.onMoreDetailClick(itemId, item.orderStatusUI?.statusName == "Передан в службу доставки")
         }
         binding.tvRepeatOrder.setOnClickListener {
             val itemId = item?.id ?: return@setOnClickListener
