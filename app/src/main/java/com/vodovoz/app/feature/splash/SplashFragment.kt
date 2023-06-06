@@ -73,6 +73,7 @@ class SplashFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //accountManager.reportYandexMetrica("Зашел в приложение") //todo релиз
         observeFlowViewModel()
         bindErrorRefresh {
             refreshLoad()

@@ -92,6 +92,11 @@ class AccountManager @Inject constructor(
         }
     }
 
+    fun reportYandexMetrica(text: String) {
+        val eventParameters = "{\"UserID\":\"${accountIdListener.value ?: ""}\"}"
+        //YandexMetrica.reportEvent("Заказ оформлен", eventParameters) //todo релиз
+    }
+
     data class UserSettings(
         val email: String,
         val password: String

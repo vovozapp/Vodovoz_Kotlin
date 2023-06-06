@@ -3,8 +3,8 @@ package com.vodovoz.app.ui.base
 import android.app.Application
 import android.util.Log
 import com.vodovoz.app.common.notification.NotificationChannels
-import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.core.network.ApiConfig
+import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.local.LocalData
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.remote.MapKitApi
@@ -14,6 +14,8 @@ import com.vodovoz.app.data.remote.VodovozApi
 import com.vodovoz.app.util.Keys
 import com.vodovoz.app.util.LogSettings
 import com.yandex.mapkit.MapKitFactory
+import com.yandex.metrica.YandexMetrica
+import com.yandex.metrica.YandexMetricaConfig
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -34,6 +36,7 @@ class VodovozApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        //initYandexMetrica() //todo релиз
         MapKitFactory.setApiKey(Keys.MAPKIT_API_KEY)
         Timber.plant(Timber.DebugTree())
         NotificationChannels.create(this)
@@ -48,6 +51,13 @@ class VodovozApplication : Application() {
             localDataSource = localDataSource
         )
         viewModelFactory = ViewModelFactory(dataRepository = dataRepository)
+    }
+
+    private fun initYandexMetrica() {
+        val config: YandexMetricaConfig =
+            YandexMetricaConfig.newConfigBuilder("6a2669ed-8014-4cd8-8427-3179e72f0635").build()
+        YandexMetrica.activate(this, config)
+        YandexMetrica.enableActivityAutoTracking(this)
     }
 
     private fun buildVodovozClient(): VodovozApi {

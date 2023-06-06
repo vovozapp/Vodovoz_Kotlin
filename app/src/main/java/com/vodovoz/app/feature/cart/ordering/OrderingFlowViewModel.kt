@@ -20,6 +20,7 @@ import com.vodovoz.app.ui.extensions.ContextExtensions.getDeviceInfo
 import com.vodovoz.app.ui.model.*
 import com.vodovoz.app.ui.model.custom.OrderingCompletedInfoBundleUI
 import com.vodovoz.app.util.extensions.debugLog
+import com.yandex.metrica.YandexMetrica
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -35,7 +36,7 @@ class OrderingFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val accountManager: AccountManager,
     private val application: Application,
-    private val cartManager: CartManager
+    private val cartManager: CartManager,
 ) : PagingContractViewModel<OrderingFlowViewModel.OrderingState, OrderingFlowViewModel.OrderingEvents>(
     OrderingState(
         full = savedStateHandle.get<Int>("full"),
@@ -154,6 +155,7 @@ class OrderingFlowViewModel @Inject constructor(
                             loadingPage = false,
                             error = null
                         )
+                        //accountManager.reportYandexMetrica("Заказ оформлен")//todo релиз
                         eventListener.emit(OrderingEvents.OrderSuccess(data))
                     } else {
                         uiStateListener.value =
@@ -251,7 +253,7 @@ class OrderingFlowViewModel @Inject constructor(
     fun fetchShippingInfo(
         pay: Boolean = false,
         intervals: Boolean = false,
-        today: Boolean = false
+        today: Boolean = false,
     ) {
         viewModelScope.launch {
             val address = state.data.selectedAddressUI
@@ -454,7 +456,7 @@ class OrderingFlowViewModel @Inject constructor(
         val shippingDaysInfoBundleUi: FreeShippingDaysInfoBundleUI? = null,
 
         val orderingCompletedInfoBundleUI: OrderingCompletedInfoBundleUI? = null,
-        val checkDeliveryValue: Int = 0
+        val checkDeliveryValue: Int = 0,
     ) : State
 
     sealed class OrderingEvents : Event {
@@ -474,7 +476,7 @@ class OrderingFlowViewModel @Inject constructor(
 
         data class ShowShippingIntervals(
             val list: List<ShippingIntervalUI>,
-            val selectedDate: Date?
+            val selectedDate: Date?,
         ) : OrderingEvents()
 
         data class TodayShippingMessage(val message: String) : OrderingEvents()
