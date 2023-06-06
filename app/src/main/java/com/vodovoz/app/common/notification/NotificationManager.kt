@@ -14,18 +14,16 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.os.bundleOf
 import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.vodovoz.app.R
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.util.extensions.fromHtml
+import org.json.JSONObject
 
 class NotificationManager : FirebaseMessagingService() {
-
-    private val permissionsController by lazy {
-        PermissionsController(this)
-    }
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
@@ -35,44 +33,28 @@ class NotificationManager : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
+        val messageNotification = message.notification
 
-        if (message.notification != null) {
-            if (message.notification!!.imageUrl != null) {
-                showLargeIconNotification(message.notification!!)
+        if (messageNotification != null) {
+
+            val jsonData = if (message.data.isNotEmpty()) {
+                JSONObject(message.data.toString())
             } else {
-                showSmallIconNotification(message.notification!!)
+                JSONObject()
+            }
+
+            if (messageNotification.imageUrl != null) {
+                showLargeIconNotification(messageNotification, jsonData)
+            } else {
+                showSmallIconNotification(messageNotification, jsonData)
             }
         }
-
-
-        /*if (message.notification != null) {
-            if (message.notification?.imageUrl != null) {
-                handleNotificationWithImage(
-                    message.notification?.title,
-                    message.notification?.body,
-                    message.notification?.imageUrl.toString()
-                )
-            } else {
-                handleNotificationWithoutImage(
-                    message.notification?.title,
-                    message.notification?.body
-                )
-            }
-        }
-
-        if (message.data.isNotEmpty()) {
-            try {
-                val json = JSONObject(message.data.toString())
-                handleDataMessage(json)
-            } catch (e: Exception) {
-                debugLog { "NotifApp ${e.localizedMessage}" }
-            }
-        }*/
     }
 
-    private fun showLargeIconNotification(not: RemoteMessage.Notification) {
+    private fun showLargeIconNotification(not: RemoteMessage.Notification, data: JSONObject) {
         val pendingIntent = NavDeepLinkBuilder(applicationContext)
             .setGraph(R.navigation.nav_graph)
+            .setArguments(bundleOf("push" to data))
             .setDestination(R.id.splashFragment)
             .createPendingIntent()
 
@@ -106,9 +88,10 @@ class NotificationManager : FirebaseMessagingService() {
         }
     }
 
-    private fun showSmallIconNotification(not: RemoteMessage.Notification) {
+    private fun showSmallIconNotification(not: RemoteMessage.Notification, data: JSONObject) {
         val pendingIntent = NavDeepLinkBuilder(applicationContext)
             .setGraph(R.navigation.nav_graph)
+            .setArguments(bundleOf("push" to data))
             .setDestination(R.id.splashFragment)
             .createPendingIntent()
 
