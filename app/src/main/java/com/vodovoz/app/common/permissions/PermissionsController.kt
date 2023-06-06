@@ -3,6 +3,7 @@ package com.vodovoz.app.common.permissions
 import android.Manifest
 import android.content.Context
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import com.vodovoz.app.util.extensions.debugLog
 import pub.devrel.easypermissions.AfterPermissionGranted
@@ -76,6 +77,23 @@ class PermissionsController(
             EasyPermissions.requestPermissions(
                 activity, "Необходимы разрешения, чтобы использовать приложение.",
                 PermissionsConstants.REQUEST_STORAGE_PERMISSION, *perms
+            )
+            failure.invoke()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    @AfterPermissionGranted(PermissionsConstants.REQUEST_NOTIFICATION_PERMISSION)
+    fun methodRequiresNotificationPermission(activity: FragmentActivity, failure: () -> Unit = {}, success: () -> Unit = {}) {
+        val perms = arrayOf(
+            Manifest.permission.POST_NOTIFICATIONS
+        )
+        if (EasyPermissions.hasPermissions(context, *perms)) {
+            success.invoke()
+        } else {
+            EasyPermissions.requestPermissions(
+                activity, "Необходимы разрешения, чтобы использовать приложение.",
+                PermissionsConstants.REQUEST_NOTIFICATION_PERMISSION, *perms
             )
             failure.invoke()
         }

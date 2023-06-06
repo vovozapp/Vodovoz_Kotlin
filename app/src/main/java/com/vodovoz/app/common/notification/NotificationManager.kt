@@ -1,6 +1,8 @@
 package com.vodovoz.app.common.notification
 
+import android.Manifest
 import android.content.ContentResolver
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
@@ -8,15 +10,22 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.text.Html
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.vodovoz.app.R
+import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.util.extensions.fromHtml
 
 class NotificationManager : FirebaseMessagingService() {
+
+    private val permissionsController by lazy {
+        PermissionsController(this)
+    }
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
@@ -82,8 +91,19 @@ class NotificationManager : FirebaseMessagingService() {
                 .setStyle(bigPictureStyle)
                 .build()
 
-        NotificationManagerCompat.from(this)
-            .notify(NotificationConfig.NOTIFICATION_ID_BIG_IMAGE, notification)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                NotificationManagerCompat.from(this)
+                    .notify(NotificationConfig.NOTIFICATION_ID_BIG_IMAGE, notification)
+            }
+        } else {
+            NotificationManagerCompat.from(this)
+                .notify(NotificationConfig.NOTIFICATION_ID_BIG_IMAGE, notification)
+        }
     }
 
     private fun showSmallIconNotification(not: RemoteMessage.Notification) {
@@ -106,8 +126,19 @@ class NotificationManager : FirebaseMessagingService() {
                 .setStyle(inboxStyle)
                 .build()
 
-        NotificationManagerCompat.from(this)
-            .notify(NotificationConfig.NOTIFICATION_ID, notification)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                NotificationManagerCompat.from(this)
+                    .notify(NotificationConfig.NOTIFICATION_ID, notification)
+            }
+        } else {
+            NotificationManagerCompat.from(this)
+                .notify(NotificationConfig.NOTIFICATION_ID, notification)
+        }
     }
 
     private fun getBitmap(contentResolver: ContentResolver, fileUri: Uri?): Bitmap? {
@@ -117,7 +148,7 @@ class NotificationManager : FirebaseMessagingService() {
             } else {
                 MediaStore.Images.Media.getBitmap(contentResolver, fileUri)
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             null
         }
     }
