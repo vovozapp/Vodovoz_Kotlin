@@ -20,6 +20,7 @@ import com.vodovoz.app.feature.home.ratebottom.adapter.RateBottomImageAdapter
 import com.vodovoz.app.feature.home.ratebottom.adapter.RateBottomViewPagerAdapter
 import com.vodovoz.app.feature.productdetail.sendcomment.SendCommentAboutProductBottomDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -111,6 +112,9 @@ class RateBottomFragment : BaseBottomSheetFragment() {
 
     private fun observeUiState() {
         lifecycleScope.launchWhenStarted {
+
+            dialog?.setCancelable(false)
+
             viewModel
                 .observeUiState()
                 .collect { state ->
@@ -137,6 +141,9 @@ class RateBottomFragment : BaseBottomSheetFragment() {
                     }
 
                     showError(state.error)
+
+                    delay(2000)
+                    dialog?.setCancelable(true)
                 }
         }
     }
