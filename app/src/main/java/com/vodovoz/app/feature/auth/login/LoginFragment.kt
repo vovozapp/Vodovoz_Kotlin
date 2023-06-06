@@ -114,7 +114,7 @@ class LoginFragment : BaseFragment() {
                             flowViewModel.refresh()
                             cartFlowViewModel.refreshIdle()
                             favoriteViewModel.refreshIdle()
-                            profileViewModel.refreshIdle()
+                            profileViewModel.refresh()
                             val redirect = tabManager.fetchAuthRedirect()
                             if (redirect == TabManager.DEFAULT_AUTH_REDIRECT) {
                                 findNavController().popBackStack()

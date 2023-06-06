@@ -4,41 +4,21 @@ import android.app.Application
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.common.content.Event
-import com.vodovoz.app.common.content.PagingContractViewModel
-import com.vodovoz.app.common.content.State
+import com.vodovoz.app.common.content.*
 import com.vodovoz.app.common.content.itemadapter.Item
-import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
-import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
-import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
-import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
-import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
-import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
-import com.vodovoz.app.feature.home.HomeFlowViewModel
-import com.vodovoz.app.feature.home.viewholders.homeorders.HomeOrders
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
-import com.vodovoz.app.feature.profile.viewholders.models.*
+import com.vodovoz.app.feature.profile.ProfileFlowViewModel.ProfileState.Companion.fetchStaticItems
+import com.vodovoz.app.feature.profile.viewholders.models.ProfileLogout
 import com.vodovoz.app.feature.sitestate.SiteStateManager
-import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
-import com.vodovoz.app.mapper.OrderMapper.mapToUI
-import com.vodovoz.app.mapper.UserDataMapper.mapToUI
 import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
-import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
-import com.vodovoz.app.ui.model.CategoryDetailUI
-import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,7 +32,7 @@ class ProfileFlowViewModel @Inject constructor(
     private val accountManager: AccountManager,
     private val siteStateManager: SiteStateManager,
     private val tabManager: TabManager,
-    private val application: Application
+    private val application: Application,
 ) : PagingContractViewModel<ProfileFlowViewModel.ProfileState, ProfileFlowViewModel.ProfileEvents>(
     ProfileState.idle()
 ) {
@@ -63,308 +43,182 @@ class ProfileFlowViewModel @Inject constructor(
         }
     }
 
-    private fun loadPage() {
-        fetchProfileData(POSITION_1)
-        fetchOrdersSlider(POSITION_3)
-        fetchViewedProductsSlider(POSITION_6_TITLE, POSITION_7)
-        fetchPersonalProducts(POSITION_8)
-        fetchProfileCategories(POSITION_2, POSITION_4)
+    private fun CoroutineScope.firstLoadTasks(userId: Long) = arrayOf(
+        async(Dispatchers.IO) { fetchProfileData(POSITION_1, userId) },
+        async(Dispatchers.IO) { fetchProfileCategories(POSITION_2, POSITION_4, userId) },
+        async(Dispatchers.IO) { fetchOrdersSlider(POSITION_3, userId) }
+    )
+
+    private fun CoroutineScope.secondLoadTasks(userId: Long) = arrayOf(
+        async(Dispatchers.IO) { fetchViewedProductsSlider(POSITION_6_TITLE, POSITION_7, userId) },
+        async(Dispatchers.IO) { fetchPersonalProducts(POSITION_8, userId) },
+    )
+
+    private suspend fun fetchProfileData(position: Int, userId: Long): List<PositionItem> {
+        return runCatching { repository.fetchUserData(userId, position) }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
     }
 
-    fun fetchProfileData(position: Int) {
-        uiStateListener.value = state.copy(loadingPage = true)
-        val userId = dataRepository.fetchUserId()
-        if (userId == null) {
-            uiStateListener.value = state.copy(data = state.data.copy(isLogin = false))
-            return
-        }
-        viewModelScope.launch {
-            flow { emit(repository.fetchUserData(userId)) }
-                .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseUserDataResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
-                        val item = PositionItem(
-                            position,
-                            ProfileHeader(data = response.data.mapToUI())
-                        )
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
-                    } else {
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    position,
-                                    null
-                                )
-                            )
-                        )
-                    }
-                }
-                .flowOn(Dispatchers.Default)
-                .catch {
-                    debugLog { "fetch profile data error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .collect()
-        }
+    private suspend fun fetchOrdersSlider(position: Int, userId: Long): List<PositionItem> {
+        return runCatching { repository.fetchOrdersSliderProfile(userId, position) }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
     }
 
-    private fun fetchOrdersSlider(position: Int) {
-        uiStateListener.value = state.copy(loadingPage = true)
-        val userId = dataRepository.fetchUserId()
-        if (userId == null) {
-            uiStateListener.value = state.copy(data = state.data.copy(isLogin = false))
-            return
-        }
-        viewModelScope.launch {
-            flow { emit(repository.fetchOrdersSlider(userId)) }
-                .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseOrderSliderResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
-                        val item = PositionItem(
-                            position,
-                            ProfileOrders(data = response.data.mapToUI())
-                        )
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
-                    } else {
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    position,
-                                    null
-                                )
-                            )
-                        )
-                    }
-                }
-                .flowOn(Dispatchers.Default)
-                .catch {
-                    debugLog { "fetch profile orders slider error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .collect()
-        }
-    }
-
-    private fun fetchProfileCategories(positionBlock: Int, position: Int) {
-        uiStateListener.value = state.copy(loadingPage = true)
-        val userId = dataRepository.fetchUserId()
-        if (userId == null) {
-            uiStateListener.value = state.copy(data = state.data.copy(isLogin = false))
-            return
-        }
-        val isTablet = application.isTablet()
-        viewModelScope.launch {
-            flow { emit(repository.fetchProfileCategories(userId, isTablet)) }
-                .flowOn(Dispatchers.IO)
-                .onEach {
-                    uiStateListener.value = if (it.status != null && it.status == "Success") {
-                        val mapped = it.fetchProfileCategoryUIList()
-                        val item = PositionItem(
-                            position,
-                            ProfileMain(items = mapped.list)
-                        )
-
-                        val blockList = it.block
-                        val itemBlock = if (!blockList.isNullOrEmpty()) {
-                            PositionItem(
-                                positionBlock,
-                                ProfileBlock(data = blockList)
-                            )
-                        } else {
-                            PositionItem(
-                                positionBlock,
-                                null
-                            )
-                        }
-
-                        tabManager.saveBottomNavProfileState(mapped.amount)
-
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item + itemBlock),
-                            error = null
-                        )
-                    } else {
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    position,
-                                    null
-                                )
-                            )
-                        )
-                    }
-                }
-                .flowOn(Dispatchers.Default)
-                .catch {
-                    debugLog { "fetch profile categories error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .collect()
-        }
-    }
-
-    private fun fetchViewedProductsSlider(positionTitle: Int, position: Int) {
-        uiStateListener.value = state.copy(loadingPage = true)
-        val userId = dataRepository.fetchUserId()
-        if (userId == null) {
-            uiStateListener.value = state.copy(data = state.data.copy(isLogin = false))
-            return
-        }
-        viewModelScope.launch {
-            flow { emit(repository.fetchViewedProductsSlider(userId)) }
-                .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseViewedProductsSliderResponse()
-                    val item = if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        PositionItemWithTitle(
-                            item = PositionItem(
-                                position,
-                                fetchHomeProductsByType(data, HomeProducts.VIEWED, position)
-                            ),
-                            itemTitle = PositionItem(
-                                positionTitle,
-                                HomeTitle(
-                                    id = positionTitle,
-                                    type = HomeTitle.VIEWED_TITLE,
-                                    name = "Вы смотрели",
-                                    showAll = false,
-                                    showAllName = "СМ.ВСЕ",
-                                    categoryProductsName = if (data.size == 1) {
-                                        data.first().name
-                                    } else {
-                                        ""
-                                    }
-                                )
-                            )
-                        )
-                    } else {
-                        PositionItemWithTitle(
-                            item = PositionItem(position, null),
-                            itemTitle = PositionItem(positionTitle, null)
-                        )
-                    }
-                    updateStateByPositionItem(item)
-                }
-                .flowOn(Dispatchers.Default)
-                .catch {
-                    debugLog { "fetch profile viewed products error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .collect()
-        }
-    }
-
-    private fun fetchHomeProductsByType(
-        data: List<CategoryDetailUI>,
-        type: Int,
+    private suspend fun fetchProfileCategories(
+        positionBlock: Int,
         position: Int,
-    ): HomeProducts {
-        return HomeProducts(
-            position,
-            data,
-            productsType = type,
-            productsSliderConfig = ProductsSliderConfig(
-                containShowAllButton = true
-            ),
-            prodList = if (data.size > 1) {
-                val list = mutableListOf<ProductUI>()
-                data.forEach {
-                    list.addAll(it.productUIList)
-                }
-                list
-            } else {
-                data.first().productUIList
-            }
-        )
-    }
-
-    private fun updateStateByPositionItem(positionItemWithTitle: PositionItemWithTitle) {
-        uiStateListener.value = state.copy(
-            loadingPage = false,
-            data = state.data.copy(items = state.data.items + positionItemWithTitle.itemTitle + positionItemWithTitle.item),
-            error = null
-        )
-    }
-
-    private fun fetchPersonalProducts(position: Int) {
-        uiStateListener.value = state.copy(loadingPage = true)
-        val userId = dataRepository.fetchUserId()
-        if (userId == null) {
-            uiStateListener.value = state.copy(data = state.data.copy(isLogin = false))
-            return
+        userId: Long,
+    ): List<PositionItem> {
+        return runCatching {
+            repository.fetchProfileCategories(
+                position,
+                positionBlock,
+                userId,
+                application.isTablet()
+            )
         }
-        viewModelScope.launch {
-            flow { emit(repository.fetchPersonalProducts(userId, 1)) }
-                .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parsePersonalProductsResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        val item = PositionItem(
-                            position,
-                            ProfileBestForYou(data = data.copy(
-                                productUIList = FavoritesMapper.mapFavoritesListByManager("grid", data.productUIList)
-                            ))
-                        )
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(items = state.data.items + item),
-                            error = null
-                        )
-                    } else {
-                        state.copy(
-                            loadingPage = false,
-                            data = state.data.copy(
-                                items = state.data.items + PositionItem(
-                                    position,
-                                    null
-                                )
-                            )
-                        )
-                    }
-                }
-                .flowOn(Dispatchers.Default)
-                .catch {
-                    debugLog { "fetch profile personal products error ${it.localizedMessage}" }
-                    updateStateByThrowableAndPosition(it, position)
-                }
-                .collect()
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
+    }
+
+    private suspend fun fetchViewedProductsSlider(
+        positionTitle: Int,
+        position: Int,
+        userId: Long,
+    ): List<PositionItem> {
+        return runCatching { repository.fetchViewedProductsSlider(userId, positionTitle, position) }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
+    }
+
+    private suspend fun fetchPersonalProducts(position: Int, userId: Long): List<PositionItem> {
+        return runCatching { repository.fetchPersonalProducts(position, userId, 1) }
+            .onFailure { showNetworkError(it) }
+            .getOrDefault(emptyList())
+    }
+
+    private fun showNetworkError(throwable: Throwable) {
+        val error = throwable.toErrorState()
+        if (error is ErrorState.NetworkError) {
+            uiStateListener.value = state.copy(error = error)
         }
     }
 
     fun firstLoad() {
         if (!state.isFirstLoad) {
-            uiStateListener.value =
-                state.copy(isFirstLoad = true, loadingPage = true)
-            loadPage()
+            uiStateListener.value = state.copy(loadingPage = true)
+
+            val userId = dataRepository.fetchUserId()
+            if (userId == null) {
+                uiStateListener.value = state.copy(data = state.data.copy(isLogin = false))
+                return
+            }
+
+            viewModelScope.launch {
+                val tasks = firstLoadTasks(userId)
+                val start = System.currentTimeMillis()
+                val result = awaitAll(*tasks).flatten()
+                debugLog { "profile first load task ${System.currentTimeMillis() - start} result size ${result.size}" }
+                val positionItemsSorted =
+                    (state.data.positionItems + result).sortedBy { it.position }
+                uiStateListener.value = state.copy(
+                    loadingPage = false,
+                    data = state.data.copy(
+                        positionItems = positionItemsSorted,
+                        items = positionItemsSorted.map { it.item },
+                        isLogin = true
+                    ),
+                    isFirstLoad = true,
+                    error = if (result.isNotEmpty()) {
+                        null
+                    } else {
+                        state.error
+                    }
+                )
+            }
+
+            secondLoad(userId)
         }
     }
 
-    fun refreshIdle() {
-        uiStateListener.value =
-            state.copy(loadingPage = true, bottomItem = null, data = state.data.copy(items = ProfileState.idle().items, isLogin = true))
-        loadPage()
+    private fun secondLoad(userId: Long) {
+        viewModelScope.launch {
+            val tasks = secondLoadTasks(userId)
+            val start = System.currentTimeMillis()
+            val result = awaitAll(*tasks).flatten()
+            val mappedResult = if (result.isNotEmpty()) {
+                result + fetchStaticItems()
+            } else {
+                result
+            }
+            debugLog { "profile second load task ${System.currentTimeMillis() - start} result size ${mappedResult.size}" }
+            val positionItemsSorted =
+                (state.data.positionItems + mappedResult).sortedBy { it.position }
+            uiStateListener.value = state.copy(
+                loadingPage = false,
+                data = state.data.copy(
+                    positionItems = positionItemsSorted,
+                    items = positionItemsSorted.map { it.item },
+                    isSecondLoad = true,
+                    isLogin = true
+                ),
+                error = if (mappedResult.isNotEmpty()) {
+                    null
+                } else {
+                    state.error
+                }
+            )
+        }
     }
 
     fun refresh() {
-        uiStateListener.value =
-            state.copy(loadingPage = true, bottomItem = null)
-        loadPage()
+        if (!state.loadingPage) {
+            val userId = dataRepository.fetchUserId()
+
+            if (userId == null) {
+                uiStateListener.value = state.copy(data = state.data.copy(isLogin = false))
+                return
+            }
+
+            uiStateListener.value =
+                state.copy(
+                    loadingPage = true,
+                    data = state.data.copy(
+                        items = ProfileState.idle().items,
+                        positionItems = ProfileState.idle().positionItems,
+                        isSecondLoad = false,
+                        isLogin = true
+                    ),
+                    isFirstLoad = false
+                )
+            viewModelScope.launch {
+                val tasks = firstLoadTasks(userId) + secondLoadTasks(userId)
+                val result = awaitAll(*tasks).flatten()
+                val mappedResult = if (result.isNotEmpty()) {
+                    result + fetchStaticItems()
+                } else {
+                    result
+                }
+                val positionItemsSorted =
+                    (state.data.positionItems + mappedResult).sortedBy { it.position }
+                uiStateListener.value = state.copy(
+                    loadingPage = false,
+                    data = state.data.copy(
+                        positionItems = positionItemsSorted,
+                        items = positionItemsSorted.map { it.item },
+                        isSecondLoad = true
+                    ),
+                    error = if (mappedResult.isNotEmpty()) {
+                        null
+                    } else {
+                        state.error
+                    },
+                    isFirstLoad = true
+                )
+            }
+        }
     }
 
     fun logout() {
@@ -404,32 +258,25 @@ class ProfileFlowViewModel @Inject constructor(
         }
     }
 
-    private fun updateStateByThrowableAndPosition(it: Throwable, position: Int) {
-        uiStateListener.value =
-            state.copy(
-                error = it.toErrorState(),
-                loadingPage = false,
-                data = state.data.copy(
-                    items = state.data.items + PositionItem(
-                        position,
-                        null
-                    )
-                )
-            )
-    }
-
     data class ProfileState(
-        val items: List<PositionItem>,
-        val isLogin: Boolean = true
+        val positionItems: List<PositionItem>,
+        val items: List<Item>,
+        val isLogin: Boolean = true,
+        val isSecondLoad: Boolean = false,
     ) : State {
         companion object {
             fun idle(): ProfileState {
                 return ProfileState(
-                    listOf(
-                        PositionItem(
-                            POSITION_5,
-                            ProfileLogout()
-                        ),
+                    positionItems = emptyList(),
+                    items = emptyList()
+                )
+            }
+
+            fun fetchStaticItems(): List<PositionItem> {
+                return listOf(
+                    PositionItem(
+                        POSITION_5,
+                        ProfileLogout()
                     )
                 )
             }
@@ -442,12 +289,7 @@ class ProfileFlowViewModel @Inject constructor(
 
     data class PositionItem(
         val position: Int,
-        val item: Item?
-    )
-
-    data class PositionItemWithTitle(
-        val item: PositionItem,
-        val itemTitle: PositionItem
+        val item: Item,
     )
 
     companion object {
@@ -459,7 +301,5 @@ class ProfileFlowViewModel @Inject constructor(
         const val POSITION_6_TITLE = 6
         const val POSITION_7 = 7
         const val POSITION_8 = 8
-
-        const val POSITIONS_COUNT = 8
     }
 }

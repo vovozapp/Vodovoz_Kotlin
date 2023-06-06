@@ -107,21 +107,21 @@ class ProfileFlowFragment : BaseFragment() {
                         binding.noLoginContainer.isVisible = false
                     }
 
-                    if (profileState.data.items.mapNotNull { it.item }.size < 4) {
+                    /*if (profileState.data.items.mapNotNull { it.item }.size < 4) {
                         binding.profileFlowRv.isVisible = false
                         showLoaderWithBg(true)
                     } else {
                         binding.profileFlowRv.isVisible = true
                         showLoaderWithBg(false)
-                    }
+                    }*/
 
-                    if (profileState.data.items.size in (ProfileFlowViewModel.POSITIONS_COUNT - 2..ProfileFlowViewModel.POSITIONS_COUNT)) {
+                    /*if (profileState.data.items.size in (ProfileFlowViewModel.POSITIONS_COUNT - 2..ProfileFlowViewModel.POSITIONS_COUNT)) {
                         val list =
                             profileState.data.items.sortedBy { it.position }.mapNotNull { it.item }
                         profileController.submitList(list)
                     }
 
-                    showError(profileState.error)
+                    showError(profileState.error)*/
 
                 }
         }

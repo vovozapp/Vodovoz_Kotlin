@@ -6,6 +6,7 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressViewHolder
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.home.viewholders.homeorders.inneradapter.HomeOrdersSliderClickListener
@@ -53,7 +54,9 @@ class ProfileFlowAdapter(
             R.layout.view_holder_flow_title -> {
                 HomeTitleViewHolder(getViewFromInflater(viewType, parent))
             }
-
+            R.layout.item_progress -> {
+                BottomProgressViewHolder(getViewFromInflater(viewType, parent))
+            }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")
             }

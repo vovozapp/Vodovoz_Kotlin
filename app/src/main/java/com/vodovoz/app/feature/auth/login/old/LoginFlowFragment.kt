@@ -107,7 +107,7 @@ class LoginFlowFragment : BaseFragment() {
                             flowViewModel.refresh()
                             cartFlowViewModel.refreshIdle()
                             favoriteViewModel.refreshIdle()
-                            profileViewModel.refreshIdle()
+                            profileViewModel.refresh()
                             findNavController().popBackStack()
                         }
                         LoginFlowViewModel.LoginEvents.CodeComplete -> {

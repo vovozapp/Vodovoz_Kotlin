@@ -67,7 +67,7 @@ class SplashFragment : BaseFragment() {
         catalogViewModel.refresh()
         cartFlowViewModel.refreshIdle()
         favoriteViewModel.refreshIdle()
-        profileViewModel.refreshIdle()
+        profileViewModel.refresh()
         accountManager.fetchAccountId()
     }
 

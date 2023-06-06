@@ -87,7 +87,7 @@
                         android:id="@+id/etFirstName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Дмитрий"
+                        tools:text="Дмитрий"
                         android:hint="Имя" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -106,7 +106,7 @@
                         android:id="@+id/etSecondName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Слухинский"
+                        tools:text="Слухинский"
                         android:hint="Фамилия" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -170,7 +170,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Дата рождения"
-                            android:text="31.08.1999" />
+                            tools:text="31.08.1999" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -211,7 +211,7 @@
                             android:layout_height="wrap_content"
                             android:enabled="false"
                             android:hint="Почта(нельзя поменять)"
-                            android:text="sluhdimaa@gmail.com" />
+                            tools:text="sluhdimaa@gmail.com" />
 
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -244,7 +244,7 @@
                         android:id="@+id/etPhone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="+7-952-247-38-26"
+                        tools:text="+7-952-247-38-26"
                         android:hint="Телефон" />
 
                 </com.google.android.material.textfield.TextInputLayout>

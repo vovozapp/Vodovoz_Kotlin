@@ -14,6 +14,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
@@ -124,24 +125,27 @@ class ProfileFragment : BaseFragment() {
             viewModel.observeUiState()
                 .collect { profileState ->
 
+                    if (profileState.loadingPage) {
+                        showLoaderWithBg(true)
+                    } else {
+                        showLoaderWithBg(false)
+                    }
+
                     if (profileState.data.isLogin) {
-                        if (profileState.data.items.mapNotNull { it.item }.size < 4) {
-                            binding.profileFlowRv.isVisible = false
-                            showLoaderWithBg(true)
-                        } else {
-                            binding.profileFlowRv.isVisible = true
-                            showLoaderWithBg(false)
-                        }
+                        binding.profileFlowRv.isVisible = true
+                        binding.noLoginContainer.isVisible = false
                     } else {
                         binding.profileFlowRv.isVisible = false
                         binding.noLoginContainer.isVisible = true
                     }
 
-                    if (profileState.data.items.size in (ProfileFlowViewModel.POSITIONS_COUNT - 2..ProfileFlowViewModel.POSITIONS_COUNT)) {
-                        val list =
-                            profileState.data.items.sortedBy { it.position }.mapNotNull { it.item }
-                        profileController.submitList(list)
+                    val list = profileState.data.items
+                    val progressList = if (!profileState.data.isSecondLoad) {
+                        list + BottomProgressItem()
+                    } else {
+                        list
                     }
+                    profileController.submitList(progressList)
 
                     showError(profileState.error)
 

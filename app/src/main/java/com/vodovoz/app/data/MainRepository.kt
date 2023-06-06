@@ -3,6 +3,7 @@ package com.vodovoz.app.data
 import androidx.core.net.toUri
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.product.rating.RatingResponse
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.config.ShippingAlertConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
@@ -20,7 +21,10 @@ import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.
 import com.vodovoz.app.data.parser.response.popular.PopularSliderResponseJsonParser.parsePopularSliderResponse
 import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionSliderResponseJsonParser.parsePromotionSliderResponse
+import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
+import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
+import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
 import com.vodovoz.app.feature.home.viewholders.homebrands.HomeBrands
@@ -34,7 +38,9 @@ import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeProductsTab
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.map.api.MapKitFlowApi
+import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import com.vodovoz.app.feature.profile.notificationsettings.model.NotificationSettingsModel
+import com.vodovoz.app.feature.profile.viewholders.models.*
 import com.vodovoz.app.feature.search.qrcode.model.QrCodeModel
 import com.vodovoz.app.mapper.BannerMapper.mapToUI
 import com.vodovoz.app.mapper.BrandMapper.mapToUI
@@ -46,6 +52,7 @@ import com.vodovoz.app.mapper.HistoryMapper.mapToUI
 import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.mapper.PopupNewsMapper.mapToUI
 import com.vodovoz.app.mapper.PromotionMapper.mapToUI
+import com.vodovoz.app.mapper.UserDataMapper.mapToUI
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.PopupNewsUI
@@ -67,6 +74,7 @@ import javax.inject.Inject
 class MainRepository @Inject constructor(
     private val api: MainApi,
     private val mapKitApi: MapKitFlowApi,
+    private val tabManager: TabManager,
 ) {
 
     //Слайдер рекламных баннеров на главной странице
@@ -95,7 +103,8 @@ class MainRepository @Inject constructor(
         position: Int,
     ): List<HomeFlowViewModel.PositionItem> {
         return coroutineScope {
-            val responseBody = api.fetchHistories(blockId = 12, action = "stories", platform = "android")
+            val responseBody =
+                api.fetchHistories(blockId = 12, action = "stories", platform = "android")
             withContext(Dispatchers.Default) {
                 val response = responseBody.parseHistoriesSliderResponse()
                 if (response is ResponseEntity.Success) {
@@ -154,7 +163,8 @@ class MainRepository @Inject constructor(
     //Слайдер баннеров категорий на главной странице
     suspend fun fetchCategoryBannersSlider(position: Int): List<HomeFlowViewModel.PositionItem> {
         return coroutineScope {
-            val responseBody = api.fetchCategoryBanners(action = "slayder", androidVersion = "1.4.84")
+            val responseBody =
+                api.fetchCategoryBanners(action = "slayder", androidVersion = "1.4.84")
             withContext(Dispatchers.Default) {
                 val response = responseBody.parseCategoryBannersSliderResponse()
                 if (response is ResponseEntity.Success) {
@@ -250,8 +260,27 @@ class MainRepository @Inject constructor(
 
     //Информация о слайдере заказов на главной странице
 
-    suspend fun fetchOrdersSlider(userId: Long): ResponseBody {
-        return api.fetchOrderSlider(userId)
+    suspend fun fetchOrdersSliderProfile(
+        userId: Long,
+        position: Int,
+    ): List<ProfileFlowViewModel.PositionItem> {
+        return coroutineScope {
+
+            val responseBody = api.fetchOrderSlider(userId)
+            withContext(Dispatchers.Default) {
+                val response = responseBody.parseOrderSliderResponse()
+                if (response is ResponseEntity.Success) {
+                    listOf(
+                        ProfileFlowViewModel.PositionItem(
+                            position,
+                            ProfileOrders(position, response.data.mapToUI())
+                        )
+                    )
+                } else {
+                    emptyList()
+                }
+            }
+        }
     }
 
     suspend fun fetchOrdersSlider(
@@ -336,7 +365,8 @@ class MainRepository @Inject constructor(
         position: Int,
     ): List<HomeFlowViewModel.PositionItem> {
         return coroutineScope {
-            val responseBody = api.fetchPromotions(action = "akcii", limit = 10, platform = "android")
+            val responseBody =
+                api.fetchPromotions(action = "akcii", limit = 10, platform = "android")
             withContext(Dispatchers.Default) {
                 val response = responseBody.parsePromotionSliderResponse()
                 if (response is ResponseEntity.Success) {
@@ -467,6 +497,46 @@ class MainRepository @Inject constructor(
             action = "viewed",
             userId = userId
         )
+    }
+
+    suspend fun fetchViewedProductsSlider(
+        userId: Long,
+        positionTitle: Int,
+        position: Int,
+    ): List<ProfileFlowViewModel.PositionItem> {
+        return coroutineScope {
+
+            val responseBody = api.fetchViewedProducts(action = "viewed", userId = userId)
+            withContext(Dispatchers.Default) {
+                val response = responseBody.parseViewedProductsSliderResponse()
+                if (response is ResponseEntity.Success) {
+                    val data = response.data.mapToUI()
+                    listOf(
+                        ProfileFlowViewModel.PositionItem(
+                            position,
+                            fetchHomeProductsByType(data, HomeProducts.VIEWED, position)
+                        ),
+                        ProfileFlowViewModel.PositionItem(
+                            positionTitle,
+                            HomeTitle(
+                                id = positionTitle,
+                                type = HomeTitle.VIEWED_TITLE,
+                                name = "Вы смотрели",
+                                showAll = false,
+                                showAllName = "СМ.ВСЕ",
+                                categoryProductsName = if (data.size == 1) {
+                                    data.first().name
+                                } else {
+                                    ""
+                                }
+                            )
+                        )
+                    )
+                } else {
+                    emptyList()
+                }
+            }
+        }
     }
 
     suspend fun fetchViewedProductsSlider(
@@ -1162,32 +1232,116 @@ class MainRepository @Inject constructor(
      */
 
 //Информация о пользователе
-    suspend fun fetchUserData(
-        userId: Long,
-    ) = api.fetchProfileResponse(
+
+    suspend fun fetchUserData(userId: Long) = api.fetchProfileResponse(
         action = "details",
         userId = userId
     )
 
+    suspend fun fetchUserData(
+        userId: Long,
+        position: Int,
+    ): List<ProfileFlowViewModel.PositionItem> {
+        return coroutineScope {
+            val responseBody = api.fetchProfileResponse(action = "details", userId = userId)
+            withContext(Dispatchers.Default) {
+                val response = responseBody.parseUserDataResponse()
+                if (response is ResponseEntity.Success) {
+                    listOf(
+                        ProfileFlowViewModel.PositionItem(
+                            position,
+                            ProfileHeader(
+                                position, response.data.mapToUI()
+                            )
+                        )
+                    )
+                } else {
+                    emptyList()
+                }
+            }
+        }
+    }
+
     //Информация о пользователе
     suspend fun fetchProfileCategories(
+        position: Int,
+        positionBlock: Int,
         userId: Long,
         isTablet: Boolean,
-    ) = api.fetchProfileCategoriesResponse(
-        action = "glav",
-        userId = userId,
-        appVersion = BuildConfig.VERSION_NAME,
-        isTablet = isTablet
-    )
+    ): List<ProfileFlowViewModel.PositionItem> {
+
+        return coroutineScope {
+            val responseBody = api.fetchProfileCategoriesResponse(
+                action = "glav",
+                userId = userId,
+                appVersion = BuildConfig.VERSION_NAME,
+                isTablet = isTablet
+            )
+            withContext(Dispatchers.Default) {
+                if (responseBody.status != null && responseBody.status == "Success") {
+                    val mapped = responseBody.fetchProfileCategoryUIList()
+                    val item = ProfileFlowViewModel.PositionItem(
+                        position,
+                        ProfileMain(items = mapped.list)
+                    )
+
+                    val blockList = responseBody.block
+                    val itemBlock = if (!blockList.isNullOrEmpty()) {
+                        ProfileFlowViewModel.PositionItem(
+                            positionBlock,
+                            ProfileBlock(data = blockList)
+                        )
+                    } else {
+                        null
+                    }
+                    tabManager.saveBottomNavProfileState(mapped.amount)
+
+                    if (itemBlock != null) {
+                        listOf(itemBlock, item)
+                    } else {
+                        listOf(item)
+                    }
+                } else {
+                    emptyList()
+                }
+            }
+        }
+    }
 
     suspend fun fetchPersonalProducts(
-        userId: Long?,
+        position: Int,
+        userId: Long,
         page: Int?,
-    ) = api.fetchPersonalProducts(
-        action = "tovarchik",
-        userId = userId,
-        page = page
-    )
+    ): List<ProfileFlowViewModel.PositionItem> {
+
+        return coroutineScope {
+            val responseBody = api.fetchPersonalProducts(
+                action = "tovarchik",
+                userId = userId,
+                page = page
+            )
+            withContext(Dispatchers.Default) {
+                val response = responseBody.parsePersonalProductsResponse()
+                if (response is ResponseEntity.Success) {
+                    val data = response.data.mapToUI()
+                    val item = ProfileFlowViewModel.PositionItem(
+                        position,
+                        ProfileBestForYou(
+                            data = data.copy(
+                                productUIList = FavoritesMapper.mapFavoritesListByManager(
+                                    "grid",
+                                    data.productUIList
+                                )
+                            )
+                        )
+                    )
+                    listOf(item)
+                } else {
+                    emptyList()
+                }
+            }
+        }
+    }
 
     /**
      * auth
@@ -1484,7 +1638,7 @@ class MainRepository @Inject constructor(
         overMoney: Int?, //?
         parking: Int?, // числовое значение
         appVerision: String?,
-        checkDeliveryValue: Int?
+        checkDeliveryValue: Int?,
     ) = api.fetchRegOrderResponse(
         orderType = orderType,
         device = device,
