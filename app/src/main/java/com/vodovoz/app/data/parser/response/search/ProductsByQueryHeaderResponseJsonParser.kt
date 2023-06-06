@@ -2,6 +2,7 @@ package com.vodovoz.app.data.parser.response.search
 
 import com.vodovoz.app.data.model.common.CategoryEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
 import org.json.JSONArray
@@ -21,8 +22,8 @@ object ProductsByQueryHeaderResponseJsonParser {
     private fun JSONObject.parseCategoryEntity() = CategoryEntity(
         id = 0,
         name = "",
-        shareUrl = getString("detail_page_url"),
-        productAmount = getString("tovarvsego"),
+        shareUrl = safeString("detail_page_url"),
+        productAmount = safeString("tovarvsego"),
         subCategoryEntityList = when(getJSONObject("razdel").isNull("LISTRAZDEL")) {
             true -> listOf()
             false -> getJSONObject("razdel").getJSONArray("LISTRAZDEL").parseSubCategoryEntityList()
@@ -36,8 +37,8 @@ object ProductsByQueryHeaderResponseJsonParser {
     }
 
     private fun JSONObject.parseSubCategoryEntity() = CategoryEntity(
-        id = getString("ID").toLong(),
-        name = getString("NAME")
+        id = safeString("ID").toLong(),
+        name = safeString("NAME")
     )
 
 }

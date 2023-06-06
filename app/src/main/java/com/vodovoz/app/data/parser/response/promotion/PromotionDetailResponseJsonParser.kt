@@ -5,6 +5,7 @@ import com.vodovoz.app.data.model.common.PromotionDetailEntity
 import com.vodovoz.app.data.model.common.PromotionEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
+import com.vodovoz.app.data.parser.common.safeLong
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
@@ -51,22 +52,22 @@ object PromotionDetailResponseJsonParser {
     )
 
     private fun JSONObject.parsePromotionDetailEntity() = PromotionDetailEntity(
-        id = getJSONObject("aktion").getLong("ID"),
-        name = getJSONObject("aktion").getString("NAME"),
-        detailText = getJSONObject("aktion").getString("DETAIL_TEXT"),
-        detailPicture = getJSONObject("aktion").getString("DETAIL_PICTURE"),
-        status = getJSONObject("aktion").getString("NAMERAZDEL"),
-        statusColor = getJSONObject("aktion").getString("CVET"),
-        timeLeft = getJSONObject("aktion").getString("DATAOUT"),
+        id = getJSONObject("aktion").safeLong("ID"),
+        name = getJSONObject("aktion").safeString("NAME"),
+        detailText = getJSONObject("aktion").safeString("DETAIL_TEXT"),
+        detailPicture = getJSONObject("aktion").safeString("DETAIL_PICTURE"),
+        status = getJSONObject("aktion").safeString("NAMERAZDEL"),
+        statusColor = getJSONObject("aktion").safeString("CVET"),
+        timeLeft = getJSONObject("aktion").safeString("DATAOUT"),
         promotionCategoryDetailEntity = when(isNull("production")) {
             false -> CategoryDetailEntity(
-                name = getJSONObject("production").getString("NAMETOVAR"),
+                name = getJSONObject("production").safeString("NAMETOVAR"),
                 productEntityList = getJSONObject("production").getJSONArray("TOVARY").parseProductEntityList()
             )
             true -> null
         },
         forYouCategoryDetailEntity = CategoryDetailEntity(
-            name = getString("title"),
+            name = safeString("title"),
             productEntityList = getJSONArray("tovary").parseProductEntityList()
         )
     )
@@ -93,12 +94,12 @@ object PromotionDetailResponseJsonParser {
     }
 
     private fun JSONObject.parsePromotionEntity() = PromotionEntity(
-        id = getString("ID").toLong(),
-        name = getString("NAME"),
-        detailPicture = getString("PREVIEW_PICTURE").parseImagePath(),
-        timeLeft = getString("DATAOUT"),
-        statusColor = getString("CVET"),
-        customerCategory = getString("NAMERAZDEL")
+        id = safeString("ID").toLong(),
+        name = safeString("NAME"),
+        detailPicture = safeString("PREVIEW_PICTURE").parseImagePath(),
+        timeLeft = safeString("DATAOUT"),
+        statusColor = safeString("CVET"),
+        customerCategory = safeString("NAMERAZDEL")
     )
 
 }

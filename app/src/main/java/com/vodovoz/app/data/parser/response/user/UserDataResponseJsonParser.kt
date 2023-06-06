@@ -20,22 +20,22 @@ object UserDataResponseJsonParser {
 
     private fun JSONObject.parseUserDataEntity() = UserDataEntity(
         id = getLong("ID"),
-        firstName = getString("NAME"),
-        secondName = getString("LAST_NAME"),
-        sex = when(getString("PERSONAL_GENDER")) {
+        firstName = safeString("NAME"),
+        secondName = safeString("LAST_NAME"),
+        sex = when(safeString("PERSONAL_GENDER")) {
             "M" -> "Мужской"
             "F" -> "Женский"
             else -> "Не указано"
         },
-        email = getString("EMAIL"),
-        registerDate = getString("DATE_REGISTER"),
-        avatar = getString("PERSONAL_PHOTO").parseImagePath(),
-        phone = getString("PERSONAL_PHONE"),
+        email = safeString("EMAIL"),
+        registerDate = safeString("DATE_REGISTER"),
+        avatar = safeString("PERSONAL_PHOTO").parseImagePath(),
+        phone = safeString("PERSONAL_PHONE"),
         birthday = when(isNull("PERSONAL_BIRTHDAY")) {
             true -> "Не указано"
-            false -> getString("PERSONAL_BIRTHDAY")
+            false -> safeString("PERSONAL_BIRTHDAY")
         },
-        token = getString("UF_TOKEN")
+        token = safeString("UF_TOKEN")
     )
 
 }

@@ -2,6 +2,7 @@ package com.vodovoz.app.data.parser.response.service
 
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.ServiceEntity
+import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
 import org.json.JSONObject
@@ -19,8 +20,8 @@ object ServiceByIdResponseJsonParser {
     }
 
     private fun JSONObject.parseServiceEntity( type: String?) = ServiceEntity(
-        name = getString("TITLE"),
-        detail = getString("NAME"),
+        name = safeString("TITLE"),
+        detail = safeString("NAME"),
         type = type ?: ""
     )
 

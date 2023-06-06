@@ -2,6 +2,7 @@ package com.vodovoz.app.data.parser.response.questionnaires
 
 import com.vodovoz.app.data.model.common.QuestionnaireTypeEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
 import org.json.JSONArray
@@ -22,7 +23,7 @@ object QuestionnaireTypesResponseJsonParser {
         for (index in 0 until length()) list.add(getJSONObject(index).parseQuestionnaireType())
     }
     private fun JSONObject.parseQuestionnaireType() = QuestionnaireTypeEntity(
-        name = getString("NAME"),
-        type = getString("URL")
+        name = safeString("NAME"),
+        type = safeString("URL")
     )
 }

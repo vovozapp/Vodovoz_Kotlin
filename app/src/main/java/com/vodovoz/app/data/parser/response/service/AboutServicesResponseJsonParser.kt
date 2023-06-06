@@ -3,6 +3,7 @@ package com.vodovoz.app.data.parser.response.service
 import com.vodovoz.app.data.model.common.AboutServicesBundleEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.ServiceEntity
+import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
 import org.json.JSONArray
@@ -19,8 +20,8 @@ object AboutServicesResponseJsonParser {
     }
 
     private fun JSONObject.parseAboutServicesBundleEntity() = AboutServicesBundleEntity(
-        title = getString("TITLE"),
-        detail = getString("NAME"),
+        title = safeString("TITLE"),
+        detail = safeString("NAME"),
         serviceEntityList = getJSONArray("OPIS").parseServiceEntityList()
     )
 
@@ -28,8 +29,8 @@ object AboutServicesResponseJsonParser {
         for (index in 0 until length()) list.add(getJSONObject(index).parseServiceEntity())
     }
     private fun JSONObject.parseServiceEntity() = ServiceEntity(
-        name = getString("TITLE"),
-        detail = getString("TEXT"),
-        type = getString("TIP")
+        name = safeString("TITLE"),
+        detail = safeString("TEXT"),
+        type = safeString("TIP")
     )
 }

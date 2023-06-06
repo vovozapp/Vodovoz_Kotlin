@@ -4,6 +4,7 @@ import com.vodovoz.app.data.model.common.CategoryDetailEntity
 import com.vodovoz.app.data.model.common.DefaultSearchDataBundleEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
+import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
 import org.json.JSONArray
@@ -24,7 +25,7 @@ object DefaultSearchDataResponseJsonParser {
 
     private fun JSONObject.parseCategoryDetailEntity() = CategoryDetailEntity(
         id = 0,
-        name = getString("NAME"),
+        name = safeString("NAME"),
         productEntityList = getJSONArray("REKOMEND").parseProductEntityList()
     )
 

@@ -3,6 +3,7 @@ package com.vodovoz.app.data.parser.response.questionnaires
 import com.vodovoz.app.data.model.common.LinkEntity
 import com.vodovoz.app.data.model.common.QuestionEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
 import org.json.JSONArray
@@ -22,8 +23,8 @@ object QuestionnaireResponseJsonParser {
         for (index in 0 until length()) list.add(getJSONObject(index).parseQuestion())
     }
 
-    private fun JSONObject.parseQuestion() = when(getString("PROPERTY_TYPE")) {
-        "L" -> when(getString("MULTIPLE")) {
+    private fun JSONObject.parseQuestion() = when(safeString("PROPERTY_TYPE")) {
+        "L" -> when(safeString("MULTIPLE")) {
             "Y" -> parseMultiAnswerQuestion()
             else -> parseSingleAnswerQuestion()
         }
@@ -31,14 +32,14 @@ object QuestionnaireResponseJsonParser {
     }
 
     private fun JSONObject.parseInputAnswerQuestion() = QuestionEntity.InputAnswer(
-        name = getString("NAME"),
-        code = getString("CODE"),
-        isRequired = when(getString("IS_REQUIRED")) {
+        name = safeString("NAME"),
+        code = safeString("CODE"),
+        isRequired = when(safeString("IS_REQUIRED")) {
             "Y" -> true
             else -> false
         },
         defaultAnswer = when(has("VALUE")) {
-            true -> getString("VALUE")
+            true -> safeString("VALUE")
             false -> ""
         }
     )
