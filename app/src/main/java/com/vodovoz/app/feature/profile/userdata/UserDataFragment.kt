@@ -15,6 +15,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.media.ImagePickerFragment
+import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.databinding.FragmentUserDataFlowBinding
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel.Companion.POSITION_1
@@ -45,6 +46,10 @@ class UserDataFragment : BaseFragment() {
 
     private val profileViewModel: ProfileFlowViewModel by activityViewModels()
 
+    private val permissionsController by lazy {
+        PermissionsController(requireContext())
+    }
+
     private val binding: FragmentUserDataFlowBinding by viewBinding {
         FragmentUserDataFlowBinding.bind(contentView)
     }
@@ -69,9 +74,10 @@ class UserDataFragment : BaseFragment() {
     private fun bindButtons() {
 
         binding.downloadAvatar.setOnClickListener {
-            findNavController().navigate(R.id.imagePickerFragment, bundleOf(ImagePickerFragment.IMAGE_PICKER_RECEIVER to ImagePickerFragment.AVATAR))
+            permissionsController.methodRequiresStoragePermission(requireActivity()) {
+                findNavController().navigate(R.id.imagePickerFragment, bundleOf(ImagePickerFragment.IMAGE_PICKER_RECEIVER to ImagePickerFragment.AVATAR))
+            }
         }
-
 
         binding.vGender.setOnClickListener {
             viewModel.navigateToGenderChoose()
@@ -205,7 +211,6 @@ class UserDataFragment : BaseFragment() {
                             datePickerDialog.show(childFragmentManager, datePickerDialog::class.simpleName)
                         }
                         is UserDataFlowViewModel.UserDataEvents.UpdateProfile -> {
-                            debugLog { "spasibo refresh" }
                             profileViewModel.refresh()
                         }
                     }

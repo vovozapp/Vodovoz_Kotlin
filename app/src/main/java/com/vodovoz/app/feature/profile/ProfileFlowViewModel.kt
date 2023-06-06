@@ -112,7 +112,7 @@ class ProfileFlowViewModel @Inject constructor(
 
             val userId = dataRepository.fetchUserId()
             if (userId == null) {
-                uiStateListener.value = state.copy(data = state.data.copy(isLogin = false))
+                uiStateListener.value = state.copy(data = state.data.copy(isLogin = false), loadingPage = false)
                 return
             }
 

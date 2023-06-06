@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.view.View
@@ -24,6 +25,7 @@ class ImagePickerFragment : BaseFragment() {
 
     companion object {
         private const val READ_EXTERNAL = Manifest.permission.READ_EXTERNAL_STORAGE
+        private const val READ_IMAGES = Manifest.permission.READ_MEDIA_IMAGES
         const val CREATE = 1L
         const val AVATAR = 2L
         const val IMAGE_PICKER_RECEIVER = "image picker receiver"
@@ -91,10 +93,16 @@ class ImagePickerFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        storagePermission.launch(READ_EXTERNAL)
+        storagePermission.launch(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                READ_IMAGES
+            } else {
+                READ_EXTERNAL
+            }
+        )
     }
 
-    private fun saveFileFromGallery(uri: Uri) : File {
+    private fun saveFileFromGallery(uri: Uri): File {
         val inputStream = requireContext().contentResolver.openInputStream(uri)
         val file = createImageFile()
         file.outputStream().use {
@@ -116,7 +124,7 @@ class ImagePickerFragment : BaseFragment() {
     private fun onPermissionResult(isGranted: Boolean) {
         if (isGranted) {
 
-            when(receiver) {
+            when (receiver) {
                 CREATE -> {
                     val intent = Intent().apply {
                         putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
@@ -142,7 +150,11 @@ class ImagePickerFragment : BaseFragment() {
     private fun initPermissionRationale() {
         val needPermissionRationale = ActivityCompat.shouldShowRequestPermissionRationale(
             requireActivity(),
-            READ_EXTERNAL
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                READ_IMAGES
+            } else {
+                READ_EXTERNAL
+            }
         )
         if (needPermissionRationale) {
             showPermissionRationaleDialog()
@@ -152,7 +164,15 @@ class ImagePickerFragment : BaseFragment() {
     private fun showPermissionRationaleDialog() {
         AlertDialog.Builder(requireContext())
             .setMessage("Чтобы добавить фото, нужен доступ к хранилищу")
-            .setPositiveButton("ОК") { _, _ -> storagePermission.launch(READ_EXTERNAL) }
+            .setPositiveButton("ОК") { _, _ ->
+                storagePermission.launch(
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        READ_IMAGES
+                    } else {
+                        READ_EXTERNAL
+                    }
+                )
+            }
             .setNegativeButton("Отмена", null)
             .show()
     }

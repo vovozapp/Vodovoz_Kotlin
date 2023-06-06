@@ -2,7 +2,9 @@ package com.vodovoz.app.common.permissions
 
 import android.Manifest
 import android.content.Context
+import android.os.Build
 import androidx.fragment.app.FragmentActivity
+import com.vodovoz.app.util.extensions.debugLog
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -54,6 +56,26 @@ class PermissionsController(
             EasyPermissions.requestPermissions(
                 activity, "Необходимы разрешения, чтобы использовать приложение.",
                 PermissionsConstants.REQUEST_RECORD_AUDIO_PERMISSION, *perms
+            )
+            failure.invoke()
+        }
+    }
+
+    @AfterPermissionGranted(PermissionsConstants.REQUEST_STORAGE_PERMISSION)
+    fun methodRequiresStoragePermission(activity: FragmentActivity, failure: () -> Unit = {}, success: () -> Unit = {}) {
+        val perms = arrayOf(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                Manifest.permission.READ_MEDIA_IMAGES
+            } else {
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            }
+        )
+        if (EasyPermissions.hasPermissions(context, *perms)) {
+            success.invoke()
+        } else {
+            EasyPermissions.requestPermissions(
+                activity, "Необходимы разрешения, чтобы использовать приложение.",
+                PermissionsConstants.REQUEST_STORAGE_PERMISSION, *perms
             )
             failure.invoke()
         }
