@@ -5,12 +5,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.speech.RecognitionListener
-import android.speech.RecognizerIntent
-import android.speech.SpeechRecognizer
 import android.view.View
 import androidx.core.app.ActivityCompat
-import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -19,13 +15,13 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.R
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.media.MediaManager
 import com.vodovoz.app.common.permissions.PermissionsController
-import com.vodovoz.app.common.speechrecognizer.SpeechController
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
@@ -51,16 +47,13 @@ import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.PR
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.VIEWED_TITLE
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
-import com.vodovoz.app.feature.productdetail.ProductDetailsFragmentDirections
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.extensions.addOnBackPressedCallback
-import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -94,6 +87,9 @@ class HomeFragment : BaseFragment() {
 
     @Inject
     lateinit var mediaManager: MediaManager
+
+    @Inject
+    lateinit var accountManager: AccountManager
 
     private val homeController by lazy {
         HomeController(
@@ -146,24 +142,170 @@ class HomeFragment : BaseFragment() {
             siteStateManager
                 .observePush()
                 .collect {
-                    when(it?.path) {
-                        "AKCII" -> {}
-                        "TOVAR" -> {}
-                        "RAZDEL" -> {}
-                        "Karta" -> {}
-                        "vsenovinki" -> {}
-                        "vseskidki" -> {}
-                        "BRAND" -> {}
-                        "BRANDY" -> {}
-                        "about" -> {}
-                        "dostavka" -> {}
-                        "service" -> {}
-                        "remont_kulerov" -> {}
-                        "feedback" -> {}
-                        "TOVARY" -> {}
-                        "ACTIONS" -> {}
-                        "vseakcii" -> {}
-                        "URL" -> {}
+                    when (it?.path) {
+                        "AKCII" -> {
+                            val promotionId = it.id
+                            if (!promotionId.isNullOrEmpty()) {
+                                val eventParameters = "ID_AKCII: $promotionId"
+                                accountManager.reportYandexMetrica(
+                                    "Зашел в акцию (push)",
+                                    eventParameters
+                                )
+
+                                findNavController().navigate(
+                                    HomeFragmentDirections.actionToPromotionDetailFragment(
+                                        promotionId.toLong()
+                                    )
+                                )
+                            }
+                            siteStateManager.clearPushListener()
+                        }
+                        "TOVAR" -> {
+                            val productId = it.id
+                            if (!productId.isNullOrEmpty()) {
+                                val eventParameters = "ID_Product: $productId"
+                                accountManager.reportYandexMetrica(
+                                    "Зашел в товар (push)",
+                                    eventParameters
+                                )
+
+                                findNavController().navigate(
+                                    HomeFragmentDirections.actionToProductDetailFragment(
+                                        productId.toLong()
+                                    )
+                                )
+                            }
+                            siteStateManager.clearPushListener()
+                        }
+                        "RAZDEL" -> {
+                            val sectionId = it.id
+                            if (!sectionId.isNullOrEmpty()) {
+                                val eventParameters = "Secition_ID: $sectionId"
+                                accountManager.reportYandexMetrica(
+                                    "Зашел в раздел (push)",
+                                    eventParameters
+                                )
+
+                                findNavController().navigate(
+                                    HomeFragmentDirections.actionToPaginatedProductsCatalogFragment(
+                                        sectionId.toLong()
+                                    )
+                                )
+                            }
+                            siteStateManager.clearPushListener()
+                        }
+                        "Karta" -> {
+                            val orderId = it.orderId
+                            if (!orderId.isNullOrEmpty()) {
+                                val eventParameters = "ID_Zakaz: $orderId"
+                                accountManager.reportYandexMetrica(
+                                    "Зашел в заказ, статус в пути (push)",
+                                    eventParameters
+                                )
+
+                                findNavController().navigate(
+                                    HomeFragmentDirections.actionToOrderDetailsFragment(
+                                        orderId.toLong()
+                                    )
+                                )
+                            }
+                            siteStateManager.clearPushListener()
+                        }
+                        "vsenovinki" -> {
+                            findNavController().navigate(
+                                HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
+                                )
+                            )
+                            siteStateManager.clearPushListener()
+                        }
+                        "vseskidki" -> {
+                            findNavController().navigate(
+                                HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
+                                )
+                            )
+                            siteStateManager.clearPushListener()
+                        }
+                        "BRAND" -> {
+                            val brandId = it.id
+                            if (!brandId.isNullOrEmpty()) {
+                                findNavController().navigate(
+                                    HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Brand(
+                                            brandId.toLong()
+                                        )
+                                    )
+                                )
+                            } else {
+                                findNavController().navigate(HomeFragmentDirections.actionToAllBrandsFragment())
+                            }
+                            siteStateManager.clearPushListener()
+                        }
+                        "BRANDY" -> {
+                            findNavController().navigate(HomeFragmentDirections.actionToAllBrandsFragment())
+                            siteStateManager.clearPushListener()
+                        }
+                        "about" -> {
+                            val section = it.section ?: return@collect
+                            if (section == "О магазине") {
+                                findNavController().navigate(
+                                    HomeFragmentDirections.actionToWebViewFragment(
+                                        ApiConfig.ABOUT_SHOP_URL,
+                                        "О магазине"
+                                    )
+                                )
+                            }
+                            if (section == "Связаться с нами") {
+                                findNavController().navigate(HomeFragmentDirections.actionToContactsFragment())
+                            }
+                            siteStateManager.clearPushListener()
+                        }
+                        "dostavka" -> {
+                            findNavController().navigate(
+                                HomeFragmentDirections.actionToWebViewFragment(
+                                    ApiConfig.ABOUT_DELIVERY_URL,
+                                    "О доставке"
+                                )
+                            )
+                            siteStateManager.clearPushListener()
+                        }
+                        "service" -> {
+                            findNavController().navigate(HomeFragmentDirections.actionToAboutServicesDialogFragment())
+                            siteStateManager.clearPushListener()
+                        }
+                        "remont_kulerov" -> {
+                            findNavController().navigate(HomeFragmentDirections.actionToAboutServicesDialogFragment())
+                            siteStateManager.clearPushListener()
+                        }
+                        "feedback" -> {
+                            findNavController().navigate(HomeFragmentDirections.actionToContactsFragment())
+                            siteStateManager.clearPushListener()
+                        }
+                        "TOVARY" -> {
+
+                        }
+                        "ACTIONS" -> {
+
+                        }
+                        "vseakcii" -> {
+                            findNavController().navigate(
+                                HomeFragmentDirections.actionToAllPromotionsFragment(
+                                    AllPromotionsFragment.DataSource.All()
+                                )
+                            )
+                            siteStateManager.clearPushListener()
+                        }
+                        "URL" -> {
+                            val url = it.id ?: return@collect
+                            findNavController().navigate(
+                                HomeFragmentDirections.actionToWebViewFragment(
+                                    url,
+                                    ""
+                                )
+                            )
+                            siteStateManager.clearPushListener()
+                        }
                         null -> {
                             siteStateManager.clearPushListener()
                         }
@@ -177,7 +319,7 @@ class HomeFragment : BaseFragment() {
             siteStateManager
                 .observeDeepLinkPath()
                 .collect {
-                    when(it) {
+                    when (it) {
                         "catalog" -> {
                             tabManager.selectTab(R.id.graph_catalog)
                             siteStateManager.clearDeepLinkListener()
@@ -249,7 +391,7 @@ class HomeFragment : BaseFragment() {
         lifecycleScope.launchWhenStarted {
             flowViewModel.observeEvent()
                 .collect {
-                    when(it) {
+                    when (it) {
                         is HomeFlowViewModel.HomeEvents.GoToPreOrder -> {
                             if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
                                 findNavController().popBackStack()
@@ -397,7 +539,7 @@ class HomeFragment : BaseFragment() {
     private fun getTitleClickListener(): HomeTitleClickListener {
         return object : HomeTitleClickListener {
             override fun onShowAllTitleClick(item: HomeTitle) {
-                when(item.type) {
+                when (item.type) {
                     DISCOUNT_TITLE -> {
                         findNavController().navigate(
                             HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
@@ -437,7 +579,7 @@ class HomeFragment : BaseFragment() {
         }
     }
 
-    private fun getHomeTabsClickListener() : HomeTabsClickListener {
+    private fun getHomeTabsClickListener(): HomeTabsClickListener {
         return object : HomeTabsClickListener {
             override fun onCategoryClick(categoryId: Long?, position: Int?) {
                 if (categoryId == null || position == null) return
@@ -632,7 +774,7 @@ class HomeFragment : BaseFragment() {
         flowViewModel.hasShown()
     }
 
-    private fun newsClickListener() : NewsClickListener {
+    private fun newsClickListener(): NewsClickListener {
         return object : NewsClickListener {
             override fun onClick(actionEntity: ActionEntity) {
                 actionEntity.invoke()
@@ -705,7 +847,7 @@ class HomeFragment : BaseFragment() {
             mediaManager
                 .observeCommentData()
                 .collect {
-                    if(it != null && it.show) {
+                    if (it != null && it.show) {
                         mediaManager.dontShow()
                         if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutProductFragment) {
                             findNavController().popBackStack()
