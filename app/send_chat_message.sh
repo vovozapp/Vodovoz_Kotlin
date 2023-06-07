@@ -11,6 +11,7 @@ curl -X POST -H "Authorization: key=AAAAVDRk2dI:APA91bFhJbuY4JSilZY911uqEawOmU-Z
         "image":"https://vodovoz.ru/upload/iblock/98a/98a42013dfc7d167aafd6370ed2e652b.jpg",
         "title":"Водовоз - Вода 19л",
         "body":"Водовоз - Вода 19л"
-      }
+      },
+      "priority": "high"
 
 }' https://fcm.googleapis.com/fcm/send -v -i

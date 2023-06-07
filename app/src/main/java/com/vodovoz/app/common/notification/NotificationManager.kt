@@ -20,6 +20,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.vodovoz.app.R
 import com.vodovoz.app.common.permissions.PermissionsController
+import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.fromHtml
 import org.json.JSONObject
 
@@ -42,6 +43,8 @@ class NotificationManager : FirebaseMessagingService() {
             } else {
                 JSONObject()
             }
+
+            debugLog { "jsonData $jsonData" }
 
             if (messageNotification.imageUrl != null) {
                 showLargeIconNotification(messageNotification, jsonData)

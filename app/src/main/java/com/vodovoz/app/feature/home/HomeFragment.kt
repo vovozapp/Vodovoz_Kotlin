@@ -52,6 +52,7 @@ import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWitho
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.extensions.addOnBackPressedCallback
+import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -138,7 +139,7 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun observePushFromSiteState() {
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launchWhenResumed {
             siteStateManager
                 .observePush()
                 .collect {
@@ -158,7 +159,6 @@ class HomeFragment : BaseFragment() {
                                     )
                                 )
                             }
-                            siteStateManager.clearPushListener()
                         }
                         "TOVAR" -> {
                             val productId = it.id
@@ -175,7 +175,6 @@ class HomeFragment : BaseFragment() {
                                     )
                                 )
                             }
-                            siteStateManager.clearPushListener()
                         }
                         "RAZDEL" -> {
                             val sectionId = it.id
@@ -192,7 +191,6 @@ class HomeFragment : BaseFragment() {
                                     )
                                 )
                             }
-                            siteStateManager.clearPushListener()
                         }
                         "Karta" -> {
                             val orderId = it.orderId
@@ -209,7 +207,6 @@ class HomeFragment : BaseFragment() {
                                     )
                                 )
                             }
-                            siteStateManager.clearPushListener()
                         }
                         "vsenovinki" -> {
                             findNavController().navigate(
@@ -217,7 +214,6 @@ class HomeFragment : BaseFragment() {
                                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
                                 )
                             )
-                            siteStateManager.clearPushListener()
                         }
                         "vseskidki" -> {
                             findNavController().navigate(
@@ -225,7 +221,6 @@ class HomeFragment : BaseFragment() {
                                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
                                 )
                             )
-                            siteStateManager.clearPushListener()
                         }
                         "BRAND" -> {
                             val brandId = it.id
@@ -240,7 +235,6 @@ class HomeFragment : BaseFragment() {
                             } else {
                                 findNavController().navigate(HomeFragmentDirections.actionToAllBrandsFragment())
                             }
-                            siteStateManager.clearPushListener()
                         }
                         "BRANDY" -> {
                             findNavController().navigate(HomeFragmentDirections.actionToAllBrandsFragment())
@@ -259,7 +253,6 @@ class HomeFragment : BaseFragment() {
                             if (section == "Связаться с нами") {
                                 findNavController().navigate(HomeFragmentDirections.actionToContactsFragment())
                             }
-                            siteStateManager.clearPushListener()
                         }
                         "dostavka" -> {
                             findNavController().navigate(
@@ -268,19 +261,15 @@ class HomeFragment : BaseFragment() {
                                     "О доставке"
                                 )
                             )
-                            siteStateManager.clearPushListener()
                         }
                         "service" -> {
                             findNavController().navigate(HomeFragmentDirections.actionToAboutServicesDialogFragment())
-                            siteStateManager.clearPushListener()
                         }
                         "remont_kulerov" -> {
                             findNavController().navigate(HomeFragmentDirections.actionToAboutServicesDialogFragment())
-                            siteStateManager.clearPushListener()
                         }
                         "feedback" -> {
                             findNavController().navigate(HomeFragmentDirections.actionToContactsFragment())
-                            siteStateManager.clearPushListener()
                         }
                         "TOVARY" -> {
 
@@ -294,7 +283,6 @@ class HomeFragment : BaseFragment() {
                                     AllPromotionsFragment.DataSource.All()
                                 )
                             )
-                            siteStateManager.clearPushListener()
                         }
                         "URL" -> {
                             val url = it.id ?: return@collect
@@ -304,11 +292,8 @@ class HomeFragment : BaseFragment() {
                                     ""
                                 )
                             )
-                            siteStateManager.clearPushListener()
                         }
-                        null -> {
-                            siteStateManager.clearPushListener()
-                        }
+                        null -> {}
                     }
                 }
         }

@@ -4,6 +4,7 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.parser.common.safeInt
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
+import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.json.JSONObject
@@ -53,6 +54,7 @@ class SiteStateManager @Inject constructor(
     }
     
     fun savePushData(json: JSONObject) {
+        debugLog { "save push data $json" }
         val path = json.safeString("Secreen")
         val id = json.safeString("ID")
         val subsections = json.safeString("SUBSECTIONS")
@@ -68,6 +70,7 @@ class SiteStateManager @Inject constructor(
     }
 
     fun clearPushListener() {
+        debugLog { "clear push data" }
         pushListener.value = null
     }
 

@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.messaging.RemoteMessage
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.ActivityMainBinding
 import com.vodovoz.app.feature.sitestate.SiteStateManager
@@ -50,11 +51,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handlePushIntent(intent: Intent) {
-        val extra = intent.getStringExtra("push")
-        if (!extra.isNullOrEmpty()) {
-            lifecycleScope.launchWhenStarted {
-                siteStateManager.savePushData(JSONObject(extra))
-            }
+        val data = intent.extras ?: return
+        val remoteMessage = RemoteMessage(data)
+        debugLog { "handlePushIntent $remoteMessage" }
+
+        val jsonData = if (remoteMessage.data.isNotEmpty()) {
+            JSONObject(remoteMessage.data.toString())
+        } else {
+            null
+        }
+
+        debugLog { "jsonData $jsonData" }
+
+        lifecycleScope.launchWhenStarted {
+            if (jsonData != null) siteStateManager.savePushData(jsonData)
         }
     }
 

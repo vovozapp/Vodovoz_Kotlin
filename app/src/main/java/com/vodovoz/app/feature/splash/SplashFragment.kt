@@ -19,6 +19,7 @@ import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
+import org.json.JSONObject
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -73,10 +74,29 @@ class SplashFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //accountManager.reportYandexMetrica("Зашел в приложение") //todo релиз
+        //accountManager.reportYandexMetrica("Зашел в приложение") //t
+        // odo релиз
+
+        handlePushData()
         observeFlowViewModel()
         bindErrorRefresh {
             refreshLoad()
+        }
+    }
+
+    private fun handlePushData() {
+        debugLog { "splash args $arguments" }
+        if (arguments != null) {
+            debugLog { "splash containsKey ${requireArguments().containsKey("push")}" }
+            if (requireArguments().containsKey("push")) {
+                val extra = requireArguments().getString("push")
+                debugLog { "splash get push extra $extra" }
+                if (!extra.isNullOrEmpty()) {
+                    lifecycleScope.launchWhenCreated {
+                        siteStateManager.savePushData(JSONObject(extra))
+                    }
+                }
+            }
         }
     }
 
