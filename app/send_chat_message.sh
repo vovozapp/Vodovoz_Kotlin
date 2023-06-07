@@ -1,8 +1,16 @@
-curl -X POST -H "Authorization: key=AAAAt7juqLs:APA91bFV2CEwTi1a9CzTwfHBpGQqVlGwTGjufflwBf7Iyty9qERY45IQzDurQdx0DI0uqnVM6IuWgHrZ7XBzb-a42RNo8Ouapoyk7UkFfxZWD6oQdmLr55KKPF_lwP9nF-TKvgAPW1aX" -H "Content-Type: application/json" -d '{
-    "to":"cK147myJTDmdyN0CF8XiZa:APA91bEXXuS98NEQx28XCQ6csutf2aX1tAebxJ5jctzcwODAfHZHR6RMNtnGIk_PCGBdRRBOmalit0U2dIJVmb2jmCijl1oGFjs81nYUzAK-cb0y8fiCmsjGYroH4J83gUnHSFrynQvf",
+curl -X POST -H "Authorization: key=AAAAVDRk2dI:APA91bFhJbuY4JSilZY911uqEawOmU-Z-pl0gi9pjd9DPQeRo1dywL2Tpjw0m7MWZtglJvTjLCRNtndDc7K7v0CTDqgi_xH84I1ZvcSfCHDNr0EY1gdxMAp63BMIcYr8GaO5GYHfRqtP" -H "Content-Type: application/json" -d '{
+    "to":"eeqlYFZCRlulXr9TRcG8xa:APA91bHM00Qsf9eGfSeRTE5HyHSQyPHa_BsUjOQZyQaTafdZH8Fda6btPWYu_Jy4qSdDrjtV2-UniE4pjlPlDKNgbzw3X2HrHrqbi4YYyz4-JS7ujzuKvBOtuxC_vQB4ayS4QDhl1zEG",
     "data": {
-      "imageUrl":"new",
-      "title":"new",
-      "body":"fafasafsasffa"
-     }
+        "Secreen":"BRANDY",
+        "ID":"new",
+        "SUBSECTIONS":"new",
+        "NumberZakaz":"new",
+        "NAME_RAZDEL":"new"
+     },
+     "notification": {
+        "image":"https://vodovoz.ru/upload/iblock/98a/98a42013dfc7d167aafd6370ed2e652b.jpg",
+        "title":"Водовоз - Вода 19л",
+        "body":"Водовоз - Вода 19л"
+      }
+
 }' https://fcm.googleapis.com/fcm/send -v -i
