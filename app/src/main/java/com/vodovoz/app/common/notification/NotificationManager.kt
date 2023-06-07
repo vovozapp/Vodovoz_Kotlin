@@ -1,25 +1,19 @@
 package com.vodovoz.app.common.notification
 
 import android.Manifest
-import android.content.ContentResolver
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
-import android.provider.MediaStore
-import android.text.Html
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.os.bundleOf
 import androidx.navigation.NavDeepLinkBuilder
+import com.bumptech.glide.Glide
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.vodovoz.app.R
-import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.fromHtml
 import org.json.JSONObject
@@ -45,6 +39,7 @@ class NotificationManager : FirebaseMessagingService() {
             }
 
             debugLog { "jsonData $jsonData" }
+            debugLog { "imageUrl ${messageNotification.imageUrl}" }
 
             if (messageNotification.imageUrl != null) {
                 showLargeIconNotification(messageNotification, jsonData)
@@ -61,10 +56,12 @@ class NotificationManager : FirebaseMessagingService() {
             .setDestination(R.id.splashFragment)
             .createPendingIntent()
 
+        val bitmap = getBitmap(not.imageUrl)
+        debugLog { "large icon bitmap $bitmap" }
         val bigPictureStyle = NotificationCompat.BigPictureStyle().also {
             it.setBigContentTitle(not.title)
             it.setSummaryText(not.body.fromHtml())
-            it.bigPicture(getBitmap(applicationContext.contentResolver, not.imageUrl))
+            it.bigPicture(bitmap)
         }
 
         val notification =
@@ -73,6 +70,7 @@ class NotificationManager : FirebaseMessagingService() {
                 .setSmallIcon(R.drawable.png_logo)
                 .setAutoCancel(false)
                 .setContentIntent(pendingIntent)
+                .setLargeIcon(bitmap)
                 .setStyle(bigPictureStyle)
                 .build()
 
@@ -127,111 +125,12 @@ class NotificationManager : FirebaseMessagingService() {
         }
     }
 
-    private fun getBitmap(contentResolver: ContentResolver, fileUri: Uri?): Bitmap? {
-        return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, fileUri!!))
-            } else {
-                MediaStore.Images.Media.getBitmap(contentResolver, fileUri)
-            }
-        } catch (e: Exception) {
-            null
-        }
+    private fun getBitmap(fileUri: Uri?): Bitmap? {
+        return Glide
+            .with(applicationContext)
+            .asBitmap()
+            .load(fileUri)
+            .submit()
+            .get()
     }
-
-    /*private fun handleNotificationWithoutImage(title: String?, message: String?) {
-        if (!isAppIsInBackground(applicationContext)) {
-            val pushNotification = Intent(NotificationConfig.PUSH_NOTIFICATION).apply {
-                putExtra("title", title)
-                putExtra("message", message)
-            }
-
-            LocalBroadcastManager
-                .getInstance(this)
-                .sendBroadcast(pushNotification)
-
-            val resultIntent = Intent(applicationContext, MainActivity::class.java).apply {
-                putExtra("message", message)
-            }
-        } else {
-            val pushNotification = Intent(NotificationConfig.PUSH_NOTIFICATION).apply {
-                putExtra("title", title)
-                putExtra("message", message)
-            }
-
-            LocalBroadcastManager
-                .getInstance(this)
-                .sendBroadcast(pushNotification)
-
-            val resultIntent = Intent(applicationContext, MainActivity::class.java).apply {
-                putExtra("message", message)
-            }
-        }
-    }
-
-    private fun handleNotificationWithImage(title: String?, message: String?, image: String?) {
-        if (!isAppIsInBackground(applicationContext)) {
-
-            val pushNotification = Intent(NotificationConfig.PUSH_NOTIFICATION).apply {
-                putExtra("title", title)
-                putExtra("message", message)
-                putExtra("image", image)
-            }
-
-            LocalBroadcastManager
-                .getInstance(this)
-                .sendBroadcast(pushNotification)
-
-            val resultIntent = Intent(applicationContext, MainActivity::class.java).apply {
-                putExtra("message", message)
-            }
-        }
-    }
-
-    private fun handleDataMessage(json: JSONObject) {
-        try {
-            val titleScreen = json.getString("extra")
-            val message = json.getString("ID")
-            if (!isAppIsInBackground(applicationContext)) {
-                val pushNotification = Intent(NotificationConfig.PUSH_NOTIFICATION).apply {
-                    putExtra("extra", titleScreen)
-                    putExtra("ID", message)
-                }
-
-                LocalBroadcastManager
-                    .getInstance(this)
-                    .sendBroadcast(pushNotification)
-
-            } else {
-                val resultIntent = Intent(applicationContext, MainActivity::class.java).apply {
-                    putExtra("extra", titleScreen)
-                    putExtra("ID", message)
-                }
-            }
-        } catch (e: JSONException) {
-            debugLog { "Json Exception: " + e.message }
-        } catch (e: java.lang.Exception) {
-            debugLog { "Exception: " + e.message }
-        }
-    }
-
-    */
-    /**
-     * Method checks if the app is in background or not
-     *//*
-    private fun isAppIsInBackground(context: Context): Boolean {
-        var isInBackground = true
-        val am = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
-        val runningProcesses = am.runningAppProcesses
-        for (processInfo in runningProcesses) {
-            if (processInfo.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                for (activeProcess in processInfo.pkgList) {
-                    if (activeProcess == context.packageName) {
-                        isInBackground = false
-                    }
-                }
-            }
-        }
-        return isInBackground
-    }*/
 }
