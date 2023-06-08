@@ -132,7 +132,7 @@ class TraceOrderFragment : BaseFragment(), InputListener,
     private fun initBottomSheetCallback() {
         val behavior = BottomSheetBehavior.from(binding.traceOrderBs.root)
         val density = requireContext().resources.displayMetrics.density
-        behavior.peekHeight = (85 * density).toInt()
+        behavior.peekHeight = (115 * density).toInt()
         behavior.state = BottomSheetBehavior.STATE_COLLAPSED
         behavior.isHideable = false
     }
@@ -177,7 +177,7 @@ class TraceOrderFragment : BaseFragment(), InputListener,
                         } else {
                             binding.traceOrderBs.timeTv.isVisible = true
                             binding.traceOrderBs.commentTv.isVisible = false
-                            binding.traceOrderBs.commentTv.text = "Ориентировочное время прибытия: ${it.data.driverPointsEntity.Priblizitelnoe_vremya}"
+                            binding.traceOrderBs.timeTv.text = "Ориентировочное время прибытия: ${it.data.driverPointsEntity.Priblizitelnoe_vremya}"
                         }
                     } else {
                         binding.traceOrderBs.timeTv.isVisible = false
@@ -188,14 +188,7 @@ class TraceOrderFragment : BaseFragment(), InputListener,
     }
 
     private fun placeMark(point: Point, bitmap: Bitmap) {
-        lastPlaceMark?.let {
-            try {
-                binding.mapView.map.mapObjects.remove(it)
-            } catch (_: Throwable) {
-
-            }
-        }
-        lastPlaceMark = binding.mapView.map.mapObjects.addPlacemark(
+        binding.mapView.map.mapObjects.addPlacemark(
             point,
             ImageProvider.fromBitmap(bitmap)
         )

@@ -31,10 +31,12 @@
 
     <TextView
         android:id="@+id/driverNameTv"
+        style="@style/TextViewNormalBlackBold"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/space_16"
         android:layout_marginTop="14dp"
+        android:textStyle="bold"
         android:ellipsize="end"
         android:maxLines="2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,10 +55,12 @@
 
     <TextView
         android:id="@+id/carNumberTv"
+        style="@style/TextViewNormalBlackBold"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/space_16"
         android:layout_marginTop="14dp"
+        android:textStyle="bold"
         android:ellipsize="end"
         android:maxLines="2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,9 +70,11 @@
 
     <TextView
         android:id="@+id/timeTv"
+        style="@style/TextViewNormalBlackBold"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/space_16"
+        android:textStyle="bold"
         android:layout_marginTop="14dp"
         android:ellipsize="end"
         android:maxLines="2"
@@ -82,6 +88,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/space_16"
+        style="@style/TextViewNormalBlackBold"
         android:layout_marginTop="14dp"
         android:ellipsize="end"
         android:maxLines="2"

@@ -97,6 +97,7 @@ class TraceOrderViewModel @Inject constructor(
                         debugLog { "lastName $lastName, firstName $firstName, carName $carName, carNumber $carNumber" }
 
                         nameBuilder
+                            .append("водитель ")
                             .apply {
                                 if (lastName.isNotEmpty()) {
                                     append("$lastName ")
@@ -112,7 +113,7 @@ class TraceOrderViewModel @Inject constructor(
                                     append("$carName ")
                                 }
                                 if (carNumber.isNotEmpty()) {
-                                    append(carNumber)
+                                    append(", номер машины $carNumber")
                                 }
                             }
 
@@ -139,6 +140,9 @@ class TraceOrderViewModel @Inject constructor(
                         }
 
                         val driverPointsEntity = list.find { it?.OrderNumber == orderId.toString() }
+
+                        debugLog { "driverPointsEntity $driverPointsEntity" }
+
 
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
