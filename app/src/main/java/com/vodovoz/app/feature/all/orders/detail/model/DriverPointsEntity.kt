@@ -10,6 +10,6 @@ data class DriverPointsEntity(
 )
 
 data class Position(
-    val Latitude: String,
-    val Longitude: String
+    val Latitude: String? = null,
+    val Longitude: String? = null
 )

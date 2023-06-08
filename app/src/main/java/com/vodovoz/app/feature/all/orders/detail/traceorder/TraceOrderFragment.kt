@@ -33,6 +33,7 @@ import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.databinding.FragmentTraceOrderBinding
 import com.vodovoz.app.feature.all.orders.detail.traceorder.bottom.TraceOrderBottomSheetFragment
 import com.vodovoz.app.feature.all.orders.detail.traceorder.bottom.TraceOrderBottomSheetFragmentDirections
+import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.drawable
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKit
@@ -98,7 +99,8 @@ class TraceOrderFragment : BaseFragment(), InputListener,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.fetchDriverData()
+        debugLog { "args ${args.driverId}" }
+        viewModel.fetchDriverData(args.driverId, args.orderId)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

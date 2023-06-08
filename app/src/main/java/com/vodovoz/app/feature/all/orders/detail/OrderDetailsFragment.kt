@@ -22,6 +22,7 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
 import com.vodovoz.app.ui.model.OrderDetailsUI
 import com.vodovoz.app.ui.model.OrderStatusUI
+import com.vodovoz.app.util.extensions.debugLog
 import com.yandex.metrica.YandexMetrica
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -184,6 +185,8 @@ class OrderDetailsFragment : BaseFragment() {
                             if (orderDetailsUI.driverId == null || orderDetailsUI.id == null) return@setOnClickListener
                             val eventParameters = "{\"ZakazNumber\":\"${orderDetailsUI.id}\"}"
                             //accountManager.reportYandexMetrica("Где мой заказ", eventParameters) //todo релиз
+
+                            debugLog { "driverId ${orderDetailsUI.driverId}" }
 
                             findNavController().navigate(OrderDetailsFragmentDirections.actionToTraceOrderFragment(
                                 orderDetailsUI.driverId, orderDetailsUI.driverName, orderDetailsUI.id.toString()

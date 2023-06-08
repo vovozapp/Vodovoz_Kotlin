@@ -15,6 +15,7 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.feature.all.orders.detail.model.DriverPointsEntity
+import com.vodovoz.app.util.extensions.debugLog
 import com.yandex.mapkit.geometry.Point
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -30,20 +31,16 @@ class TraceOrderViewModel @Inject constructor(
     TraceOrderState()
 ) {
 
-    private val driverId = savedState.get<String>("driverId")
-    private val driverName = savedState.get<String>("driverName")
-    private val orderId = savedState.get<String>("orderId")
-
     private val firebaseDatabase = FirebaseDatabase.getInstance().reference
 
     init {
         viewModelScope.launch(Dispatchers.Default) {
             generateBitmap(
-                "https://vodovoz.ru/bitrix/templates/vodovoz/images/karta/auto.png",
+                "http://vodovoz.ru/bitrix/templates/vodovoz/images/karta/auto.png",
                 true
             )
             generateBitmap(
-                "https://vodovoz.ru/bitrix/templates/vodovoz/images/karta/home.png",
+                "http://vodovoz.ru/bitrix/templates/vodovoz/images/karta/home.png",
                 false
             )
         }
@@ -79,8 +76,9 @@ class TraceOrderViewModel @Inject constructor(
         }
     }
 
-    fun fetchDriverData() {
+    fun fetchDriverData(driverId: String?, orderId: String?) {
         viewModelScope.launch(Dispatchers.IO) {
+            debugLog { "driverId $driverId" }
             if (driverId == null) return@launch
             runCatching {
                 firebaseDatabase.child(driverId).addListenerForSingleValueEvent(object :
@@ -95,6 +93,8 @@ class TraceOrderViewModel @Inject constructor(
                         val firstName = snapshot.child("FirstName").value.toString()
                         val carName = snapshot.child("Auto").value.toString()
                         val carNumber = snapshot.child("CarNumber").value.toString()
+
+                        debugLog { "lastName $lastName, firstName $firstName, carName $carName, carNumber $carNumber" }
 
                         nameBuilder
                             .apply {
@@ -122,6 +122,8 @@ class TraceOrderViewModel @Inject constructor(
                         val driverLongitude =
                             snapshot.child("Position_vodila").child("Longitude").value.toString()
                                 .replace(",", ".")
+
+                        debugLog { "driverLatitude $driverLatitude, driverLongitude $driverLongitude" }
 
                         val point =
                             if (driverLatitude.isNotEmpty() && driverLongitude.isNotEmpty()) {
