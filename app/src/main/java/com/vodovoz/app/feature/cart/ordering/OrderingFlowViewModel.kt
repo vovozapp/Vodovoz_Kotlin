@@ -59,6 +59,8 @@ class OrderingFlowViewModel @Inject constructor(
 
     init {
         //accountManager.reportYandexMetrica("Зашел на экран оформления заказа") //todo релиз
+
+        debugLog { "full ${state.data.full}, discount ${state.data.discount}" }
     }
 
     fun regOrder(

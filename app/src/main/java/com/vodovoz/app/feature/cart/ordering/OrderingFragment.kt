@@ -32,6 +32,7 @@ import com.vodovoz.app.ui.model.custom.OrderingCompletedInfoBundleUI
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToFullFormat
+import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.scrollViewToTop
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
@@ -130,9 +131,10 @@ class OrderingFragment : BaseFragment() {
     }
 
     private fun initArgs(data: OrderingFlowViewModel.OrderingState) {
+        debugLog { "full ${data.full}, discount ${data.discount}" }
         binding.tvFullPrice.setPriceText(data.full)
         binding.tvDepositPrice.setPriceText(data.deposit)
-        binding.tvDiscountPrice.setPriceText(data.deposit, true)
+        binding.tvDiscountPrice.setPriceText(data.discount, true)
         binding.btnOrder.text = String.format(getString(R.string.order_btn_text), data.total)
         binding.tvTotalPrice.setPriceText(data.total)
     }
