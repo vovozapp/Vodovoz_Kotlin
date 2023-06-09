@@ -314,8 +314,8 @@ class DetailHeaderViewHolder(
         }
 
         when(isNotHaveStatuses) {
-            true -> binding.cgStatuses.visibility = View.GONE
-            false -> binding.cgStatuses.visibility = View.VISIBLE
+            true -> binding.cwStatusContainer.visibility = View.GONE
+            false -> binding.cwStatusContainer.visibility = View.VISIBLE
         }
 
         detailPictureFlowPagerAdapter.submitList(item.productDetailUI.detailPictureList.map { DetailPicturePager(it) })
