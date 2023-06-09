@@ -202,7 +202,7 @@ class ProductsGridViewHolder(
                 binding.llPricesContainer.tvPricePerUnit.visibility = View.VISIBLE
                 binding.llPricesContainer.tvPricePerUnit.text = item.pricePerUnitStringBuilder
             }
-            false -> binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
+            false -> binding.llPricesContainer.tvPricePerUnit.visibility = View.INVISIBLE
         }
 
         //Price
@@ -216,7 +216,7 @@ class ProductsGridViewHolder(
                 binding.llPricesContainer.tvCurrentPrice.text = item.minimalPriceStringBuilder
                 binding.llPricesContainer.tvPriceCondition.text = item.priceConditionStringBuilder
                 binding.llPricesContainer.tvPriceCondition.visibility = View.VISIBLE
-                binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
+                binding.llPricesContainer.tvPricePerUnit.visibility = View.INVISIBLE
             }
         }
 
