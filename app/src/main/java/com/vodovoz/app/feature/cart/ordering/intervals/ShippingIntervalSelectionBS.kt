@@ -46,35 +46,3 @@ class ShippingIntervalSelectionBS : BaseBottomSheetFragment() {
         }
     }
 }
-/*
-class ShippingIntervalSelectionBS : BottomSheetDialogFragment() {
-
-    private val shippingIntervalsAdapter = ShippingIntervalsAdapter()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ) = BsSelectionShippingIntervalsBinding.inflate(
-        layoutInflater,
-        container,
-        false
-    ).apply {
-        this.rvIntervals.layoutManager = LinearLayoutManager(requireContext())
-        shippingIntervalsAdapter.setupListeners {
-            findNavController().previousBackStackEntry?.savedStateHandle?.set(OrderingFragment.SELECTED_SHIPPING_INTERVAL, it.id)
-            dismiss()
-        }
-        ShippingIntervalSelectionBSArgs.fromBundle(requireArguments()).let { args ->
-            shippingIntervalsAdapter.updateData(args.shippingIntervalList.toList())
-        }
-
-        this.rvIntervals.adapter = shippingIntervalsAdapter
-        val space8 = resources.getDimension(R.dimen.space_8).toInt()
-        this.rvIntervals.addMarginDecoration { rect, view, parent, state ->
-            if (parent.getChildAdapterPosition(view) == 0) rect.top = space8
-            if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.bottom = space8
-        }
-    }.root
-
-}*/
