@@ -110,6 +110,9 @@ class OrderingFragment : BaseFragment() {
                         binding.tvNameDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
                     }
 
+                    binding.llShippingPriceCOntainer.isVisible = state.data.shippingPrice != null
+                    binding.llParkingPriceCOntainer.isVisible = state.data.parkingPrice != null
+
                     binding.tvShippingPrice.setPriceText(state.data.shippingPrice)
                     binding.tvParkingPrice.setPriceText(state.data.parkingPrice)
 

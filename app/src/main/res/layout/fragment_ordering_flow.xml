@@ -433,6 +433,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llShippingPriceCOntainer"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
                 android:orientation="horizontal">
