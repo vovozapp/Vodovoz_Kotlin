@@ -67,6 +67,7 @@ class FavoriteFlowViewModel @Inject constructor(
     }
 
     fun refreshIdle() {
+        changeLayoutManager.value = LINEAR
         uiStateListener.value = state.copy(loadingPage = true, page = 1, loadMore = false, bottomItem = null, data = FavoriteState())
         fetchFavoriteProductsHeader()
         fetchFavoriteProductsSorted()
