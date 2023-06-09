@@ -12,9 +12,9 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsSelectionServicesBinding
 import com.vodovoz.app.feature.bottom.services.AboutServicesFlowViewModel
+import com.vodovoz.app.feature.bottom.services.detail.ServiceDetailFragment
 import com.vodovoz.app.feature.bottom.services.detail.bottom.adapter.ServiceNamesFlowAdapter
 import com.vodovoz.app.feature.bottom.services.detail.bottom.adapter.ServiceNamesFlowClickListener
-import com.vodovoz.app.feature.bottom.services.detail.old.ServiceDetailFlowFragment
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,7 +32,7 @@ class ServiceSelectionBS : BaseBottomSheetFragment() {
     private val serviceNamesAdapter = ServiceNamesFlowAdapter(object : ServiceNamesFlowClickListener {
         override fun onServiceClick(type: String) {
             findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                ServiceDetailFlowFragment.SERVICE_TYPE, type)
+                ServiceDetailFragment.SERVICE_TYPE, type)
             dismiss()
         }
     })
