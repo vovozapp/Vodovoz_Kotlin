@@ -15,6 +15,7 @@ import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import pub.devrel.easypermissions.EasyPermissions
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -89,4 +90,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
 }
