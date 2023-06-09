@@ -871,10 +871,6 @@
         android:name="com.vodovoz.app.common.webview.WebViewFlowBottomSheetFragment"
         android:label="WebViewFlowBottomSheetFragment" />
     <fragment
-        android:id="@+id/webViewFlowFragment"
-        android:name="com.vodovoz.app.common.webview.old.WebViewFlowFragment"
-        android:label="WebViewFlowFragment" />
-    <fragment
         android:id="@+id/imagePickerFragment"
         android:name="com.vodovoz.app.common.media.ImagePickerFragment"
         android:label="ImagePickerFragment">

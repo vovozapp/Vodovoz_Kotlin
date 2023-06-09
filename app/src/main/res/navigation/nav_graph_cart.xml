@@ -871,11 +871,6 @@
         android:name="com.vodovoz.app.common.webview.WebViewFlowBottomSheetFragment"
         android:label="WebViewFlowBottomSheetFragment" />
     <fragment
-        android:id="@+id/webViewFlowFragment"
-        android:name="com.vodovoz.app.common.webview.old.WebViewFlowFragment"
-        android:label="WebViewFlowFragment" />
-
-    <fragment
         android:id="@+id/serviceDetailNewFragment"
         android:name="com.vodovoz.app.feature.bottom.services.detail.ServiceDetailNewFragment"
         android:label="ServiceDetailNewFragment" >

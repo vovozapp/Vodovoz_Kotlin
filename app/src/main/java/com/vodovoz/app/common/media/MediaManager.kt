@@ -32,7 +32,7 @@ class MediaManager @Inject constructor() {
 
     fun removePublicationImage() {
         publicationImageListener.value = null
-    }
+    } //todo после написания кода отправки комментария с фото
 
     fun saveCommentData(commentData: CommentData) {
         commentDataListener.value = commentData
@@ -48,7 +48,7 @@ class MediaManager @Inject constructor() {
 
     fun removeCommentData() {
         commentDataListener.value = null
-    }
+    } //todo после написания кода отправки комментария с фото
 
     fun dontShow() {
         if (commentDataListener.value != null) {

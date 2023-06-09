@@ -878,10 +878,6 @@
         android:id="@+id/webViewFlowBottomSheetFragment"
         android:name="com.vodovoz.app.common.webview.WebViewFlowBottomSheetFragment"
         android:label="WebViewFlowBottomSheetFragment" />
-    <fragment
-        android:id="@+id/webViewFlowFragment"
-        android:name="com.vodovoz.app.common.webview.old.WebViewFlowFragment"
-        android:label="WebViewFlowFragment" />
     <dialog
         android:id="@+id/rateBottomFragment"
         android:name="com.vodovoz.app.feature.home.ratebottom.RateBottomFragment"
