@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.google.android.youtube.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.DialogFragmentVideoBinding
 
@@ -40,9 +42,70 @@ class YouTubeVideoFragmentDialog : DialogFragment() {
 
     private fun initView() {
         lifecycle.addObserver(binding.youtubePlayerView)
-        binding.youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-            fun onReady(youTubePlayer: YouTubePlayer) {
-                youTubePlayer.loadVideo(videoCode, 0)
+        binding.youtubePlayerView.addYouTubePlayerListener(object : YouTubePlayerListener {
+            override fun onApiChange(youTubePlayer: com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer) {
+
+            }
+
+            override fun onCurrentSecond(
+                youTubePlayer: com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer,
+                second: Float,
+            ) {
+
+            }
+
+            override fun onError(
+                youTubePlayer: com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer,
+                error: PlayerConstants.PlayerError,
+            ) {
+
+            }
+
+            override fun onPlaybackQualityChange(
+                youTubePlayer: com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer,
+                playbackQuality: PlayerConstants.PlaybackQuality,
+            ) {
+
+            }
+
+            override fun onPlaybackRateChange(
+                youTubePlayer: com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer,
+                playbackRate: PlayerConstants.PlaybackRate,
+            ) {
+
+            }
+
+
+            override fun onReady(youTubePlayer: com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer) {
+                youTubePlayer.loadVideo(videoCode, 0F)
+            }
+
+            override fun onStateChange(
+                youTubePlayer: com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer,
+                state: PlayerConstants.PlayerState,
+            ) {
+
+            }
+
+            override fun onVideoDuration(
+                youTubePlayer: com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer,
+                duration: Float,
+            ) {
+
+            }
+
+            override fun onVideoId(
+                youTubePlayer: com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer,
+                videoId: String,
+            ) {
+
+            }
+
+            override fun onVideoLoadedFraction(
+                youTubePlayer: com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer,
+                loadedFraction: Float,
+            ) {
+
             }
         })
     }
