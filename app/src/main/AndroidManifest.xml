@@ -54,7 +54,18 @@
 
                 <data
                     android:scheme="@string/new_app_ssl_not"
-                    android:host="@string/new_app" />
+                    android:host="@string/new_app"
+                    android:path="/mobile_app/"/>
+
+                <data
+                    android:scheme="@string/new_app_ssl_not"
+                    android:host="@string/new_app"
+                    android:path="/gl/"/>
+
+                <data
+                    android:scheme="@string/new_app_ssl_not"
+                    android:host="@string/new_app"
+                    android:path="/landings/kalkulyator_vody/"/>
             </intent-filter>
 
             <intent-filter>
@@ -65,7 +76,18 @@
 
                 <data
                     android:scheme="@string/new_app_ssl"
-                    android:host="@string/new_app" />
+                    android:host="@string/new_app"
+                    android:path="/mobile_app/"/>
+
+                <data
+                    android:scheme="@string/new_app_ssl"
+                    android:host="@string/new_app"
+                    android:path="/gl/"/>
+
+                <data
+                    android:scheme="@string/new_app_ssl"
+                    android:host="@string/new_app"
+                    android:path="/landings/kalkulyator_vody/"/>
             </intent-filter>
 
         </activity>

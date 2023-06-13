@@ -305,7 +305,7 @@ class HomeFragment : BaseFragment() {
                 .observeDeepLinkPath()
                 .collect {
                     when (it) {
-                        "catalog" -> {
+                        /*"catalog" -> {
                             tabManager.selectTab(R.id.graph_catalog)
                             siteStateManager.clearDeepLinkListener()
                         }
@@ -321,10 +321,7 @@ class HomeFragment : BaseFragment() {
                             findNavController().navigate(HomeFragmentDirections.actionToAllBrandsFragment())
                             siteStateManager.clearDeepLinkListener()
                         }
-                        "mobile_app" -> {
-                            findNavController().navigate(HomeFragmentDirections.actionToAboutAppDialogFragment())
-                            siteStateManager.clearDeepLinkListener()
-                        }
+
                         "about" -> {
                             findNavController().navigate(
                                 HomeFragmentDirections.actionToWebViewFragment(
@@ -357,11 +354,15 @@ class HomeFragment : BaseFragment() {
                         }
                         "basket" -> {
                             tabManager.selectTab(R.id.graph_cart)
-                        }
-                        "gl" -> {
+                        }*/
+                        "mobile_app/" -> {
+                            findNavController().navigate(HomeFragmentDirections.actionToAboutAppDialogFragment())
                             siteStateManager.clearDeepLinkListener()
                         }
-                        "kalkulyator_vody" -> {
+                        "gl/" -> {
+                            siteStateManager.clearDeepLinkListener()
+                        }
+                        "kalkulyator_vody/" -> {
                             findNavController().navigate(HomeFragmentDirections.actionToWaterAppFragment())
                         }
                         null -> {
