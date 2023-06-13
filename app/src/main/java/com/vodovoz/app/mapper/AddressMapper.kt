@@ -25,7 +25,8 @@ object AddressMapper {
         comment = comment,
         length = length,
         latitude = coordinates.substringBefore(","),
-        longitude = coordinates.substringAfter(",")
+        longitude = coordinates.substringAfter(","),
+        newFullAddress = newFullAddress
     )
 
 }

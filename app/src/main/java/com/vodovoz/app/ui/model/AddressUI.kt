@@ -23,7 +23,8 @@ data class AddressUI(
     val comment: String,
     val latitude: String = "",
     val longitude: String = "",
-    val length: String = ""
+    val length: String = "",
+    val newFullAddress: String = ""
 ): Parcelable, Item {
 
     override fun getItemViewType(): Int {

@@ -43,6 +43,7 @@ object FetchAddressesSavedResponseJsonParser {
             comment = propsList.find { it.first == "KOMENT" || it.first == "F_KOMENT" }?.second?: "",
             length = propsList.find {it.first == "UF_SEMAP_LEN_KM"}?.second?: "",
             coordinates = propsList.find {it.first == "KOORDINAT_TOCHKI"}?.second?: "",
+            newFullAddress = propsList.find { it.first == "ADDRESS_DELIVERY" }?.second ?: ""
         )
     }
 

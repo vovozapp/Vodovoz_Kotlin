@@ -15,5 +15,6 @@ class AddressEntity(
     val flat: String = "",
     val comment: String = "",
     val length: String = "",
-    val coordinates: String = ""
+    val coordinates: String = "",
+    val newFullAddress: String = ""
 )

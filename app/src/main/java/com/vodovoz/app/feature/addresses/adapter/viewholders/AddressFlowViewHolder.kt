@@ -34,13 +34,15 @@ class AddressFlowViewHolder(
     override fun bind(item: AddressUI) {
         super.bind(item)
 
-        binding.tvAddress.text = StringBuilder()
+        binding.tvAddress.text = item.newFullAddress
+
+        /*binding.tvAddress.text = StringBuilder()
             .append(item.locality)
             .append(", ")
             .append(item.street)
             .append(", ")
             .append(item.house)
-            .toString()
+            .toString()*/
 
         binding.tvAdditionalInfo.text = StringBuilder()
             .append("Под:")
