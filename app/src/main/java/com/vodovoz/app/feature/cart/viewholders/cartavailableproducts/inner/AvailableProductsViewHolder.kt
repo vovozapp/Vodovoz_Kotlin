@@ -31,6 +31,7 @@ import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class AvailableProductsViewHolder(
     view: View,
@@ -274,22 +275,24 @@ class AvailableProductsViewHolder(
             false -> binding.tvDepositPrice.visibility = View.GONE
         }
 
+        val old = (item.priceList.first().currentPrice.toDouble() + item.totalDisc).roundToInt()
+
         when(item.priceList.size == 1 &&
-                item.priceList.first().currentPrice < item.priceList.first().oldPrice) {
+                item.priceList.first().currentPrice < old) {
             true -> {
                 isNotHaveStatuses = false
                 binding.cwDiscountContainer.visibility = View.VISIBLE
                 binding.tvDiscountPercent.setDiscountPercent(
                     newPrice = item.priceList.first().currentPrice,
-                    oldPrice = item.priceList.first().oldPrice
+                    oldPrice = old
                 )
             }
             false -> binding.cwDiscountContainer.visibility = View.GONE
         }
 
         when(isNotHaveStatuses) {
-            true -> binding.cgStatuses.visibility = View.GONE
-            false -> binding.cgStatuses.visibility = View.VISIBLE
+            true -> binding.cwDiscountContainer.visibility = View.GONE
+            false -> binding.cwDiscountContainer.visibility = View.VISIBLE
         }
 
         //UpdatePictures

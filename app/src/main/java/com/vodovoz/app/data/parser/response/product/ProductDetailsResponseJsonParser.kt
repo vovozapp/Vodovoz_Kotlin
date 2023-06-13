@@ -23,7 +23,14 @@ object ProductDetailsResponseJsonParser {
                         shareUrl = responseJson.getString("detail_page_url"),
                         commentsAmount = when(responseJson.isNull("comments")) {
                             true -> 0
-                            else -> responseJson.getJSONObject("comments").getString("COMMENT_COUNT").toInt()
+                            else -> {
+                                val count = responseJson.getJSONObject("comments").safeString("COMMENT_COUNT")
+                                if (count.isNotEmpty()) {
+                                    count.toInt()
+                                } else {
+                                    0
+                                }
+                            }
                         }
                     ),
                     categoryEntity = responseJson.getJSONArray("razdel")

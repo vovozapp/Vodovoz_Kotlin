@@ -61,7 +61,14 @@ object ProductJsonParser {
                     true -> 0
                     false -> when(safeString("PROPERTY_ZALOG_VALUE").filter { it.isDigit() }.isEmpty()) {
                         true -> 0
-                        false -> safeString("PROPERTY_ZALOG_VALUE").filter { it.isDigit() }.toInt()
+                        false -> {
+                            val zal = safeString("PROPERTY_ZALOG_VALUE").filter { it.isDigit() }
+                            if (zal.isNotEmpty()) {
+                                zal.toInt()
+                            } else {
+                                0
+                            }
+                        }
                     }
                 }
             },
@@ -108,7 +115,8 @@ object ProductJsonParser {
             chipsBan = when(has("ZAPRET_FISHKAM")) {
                 true -> safeInt("ZAPRET_FISHKAM")
                 false -> null
-            }
+            },
+            totalDisc = safeDouble("TOTAL_SKIDKA")
         )
     }
 

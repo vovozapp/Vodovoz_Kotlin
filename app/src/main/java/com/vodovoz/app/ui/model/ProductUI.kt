@@ -39,7 +39,8 @@ data class ProductUI(
     val detailPictureListPager: List<DetailPicturePager> = emptyList(),
     val serviceDetailCoef: Int? = null,
     val serviceGiftId: String? = null,
-    val chipsBan: Int? = null
+    val chipsBan: Int? = null,
+    val totalDisc: Double = 0.0
 ) : Parcelable, Item {
 
     companion object {

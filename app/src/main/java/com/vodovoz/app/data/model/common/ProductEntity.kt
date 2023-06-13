@@ -20,5 +20,6 @@ class ProductEntity(
     val priceList: List<PriceEntity> = listOf(),
     val detailPictureList: List<String> = listOf(),
     val replacementProductEntityList: List<ProductEntity> = listOf(),
-    val chipsBan: Int? = null
+    val chipsBan: Int? = null,
+    val totalDisc: Double = 0.0
 )

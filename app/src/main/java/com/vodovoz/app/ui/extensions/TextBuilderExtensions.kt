@@ -3,6 +3,7 @@ package com.vodovoz.app.ui.extensions
 import android.util.Log
 import android.widget.TextView
 import com.vodovoz.app.util.LogSettings
+import kotlin.math.roundToInt
 
 object TextBuilderExtensions {
 
@@ -85,7 +86,7 @@ object TextBuilderExtensions {
 
     fun TextView.setDiscountPercent(oldPrice: Int, newPrice: Int) {
         this.text = StringBuilder()
-            .append((100.0 - ((newPrice.toDouble()/oldPrice.toDouble()) * 100)).toInt())
+            .append((100.0 - ((newPrice.toDouble()/oldPrice.toDouble()) * 100)).roundToInt())
             .append("%")
             .toString()
     }

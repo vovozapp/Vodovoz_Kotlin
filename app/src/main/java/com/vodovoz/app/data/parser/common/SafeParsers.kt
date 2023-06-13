@@ -10,6 +10,14 @@ fun JSONObject.safeInt(name: String) = when(has(name)) {
     false -> 0
 }
 
+fun JSONObject.safeDouble(name: String) = when(has(name)) {
+    true -> when(isNull(name)) {
+        true -> 0.0
+        false -> getDouble(name)
+    }
+    false -> 0.0
+}
+
 fun JSONObject.safeString(name: String) =  when(has(name)) {
     true -> when(isNull(name)) {
         true -> ""

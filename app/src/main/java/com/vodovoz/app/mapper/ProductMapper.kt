@@ -41,7 +41,8 @@ object ProductMapper {
         priceConditionStringBuilder = getPriceCondition(priceList.mapToUI()),
         discountPercentStringBuilder = getDiscountPercent(priceList.mapToUI()),
         detailPictureListPager = detailPictureList.map { DetailPicturePager(it) },
-        chipsBan = chipsBan
+        chipsBan = chipsBan,
+        totalDisc = totalDisc
     )
 
     private fun getPricePerUnitStringBuilder(pricePerUnit: Int): String {
