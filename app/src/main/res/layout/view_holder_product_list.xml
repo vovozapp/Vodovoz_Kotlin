@@ -163,14 +163,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
-    <include
-        android:layout_width="@dimen/_100sdp"
-        android:translationZ="@dimen/space_16"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:id="@+id/amountController"
-        layout="@layout/view_product_amount_controller" />
+
 
     <LinearLayout
         android:id="@+id/clPricesContainer"
@@ -234,6 +227,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:textSize="11sp"
             android:paddingTop="@dimen/space_2"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/price"
@@ -241,5 +235,14 @@
             tools:text="При услови покупки от 10 шт" />
 
     </LinearLayout>
+
+    <include
+        android:layout_width="@dimen/_100sdp"
+        android:translationZ="@dimen/space_16"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/amountController"
+        layout="@layout/view_product_amount_controller" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

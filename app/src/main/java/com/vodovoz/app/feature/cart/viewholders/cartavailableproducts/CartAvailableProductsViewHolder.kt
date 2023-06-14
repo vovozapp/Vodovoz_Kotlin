@@ -33,7 +33,7 @@ class CartAvailableProductsViewHolder(
 
     private val binding: ItemCartAvailableProductsBinding = ItemCartAvailableProductsBinding.bind(view)
 
-    private val space: Int by lazy { itemView.context.resources.getDimension(R.dimen.space_16).toInt() }
+    private val space: Int by lazy { itemView.context.resources.getDimension(R.dimen.space_8).toInt() }
 
     private val productsAdapter = AvailableProductsAdapter(productsClickListener, likeManager, cartManager, ratingProductManager)
 

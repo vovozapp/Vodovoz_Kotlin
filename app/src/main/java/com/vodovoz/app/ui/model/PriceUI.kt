@@ -10,7 +10,8 @@ import kotlinx.parcelize.Parcelize
 data class PriceUI(
     val currentPrice: Int,
     val oldPrice: Int,
-    val requiredAmount: Int
+    val requiredAmount: Int,
+    val requiredAmountTo: Int,
 ): Parcelable, Item {
 
     override fun getItemViewType(): Int {

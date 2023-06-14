@@ -174,9 +174,10 @@ object ProductDetailsResponseJsonParser {
     }
 
     private fun JSONObject.parsePriceEntity() = PriceEntity(
-        price = getInt("PRICE"),
-        oldPrice = getInt("OLD_PRICE"),
-        requiredAmount = getInt("QUANTITY_FROM")
+        price = safeInt("PRICE"),
+        oldPrice = safeInt("OLD_PRICE"),
+        requiredAmount = safeInt("QUANTITY_FROM"),
+        requiredAmountTo = safeInt("QUANTITY_TO")
     )
 
     //Service

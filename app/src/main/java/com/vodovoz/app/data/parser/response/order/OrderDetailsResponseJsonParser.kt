@@ -82,7 +82,7 @@ object OrderDetailsResponseJsonParser {
             },
             name = getString("NAME"),
             detailPicture = detailPicture.parseImagePath(),
-            priceList = listOf(PriceEntity(price = getInt("PRICE"), oldPrice = 0, requiredAmount = 0)),
+            priceList = listOf(PriceEntity(price = safeInt("PRICE"), oldPrice = 0, requiredAmount = 0, 0)),
             rating = when(has("")) {
                 true -> getDouble("PROPERTY_RATING_VALUE")
                 else -> 0.0
@@ -90,7 +90,7 @@ object OrderDetailsResponseJsonParser {
             status = status,
             statusColor = statusColor,
             commentAmount = when(has("COUTCOMMENTS")) {
-                true -> getString("COUTCOMMENTS")
+                true -> safeString("COUTCOMMENTS")
                 false -> ""
             },
             orderQuantity = getInt("QUANTITY"),

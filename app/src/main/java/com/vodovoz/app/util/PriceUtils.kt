@@ -5,7 +5,7 @@ import timber.log.Timber
 
 fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
     var fullPrice = 0
-    var discountPrice = 0
+    var discountPrice = 0.0
     var deposit = 0
     var bottlesPrice = 0
     productUIList.forEach { productUI ->
@@ -18,25 +18,19 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
             val price = when (productUI.priceList.size) {
                 1 -> productUI.priceList.first()
                 else -> {
-                    val sortedPriceList = productUI.priceList
-                        .sortedBy { it.requiredAmount }
-                        .reversed()
-                    val defaultPrice = sortedPriceList.last()
-                    val rightPrice = sortedPriceList.find { productUI.cartQuantity >= it.requiredAmount }
-                    rightPrice?.let {
-                        discountPrice += (defaultPrice.currentPrice - rightPrice.currentPrice) * productUI.cartQuantity
+                    val sortedPriceList = productUI.priceList.sortedByDescending { it.requiredAmount }
+
+                    val minimalPrice =  if (sortedPriceList.first().requiredAmountTo == 0 && productUI.cartQuantity >= sortedPriceList.first().requiredAmount) {
+                        sortedPriceList.find { it.requiredAmountTo == 0 && productUI.cartQuantity >= it.requiredAmount }
+                    } else {
+                        sortedPriceList.find { productUI.cartQuantity in it.requiredAmount .. it.requiredAmountTo }
                     }
-                    rightPrice
+                    minimalPrice
                 }
             }
             price?.let {
-                when(price.oldPrice) {
-                    0 -> fullPrice += price.currentPrice * productUI.cartQuantity
-                    else -> {
-                        fullPrice += price.oldPrice * productUI.cartQuantity
-                        discountPrice += (price.oldPrice - price.currentPrice) * productUI.cartQuantity
-                    }
-                }
+                fullPrice += price.currentPrice * productUI.cartQuantity
+                discountPrice += productUI.totalDisc * productUI.cartQuantity
             }
         }
     }
@@ -49,8 +43,8 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
 
     deposit -= bottlesPrice
     if (deposit < 0) deposit = 0
-    val total = fullPrice + deposit - discountPrice
-    return CalculatedPrices(fullPrice, discountPrice, deposit, total)
+    val total = fullPrice + deposit - discountPrice.toInt()
+    return CalculatedPrices(fullPrice, discountPrice.toInt(), deposit, total)
 }
 
 data class CalculatedPrices(
