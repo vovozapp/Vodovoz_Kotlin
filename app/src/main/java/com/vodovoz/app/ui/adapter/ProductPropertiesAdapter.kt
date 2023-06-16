@@ -8,6 +8,7 @@ import com.vodovoz.app.databinding.ViewHolderPropertyBinding
 import com.vodovoz.app.ui.adapter.ProductPropertyGroupsAdapter.ViewMode
 import com.vodovoz.app.ui.model.PropertyUI
 import com.vodovoz.app.ui.view_holder.ProductPropertyViewHolder
+import com.vodovoz.app.util.extensions.debugLog
 
 class ProductPropertiesAdapter : RecyclerView.Adapter<ProductPropertyViewHolder>() {
 
@@ -32,10 +33,18 @@ class ProductPropertiesAdapter : RecyclerView.Adapter<ProductPropertyViewHolder>
     override fun onBindViewHolder(
         holder: ProductPropertyViewHolder,
         position: Int
-    ) = holder.onBind(propertyUIList[position])
+    ) {
+        if (position in propertyUIList.indices) {
+            holder.onBind(propertyUIList[position])
+        }
+    }
 
     override fun getItemCount() = when(viewMode) {
-        ViewMode.PREVIEW -> 4
+        ViewMode.PREVIEW -> if (propertyUIList.size < 4) {
+            propertyUIList.size
+        } else {
+            4
+        }
         ViewMode.ALL -> propertyUIList.size
     }
 

@@ -54,6 +54,7 @@ class LikeManager @Inject constructor(
     }
 
     private suspend fun action(productId: Long, userId: Long, isFavorite: Boolean) {
+        throw IllegalStateException()
         return if (isFavorite) {
             repository.dislike(productId, userId)
             updateLikes(productId, false)
