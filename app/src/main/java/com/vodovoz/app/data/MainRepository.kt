@@ -1603,14 +1603,17 @@ class MainRepository @Inject constructor(
         userId: Long?,
         addressId: Long?,
         date: String?,
+        appVerision: String?
     ) = api.fetchInfoAboutOrderingResponse(
         userId = userId,
         addressId = addressId,
-        date = date
+        date = date,
+        appVersion = appVerision
     )
 
-    suspend fun fetchFreeShippingDaysInfoResponse() =
-        api.fetchInfoAboutOrderingResponse()
+    suspend fun fetchFreeShippingDaysInfoResponse(
+        appVerision: String?
+    ) = api.fetchInfoAboutOrderingResponse(appVersion = appVerision)
 
     suspend fun regOrder(
         orderType: Int?, //Тип заказа (1/2)

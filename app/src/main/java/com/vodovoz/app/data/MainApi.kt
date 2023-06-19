@@ -626,6 +626,7 @@ interface MainApi {
         @Query("address_id") addressId: Long? = null,
         @Query("userid") userId: Long? = null,
         @Query("curDate") date: String? = null,
+        @Query("versiyaan") appVersion: String?,
     ): ResponseBody
 
     @GET("newmobile/doorder.php")
