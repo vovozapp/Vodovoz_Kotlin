@@ -13,7 +13,7 @@ class MainViewModel @Inject constructor(
     var isBottomBarInited = false
 
     override fun onCleared() {
-        super.onCleared()
         localDataSource.removeCookieSessionId()
+        super.onCleared()
     }
 }

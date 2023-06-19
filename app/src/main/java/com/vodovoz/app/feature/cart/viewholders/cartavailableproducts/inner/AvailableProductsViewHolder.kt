@@ -361,12 +361,11 @@ class AvailableProductsViewHolder(
                     oldPrice = currentPrice
                 )
             } else {
-                val priceWithDesc = (currentPrice.toDouble() + item.totalDisc).roundToInt()
                 binding.tvPrice.setPriceText(currentPrice, itCanBeGift = true)
-                binding.tvOldPrice.setPriceText(priceWithDesc, itCanBeGift = true)
+                binding.tvOldPrice.setPriceText(oldPrice, itCanBeGift = true)
                 binding.tvDiscountPercent.setDiscountPercent(
                     newPrice = currentPrice,
-                    oldPrice = priceWithDesc
+                    oldPrice = oldPrice
                 )
             }
 
