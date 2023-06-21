@@ -145,7 +145,7 @@ class LoginFlowViewModel @Inject constructor(
         val url = state.data.requestUrl ?: return
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
-            flow { emit(repository.authByPhone(phone, code, url)) }
+            flow { emit(repository.authByPhone(phone = phone, url = url, code = code)) }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     when (val response = it.parseAuthByPhoneResponse()) {
@@ -187,7 +187,7 @@ class LoginFlowViewModel @Inject constructor(
         val url = state.data.requestUrl ?: return
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
-            flow { emit(repository.requestCode(phone, url)) }
+            flow { emit(repository.requestCode(phone = phone, url = url)) }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     when (val response = it.parseRequestCodeResponse()) {
