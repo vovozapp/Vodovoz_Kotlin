@@ -55,7 +55,7 @@ class SplashFragment : BaseFragment() {
         cartFlowViewModel.firstLoad()
         favoriteViewModel.firstLoad()
         favoriteViewModel.firstLoadSorted()
-        profileViewModel.firstLoad()
+        profileViewModel.fetchFirstUserData()
         accountManager.fetchAccountId()
     }
 

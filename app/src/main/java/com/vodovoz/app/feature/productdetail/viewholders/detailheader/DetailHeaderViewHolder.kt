@@ -196,6 +196,7 @@ class DetailHeaderViewHolder(
             OnRatingBarChangeListener { p0, newRating, p2 ->
                 productsClickListener.onChangeRating(item.productDetailUI.id, newRating, item.productDetailUI.rating.toFloat())
             }
+        binding.rbRating.setIsIndicator(true)
 
         when(item.productDetailUI.youtubeVideoCode.isEmpty()) {
             true -> binding.cwPlayVideo.visibility = View.GONE

@@ -32,13 +32,13 @@ class RatingProductManager @Inject constructor(
     fun observeRatingSnackbar() = showRatingSnackbarListener.asSharedFlow()
 
     suspend fun rate(id: Long, oldRating: Float, rating: Float) {
-        updateRates(id, rating)
+        /*updateRates(id, rating)
 
         runCatching {
             action(id, rating)
         }.onFailure {
             updateRates(id, oldRating)
-        }
+        }*/
     }
 
     private suspend fun action(productId: Long, rating: Float) {

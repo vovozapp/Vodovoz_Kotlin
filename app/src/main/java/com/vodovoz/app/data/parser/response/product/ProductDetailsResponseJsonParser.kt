@@ -3,6 +3,7 @@ package com.vodovoz.app.data.parser.response.product
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.parser.common.BrandJsonParser.parserBrandEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
+import com.vodovoz.app.data.parser.common.safeDouble
 import com.vodovoz.app.data.parser.common.safeInt
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.parser.response.comment.AllCommentsByProductResponseJsonParser
@@ -11,6 +12,7 @@ import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
+import kotlin.math.roundToInt
 
 object ProductDetailsResponseJsonParser {
 
@@ -174,8 +176,8 @@ object ProductDetailsResponseJsonParser {
     }
 
     private fun JSONObject.parsePriceEntity() = PriceEntity(
-        price = safeInt("PRICE"),
-        oldPrice = safeInt("OLD_PRICE"),
+        price = safeDouble("PRICE").roundToInt(),
+        oldPrice = safeDouble("OLD_PRICE").roundToInt(),
         requiredAmount = safeInt("QUANTITY_FROM"),
         requiredAmountTo = safeInt("QUANTITY_TO")
     )

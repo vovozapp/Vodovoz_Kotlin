@@ -12,13 +12,18 @@ import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
+import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel.ProfileState.Companion.fetchStaticItems
+import com.vodovoz.app.feature.profile.viewholders.models.ProfileHeader
 import com.vodovoz.app.feature.profile.viewholders.models.ProfileLogout
 import com.vodovoz.app.feature.sitestate.SiteStateManager
+import com.vodovoz.app.mapper.UserDataMapper.mapToUI
 import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,6 +45,33 @@ class ProfileFlowViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             siteStateManager.requestSiteState()
+        }
+    }
+
+    fun fetchFirstUserData() {
+        viewModelScope.launch {
+            val userId = dataRepository.fetchUserId()
+            if (userId == null) {
+                uiStateListener.value =
+                    state.copy(data = state.data.copy(isLogin = false), loadingPage = false)
+                return@launch
+            }
+            flow { emit(repository.fetchUserData(userId)) }
+                .flowOn(Dispatchers.IO)
+                .catch {
+                    debugLog { "fetch user data error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
+                .onEach {
+                    val response = it.parseUserDataResponse()
+                    if (response is ResponseEntity.Success) {
+                        firstLoad()
+                    } else {
+                       logout()
+                    }
+                }
+                .collect()
         }
     }
 
@@ -112,7 +144,8 @@ class ProfileFlowViewModel @Inject constructor(
 
             val userId = dataRepository.fetchUserId()
             if (userId == null) {
-                uiStateListener.value = state.copy(data = state.data.copy(isLogin = false), loadingPage = false)
+                uiStateListener.value =
+                    state.copy(data = state.data.copy(isLogin = false), loadingPage = false)
                 return
             }
 

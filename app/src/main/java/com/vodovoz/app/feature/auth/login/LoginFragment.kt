@@ -194,7 +194,7 @@ class LoginFragment : BaseFragment() {
                         binding.etPassword.setText(it.data.settings.password)
                     }
 
-                    if (it.data.lastAuthPhone != null) {
+                    if (!it.data.lastAuthPhone.isNullOrEmpty()) {
                         binding.etPhone.setText(it.data.lastAuthPhone)
                     }
 
@@ -295,7 +295,9 @@ class LoginFragment : BaseFragment() {
             }
             false -> {
                 viewModel.startCountDownTimer(-expiredTime)
-                binding.etPhone.setText(phone)
+                if (phone.isNotEmpty()) {
+                    binding.etPhone.setText(phone)
+                }
                 binding.tilCode.requestFocus()
             }
         }
