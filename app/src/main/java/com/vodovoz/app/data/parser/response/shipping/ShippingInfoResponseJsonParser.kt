@@ -32,6 +32,13 @@ object ShippingInfoResponseJsonParser {
                 shippingIntervalEntityList = responseJson.getJSONObject("data")
                     .getJSONArray("DELIVERY_INTERVAL")
                     .parseShippingIntervalEntityList(),
+                isNewUser = when(responseJson.getJSONObject("data").isNull("NEWUSER")) {
+                    false -> {
+                        val str = responseJson.getJSONObject("data").safeString("NEWUSER")
+                        str == "Y"
+                    }
+                    true -> false
+                },
             ))
             else -> ResponseEntity.Error("Неправильный запрос")
         }

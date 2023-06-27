@@ -110,6 +110,13 @@ class OrderingFragment : BaseFragment() {
                         binding.tvNameDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
                     }
 
+                    val isNewUser = state.data.shippingInfoBundleUI?.isNewUser
+                    if (isNewUser != null && isNewUser) {
+                        viewModel.setCheckDelivery(5)
+                        binding.tvCheckDelivery.text = "Позвоните мне для подтверждения заказа"
+                        binding.tvNameCheckDelivery.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+                    }
+
                     binding.llShippingPriceCOntainer.isVisible = state.data.shippingPrice != null
                     binding.llParkingPriceCOntainer.isVisible = state.data.parkingPrice != null
 
@@ -244,12 +251,14 @@ class OrderingFragment : BaseFragment() {
                             clearFields()
                         }
                         is OrderingFlowViewModel.OrderingEvents.ShowCheckDeliveryBs -> {
-                            if (findNavController().currentDestination?.id == R.id.orderingFragment) {
-                                findNavController().navigate(
-                                    OrderingFragmentDirections.actionToCheckActionDeliveryBS(
-                                        it.value
+                            if (!it.isNewUser) {
+                                if (findNavController().currentDestination?.id == R.id.orderingFragment) {
+                                    findNavController().navigate(
+                                        OrderingFragmentDirections.actionToCheckActionDeliveryBS(
+                                            it.value
+                                        )
                                     )
-                                )
+                                }
                             }
                         }
                     }

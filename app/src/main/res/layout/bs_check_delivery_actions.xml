@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="22dp"
-            android:text="Что делать при отсутствии товара?"
+            android:text="Требуется ли звонок оператора?"
             android:textSize="14sp" />
 
         <TextView
@@ -54,13 +54,12 @@
                 android:textStyle="bold"
                 app:fontFamily="@font/rotondac" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#F5F5F5" />
-
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F5F5F5" />
 
         <LinearLayout
             android:id="@+id/callMeDontChangeLL"
@@ -94,12 +93,12 @@
                 android:textStyle="bold"
                 app:fontFamily="@font/rotondac" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#F5F5F5" />
-
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F5F5F5" />
 
         <LinearLayout
             android:id="@+id/dontCallMeChangeLL"
@@ -133,12 +132,12 @@
                 android:textStyle="bold"
                 app:fontFamily="@font/rotondac" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#F5F5F5" />
-
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F5F5F5" />
 
         <LinearLayout
             android:id="@+id/dontCallMeDontChangeLL"
@@ -172,10 +171,44 @@
                 android:textStyle="bold"
                 app:fontFamily="@font/rotondac" />
 
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F5F5F5" />
+
+        <LinearLayout
+            android:id="@+id/callMeNewLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
             <TextView
+                android:id="@+id/callMeNewHeaderTv"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#F5F5F5" />
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="Позвоните мне для подтверждения заказа"
+                android:textAllCaps="false"
+                android:textColor="#00a5dd"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:fontFamily="@font/rotondac" />
+
+            <TextView
+                android:id="@+id/callMeNewDescTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="start"
+                android:text="Выберите необходимое действие"
+                android:textAllCaps="false"
+                android:textColor="#999FA7"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:fontFamily="@font/rotondac" />
 
         </LinearLayout>
 

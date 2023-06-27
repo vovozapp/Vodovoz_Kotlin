@@ -17,7 +17,8 @@ object ShippingInfoBundleMapper {
         todayShippingInfo = todayShippingInfo,
         shippingPrice = shippingPrice,
         shippingIntervalUIList = shippingIntervalEntityList.mapToUI(),
-        payMethodUIList = payMethodEntityList.mapToUI()
+        payMethodUIList = payMethodEntityList.mapToUI(),
+        isNewUser = isNewUser
     )
 
 }

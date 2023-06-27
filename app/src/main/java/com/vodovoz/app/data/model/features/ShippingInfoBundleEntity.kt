@@ -14,4 +14,5 @@ class ShippingInfoBundleEntity(
     val todayShippingInfo: String = "",
     val shippingIntervalEntityList: List<ShippingIntervalEntity>,
     val payMethodEntityList: List<PayMethodEntity> = listOf(),
+    val isNewUser: Boolean = false
 )

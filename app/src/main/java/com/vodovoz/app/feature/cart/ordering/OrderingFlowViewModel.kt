@@ -434,7 +434,7 @@ class OrderingFlowViewModel @Inject constructor(
 
     fun onCheckDeliveryClick() {
         viewModelScope.launch {
-            eventListener.emit(OrderingEvents.ShowCheckDeliveryBs(state.data.checkDeliveryValue))
+            eventListener.emit(OrderingEvents.ShowCheckDeliveryBs(state.data.checkDeliveryValue, state.data.shippingInfoBundleUI?.isNewUser ?: false))
         }
     }
 
@@ -502,7 +502,7 @@ class OrderingFlowViewModel @Inject constructor(
         data class ChoosePayMethodError(val message: String) : OrderingEvents()
         object ChooseCheckDeliveryError : OrderingEvents()
 
-        data class ShowCheckDeliveryBs(val value: Int) : OrderingEvents()
+        data class ShowCheckDeliveryBs(val value: Int, val isNewUser: Boolean = false) : OrderingEvents()
 
         object ClearFields : OrderingEvents()
     }

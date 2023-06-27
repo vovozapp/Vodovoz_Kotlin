@@ -52,6 +52,11 @@ class CheckDeliveryActionsBS : BaseBottomSheetFragment() {
             dismiss()
         }
 
+        binding.callMeNewLL.setOnClickListener {
+            navigateToOrder(5, "Позвоните мне для подтверждения заказа")
+            dismiss()
+        }
+
         binding.cancelWarnBs.setOnClickListener {
             dismiss()
         }

@@ -11,4 +11,5 @@ class ShippingInfoBundleUI(
     val todayShippingInfo: String = "",
     val shippingIntervalUIList: List<ShippingIntervalUI>,
     val payMethodUIList: List<PayMethodUI> = listOf(),
+    val isNewUser: Boolean = false
 )

@@ -298,7 +298,7 @@
                 android:paddingHorizontal="@dimen/space_16"
                 android:gravity="center_vertical"
                 android:background="@color/light_gray"
-                android:text="Что делать при отсутствии товара?"/>
+                android:text="Требуется ли звонок оператора?"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvCheckDelivery"
