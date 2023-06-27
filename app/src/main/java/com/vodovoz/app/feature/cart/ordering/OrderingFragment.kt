@@ -339,6 +339,8 @@ class OrderingFragment : BaseFragment() {
         binding.scShippingAlert.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 viewModel.onShippingAlertClick()
+            } else {
+                viewModel.clearShippingAlert()
             }
         }
 
@@ -512,7 +514,11 @@ class OrderingFragment : BaseFragment() {
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<Long>(SELECTED_SHIPPING_ALERT)
             ?.observe(viewLifecycleOwner) { shippingAlertId ->
-                viewModel.setSelectedShippingAlert(shippingAlertId)
+                if (shippingAlertId == -1L) {
+                    binding.scShippingAlert.isChecked = false
+                } else {
+                    viewModel.setSelectedShippingAlert(shippingAlertId)
+                }
             }
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<AddressUI>(AddressesFragment.SELECTED_ADDRESS)

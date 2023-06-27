@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.home.ratebottom
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -129,6 +130,7 @@ class RateBottomFragment : BaseBottomSheetFragment() {
                         val prList = state.data.item.rateBottomData?.productsList
                         if (!prList.isNullOrEmpty()) {
                             rateBottomViewPagerAdapter.submitList(prList)
+                            binding.dotsIndicator.isVisible = prList.size > 1
                         }
                     }
 

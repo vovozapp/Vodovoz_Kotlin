@@ -221,6 +221,14 @@ class OrderingFlowViewModel @Inject constructor(
         )
     }
 
+    fun clearShippingAlert() {
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                selectedShippingAlertUI = null
+            )
+        )
+    }
+
     fun setNeedOperatorCall(bool: Boolean) {
         uiStateListener.value = state.copy(
             data = state.data.copy(

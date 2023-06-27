@@ -6,6 +6,7 @@ import com.vodovoz.app.mapper.PriceMapper.mapToUI
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.PriceUI
 import com.vodovoz.app.ui.model.ProductUI
+import kotlin.math.roundToInt
 
 object ProductMapper {
 
@@ -113,7 +114,7 @@ object ProductMapper {
         val newPrice = list.first().currentPrice
         val oldPrice = list.first().oldPrice
         return StringBuilder()
-            .append((100.0 - ((newPrice.toDouble()/oldPrice.toDouble()) * 100)).toInt())
+            .append((100.0 - ((newPrice.toDouble()/oldPrice.toDouble()) * 100)).roundToInt())
             .append("%")
             .toString()
     }

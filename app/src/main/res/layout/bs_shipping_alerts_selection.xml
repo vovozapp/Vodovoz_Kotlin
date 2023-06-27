@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--new -->
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/bkg_bs"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -13,9 +13,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include
-            android:id="@+id/incHeader"
-            layout="@layout/view_popup_header" />
+        <TextView
+            android:id="@+id/headerTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="22dp"
+            tools:text="Что делать при отсутствии товара?"
+            android:textSize="14sp" />
 
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/mtDivider"
@@ -27,6 +32,21 @@
             style="@style/TextViewNormalGray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/cancelWarnBs"
+            style="@style/BlueButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:text="Закрыть"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:fontFamily="@font/rotondac" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
