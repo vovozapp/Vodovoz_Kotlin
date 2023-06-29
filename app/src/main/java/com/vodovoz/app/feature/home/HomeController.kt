@@ -9,6 +9,8 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.home.adapter.HomeMainAdapter
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
+import com.vodovoz.app.feature.home.viewholders.homebanners.BottomBannerManager
+import com.vodovoz.app.feature.home.viewholders.homebanners.TopBannerManager
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeTabsClickListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
@@ -25,6 +27,8 @@ class HomeController(
     promotionsClickListener: PromotionsClickListener,
     homeTitleClickListener: HomeTitleClickListener,
     homeTabsClickListener: HomeTabsClickListener,
+    topBannerManager: TopBannerManager,
+    bottomBannerManager: BottomBannerManager,
     private val showRateBottomSheetFragment: () -> Unit
 ) {
     private val homeMainAdapter = HomeMainAdapter(
@@ -35,7 +39,9 @@ class HomeController(
         productsClickListener = productsClickListener,
         promotionsClickListener = promotionsClickListener,
         homeTitleClickListener = homeTitleClickListener,
-        homeTabsClickListener = homeTabsClickListener
+        homeTabsClickListener = homeTabsClickListener,
+        topBannerManager = topBannerManager,
+        bottomBannerManager = bottomBannerManager
     )
 
     fun bind(recyclerView: RecyclerView, refresh: SwipeRefreshLayout) {

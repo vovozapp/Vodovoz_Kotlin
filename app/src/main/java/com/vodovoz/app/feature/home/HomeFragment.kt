@@ -34,6 +34,8 @@ import com.vodovoz.app.feature.home.popup.NewsClickListener
 import com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment
 import com.vodovoz.app.feature.home.ratebottom.RateBottomFragment
 import com.vodovoz.app.feature.home.ratebottom.RateBottomViewModel
+import com.vodovoz.app.feature.home.viewholders.homebanners.BottomBannerManager
+import com.vodovoz.app.feature.home.viewholders.homebanners.TopBannerManager
 import com.vodovoz.app.feature.home.viewholders.homecomments.HomeCommentsFullBottomSheetFragment
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeTabsClickListener
@@ -94,6 +96,12 @@ class HomeFragment : BaseFragment() {
     @Inject
     lateinit var accountManager: AccountManager
 
+    @Inject
+    lateinit var topBannerManager: TopBannerManager
+
+    @Inject
+    lateinit var bottomBannerManager: BottomBannerManager
+
     private val homeController by lazy {
         HomeController(
             viewModel = flowViewModel,
@@ -104,7 +112,9 @@ class HomeFragment : BaseFragment() {
             productsClickListener = getProductsClickListener(),
             promotionsClickListener = getPromotionsClickListener(),
             homeTitleClickListener = getTitleClickListener(),
-            homeTabsClickListener = getHomeTabsClickListener()
+            homeTabsClickListener = getHomeTabsClickListener(),
+            topBannerManager = topBannerManager,
+            bottomBannerManager = bottomBannerManager
         ) {
             if (siteStateManager.showRateBottom != null) {
                 if (!siteStateManager.showRateBottom!!) {

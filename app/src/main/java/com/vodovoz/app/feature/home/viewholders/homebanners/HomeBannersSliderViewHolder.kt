@@ -25,7 +25,8 @@ class HomeBannersSliderViewHolder(
     view: View,
     private val clickListener: HomeMainClickListener,
     width: Int,
-    ratio: Double
+    ratio: Double,
+    private val manager: BannerManager
 ) : ItemViewHolder<HomeBanners>(view) {
 
     private var scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
@@ -95,18 +96,26 @@ class HomeBannersSliderViewHolder(
     @SuppressLint("ClickableViewAccessibility")
     fun ViewPager2.enableAutoScroll(totalPages: Int): Timer? {
         if (autoTimerTask == null) autoTimerTask = Timer()
-        var currentPageIndex = currentItem
+        var currentPageIndex = manager.fetchPosition()
         autoTimerTask?.schedule(object : TimerTask() {
             override fun run() {
                 scope.launch {
                     currentItem = currentPageIndex++
-                    if (currentPageIndex == totalPages) currentPageIndex = 0
+                    manager.increase()
+                    if (currentPageIndex == totalPages) {
+                        currentPageIndex = 0
+                    }
                 }
             }
         }, 0, 4000)
 
         val callback = object: OnPageChangeCallback() {
             private var settled = false
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+
+                manager.setPosition(position)
+            }
             override fun onPageScrollStateChanged(state: Int) {
                 super.onPageScrollStateChanged(state)
                 if (state == SCROLL_STATE_DRAGGING) {
@@ -116,9 +125,10 @@ class HomeBannersSliderViewHolder(
                     settled = true
                 }
                 if (state == SCROLL_STATE_IDLE && !settled) {
-                    if (currentItem == totalPages - 1) {
+                    if (manager.fetchPosition() == totalPages - 1) {
                         currentPageIndex = 0
                         currentItem = 0
+                        manager.setPosition(0)
                     }
                 }
             }

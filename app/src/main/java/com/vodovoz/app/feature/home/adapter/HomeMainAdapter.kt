@@ -8,9 +8,11 @@ import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressViewHolder
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.feature.home.viewholders.homebanners.BottomBannerManager
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners.Companion.BANNER_LARGE
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners.Companion.BANNER_SMALL
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBannersSliderViewHolder
+import com.vodovoz.app.feature.home.viewholders.homebanners.TopBannerManager
 import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfoViewHolder
 import com.vodovoz.app.feature.home.viewholders.homebrands.HomeBrandsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homecomments.HomeCommentsSliderViewHolder
@@ -37,17 +39,19 @@ class HomeMainAdapter(
     private val productsClickListener: ProductsClickListener,
     private val promotionsClickListener: PromotionsClickListener,
     private val homeTitleClickListener: HomeTitleClickListener,
-    private val homeTabsClickListener: HomeTabsClickListener
+    private val homeTabsClickListener: HomeTabsClickListener,
+    private val topBannerManager: TopBannerManager,
+    private val bottomBannerManager: BottomBannerManager,
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
 
         return when (viewType) {
             BANNER_SMALL -> {
-                HomeBannersSliderViewHolder(getViewFromInflater(R.layout.fragment_slider_banner, parent), clickListener, parent.width, 0.48)
+                HomeBannersSliderViewHolder(getViewFromInflater(R.layout.fragment_slider_banner, parent), clickListener, parent.width, 0.48, topBannerManager)
             }
             BANNER_LARGE -> {
-                HomeBannersSliderViewHolder(getViewFromInflater(R.layout.fragment_slider_banner, parent), clickListener, parent.width, 0.52)
+                HomeBannersSliderViewHolder(getViewFromInflater(R.layout.fragment_slider_banner, parent), clickListener, parent.width, 0.52, bottomBannerManager)
             }
             R.layout.fragment_section_additional_info -> {
                 HomeBottomInfoViewHolder(getViewFromInflater(viewType, parent), clickListener)
