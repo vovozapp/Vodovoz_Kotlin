@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/space_16"
         android:paddingVertical="@dimen/space_8"
-        android:textSize="16sp"
+        android:textSize="@dimen/title_text_size_cat"
         tools:text="Название категории" />
 
     <TextView

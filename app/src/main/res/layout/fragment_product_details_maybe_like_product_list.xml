@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Возможно, вам понравится"
+        android:textSize="@dimen/title_text_size_cat"
         android:paddingVertical="@dimen/space_8"
         android:paddingHorizontal="@dimen/space_16"/>
 

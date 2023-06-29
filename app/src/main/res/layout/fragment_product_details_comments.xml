@@ -25,11 +25,12 @@
             android:id="@+id/tvCommentAmountTitle"
             style="@style/TextViewHeaderBlackBold"
             android:layout_width="0dp"
+            android:textSize="@dimen/title_text_size_cat"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingHorizontal="@dimen/space_16"
             android:paddingVertical="@dimen/space_8"
-            android:text="Отзывы(3)" />
+            tools:text="Отзывы(3)" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvShowAllComment"
@@ -73,7 +74,7 @@
         android:layout_marginEnd="@dimen/space_16"
         android:gravity="bottom"
         android:text="Нет отзывов"
-        android:textSize="16sp"
+        android:textSize="@dimen/title_text_size_cat"
         android:visibility="gone" />
 
     <LinearLayout

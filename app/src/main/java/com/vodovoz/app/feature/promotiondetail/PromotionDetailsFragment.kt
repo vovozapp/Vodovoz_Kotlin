@@ -39,6 +39,7 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.PromotionDetailUI
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -181,7 +182,7 @@ class PromotionDetailsFragment : BaseFragment() {
         binding.customerCategoryCard.setCardBackgroundColor(Color.parseColor(promotionDetailUI.statusColor))
         binding.customerCategory.text = promotionDetailUI.status
         binding.timeLeft.text = promotionDetailUI.timeLeft
-        binding.detail.text = HtmlCompat.fromHtml(promotionDetailUI.detailText, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+        binding.detail.text = promotionDetailUI.detailText.fromHtml()
         Glide.with(requireContext())
             .load(promotionDetailUI.detailPicture)
             .into(binding.image)
