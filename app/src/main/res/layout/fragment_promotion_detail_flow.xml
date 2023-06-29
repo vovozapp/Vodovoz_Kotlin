@@ -150,6 +150,44 @@
 
     </androidx.core.widget.NestedScrollView>
 
+    <TextView
+        android:id="@+id/errorMesTitle"
+        style="@style/TextViewNormalBlackBold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_32"
+        android:textAlignment="center"
+        android:visibility="gone"
+        android:paddingStart="@dimen/space_16"
+        android:lineSpacingExtra="10sp"
+        android:paddingEnd="@dimen/space_16"
+        tools:text="Тексст"/>
+
+    <TextView
+        android:id="@+id/errorMesDesc"
+        style="@style/TextViewNormalBlack"
+        android:layout_width="match_parent"
+        android:textAlignment="center"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_8"
+        android:visibility="gone"
+        android:paddingStart="@dimen/space_16"
+        android:paddingEnd="@dimen/space_16"
+        android:layout_marginBottom="@dimen/space_16"
+        tools:text="Тексст"/>
+
+    <TextView
+        android:id="@+id/errorBottomMess"
+        style="@style/TextViewNormalBlackBold"
+        android:layout_width="match_parent"
+        android:textAlignment="textStart"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_16"
+        android:visibility="gone"
+        android:paddingStart="@dimen/space_16"
+        android:paddingEnd="@dimen/space_16"
+        tools:text="Тексст"/>
+
     <androidx.viewpager2.widget.ViewPager2
         android:background="@color/light_bg"
         android:id="@+id/vpPromotions"

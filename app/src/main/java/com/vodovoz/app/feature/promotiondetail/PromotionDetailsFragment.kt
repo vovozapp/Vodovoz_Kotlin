@@ -1,9 +1,12 @@
 package com.vodovoz.app.feature.promotiondetail
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.text.HtmlCompat
@@ -19,9 +22,12 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser
 import com.vodovoz.app.databinding.FragmentPromotionDetailFlowBinding
+import com.vodovoz.app.feature.favorite.FavoriteFragmentDirections
 import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
@@ -32,6 +38,7 @@ import com.vodovoz.app.feature.productdetail.ProductDetailsFragmentDirections
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.PromotionDetailUI
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -117,7 +124,7 @@ class PromotionDetailsFragment : BaseFragment() {
                         hideLoader()
                         binding.timeLeftContainer.isVisible = true
                         binding.customerCategoryCard.isVisible = true
-                        binding.rootView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_white))
+
                     }
 
                     bindHeader(state.data.items)
@@ -167,6 +174,9 @@ class PromotionDetailsFragment : BaseFragment() {
         if (promotionDetailUI == null) return
         binding.contentContainer.isVisible = true
         binding.vpPromotions.isVisible = false
+        binding.errorMesTitle.isVisible = false
+        binding.errorMesDesc.isVisible = false
+        binding.errorBottomMess.isVisible = false
         initToolbar(titleText = promotionDetailUI.name)
         binding.customerCategoryCard.setCardBackgroundColor(Color.parseColor(promotionDetailUI.statusColor))
         binding.customerCategory.text = promotionDetailUI.status
@@ -175,12 +185,25 @@ class PromotionDetailsFragment : BaseFragment() {
         Glide.with(requireContext())
             .load(promotionDetailUI.detailPicture)
             .into(binding.image)
+        binding.rootView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_white))
     }
 
     private fun bindErrorHeader(promotionDetailErrorUI: PromotionDetailResponseJsonParser.PromotionDetailErrorUI?) {
         if (promotionDetailErrorUI == null) return
 
-        initToolbar(titleText = promotionDetailErrorUI.title)
+        initSearchToolbar(
+            { findNavController().navigate(PromotionDetailsFragmentDirections.actionToSearchFragment()) },
+            { findNavController().navigate(PromotionDetailsFragmentDirections.actionToSearchFragment()) },
+            { navigateToQrCodeFragment() },
+            { startSpeechRecognizer() },
+            showBackBtn = true
+        )
+        binding.errorMesTitle.isVisible = true
+        binding.errorMesDesc.isVisible = true
+        binding.errorBottomMess.isVisible = true
+        binding.errorMesTitle.text = promotionDetailErrorUI.title
+        binding.errorMesDesc.text = promotionDetailErrorUI.message
+        binding.errorBottomMess.text = promotionDetailErrorUI.bottomMessage
         binding.contentContainer.isVisible = false
         binding.vpPromotions.isVisible = true
         homePromotionsAdapter.submitList(promotionDetailErrorUI.promotionUIList)
@@ -239,6 +262,39 @@ class PromotionDetailsFragment : BaseFragment() {
             }
 
             override fun onShowAllPromotionsClick() {}
+        }
+    }
+
+    private val permissionsController by lazy {
+        PermissionsController(requireContext())
+    }
+
+    private fun navigateToQrCodeFragment() {
+        permissionsController.methodRequiresCameraPermission(requireActivity()) {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresCameraPermission
+            }
+
+            findNavController().navigate(R.id.qrCodeFragment)
+
+        }
+    }
+
+    private fun startSpeechRecognizer() {
+        permissionsController.methodRequiresRecordAudioPermission(requireActivity()) {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.RECORD_AUDIO
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresRecordAudioPermission
+            }
+
+            SpeechDialogFragment().show(childFragmentManager, "TAG")
         }
     }
 

@@ -81,7 +81,7 @@ object PromotionDetailResponseJsonParser {
         },
         promotionEntityList = when(isNull("tovarpopyl")) {
             false -> {
-                getJSONObject("tovarpopyl").getJSONArray("data").parsePromotionEntityList()
+                getJSONObject("tovarpopyl").getJSONArray("data").parseErrorPromotionEntityList()
             }
             true -> emptyList<PromotionEntity>()
         }
@@ -97,6 +97,21 @@ object PromotionDetailResponseJsonParser {
         id = safeString("ID").toLong(),
         name = safeString("NAME"),
         detailPicture = safeString("PREVIEW_PICTURE").parseImagePath(),
+        timeLeft = safeString("DATAOUT"),
+        statusColor = safeString("CVET"),
+        customerCategory = safeString("NAMERAZDEL")
+    )
+
+    private fun JSONArray.parseErrorPromotionEntityList(): List<PromotionEntity> = mutableListOf<PromotionEntity>().apply {
+        for (index in 0 until length()) {
+            add(getJSONObject(index).parseErrorPromotionEntity())
+        }
+    }
+
+    private fun JSONObject.parseErrorPromotionEntity() = PromotionEntity(
+        id = safeString("ID").toLong(),
+        name = safeString("NAME"),
+        detailPicture = safeString("DETAIL_PICTURE").parseImagePath(),
         timeLeft = safeString("DATAOUT"),
         statusColor = safeString("CVET"),
         customerCategory = safeString("NAMERAZDEL")
