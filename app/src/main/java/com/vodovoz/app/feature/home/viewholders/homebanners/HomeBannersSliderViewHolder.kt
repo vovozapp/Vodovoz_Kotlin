@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
+import androidx.viewpager2.widget.ViewPager2.*
 import com.vodovoz.app.R
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentSliderBannerBinding
@@ -103,6 +104,27 @@ class HomeBannersSliderViewHolder(
                 }
             }
         }, 0, 4000)
+
+        val callback = object: OnPageChangeCallback() {
+            private var settled = false
+            override fun onPageScrollStateChanged(state: Int) {
+                super.onPageScrollStateChanged(state)
+                if (state == SCROLL_STATE_DRAGGING) {
+                    settled = false
+                }
+                if (state == SCROLL_STATE_SETTLING) {
+                    settled = true
+                }
+                if (state == SCROLL_STATE_IDLE && !settled) {
+                    if (currentItem == totalPages - 1) {
+                        currentPageIndex = 0
+                        currentItem = 0
+                    }
+                }
+            }
+        }
+        unregisterOnPageChangeCallback(callback)
+        registerOnPageChangeCallback(callback)
 
         // Stop auto paging when user touch the view
         getRecyclerView().setOnTouchListener { _, event ->
