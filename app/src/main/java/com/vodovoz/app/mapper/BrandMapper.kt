@@ -12,7 +12,8 @@ object BrandMapper {
     fun BrandEntity.mapToUI() = BrandUI(
         id = id,
         name = name,
-        detailPicture = detailPicture
+        detailPicture = detailPicture,
+        hasList = hasList
     )
 
 }

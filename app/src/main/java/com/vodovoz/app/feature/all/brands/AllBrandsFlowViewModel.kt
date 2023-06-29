@@ -85,7 +85,7 @@ class AllBrandsFlowViewModel @Inject constructor(
 
     fun filterByQuery(query: String) {
         val newList = if (query.isNotBlank()) {
-            state.data.items.filter { it.name.contains(query) }
+            state.data.items.filter { it.name.contains(query, ignoreCase = true) }
         } else {
             state.data.items
         }

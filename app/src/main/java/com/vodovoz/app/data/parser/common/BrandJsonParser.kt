@@ -16,7 +16,8 @@ object BrandJsonParser {
     fun JSONObject.parserBrandEntity() = BrandEntity(
         id = safeLong("ID"),
         name = safeString("NAME"),
-        detailPicture = safeString("DETAIL_PICTURE").parseImagePath()
+        detailPicture = safeString("DETAIL_PICTURE").parseImagePath(),
+        hasList = safeString("SSILKA") != "" && safeString("SSILKA") == "Y"
     )
 
 }

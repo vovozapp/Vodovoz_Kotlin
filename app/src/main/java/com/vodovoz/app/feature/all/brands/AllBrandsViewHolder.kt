@@ -16,6 +16,7 @@ class AllBrandsViewHolder(
     init {
         binding.root.setOnClickListener {
             val item = item ?: return@setOnClickListener
+            if (!item.hasList) return@setOnClickListener
             allClickListener.onBrandClick(item.id)
         }
     }

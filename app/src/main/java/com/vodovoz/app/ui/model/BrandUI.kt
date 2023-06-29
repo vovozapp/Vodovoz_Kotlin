@@ -6,7 +6,8 @@ import com.vodovoz.app.common.content.itemadapter.Item
 data class BrandUI(
     val id: Long,
     val name: String,
-    val detailPicture: String
+    val detailPicture: String,
+    val hasList: Boolean
 ) : Item {
 
     override fun getItemViewType(): Int {
