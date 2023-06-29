@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.vodovoz.app.databinding.FragmentHistoryDetailBinding
@@ -117,9 +118,10 @@ class HistoryDetailFragment : Fragment() {
     }
 
     private fun updateBanner(bannerUI: BannerUI) {
-        bannerUI.actionEntity?.action?.let { action ->
-            binding.btnAction.text = action
-        }
+        val action = bannerUI.actionEntity?.action
+        binding.btnAction.isVisible = action != null
+        binding.btnAction.text = action
+
         Glide.with(requireContext())
             .load(bannerUI.detailPicture)
             .into(binding.imgHistory)
