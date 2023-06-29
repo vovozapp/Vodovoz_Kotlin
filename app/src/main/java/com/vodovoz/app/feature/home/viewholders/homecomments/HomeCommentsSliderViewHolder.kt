@@ -9,6 +9,7 @@ import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.viewholders.homecomments.inneradapter.HomeCommentsInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.homecomments.inneradapter.HomeCommentsSliderClickListener
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
+import com.vodovoz.app.ui.model.CommentUI
 
 class HomeCommentsSliderViewHolder(
     view: View,
@@ -40,8 +41,8 @@ class HomeCommentsSliderViewHolder(
 
     private fun getHomeCommentsSliderClickListener() : HomeCommentsSliderClickListener {
         return object : HomeCommentsSliderClickListener {
-            override fun onCommentClick(id: Long?) {
-                clickListener.onCommentsClick(id)
+            override fun onCommentClick(item: CommentUI) {
+                clickListener.onCommentsClick(item)
             }
         }
     }

@@ -34,6 +34,7 @@ import com.vodovoz.app.feature.home.popup.NewsClickListener
 import com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment
 import com.vodovoz.app.feature.home.ratebottom.RateBottomFragment
 import com.vodovoz.app.feature.home.ratebottom.RateBottomViewModel
+import com.vodovoz.app.feature.home.viewholders.homecomments.HomeCommentsFullBottomSheetFragment
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeTabsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
@@ -50,6 +51,7 @@ import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.feature.sitestate.SiteStateManager
+import com.vodovoz.app.ui.model.CommentUI
 import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.extensions.addOnBackPressedCallback
 import com.vodovoz.app.util.extensions.debugLog
@@ -642,7 +644,9 @@ class HomeFragment : BaseFragment() {
             }
 
             //POSITION_15
-            override fun onCommentsClick(id: Long?) {}
+            override fun onCommentsClick(item: CommentUI) {
+                HomeCommentsFullBottomSheetFragment.newInstance(title = item.author ?: "", content = item.text ?: "").show(childFragmentManager, "comm")
+            }
 
             override fun onSendCommentAboutShop() {
                 flowViewModel.onSendCommentClick()

@@ -43,7 +43,7 @@
             style="@style/TextViewSmallGray"
             android:layout_width="match_parent"
             android:layout_height="@dimen/comment_slider_text_height"
-            android:maxLines="3"
+            android:maxLines="2"
             android:fontFamily="@font/rotondac"
             android:lineSpacingExtra="4sp"
             android:ellipsize="end"

@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.home.adapter
 
 import com.vodovoz.app.data.model.common.ActionEntity
+import com.vodovoz.app.ui.model.CommentUI
 
 interface HomeMainClickListener {
 
@@ -21,7 +22,7 @@ interface HomeMainClickListener {
     fun onShowAllBrandsClick()
 
     //POSITION_15
-    fun onCommentsClick(id: Long?)
+    fun onCommentsClick(item: CommentUI)
     fun onSendCommentAboutShop()
 
     //POSITION_13

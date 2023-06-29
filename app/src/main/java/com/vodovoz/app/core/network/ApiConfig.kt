@@ -4,8 +4,8 @@ object ApiConfig {
     private const val VODOVOZ_PROTOCOL = "http://"
     private const val VODOVOZ_IP = "m.vodovoz.ru/"
 
-    const val VODOVOZ_URL = "$VODOVOZ_PROTOCOL$VODOVOZ_IP"
-    //const val VODOVOZ_URL = "http://szorinvodovoz.tw1.ru/"
+    //const val VODOVOZ_URL = "$VODOVOZ_PROTOCOL$VODOVOZ_IP"
+    const val VODOVOZ_URL = "http://szorinvodovoz.tw1.ru/"
     //const val VODOVOZ_URL = "http://mvodovoz.tw1.ru/"
 
     private const val MAPKIT_PROTOCOL = "https://"
@@ -13,9 +13,9 @@ object ApiConfig {
 
     const val MAPKIT_URL = "$MAPKIT_PROTOCOL$MAPKIT_IP"
 
-    const val ABOUT_SHOP_URL = "http://m.vodovoz.ru/newmobile/informatsiya/omagazine.php"
-    const val ABOUT_PAY_URL = "http://m.vodovoz.ru/newmobile/informatsiya/oplata.php"
-    const val ABOUT_DELIVERY_URL = "http://m.vodovoz.ru/newmobile/informatsiya/dosytavka.php"
+    const val ABOUT_SHOP_URL = VODOVOZ_URL + "newmobile/informatsiya/omagazine.php"
+    const val ABOUT_PAY_URL = VODOVOZ_URL + "newmobile/informatsiya/oplata.php"
+    const val ABOUT_DELIVERY_URL = VODOVOZ_URL + "newmobile/informatsiya/dosytavka.php"
 
     const val AMOUNT_CONTROLLER_TIMER = 1500L
 

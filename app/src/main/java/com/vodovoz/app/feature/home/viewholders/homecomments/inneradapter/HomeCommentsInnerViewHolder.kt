@@ -15,7 +15,7 @@ class HomeCommentsInnerViewHolder(
     init {
         binding.root.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
-            clickListener.onCommentClick(item.id)
+            clickListener.onCommentClick(item)
         }
     }
 
