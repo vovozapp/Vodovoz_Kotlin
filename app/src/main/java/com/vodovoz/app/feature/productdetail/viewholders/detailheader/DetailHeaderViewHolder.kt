@@ -121,7 +121,7 @@ class DetailHeaderViewHolder(
         binding.imgBack.setOnClickListener { clickListener.backPress() }
         binding.vpPictures.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.vpPictures.adapter = detailPictureFlowPagerAdapter
-        TabLayoutMediator(binding.tlIndicators, binding.vpPictures) { _, _ -> }.attach()
+        binding.dotsIndicator.attachTo(binding.vpPictures)
 
         binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 
@@ -185,7 +185,7 @@ class DetailHeaderViewHolder(
     override fun bind(item: DetailHeader) {
         super.bind(item)
 
-        binding.tlIndicators.isVisible = item.productDetailUI.detailPictureList.size != 1
+        binding.dotsIndicator.isVisible = item.productDetailUI.detailPictureList.size != 1
 
         item.productDetailUI.brandUI?.let { binding.tvBrand.text = it.name }
 
