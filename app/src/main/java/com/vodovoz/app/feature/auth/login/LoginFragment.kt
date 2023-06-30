@@ -133,14 +133,14 @@ class LoginFragment : BaseFragment() {
 
     private fun bindFingerPrintBtn() {
         binding.btnFingerPrint.setOnClickListener {
-            checkBiometric()
+            biometricPrompt.authenticate(promptInfo)
         }
     }
 
     private fun checkShowFingerPrint() {
         val userSettings = accountManager.fetchUserSettings()
-        binding.btnFingerPrint.isVisible =
-            !(userSettings.email.isEmpty() || userSettings.password.isEmpty())
+        val isSettingsCorrect = userSettings.email.isNotEmpty() && userSettings.password.isNotEmpty()
+        if (isSettingsCorrect) checkBiometric()
     }
 
     private fun observeEvents() {
@@ -408,26 +408,29 @@ class LoginFragment : BaseFragment() {
     private fun checkBiometric() {
         when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)) {
             BiometricManager.BIOMETRIC_SUCCESS -> {
+                binding.btnFingerPrint.isVisible = true
                 biometricPrompt.authenticate(promptInfo)
                 accountManager.saveUseBio(true)
             }
             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
-                requireActivity().snack("Вход по биометрии недоступен")
+                binding.btnFingerPrint.isVisible = false
                 accountManager.saveUseBio(false)
             }
             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
-                requireActivity().snack("Вход по биометрии недоступен")
+                binding.btnFingerPrint.isVisible = false
                 accountManager.saveUseBio(false)
             }
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+                binding.btnFingerPrint.isVisible = false
+                accountManager.saveUseBio(false)
                 // Prompts the user to create credentials that your app accepts.
-                val enrollIntent = Intent(Settings.ACTION_BIOMETRIC_ENROLL).apply {
+                /*val enrollIntent = Intent(Settings.ACTION_BIOMETRIC_ENROLL).apply {
                     putExtra(
                         Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
                         BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
                     )
                 }
-                biometricResultLauncher.launch(enrollIntent)
+                biometricResultLauncher.launch(enrollIntent)*/
             }
         }
     }
