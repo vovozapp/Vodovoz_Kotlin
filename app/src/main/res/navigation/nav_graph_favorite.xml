@@ -968,4 +968,8 @@
             app:argType="integer" />
 
     </dialog>
+    <fragment
+        android:id="@+id/biometricSettingsFragment"
+        android:name="com.vodovoz.app.feature.profile.biometric.BiometricSettingsFragment"
+        android:label="BiometricSettingsFragment" />
 </navigation>

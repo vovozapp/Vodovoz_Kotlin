@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="#F5F5F5"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.SwitchCompat xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/personalDataSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_marginBottom="@dimen/space_8"
+        android:checked="true"
+        android:layout_marginTop="@dimen/space_8"
+        android:fontFamily="@font/rotonda_normal"
+        android:padding="@dimen/space_16"
+        android:text="Вход по биометрии"
+        android:textSize="14sp" />
+
+</FrameLayout>

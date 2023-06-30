@@ -16,13 +16,13 @@ import kotlin.coroutines.suspendCoroutine
 @Singleton
 class AccountManager @Inject constructor(
     private val sharedPrefs: SharedPreferences,
-    private val repository: MainRepository
+    private val repository: MainRepository,
 ) {
 
     private val accountIdListener = MutableStateFlow<Long?>(null)
     fun observeAccountId() = accountIdListener.asStateFlow()
 
-    fun fetchAccountId() : Long? {
+    fun fetchAccountId(): Long? {
         val id = accountIdListener.value ?: fetchUserId()
         accountIdListener.value = id
         return id
@@ -66,6 +66,14 @@ class AccountManager @Inject constructor(
         }
     }
 
+    fun saveUseBio(use: Boolean) {
+        sharedPrefs.edit().putBoolean(USE_BIO, use).apply()
+    }
+
+    fun fetchUseBio(): Boolean {
+        return sharedPrefs.getBoolean(USE_BIO, true)
+    }
+
     fun isAlreadyLogin() = fetchUserId() != null
 
     suspend fun sendFirebaseToken() {
@@ -77,8 +85,8 @@ class AccountManager @Inject constructor(
         }
     }
 
-    private suspend fun fetchFirebaseToken() : String? {
-        return suspendCoroutine {continuation ->
+    private suspend fun fetchFirebaseToken(): String? {
+        return suspendCoroutine { continuation ->
             FirebaseMessaging.getInstance().token
                 .addOnSuccessListener {
                     continuation.resume(it)
@@ -99,13 +107,14 @@ class AccountManager @Inject constructor(
 
     data class UserSettings(
         val email: String,
-        val password: String
+        val password: String,
     )
 
     companion object {
         private const val USER_ID = "USER_ID"
         private const val EMAIL = "EMAIL"
         private const val PASSWORD = "PASSWORD"
+        private const val USE_BIO = "USE_BIO"
     }
 
 }

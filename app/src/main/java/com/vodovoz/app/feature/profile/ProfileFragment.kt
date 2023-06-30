@@ -232,10 +232,11 @@ class ProfileFragment : BaseFragment() {
             }
 
             override fun onSafetyClick() {
-                kotlin.runCatching {
+                /*kotlin.runCatching {
                     val intent = Intent(Settings.ACTION_SECURITY_SETTINGS)
                     startActivity(intent)
-                }
+                }*/
+                findNavController().navigate(R.id.biometricSettingsFragment)
             }
 
             override fun onAboutAppClick() {
