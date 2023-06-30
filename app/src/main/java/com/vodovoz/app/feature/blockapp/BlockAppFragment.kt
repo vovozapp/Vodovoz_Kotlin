@@ -15,6 +15,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import com.vodovoz.app.databinding.FragmentBlockAppBinding
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.util.extensions.*
@@ -65,7 +66,7 @@ class BlockAppFragment : BaseFragment() {
 
 
                         Glide.with(requireContext())
-                            .load(state.data?.logo)
+                            .load(state.data?.logo?.parseImagePath())
                             .placeholder(R.drawable.placeholderimageproduits)
                             .error(R.drawable.placeholderimageproduits)
                             .into(binding.imageBlockApp)
@@ -82,31 +83,31 @@ class BlockAppFragment : BaseFragment() {
                         }
 
                         Glide.with(requireContext())
-                            .load(state.data?.whatsUp?.image)
+                            .load(state.data?.whatsUp?.image?.parseImagePath())
                             .placeholder(R.drawable.placeholderimageproduits)
                             .error(R.drawable.placeholderimageproduits)
                             .into(binding.whatsUp)
 
                         Glide.with(requireContext())
-                            .load(state.data?.viber?.image)
+                            .load(state.data?.viber?.image?.parseImagePath())
                             .placeholder(R.drawable.placeholderimageproduits)
                             .error(R.drawable.placeholderimageproduits)
                             .into(binding.viber)
 
                         Glide.with(requireContext())
-                            .load(state.data?.telegram?.image)
+                            .load(state.data?.telegram?.image?.parseImagePath())
                             .placeholder(R.drawable.placeholderimageproduits)
                             .error(R.drawable.placeholderimageproduits)
                             .into(binding.telegram)
 
                         Glide.with(requireContext())
-                            .load(state.data?.chat?.image)
+                            .load(state.data?.chat?.image?.parseImagePath())
                             .placeholder(R.drawable.placeholderimageproduits)
                             .error(R.drawable.placeholderimageproduits)
                             .into(binding.chat)
 
                         Glide.with(requireContext())
-                            .load(state.data?.phone?.image)
+                            .load(state.data?.phone?.image?.parseImagePath())
                             .placeholder(R.drawable.placeholderimageproduits)
                             .error(R.drawable.placeholderimageproduits)
                             .into(binding.imageCall)

@@ -29,7 +29,7 @@ class SiteStateManager @Inject constructor(
 
     suspend fun requestSiteState() {
         if (siteStateListener.value == null) {
-            kotlin.runCatching {
+            runCatching {
                 siteStateListener.value = repository.fetchSiteState()
             }.onFailure {
                 siteStateListener.value = null

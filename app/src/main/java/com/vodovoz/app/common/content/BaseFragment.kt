@@ -166,7 +166,7 @@ abstract class BaseFragment : Fragment() {
         viewBinding.appBarDropDown.tvDropDownTitle.text = title
 
         if (showArrowDropDown) {
-            viewBinding.appBarDropDown.tvDropDownTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, requireContext().getDrawable(R.drawable.ic_drop_down),null)
+            viewBinding.appBarDropDown.tvDropDownTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, requireContext().drawable(R.drawable.ic_drop_down),null)
         } else {
             viewBinding.appBarDropDown.tvDropDownTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, null,null)
         }

@@ -54,7 +54,6 @@ class LikeManager @Inject constructor(
     }
 
     private suspend fun action(productId: Long, userId: Long, isFavorite: Boolean) {
-        throw IllegalStateException()
         return if (isFavorite) {
             repository.dislike(productId, userId)
             updateLikes(productId, false)
@@ -133,7 +132,7 @@ class LikeManager @Inject constructor(
 
         val localLikesListString = sharedPrefs.getString(FAV_IDS, "")?.dropLast(1) ?: ""
 
-        kotlin.runCatching {
+        runCatching {
             val resp = repository.like(productIdListStr = localLikesListString, userId = userId)
             sharedPrefs.edit().remove(FAV_IDS).apply()
         }
