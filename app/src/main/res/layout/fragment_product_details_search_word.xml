@@ -10,7 +10,7 @@
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/mdBetweenCategoryAndBrand2"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
+        android:layout_height="@dimen/space_8"
         app:dividerColor="@color/divider_gray_color" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -19,7 +19,8 @@
         android:layout_height="wrap_content"
         android:text="Ищут по запросам"
         android:textSize="@dimen/title_text_size_cat"
-        android:paddingVertical="@dimen/space_8"
+        android:paddingTop="@dimen/space_10"
+        android:paddingBottom="@dimen/space_8"
         android:paddingHorizontal="@dimen/space_16"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -31,7 +32,7 @@
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/mdBetweenCategoryAndBrand3"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
+        android:layout_height="@dimen/space_8"
         app:dividerColor="@color/divider_gray_color" />
 
 </LinearLayout>

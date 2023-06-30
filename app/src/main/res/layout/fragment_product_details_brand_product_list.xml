@@ -9,7 +9,7 @@
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/mdBetweenCategoryAndBrand2"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
+        android:layout_height="@dimen/space_8"
         app:dividerColor="@color/divider_gray_color" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -26,5 +26,10 @@
         android:text="Показать еще"
         android:textColor="@color/bluePrimary"
         android:padding="@dimen/space_16"/>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        app:dividerColor="@color/light_gray"
+        android:layout_height="@dimen/space_8"/>
 
 </LinearLayout>

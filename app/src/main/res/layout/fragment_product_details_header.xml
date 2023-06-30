@@ -32,8 +32,8 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
             android:src="@drawable/png_play"
             tools:ignore="ContentDescription" />
 
