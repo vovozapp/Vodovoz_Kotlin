@@ -71,7 +71,7 @@ class AccountManager @Inject constructor(
     }
 
     fun fetchUseBio(): Boolean {
-        return sharedPrefs.getBoolean(USE_BIO, true)
+        return sharedPrefs.getBoolean(USE_BIO, false)
     }
 
     fun isAlreadyLogin() = fetchUserId() != null
