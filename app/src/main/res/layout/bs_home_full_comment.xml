@@ -49,7 +49,14 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
+        <RatingBar
+            android:id="@+id/rbRating"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:max="5"
+            android:layout_marginStart="@dimen/space_16"
+            android:progressTint="#ffa700" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvContent"
@@ -59,6 +66,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/space_16" />
+
+
+        <TextView
+            android:id="@+id/tvDate"
+            style="@style/TextViewSmallGray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:layout_marginBottom="@dimen/space_16"
+            android:layout_marginEnd="@dimen/space_16"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvComment"
+            tools:text="23.05.2022 11:17" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

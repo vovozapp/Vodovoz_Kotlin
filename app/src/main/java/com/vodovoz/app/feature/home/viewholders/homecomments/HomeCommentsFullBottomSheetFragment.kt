@@ -13,9 +13,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeCommentsFullBottomSheetFragment : BaseBottomSheetFragment() {
 
     companion object {
-        fun newInstance(title: String, content: String): HomeCommentsFullBottomSheetFragment {
+        fun newInstance(title: String, content: String, rating: Int, date: String): HomeCommentsFullBottomSheetFragment {
             return HomeCommentsFullBottomSheetFragment().apply {
-                arguments = bundleOf("title" to title, "content" to content)
+                arguments = bundleOf("title" to title, "content" to content, "rating" to rating, "date" to date)
             }
         }
     }
@@ -33,8 +33,16 @@ class HomeCommentsFullBottomSheetFragment : BaseBottomSheetFragment() {
 
         binding.imgClose.setOnClickListener { dismiss() }
         if (arguments != null) {
-            binding.tvTitle.text = requireArguments().getString("title")
+            val name = requireArguments().getString("title")
+
+            binding.tvTitle.text = if (name.isNullOrEmpty().not()) {
+                name
+            } else {
+                "Анонимно"
+            }
             binding.tvContent.text = requireArguments().getString("content")
+            binding.rbRating.rating = requireArguments().getInt("rating").toFloat()
+            binding.tvDate.text = requireArguments().getString("date")
         }
     }
 }

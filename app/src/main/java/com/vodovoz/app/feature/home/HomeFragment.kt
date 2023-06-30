@@ -655,7 +655,7 @@ class HomeFragment : BaseFragment() {
 
             //POSITION_15
             override fun onCommentsClick(item: CommentUI) {
-                HomeCommentsFullBottomSheetFragment.newInstance(title = item.author ?: "", content = item.text ?: "").show(childFragmentManager, "comm")
+                HomeCommentsFullBottomSheetFragment.newInstance(title = item.author ?: "Анонимно", content = item.text ?: "", rating = item.rating ?: 5, date = item.date ?: "").show(childFragmentManager, "comm")
             }
 
             override fun onSendCommentAboutShop() {
