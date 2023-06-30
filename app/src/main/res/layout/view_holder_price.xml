@@ -10,7 +10,7 @@
     app:cardElevation="2dp">
 
     <LinearLayout
-        android:layout_width="@dimen/_70sdp"
+        android:layout_width="@dimen/_60sdp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
