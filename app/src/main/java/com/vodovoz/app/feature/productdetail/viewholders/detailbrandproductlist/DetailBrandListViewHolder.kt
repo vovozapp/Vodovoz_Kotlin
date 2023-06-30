@@ -32,7 +32,7 @@ class DetailBrandListViewHolder(
     private val productsAdapter = AvailableProductsAdapter(productsClickListener, likeManager, cartManager, ratingProductManager)
 
     init {
-        binding.nextPage.setOnClickListener { clickListener.onNextPageBrandProductsClick() }
+        binding.nextPage.setOnClickListener { clickListener.onNextPageBrandProductsClick(bindingAdapterPosition) }
 
         binding.brandProductRecycler.layoutManager = LinearLayoutManager(itemView.context)
         binding.brandProductRecycler.adapter = productsAdapter

@@ -279,11 +279,13 @@ class ProductDetailsFragment : BaseFragment() {
                 )
             }
 
-            override fun onNextPageBrandProductsClick() {
+            override fun onNextPageBrandProductsClick(position: Int) {
+                binding.mainRv.scrollToPosition(position - 1)
                 viewModel.nextPageBrandProducts()
             }
 
-            override fun onNextPageMaybeLikeClick() {
+            override fun onNextPageMaybeLikeClick(position: Int) {
+                binding.mainRv.scrollToPosition(position - 1)
                 viewModel.nextPageMaybeLikeProducts()
             }
 

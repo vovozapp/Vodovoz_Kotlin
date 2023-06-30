@@ -16,8 +16,8 @@ interface ProductDetailsClickListener {
     fun showProductsByCategory(id: Long)
     fun showProductsByBrand(id: Long)
 
-    fun onNextPageBrandProductsClick()
-    fun onNextPageMaybeLikeClick()
+    fun onNextPageBrandProductsClick(position: Int)
+    fun onNextPageMaybeLikeClick(position: Int)
 
     fun onQueryClick(query: String)
 

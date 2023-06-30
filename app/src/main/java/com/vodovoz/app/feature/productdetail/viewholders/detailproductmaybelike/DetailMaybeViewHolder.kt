@@ -32,7 +32,7 @@ class DetailMaybeViewHolder(
     private val productsAdapter = AvailableProductsAdapter(productsClickListener, likeManager, cartManager, ratingProductManager)
 
     init {
-        binding.tvNextPage.setOnClickListener { clickListener.onNextPageMaybeLikeClick() }
+        binding.tvNextPage.setOnClickListener { clickListener.onNextPageMaybeLikeClick(bindingAdapterPosition) }
 
         binding.rvProducts.layoutManager = GridLayoutManager(itemView.context, 2)
         binding.rvProducts.adapter = productsAdapter
