@@ -200,9 +200,13 @@ class SearchFragment : BaseFragment() {
         }
 
         binding.incAppBar.incSearch.etSearch.setOnEditorActionListener{ _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val query = binding.incAppBar.incSearch.etSearch.text.toString().trim()
-                if (query.isNotEmpty()) {
+
+            val query = binding.incAppBar.incSearch.etSearch.text.toString().trim()
+            if (query.isNotEmpty()) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    updateProductsByQuery(query)
+                }
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
                     updateProductsByQuery(query)
                 }
             }
