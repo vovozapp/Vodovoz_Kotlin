@@ -287,13 +287,15 @@ class ProductDetailsFlowViewModel @Inject constructor(
     }
 
     fun nextPageMaybeLikeProducts() {
+        uiStateListener.value = state.copy(loadingPage = true)
         val newPage = state.detailMaybeLikeProducts.pageIndex + 1
         if (newPage > state.detailMaybeLikeProducts.pageAmount) {
             uiStateListener.value = state.copy(
                 detailMaybeLikeProducts = state.detailMaybeLikeProducts.copy(
                     pageAmount = 1,
                     pageIndex = 1
-                )
+                ),
+                loadingPage = false
             )
         } else {
             uiStateListener.value = state.copy(
@@ -307,13 +309,15 @@ class ProductDetailsFlowViewModel @Inject constructor(
     }
 
     fun nextPageBrandProducts() {
+        uiStateListener.value = state.copy(loadingPage = true)
         val brandId = state.productDetailUI?.brandUI?.id
         val productId = state.productDetailUI?.id
         if (brandId != null && productId != null) {
             val newPage = state.detailBrandList.pageIndex + 1
             if (newPage > state.detailBrandList.pageAmount) {
                 uiStateListener.value = state.copy(
-                    detailBrandList = state.detailBrandList.copy(pageAmount = 1, pageIndex = 1)
+                    detailBrandList = state.detailBrandList.copy(pageAmount = 1, pageIndex = 1),
+                    loadingPage = false
                 )
             } else {
                 uiStateListener.value = state.copy(
@@ -324,6 +328,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
                 )
                 fetchBrandProducts(productId, brandId)
             }
+        } else {
+            uiStateListener.value = state.copy(loadingPage = false)
         }
     }
 
