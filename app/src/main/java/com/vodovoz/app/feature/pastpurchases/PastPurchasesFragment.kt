@@ -110,6 +110,7 @@ class PastPurchasesFragment : BaseFragment() {
                             )
                         }
                         is PastPurchasesFlowViewModel.PastPurchasesEvents.GoToProfile -> {
+                            findNavController().popBackStack()
                             tabManager.setAuthRedirect(findNavController().graph.id)
                             tabManager.selectTab(R.id.graph_profile)
                         }
@@ -124,6 +125,7 @@ class PastPurchasesFragment : BaseFragment() {
                 .observeAccountId()
                 .collect {
                     if (it == null) {
+                        findNavController().popBackStack()
                         tabManager.setAuthRedirect(findNavController().graph.id)
                         tabManager.selectTab(R.id.graph_profile)
                     } else {

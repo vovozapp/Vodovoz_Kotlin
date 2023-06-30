@@ -68,6 +68,7 @@ class OrdersHistoryFragment : BaseFragment() {
                 .observeAccountId()
                 .collect {
                     if (it == null) {
+                        findNavController().popBackStack()
                         tabManager.setAuthRedirect(findNavController().graph.id)
                         tabManager.selectTab(R.id.graph_profile)
                     } else {
