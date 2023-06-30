@@ -2,7 +2,9 @@ package com.vodovoz.app.common.permissions
 
 import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import com.vodovoz.app.util.extensions.debugLog
@@ -96,6 +98,21 @@ class PermissionsController(
                 PermissionsConstants.REQUEST_NOTIFICATION_PERMISSION, *perms
             )
             failure.invoke()
+        }
+    }
+
+    fun fetchSystemFeatureExists() {
+        val packageManager = context.packageManager
+        if (packageManager?.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT) == true) {
+            Toast.makeText(context, "Fingerprint sensor found!", Toast.LENGTH_SHORT).show()
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (packageManager?.hasSystemFeature(PackageManager.FEATURE_FACE) == true) {
+                Toast.makeText(context, "Face sensor found!", Toast.LENGTH_SHORT).show()
+            }
+            if (packageManager?.hasSystemFeature(PackageManager.FEATURE_IRIS) == true) {
+                Toast.makeText(context, "Iris sensor found!", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
