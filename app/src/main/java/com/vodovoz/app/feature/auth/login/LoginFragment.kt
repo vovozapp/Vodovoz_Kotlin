@@ -1,10 +1,17 @@
 package com.vodovoz.app.feature.auth.login
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -14,6 +21,8 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
+import com.vodovoz.app.common.account.data.AccountManager
+import com.vodovoz.app.common.account.data.LoginManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentLoginFlowBinding
@@ -29,6 +38,7 @@ import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.textOrError
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.Executor
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -45,11 +55,57 @@ class LoginFragment : BaseFragment() {
     @Inject
     lateinit var tabManager: TabManager
 
+    @Inject
+    lateinit var accountManager: AccountManager
+
+    private val biometricManager by lazy { BiometricManager.from(requireContext()) }
+
+    private val executor: Executor by lazy { ContextCompat.getMainExecutor(requireContext()) }
+    private val biometricPrompt: BiometricPrompt by lazy {
+        BiometricPrompt(this, executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    requireActivity().snack("Вход по биометрии не выполнен")
+                }
+
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult, ) {
+                    super.onAuthenticationSucceeded(result)
+                    authByUserSettings()
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    requireActivity().snack("Вход по биометрии не выполнен")
+                }
+            })
+    }
+
+    private val promptInfo: BiometricPrompt.PromptInfo by lazy {
+        BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Biometric login for my app")
+            .setSubtitle("Log in using your biometric credential")
+            .setNegativeButtonText("Use account password")
+            .build()
+    }
+
+
     private val viewModel: LoginFlowViewModel by viewModels()
     private val profileViewModel: ProfileFlowViewModel by activityViewModels()
     private val flowViewModel: HomeFlowViewModel by activityViewModels()
     private val cartFlowViewModel: CartFlowViewModel by activityViewModels()
     private val favoriteViewModel: FavoriteFlowViewModel by activityViewModels()
+
+    private val biometricResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val resultCode = result.resultCode
+            if (resultCode == Activity.RESULT_OK) {
+                biometricPrompt.authenticate(promptInfo)
+                accountManager.saveUseBio(true)
+            } else {
+                accountManager.saveUseBio(false)
+            }
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -64,6 +120,27 @@ class LoginFragment : BaseFragment() {
         binding.etPhone.setPhoneValidator {}
         bindTextListeners()
         bindErrorRefresh { showError(null) }
+        checkShowFingerPrint()
+        bindFingerPrintBtn()
+    }
+
+    private fun authByUserSettings() {
+        val userSettings = accountManager.fetchUserSettings()
+        if (userSettings.email.isNotEmpty() && userSettings.password.isNotEmpty()) {
+            viewModel.authByEmail(userSettings.email, userSettings.password)
+        }
+    }
+
+    private fun bindFingerPrintBtn() {
+        binding.btnFingerPrint.setOnClickListener {
+            checkBiometric()
+        }
+    }
+
+    private fun checkShowFingerPrint() {
+        val userSettings = accountManager.fetchUserSettings()
+        binding.btnFingerPrint.isVisible =
+            !(userSettings.email.isEmpty() || userSettings.password.isEmpty())
     }
 
     private fun observeEvents() {
@@ -174,7 +251,7 @@ class LoginFragment : BaseFragment() {
         if (!FieldValidationsSettings.EMAIL_REGEX.matches(binding.etEmail.text.toString())) {
             binding.tilEmail.error = "Неправильный формат почты"
             return false
-        } else  binding.tilEmail.error = null
+        } else binding.tilEmail.error = null
         return true
     }
 
@@ -217,7 +294,8 @@ class LoginFragment : BaseFragment() {
         binding.btnSignIn.setOnClickListener {
             if (binding.scPersonalInfo.isChecked.not()) {
                 requireActivity().snack("Необходимо согласие на обработку персональных данных")
-                binding.scPersonalInfo.error = "Необходимо согласие на обработку персональных данных"
+                binding.scPersonalInfo.error =
+                    "Необходимо согласие на обработку персональных данных"
             } else {
                 viewModel.signIn()
             }
@@ -282,13 +360,13 @@ class LoginFragment : BaseFragment() {
     private fun setupAuthByPhone(expiredTime: Int, phone: String) {
 
         binding.etPhone.setPhoneValidator {
-            when(FieldValidationsSettings.PHONE_REGEX.matches(it.toString())) {
+            when (FieldValidationsSettings.PHONE_REGEX.matches(it.toString())) {
                 true -> binding.tilPhone.error = null
                 false -> binding.tilPhone.error = "Неверный формат телефона"
             }
         }
 
-        when(expiredTime >= 0) {
+        when (expiredTime >= 0) {
             true -> {
                 binding.tvExpired.visibility = View.GONE
                 binding.tilCode.visibility = View.GONE
@@ -304,25 +382,52 @@ class LoginFragment : BaseFragment() {
     }
 
     private fun bindTextListeners() {
-        binding.etEmail.doOnTextChanged { _, _,_, count ->
-            if (count >0) binding.tilEmail.isErrorEnabled = false
+        binding.etEmail.doOnTextChanged { _, _, _, count ->
+            if (count > 0) binding.tilEmail.isErrorEnabled = false
         }
 
-        binding.etPassword.doOnTextChanged { _, _,_, count ->
-            if (count >0) binding.tilPassword.isErrorEnabled = false
+        binding.etPassword.doOnTextChanged { _, _, _, count ->
+            if (count > 0) binding.tilPassword.isErrorEnabled = false
         }
 
-        binding.etCode.doOnTextChanged { _, _,_, count ->
-            if (count >0) binding.tilCode.isErrorEnabled = false
+        binding.etCode.doOnTextChanged { _, _, _, count ->
+            if (count > 0) binding.tilCode.isErrorEnabled = false
         }
 
-        binding.etPhone.doOnTextChanged { _, _,_, count ->
-            if (count >0) binding.tilPhone.isErrorEnabled = false
+        binding.etPhone.doOnTextChanged { _, _, _, count ->
+            if (count > 0) binding.tilPhone.isErrorEnabled = false
         }
 
         binding.scPersonalInfo.setOnCheckedChangeListener { compoundButton, b ->
             if (b) {
                 binding.scPersonalInfo.error = null
+            }
+        }
+    }
+
+    private fun checkBiometric() {
+        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)) {
+            BiometricManager.BIOMETRIC_SUCCESS -> {
+                biometricPrompt.authenticate(promptInfo)
+                accountManager.saveUseBio(true)
+            }
+            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
+                requireActivity().snack("Вход по биометрии недоступен")
+                accountManager.saveUseBio(false)
+            }
+            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
+                requireActivity().snack("Вход по биометрии недоступен")
+                accountManager.saveUseBio(false)
+            }
+            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+                // Prompts the user to create credentials that your app accepts.
+                val enrollIntent = Intent(Settings.ACTION_BIOMETRIC_ENROLL).apply {
+                    putExtra(
+                        Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
+                        BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+                    )
+                }
+                biometricResultLauncher.launch(enrollIntent)
             }
         }
     }
