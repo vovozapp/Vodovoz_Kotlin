@@ -1482,10 +1482,10 @@ class MainRepository @Inject constructor(
      * Contacts
      */
 
-    suspend fun fetchContacts() = api.fetchContactsResponse(
+    suspend fun fetchContacts(appVersion: String) = api.fetchContactsResponse(
         action = "dannyesvyazi",
-        appVersion = "1.5.10"
-    ) //todo Build.VERSION.RELEASE
+        appVersion = appVersion
+    )
 
     /**
      * Send Mail

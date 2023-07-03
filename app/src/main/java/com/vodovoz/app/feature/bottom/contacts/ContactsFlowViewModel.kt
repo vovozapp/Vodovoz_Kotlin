@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.bottom.contacts
 
 import android.os.Build
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.content.*
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.data.MainRepository
@@ -28,7 +29,7 @@ class ContactsFlowViewModel @Inject constructor(
 
     fun fetchContacts() {
         viewModelScope.launch {
-            flow { emit(repository.fetchContacts()) }
+            flow { emit(repository.fetchContacts(BuildConfig.VERSION_NAME)) }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseContactsBundleResponse()
