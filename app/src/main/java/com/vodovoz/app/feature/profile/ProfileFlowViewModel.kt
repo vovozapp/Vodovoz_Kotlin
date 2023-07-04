@@ -17,6 +17,7 @@ import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.pars
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel.ProfileState.Companion.fetchStaticItems
 import com.vodovoz.app.feature.profile.viewholders.models.ProfileHeader
 import com.vodovoz.app.feature.profile.viewholders.models.ProfileLogout
+import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.mapper.UserDataMapper.mapToUI
 import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
@@ -38,6 +39,7 @@ class ProfileFlowViewModel @Inject constructor(
     private val siteStateManager: SiteStateManager,
     private val tabManager: TabManager,
     private val application: Application,
+    private val waterAppHelper: WaterAppHelper
 ) : PagingContractViewModel<ProfileFlowViewModel.ProfileState, ProfileFlowViewModel.ProfileEvents>(
     ProfileState.idle()
 ) {
@@ -262,6 +264,7 @@ class ProfileFlowViewModel @Inject constructor(
             accountManager.removeUserId()
             eventListener.emit(ProfileEvents.Logout)
             localDataSource.removeCookieSessionId()
+            waterAppHelper.clearData()
         }
     }
 
