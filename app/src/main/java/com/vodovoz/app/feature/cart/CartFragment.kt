@@ -25,6 +25,7 @@ import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
+import com.vodovoz.app.util.extensions.snackTop
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -181,10 +182,8 @@ class CartFragment : BaseFragment() {
                     showError(cartState.error)
 
                     if (cartState.data.infoMessage?.message?.isNotEmpty() == true) {
-                        Snackbar.make(binding.root, cartState.data.infoMessage.message, Snackbar.LENGTH_LONG).show()
+                        requireActivity().snackTop(cartState.data.infoMessage.message)
                     }
-
-                    debugLog { "spasibo ${cartState.data.giftMessageBottom?.message}" }
 
                     when(cartState.data.giftMessageBottom?.message?.isNotEmpty() == true) {
                         null -> binding.bottom.tvGiftMessage.visibility = View.GONE

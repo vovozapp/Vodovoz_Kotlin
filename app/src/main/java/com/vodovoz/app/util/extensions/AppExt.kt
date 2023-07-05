@@ -15,8 +15,10 @@ import android.text.TextPaint
 import android.text.style.ClickableSpan
 import android.util.Base64
 import android.view.ContextThemeWrapper
+import android.view.Gravity
 import android.view.View
 import android.widget.EditText
+import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
@@ -33,6 +35,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewbinding.BuildConfig
 import com.google.android.material.snackbar.Snackbar
+import com.vodovoz.app.R
 import java.io.File
 import java.io.FileInputStream
 import java.text.SimpleDateFormat
@@ -116,6 +119,22 @@ inline fun Activity.snack(
     snack.show()*/
 
     Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+}
+
+inline fun Activity.snackTop(
+    message: String,
+    length: Int = Snackbar.LENGTH_LONG,
+    f: Snackbar.() -> Unit = {}
+) {
+    val snack = Snackbar.make(findViewById(android.R.id.content), message, length)
+    val view = snack.view
+    view.background = this.drawable(R.drawable.bg_custom_snackbar)
+    val params = view.layoutParams as FrameLayout.LayoutParams
+    params.gravity = Gravity.TOP
+    view.layoutParams = params
+    snack.setTextColor(this.color(R.color.text_black))
+    snack.f()
+    snack.show()
 }
 
 fun Snackbar.action(action: String, color: Int? = null, listener: (View) -> Unit) {
