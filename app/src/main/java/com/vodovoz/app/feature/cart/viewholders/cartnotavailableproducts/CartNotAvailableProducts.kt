@@ -2,12 +2,13 @@ package com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts
 
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.data.parser.response.cart.MessageTextBasket
 import com.vodovoz.app.ui.model.ProductUI
 
 data class CartNotAvailableProducts(
     val id: Int,
     val items: List<ProductUI>,
-    val giftMessage: String? = null
+    val giftMessage: MessageTextBasket? = null
 ) : Item {
 
     override fun getItemViewType(): Int {

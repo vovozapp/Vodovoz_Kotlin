@@ -72,7 +72,7 @@ class CartAvailableProductsViewHolder(
             null -> binding.tvGiftMessage.visibility = View.GONE
             else -> {
                 binding.tvGiftMessage.visibility = View.VISIBLE
-                binding.tvGiftMessage.text = item.giftMessage
+                binding.tvGiftMessage.text = item.giftMessage.message
             }
         }
 

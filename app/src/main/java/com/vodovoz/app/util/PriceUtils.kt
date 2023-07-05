@@ -29,7 +29,11 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
                 }
             }
             price?.let {
-                fullPrice += price.oldPrice * productUI.cartQuantity
+                if (price.oldPrice == 0) {
+                    fullPrice += price.currentPrice * productUI.cartQuantity
+                } else {
+                    fullPrice += price.oldPrice * productUI.cartQuantity
+                }
                 discountPrice += productUI.totalDisc * productUI.cartQuantity
             }
         }

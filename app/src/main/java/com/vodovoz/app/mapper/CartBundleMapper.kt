@@ -8,6 +8,7 @@ import com.vodovoz.app.ui.model.custom.CartBundleUI
 object CartBundleMapper {
 
     fun CartBundleEntity.mapUoUI() = CartBundleUI(
+        giftMessageBottom = giftMessageBottom,
         giftMessage = giftMessage,
         infoMessage = infoMessage,
         availableProductUIList = availableProductEntityList.mapToUI(),

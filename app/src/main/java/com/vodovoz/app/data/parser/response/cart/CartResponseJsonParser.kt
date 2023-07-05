@@ -9,8 +9,10 @@ import com.vodovoz.app.data.model.features.CartBundleEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
 import com.vodovoz.app.data.parser.common.safeDouble
 import com.vodovoz.app.data.parser.common.safeInt
+import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import com.vodovoz.app.util.LogSettings
+import com.vodovoz.app.util.extensions.debugLog
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
@@ -24,14 +26,9 @@ object CartResponseJsonParser {
      //   Log.d(LogSettings.RESPONSE_BODY_LOG, responseJson.toString(2))
         return ResponseEntity.Success(
             CartBundleEntity(
-                infoMessage = when(responseJson.getJSONArray("textkorzina").getJSONObject(1).isNull("MESSAGETEXT")) {
-                    true -> ""
-                    false -> responseJson.getJSONArray("textkorzina").getJSONObject(1).getString("MESSAGETEXT")
-                },
-                giftMessage = when(responseJson.getJSONArray("textkorzina").getJSONObject(0).isNull("MESSAGETEXT")) {
-                    true -> null
-                    false -> responseJson.getJSONArray("textkorzina").getJSONObject(0).getString("MESSAGETEXT")
-                },
+                giftMessageBottom = responseJson.getJSONArray("textkorzina").getMessageTextBasketOrNull("text_niz"),
+                infoMessage = responseJson.getJSONArray("textkorzina").getMessageTextBasketOrNull("okno"),
+                giftMessage = responseJson.getJSONArray("textkorzina").getMessageTextBasketOrNull("text"),
                 availableProductEntityList = responseJson.getJSONArray("data").parseProductEntityList(),
                 notAvailableProductEntityList = when(responseJson.has("netvnalichii")) {
                     true -> responseJson.getJSONObject("netvnalichii").parseNotAvailableProductEntityList()
@@ -53,6 +50,58 @@ object CartResponseJsonParser {
         )
     }
 
+    private fun JSONArray.getMessageTextBasketOrNull(id: String) : MessageTextBasket? {
+        var messageTextBasket: MessageTextBasket? = null
+        for (index in 0 until length()) {
+            if (getJSONObject(index).has("ID")) {
+                when (getJSONObject(index).safeString("ID")) {
+                    "text" -> {
+                        if (id == "text") {
+                            val mes = getJSONObject(index).safeString("MESSAGETEXT")
+                            messageTextBasket = MessageTextBasket(
+                                id = getJSONObject(index).safeString("ID"),
+                                message = if (mes == "null") {
+                                    null
+                                } else {
+                                    mes
+                                }
+                            )
+                        }
+                    }
+                    "text_niz" -> {
+                        if (id == "text_niz") {
+                            val mes = getJSONObject(index).safeString("MESSAGETEXT")
+                            debugLog { "spasibo mes $mes" }
+                            messageTextBasket = MessageTextBasket(
+                                id = getJSONObject(index).safeString("ID"),
+                                message = if (mes == "null") {
+                                    null
+                                } else {
+                                    mes
+                                }
+                            )
+                        }
+                    }
+                    "okno" -> {
+                        if (id == "okno") {
+                            val mes = getJSONObject(index).safeString("MESSAGETEXT")
+                            messageTextBasket = MessageTextBasket(
+                                id = getJSONObject(index).safeString("ID"),
+                                message = if (mes == "null") {
+                                    null
+                                } else {
+                                    mes
+                                },
+                                color = getJSONObject(index).safeString("CVET"),
+                                session = getJSONObject(index).safeString("SESION"),
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        return messageTextBasket
+    }
     private fun JSONObject.parseNotAvailableProductEntityList() = when(isNull("data")) {
         true -> listOf()
         false -> getJSONArray("data").parseProductEntityList()
@@ -100,3 +149,10 @@ object CartResponseJsonParser {
     )
 
 }
+
+data class MessageTextBasket(
+    val id : String? = null,
+    val message : String? = null,
+    val color : String? = null,
+    val session : String? = null,
+)

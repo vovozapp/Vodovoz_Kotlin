@@ -180,7 +180,19 @@ class CartFragment : BaseFragment() {
 
                     showError(cartState.error)
 
-                    if (cartState.data.infoMessage.isNotEmpty()) Snackbar.make(binding.root, cartState.data.infoMessage, Snackbar.LENGTH_LONG).show()
+                    if (cartState.data.infoMessage?.message?.isNotEmpty() == true) {
+                        Snackbar.make(binding.root, cartState.data.infoMessage.message, Snackbar.LENGTH_LONG).show()
+                    }
+
+                    debugLog { "spasibo ${cartState.data.giftMessageBottom?.message}" }
+
+                    when(cartState.data.giftMessageBottom?.message?.isNotEmpty() == true) {
+                        null -> binding.bottom.tvGiftMessage.visibility = View.GONE
+                        else -> {
+                            binding.bottom.tvGiftMessage.visibility = View.VISIBLE
+                            binding.bottom.tvGiftMessage.text = cartState.data.giftMessageBottom?.message
+                        }
+                    }
 
                     when(cartState.data.giftProductUIList.isEmpty()) {
                         true -> binding.bottom.llShowGifts.visibility = View.GONE

@@ -15,6 +15,7 @@ import com.vodovoz.app.data.parser.response.cart.ClearCartResponseJsonParser.par
 import com.vodovoz.app.mapper.CartBundleMapper.mapUoUI
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.data.parser.response.cart.MessageTextBasket
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.CartAvailableProducts
 import com.vodovoz.app.feature.cart.viewholders.cartempty.CartEmpty
 import com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts.CartNotAvailableProducts
@@ -115,10 +116,12 @@ class CartFlowViewModel @Inject constructor(
                             availableProducts,
                             calculatedPrices.total
                         )
+                        debugLog { "spasibo vm ${mappedData.giftMessageBottom}" }
                         state.copy(
                             data = state.data.copy(
                                 coupon = coupon ?: "",
                                 infoMessage = mappedData.infoMessage,
+                                giftMessageBottom = mappedData.giftMessageBottom,
                                 giftProductUIList = mappedData.giftProductUIList,
                                 availableProducts = CartAvailableProducts(
                                     CART_AVAILABLE_PRODUCTS_ID,
@@ -255,7 +258,8 @@ class CartFlowViewModel @Inject constructor(
 
     data class CartState(
         val coupon: String = "",
-        val infoMessage: String = "",
+        val infoMessage: MessageTextBasket? = null,
+        val giftMessageBottom: MessageTextBasket? = null,
         val giftProductUIList: List<ProductUI> = emptyList(),
         val availableProducts: CartAvailableProducts? = null,
         val notAvailableProducts: CartNotAvailableProducts? = null,

@@ -50,6 +50,18 @@
 
     </LinearLayout>
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvGiftMessage"
+        style="@style/TextViewNormalBlack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/space_16"
+        android:paddingVertical="@dimen/space_8"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:background="@color/white"
+        tools:text="Для получения более интересного подарка осталось 984 Р" />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnRegOrderFlow"
         style="@style/GreenButton"
