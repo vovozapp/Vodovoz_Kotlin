@@ -54,49 +54,13 @@ object CartResponseJsonParser {
         var messageTextBasket: MessageTextBasket? = null
         for (index in 0 until length()) {
             if (getJSONObject(index).has("ID")) {
-                when (getJSONObject(index).safeString("ID")) {
-                    "text" -> {
-                        if (id == "text") {
-                            val mes = getJSONObject(index).safeString("MESSAGETEXT")
-                            messageTextBasket = MessageTextBasket(
-                                id = getJSONObject(index).safeString("ID"),
-                                message = if (mes == "null") {
-                                    null
-                                } else {
-                                    mes
-                                }
-                            )
-                        }
-                    }
-                    "text_niz" -> {
-                        if (id == "text_niz") {
-                            val mes = getJSONObject(index).safeString("MESSAGETEXT")
-                            debugLog { "spasibo mes $mes" }
-                            messageTextBasket = MessageTextBasket(
-                                id = getJSONObject(index).safeString("ID"),
-                                message = if (mes == "null") {
-                                    null
-                                } else {
-                                    mes
-                                }
-                            )
-                        }
-                    }
-                    "okno" -> {
-                        if (id == "okno") {
-                            val mes = getJSONObject(index).safeString("MESSAGETEXT")
-                            messageTextBasket = MessageTextBasket(
-                                id = getJSONObject(index).safeString("ID"),
-                                message = if (mes == "null") {
-                                    null
-                                } else {
-                                    mes
-                                },
-                                color = getJSONObject(index).safeString("CVET"),
-                                session = getJSONObject(index).safeString("SESION"),
-                            )
-                        }
-                    }
+                if (getJSONObject(index).safeString("ID") == id) {
+                    messageTextBasket = MessageTextBasket(
+                        id = getJSONObject(index).safeString("ID"),
+                        message = getJSONObject(index).safeString("MESSAGETEXT"),
+                        color = getJSONObject(index).safeString("CVET"),
+                        session = getJSONObject(index).safeString("SESION"),
+                    )
                 }
             }
         }

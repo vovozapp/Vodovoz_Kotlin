@@ -186,7 +186,7 @@ class CartFragment : BaseFragment() {
                     }
 
                     when(cartState.data.giftMessageBottom?.message?.isNotEmpty() == true) {
-                        null -> binding.bottom.tvGiftMessage.visibility = View.GONE
+                        false -> binding.bottom.tvGiftMessage.visibility = View.GONE
                         else -> {
                             binding.bottom.tvGiftMessage.visibility = View.VISIBLE
                             binding.bottom.tvGiftMessage.text = cartState.data.giftMessageBottom?.message
