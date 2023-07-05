@@ -122,11 +122,13 @@ class CartFlowViewModel @Inject constructor(
                                     CART_AVAILABLE_PRODUCTS_ID,
                                     availableProducts,
                                     showCheckForm = availableProducts.any { it.depositPrice != 0 },
-                                    showReturnBottleBtn = false
+                                    showReturnBottleBtn = false,
+                                    giftMessage = mappedData.giftMessage
                                 ),
                                 notAvailableProducts = CartNotAvailableProducts(
                                     CART_NOT_AVAILABLE_PRODUCTS_ID,
-                                    mappedData.notAvailableProductUIList
+                                    mappedData.notAvailableProductUIList,
+                                    giftMessage = mappedData.giftMessage
                                 ),
                                 total = CartTotal(CART_TOTAL_ID, calculatedPrices),
                                 bestForYouTitle = HomeTitle(

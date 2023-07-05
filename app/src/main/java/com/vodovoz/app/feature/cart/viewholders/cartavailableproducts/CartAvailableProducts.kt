@@ -8,7 +8,8 @@ data class CartAvailableProducts(
     val id: Int,
     val items: List<ProductUI>,
     val showCheckForm: Boolean = false,
-    val showReturnBottleBtn: Boolean = false
+    val showReturnBottleBtn: Boolean = false,
+    val giftMessage: String? = null
 ) : Item {
 
     override fun getItemViewType(): Int {

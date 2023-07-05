@@ -68,6 +68,14 @@ class CartAvailableProductsViewHolder(
     override fun bind(item: CartAvailableProducts) {
         super.bind(item)
 
+        when(item.giftMessage) {
+            null -> binding.tvGiftMessage.visibility = View.GONE
+            else -> {
+                binding.tvGiftMessage.visibility = View.VISIBLE
+                binding.tvGiftMessage.text = item.giftMessage
+            }
+        }
+
         binding.rlChooseBottleBtnContainer.visibility = View.GONE
 
         when(item.showCheckForm || binding.cbReturnBottles.isChecked) {
