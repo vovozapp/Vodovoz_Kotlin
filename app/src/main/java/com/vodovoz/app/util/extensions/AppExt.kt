@@ -3,6 +3,7 @@ package com.vodovoz.app.util.extensions
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Parcelable
@@ -25,6 +26,7 @@ import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -322,4 +324,12 @@ fun fetchCurrentDayInTimeMillis() : Long {
         set(Calendar.MILLISECOND, 0)
     }.timeInMillis
 }
+
+fun String.getColorWithAlpha(): Int {
+    return ColorUtils.setAlphaComponent(
+        Color.parseColor(this),
+        (35f / 100 * 255).toInt()
+    )
+}
+
 

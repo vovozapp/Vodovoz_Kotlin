@@ -116,7 +116,6 @@ class CartFlowViewModel @Inject constructor(
                             availableProducts,
                             calculatedPrices.total
                         )
-                        debugLog { "spasibo vm ${mappedData.giftMessageBottom}" }
                         state.copy(
                             data = state.data.copy(
                                 coupon = coupon ?: "",
