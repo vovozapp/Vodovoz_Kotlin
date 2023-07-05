@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.cart
 
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.*
@@ -82,7 +83,8 @@ class CartFlowViewModel @Inject constructor(
                     repository.fetchCartResponse(
                         action = "getbasket",
                         userId = localDataSource.fetchUserId(),
-                        coupon = coupon
+                        coupon = coupon,
+                        appVersion = BuildConfig.VERSION_NAME
                     )
                 )
             }

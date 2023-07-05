@@ -715,12 +715,14 @@ class MainRepository @Inject constructor(
         userId: Long? = null,
         coupon: String? = null,
         amount: Int? = null,
+        appVersion: String? = null,
     ): ResponseBody {
         return api.fetchCartResponse(
             action = action,
             userId = userId,
             coupon = coupon,
-            amount = amount
+            amount = amount,
+            appVersion = appVersion
         )
     }
 

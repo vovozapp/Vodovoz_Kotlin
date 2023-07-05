@@ -197,6 +197,7 @@ interface MainApi {
         @Query("userid") userId: Long? = null,
         @Query("coupon") coupon: String? = null,
         @Query("quantity") amount: Int? = null,
+        @Query("versiyaan") appVersion: String? = null,
     ): ResponseBody
 
     //Добавление в корзину fetchAddProductResponse
