@@ -64,7 +64,10 @@ class ProductsListFlowViewModel @Inject constructor(
                             data = state.data.copy(
                                 categoryHeader = data,
                                 categoryId = categoryId,
-                                showCatagoryContainer = catalogManager.hasRootItems(categoryId)
+                                showCategoryContainer = catalogManager.hasRootItems(categoryId),
+                                filterCode = data.filterCode.ifEmpty {
+                                    state.data.filterCode
+                                }
                             ),
                             loadingPage = false,
                             error = null
@@ -276,10 +279,10 @@ class ProductsListFlowViewModel @Inject constructor(
         val categoryUI = state.data.categoryHeader ?: return
 
         val bundle = state.data.filterBundle
-        bundle.filterUIList.removeAll { it.code == FiltersConfig.BRAND_FILTER_CODE }
+        bundle.filterUIList.removeAll { it.code == state.data.filterCode }
         bundle.filterUIList.add(
             FilterUI(
-                code = FiltersConfig.BRAND_FILTER_CODE,
+                code = state.data.filterCode,
                 name = FiltersConfig.BRAND_FILTER_NAME,
                 filterValueList = mutableListOf(filterValue)
             )
@@ -322,7 +325,8 @@ class ProductsListFlowViewModel @Inject constructor(
         val isFirstLoadSorted: Boolean = false,
         val itemsList: List<Item> = emptyList(),
         val layoutManager: String = LINEAR,
-        val showCatagoryContainer: Boolean = false
+        val showCategoryContainer: Boolean = false,
+        val filterCode: String = "BRAND"
     ) : State
 
     companion object {

@@ -3,6 +3,7 @@ package com.vodovoz.app.data.parser.response.category
 import com.vodovoz.app.data.model.common.CategoryEntity
 import com.vodovoz.app.data.model.common.FilterValueEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
 import org.json.JSONArray
@@ -29,6 +30,11 @@ object CategoryHeaderResponseJsonParser {
                         true -> listOf()
                     }
                 } else listOf()
+
+                val filterCode = when (responseJson.has("brand")) {
+                    true -> responseJson.getJSONObject("brand").safeString("SIMVOL_CODE")
+                    else -> ""
+                }
 
                 return ResponseEntity.Success(
                     CategoryEntity(

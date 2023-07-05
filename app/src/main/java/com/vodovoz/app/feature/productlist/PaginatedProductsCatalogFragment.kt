@@ -187,7 +187,7 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
             showAllFiltersFragment(filterBundle, id)
         }
 
-        binding.changeCategoryContainer.isVisible = state.showCatagoryContainer
+        binding.changeCategoryContainer.isVisible = state.showCategoryContainer
 
         binding.categoryContainer.setOnClickListener {
             val id = state.categoryId

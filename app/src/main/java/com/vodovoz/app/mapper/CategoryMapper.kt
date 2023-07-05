@@ -18,7 +18,8 @@ object CategoryMapper  {
         productAmount = productAmount,
         primaryFilterName = primaryFilterName,
         primaryFilterValueList = primaryFilterValueList.mapToUI(),
-        categoryUIList = subCategoryEntityList.mapToUI()
+        categoryUIList = subCategoryEntityList.mapToUI(),
+        filterCode = filterCode
     )
 
 }
