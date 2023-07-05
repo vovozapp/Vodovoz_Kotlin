@@ -16,6 +16,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
@@ -148,8 +149,12 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
                         productsListFlowController.submitList(data.itemsList)
                     }
 
-                    showError(state.error)
-
+                    if (state.error is ErrorState.Empty) {
+                        binding.emptyErrorTv.isVisible = true
+                    } else {
+                        binding.emptyErrorTv.isVisible = false
+                        showError(state.error)
+                    }
                 }
         }
     }

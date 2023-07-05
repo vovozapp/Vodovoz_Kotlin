@@ -239,6 +239,8 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/productRecycler"
             android:layout_width="match_parent"
@@ -246,5 +248,15 @@
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        style="@style/TextViewNormalBlackBold"
+        tools:visibility="visible"
+        android:id="@+id/emptyErrorTv"
+        android:text="Ничего не найдено"
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

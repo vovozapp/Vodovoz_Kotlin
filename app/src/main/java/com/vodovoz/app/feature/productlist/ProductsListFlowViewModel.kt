@@ -116,6 +116,7 @@ class ProductsListFlowViewModel @Inject constructor(
                         uiStateListener.value = if (data.isEmpty() && !state.loadMore) {
                             state.copy(
                                 error = ErrorState.Empty(),
+                                data = state.data.copy(itemsList = emptyList()),
                                 loadingPage = false,
                                 loadMore = false,
                                 bottomItem = null,
