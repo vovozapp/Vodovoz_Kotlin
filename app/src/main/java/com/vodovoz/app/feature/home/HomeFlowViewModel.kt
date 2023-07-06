@@ -57,7 +57,8 @@ class HomeFlowViewModel @Inject constructor(
 
     private fun secondLoad() {
         viewModelScope.launch {
-            val tasks = secondLoadTasks()
+            val userId = accountManager.fetchAccountId()
+            val tasks = secondLoadTasks(userId)
             val start = System.currentTimeMillis()
             val result = awaitAll(*tasks).flatten()
             val mappedResult = if (result.isNotEmpty()) {
@@ -92,7 +93,8 @@ class HomeFlowViewModel @Inject constructor(
                     isFirstLoad = false
                 )
             viewModelScope.launch {
-                val tasks = firstLoadTasks() + secondLoadTasks()
+                val userId = accountManager.fetchAccountId()
+                val tasks = firstLoadTasks() + secondLoadTasks(userId)
                 val result = awaitAll(*tasks).flatten()
                 val mappedResult = if (result.isNotEmpty()) {
                     result + HomeState.fetchStaticItems()
@@ -120,112 +122,27 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun CoroutineScope.firstLoadTasks() = arrayOf(
-        async(Dispatchers.IO) { fetchAdvBannerSlider(POSITION_1) },
-        async(Dispatchers.IO) { fetchHisSlider(POSITION_2_TITLE, POSITION_3) },
-        async(Dispatchers.IO) { fetchPopSlider(POSITION_4_TITLE, POSITION_5) },
-        async(Dispatchers.IO) { fetchDiscSlider(POSITION_6_TITLE, POSITION_7) },
-        async(Dispatchers.IO) { fetchCatBannerSlider(POSITION_8) }
+        async(Dispatchers.IO) { homeRequest { repository.fetchAdvertisingBannersSlider(POSITION_1) } },
+        async(Dispatchers.IO) { homeRequest { repository.fetchHistoriesSlider(POSITION_2_TITLE, POSITION_3) } },
+        async(Dispatchers.IO) { homeRequest { repository.fetchPopularSlider(POSITION_4_TITLE, POSITION_5) } },
+        async(Dispatchers.IO) { homeRequest { repository.fetchDiscountsSlider(POSITION_6_TITLE, POSITION_7) } },
+        async(Dispatchers.IO) { homeRequest { repository.fetchCategoryBannersSlider(POSITION_8) } }
     )
 
-    private fun CoroutineScope.secondLoadTasks() = arrayOf(
-        async(Dispatchers.IO) { fetchTSlider(POSITION_9_TAB, POSITION_10) },
-        async(Dispatchers.IO) { fetchOrdSlider(POSITION_11_TITLE, POSITION_12) },
-        async(Dispatchers.IO) { fetchNovSlider(POSITION_14_TITLE, POSITION_15) },
-        async(Dispatchers.IO) { fetchPromSlider(POSITION_16_TITLE, POSITION_17) },
-        async(Dispatchers.IO) { fetchBSlider(POSITION_18_TAB, POSITION_19) },
-        async(Dispatchers.IO) { fetchBrSlider(POSITION_20_TITLE, POSITION_21) },
-        async(Dispatchers.IO) { fetchCountrSlider(POSITION_22) },
-        async(Dispatchers.IO) { fetchViSlider(POSITION_23_TITLE, POSITION_24) },
-        async(Dispatchers.IO) { fetchCommSlider(POSITION_25_TITLE, POSITION_26) }
+    private fun CoroutineScope.secondLoadTasks(userId: Long?) = arrayOf(
+        async(Dispatchers.IO) { homeRequest { repository.fetchTopSlider(POSITION_9_TAB, POSITION_10) } },
+        async(Dispatchers.IO) { homeRequest { repository.fetchOrdersSlider(userId, POSITION_11_TITLE, POSITION_12) } },
+        async(Dispatchers.IO) { homeRequest { repository.fetchNoveltiesSlider(POSITION_14_TITLE, POSITION_15) } },
+        async(Dispatchers.IO) { homeRequest { repository.fetchPromotionsSlider(POSITION_16_TITLE, POSITION_17) } },
+        async(Dispatchers.IO) { homeRequest { repository.fetchBottomSlider(POSITION_18_TAB, POSITION_19) } },
+        async(Dispatchers.IO) { homeRequest { repository.fetchBrandsSlider(POSITION_20_TITLE, POSITION_21) } },
+        async(Dispatchers.IO) { homeRequest { repository.fetchCountriesSlider(POSITION_22) } },
+        async(Dispatchers.IO) { homeRequest { repository.fetchViewedProductsSlider(userId, POSITION_23_TITLE, POSITION_24) } },
+        async(Dispatchers.IO) { homeRequest { repository.fetchCommentsSlider(POSITION_25_TITLE, POSITION_26) } }
     )
 
-    private suspend fun fetchAdvBannerSlider(position: Int): List<PositionItem> {
-        return runCatching { repository.fetchAdvertisingBannersSlider(position) }
-            .onFailure { showNetworkError(it) }
-            .getOrDefault(emptyList())
-    }
-
-    private suspend fun fetchHisSlider(positionTitle: Int, position: Int): List<PositionItem> {
-        return runCatching { repository.fetchHistoriesSlider(positionTitle, position) }
-            .onFailure { showNetworkError(it) }
-            .getOrDefault(emptyList())
-    }
-
-    private suspend fun fetchPopSlider(positionTitle: Int, position: Int): List<PositionItem> {
-        return runCatching { repository.fetchPopularSlider(positionTitle, position) }
-            .onFailure { showNetworkError(it) }
-            .getOrDefault(emptyList())
-    }
-
-    private suspend fun fetchDiscSlider(positionTitle: Int, position: Int): List<PositionItem> {
-        return runCatching { repository.fetchDiscountsSlider(positionTitle, position) }
-            .onFailure { showNetworkError(it) }
-            .getOrDefault(emptyList())
-    }
-
-    private suspend fun fetchCatBannerSlider(position: Int): List<PositionItem> {
-        return runCatching { repository.fetchCategoryBannersSlider(position) }
-            .onFailure { showNetworkError(it) }
-            .getOrDefault(emptyList())
-    }
-
-    private suspend fun fetchTSlider(positionTab: Int, position: Int): List<PositionItem> {
-        return runCatching { repository.fetchTopSlider(positionTab, position) }
-            .onFailure { showNetworkError(it) }
-            .getOrDefault(emptyList())
-    }
-
-    private suspend fun fetchOrdSlider(positionTitle: Int, position: Int): List<PositionItem> {
-        return runCatching {
-            val userId = accountManager.fetchAccountId()
-            repository.fetchOrdersSlider(userId, positionTitle, position)
-        }
-            .onFailure { showNetworkError(it) }
-            .getOrDefault(emptyList())
-    }
-
-    private suspend fun fetchNovSlider(positionTitle: Int, position: Int): List<PositionItem> {
-        return runCatching { repository.fetchNoveltiesSlider(positionTitle, position) }
-            .onFailure { showNetworkError(it) }
-            .getOrDefault(emptyList())
-    }
-
-    private suspend fun fetchPromSlider(positionTitle: Int, position: Int): List<PositionItem> {
-        return runCatching { repository.fetchPromotionsSlider(positionTitle, position) }
-            .onFailure { showNetworkError(it) }
-            .getOrDefault(emptyList())
-    }
-
-    private suspend fun fetchBSlider(positionTab: Int, position: Int): List<PositionItem> {
-        return runCatching { repository.fetchBottomSlider(positionTab, position) }
-            .onFailure { showNetworkError(it) }
-            .getOrDefault(emptyList())
-    }
-
-
-    private suspend fun fetchBrSlider(positionTitle: Int, position: Int): List<PositionItem> {
-        return runCatching { repository.fetchBrandsSlider(positionTitle, position) }
-            .onFailure { showNetworkError(it) }
-            .getOrDefault(emptyList())
-    }
-
-    private suspend fun fetchCountrSlider(position: Int): List<PositionItem> {
-        return runCatching { repository.fetchCountriesSlider(position) }
-            .onFailure { showNetworkError(it) }
-            .getOrDefault(emptyList())
-    }
-
-    private suspend fun fetchViSlider(positionTitle: Int, position: Int): List<PositionItem> {
-        return runCatching {
-            val userId = accountManager.fetchAccountId()
-            repository.fetchViewedProductsSlider(userId, positionTitle, position)
-        }
-            .onFailure { showNetworkError(it) }
-            .getOrDefault(emptyList())
-    }
-
-    private suspend fun fetchCommSlider(positionTitle: Int, position: Int): List<PositionItem> {
-        return runCatching { repository.fetchCommentsSlider(positionTitle, position) }
+    private inline fun homeRequest(request: () -> List<PositionItem>): List<PositionItem> {
+        return runCatching { request.invoke() }
             .onFailure { showNetworkError(it) }
             .getOrDefault(emptyList())
     }
@@ -242,11 +159,8 @@ class HomeFlowViewModel @Inject constructor(
             val userId = accountManager.fetchAccountId()
             flow { emit(repository.fetchPopupNews(userId)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    if (it != null) {
-                        uiStateListener.value = state.copy(data = state.data.copy(news = it))
-                    }
-                }
+                .filterNotNull()
+                .onEach { uiStateListener.value = state.copy(data = state.data.copy(news = it)) }
                 .catch { debugLog { "fetch popup news error ${it.localizedMessage}" } }
                 .collect()
         }
@@ -272,11 +186,7 @@ class HomeFlowViewModel @Inject constructor(
                     it.copy(
                         item = (it.item as HomeProductsTabs).copy(
                             tabsNames = it.item.tabsNames.map { cat ->
-                                if (cat.id == categoryId) {
-                                    cat.copy(isSelected = true)
-                                } else {
-                                    cat.copy(isSelected = false)
-                                }
+                                cat.copy(isSelected = cat.id == categoryId)
                             }
                         )
                     )
@@ -312,13 +222,7 @@ class HomeFlowViewModel @Inject constructor(
 
     fun onPreOrderClick(id: Long, name: String, detailPicture: String) {
         viewModelScope.launch {
-            val accountId = accountManager.fetchAccountId()
-            if (accountId == null) {
-                //eventListener.emit(HomeEvents.GoToProfile)
-                eventListener.emit(HomeEvents.GoToPreOrder(id, name, detailPicture))
-            } else {
-                eventListener.emit(HomeEvents.GoToPreOrder(id, name, detailPicture))
-            }
+            eventListener.emit(HomeEvents.GoToPreOrder(id, name, detailPicture))
         }
     }
 
@@ -332,8 +236,6 @@ class HomeFlowViewModel @Inject constructor(
             }
         }
     }
-
-    fun isLoginAlready() = accountManager.isAlreadyLogin()
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
         viewModelScope.launch {
@@ -433,7 +335,5 @@ class HomeFlowViewModel @Inject constructor(
         const val POSITION_25_TITLE = 25
         const val POSITION_26 = 26
         const val POSITION_27 = 27
-
-        const val POSITIONS_COUNT = 27
     }
 }

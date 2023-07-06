@@ -10,45 +10,60 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:id="@+id/llShowGifts"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingHorizontal="@dimen/space_16"
-        android:layout_marginTop="@dimen/space_4"
-        android:gravity="center">
+        android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_margin="12dp"
-            android:src="@drawable/arrowpadarok"
-            app:tint="#008236"
-            tools:ignore="ContentDescription" />
+        <LinearLayout
+            android:id="@+id/llShowGifts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/space_16"
+            android:layout_marginTop="@dimen/space_4"
+            android:gravity="center">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/TextViewMediumGreenBold"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textSize="16sp"
-            android:textColor="#008236"
-            android:fontFamily="@font/rotonda_normal"
-            android:gravity="center"
-            android:text="Ваши подарки"
-            android:paddingStart="@dimen/space_16"
-            android:paddingEnd="@dimen/space_16"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_margin="12dp"
+                android:src="@drawable/arrowpadarok"
+                app:tint="#008236"
+                tools:ignore="ContentDescription" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_margin="12dp"
-            android:src="@drawable/arrowpadarok"
-            app:tint="#008236"
-            tools:ignore="ContentDescription" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextViewMediumGreenBold"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:id="@+id/yourGiftsTv"
+                android:textColor="#008236"
+                android:fontFamily="@font/rotonda_normal"
+                android:gravity="center"
+                android:text="Ваши подарки"
+                android:paddingStart="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"/>
 
-    </LinearLayout>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_margin="12dp"
+                android:src="@drawable/arrowpadarok"
+                app:tint="#008236"
+                tools:ignore="ContentDescription" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/shine"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_circ_shine"
+            android:rotation="20" />
+    </FrameLayout>
+
+
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvGiftMessage"

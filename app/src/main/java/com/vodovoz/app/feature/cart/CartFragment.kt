@@ -2,6 +2,9 @@ package com.vodovoz.app.feature.cart
 
 import android.os.Bundle
 import android.view.*
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -141,6 +144,23 @@ class CartFragment : BaseFragment() {
         bindErrorRefresh { viewModel.refresh() }
         bindSwipeRefresh()
         observeTabReselect()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        shineAnimation()
+    }
+
+    private fun shineAnimation() {
+        val anim = AnimationUtils.loadAnimation(requireContext(), R.anim.left_right)
+        binding.bottom.shine.startAnimation(anim)
+        anim.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationEnd(p0: Animation?) {
+                binding.bottom.shine.startAnimation(anim)
+            }
+            override fun onAnimationStart(p0: Animation?) {}
+            override fun onAnimationRepeat(p0: Animation?) {}
+        })
     }
 
     private fun bindSwipeRefresh() {
