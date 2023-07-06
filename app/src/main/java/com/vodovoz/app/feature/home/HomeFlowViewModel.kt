@@ -122,29 +122,31 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun CoroutineScope.firstLoadTasks() = arrayOf(
-        async(Dispatchers.IO) { homeRequest { repository.fetchAdvertisingBannersSlider(POSITION_1) } },
-        async(Dispatchers.IO) { homeRequest { repository.fetchHistoriesSlider(POSITION_2_TITLE, POSITION_3) } },
-        async(Dispatchers.IO) { homeRequest { repository.fetchPopularSlider(POSITION_4_TITLE, POSITION_5) } },
-        async(Dispatchers.IO) { homeRequest { repository.fetchDiscountsSlider(POSITION_6_TITLE, POSITION_7) } },
-        async(Dispatchers.IO) { homeRequest { repository.fetchCategoryBannersSlider(POSITION_8) } }
+        homeRequestAsync { repository.fetchAdvertisingBannersSlider(POSITION_1) },
+        homeRequestAsync { repository.fetchHistoriesSlider(POSITION_2_TITLE, POSITION_3) },
+        homeRequestAsync { repository.fetchPopularSlider(POSITION_4_TITLE, POSITION_5) },
+        homeRequestAsync { repository.fetchDiscountsSlider(POSITION_6_TITLE, POSITION_7) },
+        homeRequestAsync { repository.fetchCategoryBannersSlider(POSITION_8) }
     )
 
     private fun CoroutineScope.secondLoadTasks(userId: Long?) = arrayOf(
-        async(Dispatchers.IO) { homeRequest { repository.fetchTopSlider(POSITION_9_TAB, POSITION_10) } },
-        async(Dispatchers.IO) { homeRequest { repository.fetchOrdersSlider(userId, POSITION_11_TITLE, POSITION_12) } },
-        async(Dispatchers.IO) { homeRequest { repository.fetchNoveltiesSlider(POSITION_14_TITLE, POSITION_15) } },
-        async(Dispatchers.IO) { homeRequest { repository.fetchPromotionsSlider(POSITION_16_TITLE, POSITION_17) } },
-        async(Dispatchers.IO) { homeRequest { repository.fetchBottomSlider(POSITION_18_TAB, POSITION_19) } },
-        async(Dispatchers.IO) { homeRequest { repository.fetchBrandsSlider(POSITION_20_TITLE, POSITION_21) } },
-        async(Dispatchers.IO) { homeRequest { repository.fetchCountriesSlider(POSITION_22) } },
-        async(Dispatchers.IO) { homeRequest { repository.fetchViewedProductsSlider(userId, POSITION_23_TITLE, POSITION_24) } },
-        async(Dispatchers.IO) { homeRequest { repository.fetchCommentsSlider(POSITION_25_TITLE, POSITION_26) } }
+        homeRequestAsync { repository.fetchTopSlider(POSITION_9_TAB, POSITION_10) },
+        homeRequestAsync { repository.fetchOrdersSlider(userId, POSITION_11_TITLE, POSITION_12) },
+        homeRequestAsync { repository.fetchNoveltiesSlider(POSITION_14_TITLE, POSITION_15) },
+        homeRequestAsync { repository.fetchPromotionsSlider(POSITION_16_TITLE, POSITION_17) },
+        homeRequestAsync { repository.fetchBottomSlider(POSITION_18_TAB, POSITION_19) },
+        homeRequestAsync { repository.fetchBrandsSlider(POSITION_20_TITLE, POSITION_21) },
+        homeRequestAsync { repository.fetchCountriesSlider(POSITION_22) },
+        homeRequestAsync { repository.fetchViewedProductsSlider(userId, POSITION_23_TITLE, POSITION_24) },
+        homeRequestAsync { repository.fetchCommentsSlider(POSITION_25_TITLE, POSITION_26) }
     )
 
-    private inline fun homeRequest(request: () -> List<PositionItem>): List<PositionItem> {
-        return runCatching { request.invoke() }
-            .onFailure { showNetworkError(it) }
-            .getOrDefault(emptyList())
+    private inline fun CoroutineScope.homeRequestAsync(crossinline request: suspend () -> List<PositionItem>): Deferred<List<PositionItem>> {
+        return async(Dispatchers.IO) {
+            runCatching { request.invoke() }
+                .onFailure { showNetworkError(it) }
+                .getOrDefault(emptyList())
+        }
     }
 
     private fun showNetworkError(throwable: Throwable) {
