@@ -1,18 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--new-->
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--new-->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardElevation="@dimen/elevation_3"
-    android:layout_marginTop="@dimen/_6sdp"
-    app:cardCornerRadius="@dimen/corner_5">
+    android:layout_marginTop="@dimen/_8sdp"
+    app:cardCornerRadius="@dimen/corner_5"
+    app:cardElevation="@dimen/elevation_3">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgPicture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY"
+        tools:src="@tools:sample/avatars" />
+
+    <include
+        android:id="@+id/advIncludeCard"
+        android:visibility="gone"
+        layout="@layout/adv_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/_6sdp" />
 
 </androidx.cardview.widget.CardView>

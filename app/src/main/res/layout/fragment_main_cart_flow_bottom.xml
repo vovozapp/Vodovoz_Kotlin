@@ -28,7 +28,7 @@
                 android:layout_height="20dp"
                 android:layout_margin="12dp"
                 android:src="@drawable/arrowpadarok"
-                app:tint="#008236"
+                app:tint="@color/bluePrimary"
                 tools:ignore="ContentDescription" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -38,7 +38,7 @@
                 android:layout_weight="1"
                 android:textSize="16sp"
                 android:id="@+id/yourGiftsTv"
-                android:textColor="#008236"
+                android:textColor="@color/bluePrimary"
                 android:fontFamily="@font/rotonda_normal"
                 android:gravity="center"
                 android:text="Ваши подарки"
@@ -50,7 +50,7 @@
                 android:layout_height="20dp"
                 android:layout_margin="12dp"
                 android:src="@drawable/arrowpadarok"
-                app:tint="#008236"
+                app:tint="@color/bluePrimary"
                 tools:ignore="ContentDescription" />
 
         </LinearLayout>
