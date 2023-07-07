@@ -4,13 +4,15 @@ import android.os.Parcelable
 import com.vodovoz.app.R
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.feature.home.viewholders.homebanners.model.BannerAdvEntity
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class BannerUI(
     val id: Long,
     val detailPicture: String,
-    val actionEntity: ActionEntity? = null
+    val actionEntity: ActionEntity? = null,
+    val advEntity: BannerAdvEntity? = null
 ): Parcelable, Item {
 
     override fun getItemViewType(): Int {
