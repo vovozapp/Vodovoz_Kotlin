@@ -32,7 +32,7 @@ class AboutServicesDialogFragment : BaseFragment() {
     }
 
     private val servicesController by lazy {
-        ServicesController(getServicesClickListener(), requireContext())
+        ServicesController(getServicesClickListener())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

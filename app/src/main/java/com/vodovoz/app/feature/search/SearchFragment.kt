@@ -83,7 +83,9 @@ class SearchFragment : BaseFragment() {
     private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
     private val compositeDisposable = CompositeDisposable()
 
-    private val categoryTabsController = CategoryTabsFlowController(categoryTabsClickListener())
+    private val categoryTabsController by lazy {
+        CategoryTabsFlowController(categoryTabsClickListener(), space)
+    }
     private val bestForYouController by lazy { BestForYouController(cartManager, likeManager, getProductsShowClickListener(), getProductsClickListener()) }
     private val productsController by lazy {
         SearchFlowController(viewModel, cartManager, likeManager, getProductsClickListener(), requireContext(), ratingProductManager)
@@ -109,9 +111,9 @@ class SearchFragment : BaseFragment() {
             viewModel.fetchMatchesQueries(args.query)
         }
 
-        categoryTabsController.bind(binding.categoriesRecycler, space)
+        categoryTabsController.bind(binding.categoriesRecycler)
         bestForYouController.bind(binding.bestForYouRv)
-        productsController.bind(binding.productRecycler, null)
+        productsController.bind(binding.productRecycler)
 
         observeUiState()
         observeResultLiveData()
@@ -267,7 +269,7 @@ class SearchFragment : BaseFragment() {
 
         val categoryUiList = state.categoryHeader?.categoryUIList ?: emptyList()
         bindTabsVisibility(categoryUiList.isNotEmpty())
-        categoryTabsController.submitList(categoryUiList)
+        categoryTabsController.submitList(categoryUiList, "")
 
         binding.tvCategoryName.text = state.categoryHeader?.productAmount
 

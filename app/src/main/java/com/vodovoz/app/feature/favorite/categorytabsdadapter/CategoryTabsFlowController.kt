@@ -2,28 +2,19 @@ package com.vodovoz.app.feature.favorite.categorytabsdadapter
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.common.content.ItemController
 import com.vodovoz.app.ui.decoration.CategoryTabsMarginDecoration
 
 class CategoryTabsFlowController(
-    private val clickListener: CategoryTabsFlowClickListener
-) {
+    private val clickListener: CategoryTabsFlowClickListener,
+    private val space: Int,
+) : ItemController(CategoryTabsFlowAdapter(clickListener)) {
 
-    private val tabsAdapter = CategoryTabsFlowAdapter(clickListener)
-
-    fun bind(recyclerView: RecyclerView, space: Int) {
-        initList(recyclerView, space)
-    }
-
-    fun submitList(list: List<Item>) {
-        tabsAdapter.submitList(list, "")
-    }
-
-    private fun initList(recyclerView: RecyclerView, space: Int) {
+    override fun initList(recyclerView: RecyclerView) {
+        super.initList(recyclerView)
         with(recyclerView) {
-            adapter = tabsAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            addItemDecoration(CategoryTabsMarginDecoration(space/2))
+            addItemDecoration(CategoryTabsMarginDecoration(space / 2))
         }
     }
 }

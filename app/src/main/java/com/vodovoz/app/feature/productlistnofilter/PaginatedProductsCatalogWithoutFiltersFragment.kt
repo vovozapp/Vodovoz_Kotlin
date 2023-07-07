@@ -63,7 +63,10 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
 
     private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
 
-    private val categoryTabsController = CategoryTabsFlowController(categoryTabsClickListener())
+    private val categoryTabsController by lazy {
+        CategoryTabsFlowController(categoryTabsClickListener(), space)
+    }
+
     private val productsListNoFilterFlowController by lazy {
         ProductsListNoFilterFlowController(
             viewModel,
@@ -84,8 +87,8 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        categoryTabsController.bind(binding.categoriesRecycler, space)
-        productsListNoFilterFlowController.bind(binding.productRecycler, null)
+        categoryTabsController.bind(binding.categoriesRecycler)
+        productsListNoFilterFlowController.bind(binding.productRecycler)
 
         observeUiState()
         observeResultLiveData()
@@ -206,7 +209,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
                 binding.categoriesRecycler.visibility = View.GONE
             }
         }
-        categoryTabsController.submitList(categoryUIList)
+        categoryTabsController.submitList(categoryUIList, "")
 
         binding.imgViewMode.setOnClickListener { viewModel.changeLayoutManager() }
         binding.tvSort.setOnClickListener { showBottomSortSettings(state.sortType) }
@@ -322,7 +325,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
     sealed class DataSource : Serializable {
         class Brand(val brandId: Long) : DataSource()
         class Country(val countryId: Long) : DataSource()
-        class Discount: DataSource()
+        class Discount : DataSource()
         class Novelties : DataSource()
         class Slider(val categoryId: Long) : DataSource()
     }

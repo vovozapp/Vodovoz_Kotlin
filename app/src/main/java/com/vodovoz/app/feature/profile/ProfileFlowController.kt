@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vodovoz.app.common.cart.CartManager
+import com.vodovoz.app.common.content.ItemController
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
@@ -22,10 +23,9 @@ class ProfileFlowController(
     listener: ProfileFlowClickListener,
     productsShowAllListener: ProductsShowAllListener,
     productsClickListener: ProductsClickListener,
-    homeOrdersSliderClickListener: HomeOrdersSliderClickListener
-) {
-
-    private val profileFlowAdapter = ProfileFlowAdapter(
+    homeOrdersSliderClickListener: HomeOrdersSliderClickListener,
+) : ItemController(
+    ProfileFlowAdapter(
         listener,
         cartManager,
         likeManager,
@@ -34,25 +34,16 @@ class ProfileFlowController(
         productsClickListener,
         homeOrdersSliderClickListener
     )
+) {
 
-    fun bind(recyclerView: RecyclerView, refresh: SwipeRefreshLayout) {
-        initList(recyclerView)
-        bindRefresh(refresh)
-    }
-
-    fun submitList(list: List<Item>) {
-        profileFlowAdapter.submitList(list)
-    }
-
-    private fun initList(recyclerView: RecyclerView) {
+    override fun initList(recyclerView: RecyclerView) {
+        super.initList(recyclerView)
         with(recyclerView) {
-            adapter = profileFlowAdapter
             layoutManager = LinearLayoutManager(context)
         }
     }
 
-    private fun bindRefresh(refresh: SwipeRefreshLayout) {
-
+     override fun bindRefresh(refresh: SwipeRefreshLayout) {
         refresh.setOnRefreshListener {
             viewModel.refresh()
             refresh.isRefreshing = false

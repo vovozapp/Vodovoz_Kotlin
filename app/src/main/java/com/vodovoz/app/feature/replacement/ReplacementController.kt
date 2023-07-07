@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
+import com.vodovoz.app.common.content.ItemController
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
@@ -20,25 +21,16 @@ class ReplacementController(
     productsClickListener: ProductsClickListener,
     private val context: Context,
     ratingProductManager: RatingProductManager
-) {
+) : ItemController(AvailableProductsAdapter(productsClickListener, likeManager, cartManager, ratingProductManager)) {
+
     private val space: Int by lazy { context.resources.getDimension(R.dimen.space_16).toInt() }
 
-    private val productsAdapter = AvailableProductsAdapter(productsClickListener, likeManager, cartManager, ratingProductManager)
+    override fun initList(recyclerView: RecyclerView) {
+        super.initList(recyclerView)
 
-    fun bind(recyclerView: RecyclerView, list: List<Item>) {
-        initList(recyclerView, list)
-    }
-
-    fun submitList(list: List<Item>) {
-        productsAdapter.submitList(list)
-    }
-
-    private fun initList(recyclerView: RecyclerView, list: List<Item>) {
         with(recyclerView) {
-            adapter = productsAdapter
-            layoutManager = LinearLayoutManager(context)
 
-            productsAdapter.submitList(list)
+            layoutManager = LinearLayoutManager(context)
 
             ContextCompat.getDrawable(context, R.drawable.bkg_gray_divider)?.let {
                 addItemDecoration(Divider(it, space))

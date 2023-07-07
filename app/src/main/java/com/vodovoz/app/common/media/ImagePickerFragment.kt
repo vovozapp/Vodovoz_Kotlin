@@ -108,6 +108,7 @@ class ImagePickerFragment : BaseFragment() {
         file.outputStream().use {
             inputStream?.copyTo(it)
         }
+        inputStream?.close()
         return file
     }
 

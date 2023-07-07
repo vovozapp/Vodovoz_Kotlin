@@ -3,23 +3,14 @@ package com.vodovoz.app.feature.all
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.common.content.ItemController
 
-class AllAdapterController(allClickListener: AllClickListener) {
+class AllAdapterController(allClickListener: AllClickListener) :
+    ItemController(AllAdapter(allClickListener)) {
 
-    private val allAdapter = AllAdapter(allClickListener)
-
-    fun bind(recyclerView: RecyclerView) {
-        initList(recyclerView)
-    }
-
-    fun submitList(list: List<Item>) {
-        allAdapter.submitList(list)
-    }
-
-    private fun initList(recyclerView: RecyclerView) {
+    override fun initList(recyclerView: RecyclerView) {
+        super.initList(recyclerView)
         with(recyclerView) {
-            adapter = allAdapter
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }

@@ -66,7 +66,7 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
 
     private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
 
-    private val brandController = BrandFlowController(brandClickListener())
+    private val brandController by lazy { BrandFlowController(brandClickListener(), space) }
     private val productsListFlowController by lazy {
         ProductsListFlowController(viewModel, cartManager, likeManager, getProductsClickListener(), requireContext(), ratingProductManager)
     }
@@ -80,8 +80,8 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        brandController.bind(binding.brandRecycler, space)
-        productsListFlowController.bind(binding.productRecycler, null)
+        brandController.bind(binding.brandRecycler)
+        productsListFlowController.bind(binding.productRecycler)
 
         observeUiState()
         observeResultLiveData()

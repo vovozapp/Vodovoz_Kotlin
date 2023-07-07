@@ -10,14 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.common.content.ItemController
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlist.adapter.SortedAdapter
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.decoration.ListMarginDecoration
-import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel.Companion.LINEAR
 
 class FavoritesListController(
     private val viewModel: FavoriteFlowViewModel,
@@ -25,36 +24,32 @@ class FavoritesListController(
     likeManager: LikeManager,
     productsClickListener: ProductsClickListener,
     private val context: Context,
-    ratingProductManager: RatingProductManager
+    ratingProductManager: RatingProductManager,
+) : ItemController(
+    SortedAdapter(
+        productsClickListener,
+        cartManager,
+        likeManager,
+        ratingProductManager
+    )
 ) {
-    private val space: Int by lazy { context.resources.getDimension(R.dimen.space_16).toInt() }
 
-    private val favoritesAdapter = SortedAdapter(productsClickListener, cartManager, likeManager, ratingProductManager)
+    private val space: Int by lazy { context.resources.getDimension(R.dimen.space_16).toInt() }
 
     private val gridMarginDecoration: GridMarginDecoration by lazy {
         GridMarginDecoration(space)
     }
 
     private val linearMarginDecoration: ListMarginDecoration by lazy {
-        ListMarginDecoration((space*0.8).toInt())
+        ListMarginDecoration((space * 0.8).toInt())
     }
     private val linearDividerItemDecoration: DividerItemDecoration by lazy {
         DividerItemDecoration(context, VERTICAL)
     }
 
-    fun bind(recyclerView: RecyclerView, refresh: SwipeRefreshLayout?) {
-        initList(recyclerView)
-        if (refresh == null) return
-        bindRefresh(refresh)
-    }
-
-    fun submitList(list: List<Item>) {
-        favoritesAdapter.submitList(list)
-    }
-
-    private fun initList(recyclerView: RecyclerView) {
+    override fun initList(recyclerView: RecyclerView) {
+        super.initList(recyclerView)
         with(recyclerView) {
-            adapter = favoritesAdapter
             layoutManager = GridLayoutManager(context, 1)
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -72,15 +67,29 @@ class FavoritesListController(
         }
     }
 
-    fun changeLayoutManager(manager: String, recyclerView: RecyclerView, imageViewMode: AppCompatImageView) {
+    fun changeLayoutManager(
+        manager: String,
+        recyclerView: RecyclerView,
+        imageViewMode: AppCompatImageView,
+    ) {
         clearDecorators(recyclerView)
         when (manager) {
             FavoriteFlowViewModel.LINEAR -> {
-                imageViewMode.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_list))
+                imageViewMode.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.png_list
+                    )
+                )
                 changeToLinearLayoutManager(recyclerView)
             }
             FavoriteFlowViewModel.GRID -> {
-                imageViewMode.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_table))
+                imageViewMode.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.png_table
+                    )
+                )
                 changeToGridLayoutManager(recyclerView)
             }
         }
@@ -112,8 +121,7 @@ class FavoritesListController(
         }
     }
 
-    private fun bindRefresh(refresh: SwipeRefreshLayout) {
-
+    override fun bindRefresh(refresh: SwipeRefreshLayout) {
         refresh.setOnRefreshListener {
             viewModel.refreshSorted()
             refresh.isRefreshing = false

@@ -134,6 +134,7 @@ class HomeFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         homeController.bind(binding.homeRv, binding.refreshContainer)
+
         initSearchToolbar(
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },

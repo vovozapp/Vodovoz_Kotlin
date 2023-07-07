@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
+import com.vodovoz.app.common.content.ItemController
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
@@ -28,37 +29,20 @@ class ProductDetailsController(
     likeManager: LikeManager,
     val context: Context,
     ratingProductManager: RatingProductManager
-) {
-    private val productDetailsAdapter = ProductDetailsAdapter(
-        clickListener = listener,
-        productsClickListener = productsClickListener,
-        productsShowAllListener = productsShowAllListener,
-        promotionsClickListener = promotionsClickListener,
-        cartManager = cartManager,
-        likeManager = likeManager,
-        ratingProductManager = ratingProductManager
-    )
+) : ItemController(ProductDetailsAdapter(
+    clickListener = listener,
+    productsClickListener = productsClickListener,
+    productsShowAllListener = productsShowAllListener,
+    promotionsClickListener = promotionsClickListener,
+    cartManager = cartManager,
+    likeManager = likeManager,
+    ratingProductManager = ratingProductManager
+)) {
 
-    fun bind(recyclerView: RecyclerView, fab: ConstraintLayout) {
-        initList(recyclerView, fab)
-    }
-
-    fun submitList(list: List<Item>) {
-        productDetailsAdapter.submitList(list)
-    }
-
-    private fun initList(recyclerView: RecyclerView, fab: ConstraintLayout) {
+    override fun initList(recyclerView: RecyclerView, fab: ConstraintLayout) {
+        super.initList(recyclerView, fab)
         with(recyclerView) {
-            adapter = productDetailsAdapter
             layoutManager = LinearLayoutManager(context)
-
-            /*val divider = MaterialDividerItemDecoration(
-                context,
-                MaterialDividerItemDecoration.VERTICAL
-            )
-            divider.dividerThickness = 24
-            divider.dividerColor = ContextCompat.getColor(context, R.color.light_gray)
-            recyclerView.addItemDecoration(divider)*/
 
             addOnScrollListener(object : OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

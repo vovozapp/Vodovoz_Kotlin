@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.common.content.ItemController
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.home.adapter.HomeMainAdapter
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
@@ -29,9 +29,9 @@ class HomeController(
     homeTabsClickListener: HomeTabsClickListener,
     topBannerManager: TopBannerManager,
     bottomBannerManager: BottomBannerManager,
-    private val showRateBottomSheetFragment: () -> Unit
-) {
-    private val homeMainAdapter = HomeMainAdapter(
+    private val showRateBottomSheetFragment: () -> Unit,
+) : ItemController(
+    HomeMainAdapter(
         clickListener = listener,
         cartManager = cartManager,
         likeManager = likeManager,
@@ -43,19 +43,11 @@ class HomeController(
         topBannerManager = topBannerManager,
         bottomBannerManager = bottomBannerManager
     )
+) {
 
-    fun bind(recyclerView: RecyclerView, refresh: SwipeRefreshLayout) {
-        initList(recyclerView)
-        bindRefresh(refresh)
-    }
-
-    fun submitList(list: List<Item>) {
-        homeMainAdapter.submitList(list)
-    }
-
-    private fun initList(recyclerView: RecyclerView) {
+    override fun initList(recyclerView: RecyclerView) {
+        super.initList(recyclerView)
         with(recyclerView) {
-            adapter = homeMainAdapter
             layoutManager = LinearLayoutManager(context)
             addOnScrollListener(object : OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -68,8 +60,7 @@ class HomeController(
         }
     }
 
-    private fun bindRefresh(refresh: SwipeRefreshLayout) {
-
+    override fun bindRefresh(refresh: SwipeRefreshLayout) {
         refresh.setOnRefreshListener {
             viewModel.refresh()
             refresh.isRefreshing = false

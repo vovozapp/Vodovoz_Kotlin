@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vodovoz.app.R
+import com.vodovoz.app.common.content.ItemController
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.feature.all.AllAdapter
 import com.vodovoz.app.feature.all.AllClickListener
@@ -18,33 +19,19 @@ class AllOrdersController(
     private val viewModel: AllOrdersFlowViewModel,
     private val context: Context,
     allClickListener: AllClickListener
-) {
-
-    private val allAdapter = AllAdapter(allClickListener)
+): ItemController(AllAdapter(allClickListener)){
 
     private val space: Int by lazy { context.resources.getDimension(R.dimen.space_16).toInt() }
 
-    fun bind(recyclerView: RecyclerView, refresh: SwipeRefreshLayout?) {
-        initList(recyclerView)
-        if (refresh == null) return
-        bindRefresh(refresh)
-    }
-
-    private fun bindRefresh(refresh: SwipeRefreshLayout) {
-
+    override fun bindRefresh(refresh: SwipeRefreshLayout) {
         refresh.setOnRefreshListener {
             viewModel.refreshSorted()
             refresh.isRefreshing = false
         }
     }
-
-    fun submitList(list: List<Item>) {
-        allAdapter.submitList(list)
-    }
-
-    private fun initList(recyclerView: RecyclerView) {
+    override fun initList(recyclerView: RecyclerView) {
+        super.initList(recyclerView)
         with(recyclerView) {
-            adapter = allAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
             addItemDecoration(

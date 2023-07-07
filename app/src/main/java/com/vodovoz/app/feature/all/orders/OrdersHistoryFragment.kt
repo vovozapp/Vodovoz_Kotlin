@@ -52,6 +52,7 @@ class OrdersHistoryFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         allOrdersController.bind(binding.rvOrders, binding.refreshContainer)
+
         bindErrorRefresh { viewModel.refreshSorted() }
 
         initFilterToolbar(true) { viewModel.goToFilter() }

@@ -91,7 +91,7 @@ class PromotionDetailsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        productsController.bind(binding.productRecycler, null)
+        productsController.bind(binding.productRecycler)
         bestForYouController.bind(binding.fcvProductSliderRv)
         binding.vpPromotions.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.vpPromotions.adapter = homePromotionsAdapter

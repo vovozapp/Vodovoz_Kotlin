@@ -2,23 +2,15 @@ package com.vodovoz.app.feature.profile.notificationsettings.adapter
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.vodovoz.app.common.content.ItemController
 import com.vodovoz.app.common.content.itemadapter.Item
 
-class NotSettingsController(clickListener: NotSettingsClickListener) {
+class NotSettingsController(clickListener: NotSettingsClickListener) :
+    ItemController(NotSettingsAdapter(clickListener)) {
 
-    private val notSettingsAdapter = NotSettingsAdapter(clickListener)
-
-    fun bind(recyclerView: RecyclerView) {
-        initList(recyclerView)
-    }
-
-    fun submitList(list: List<Item>) {
-        notSettingsAdapter.submitList(list)
-    }
-
-    private fun initList(recyclerView: RecyclerView) {
+    override fun initList(recyclerView: RecyclerView) {
+        super.initList(recyclerView)
         with(recyclerView) {
-            adapter = notSettingsAdapter
             layoutManager = LinearLayoutManager(context)
         }
     }

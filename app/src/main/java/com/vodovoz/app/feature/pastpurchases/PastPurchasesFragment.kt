@@ -68,7 +68,10 @@ class PastPurchasesFragment : BaseFragment() {
 
     private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
 
-    private val categoryTabsController = CategoryTabsFlowController(categoryTabsClickListener())
+    private val categoryTabsController by lazy {
+        CategoryTabsFlowController(categoryTabsClickListener(), space)
+    }
+
     private val favoritesController by lazy {
         PastPurchasesListController(viewModel, cartManager, likeManager, getProductsClickListener(), requireContext(), ratingProductManager)
     }
@@ -81,7 +84,7 @@ class PastPurchasesFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        categoryTabsController.bind(binding.categoriesRecycler, space)
+        categoryTabsController.bind(binding.categoriesRecycler)
         favoritesController.bind(binding.productRecycler, binding.refreshEmptyFavoriteContainer)
 
         observeUiState()
@@ -195,7 +198,7 @@ class PastPurchasesFragment : BaseFragment() {
             bindTabsVisibility(false)
         }
 
-        categoryTabsController.submitList(categoryUiList)
+        categoryTabsController.submitList(categoryUiList, "")
 
         binding.tvCategoryName.text = state.favoriteCategory?.name
         binding.tvProductAmount.text = state.favoriteCategory?.productAmount.toString()
