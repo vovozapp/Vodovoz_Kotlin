@@ -30,12 +30,14 @@ import com.vodovoz.app.databinding.FragmentMainHomeFlowBinding
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.catalog.CatalogFragmentDirections
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
+import com.vodovoz.app.feature.home.banneradvinfo.BannerAdvInfoBottomSheetFragment
 import com.vodovoz.app.feature.home.popup.NewsClickListener
 import com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment
 import com.vodovoz.app.feature.home.ratebottom.RateBottomFragment
 import com.vodovoz.app.feature.home.ratebottom.RateBottomViewModel
 import com.vodovoz.app.feature.home.viewholders.homebanners.BottomBannerManager
 import com.vodovoz.app.feature.home.viewholders.homebanners.TopBannerManager
+import com.vodovoz.app.feature.home.viewholders.homebanners.model.BannerAdvEntity
 import com.vodovoz.app.feature.home.viewholders.homecomments.HomeCommentsFullBottomSheetFragment
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeTabsClickListener
@@ -595,6 +597,12 @@ class HomeFragment : BaseFragment() {
             //POSITION_1
             override fun onBannerClick(actionEntity: ActionEntity?) {
                 actionEntity?.invoke(findNavController(), requireActivity())
+            }
+
+            override fun onBannerAdvClick(entity: BannerAdvEntity?) {
+                BannerAdvInfoBottomSheetFragment
+                    .newInstance(entity?.titleAdv ?: "", entity?.bodyAdv ?: "", entity?.dataAdv ?: "")
+                    .show(childFragmentManager, "TAG")
             }
 
             //POSITION_16

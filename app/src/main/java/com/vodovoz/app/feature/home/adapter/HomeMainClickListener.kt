@@ -1,12 +1,14 @@
 package com.vodovoz.app.feature.home.adapter
 
 import com.vodovoz.app.data.model.common.ActionEntity
+import com.vodovoz.app.feature.home.viewholders.homebanners.model.BannerAdvEntity
 import com.vodovoz.app.ui.model.CommentUI
 
 interface HomeMainClickListener {
 
     //POSITION_1
     fun onBannerClick(actionEntity: ActionEntity?)
+    fun onBannerAdvClick(entity: BannerAdvEntity?)
 
     //POSITION_16
     fun onAboutAppClick()

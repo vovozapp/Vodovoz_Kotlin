@@ -17,6 +17,7 @@ import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.viewholders.homebanners.inneradapter.HomeBannersInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.homebanners.inneradapter.HomeBannersSliderClickListener
+import com.vodovoz.app.feature.home.viewholders.homebanners.model.BannerAdvEntity
 import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.*
 import java.util.*
@@ -89,6 +90,10 @@ class HomeBannersSliderViewHolder(
         return object : HomeBannersSliderClickListener {
             override fun onBannerClick(entity: ActionEntity?) {
                 clickListener.onBannerClick(entity)
+            }
+
+            override fun onBannerAdvClick(entity: BannerAdvEntity?) {
+                clickListener.onBannerAdvClick(entity)
             }
         }
     }

@@ -19,6 +19,11 @@ class HomeBannersInnerViewHolder(
             val item = getItemByPosition() ?: return@setOnClickListener
             clickListener.onBannerClick(item.actionEntity)
         }
+
+        binding.advIncludeCard.root.setOnClickListener {
+            val item = getItemByPosition() ?: return@setOnClickListener
+            clickListener.onBannerAdvClick(item.advEntity)
+        }
     }
 
     override fun bind(item: BannerUI) {

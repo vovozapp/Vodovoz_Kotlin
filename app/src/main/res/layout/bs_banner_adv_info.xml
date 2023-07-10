@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/titleAdvTv"
+            android:gravity="center"
+            android:padding="22dp"
+            android:textColor="#434343"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Предупредить о приезде водителя" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:weightSum="13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_weight="1"
+                android:src="@drawable/baseline_info_24"
+                android:layout_width="@dimen/_20sdp"
+                android:padding="@dimen/_10sdp"
+                android:layout_height="match_parent"
+                app:tint="@color/bluePrimary" />
+
+            <LinearLayout
+                android:layout_weight="12"
+                android:paddingVertical="@dimen/_8sdp"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/bodyAdvTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+
+                    android:textAllCaps="false"
+                    android:textAlignment="textStart"
+                    android:textColor="#434343"
+                    android:layout_marginBottom="4dp"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:fontFamily="@font/rotondac"
+                    tools:text="За 30 минут" />
+
+                <TextView
+                    android:id="@+id/dataAdvTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textAllCaps="false"
+                    android:textAlignment="textStart"
+                    android:textColor="#434343"
+                    android:textSize="14sp"
+                    app:fontFamily="@font/rotondac"
+                    tools:text="За 30 минут" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/_34sdp"
+            android:layout_marginBottom="@dimen/_12sdp"
+            android:background="#F5F5F5" />
+
+    </LinearLayout>
+</RelativeLayout>
