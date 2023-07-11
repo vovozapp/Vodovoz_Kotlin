@@ -150,25 +150,29 @@ class OrderingFlowViewModel @Inject constructor(
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseRegOrderResponse()
-                    if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        cartManager.clearCart()
-                        cartManager.updateCartListState(true)
-                        uiStateListener.value = state.copy(
-                            data = state.data.copy(
-                                orderingCompletedInfoBundleUI = data
-                            ),
-                            loadingPage = false,
-                            error = null
-                        )
-                        //accountManager.reportYandexMetrica("Заказ оформлен")//todo релиз
-                        eventListener.emit(OrderingEvents.OrderSuccess(data))
-                    } else {
-                        uiStateListener.value =
-                            state.copy(
+                    when(response) {
+                        is ResponseEntity.Success -> {
+                            val data = response.data.mapToUI()
+                            cartManager.clearCart()
+                            cartManager.updateCartListState(true)
+                            uiStateListener.value = state.copy(
+                                data = state.data.copy(
+                                    orderingCompletedInfoBundleUI = data
+                                ),
                                 loadingPage = false,
-                                error = ErrorState.Error()
+                                error = null
                             )
+                            //accountManager.reportYandexMetrica("Заказ оформлен")//todo релиз
+                            eventListener.emit(OrderingEvents.OrderSuccess(data))
+                        }
+                        is ResponseEntity.Error -> {
+                            uiStateListener.value =
+                                state.copy(
+                                    loadingPage = false,
+                                    error = ErrorState.Error(response.errorMessage)
+                                )
+                        }
+                        else -> {}
                     }
                 }
                 .flowOn(Dispatchers.Default)

@@ -16,6 +16,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.databinding.FragmentOrderingFlowBinding
 import com.vodovoz.app.feature.addresses.AddressesFragment
 import com.vodovoz.app.feature.addresses.OpenMode
@@ -96,25 +97,45 @@ class OrderingFragment : BaseFragment() {
                     }
 
                     if (state.data.selectedDate != null) {
-                        binding.tvNameDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+                        binding.tvNameDate.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.text_black
+                            )
+                        )
                     }
 
                     if (state.data.selectedPayMethodUI != null) {
                         binding.tvPayMethod.text = state.data.selectedPayMethodUI.name
-                        binding.tvNamePayMethod.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+                        binding.tvNamePayMethod.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.text_black
+                            )
+                        )
                     }
 
                     if (state.data.selectedShippingIntervalUI != null) {
                         binding.tvShippingInterval.text =
                             state.data.selectedShippingIntervalUI.name.toString()
-                        binding.tvNameDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+                        binding.tvNameDate.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.text_black
+                            )
+                        )
                     }
 
                     val isNewUser = state.data.shippingInfoBundleUI?.isNewUser
                     if (isNewUser != null && isNewUser) {
                         viewModel.setCheckDelivery(5)
                         binding.tvCheckDelivery.text = "Позвоните мне для подтверждения заказа"
-                        binding.tvNameCheckDelivery.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+                        binding.tvNameCheckDelivery.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.text_black
+                            )
+                        )
                     }
 
                     binding.llShippingPriceCOntainer.isVisible = state.data.shippingPrice != null
@@ -125,17 +146,29 @@ class OrderingFragment : BaseFragment() {
 
                     val addressUI = state.data.selectedAddressUI
                     if (addressUI != null) {
-                        binding.tvNameAddress.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+                        binding.tvNameAddress.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.text_black
+                            )
+                        )
                         binding.tvAddress.text = addressUI.fullAddress
                         binding.etName.setText(addressUI.name)
                         binding.etEmail.setText(addressUI.email)
-                        binding.etPhone.setPhoneValidator {  }
-                        binding.etPhone.setText(addressUI.phone.convertPhoneToBaseFormat().convertPhoneToFullFormat())
+                        binding.etPhone.setPhoneValidator { }
+                        binding.etPhone.setText(
+                            addressUI.phone.convertPhoneToBaseFormat().convertPhoneToFullFormat()
+                        )
                     }
 
                     initArgs(data = state.data)
 
-                    showError(state.error)
+                    if (state.error is ErrorState.Error) {
+                        requireActivity().snack(state.error.messageInfo)
+                        findNavController().popBackStack()
+                    } else {
+                        showError(state.error)
+                    }
                 }
         }
     }
@@ -153,10 +186,14 @@ class OrderingFragment : BaseFragment() {
         binding.nsvContent.visibility = View.INVISIBLE
         binding.tvOrderId.text = orderingCompletedInfoBundleUI.message
         binding.llOrderingCompleted.visibility = View.VISIBLE
-        when(orderingCompletedInfoBundleUI.paymentURL.isNotEmpty()) {
+        when (orderingCompletedInfoBundleUI.paymentURL.isNotEmpty()) {
             true -> {
                 binding.btnGoToPayment.visibility = View.VISIBLE
-                binding.btnGoToPayment.setOnClickListener { binding.root.openLink(orderingCompletedInfoBundleUI.paymentURL) }
+                binding.btnGoToPayment.setOnClickListener {
+                    binding.root.openLink(
+                        orderingCompletedInfoBundleUI.paymentURL
+                    )
+                }
             }
             false -> binding.btnGoToPayment.visibility = View.INVISIBLE
         }
@@ -174,7 +211,11 @@ class OrderingFragment : BaseFragment() {
                             requireActivity().snack(it.message)
                         }
                         is OrderingFlowViewModel.OrderingEvents.OrderSuccess -> {
-                            orderingCompleted(it.item)
+                            if (it.item.orderId != 0L) {
+                                orderingCompleted(it.item)
+                            } else {
+
+                            }
                         }
                         is OrderingFlowViewModel.OrderingEvents.OnAddressBtnClick -> {
                             if (findNavController().currentDestination?.id == R.id.orderingFragment) {
@@ -230,22 +271,47 @@ class OrderingFragment : BaseFragment() {
                         }
                         is OrderingFlowViewModel.OrderingEvents.ChooseAddressError -> {
                             binding.nsvContent.scrollViewToTop()
-                            binding.tvNameAddress.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                            binding.tvNameAddress.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.red
+                                )
+                            )
                         }
                         is OrderingFlowViewModel.OrderingEvents.ChoosePayMethodError -> {
                             binding.nsvContent.scrollViewToTop()
-                            binding.tvNamePayMethod.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                            binding.tvNamePayMethod.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.red
+                                )
+                            )
                         }
                         is OrderingFlowViewModel.OrderingEvents.ChooseIntervalError -> {
                             binding.nsvContent.scrollViewToTop()
-                            binding.tvNameDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                            binding.tvNameDate.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.red
+                                )
+                            )
                         }
                         is OrderingFlowViewModel.OrderingEvents.ChooseDateError -> {
                             binding.nsvContent.scrollViewToTop()
-                            binding.tvNameDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                            binding.tvNameDate.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.red
+                                )
+                            )
                         }
                         is OrderingFlowViewModel.OrderingEvents.ChooseCheckDeliveryError -> {
-                            binding.tvNameCheckDelivery.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                            binding.tvNameCheckDelivery.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.red
+                                )
+                            )
                         }
                         is OrderingFlowViewModel.OrderingEvents.ClearFields -> {
                             clearFields()
@@ -363,27 +429,47 @@ class OrderingFragment : BaseFragment() {
     }
 
     private fun bindTextWatchers() {
-        binding.etName.doOnTextChanged { _, _,_, count ->
-            if (count >0) {
-                binding.tvNameName.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+        binding.etName.doOnTextChanged { _, _, _, count ->
+            if (count > 0) {
+                binding.tvNameName.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.text_black
+                    )
+                )
             }
         }
 
-        binding.etPhone.doOnTextChanged { _, _,_, count ->
-            if (count >0) {
-                binding.tvNamePhone.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+        binding.etPhone.doOnTextChanged { _, _, _, count ->
+            if (count > 0) {
+                binding.tvNamePhone.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.text_black
+                    )
+                )
             }
         }
 
-        binding.etEmail.doOnTextChanged { _, _,_, count ->
-            if (count >0) {
-                binding.tvNameEmail.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+        binding.etEmail.doOnTextChanged { _, _, _, count ->
+            if (count > 0) {
+                binding.tvNameEmail.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.text_black
+                    )
+                )
             }
         }
 
-        binding.etCompanyName.doOnTextChanged { _, _,_, count ->
-            if (count >0) {
-                binding.tvNameCompanyName.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+        binding.etCompanyName.doOnTextChanged { _, _, _, count ->
+            if (count > 0) {
+                binding.tvNameCompanyName.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.text_black
+                    )
+                )
             }
         }
     }
@@ -541,29 +627,41 @@ class OrderingFragment : BaseFragment() {
             ?.observe(viewLifecycleOwner) {
                 viewModel.setCheckDelivery(it.value)
                 binding.tvCheckDelivery.text = it.text
-                binding.tvNameCheckDelivery.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+                binding.tvNameCheckDelivery.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.text_black
+                    )
+                )
             }
     }
 
     private fun showFreeShippingDaysInfoPopup(freeShippingDaysInfoBundleUI: FreeShippingDaysInfoBundleUI) {
         if (findNavController().currentDestination?.id == R.id.orderingFragment) {
-            findNavController().navigate(OrderingFragmentDirections.actionToFreeShippingSaysBS(
-                freeShippingDaysInfoBundleUI.title,
-                freeShippingDaysInfoBundleUI.info
-            ))
+            findNavController().navigate(
+                OrderingFragmentDirections.actionToFreeShippingSaysBS(
+                    freeShippingDaysInfoBundleUI.title,
+                    freeShippingDaysInfoBundleUI.info
+                )
+            )
         }
     }
 
     private fun showPayMethodPopup(payMethodUIList: List<PayMethodUI>, selectedPayMethodId: Long) {
         if (findNavController().currentDestination?.id == R.id.orderingFragment) {
-            findNavController().navigate(OrderingFragmentDirections.actionToPayMethodSelectionBS(
-                payMethodUIList.toTypedArray(),
-                selectedPayMethodId
-            ))
+            findNavController().navigate(
+                OrderingFragmentDirections.actionToPayMethodSelectionBS(
+                    payMethodUIList.toTypedArray(),
+                    selectedPayMethodId
+                )
+            )
         }
     }
 
-    private fun showShippingIntervalSelectionPopup(shippingIntervalUIList: List<ShippingIntervalUI>, selectedDate: java.util.Date?) {
+    private fun showShippingIntervalSelectionPopup(
+        shippingIntervalUIList: List<ShippingIntervalUI>,
+        selectedDate: java.util.Date?,
+    ) {
         if (selectedDate == null) {
             Snackbar.make(binding.root, "Выберите дату!", Snackbar.LENGTH_LONG).show()
             return
@@ -572,14 +670,16 @@ class OrderingFragment : BaseFragment() {
             Snackbar.make(binding.root, "На эту дату нет доставок!", Snackbar.LENGTH_LONG).show()
         } else {
             if (findNavController().currentDestination?.id == R.id.orderingFragment) {
-                findNavController().navigate(OrderingFragmentDirections.actionToShippingIntervalSelectionBS(
-                    shippingIntervalUIList.toTypedArray()
-                ))
+                findNavController().navigate(
+                    OrderingFragmentDirections.actionToShippingIntervalSelectionBS(
+                        shippingIntervalUIList.toTypedArray()
+                    )
+                )
             }
         }
     }
 
-    private fun validateSimpleField(name: TextView, input: String) = when(input.isNotEmpty()) {
+    private fun validateSimpleField(name: TextView, input: String) = when (input.isNotEmpty()) {
         false -> {
             name.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
             false
@@ -590,27 +690,29 @@ class OrderingFragment : BaseFragment() {
         }
     }
 
-    private fun validateEmail(name: TextView, input: String) = when(FieldValidationsSettings.EMAIL_REGEX.matches(input)) {
-        false -> {
-            name.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-            false
+    private fun validateEmail(name: TextView, input: String) =
+        when (FieldValidationsSettings.EMAIL_REGEX.matches(input)) {
+            false -> {
+                name.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                false
+            }
+            true -> {
+                name.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+                true
+            }
         }
-        true -> {
-            name.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
-            true
-        }
-    }
 
-    private fun validatePhone(name: TextView, input: String) = when(FieldValidationsSettings.PHONE_REGEX.matches(input)) {
-        false -> {
-            name.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-            false
+    private fun validatePhone(name: TextView, input: String) =
+        when (FieldValidationsSettings.PHONE_REGEX.matches(input)) {
+            false -> {
+                name.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                false
+            }
+            true -> {
+                name.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
+                true
+            }
         }
-        true -> {
-            name.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
-            true
-        }
-    }
 
 }
 
