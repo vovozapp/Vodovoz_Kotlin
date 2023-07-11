@@ -12,6 +12,8 @@ import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.databinding.FragmentAllPromotionsBinding
 import com.vodovoz.app.feature.all.AllAdapterController
 import com.vodovoz.app.feature.all.AllClickListener
+import com.vodovoz.app.feature.home.banneradvinfo.BannerAdvInfoBottomSheetFragment
+import com.vodovoz.app.feature.home.viewholders.homepromotions.model.PromotionAdvEntity
 import com.vodovoz.app.ui.model.ListOfPromotionFilterUi
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.Serializable
@@ -104,6 +106,12 @@ class AllPromotionsFragment : BaseFragment() {
                 findNavController().navigate(
                     AllPromotionsFragmentDirections.actionToPromotionDetailFragment(id)
                 )
+            }
+
+            override fun onPromotionAdvClick(promotionAdvEntity: PromotionAdvEntity?) {
+                BannerAdvInfoBottomSheetFragment
+                    .newInstance(promotionAdvEntity?.titleAdv ?: "", promotionAdvEntity?.bodyAdv ?: "", promotionAdvEntity?.dataAdv ?: "")
+                    .show(childFragmentManager, "TAG")
             }
 
             override fun onBrandClick(id: Long) {

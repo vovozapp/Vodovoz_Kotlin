@@ -28,6 +28,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imgImage"
                 android:layout_width="match_parent"
+                tools:src="@tools:sample/avatars"
                 android:layout_height="0dp"
                 android:scaleType="fitXY"
                 app:layout_constraintDimensionRatio="H,2:1"
@@ -35,6 +36,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="ContentDescription" />
+
+            <include
+                android:id="@+id/advIncludeCard"
+                layout="@layout/adv_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="@dimen/_6sdp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
                 android:id="@+id/llTitleContainer"

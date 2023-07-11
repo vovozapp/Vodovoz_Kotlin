@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.all.promotions
 
 import android.graphics.Color
 import android.view.View
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ViewHolderPromotionBinding
@@ -20,6 +21,11 @@ class AllPromotionsViewHolder(
             val item = item ?: return@setOnClickListener
             allClickListener.onPromotionClick(item.id)
         }
+
+        binding.advIncludeCard.root.setOnClickListener {
+            val item = item ?: return@setOnClickListener
+            allClickListener.onPromotionAdvClick(item.promotionAdvEntity)
+        }
     }
 
     override fun bind(item: PromotionUI) {
@@ -34,6 +40,9 @@ class AllPromotionsViewHolder(
         item.statusColor?.let { noNullColor ->
             binding.cwCustomerCategory.setCardBackgroundColor(Color.parseColor(noNullColor))
         }
+
+        binding.advIncludeCard.root.isVisible = item.promotionAdvEntity != null
+        binding.advIncludeCard.advTv.text = item.promotionAdvEntity?.titleHeader
 
         Glide
             .with(itemView.context)
