@@ -144,9 +144,7 @@ class HomeFlowViewModel @Inject constructor(
     private inline fun CoroutineScope.homeRequestAsync(crossinline request: suspend () -> List<PositionItem>): Deferred<List<PositionItem>> {
         return async(Dispatchers.IO) {
             runCatching { request.invoke() }
-                .onFailure {
-                    debugLog { "spasibo ${it.localizedMessage}" }
-                    showNetworkError(it) }
+                .onFailure { showNetworkError(it) }
                 .getOrDefault(emptyList())
         }
     }

@@ -42,6 +42,7 @@ import com.vodovoz.app.feature.home.viewholders.homecomments.HomeCommentsFullBot
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeTabsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
+import com.vodovoz.app.feature.home.viewholders.homepromotions.model.PromotionAdvEntity
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.BRANDS_TITLE
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.COMMENTS_TITLE
@@ -533,6 +534,12 @@ class HomeFragment : BaseFragment() {
                         AllPromotionsFragment.DataSource.All()
                     )
                 )
+            }
+
+            override fun onPromotionAdvClick(promotionAdvEntity: PromotionAdvEntity?) {
+                BannerAdvInfoBottomSheetFragment
+                    .newInstance(promotionAdvEntity?.titleAdv ?: "", promotionAdvEntity?.bodyAdv ?: "", promotionAdvEntity?.dataAdv ?: "")
+                    .show(childFragmentManager, "TAG")
             }
         }
     }

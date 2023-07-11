@@ -18,6 +18,7 @@ object PromotionMapper  {
         customerCategory = customerCategory,
         timeLeft = timeLeft,
         productUIList = productEntityList.mapToUI(),
+        promotionAdvEntity = promotionAdvEntity
     )
 
 }

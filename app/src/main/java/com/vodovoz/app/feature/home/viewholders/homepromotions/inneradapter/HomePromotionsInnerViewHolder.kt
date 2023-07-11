@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter
 import android.graphics.Color
 import android.graphics.Rect
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -15,6 +16,7 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter.inneradapterproducts.HomePromotionsProductInnerAdapter
 import com.vodovoz.app.ui.model.PromotionUI
+import com.vodovoz.app.util.extensions.debugLog
 
 class HomePromotionsInnerViewHolder(
     view: View,
@@ -58,6 +60,11 @@ class HomePromotionsInnerViewHolder(
         )
 
         binding.rvProducts.adapter = homePromotionProductAdapter
+
+        binding.advIncludeCard.root.setOnClickListener {
+            val item = item ?: return@setOnClickListener
+            promotionsClickListener.onPromotionAdvClick(item.promotionAdvEntity)
+        }
     }
 
     override fun bind(item: PromotionUI) {
@@ -66,6 +73,9 @@ class HomePromotionsInnerViewHolder(
         binding.tvTimeLeft.text = item.timeLeft
         binding.tvCustomerCategory.text = item.customerCategory
         binding.cwCustomerCategory.setCardBackgroundColor(Color.parseColor(item.statusColor))
+
+        binding.advIncludeCard.root.isVisible = item.promotionAdvEntity != null
+        binding.advIncludeCard.advTv.text = item.promotionAdvEntity?.titleHeader
 
         Glide
             .with(itemView.context)
