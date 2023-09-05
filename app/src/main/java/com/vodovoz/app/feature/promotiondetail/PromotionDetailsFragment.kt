@@ -9,7 +9,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,25 +19,21 @@ import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser
 import com.vodovoz.app.databinding.FragmentPromotionDetailFlowBinding
-import com.vodovoz.app.feature.favorite.FavoriteFragmentDirections
 import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter.HomePromotionsInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
-import com.vodovoz.app.feature.productdetail.ProductDetailsFragmentDirections
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.PromotionDetailUI
-import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -65,7 +60,14 @@ class PromotionDetailsFragment : BaseFragment() {
     @Inject
     lateinit var ratingProductManager: RatingProductManager
 
-    private val bestForYouController by lazy { BestForYouController(cartManager, likeManager, getProductsShowClickListener(), getProductsClickListener()) }
+    private val bestForYouController by lazy {
+        BestForYouController(
+            cartManager,
+            likeManager,
+            getProductsShowClickListener(),
+            getProductsClickListener()
+        )
+    }
 
     private val productsController by lazy {
         PromotionDetailFlowController(
@@ -79,7 +81,12 @@ class PromotionDetailsFragment : BaseFragment() {
     }
 
     private val homePromotionsAdapter by lazy {
-        HomePromotionsInnerAdapter(getProductsClickListener(), getPromotionsClickListener(), cartManager, likeManager)
+        HomePromotionsInnerAdapter(
+            getProductsClickListener(),
+            getPromotionsClickListener(),
+            cartManager,
+            likeManager
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -153,7 +160,7 @@ class PromotionDetailsFragment : BaseFragment() {
                         bestForYouController.submitList(listOf(homeTitle, homeProducts))
                     }
 
-                    when(state.data.items?.promotionCategoryDetailUI) {
+                    when (state.data.items?.promotionCategoryDetailUI) {
                         null -> {
                             binding.promotionProductsTitle.visibility = View.GONE
                             binding.productRecycler.visibility = View.GONE
@@ -186,7 +193,12 @@ class PromotionDetailsFragment : BaseFragment() {
         Glide.with(requireContext())
             .load(promotionDetailUI.detailPicture)
             .into(binding.image)
-        binding.rootView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_white))
+        binding.rootView.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.dark_white
+            )
+        )
     }
 
     private fun bindErrorHeader(promotionDetailErrorUI: PromotionDetailResponseJsonParser.PromotionDetailErrorUI?) {
@@ -245,7 +257,7 @@ class PromotionDetailsFragment : BaseFragment() {
         }
     }
 
-    private fun getProductsShowClickListener() : ProductsShowAllListener {
+    private fun getProductsShowClickListener(): ProductsShowAllListener {
         return object : ProductsShowAllListener {
             override fun showAllDiscountProducts(id: Long) {}
             override fun showAllTopProducts(id: Long) {}

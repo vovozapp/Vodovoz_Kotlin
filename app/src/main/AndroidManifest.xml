@@ -36,10 +36,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Vodovoz"
-        android:name="com.vodovoz.app.ui.base.VodovozApplication"
+        android:name=".ui.base.VodovozApplication"
         android:usesCleartextTraffic="true">
         <activity
-            android:name="com.vodovoz.app.ui.base.MainActivity"
+            android:name=".ui.base.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

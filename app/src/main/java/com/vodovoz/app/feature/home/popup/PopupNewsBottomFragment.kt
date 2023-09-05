@@ -4,7 +4,6 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
@@ -12,6 +11,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsPopupNewsBinding
 import com.vodovoz.app.ui.model.PopupNewsUI
+import com.vodovoz.app.util.extensions.fromHtml
 
 class PopupNewsBottomFragment : BaseBottomSheetFragment() {
 
@@ -45,7 +45,7 @@ class PopupNewsBottomFragment : BaseBottomSheetFragment() {
     private fun initView() {
         binding.incHeader.tvTitle.text = popupNewsUI.name
 
-        binding.tvDetails.text = popupNewsUI.detailText
+        binding.tvDetails.text = popupNewsUI.detailText.fromHtml()
         binding.tvDetails.isVisible = !popupNewsUI.detailText.isNullOrEmpty()
 
         binding.incHeader.imgClose.setOnClickListener { dismiss() }

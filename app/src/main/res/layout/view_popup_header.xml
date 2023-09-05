@@ -14,8 +14,6 @@
         android:textSize="20sp"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:maxLines="1"
-        android:ellipsize="end"
         android:gravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imgClose"
