@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     //About App
-    <string name="about_app_title">О приложении</string>
-    <string name="app_version_text">Версия: %s</string>
-    <string name="write_to_developers">Написать разработчикам</string>
-    <string name="rate_app_text">Оценить приложение</string>
-    <string name="share_app_text">Поделиться приложением</string>
+    <string name="about_app_title" translatable="false">О приложении</string>
+    <string name="app_version_text" translatable="false">Версия: %s</string>
+    <string name="write_to_developers" translatable="false">Написать разработчикам</string>
+    <string name="rate_app_text" translatable="false">Оценить приложение</string>
+    <string name="share_app_text" translatable="false">Поделиться приложением</string>
 
     //Services
-    <string name="services_title">Услуги</string>
-    <string name="more_details_about_service_btn_text">Подробнее</string>
+    <string name="services_title" translatable="false">Услуги</string>
+    <string name="more_details_about_service_btn_text" translatable="false">Подробнее</string>
 
     //How to Order
-    <string name="how_order_title">Как заказать</string>
+    <string name="how_order_title" translatable="false">Как заказать</string>
 
     //Histories
-    <string name="histories_title">Истории</string>
+    <string name="histories_title" translatable="false">Истории</string>
 
     //Popular
-    <string name="popular_categories_slider_title">Популярные разделы</string>
+    <string name="popular_categories_slider_title" translatable="false">Популярные разделы</string>
 
     //Promotions
-    <string name="promotions_slider_title">Акции</string>
+    <string name="promotions_slider_title" translatable="false">Акции</string>
 
     //Orders
-    <string name="orders_slider_title">Мои заказы</string>
+    <string name="orders_slider_title" translatable="false">Мои заказы</string>
 </resources>

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     //History
-    <string name="orders_history_title">История заказов</string>
-    <string name="empty_history_title">Вы не совершили ещё ни одного заказа</string>
-    <string name="empty_history_subtitle">История заказов показывает всю информацию по заказам. Совершите свой первый заказ, нажав в корзине на кнопку Оформить заказ!</string>
+    <string name="orders_history_title" translatable="false">История заказов</string>
+    <string name="empty_history_title" translatable="false">Вы не совершили ещё ни одного заказа</string>
+    <string name="empty_history_subtitle" translatable="false">История заказов показывает всю информацию по заказам. Совершите свой первый заказ, нажав в корзине на кнопку Оформить заказ!</string>
 
     //Card Slider
-    <string name="more_details_about_order_btn_text">Подробнее</string>
+    <string name="more_details_about_order_btn_text" translatable="false">Подробнее</string>
 
     //Filters
-    <string name="orders_filters_title">Фильтры</string>
-    <string name="order_number_hint_text">Номер заказа</string>
-    <string name="order_status_text">Статус заказа</string>
-    <string name="apply_orders_filters">Применить</string>
-    <string name="clear_orders_filters">Очистить</string>
+    <string name="orders_filters_title" translatable="false">Фильтры</string>
+    <string name="order_number_hint_text" translatable="false">Номер заказа</string>
+    <string name="order_status_text" translatable="false">Статус заказа</string>
+    <string name="apply_orders_filters" translatable="false">Применить</string>
+    <string name="clear_orders_filters" translatable="false">Очистить</string>
 
     //
 </resources>

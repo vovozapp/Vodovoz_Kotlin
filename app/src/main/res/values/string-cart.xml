@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="cart_title">Корзина</string>
+    <string name="cart_title" translatable="false">Корзина</string>
 
     //Gifts
     <string name="gift_selection_title">Ваши подарки</string>
@@ -10,6 +10,6 @@
     <string name="not_available_product_title">Нет в наличии</string>
     <string name="replacement_text">Предлагаем замену</string>
     <string name="all_products_of_this_category_btn_text">Все продукты категории</string>
-    <string name="price_condition">При условии покупки от %d шт</string>
+    <string name="price_condition" translatable="false">При условии покупки от %d шт</string>
 
 </resources>

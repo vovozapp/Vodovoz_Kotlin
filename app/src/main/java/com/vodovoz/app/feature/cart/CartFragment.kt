@@ -1,8 +1,7 @@
 package com.vodovoz.app.feature.cart
 
 import android.os.Bundle
-import android.view.*
-import android.view.animation.AccelerateInterpolator
+import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
@@ -11,11 +10,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
@@ -26,7 +23,7 @@ import com.vodovoz.app.feature.cart.menu.CartMenuProvider
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.ProductUI
-import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.fromHtml
 import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.snackTop
 import dagger.hilt.android.AndroidEntryPoint
@@ -78,7 +75,8 @@ class CartFragment : BaseFragment() {
                         productUI.replacementProductUIList.toTypedArray(),
                         productUI.id,
                         productUI.name
-                    ))
+                    )
+                )
             }
 
             override fun onChooseBtnClick() {
@@ -158,6 +156,7 @@ class CartFragment : BaseFragment() {
             override fun onAnimationEnd(p0: Animation?) {
                 binding.bottom.shine.startAnimation(anim)
             }
+
             override fun onAnimationStart(p0: Animation?) {}
             override fun onAnimationRepeat(p0: Animation?) {}
         })
@@ -171,10 +170,15 @@ class CartFragment : BaseFragment() {
     }
 
     private fun initActionBar() {
-        initToolbar(requireContext().getString(R.string.cart_title), addAction = true, showNavBtn = false, provider = CartMenuProvider(getCartMenuListener()))
+        initToolbar(
+            requireContext().getString(R.string.cart_title),
+            addAction = true,
+            showNavBtn = false,
+            provider = CartMenuProvider(getCartMenuListener())
+        )
     }
 
-    private fun getCartMenuListener() : CartMenuListener {
+    private fun getCartMenuListener(): CartMenuListener {
         return object : CartMenuListener {
             override fun onClearCartClick() {
                 clearCart()
@@ -205,18 +209,20 @@ class CartFragment : BaseFragment() {
                         requireActivity().snackTop(cartState.data.infoMessage.message)
                     }
 
-                    when(cartState.data.giftMessageBottom?.message?.isNotEmpty() == true) {
-                        false -> binding.bottom.tvGiftMessage.visibility = View.GONE
-                        else -> {
-                            binding.bottom.tvGiftMessage.visibility = View.VISIBLE
-                            binding.bottom.tvGiftMessage.text = cartState.data.giftMessageBottom?.message
-                        }
+                    if (cartState.data.giftMessageBottom?.message?.isEmpty() == true) {
+                        binding.bottom.tvGiftMessage.visibility = View.GONE
+                    } else {
+                        binding.bottom.tvGiftMessage.visibility = View.VISIBLE
+                        binding.bottom.tvGiftMessage.text =
+                            cartState.data.giftMessageBottom?.message.fromHtml()
                     }
 
-                    when(cartState.data.giftProductUIList.isEmpty()) {
-                        true -> binding.bottom.llShowGifts.visibility = View.GONE
-                        false -> binding.bottom.llShowGifts.visibility = View.VISIBLE
-                    }
+                    binding.bottom.llShowGifts.visibility =
+                        if (cartState.data.giftProductUIList.isEmpty()) {
+                            View.GONE
+                        } else {
+                            View.VISIBLE
+                        }
 
                     if (cartState.loadingPage) {
                         showLoader()
@@ -228,7 +234,9 @@ class CartFragment : BaseFragment() {
                     val notAvailableItems = cartState.data.notAvailableProducts?.items
 
                     if (cartState.data.total != null) {
-                        binding.bottom.btnRegOrderFlow.text = StringBuilder().append("Оформить заказ на ").append(cartState.data.total.prices.total).append(" ₽").toString()
+                        binding.bottom.btnRegOrderFlow.text =
+                            StringBuilder().append("Оформить заказ на ")
+                                .append(cartState.data.total.prices.total).append(" ₽").toString()
                     }
 
                     showHideDefToolbarItem(R.id.clearCart, availableItems.isNullOrEmpty().not())
@@ -247,7 +255,9 @@ class CartFragment : BaseFragment() {
                             binding.bottom.root.isVisible = true
                             cartController.submitList(
                                 listOfNotNull(
-                                    cartState.data.notAvailableProducts.takeIf { notAvailableItems.isNullOrEmpty().not() },
+                                    cartState.data.notAvailableProducts.takeIf {
+                                        notAvailableItems.isNullOrEmpty().not()
+                                    },
                                     cartState.data.availableProducts,
                                     cartState.data.total
                                 )
@@ -262,7 +272,7 @@ class CartFragment : BaseFragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.observeEvent()
                 .collect {
-                    when(it) {
+                    when (it) {
                         is CartFlowViewModel.CartEvents.NavigateToOrder -> {
                             if (it.prices != null) {
                                 if (findNavController().currentBackStackEntry?.destination?.id == R.id.orderingFragment) {
@@ -288,7 +298,8 @@ class CartFragment : BaseFragment() {
                             findNavController().navigate(
                                 CartFragmentDirections.actionToGiftsBottomFragment(
                                     it.list.toTypedArray()
-                                ))
+                                )
+                            )
                         }
                         is CartFlowViewModel.CartEvents.NavigateToProfile -> {
                             tabManager.setAuthRedirect(findNavController().graph.id)

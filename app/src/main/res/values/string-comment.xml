@@ -5,9 +5,9 @@
     <string name="send_comment_btn_text">Отправить</string>
 
     //Products Comments
-    <string name="product_comments_title">Отзывы</string>
+    <string name="product_comments_title" translatable="false">Отзывы</string>
 
     //HomeComments
-    <string name="comments_slider_title">Отзывы</string>
-    <string name="write_comment_btn_text">Написать отзыв</string>
+    <string name="comments_slider_title" translatable="false">Отзывы</string>
+    <string name="write_comment_btn_text" translatable="false">Написать отзыв</string>
 </resources>

@@ -1,57 +1,57 @@
 <resources>
-    <string name="plug">Текст</string>
+    <string name="plug" translatable="false">Текст</string>
 
-    <string name="new_app">vodovoz.ru</string>
-    <string name="new_app_ssl_not">http</string>
-    <string name="new_app_ssl">https</string>
+    <string name="new_app" translatable="false">vodovoz.ru</string>
+    <string name="new_app_ssl_not" translatable="false">http</string>
+    <string name="new_app_ssl" translatable="false">https</string>
 
-    <string name="app_name">Vodovoz</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="app_name" translatable="false">Vodovoz</string>
+    <string name="title_home" translatable="false">Home</string>
+    <string name="title_dashboard" translatable="false">Dashboard</string>
+    <string name="title_notifications" translatable="false">Notifications</string>
 
     //BottomNavMenu
-    <string name="home">Домой</string>
-    <string name="catalog">Каталог</string>
-    <string name="cart">Корзина</string>
-    <string name="favorite">Избранное</string>
-    <string name="account">Профиль</string>
-    <string name="search_hint">Искать в Vodovoz</string>
-    <string name="load_label">Загрузка</string>
-    <string name="update_label">Обновить</string>
+    <string name="home" translatable="false">Домой</string>
+    <string name="catalog" translatable="false">Каталог</string>
+    <string name="cart" translatable="false">Корзина</string>
+    <string name="favorite" translatable="false">Избранное</string>
+    <string name="account" translatable="false">Профиль</string>
+    <string name="search_hint" translatable="false">Искать в Vodovoz</string>
+    <string name="load_label" translatable="false">Загрузка</string>
+    <string name="update_label" translatable="false">Обновить</string>
 
     //Section
-    <string name="discount">Самое выгодное</string>
-    <string name="history_label">Истории</string>
-    <string name="popular_label">Популярное</string>
+    <string name="discount" translatable="false">Самое выгодное</string>
+    <string name="history_label" translatable="false">Истории</string>
+    <string name="popular_label" translatable="false">Популярное</string>
 
     //Additional Info
-    <string name="about_shop">О магазине</string>
-    <string name="about_delivery">О доставке</string>
-    <string name="about_pay">Об оплате</string>
-    <string name="about_contacts">Связаться с нами</string>
-    <string name="about_how_to_order">Как заказать</string>
-    <string name="about_services">Услуги</string>
-    <string name="about_app">О приложении</string>
-    <string name="show_all">СМ.ВСЕ</string>
-    <string name="last_purchases">Прошлые покупки</string>
-    <string name="additional_navigation_favorite">Избранное \n</string>
-    <string name="additional_navigation_order_history">История заказов</string>
-    <string name="brands">Бренды</string>
-    <string name="novelty">Новинка</string>
-    <string name="novelties">Новинки</string>
-    <string name="not_available">Нет в наличии</string>
-    <string name="resizable_text_read_more"> подробнее</string>
-    <string name="resizable_text_read_less"> свернуть</string>
-    <string name="cancel">Отмена</string>
-    <string name="confirm">Подтвердить</string>
+    <string name="about_shop" translatable="false">О магазине</string>
+    <string name="about_delivery" translatable="false">О доставке</string>
+    <string name="about_pay" translatable="false">Об оплате</string>
+    <string name="about_contacts" translatable="false">Связаться с нами</string>
+    <string name="about_how_to_order" translatable="false">Как заказать</string>
+    <string name="about_services" translatable="false">Услуги</string>
+    <string name="about_app" translatable="false">О приложении</string>
+    <string name="show_all" translatable="false">СМ.ВСЕ</string>
+    <string name="last_purchases" translatable="false">Прошлые покупки</string>
+    <string name="additional_navigation_favorite" translatable="false">Избранное \n</string>
+    <string name="additional_navigation_order_history" translatable="false">История заказов</string>
+    <string name="brands" translatable="false">Бренды</string>
+    <string name="novelty" translatable="false">Новинка</string>
+    <string name="novelties" translatable="false">Новинки</string>
+    <string name="not_available" translatable="false">Нет в наличии</string>
+    <string name="resizable_text_read_more" translatable="false"> подробнее</string>
+    <string name="resizable_text_read_less" translatable="false"> свернуть</string>
+    <string name="cancel" translatable="false">Отмена</string>
+    <string name="confirm" translatable="false">Подтвердить</string>
 
     
     //New Strings
 
     //Base
-    <string name="default_text">Заглушка для превью</string>
-    <string name="price_text">%d Р</string>
+    <string name="default_text" translatable="false">Заглушка для превью</string>
+    <string name="price_text" translatable="false">%d ₽</string>
 
 
 </resources>

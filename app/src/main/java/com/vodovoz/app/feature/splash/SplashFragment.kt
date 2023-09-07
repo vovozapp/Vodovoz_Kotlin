@@ -10,11 +10,10 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
-import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.feature.cart.CartFlowViewModel
-import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.catalog.CatalogFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
+import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.util.extensions.debugLog
@@ -74,8 +73,7 @@ class SplashFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //accountManager.reportYandexMetrica("Зашел в приложение") //t
-        // odo релиз
+        //accountManager.reportYandexMetrica("Зашел в приложение") //todo релиз
 
         handlePushData()
         observeFlowViewModel()
