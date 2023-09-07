@@ -3,11 +3,10 @@ package com.vodovoz.app.data
 import com.vodovoz.app.common.product.rating.RatingResponse
 import com.vodovoz.app.feature.bottom.services.newservs.model.AboutServicesNew
 import com.vodovoz.app.feature.home.ratebottom.model.RateBottomModel
-import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
 import com.vodovoz.app.feature.profile.cats.ProfileCategoriesModel
 import com.vodovoz.app.feature.profile.notificationsettings.model.NotificationSettingsModel
 import com.vodovoz.app.feature.search.qrcode.model.QrCodeModel
-import io.reactivex.rxjava3.core.Single
+import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -140,7 +139,7 @@ interface MainApi {
         @Query("quantity") quantity: Int? = null,
     ): ResponseBody
 
-    //Изменение колличества товаров в корзине
+    //Изменение количества товаров в корзине
     @GET("/newmobile/korzina/function/guaty/index.php")
     suspend fun fetchChangeProductsQuantityResponse(
         @Query("action") action: String? = null,
@@ -317,7 +316,7 @@ interface MainApi {
     suspend fun fetchMainSliderResponse(
         @Query("action") action: String? = null,
         @Query("id") categoryId: Long? = null,
-        @Query("baner") baner: String? = "uzkiy"
+        @Query("baner") baner: String? = "uzkiy",
     ): ResponseBody
 
     /**
@@ -356,13 +355,13 @@ interface MainApi {
         @Query("fio") name: String? = null,
         @Query("email") email: String? = null,
         @Query("phone") phone: String? = null,
-        @Query("tovar") productId: Long? = null
+        @Query("tovar") productId: Long? = null,
     ): ResponseBody
 
     @GET("newmobile/voteRating.php")
     suspend fun rateProduct(
         @Query("element_id") productId: Long,
-        @Query("rating_value") ratingValue: Float
+        @Query("rating_value") ratingValue: Float,
     ): RatingResponse
 
     /**
@@ -384,7 +383,7 @@ interface MainApi {
     suspend fun dontCommentProduct(
         @Query("action") action: String? = null,
         @Query("id") productId: Long? = null,
-        @Query("userid") userId: Long? = null
+        @Query("userid") userId: Long? = null,
     ): ResponseBody
 
     /**
@@ -430,7 +429,7 @@ interface MainApi {
 
     @GET("newmobile/changeOrderStatus.php")
     suspend fun cancelOrder(
-        @Query("orderID") orderId: Long?
+        @Query("orderID") orderId: Long?,
     ): ResponseBody
 
     /**
@@ -449,7 +448,7 @@ interface MainApi {
 
     @GET("/newmobile/profile/karta/index.php")
     suspend fun fetchMapResponse(
-        @Query("action") action: String? = null
+        @Query("action") action: String? = null,
     ): ResponseBody
 
     /**
@@ -499,7 +498,7 @@ interface MainApi {
 
     @GET
     suspend fun fetchAuthByPhoneResponse(
-        @Url url: String
+        @Url url: String,
     ): ResponseBody
 
     /**
@@ -518,7 +517,7 @@ interface MainApi {
 
     @GET("newmobile/config/closesait.php")
     suspend fun fetchSiteState(
-        @Query("action") action: String? = null
+        @Query("action") action: String? = null,
     ): SiteStateResponse
 
     /**
@@ -570,7 +569,7 @@ interface MainApi {
         @Query("COORDS_FROM[0]", encoded = false) latitude: String,
         @Query("COORDS_FROM[1]", encoded = false) longitude: String,
         @Query("LENGTH") length: String,
-        @Query("DELIVERY_DATE", encoded = true) date: String
+        @Query("DELIVERY_DATE", encoded = true) date: String,
     ): ResponseBody
 
     /**
@@ -615,7 +614,7 @@ interface MainApi {
         @Query("addressid") addressId: Long? = null,
         @Query("leghtkm") length: String? = null,
         @Query("polnadres") fullAddress: String? = null,
-        @Query("ktochka") longAndLat: String? = null
+        @Query("ktochka") longAndLat: String? = null,
     ): ResponseBody
 
     /**
@@ -657,14 +656,14 @@ interface MainApi {
         @Query("sdacha") overMoney: Int?, //?
         @Query("parkovka") parking: Int?, // числовое значение,
         @Query("versiyaan") appVersion: String?,
-        @Query("nettovar") checkDeliveryValue: Int?
+        @Query("nettovar") checkDeliveryValue: Int?,
     ): ResponseBody
 
     @Multipart
     @POST("/newmobile/profile/index.php?action=uploadPhoto")
     suspend fun addAvatar(
         @Part("userid") id: Long,
-        @Part file: MultipartBody.Part
+        @Part file: MultipartBody.Part,
     ): Response<Void>
 
     @GET("/newmobile/profile/aktivacija_karty/index.php")
@@ -684,7 +683,7 @@ interface MainApi {
     @GET("/newmobile/korzina/function/add/index.php")
     suspend fun addProductFromServiceDetails(
         @Query("action") action: String? = null,
-        @Query("idquanit", encoded = true) idWithGift: String? = null
+        @Query("idquanit", encoded = true) idWithGift: String? = null,
     ): ResponseBody
 
     @GET("newmobile/el.php")
@@ -695,6 +694,11 @@ interface MainApi {
 
     @GET
     suspend fun fetchNotificationSettingsData(
-        @Url url: String
+        @Url url: String,
     ): NotificationSettingsModel
+
+    @GET("newmobile/el.php")
+    suspend fun fetchBottles(
+        @Query("iblock_id") iBlockId: Int? = 90,
+    ): ResponseBody
 }

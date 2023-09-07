@@ -39,9 +39,7 @@ import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.map.api.MapKitFlowApi
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel
-import com.vodovoz.app.feature.profile.notificationsettings.model.NotificationSettingsModel
 import com.vodovoz.app.feature.profile.viewholders.models.*
-import com.vodovoz.app.feature.search.qrcode.model.QrCodeModel
 import com.vodovoz.app.mapper.BannerMapper.mapToUI
 import com.vodovoz.app.mapper.BrandMapper.mapToUI
 import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
@@ -57,7 +55,6 @@ import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
@@ -66,8 +63,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Query
 import java.io.File
 import javax.inject.Inject
 
@@ -1605,7 +1600,7 @@ class MainRepository @Inject constructor(
         userId: Long?,
         addressId: Long?,
         date: String?,
-        appVerision: String?
+        appVerision: String?,
     ) = api.fetchInfoAboutOrderingResponse(
         userId = userId,
         addressId = addressId,
@@ -1614,7 +1609,7 @@ class MainRepository @Inject constructor(
     )
 
     suspend fun fetchFreeShippingDaysInfoResponse(
-        appVerision: String?
+        appVerision: String?,
     ) = api.fetchInfoAboutOrderingResponse(appVersion = appVerision)
 
     suspend fun regOrder(
@@ -1758,4 +1753,6 @@ class MainRepository @Inject constructor(
     suspend fun fetchNotificationSettingsData(uri: String) = coroutineScope {
         api.fetchNotificationSettingsData(uri)
     }
+
+    suspend fun fetchBottles() = api.fetchBottles()
 }

@@ -817,7 +817,7 @@
     </dialog>
     <fragment
         android:id="@+id/allBottlesFragment"
-        android:name="com.vodovoz.app.feature.cart.bottles.AllBottlesFragment"
+        android:name="com.vodovoz.app.feature.cart.bottles.AllBottlesFlowFragment"
         android:label="AllBottlesFragment" />
     <fragment
         android:id="@+id/ordersFiltersDialog"

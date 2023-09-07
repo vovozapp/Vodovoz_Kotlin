@@ -792,7 +792,7 @@
     </dialog>
     <fragment
         android:id="@+id/allBottlesFragment"
-        android:name="com.vodovoz.app.feature.cart.bottles.AllBottlesFragment"
+        android:name="com.vodovoz.app.feature.cart.bottles.AllBottlesFlowFragment"
         android:label="AllBottlesFragment" />
     <fragment
         android:id="@+id/ordersFiltersDialog"
@@ -848,8 +848,8 @@
         android:id="@+id/webViewFlowBottomSheetFragment"
         android:name="com.vodovoz.app.common.webview.WebViewFlowBottomSheetFragment"
         android:label="WebViewFlowBottomSheetFragment" />
-    <fragment
-        android:id="@+id/webViewFlowFragment"
-        android:name="com.vodovoz.app.common.webview.old.WebViewFlowFragment"
-        android:label="WebViewFlowFragment" />
+<!--    <fragment-->
+<!--        android:id="@+id/webViewFlowFragment"-->
+<!--        android:name="com.vodovoz.app.common.webview.old.WebViewFlowFragment"-->
+<!--        android:label="WebViewFlowFragment" />-->
 </navigation>
