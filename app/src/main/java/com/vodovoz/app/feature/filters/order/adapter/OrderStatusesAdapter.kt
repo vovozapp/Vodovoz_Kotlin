@@ -12,7 +12,7 @@ class OrderStatusesAdapter : RecyclerView.Adapter<OrderStatusViewHolder>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ) = OrderStatusViewHolder(
         binding = ViewHolderOrderStatusBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
@@ -21,7 +21,7 @@ class OrderStatusesAdapter : RecyclerView.Adapter<OrderStatusViewHolder>() {
 
     override fun onBindViewHolder(
         holder: OrderStatusViewHolder,
-        position: Int
+        position: Int,
     ) = holder.onBind(orderStatusUIList[position])
 
     override fun getItemCount() = orderStatusUIList.size

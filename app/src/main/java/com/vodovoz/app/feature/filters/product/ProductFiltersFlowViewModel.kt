@@ -27,8 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductFiltersFlowViewModel @Inject constructor(
     private val savedState: SavedStateHandle,
-    private val repository: MainRepository,
-    private val dataRepository: DataRepository,
+    private val repository: MainRepository
 ) : PagingStateViewModel<ProductFiltersFlowViewModel.ProductFiltersState>(ProductFiltersState()) {
 
     private val filterBundle = savedState.get<FiltersBundleUI>("defaultFiltersBundle")

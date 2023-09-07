@@ -796,8 +796,8 @@
         android:label="AllBottlesFragment" />
     <fragment
         android:id="@+id/ordersFiltersDialog"
-        android:name="com.vodovoz.app.feature.filters.order.OrdersFiltersFragment"
-        android:label="OrdersFiltersDialog" >
+        android:name="com.vodovoz.app.feature.filters.order.OrdersFiltersFlowFragment"
+        android:label="OrdersFiltersDialog">
         <argument
             android:name="ordersFiltersBundleUI"
             app:argType="com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI" />

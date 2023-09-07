@@ -10,10 +10,11 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentOrdersFiltersBinding
 import com.vodovoz.app.feature.filters.order.adapter.OrderStatusesAdapter
 import com.vodovoz.app.feature.all.orders.OrdersHistoryFragment
+import com.vodovoz.app.feature.filters.order.adapter.OrderStatusesFlowAdapter
 import com.vodovoz.app.ui.model.OrderStatusUI
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
 
-class OrdersFiltersFragment : Fragment() {
+class OrdersFiltersFlowFragment : Fragment() {
 
     private lateinit var ordersFiltersBundleUI: OrdersFiltersBundleUI
     private lateinit var binding: FragmentOrdersFiltersBinding
@@ -27,7 +28,7 @@ class OrdersFiltersFragment : Fragment() {
         OrderStatusUI.DELIVERED,
     )
 
-    private lateinit var orderStatusesAdapter: OrderStatusesAdapter
+    private lateinit var orderStatusesAdapter: OrderStatusesFlowAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +36,7 @@ class OrdersFiltersFragment : Fragment() {
     }
 
     private fun getArgs() {
-       // ordersFiltersBundleUI = OrdersFiltersFragmentArgs.fromBundle(requireArguments()).ordersFiltersBundleUI
+        ordersFiltersBundleUI = OrdersFiltersFlowFragmentArgs.fromBundle(requireArguments()).ordersFiltersBundleUI
     }
 
     override fun onCreateView(
@@ -67,7 +68,10 @@ class OrdersFiltersFragment : Fragment() {
         ordersFiltersBundleUI.orderStatusUIList.forEach { orderStatusUI ->
             orderStatusUIList.find { it == orderStatusUI }?.let { it.isChecked = true }
         }
-        orderStatusesAdapter = OrderStatusesAdapter().also { it.orderStatusUIList = this.orderStatusUIList }
+        orderStatusesAdapter = OrderStatusesFlowAdapter().also {
+            it.submitList(orderStatusUIList)
+        }
+
         binding.rvOrderStatuses.layoutManager = LinearLayoutManager(requireContext())
         binding.rvOrderStatuses.adapter = orderStatusesAdapter
     }
