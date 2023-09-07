@@ -4,9 +4,6 @@ import android.os.Parcelable
 import com.squareup.moshi.JsonClass
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
-import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
-import com.vodovoz.app.ui.model.ChatUI
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -16,15 +13,15 @@ data class ProfileCategoriesModel(
     val dannie: List<Dannie>?,
     val message: String?,
     val status: String?,
-    val zakaz: List<Zakaz>?
-): Parcelable {
+    val zakaz: List<Zakaz>?,
+) : Parcelable {
 
-    fun fetchProfileCategoryUIList() : MappedProfileCategories {
+    fun fetchProfileCategoryUIList(): MappedProfileCategories {
         var amount: Int? = null
-        val list = dannie?.map {
+        val list = dannie?.map { dannieLambda ->
             ProfileCategoryUI(
-                it.RAZDEL,
-                it.PODRAZDEL?.map {
+                dannieLambda.RAZDEL,
+                dannieLambda.PODRAZDEL?.map {
                     if (it.ZNACHENI != null) {
                         amount = it.ZNACHENI
                     }
@@ -45,14 +42,14 @@ data class ProfileCategoriesModel(
 
 data class MappedProfileCategories(
     val list: List<ProfileCategoryUI>?,
-    val amount: Int?
+    val amount: Int?,
 )
 
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class Dannie(
     val PODRAZDEL: List<PODRAZDEL>?,
-    val RAZDEL: String?
+    val RAZDEL: String?,
 ) : Parcelable
 
 @Parcelize
@@ -64,7 +61,7 @@ data class Zakaz(
     val INTERVAL: String?,
     val PRICE: Int?,
     val STATUS_NAME: String?,
-    val STATUS_NAME_ID: String?
+    val STATUS_NAME_ID: String?,
 ) : Parcelable
 
 @Parcelize
@@ -74,7 +71,7 @@ data class PODRAZDEL(
     val NAME: String?,
     val URL: String?,
     val ZNACHENI: Int?,
-    val DANNYECHAT: List<DANNYECHAT>?
+    val DANNYECHAT: List<DANNYECHAT>?,
 ) : Parcelable
 
 @Parcelize
@@ -83,8 +80,8 @@ data class DANNYECHAT(
     val ID: String?,
     val NAME: String?,
     val CHATDAN: String?,
-    val CHATDANIOS: String?
-): Parcelable, Item {
+    val CHATDANIOS: String?,
+) : Parcelable, Item {
 
     companion object {
         const val DANNAYE_CHAT_VIEW_TYPE = -412412222
@@ -106,7 +103,7 @@ data class DANNYECHAT(
 @JsonClass(generateAdapter = true)
 data class BLOCKRESPONSE(
     val ZAGALOVOK: String?,
-    val OPISANIE: String?
+    val OPISANIE: String?,
 ) : Parcelable, Item {
 
     override fun getItemViewType(): Int {

@@ -52,6 +52,12 @@
     //Base
     <string name="default_text" translatable="false">Заглушка для превью</string>
     <string name="price_text" translatable="false">%d ₽</string>
+    <string name="telephone" translatable="false">Телефон</string>
+    <string name="email" translatable="false">Эл.почта</string>
+    <string name="enter_your_phone_number" translatable="false">Введите номер телефона, чтобы войти или зарегистрироваться, если у вас нет аккаунта</string>
+    <string name="i_confirm_personal_data" translatable="false">Я подтверждаю согласие на обработку персональных данных</string>
+    <string name="subscribe_on_mailing_list" translatable="false">Подписаться на рассылку</string>
+    <string name="send_code" translatable="false">Выслать код</string>
 
 
 </resources>

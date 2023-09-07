@@ -160,16 +160,13 @@ class PromotionDetailsFragment : BaseFragment() {
                         bestForYouController.submitList(listOf(homeTitle, homeProducts))
                     }
 
-                    when (state.data.items?.promotionCategoryDetailUI) {
-                        null -> {
-                            binding.promotionProductsTitle.visibility = View.GONE
-                            binding.productRecycler.visibility = View.GONE
-                        }
-                        else -> {
-                            binding.promotionProductsTitle.visibility = View.VISIBLE
-                            binding.productRecycler.visibility = View.VISIBLE
-                            productsController.submitList(state.data.items.promotionCategoryDetailUI.productUIList)
-                        }
+                    state.data.items?.promotionCategoryDetailUI?.let {
+                        binding.promotionProductsTitle.visibility = View.VISIBLE
+                        binding.productRecycler.visibility = View.VISIBLE
+                        productsController.submitList(state.data.items.promotionCategoryDetailUI.productUIList)
+                    } ?: {
+                        binding.promotionProductsTitle.visibility = View.GONE
+                        binding.productRecycler.visibility = View.GONE
                     }
 
                     showError(state.error)

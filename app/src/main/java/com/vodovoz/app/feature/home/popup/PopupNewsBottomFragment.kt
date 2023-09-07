@@ -56,7 +56,7 @@ class PopupNewsBottomFragment : BaseBottomSheetFragment() {
             .load(popupNewsUI.detailPicture)
             .into(binding.imgBanner)
 
-        if (popupNewsUI.actionEntity?.action != null) {
+        popupNewsUI.actionEntity?.action?.let{
             binding.btnShowDetails.text = popupNewsUI.actionEntity?.action
             binding.btnShowDetails.isVisible = true
             binding.btnShowDetails.setOnClickListener {
@@ -65,11 +65,11 @@ class PopupNewsBottomFragment : BaseBottomSheetFragment() {
                 }
                 dismiss()
             }
-        } else {
+        } ?: {
             binding.btnShowDetails.isVisible = false
         }
 
-        if (popupNewsUI.actionEntity?.actionColor != null) {
+        popupNewsUI.actionEntity?.actionColor?.let {
             val color = Color.parseColor(popupNewsUI.actionEntity!!.actionColor)
             binding.btnShowDetails.backgroundTintList = ColorStateList.valueOf(color)
         }

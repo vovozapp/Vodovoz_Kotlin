@@ -10,18 +10,12 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.databinding.ViewHolderSliderProductBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.core.network.ApiConfig.AMOUNT_CONTROLLER_TIMER
+import com.vodovoz.app.databinding.ViewHolderSliderProductBinding
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
-import com.vodovoz.app.util.extensions.debugLog
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
@@ -31,17 +25,18 @@ class HomeProductsInnerViewHolder(
     view: View,
     private val clickListener: ProductsClickListener,
     private val cartManager: CartManager,
-    private val likeManager: LikeManager
+    private val likeManager: LikeManager,
 ) : ItemViewHolder<ProductUI>(view) {
 
     private val binding: ViewHolderSliderProductBinding = ViewHolderSliderProductBinding.bind(view)
 
-    private val amountControllerTimer = object: CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
-        override fun onTick(millisUntilFinished: Long) {}
-        override fun onFinish() {
-            hideAmountController()
+    private val amountControllerTimer =
+        object : CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
+            override fun onTick(millisUntilFinished: Long) {}
+            override fun onFinish() {
+                hideAmountController()
+            }
         }
-    }
 
     override fun attach() {
         super.attach()
@@ -62,7 +57,7 @@ class HomeProductsInnerViewHolder(
             val item = item ?: return@launch
             likeManager
                 .observeLikes()
-                .filter{ it.containsKey(item.id) }
+                .filter { it.containsKey(item.id) }
                 .onEach {
                     item.isFavorite = it[item.id] ?: item.isFavorite
                     bindFav(item)
@@ -116,7 +111,7 @@ class HomeProductsInnerViewHolder(
 
         binding.imgFavoriteStatus.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            when(item.isFavorite) {
+            when (item.isFavorite) {
                 true -> {
                     item.isFavorite = false
                     binding.imgFavoriteStatus.isSelected = false
@@ -140,7 +135,7 @@ class HomeProductsInnerViewHolder(
         binding.tvPricePerUnit.text = item.pricePerUnitStringBuilder
 
         //Price
-        when(item.priceList.size) {
+        when (item.priceList.size) {
             1 -> {
                 binding.tvCurrentPrice.text = item.currentPriceStringBuilder
                 binding.tvOldPrice.text = item.oldPriceStringBuilder
@@ -150,13 +145,23 @@ class HomeProductsInnerViewHolder(
                 binding.tvPricePerUnit.visibility = View.GONE
             }
         }
-        when(item.haveDiscount) {
+        when (item.haveDiscount) {
             true -> {
-                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
+                binding.tvCurrentPrice.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.red
+                    )
+                )
                 binding.tvOldPrice.visibility = View.VISIBLE
             }
             false -> {
-                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
+                binding.tvCurrentPrice.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.text_black
+                    )
+                )
                 binding.tvOldPrice.visibility = View.GONE
             }
         }
@@ -178,13 +183,13 @@ class HomeProductsInnerViewHolder(
         }
 
         //DiscountPercent
-        when(item.priceList.size == 1 &&
-                item.priceList.first().currentPrice < item.priceList.first().oldPrice) {
-            true -> {
-                binding.tvDiscountPercent.visibility = View.VISIBLE
-                binding.tvDiscountPercent.text = item.discountPercentStringBuilder
-            }
-            false -> binding.tvDiscountPercent.visibility = View.GONE
+        if (item.priceList.size == 1 &&
+            item.priceList.first().currentPrice < item.priceList.first().oldPrice
+        ) {
+            binding.tvDiscountPercent.visibility = View.VISIBLE
+            binding.tvDiscountPercent.text = item.discountPercentStringBuilder
+        } else {
+            binding.tvDiscountPercent.visibility = View.GONE
         }
 
         //UpdatePictures
@@ -217,12 +222,9 @@ class HomeProductsInnerViewHolder(
 
         if (item.cartQuantity <= 0) {
             binding.circleAmount.visibility = View.GONE
-        } else {
-            if (!binding.amount.isVisible) {
-                binding.circleAmount.visibility = View.VISIBLE
-            }
+        } else if (!binding.amount.isVisible) {
+            binding.circleAmount.visibility = View.VISIBLE
         }
-
 
         binding.amount.text = item.cartQuantity.toString()
         binding.circleAmount.text = item.cartQuantity.toString()
