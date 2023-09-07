@@ -10,5 +10,6 @@
     <string name="not_available_product_title">Нет в наличии</string>
     <string name="replacement_text">Предлагаем замену</string>
     <string name="all_products_of_this_category_btn_text">Все продукты категории</string>
+    <string name="price_condition">При условии покупки от %d шт</string>
 
 </resources>

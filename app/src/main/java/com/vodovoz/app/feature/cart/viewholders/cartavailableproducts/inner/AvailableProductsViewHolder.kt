@@ -7,9 +7,7 @@ import android.view.View
 import android.widget.RatingBar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.DiffUtil
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
@@ -21,7 +19,6 @@ import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.Det
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowPagerAdapter
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPicturePager
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDepositPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setOrderQuantity
@@ -29,7 +26,9 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -38,19 +37,24 @@ class AvailableProductsViewHolder(
     val productsClickListener: ProductsClickListener,
     private val likeManager: LikeManager,
     private val cartManager: CartManager,
-    private val ratingProductManager: RatingProductManager
+    private val ratingProductManager: RatingProductManager,
 ) : ItemViewHolder<ProductUI>(view) {
 
     private val binding: ViewHolderProductListBinding = ViewHolderProductListBinding.bind(view)
 
-    private val amountControllerTimer = object : CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
-        override fun onTick(millisUntilFinished: Long) {}
-        override fun onFinish() {
-            val item = item ?: return
-            productsClickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
-            hideAmountController(item)
+    private val amountControllerTimer =
+        object : CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
+            override fun onTick(millisUntilFinished: Long) {}
+            override fun onFinish() {
+                val item = item ?: return
+                productsClickListener.onChangeProductQuantity(
+                    item.id,
+                    item.cartQuantity,
+                    item.oldQuantity
+                )
+                hideAmountController(item)
+            }
         }
-    }
 
     private val detailPictureFlowPagerAdapter = DetailPictureFlowPagerAdapter(
         clickListener = object : DetailPictureFlowClickListener {
@@ -76,7 +80,7 @@ class AvailableProductsViewHolder(
             val item = item ?: return@launch
             ratingProductManager
                 .observeRatings()
-                .filter{ it.containsKey(item.id) }
+                .filter { it.containsKey(item.id) }
                 .onEach {
                     item.rating = it[item.id] ?: item.rating
                     binding.rbRating.rating = item.rating
@@ -88,7 +92,7 @@ class AvailableProductsViewHolder(
             val item = item ?: return@launch
             likeManager
                 .observeLikes()
-                .filter{ it.containsKey(item.id) }
+                .filter { it.containsKey(item.id) }
                 .onEach {
                     item.isFavorite = it[item.id] ?: item.isFavorite
                     bindFav(item)
@@ -137,7 +141,7 @@ class AvailableProductsViewHolder(
             if (item.isGift || item.chipsBan == 2 || item.chipsBan == 3 || item.chipsBan == 5) return@setOnClickListener
 
             item.oldQuantity = item.cartQuantity
-            item.cartQuantity++
+//            item.cartQuantity++
             updateCartQuantity(item)
             showAmountController()
         }
@@ -163,7 +167,7 @@ class AvailableProductsViewHolder(
 
         binding.imgFavoriteStatus.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            when(item.isFavorite) {
+            when (item.isFavorite) {
                 true -> {
                     item.isFavorite = false
                     binding.imgFavoriteStatus.isSelected = false
@@ -227,7 +231,7 @@ class AvailableProductsViewHolder(
 
         bindFav(item)
 
-        when(item.depositPrice != 0) {
+        when (item.depositPrice != 0) {
             true -> {
                 binding.tvDepositPrice.visibility = View.VISIBLE
                 binding.tvDepositPrice.setDepositPriceText(item.depositPrice)
@@ -265,7 +269,8 @@ class AvailableProductsViewHolder(
             binding.rbRating.isVisible = false
         }
 
-        binding.imgFavoriteStatus.isVisible = !(item.chipsBan == 1 || item.chipsBan == 3 || item.chipsBan == 5)
+        binding.imgFavoriteStatus.isVisible =
+            !(item.chipsBan == 1 || item.chipsBan == 3 || item.chipsBan == 5)
 
         //If is not available
         if (!item.isAvailable) {
@@ -276,9 +281,19 @@ class AvailableProductsViewHolder(
     }
 
     private fun bindFav(item: ProductUI) {
-        when(item.isFavorite) {
-            false -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
-            true -> binding.imgFavoriteStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
+        when (item.isFavorite) {
+            false -> binding.imgFavoriteStatus.setImageDrawable(
+                ContextCompat.getDrawable(
+                    itemView.context,
+                    R.drawable.ic_favorite_black
+                )
+            )
+            true -> binding.imgFavoriteStatus.setImageDrawable(
+                ContextCompat.getDrawable(
+                    itemView.context,
+                    R.drawable.png_ic_favorite_red
+                )
+            )
         }
     }
 
@@ -315,35 +330,50 @@ class AvailableProductsViewHolder(
             binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(item.statusColor))
         }
 
-        when(item.priceList.size) {
+        when (item.priceList.size) {
             1 -> {
                 binding.tvPriceCondition.visibility = View.GONE
-                bindDiscountPrice(item, item.priceList.first().currentPrice, item.priceList.first().oldPrice)
+                bindDiscountPrice(
+                    item,
+                    item.priceList.first().currentPrice,
+                    item.priceList.first().oldPrice
+                )
             }
             else -> {
                 val sortedPriceList = item.priceList.sortedByDescending { it.requiredAmount }
 
-                val minimalPrice =  if (sortedPriceList.first().requiredAmountTo == 0 && item.cartQuantity >= sortedPriceList.first().requiredAmount) {
-                    sortedPriceList.find { it.requiredAmountTo == 0 && item.cartQuantity >= it.requiredAmount }
-                } else {
-                    sortedPriceList.find { item.cartQuantity in it.requiredAmount .. it.requiredAmountTo }
-                } ?: sortedPriceList.first()
+                val minimalPrice =
+                    if (sortedPriceList.first().requiredAmountTo == 0 && item.cartQuantity >= sortedPriceList.first().requiredAmount) {
+                        sortedPriceList.find { it.requiredAmountTo == 0 && item.cartQuantity >= it.requiredAmount }
+                    } else {
+                        sortedPriceList.find { item.cartQuantity in it.requiredAmount..it.requiredAmountTo }
+                    } ?: sortedPriceList.first()
 
                 binding.tvPriceCondition.visibility = View.VISIBLE
-                binding.tvPriceCondition.text = "При услови покупки от ${minimalPrice.requiredAmount} шт"
+                binding.tvPriceCondition.text =
+                    itemView.context.getString(
+                        R.string.price_condition,
+                        minimalPrice.requiredAmount
+                    )
+//                    "При условии покупки от ${minimalPrice.requiredAmount} шт"
 
                 bindDiscountPrice(item, minimalPrice.currentPrice, minimalPrice.oldPrice)
                 binding.tvPricePerUnit.visibility = View.GONE
             }
         }
 
-        when(item.totalDisc > 0 || item.isGift) {
+        when (item.totalDisc > 0 || item.isGift) {
             true -> {
                 binding.tvPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
                 binding.tvOldPrice.visibility = View.VISIBLE
             }
             false -> {
-                binding.tvPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_new_black))
+                binding.tvPrice.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.text_new_black
+                    )
+                )
                 binding.tvOldPrice.visibility = View.GONE
             }
         }
