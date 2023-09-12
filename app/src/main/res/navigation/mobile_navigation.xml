@@ -435,9 +435,9 @@
             android:id="@+id/action_to_allPromotionsFragment"
             app:destination="@id/allPromotionsFragment" />
     </dialog>
-    <dialog
+    <fragment
         android:id="@+id/concreteFilterFragment"
-        android:name="com.vodovoz.app.feature.filters.concrete.ConcreteFilterFragment"
+        android:name="com.vodovoz.app.feature.filters.concrete.ConcreteFilterFlowFragment"
         android:label="ConcreteFilterFragment" >
         <argument
             android:name="categoryId"
@@ -445,10 +445,10 @@
         <argument
             android:name="filter"
             app:argType="com.vodovoz.app.ui.model.FilterUI" />
-    </dialog>
-    <dialog
+    </fragment>
+    <fragment
         android:id="@+id/productFiltersFragment"
-        android:name="com.vodovoz.app.feature.filters.product.ProductFiltersFragment"
+        android:name="com.vodovoz.app.feature.filters.product.ProductFiltersFlowFragment"
         android:label="ProductFiltersFragment" >
         <argument
             android:name="defaultFiltersBundle"
@@ -459,7 +459,7 @@
         <argument
             android:name="categoryId"
             app:argType="long" />
-    </dialog>
+    </fragment>
     <dialog
         android:id="@+id/fullScreenDetailPicturesSliderFragment"
         android:name="com.vodovoz.app.feature.productdetail.fullscreen.FullScreenDetailPicturesSliderFragment"

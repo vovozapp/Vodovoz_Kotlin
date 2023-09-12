@@ -33,8 +33,8 @@ class ConcreteFilterFragment : ViewStateBaseDialogFragment() {
 
     private fun getArgs() {
         viewModel.updateArgs(
-            categoryId = ConcreteFilterFragmentArgs.fromBundle(requireArguments()).categoryId,
-            filter = ConcreteFilterFragmentArgs.fromBundle(requireArguments()).filter,
+            categoryId = ConcreteFilterFlowFragmentArgs.fromBundle(requireArguments()).categoryId,
+            filter = ConcreteFilterFlowFragmentArgs.fromBundle(requireArguments()).filter,
         )
     }
 

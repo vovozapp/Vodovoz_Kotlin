@@ -1205,6 +1205,12 @@ class MainRepository @Inject constructor(
         categoryId: Long,
     ) = api.fetchFilterBundleResponse(categoryId = categoryId)
 
+    suspend fun fetchProductFilterById(
+        categoryId: Long,
+        filterCode: String,
+    ) = api.fetchFilterResponse(categoryId = categoryId, filterCode = filterCode)
+
+
     /**
      * map
      */

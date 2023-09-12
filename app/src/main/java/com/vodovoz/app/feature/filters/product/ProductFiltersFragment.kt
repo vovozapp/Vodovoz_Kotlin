@@ -50,7 +50,7 @@ class ProductFiltersFragment : ViewStateBaseDialogFragment() {
     }
 
     private fun getArgs() {
-        with(ProductFiltersFragmentArgs.fromBundle(requireArguments())) {
+        with(ProductFiltersFlowFragmentArgs.fromBundle(requireArguments())) {
             viewModel.setArgs(defaultFiltersBundle, categoryId)
         }
     }
@@ -186,7 +186,7 @@ class ProductFiltersFragment : ViewStateBaseDialogFragment() {
         super.onStart()
 
         onFilterClickSubject.subscribeBy { filter ->
-            findNavController().navigate(ProductFiltersFragmentDirections.actionToConcreteFilterFragment(
+            findNavController().navigate(ProductFiltersFlowFragmentDirections.actionToConcreteFilterFragment(
                 viewModel.categoryId!!,
                 filter
             ))

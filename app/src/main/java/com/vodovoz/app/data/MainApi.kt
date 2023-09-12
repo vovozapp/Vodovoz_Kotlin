@@ -442,6 +442,14 @@ interface MainApi {
         @Query("section") categoryId: Long,
     ): ResponseBody
 
+    //Фильтр продуктов
+    @GET("/newmobile/filterCatalog.php")
+    suspend fun fetchFilterResponse(
+        @Query("action") action: String = "getAllValueOfProps",
+        @Query("propCode") filterCode: String,
+        @Query("section") categoryId: Long,
+    ): ResponseBody
+
     /**
      * map
      */
