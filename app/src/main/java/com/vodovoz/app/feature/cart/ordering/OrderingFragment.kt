@@ -355,6 +355,7 @@ class OrderingFragment : BaseFragment() {
                 return@setOnClickListener
             }
 
+
             if(binding.scShippingAlert.isChecked){
                 val phone = binding.etPhoneForDriver.text.toString()
                 if(phone.isNotEmpty() && !validatePhone(binding.etPhoneForDriver, phone)) {
@@ -367,7 +368,6 @@ class OrderingFragment : BaseFragment() {
                 return@setOnClickListener
             }
             if (binding.llCompanyNameContainer.isVisible) {
-
                 if (!validateSimpleField(
                         binding.tvNameCompanyName,
                         binding.etCompanyName.text.toString()
@@ -384,6 +384,7 @@ class OrderingFragment : BaseFragment() {
             val email = binding.etEmail.text.toString()
             val company = binding.etCompanyName.text.toString()
             val inputCash = binding.etInputCash.text.toString()
+            val phoneForDriver = binding.etPhoneForDriver.text.toString()
 
             viewModel.regOrder(
                 name = name,
@@ -391,7 +392,8 @@ class OrderingFragment : BaseFragment() {
                 phone = phone,
                 inputCash = inputCash,
                 email = email,
-                companyName = company
+                companyName = company,
+                phoneForDriver = phoneForDriver
             )
         }
 

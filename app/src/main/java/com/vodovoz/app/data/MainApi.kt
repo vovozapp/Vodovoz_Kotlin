@@ -645,7 +645,8 @@ interface MainApi {
         @Query("date") date: String?, //23.08.2022
         @Query("payment") paymentId: Long?, //Pay method Id
         @Query("operator") needOperatorCall: String?, // Y/N
-        @Query("driver") needShippingAlert: String?, //За 90 минут
+        @Query("driver") needShippingAlert: String?,//За 90 минут
+        @Query("dopphone") shippingAlertPhone: String?,//телефон для водителя
         @Query("comment") comment: String?,
         @Query("summ") totalPrice: Int?, //Итоговая сумма заказа
         @Query("delivery_id") shippingId: Long?, //

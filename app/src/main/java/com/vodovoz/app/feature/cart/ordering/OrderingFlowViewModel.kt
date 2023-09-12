@@ -20,7 +20,6 @@ import com.vodovoz.app.ui.extensions.ContextExtensions.getDeviceInfo
 import com.vodovoz.app.ui.model.*
 import com.vodovoz.app.ui.model.custom.OrderingCompletedInfoBundleUI
 import com.vodovoz.app.util.extensions.debugLog
-import com.yandex.metrica.YandexMetrica
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -70,6 +69,7 @@ class OrderingFlowViewModel @Inject constructor(
         email: String = "",
         companyName: String = "",
         inputCash: String = "",
+        phoneForDriver: String = "",
     ) {
         viewModelScope.launch {
 
@@ -121,6 +121,7 @@ class OrderingFlowViewModel @Inject constructor(
                         paymentId = state.data.selectedPayMethodUI?.id,
                         needOperatorCall = needCall,
                         needShippingAlert = state.data.selectedShippingAlertUI?.name,
+                        shippingAlertPhone = phoneForDriver,
                         comment = comment,
                         totalPrice = totalPrice,
                         shippingId = state.data.shippingInfoBundleUI?.id,
@@ -150,7 +151,7 @@ class OrderingFlowViewModel @Inject constructor(
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseRegOrderResponse()
-                    when(response) {
+                    when (response) {
                         is ResponseEntity.Success -> {
                             val data = response.data.mapToUI()
                             cartManager.clearCart()
@@ -264,7 +265,15 @@ class OrderingFlowViewModel @Inject constructor(
         viewModelScope.launch {
             if (state.data.selectedOrderType == type) return@launch
             eventListener.emit(OrderingEvents.ClearFields)
-            uiStateListener.value = state.copy(data = OrderingState(selectedOrderType = type, total = state.data.total, full = state.data.full, deposit = state.data.deposit, discount = state.data.discount))
+            uiStateListener.value = state.copy(
+                data = OrderingState(
+                    selectedOrderType = type,
+                    total = state.data.total,
+                    full = state.data.full,
+                    deposit = state.data.deposit,
+                    discount = state.data.discount
+                )
+            )
         }
     }
 
@@ -438,7 +447,12 @@ class OrderingFlowViewModel @Inject constructor(
 
     fun onCheckDeliveryClick() {
         viewModelScope.launch {
-            eventListener.emit(OrderingEvents.ShowCheckDeliveryBs(state.data.checkDeliveryValue, state.data.shippingInfoBundleUI?.isNewUser ?: false))
+            eventListener.emit(
+                OrderingEvents.ShowCheckDeliveryBs(
+                    state.data.checkDeliveryValue,
+                    state.data.shippingInfoBundleUI?.isNewUser ?: false
+                )
+            )
         }
     }
 
@@ -506,7 +520,8 @@ class OrderingFlowViewModel @Inject constructor(
         data class ChoosePayMethodError(val message: String) : OrderingEvents()
         object ChooseCheckDeliveryError : OrderingEvents()
 
-        data class ShowCheckDeliveryBs(val value: Int, val isNewUser: Boolean = false) : OrderingEvents()
+        data class ShowCheckDeliveryBs(val value: Int, val isNewUser: Boolean = false) :
+            OrderingEvents()
 
         object ClearFields : OrderingEvents()
     }

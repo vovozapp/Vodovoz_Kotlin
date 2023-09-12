@@ -1626,6 +1626,7 @@ class MainRepository @Inject constructor(
         paymentId: Long?, //Pay method Id
         needOperatorCall: String?, // Y/N
         needShippingAlert: String?, //За 90 минут
+        shippingAlertPhone: String?,
         comment: String?,
         totalPrice: Int?, //Итоговая сумма заказа
         shippingId: Long?, //
@@ -1653,6 +1654,7 @@ class MainRepository @Inject constructor(
         paymentId = paymentId,
         needOperatorCall = needOperatorCall,
         needShippingAlert = needShippingAlert,
+        shippingAlertPhone = shippingAlertPhone,
         comment = comment,
         totalPrice = totalPrice,
         shippingId = shippingId,
