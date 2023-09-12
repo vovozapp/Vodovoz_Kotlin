@@ -18,7 +18,8 @@ object TextViewExtensions {
 
     fun TextView.setDrawableColor(@ColorRes color: Int) {
         compoundDrawables.filterNotNull().forEach {
-            it.colorFilter = PorterDuffColorFilter(getColor(context, R.color.green), PorterDuff.Mode.SRC_IN)
+            it.colorFilter =
+                PorterDuffColorFilter(getColor(context, R.color.green), PorterDuff.Mode.SRC_IN)
         }
     }
 
@@ -29,18 +30,21 @@ object TextViewExtensions {
         filters = fArray
         var oldLength = 0
         this.setOnFocusChangeListener { _, isFocused ->
-            when(isFocused) {
+            when (isFocused) {
                 true -> {
                     if (text.isEmpty()) setText("+7-")
                     setSelection(text.length)
                 }
                 false -> {
-                    if (text.toString() == "+7-") { setText("") }
+                    if (text.toString() == "+7-") {
+                        setText("")
+                    }
                 }
             }
         }
         this.doAfterTextChanged {
             if (this.isFocused) {
+                setTextColor(getColor(this.context, R.color.text_black))
                 it?.let { input ->
                     kotlin.runCatching {
                         if (input.toString()[input.indices.last] == '-'
@@ -57,10 +61,14 @@ object TextViewExtensions {
                                 setSelection(input.length - 1)
                             }
                         } else {
-                            if (input.length < 3) {
+                            if (input.length < 3
+                                || input.toString() == "+7-7"
+                                || input.toString() == "+7-8"
+                                || input.toString() == "+7-+"
+                            ) {
                                 kotlin.runCatching {
                                     setText("+7-")
-                                    setSelection(input.length + 2)
+                                    setSelection(3)
                                 }
                             } else {
                                 kotlin.runCatching {
@@ -99,5 +107,6 @@ object TextViewExtensions {
             }
         }
     }
+
 
 }
