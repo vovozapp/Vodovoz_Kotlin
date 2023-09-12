@@ -1,10 +1,7 @@
 package com.vodovoz.app.data.parser.response.comment
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
 import com.vodovoz.app.data.model.common.CommentEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
@@ -36,11 +33,11 @@ object AllCommentsByProductResponseJsonParser {
         }
 
     private fun JSONObject.parseCommentEntity() = CommentEntity(
-        author = getString("NAME"),
+        author = if (has("NAME")) getString("NAME") else null,
         text = getString("TEXT"),
         date = getString("DATA"),
-        authorPhoto = getString("USER_PHOTO").parseImagePath(),
-        images = when(has("IMAGES") && !isNull("IMAGES") ) {
+        authorPhoto = if (has("USER_PHOTO")) getString("USER_PHOTO").parseImagePath() else null,
+        images = when (has("IMAGES") && !isNull("IMAGES")) {
             false -> null
             true -> getJSONArray("IMAGES").parseCommentImageEntityList()
         }
