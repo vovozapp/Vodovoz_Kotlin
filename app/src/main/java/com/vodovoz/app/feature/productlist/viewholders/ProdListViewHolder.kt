@@ -7,9 +7,7 @@ import android.view.View
 import android.widget.RatingBar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.DiffUtil
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
@@ -21,8 +19,6 @@ import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.Det
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowPagerAdapter
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPicturePager
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.feature.productlist.adapter.SortedAdapter
-import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDepositPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setOrderQuantity
@@ -33,26 +29,30 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class ProdListViewHolder(
     view: View,
     val productsClickListener: ProductsClickListener,
     private val likeManager: LikeManager,
     private val cartManager: CartManager,
-    private val ratingProductManager: RatingProductManager
+    private val ratingProductManager: RatingProductManager,
 ) : ItemViewHolder<ProductUI>(view) {
 
     private val binding: ViewHolderProductListBinding = ViewHolderProductListBinding.bind(view)
 
-    private val amountControllerTimer = object : CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
-        override fun onTick(millisUntilFinished: Long) {}
-        override fun onFinish() {
-            val item = item ?: return
-            productsClickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
-            hideAmountController(item)
+    private val amountControllerTimer =
+        object : CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
+            override fun onTick(millisUntilFinished: Long) {}
+            override fun onFinish() {
+                val item = item ?: return
+                productsClickListener.onChangeProductQuantity(
+                    item.id,
+                    item.cartQuantity,
+                    item.oldQuantity
+                )
+                hideAmountController(item)
+            }
         }
-    }
 
     private val detailPictureFlowPagerAdapter = DetailPictureFlowPagerAdapter(
         clickListener = object : DetailPictureFlowClickListener {
@@ -74,7 +74,7 @@ class ProdListViewHolder(
             val item = item ?: return@launch
             ratingProductManager
                 .observeRatings()
-                .filter{ it.containsKey(item.id) }
+                .filter { it.containsKey(item.id) }
                 .onEach {
                     item.rating = it[item.id] ?: item.rating
                     binding.rbRating.rating = item.rating
@@ -86,7 +86,7 @@ class ProdListViewHolder(
             val item = item ?: return@launch
             likeManager
                 .observeLikes()
-                .filter{ it.containsKey(item.id) }
+                .filter { it.containsKey(item.id) }
                 .onEach {
                     item.isFavorite = it[item.id] ?: item.isFavorite
                     bindFav(item)
@@ -102,6 +102,7 @@ class ProdListViewHolder(
                 .onEach {
                     item.cartQuantity = it[item.id] ?: item.cartQuantity
                     updateCartQuantity(item)
+                    hideAmountController(item)
                 }
                 .collect()
         }
@@ -132,7 +133,11 @@ class ProdListViewHolder(
             val item = item ?: return@setOnClickListener
             if (item.isGift) return@setOnClickListener
             if (item.leftItems == 0) {
-                productsClickListener.onNotifyWhenBeAvailable(item.id, item.name, item.detailPicture)
+                productsClickListener.onNotifyWhenBeAvailable(
+                    item.id,
+                    item.name,
+                    item.detailPicture
+                )
                 return@setOnClickListener
             }
 
@@ -163,7 +168,7 @@ class ProdListViewHolder(
 
         binding.imgFavoriteStatus.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            when(item.isFavorite) {
+            when (item.isFavorite) {
                 true -> {
                     item.isFavorite = false
                     binding.imgFavoriteStatus.isSelected = false
@@ -211,15 +216,20 @@ class ProdListViewHolder(
         }
 
         var haveDiscount = false
-        when(item.priceList.size) {
+        when (item.priceList.size) {
             1 -> {
-                binding.tvPrice.setPriceText(item.priceList.first().currentPrice, itCanBeGift = true)
+                binding.tvPrice.setPriceText(
+                    item.priceList.first().currentPrice,
+                    itCanBeGift = true
+                )
                 binding.tvOldPrice.setPriceText(item.priceList.first().oldPrice)
                 binding.tvPriceCondition.visibility = View.GONE
-                if (item.priceList.first().currentPrice < item.priceList.first().oldPrice || item.isGift) haveDiscount = true
+                if (item.priceList.first().currentPrice < item.priceList.first().oldPrice || item.isGift) haveDiscount =
+                    true
             }
             else -> {
-                val minimalPrice = item.priceList.sortedBy { it.requiredAmount }.find { it.requiredAmount >= item.cartQuantity }
+                val minimalPrice = item.priceList.sortedBy { it.requiredAmount }
+                    .find { it.requiredAmount >= item.cartQuantity }
                 minimalPrice?.let {
                     binding.tvPrice.setPriceText(minimalPrice.currentPrice)
                     binding.tvPriceCondition.visibility = View.GONE
@@ -228,13 +238,18 @@ class ProdListViewHolder(
             }
         }
 
-        when(haveDiscount) {
+        when (haveDiscount) {
             true -> {
                 binding.tvPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
                 binding.tvOldPrice.visibility = View.VISIBLE
             }
             false -> {
-                binding.tvPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_new_black))
+                binding.tvPrice.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.text_new_black
+                    )
+                )
                 binding.tvOldPrice.visibility = View.GONE
             }
         }
@@ -268,7 +283,7 @@ class ProdListViewHolder(
             }
         }
 
-        when(item.depositPrice != 0) {
+        when (item.depositPrice != 0) {
             true -> {
                 binding.tvDepositPrice.visibility = View.VISIBLE
                 binding.tvDepositPrice.setDepositPriceText(item.depositPrice)
@@ -276,7 +291,7 @@ class ProdListViewHolder(
             false -> binding.tvDepositPrice.visibility = View.GONE
         }
 
-        when(item.priceList.size == 1 &&
+        when (item.priceList.size == 1 &&
                 item.priceList.first().currentPrice < item.priceList.first().oldPrice) {
             true -> {
                 isNotHaveStatuses = false
@@ -289,7 +304,7 @@ class ProdListViewHolder(
             false -> binding.cwDiscountContainer.visibility = View.GONE
         }
 
-        when(isNotHaveStatuses) {
+        when (isNotHaveStatuses) {
             true -> binding.cgStatuses.visibility = View.GONE
             false -> binding.cgStatuses.visibility = View.VISIBLE
         }
