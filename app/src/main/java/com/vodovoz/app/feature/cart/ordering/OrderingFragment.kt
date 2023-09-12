@@ -73,6 +73,7 @@ class OrderingFragment : BaseFragment() {
         observeEvents()
         observeResultLiveData()
         binding.etPhone.setPhoneValidator {}
+        binding.etPhoneForDriver.setPhoneValidator {}
         bindTextWatchers()
     }
 
@@ -117,7 +118,7 @@ class OrderingFragment : BaseFragment() {
 
                     if (state.data.selectedShippingIntervalUI != null) {
                         binding.tvShippingInterval.text =
-                            state.data.selectedShippingIntervalUI.name.toString()
+                            state.data.selectedShippingIntervalUI.name
                         binding.tvNameDate.setTextColor(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -159,6 +160,12 @@ class OrderingFragment : BaseFragment() {
                         binding.etPhone.setText(
                             addressUI.phone.convertPhoneToBaseFormat().convertPhoneToFullFormat()
                         )
+                    }
+
+                    if(state.data.selectedShippingAlertUI != null){
+                        showPhoneForDriver()
+                    } else {
+                        hidePhoneForDriver()
                     }
 
                     initArgs(data = state.data)
@@ -213,8 +220,6 @@ class OrderingFragment : BaseFragment() {
                         is OrderingFlowViewModel.OrderingEvents.OrderSuccess -> {
                             if (it.item.orderId != 0L) {
                                 orderingCompleted(it.item)
-                            } else {
-
                             }
                         }
                         is OrderingFlowViewModel.OrderingEvents.OnAddressBtnClick -> {
@@ -350,6 +355,13 @@ class OrderingFragment : BaseFragment() {
                 return@setOnClickListener
             }
 
+            if(binding.scShippingAlert.isChecked){
+                val phone = binding.etPhoneForDriver.text.toString()
+                if(phone.isNotEmpty() && !validatePhone(binding.etPhoneForDriver, phone)) {
+                    return@setOnClickListener
+                }
+            }
+
             if (!validateEmail(binding.tvNameEmail, binding.etEmail.text.toString())) {
                 binding.nsvContent.scrollViewToTop()
                 return@setOnClickListener
@@ -416,6 +428,7 @@ class OrderingFragment : BaseFragment() {
                 viewModel.onShippingAlertClick()
             } else {
                 viewModel.clearShippingAlert()
+                hidePhoneForDriver()
             }
         }
 
@@ -426,6 +439,16 @@ class OrderingFragment : BaseFragment() {
         binding.tvCheckDelivery.setOnClickListener {
             viewModel.onCheckDeliveryClick()
         }
+    }
+
+    private fun hidePhoneForDriver() {
+
+        binding.etPhoneForDriver.visibility = View.GONE
+    }
+
+    private fun showPhoneForDriver() {
+
+        binding.etPhoneForDriver.visibility = View.VISIBLE
     }
 
     private fun bindTextWatchers() {

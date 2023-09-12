@@ -58,6 +58,34 @@
     <string name="i_confirm_personal_data" translatable="false">Я подтверждаю согласие на обработку персональных данных</string>
     <string name="subscribe_on_mailing_list" translatable="false">Подписаться на рассылку</string>
     <string name="send_code" translatable="false">Выслать код</string>
+    <string name="vvedite_nazvanie" translatable="false">Введите название</string>
+    <string name="address_text" translatable="false">Адрес</string>
+    <string name="nazvanie_kompanii" translatable="false">Название компании</string>
+    <string name="kuda_vopros" translatable="false">Куда?</string>
+    <string name="fio_text" translatable="false">ФИО</string>
+    <string name="email_text" translatable="false">Email</string>
+    <string name="telephone_text" translatable="false">Телефон</string>
+    <string name="kogda_vopros" translatable="false">Когда?</string>
+    <string name="data_text" translatable="false">Дата</string>
+    <string name="vremya_text" translatable="false">Время</string>
+    <string name="oplata_text" translatable="false">Оплата</string>
+    <string name="vyberite_sposob_oplaty" translatable="false">Выберите способ оплаты</string>
+    <string name="sdacha_text" translatable="false">С какой суммы нужна сдача?</string>
+    <string name="zvonok_operatore_vopros" translatable="false">Требуется ли звонок оператора?</string>
+    <string name="neobhodimoe_deystvie" translatable="false">Выберите необходимое действие</string>
+    <string name="zvonok_operatore_text" translatable="false">Требуется звонок оператора</string>
+    <string name="predupredit_o_priezde" translatable="false">Предупредить о приезде водителя</string>
+    <string name="telephone_dlya_voditelya" translatable="false">Телефон для водителя</string>
+    <string name="kommentariy_k_zakazu" translatable="false">Комментарий к заказу</string>
+    <string name="tsena_text" translatable="false">Цена</string>
+    <string name="stoimost_tovarov" translatable="false">Стоимость товаров</string>
+    <string name="zalog_text" translatable="false">Залог</string>
+    <string name="skidka_po_akciyam" translatable="false">Скидка по акциям</string>
+    <string name="dostavka_text" translatable="false">Доставка</string>
+    <string name="oplata_parkovki" translatable="false">Оплата парковки</string>
+    <string name="itogo_text" translatable="false">Итого</string>
+    <string name="spasibo_za_zakaz" translatable="false">Спасибо за заказ</string>
+    <string name="oplatit_text" translatable="false">Оплатить</string>
 
 
 </resources>

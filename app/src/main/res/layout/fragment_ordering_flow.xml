@@ -67,7 +67,7 @@
                         android:layout_height="match_parent"
                         android:paddingHorizontal="@dimen/space_16"
                         android:gravity="center_vertical"
-                        android:text="Куда?"/>
+                        android:text="@string/kuda_vopros"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvFreeShipping"
@@ -88,7 +88,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:hint="Адресс"/>
+                    android:hint="@string/address_text"/>
 
             </LinearLayout>
 
@@ -107,7 +107,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/light_gray"
-                    android:text="Название компании"/>
+                    android:text="@string/nazvanie_kompanii"/>
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/etCompanyName"
@@ -117,7 +117,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:hint="Введите название"/>
+                    android:hint="@string/vvedite_nazvanie"/>
 
             </LinearLayout>
 
@@ -134,7 +134,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/light_gray"
-                    android:text="ФИО"/>
+                    android:text="@string/fio_text"/>
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/etName"
@@ -144,7 +144,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:hint="ФИО"/>
+                    android:hint="@string/fio_text"/>
 
             </LinearLayout>
 
@@ -161,7 +161,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/light_gray"
-                    android:text="Email"/>
+                    android:text="@string/email_text"/>
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/etEmail"
@@ -171,7 +171,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:hint="Email"/>
+                    android:hint="@string/email_text"/>
 
             </LinearLayout>
 
@@ -188,7 +188,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/light_gray"
-                    android:text="Телефон"/>
+                    android:text="@string/telephone_text"/>
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/etPhone"
@@ -198,7 +198,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:hint="Телефон" />
+                    android:hint="@string/telephone_text" />
 
             </LinearLayout>
 
@@ -215,7 +215,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/light_gray"
-                    android:text="Когда?"/>
+                    android:text="@string/kogda_vopros"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvDate"
@@ -225,7 +225,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:text="Дата"/>
+                    android:text="@string/data_text"/>
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"
@@ -240,7 +240,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:text="Время"/>
+                    android:text="@string/vremya_text"/>
 
             </LinearLayout>
 
@@ -257,7 +257,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/light_gray"
-                    android:text="Оплата"/>
+                    android:text="@string/oplata_text"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvPayMethod"
@@ -267,7 +267,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:hint="Выберите способ оплаты"/>
+                    android:hint="@string/vyberite_sposob_oplaty"/>
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/mtBetweenPayMethodAndInputCash"
@@ -286,7 +286,7 @@
                     android:visibility="gone"
                     android:background="@color/white"
                     android:inputType="number"
-                    android:hint="С какой суммы нужна сдача?"/>
+                    android:hint="@string/sdacha_text"/>
 
             </LinearLayout>
 
@@ -298,7 +298,7 @@
                 android:paddingHorizontal="@dimen/space_16"
                 android:gravity="center_vertical"
                 android:background="@color/light_gray"
-                android:text="Требуется ли звонок оператора?"/>
+                android:text="@string/zvonok_operatore_vopros"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvCheckDelivery"
@@ -309,7 +309,7 @@
                 android:drawableEnd="@drawable/baseline_arrow_right_24"
                 android:gravity="center_vertical"
                 android:background="@color/white"
-                android:hint="Выберите необходимое действие"/>
+                android:hint="@string/neobhodimoe_deystvie"/>
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/scOperatorCall"
@@ -320,7 +320,7 @@
                 android:paddingHorizontal="@dimen/space_16"
                 android:gravity="center_vertical"
                 android:background="@color/light_gray"
-                android:text="Требуется звонок оператора"/>
+                android:text="@string/zvonok_operatore_text"/>
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/scShippingAlert"
@@ -330,7 +330,18 @@
                 android:paddingHorizontal="@dimen/space_16"
                 android:gravity="center_vertical"
                 android:background="@color/light_gray"
-                android:text="Предупредить о приезде водителя"/>
+                android:text="@string/predupredit_o_priezde"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/etPhoneForDriver"
+                style="@style/EditTextViewNormalGray"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/field_height"
+                android:paddingHorizontal="@dimen/space_16"
+                android:gravity="center_vertical"
+                android:background="@color/white"
+                android:hint="@string/telephone_dlya_voditelya"
+                android:visibility="gone"/>
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/etComment"
@@ -340,7 +351,7 @@
                 android:paddingHorizontal="@dimen/space_16"
                 android:gravity="center_vertical"
                 android:background="@color/white"
-                android:hint="Комментарий к заказу"/>
+                android:hint="@string/kommentariy_k_zakazu"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/TextViewNormalBlackBold"
@@ -349,7 +360,7 @@
                 android:paddingHorizontal="@dimen/space_16"
                 android:gravity="center_vertical"
                 android:background="@color/light_gray"
-                android:text="Цена"/>
+                android:text="@string/tsena_text"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -364,7 +375,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:text="Стоимость товаров"/>
+                    android:text="@string/stoimost_tovarov"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvFullPrice"
@@ -391,7 +402,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:text="Залог"/>
+                    android:text="@string/zalog_text"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvDepositPrice"
@@ -418,7 +429,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:text="Скидка по акциям"/>
+                    android:text="@string/skidka_po_akciyam"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvDiscountPrice"
@@ -446,7 +457,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:text="Доставка"/>
+                    android:text="@string/dostavka_text"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvShippingPrice"
@@ -474,7 +485,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:text="Оплата парковки"/>
+                    android:text="@string/oplata_parkovki"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvParkingPrice"
@@ -501,7 +512,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:text="Итого"/>
+                    android:text="@string/itogo_text"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvTotalPrice"
@@ -555,7 +566,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_8"
-            android:text="Спасибо за заказ"/>
+            android:text="@string/spasibo_za_zakaz"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvOrderId"
@@ -575,7 +586,7 @@
             style="@style/BlueButton"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_normal_height"
-            android:text="Оплатить"/>
+            android:text="@string/oplatit_text"/>
 
     </LinearLayout>
 
