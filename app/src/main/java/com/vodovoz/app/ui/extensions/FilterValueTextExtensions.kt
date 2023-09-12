@@ -7,8 +7,8 @@ object FilterValueTextExtensions {
 
     fun TextView.setFilterValue(filterValueList: MutableList<FilterValueUI>) {
         val value = StringBuilder()
-        for (index in filterValueList.indices) {
-            value.append(filterValueList[index].value)
+        filterValueList.forEachIndexed { index, filterValueUI ->
+            value.append(filterValueUI.value)
             if (index != filterValueList.size - 1) {
                 value.append(", ")
             }

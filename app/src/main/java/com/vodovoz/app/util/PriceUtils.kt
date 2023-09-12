@@ -18,13 +18,15 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
             val price = when (productUI.priceList.size) {
                 1 -> productUI.priceList.first()
                 else -> {
-                    val sortedPriceList = productUI.priceList.sortedByDescending { it.requiredAmount }
+                    val sortedPriceList =
+                        productUI.priceList.sortedByDescending { it.requiredAmount }
 
-                    val minimalPrice =  if (sortedPriceList.first().requiredAmountTo == 0 && productUI.cartQuantity >= sortedPriceList.first().requiredAmount) {
-                        sortedPriceList.find { it.requiredAmountTo == 0 && productUI.cartQuantity >= it.requiredAmount }
-                    } else {
-                        sortedPriceList.find { productUI.cartQuantity in it.requiredAmount .. it.requiredAmountTo }
-                    }
+                    val minimalPrice =
+                        if (sortedPriceList.first().requiredAmountTo == 0 && productUI.cartQuantity >= sortedPriceList.first().requiredAmount) {
+                            sortedPriceList.find { it.requiredAmountTo == 0 && productUI.cartQuantity >= it.requiredAmount }
+                        } else {
+                            sortedPriceList.find { productUI.cartQuantity in it.requiredAmount..it.requiredAmountTo }
+                        }
                     minimalPrice
                 }
             }

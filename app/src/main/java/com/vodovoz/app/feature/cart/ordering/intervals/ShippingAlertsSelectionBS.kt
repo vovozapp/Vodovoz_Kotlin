@@ -8,9 +8,8 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsShippingAlertsSelectionBinding
-import com.vodovoz.app.feature.cart.ordering.intervals.adapter.IntervalsClickListener
-import com.vodovoz.app.feature.cart.ordering.intervals.adapter.IntervalsController
 import com.vodovoz.app.feature.cart.ordering.OrderingFragment
+import com.vodovoz.app.feature.cart.ordering.intervals.adapter.IntervalsController
 import com.vodovoz.app.ui.model.ShippingAlertUI
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,7 +27,14 @@ class ShippingAlertsSelectionBS : BaseBottomSheetFragment() {
     private val args: ShippingAlertsSelectionBSArgs by navArgs()
 
     private val intervalsController by lazy {
-        IntervalsController(getIntervalsClickListener(), requireContext())
+        IntervalsController() {
+            val item = it as ShippingAlertUI
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                OrderingFragment.SELECTED_SHIPPING_ALERT,
+                item.id
+            )
+            dismiss()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,19 +42,13 @@ class ShippingAlertsSelectionBS : BaseBottomSheetFragment() {
 
         binding.headerTv.text = "Предупредить о приезде водителя"
         binding.cancelWarnBs.setOnClickListener {
-            findNavController().previousBackStackEntry?.savedStateHandle?.set(OrderingFragment.SELECTED_SHIPPING_ALERT, -1L)
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                OrderingFragment.SELECTED_SHIPPING_ALERT,
+                -1L
+            )
             dismiss()
         }
 
         intervalsController.bind(binding.rvShippingAlerts, args.shippingAlertList.toList())
-    }
-
-    private fun getIntervalsClickListener() : IntervalsClickListener {
-        return object: IntervalsClickListener {
-            override fun onAlertClick(item: ShippingAlertUI) {
-                findNavController().previousBackStackEntry?.savedStateHandle?.set(OrderingFragment.SELECTED_SHIPPING_ALERT, item.id)
-                dismiss()
-            }
-        }
     }
 }

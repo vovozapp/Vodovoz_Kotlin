@@ -11,7 +11,7 @@ import com.vodovoz.app.feature.cart.ordering.intervals.adapter.viewholders.Shipp
 import com.vodovoz.app.feature.cart.ordering.intervals.adapter.viewholders.ShippingIntervalFlowViewHolder
 
 class IntervalsAdapter(
-    private val clickListener: IntervalsClickListener
+    private val clickListener: ((Item)->Unit)
 ): ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
