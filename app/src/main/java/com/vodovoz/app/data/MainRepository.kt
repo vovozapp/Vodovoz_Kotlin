@@ -15,7 +15,6 @@ import com.vodovoz.app.data.parser.response.country.CountrySliderResponseJsonPar
 import com.vodovoz.app.data.parser.response.discount.DiscountSliderResponseParser.parseDiscountSliderResponse
 import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseBottomSliderResponse
 import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseTopSliderResponse
-import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonParser.parseHistoriesSliderResponse
 import com.vodovoz.app.data.parser.response.novelties.NoveltiesSliderResponseParser.parseNoveltiesSliderResponse
 import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
 import com.vodovoz.app.data.parser.response.popular.PopularSliderResponseJsonParser.parsePopularSliderResponse
@@ -30,7 +29,6 @@ import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
 import com.vodovoz.app.feature.home.viewholders.homebrands.HomeBrands
 import com.vodovoz.app.feature.home.viewholders.homecomments.HomeComments
 import com.vodovoz.app.feature.home.viewholders.homecountries.HomeCountries
-import com.vodovoz.app.feature.home.viewholders.homehistories.HomeHistories
 import com.vodovoz.app.feature.home.viewholders.homeorders.HomeOrders
 import com.vodovoz.app.feature.home.viewholders.homepopulars.HomePopulars
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
@@ -46,7 +44,6 @@ import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.CommentMapper.mapToUI
 import com.vodovoz.app.mapper.CountriesSliderBundleMapper.mapToUI
-import com.vodovoz.app.mapper.HistoryMapper.mapToUI
 import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.mapper.PopupNewsMapper.mapToUI
 import com.vodovoz.app.mapper.PromotionMapper.mapToUI
@@ -63,6 +60,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
+import retrofit2.http.Query
 import java.io.File
 import javax.inject.Inject
 
@@ -93,36 +91,40 @@ class MainRepository @Inject constructor(
     }
 
     //Слайдер историй на главное странице
-    suspend fun fetchHistoriesSlider(
-        positionTitle: Int,
-        position: Int,
-    ): List<HomeFlowViewModel.PositionItem> {
-        return coroutineScope {
-            val responseBody =
-                api.fetchHistories(blockId = 12, action = "stories", platform = "android")
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parseHistoriesSliderResponse()
-                if (response is ResponseEntity.Success) {
-                    listOf(
-                        HomeFlowViewModel.PositionItem(
-                            position,
-                            HomeHistories(position, response.data.mapToUI())
-                        ),
-                        HomeFlowViewModel.PositionItem(
-                            positionTitle,
-                            HomeTitle(
-                                id = positionTitle,
-                                type = HomeTitle.HISTORIES_TITLE,
-                                name = "Истории"
-                            )
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
+
+    suspend fun fetchHistoriesSlider() =
+        api.fetchHistories(blockId = 12, action = "stories", platform = "android")
+
+//    suspend fun fetchHistoriesSlider(
+//        positionTitle: Int,
+//        position: Int,
+//    ): List<HomeFlowViewModel.PositionItem> {
+//        return coroutineScope {
+//            val responseBody =
+//                api.fetchHistories(blockId = 12, action = "stories", platform = "android")
+//            withContext(Dispatchers.Default) {
+//                val response = responseBody.parseHistoriesSliderResponse()
+//                if (response is ResponseEntity.Success) {
+//                    listOf(
+//                        HomeFlowViewModel.PositionItem(
+//                            position,
+//                            HomeHistories(position, response.data.mapToUI())
+//                        ),
+//                        HomeFlowViewModel.PositionItem(
+//                            positionTitle,
+//                            HomeTitle(
+//                                id = positionTitle,
+//                                type = HomeTitle.HISTORIES_TITLE,
+//                                name = "Истории"
+//                            )
+//                        )
+//                    )
+//                } else {
+//                    emptyList()
+//                }
+//            }
+//        }
+//    }
 
     //Слайдер популярных разделов на главной странице
     suspend fun fetchPopularSlider(
@@ -609,6 +611,18 @@ class MainRepository @Inject constructor(
             }
         }
     }
+
+    suspend fun sendCommentAboutShop(
+        userId: Long?,
+        comment: String?,
+        rating: Int?,
+    ) = api.fetchComments(
+        action = "add",
+        userId = userId,
+        comment = comment,
+        rating = rating
+    )
+
 
     //Добавление продукта в корзину
     suspend fun addProductToCart(productId: Long, quantity: Int): ResponseBody {
@@ -1345,6 +1359,34 @@ class MainRepository @Inject constructor(
             }
         }
     }
+
+    suspend fun fetchQuestionnairesResponse(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+    ) = api.fetchQuestionnairesResponse(
+        action = action,
+        userId = userId
+    )
+
+    suspend fun fetchFormForOrderService(
+        type: String?,
+        userId: Long?,
+    ) = api.fetchOrderServiceResponse(
+        action = "glav",
+        type = type,
+        userId = userId
+    )
+
+    suspend fun orderService(
+        type: String?,
+        userId: Long?,
+        value: String?,
+    ) = api.fetchOrderServiceResponse(
+        action = "add",
+        type = type,
+        userId = userId,
+        value = value
+    )
 
     /**
      * auth

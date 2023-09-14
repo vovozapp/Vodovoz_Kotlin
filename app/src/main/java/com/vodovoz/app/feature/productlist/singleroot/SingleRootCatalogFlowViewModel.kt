@@ -38,7 +38,7 @@ class SingleRootCatalogFlowViewModel @Inject constructor(
                     data = state.data.copy(
                         items = catalog,
                         rootCategory = root,
-                        bundle = buildBundle(root)
+                        bundle = buildBundle(root, state.data.selectedCategoryId)
                     ),
                     error = null
                 )
@@ -62,7 +62,7 @@ class SingleRootCatalogFlowViewModel @Inject constructor(
                                     data = state.data.copy(
                                         items = catalogFetched,
                                         rootCategory = root,
-                                        bundle = buildBundle(root)
+                                        bundle = buildBundle(root, state.data.selectedCategoryId)
                                     ),
                                     error = null
                                 )
@@ -80,9 +80,9 @@ class SingleRootCatalogFlowViewModel @Inject constructor(
         }
     }
 
-    private fun buildBundle(root: CategoryUI?): SingleRootCatalogBundleUI? {
+    private fun buildBundle(root: CategoryUI?, selectedId: Long? = null): SingleRootCatalogBundleUI? {
         val rootCat = root ?: return null
-        val selected = state.data.selectedCategoryId ?: return null
+        val selected = selectedId ?: return null
         return SingleRootCatalogBundleUI(
             way = findWay(currentPoint = rootCat, endPointId = selected) ?: emptyList(),
             categoryUIList = listOf(rootCat)
@@ -93,7 +93,7 @@ class SingleRootCatalogFlowViewModel @Inject constructor(
         uiStateListener.value = state.copy(
             data = state.data.copy(
                 selectedCategoryId = category.id,
-                bundle = buildBundle(state.data.rootCategory)
+                bundle = buildBundle(state.data.rootCategory, category.id)
             )
         )
     }

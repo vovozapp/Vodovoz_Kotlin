@@ -415,9 +415,9 @@
             android:name="popupNews"
             app:argType="com.vodovoz.app.ui.model.PopupNewsUI" />
     </dialog>
-    <dialog
+    <fragment
         android:id="@+id/fullScreenHistorySliderFragment"
-        android:name="com.vodovoz.app.ui.fragment.full_screen_history_slider.FullScreenHistoriesSliderFragment"
+        android:name="com.vodovoz.app.feature.full_screen_history_slider.FullScreenHistoriesSliderFlowFragment"
         android:label="FullScreenHistorySliderFragment" >
         <argument
             android:name="startHistoryId"
@@ -443,7 +443,7 @@
         <action
             android:id="@+id/action_to_allPromotionsFragment"
             app:destination="@id/allPromotionsFragment" />
-    </dialog>
+    </fragment>
     <fragment
         android:id="@+id/concreteFilterFragment"
         android:name="com.vodovoz.app.feature.filters.concrete.ConcreteFilterFlowFragment"
@@ -620,7 +620,7 @@
         android:label="HowToOrderFragment" />
     <dialog
         android:id="@+id/sendCommentAboutShopBottomDialog"
-        android:name="com.vodovoz.app.ui.fragment.send_comment_about_shop.SendCommentAboutShopBottomDialog"
+        android:name="com.vodovoz.app.ui.fragment.send_comment_about_shop.SendCommentAboutShopFlowBottomDialog"
         android:label="SendCommentAboutShopBottomDialog" />
     <fragment
         android:id="@+id/searchFragment"
@@ -680,7 +680,7 @@
         android:label="DiscountCardFragment" />
     <fragment
         android:id="@+id/questionnairesFragment2"
-        android:name="com.vodovoz.app.ui.fragment.questionnaires.QuestionnairesFragment"
+        android:name="com.vodovoz.app.feature.questionnaires.QuestionnairesFlowFragment"
         android:label="QuestionnairesFragment" />
     <fragment
         android:id="@+id/contactsFragment"

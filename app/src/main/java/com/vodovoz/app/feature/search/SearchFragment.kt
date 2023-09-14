@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -19,7 +18,6 @@ import com.google.android.material.chip.Chip
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
@@ -27,25 +25,22 @@ import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentSearchFlowBinding
 import com.vodovoz.app.databinding.ViewSimpleTextChipBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
-import com.vodovoz.app.feature.favorite.FavoriteFragmentDirections
 import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
-import com.vodovoz.app.feature.pastpurchases.PastPurchasesFlowViewModel
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -86,9 +81,23 @@ class SearchFragment : BaseFragment() {
     private val categoryTabsController by lazy {
         CategoryTabsFlowController(categoryTabsClickListener(), space)
     }
-    private val bestForYouController by lazy { BestForYouController(cartManager, likeManager, getProductsShowClickListener(), getProductsClickListener()) }
+    private val bestForYouController by lazy {
+        BestForYouController(
+            cartManager,
+            likeManager,
+            getProductsShowClickListener(),
+            getProductsClickListener()
+        )
+    }
     private val productsController by lazy {
-        SearchFlowController(viewModel, cartManager, likeManager, getProductsClickListener(), requireContext(), ratingProductManager)
+        SearchFlowController(
+            viewModel,
+            cartManager,
+            likeManager,
+            getProductsClickListener(),
+            requireContext(),
+            ratingProductManager
+        )
     }
 
     private val args: SearchFragmentArgs by navArgs()
@@ -131,7 +140,7 @@ class SearchFragment : BaseFragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.observeEvent()
                 .collect {
-                    when(it) {
+                    when (it) {
                         is SearchFlowViewModel.SearchEvents.GoToPreOrder -> {
                             if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
                                 findNavController().popBackStack()
@@ -158,7 +167,7 @@ class SearchFragment : BaseFragment() {
             viewModel.observeNoMatchesToast()
                 .collect {
                     if (it) {
-                      //  Toast.makeText(requireContext(), "Ничего не найдено", Toast.LENGTH_SHORT).show()
+                        //  Toast.makeText(requireContext(), "Ничего не найдено", Toast.LENGTH_SHORT).show()
                         binding.emptyResultContainer.isVisible = true
                     }
                 }
@@ -180,17 +189,21 @@ class SearchFragment : BaseFragment() {
             }
         }
 
-        Observable.create<String> { emitter ->
-            binding.incAppBar.incSearch.etSearch.doAfterTextChanged { query ->
-                when(query?.trim().toString().isNotEmpty()) {
-                    true ->  binding.incAppBar.incSearch.imgClear.visibility = View.VISIBLE
-                    false ->binding.incAppBar.incSearch.imgClear.visibility = View.INVISIBLE
-                }
-                emitter.onNext(query.toString())
+
+        val mutableStateFlow = MutableStateFlow("")
+
+        binding.incAppBar.incSearch.etSearch.doAfterTextChanged { query ->
+            when (query?.trim().toString().isNotEmpty()) {
+                true -> binding.incAppBar.incSearch.imgClear.visibility = View.VISIBLE
+                false -> binding.incAppBar.incSearch.imgClear.visibility = View.INVISIBLE
             }
-        }.debounce(300, TimeUnit.MILLISECONDS).subscribeBy { query ->
-            viewModel.fetchMatchesQueries(query)
-        }.addTo(compositeDisposable)
+            mutableStateFlow.value = query.toString()
+        }
+        lifecycleScope.launch {
+            mutableStateFlow.debounce(300).filter { it.isNotEmpty() }.collect {
+                viewModel.fetchMatchesQueries(it)
+            }
+        }
 
         binding.incAppBar.incSearch.imgClear.setOnClickListener {
             binding.incAppBar.incSearch.etSearch.setText("")
@@ -201,7 +214,7 @@ class SearchFragment : BaseFragment() {
             viewModel.clearState()
         }
 
-        binding.incAppBar.incSearch.etSearch.setOnEditorActionListener{ _, actionId, _ ->
+        binding.incAppBar.incSearch.etSearch.setOnEditorActionListener { _, actionId, _ ->
 
             val query = binding.incAppBar.incSearch.etSearch.text.toString().trim()
             if (query.isNotEmpty()) {
@@ -232,7 +245,11 @@ class SearchFragment : BaseFragment() {
             viewModel
                 .observeChangeLayoutManager()
                 .collect {
-                    productsController.changeLayoutManager(it, binding.productRecycler, binding.imgViewMode)
+                    productsController.changeLayoutManager(
+                        it,
+                        binding.productRecycler,
+                        binding.imgViewMode
+                    )
                 }
         }
     }
@@ -363,7 +380,8 @@ class SearchFragment : BaseFragment() {
 
         val view = requireActivity().currentFocus
         if (view != null) {
-            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+            val imm =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
             imm!!.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
@@ -389,7 +407,7 @@ class SearchFragment : BaseFragment() {
     }
 
     private fun bindTabsVisibility(vis: Boolean) {
-        when(vis) {
+        when (vis) {
             true -> {
                 binding.categoriesRecycler.visibility = View.VISIBLE
                 binding.imgCategories.visibility = View.VISIBLE
@@ -406,7 +424,7 @@ class SearchFragment : BaseFragment() {
         binding.favoriteContainer.isVisible = bool*/
     }
 
-    private fun categoryTabsClickListener() : CategoryTabsFlowClickListener {
+    private fun categoryTabsClickListener(): CategoryTabsFlowClickListener {
         return object : CategoryTabsFlowClickListener {
             override fun onTabClick(id: Long) {
                 viewModel.onTabClick(id)
@@ -422,7 +440,8 @@ class SearchFragment : BaseFragment() {
     )
 
     private fun showBottomSortSettings(sortType: SortType) = findNavController().navigate(
-        SearchFragmentDirections.actionToSortProductsSettingsBottomFragment(sortType.name))
+        SearchFragmentDirections.actionToSortProductsSettingsBottomFragment(sortType.name)
+    )
 
     private fun observeResultLiveData() {
         findNavController().currentBackStackEntry?.savedStateHandle
@@ -439,7 +458,11 @@ class SearchFragment : BaseFragment() {
     private fun getProductsClickListener(): ProductsClickListener {
         return object : ProductsClickListener {
             override fun onProductClick(id: Long) {
-                findNavController().navigate(SearchFragmentDirections.actionToProductDetailFragment(id))
+                findNavController().navigate(
+                    SearchFragmentDirections.actionToProductDetailFragment(
+                        id
+                    )
+                )
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
@@ -465,7 +488,7 @@ class SearchFragment : BaseFragment() {
         binding.incAppBar.incSearch.etSearch.requestFocus()
     }
 
-    private fun getProductsShowClickListener() : ProductsShowAllListener {
+    private fun getProductsShowClickListener(): ProductsShowAllListener {
         return object : ProductsShowAllListener {
             override fun showAllDiscountProducts(id: Long) {}
             override fun showAllTopProducts(id: Long) {}

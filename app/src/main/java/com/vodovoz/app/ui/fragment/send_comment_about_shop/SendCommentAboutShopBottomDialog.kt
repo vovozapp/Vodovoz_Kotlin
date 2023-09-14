@@ -1,49 +1,48 @@
 package com.vodovoz.app.ui.fragment.send_comment_about_shop
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
+import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsSendCommentBinding
-import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
-import com.vodovoz.app.ui.base.VodovozApplication
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SendCommentAboutShopBottomDialog : ViewStateBaseBottomFragment() {
+class SendCommentAboutShopFlowBottomDialog : BaseBottomSheetFragment() {
 
-    private lateinit var binding: BsSendCommentBinding
-    private val viewModel: SendCommentAboutShopViewModel by viewModels()
+    override fun layout() = R.layout.bs_send_comment
+
+    private val binding: BsSendCommentBinding by viewBinding {
+        BsSendCommentBinding.bind(
+            contentView
+        )
+    }
+
+    private val viewModel: SendCommentAboutShopFlowViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    override fun setContentView(
-        inflater: LayoutInflater,
-        container: ViewGroup
-    ) = BsSendCommentBinding.inflate(
-        inflater,
-        container,
-        false
-    ).apply { binding = this }.root
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+    }
 
-    override fun initView() {
-        onStateSuccess()
+    private fun initView() {
         initActionBar()
         initDialog()
         initSendButton()
         observeViewModel()
     }
-
-    override fun update() {}
 
     private fun initActionBar() {
         binding.incHeader.tvTitle.text = getString(R.string.new_comment_title)
@@ -67,24 +66,27 @@ class SendCommentAboutShopBottomDialog : ViewStateBaseBottomFragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.errorLD.observe(viewLifecycleOwner) { errorMessage ->
-            Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_SHORT).show()
-        }
+        lifecycleScope.launch {
+            viewModel.observeUiState().collect { state ->
+                if (state.loadingPage) {
+                    showLoader()
+                } else {
+                    hideLoader()
+                }
 
-        viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
-            when(state) {
-                is ViewState.Loading -> onStateLoading()
-                is ViewState.Hide -> onStateHide()
-                is ViewState.Error -> {
-                    onStateSuccess()
-                    Snackbar.make(binding.root, state.errorMessage, Snackbar.LENGTH_SHORT).show()
-                }
-                is ViewState.Success -> {
+                val sendCommentState = state.data
+                if (sendCommentState.sendComplete) {
                     dialog?.cancel()
-                    Snackbar.make(binding.root, "Отзыв успешно доавблен!", Snackbar.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Отзыв успешно добавлен!", Toast.LENGTH_SHORT)
+                        .show()
+                } else if (sendCommentState.error.isNotEmpty()) {
+                    Toast.makeText(requireContext(), sendCommentState.error, Toast.LENGTH_SHORT)
+                        .show()
                 }
+
+                showError(state.error)
+
             }
         }
     }
-
 }

@@ -8,10 +8,15 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
+import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonParser.parseHistoriesSliderResponse
 import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfo
+import com.vodovoz.app.feature.home.viewholders.homehistories.HomeHistories
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeProductsTabs
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.home.viewholders.hometriplenav.HomeTripleNav
+import com.vodovoz.app.mapper.HistoryMapper.mapToUI
 import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -123,7 +128,33 @@ class HomeFlowViewModel @Inject constructor(
 
     private fun CoroutineScope.firstLoadTasks() = arrayOf(
         homeRequestAsync { repository.fetchAdvertisingBannersSlider(POSITION_1) },
-        homeRequestAsync { repository.fetchHistoriesSlider(POSITION_2_TITLE, POSITION_3) },
+        homeRequestAsync {
+            coroutineScope {
+                val responseBody =
+                    repository.fetchHistoriesSlider()
+                withContext(Dispatchers.Default) {
+                    val response = responseBody.parseHistoriesSliderResponse()
+                    if (response is ResponseEntity.Success) {
+                        listOf(
+                            PositionItem(
+                                POSITION_3,
+                                HomeHistories(POSITION_3, response.data.mapToUI())
+                            ),
+                            PositionItem(
+                                POSITION_2_TITLE,
+                                HomeTitle(
+                                    id = POSITION_2_TITLE,
+                                    type = HomeTitle.HISTORIES_TITLE,
+                                    name = "Истории"
+                                )
+                            )
+                        )
+                    } else {
+                        emptyList()
+                    }
+                }
+            }
+        },
         homeRequestAsync { repository.fetchPopularSlider(POSITION_4_TITLE, POSITION_5) },
         homeRequestAsync { repository.fetchDiscountsSlider(POSITION_6_TITLE, POSITION_7) },
         homeRequestAsync { repository.fetchCategoryBannersSlider(POSITION_8) }

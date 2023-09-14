@@ -8,24 +8,17 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vodovoz.app.databinding.BsSelectionPromotionFiltersBinding
-import com.vodovoz.app.ui.adapter.PromotionsFiltersAdapter
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.subjects.PublishSubject
+import com.vodovoz.app.ui.adapter.PromotionsFiltersAdapter
 
 class PromotionFiltersBottomFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding: BsSelectionPromotionFiltersBinding
 
-    private val compositeDisposable = CompositeDisposable()
-
-    private val onPromotionFilterClickSubject: PublishSubject<Long> = PublishSubject.create()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ) = BsSelectionPromotionFiltersBinding.inflate(
         inflater,
         container,
@@ -38,29 +31,21 @@ class PromotionFiltersBottomFragment : BottomSheetDialogFragment() {
     private fun initView() {
         binding.rvPromotionFilters.layoutManager = LinearLayoutManager(requireContext())
         binding.rvPromotionFilters
-            .addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+            .addItemDecoration(
+                DividerItemDecoration(
+                    requireContext(),
+                    DividerItemDecoration.VERTICAL
+                )
+            )
         PromotionFiltersBottomFragmentArgs.fromBundle(requireArguments()).let { args ->
             binding.rvPromotionFilters.adapter = PromotionsFiltersAdapter(
                 selectedFilterId = args.selectedFilterId,
-                promotionFilterUIList = args.promotionFilterList,
-                onPromotionFilterClickSubject = onPromotionFilterClickSubject
-            )
+                promotionFilterUIList = args.promotionFilterList
+            ) { filterId ->
+                findNavController().previousBackStackEntry?.savedStateHandle
+                    ?.set(AllPromotionsFragment.PROMOTION_FILTER, filterId)
+                dialog?.dismiss()
+            }
         }
     }
-
-    override fun onStart() {
-        super.onStart()
-
-        onPromotionFilterClickSubject.subscribeBy { filterId ->
-            findNavController().previousBackStackEntry?.savedStateHandle
-                ?.set(AllPromotionsFragment.PROMOTION_FILTER, filterId)
-            dialog?.dismiss()
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        compositeDisposable.dispose()
-    }
-
 }

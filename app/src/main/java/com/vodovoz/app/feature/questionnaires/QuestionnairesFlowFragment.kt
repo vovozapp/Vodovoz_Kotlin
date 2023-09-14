@@ -1,49 +1,45 @@
-package com.vodovoz.app.ui.fragment.questionnaires
+package com.vodovoz.app.feature.questionnaires
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
+import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentQuestionnairesBinding
-import com.vodovoz.app.ui.adapter.QuestionnaireTypesAdapter
+import com.vodovoz.app.feature.questionnaires.adapter.QuestionnaireTypesFlowAdapter
 import com.vodovoz.app.ui.adapter.QuestionsAdapter
-import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.base.ViewStateBaseFragment
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class QuestionnairesFragment : ViewStateBaseFragment() {
+class QuestionnairesFlowFragment : BaseFragment() {
 
-    private lateinit var binding: FragmentQuestionnairesBinding
-    private val viewModel: QuestionnairesViewModel by viewModels()
+    override fun layout() = R.layout.fragment_questionnaires
 
-    private val compositeDisposable = CompositeDisposable()
-    private val onQuestionnaireTypeClickSubject: PublishSubject<String> = PublishSubject.create()
-    private val questionnaireTypesAdapter = QuestionnaireTypesAdapter(onQuestionnaireTypeClickSubject)
+    private val binding: FragmentQuestionnairesBinding by viewBinding {
+        FragmentQuestionnairesBinding.bind(
+            contentView
+        )
+    }
+
+    private val viewModel: QuestionnairesFlowViewModel by viewModels()
+
+    private val questionnaireTypesAdapter = QuestionnaireTypesFlowAdapter(){
+        viewModel.fetchQuestionnaireByType(it)
+    }
     private val questionsAdapter = QuestionsAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.fetchQuestionnaireTypes()
-        subscribeSubjects()
-    }
-
-    private fun subscribeSubjects() {
-        onQuestionnaireTypeClickSubject.subscribeBy { type ->
-            viewModel.fetchQuestionnaireByType(type)
-        }.addTo(compositeDisposable)
     }
 
     override fun update() {
@@ -52,15 +48,6 @@ class QuestionnairesFragment : ViewStateBaseFragment() {
             false -> viewModel.fetchQuestionnaireTypes()
         }
     }
-
-    override fun setContentView(
-        inflater: LayoutInflater,
-        container: ViewGroup,
-    ) = FragmentQuestionnairesBinding.inflate(
-        inflater,
-        container,
-        false
-    ).apply { binding = this }.root
 
     override fun initView() {
         initAppBar()
@@ -102,33 +89,32 @@ class QuestionnairesFragment : ViewStateBaseFragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun observeViewModel() {
-        viewModel.viewStateLD.observe(viewLifecycleOwner) { viewState ->
-            when(viewState) {
-                is ViewState.Error -> onStateError(viewState.errorMessage)
-                is ViewState.Hide -> onStateHide()
-                is ViewState.Loading -> onStateLoading()
-                is ViewState.Success -> onStateSuccess()
+        lifecycleScope.launch {
+            viewModel.observeUiState().collect{state->
+                if (state.loadingPage) {
+                    showLoaderWithBg(true)
+                } else {
+                    showLoaderWithBg(false)
+                }
+
+                val questionnaireTypesUIList = state.data.questionnaireTypeUIList
+                if (questionnaireTypesUIList.isNotEmpty()) {
+                    binding.questionnairesContainer.visibility = View.VISIBLE
+                    binding.questionsContainer.visibility = View.INVISIBLE
+                    questionnaireTypesAdapter.questionnaireTypeList = questionnaireTypesUIList
+                    questionnaireTypesAdapter.notifyDataSetChanged()
+                }
+
+                val questionUIList = state.data.questionUIList
+                if (questionUIList.isNotEmpty()) {
+                    binding.questionnairesContainer.visibility = View.INVISIBLE
+                    binding.questionsContainer.visibility = View.VISIBLE
+                    questionsAdapter.questionUIList = questionUIList
+                    questionsAdapter.notifyDataSetChanged()
+                }
+
+                showError(state.error)
             }
         }
-
-        viewModel.questionnaireTypeListLD.observe(viewLifecycleOwner) { questionnaireTypesUIList ->
-            binding.questionnairesContainer.visibility = View.VISIBLE
-            binding.questionsContainer.visibility = View.INVISIBLE
-            questionnaireTypesAdapter.questionnaireTypeList = questionnaireTypesUIList
-            questionnaireTypesAdapter.notifyDataSetChanged()
-        }
-
-        viewModel.questionUIListLD.observe(viewLifecycleOwner) { questionUIList ->
-            binding.questionnairesContainer.visibility = View.INVISIBLE
-            binding.questionsContainer.visibility = View.VISIBLE
-            questionsAdapter.questionUIList = questionUIList
-            questionsAdapter.notifyDataSetChanged()
-        }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.dispose()
-    }
-
 }

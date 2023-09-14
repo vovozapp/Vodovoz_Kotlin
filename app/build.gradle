@@ -16,8 +16,8 @@ android {
         applicationId "com.vodovoz.app"
         minSdk 21
         targetSdk 33
-        versionCode 131
-        versionName "1.5.22"
+        versionCode 132
+        versionName "1.5.23"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -85,7 +85,7 @@ dependencies {
 
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.13.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
+    kapt "com.github.bumptech.glide:compiler:4.13.0"
 
     //MapKit
     implementation 'com.yandex.android:maps.mobile:4.0.0-full'

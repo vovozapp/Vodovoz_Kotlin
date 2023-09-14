@@ -432,6 +432,14 @@ interface MainApi {
         @Query("orderID") orderId: Long?,
     ): ResponseBody
 
+    @GET("/newmobile/glavnaya/uslygi/form.php")
+    suspend fun fetchOrderServiceResponse(
+        @Query("action") action: String? = null,
+        @Query("tip") type: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("filtervalue") value: String? = null,
+    ): ResponseBody
+
     /**
      * products filters
      */
@@ -491,6 +499,12 @@ interface MainApi {
         @Query("action") action: String? = null,
         @Query("userid") userId: Long? = null,
         @Query("nav") page: Int? = null,
+    ): ResponseBody
+
+    @GET("/newmobile/profile/anketa/index.php")
+    suspend fun fetchQuestionnairesResponse(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
     ): ResponseBody
 
     /**

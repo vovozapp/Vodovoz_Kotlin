@@ -1,6 +1,5 @@
 package com.vodovoz.app.ui.fragment.full_screen_history_slider
-import android.content.Intent
-import android.net.Uri
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,17 +12,13 @@ import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentFullscreenHistorySliderBinding
 import com.vodovoz.app.ui.base.ViewState
 import com.vodovoz.app.ui.base.ViewStateBaseDialogFragment
-import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
-import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
-import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.ui.interfaces.IOnChangeHistory
 import com.vodovoz.app.ui.interfaces.IOnInvokeAction
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class FullScreenHistoriesSliderFragment : ViewStateBaseDialogFragment(),
-    IOnChangeHistory, IOnInvokeAction
-{
+    IOnChangeHistory, IOnInvokeAction {
 
     private lateinit var binding: FragmentFullscreenHistorySliderBinding
     private val viewModel: FullScreenHistoriesSliderViewModel by viewModels()
@@ -38,14 +33,14 @@ class FullScreenHistoriesSliderFragment : ViewStateBaseDialogFragment(),
     }
 
     private fun getArgs() {
-        FullScreenHistoriesSliderFragmentArgs.fromBundle(requireArguments()).let { args ->
-            startHistoryId = args.startHistoryId
-        }
+//        FullScreenHistoriesSliderFlowFragmentArgs.fromBundle(requireArguments()).let { args ->
+//            startHistoryId = args.startHistoryId
+//        }
     }
 
     override fun setContentView(
         inflater: LayoutInflater,
-        container: ViewGroup
+        container: ViewGroup,
     ) = FragmentFullscreenHistorySliderBinding.inflate(
         inflater,
         container,
@@ -58,7 +53,7 @@ class FullScreenHistoriesSliderFragment : ViewStateBaseDialogFragment(),
 
     private fun observeViewModel() {
         viewModel.viewStateLD.observe(viewLifecycleOwner) { state ->
-            when(state) {
+            when (state) {
                 is ViewState.Success -> onStateSuccess()
                 is ViewState.Hide -> onStateHide()
                 is ViewState.Loading -> onStateLoading()
@@ -84,7 +79,7 @@ class FullScreenHistoriesSliderFragment : ViewStateBaseDialogFragment(),
     }
 
     override fun previousHistory() {
-        binding.vpHistories.currentItem = binding.vpHistories.currentItem -1
+        binding.vpHistories.currentItem = binding.vpHistories.currentItem - 1
     }
 
     override fun close() {
@@ -99,44 +94,44 @@ class FullScreenHistoriesSliderFragment : ViewStateBaseDialogFragment(),
         actionEntity.invoke(findNavController(), requireActivity())
     }
 
-    private fun ActionEntity.invoke(navController: NavController, activity: FragmentActivity)  {
-        val navDirect = when(this) {
-            is ActionEntity.Brand ->
-                FullScreenHistoriesSliderFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Brand(brandId = this.brandId)
-                )
-            is ActionEntity.Brands -> {
-                FullScreenHistoriesSliderFragmentDirections.actionToAllBrandsFragment(this.brandIdList.toLongArray())
-            }
-            is ActionEntity.Product ->
-                FullScreenHistoriesSliderFragmentDirections.actionToProductDetailFragment(this.productId)
-            is ActionEntity.Products ->
-                FullScreenHistoriesSliderFragmentDirections.actionToProductsCatalogFragment(
-                    ProductsCatalogFragment.DataSource.BannerProducts(categoryId = this.categoryId)
-                )
-            is ActionEntity.Promotion ->
-                FullScreenHistoriesSliderFragmentDirections.actionToPromotionDetailFragment(this.promotionId)
-            is ActionEntity.Promotions -> FullScreenHistoriesSliderFragmentDirections.actionToAllPromotionsFragment(
-                AllPromotionsFragment.DataSource.ByBanner(this.categoryId)
-            )
-            is ActionEntity.AllPromotions -> FullScreenHistoriesSliderFragmentDirections.actionToAllPromotionsFragment(
-                AllPromotionsFragment.DataSource.All()
-            )
-            is ActionEntity.Link -> {
-                val openLinkIntent = Intent(Intent.ACTION_VIEW, Uri.parse(this.url))
-                activity.startActivity(openLinkIntent)
-                null
-            }
-            is ActionEntity.Category ->
-                FullScreenHistoriesSliderFragmentDirections.actionToPaginatedProductsCatalogFragment(this.categoryId)
-            is ActionEntity.Discount -> FullScreenHistoriesSliderFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
-            )
-            is ActionEntity.Novelties -> FullScreenHistoriesSliderFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
-            )
-        }
-        navDirect?.let { navController.navigate(navDirect) }
+    private fun ActionEntity.invoke(navController: NavController, activity: FragmentActivity) {
+//        val navDirect = when(this) {
+//            is ActionEntity.Brand ->
+//                FullScreenHistoriesSliderFlowFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+//                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Brand(brandId = this.brandId)
+//                )
+//            is ActionEntity.Brands -> {
+//                FullScreenHistoriesSliderFragmentDirections.actionToAllBrandsFragment(this.brandIdList.toLongArray())
+//            }
+//            is ActionEntity.Product ->
+//                FullScreenHistoriesSliderFragmentDirections.actionToProductDetailFragment(this.productId)
+//            is ActionEntity.Products ->
+//                FullScreenHistoriesSliderFragmentDirections.actionToProductsCatalogFragment(
+//                    ProductsCatalogFragment.DataSource.BannerProducts(categoryId = this.categoryId)
+//                )
+//            is ActionEntity.Promotion ->
+//                FullScreenHistoriesSliderFragmentDirections.actionToPromotionDetailFragment(this.promotionId)
+//            is ActionEntity.Promotions -> FullScreenHistoriesSliderFragmentDirections.actionToAllPromotionsFragment(
+//                AllPromotionsFragment.DataSource.ByBanner(this.categoryId)
+//            )
+//            is ActionEntity.AllPromotions -> FullScreenHistoriesSliderFragmentDirections.actionToAllPromotionsFragment(
+//                AllPromotionsFragment.DataSource.All()
+//            )
+//            is ActionEntity.Link -> {
+//                val openLinkIntent = Intent(Intent.ACTION_VIEW, Uri.parse(this.url))
+//                activity.startActivity(openLinkIntent)
+//                null
+//            }
+//            is ActionEntity.Category ->
+//                FullScreenHistoriesSliderFragmentDirections.actionToPaginatedProductsCatalogFragment(this.categoryId)
+//            is ActionEntity.Discount -> FullScreenHistoriesSliderFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+//                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
+//            )
+//            is ActionEntity.Novelties -> FullScreenHistoriesSliderFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+//                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
+//            )
+//        }
+//        navDirect?.let { navController.navigate(navDirect) }
     }
 
     override fun onDestroy() {

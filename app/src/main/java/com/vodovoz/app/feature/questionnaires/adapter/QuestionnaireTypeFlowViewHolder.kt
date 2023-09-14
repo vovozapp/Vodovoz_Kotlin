@@ -1,17 +1,16 @@
-package com.vodovoz.app.ui.view_holder
+package com.vodovoz.app.feature.questionnaires.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderQuestionnaireTypeBinding
 import com.vodovoz.app.ui.model.QuestionnaireTypeUI
-import io.reactivex.rxjava3.subjects.PublishSubject
 
-class QuestionnaireTypeViewHolder(
+class QuestionnaireTypeFlowViewHolder(
     private val binding: ViewHolderQuestionnaireTypeBinding,
-    private val onQuestionnaireTypeClickSubject: PublishSubject<String>
+    private val onQuestionnaireTypeClickListener: (String) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.root.setOnClickListener { onQuestionnaireTypeClickSubject.onNext(questionnaireTypeUI.type) }
+        binding.root.setOnClickListener { onQuestionnaireTypeClickListener(questionnaireTypeUI.type) }
     }
 
     private lateinit var questionnaireTypeUI: QuestionnaireTypeUI

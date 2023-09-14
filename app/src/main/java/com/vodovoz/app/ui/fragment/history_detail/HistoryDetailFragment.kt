@@ -1,5 +1,6 @@
 package com.vodovoz.app.ui.fragment.history_detail
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -20,7 +21,7 @@ class HistoryDetailFragment : Fragment() {
     companion object {
         private const val HISTORY = "HISTORY"
         fun newInstance(
-            historyUI: HistoryUI
+            historyUI: HistoryUI,
         ) = HistoryDetailFragment().apply {
             arguments = bundleOf(Pair(HISTORY, historyUI))
         }
@@ -39,13 +40,17 @@ class HistoryDetailFragment : Fragment() {
     }
 
     private fun getArgs() {
-        historyUI = requireArguments().getParcelable(HISTORY)!!
+        historyUI = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            requireArguments().getParcelable(HISTORY)
+        } else {
+            requireArguments().getParcelable(HISTORY, HistoryUI::class.java)
+        } ?: throw java.lang.RuntimeException("There is not bundle HISTORY")
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ) = FragmentHistoryDetailBinding.inflate(
         inflater,
         container,

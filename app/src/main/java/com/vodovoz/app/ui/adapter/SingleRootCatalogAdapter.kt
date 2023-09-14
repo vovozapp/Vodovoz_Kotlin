@@ -7,12 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderSingleRootCatalogCategoryBinding
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.view_holder.CheckableCategoryWithChildrenViewHolder
-import io.reactivex.rxjava3.subjects.PublishSubject
 
 @SuppressLint("NotifyDataSetChanged")
 class SingleRootCatalogAdapter(
-    private val categoryClickSubject: PublishSubject<CategoryUI>,
-    private val nestingPosition: Int
+    private val nestingPosition: Int,
+    private val categoryClickListener: (CategoryUI) -> Unit,
 ) : RecyclerView.Adapter<CheckableCategoryWithChildrenViewHolder>() {
 
     var way = listOf<CategoryUI>()
@@ -21,7 +20,7 @@ class SingleRootCatalogAdapter(
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ) = CheckableCategoryWithChildrenViewHolder(
         binding = ViewHolderSingleRootCatalogCategoryBinding.inflate(
             LayoutInflater.from(parent.context),
@@ -30,12 +29,12 @@ class SingleRootCatalogAdapter(
         ),
         context = parent.context,
         nestingPosition = nestingPosition,
-        categoryClickSubject = categoryClickSubject
+        categoryClickListener = categoryClickListener
     )
 
     override fun onBindViewHolder(
         holder: CheckableCategoryWithChildrenViewHolder,
-        position: Int
+        position: Int,
     ) {
         if (nestingPosition <= way.indices.last) {
             holder.onBind(way[nestingPosition], way)
