@@ -2,11 +2,11 @@ package com.vodovoz.app.feature.all.brands
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
-import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.parseAllBrandsResponse
@@ -23,7 +23,8 @@ import javax.inject.Inject
 class AllBrandsFlowViewModel @Inject constructor(
     private val savedState: SavedStateHandle,
     private val repository: MainRepository,
-    private val dataRepository: DataRepository,
+//    private val dataRepository: DataRepository,
+    private val accountManager: AccountManager,
 ) : PagingStateViewModel<AllBrandsFlowViewModel.AllBrandsState>(AllBrandsState()) {
 
     private var dataSource = savedState.get<LongArray>("brandIdList")
@@ -96,10 +97,10 @@ class AllBrandsFlowViewModel @Inject constructor(
         )
     }
 
-    fun isLoginAlready() = dataRepository.isAlreadyLogin()
+    fun isLoginAlready() = accountManager.isAlreadyLogin()
 
     data class AllBrandsState(
-        val items : List<BrandUI> = emptyList(),
-        val filteredItems : List<BrandUI> = emptyList(),
+        val items: List<BrandUI> = emptyList(),
+        val filteredItems: List<BrandUI> = emptyList(),
     ) : State
 }

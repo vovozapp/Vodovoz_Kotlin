@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.productlist
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.catalog.CatalogManager
 import com.vodovoz.app.common.content.ErrorState
@@ -12,10 +13,8 @@ import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
-import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.config.FiltersConfig
-import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
@@ -23,7 +22,10 @@ import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsByCategory
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
-import com.vodovoz.app.ui.model.*
+import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.ui.model.FilterUI
+import com.vodovoz.app.ui.model.FilterValueUI
+import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
 import com.vodovoz.app.util.FilterBuilderExtensions.buildFilterQuery
 import com.vodovoz.app.util.FilterBuilderExtensions.buildFilterValueQuery
@@ -38,12 +40,11 @@ import javax.inject.Inject
 class ProductsListFlowViewModel @Inject constructor(
     private val savedState: SavedStateHandle,
     private val repository: MainRepository,
-    private val localDataSource: LocalDataSource,
-    private val dataRepository: DataRepository,
+    private val accountManager: AccountManager,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
     private val catalogManager: CatalogManager,
-    private val ratingProductManager: RatingProductManager
+    private val ratingProductManager: RatingProductManager,
 ) : PagingStateViewModel<ProductsListFlowViewModel.ProductsListState>(ProductsListState()) {
 
     private var categoryId = savedState.get<Long>("categoryId") ?: 0
@@ -207,7 +208,7 @@ class ProductsListFlowViewModel @Inject constructor(
         changeLayoutManager.value = manager
     }
 
-    fun isLoginAlready() = dataRepository.isAlreadyLogin()
+    fun isLoginAlready() = accountManager.isAlreadyLogin()
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
         viewModelScope.launch {
@@ -293,7 +294,11 @@ class ProductsListFlowViewModel @Inject constructor(
                 filterBundle = bundle,
                 filtersAmount = fetchFiltersAmount(bundle),
                 categoryHeader = categoryUI.copy(
-                    primaryFilterValueList = categoryUI.primaryFilterValueList.map { it.copy(isSelected = it.id == filterValue.id) }
+                    primaryFilterValueList = categoryUI.primaryFilterValueList.map {
+                        it.copy(
+                            isSelected = it.id == filterValue.id
+                        )
+                    }
                 )
             ),
             page = 1,
@@ -327,7 +332,7 @@ class ProductsListFlowViewModel @Inject constructor(
         val itemsList: List<Item> = emptyList(),
         val layoutManager: String = LINEAR,
         val showCategoryContainer: Boolean = false,
-        val filterCode: String = "BRAND"
+        val filterCode: String = "BRAND",
     ) : State
 
     companion object {

@@ -2,11 +2,11 @@ package com.vodovoz.app.feature.all.orders
 
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.BuildConfig
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.*
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
-import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.order.AllOrdersResponseJsonParser.parseAllOrdersSliderResponse
@@ -25,9 +25,12 @@ import javax.inject.Inject
 @HiltViewModel
 class AllOrdersFlowViewModel @Inject constructor(
     private val repository: MainRepository,
-    private val dataRepository: DataRepository,
-    private val cartManager: CartManager
-): PagingContractViewModel<AllOrdersFlowViewModel.AllOrdersState, AllOrdersFlowViewModel.AllOrdersEvent>(AllOrdersState()) {
+    private val accountManager: AccountManager,
+//    private val dataRepository: DataRepository,
+    private val cartManager: CartManager,
+) : PagingContractViewModel<AllOrdersFlowViewModel.AllOrdersState, AllOrdersFlowViewModel.AllOrdersEvent>(
+    AllOrdersState()
+) {
 
     fun goToFilter() {
         viewModelScope.launch {
@@ -36,17 +39,26 @@ class AllOrdersFlowViewModel @Inject constructor(
     }
 
     private fun fetchAllOrders() {
-        val userId = dataRepository.fetchUserId() ?: return
+        val userId =
+            accountManager.fetchAccountId() ?: return//dataRepository.fetchUserId() ?: return
         viewModelScope.launch {
-            flow { emit(repository.fetchAllOrders(
-                userId = userId,
-                page = state.page,
-                appVersion = BuildConfig.VERSION_NAME,
-                orderId = state.data.ordersFiltersBundleUI.orderId,
-                status = StringBuilder().apply {
-                    state.data.ordersFiltersBundleUI.orderStatusUIList.forEach { append(it.id).append(",") }
-                }.toString()
-            )) }
+            flow {
+                emit(
+                    repository.fetchAllOrders(
+                        userId = userId,
+                        page = state.page,
+                        appVersion = BuildConfig.VERSION_NAME,
+                        orderId = state.data.ordersFiltersBundleUI.orderId,
+                        status = StringBuilder().apply {
+                            state.data.ordersFiltersBundleUI.orderStatusUIList.forEach {
+                                append(it.id).append(
+                                    ","
+                                )
+                            }
+                        }.toString()
+                    )
+                )
+            }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseAllOrdersSliderResponse()
@@ -131,13 +143,18 @@ class AllOrdersFlowViewModel @Inject constructor(
     }
 
     fun repeatOrder(orderId: Long) {
-        val userId = dataRepository.fetchUserId() ?: return
+        val userId =
+            accountManager.fetchAccountId() ?: return//dataRepository.fetchUserId() ?: return
         viewModelScope.launch {
-            flow { emit(repository.fetchOrderDetailsResponse(
-                userId = userId,
-                appVersion = BuildConfig.VERSION_NAME,
-                orderId = orderId
-            )) }
+            flow {
+                emit(
+                    repository.fetchOrderDetailsResponse(
+                        userId = userId,
+                        appVersion = BuildConfig.VERSION_NAME,
+                        orderId = orderId
+                    )
+                )
+            }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseOrderDetailsResponse()
@@ -148,18 +165,19 @@ class AllOrdersFlowViewModel @Inject constructor(
                             debugLog { "spasibo add leftItems ${it.leftItems} id ${it.id} name ${it.name} cartQuantity ${it.cartQuantity} oldQuantity ${it.oldQuantity} orderQuantity ${it.orderQuantity}" }
                         }
 
-                        data.productUIList.filter { it.leftItems > 0 }.forEachIndexed {index, product ->
-                            cartManager.add(
-                                id = product.id,
-                                oldCount = product.orderQuantity,
-                                newCount = product.orderQuantity,
-                                withUpdate = index == data.productUIList.lastIndex-1,
-                                repeat = true
-                            )
-                        }
-                        uiStateListener.value =  state.copy(loadingPage = true, error = null)
+                        data.productUIList.filter { it.leftItems > 0 }
+                            .forEachIndexed { index, product ->
+                                cartManager.add(
+                                    id = product.id,
+                                    oldCount = product.orderQuantity,
+                                    newCount = product.orderQuantity,
+                                    withUpdate = index == data.productUIList.lastIndex - 1,
+                                    repeat = true
+                                )
+                            }
+                        uiStateListener.value = state.copy(loadingPage = true, error = null)
                         delay(3000)
-                        uiStateListener.value =  state.copy(loadingPage = false, error = null)
+                        uiStateListener.value = state.copy(loadingPage = false, error = null)
                         eventListener.emit(AllOrdersEvent.GoToCart(true))
                     } else {
                         uiStateListener.value =
@@ -179,11 +197,11 @@ class AllOrdersFlowViewModel @Inject constructor(
         }
     }
 
-    fun isLoginAlready() = dataRepository.isAlreadyLogin()
+    fun isLoginAlready() = accountManager.isAlreadyLogin()
 
     data class AllOrdersState(
         val itemsList: List<Item> = emptyList(),
-        val ordersFiltersBundleUI: OrdersFiltersBundleUI = OrdersFiltersBundleUI()
+        val ordersFiltersBundleUI: OrdersFiltersBundleUI = OrdersFiltersBundleUI(),
     ) : State
 
     sealed class AllOrdersEvent : Event {

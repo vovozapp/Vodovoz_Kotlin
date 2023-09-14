@@ -11,7 +11,6 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
-import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.LocalSyncExtensions.syncCartQuantity
 import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
 import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteStatus
@@ -39,7 +38,8 @@ import com.vodovoz.app.feature.productdetail.viewholders.detailtabs.DetailTabs
 import com.vodovoz.app.mapper.PaginatedProductListMapper.mapToUI
 import com.vodovoz.app.mapper.ProductDetailBundleMapper.mapToUI
 import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
-import com.vodovoz.app.ui.model.*
+import com.vodovoz.app.ui.model.CategoryDetailUI
+import com.vodovoz.app.ui.model.ProductDetailUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,13 +51,13 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductDetailsFlowViewModel @Inject constructor(
     private val savedState: SavedStateHandle,
-    private val dataRepository: DataRepository,
+    //   private val dataRepository: DataRepository,
     private val mainRepository: MainRepository,
     private val localDataSource: LocalDataSource,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
-    private val accountManager: AccountManager
+    private val accountManager: AccountManager,
 ) : ViewModel() {
 
     private val uiStateListener = MutableStateFlow(ProductDetailsState())
@@ -133,7 +133,12 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                 mappedData.categoryUI,
                                 mappedData.productDetailUI.brandUI
                             ),
-                            detailRecommendsProductsTitle = HomeTitle(141, showAll = false, name = "Рекомендуем также", type = VIEWED),
+                            detailRecommendsProductsTitle = HomeTitle(
+                                141,
+                                showAll = false,
+                                name = "Рекомендуем также",
+                                type = VIEWED
+                            ),
                             detailRecommendsProducts = HomeProducts(
                                 7,
                                 productsSliderConfig = ProductsSliderConfig(
@@ -164,7 +169,12 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                     SearchWordItem(it)
                                 }
                             ),
-                            detailBuyWithTitle = HomeTitle(141, showAll = false, name = "С этим товаром покупают", type = VIEWED),
+                            detailBuyWithTitle = HomeTitle(
+                                141,
+                                showAll = false,
+                                name = "С этим товаром покупают",
+                                type = VIEWED
+                            ),
                             detailBuyWith = HomeProducts(
                                 11,
                                 productsSliderConfig = ProductsSliderConfig(
@@ -333,7 +343,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         }
     }
 
-    fun isLoginAlready() = localDataSource.isAlreadyLogin()
+    fun isLoginAlready() = accountManager.isAlreadyLogin()
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
         viewModelScope.launch {
@@ -357,7 +367,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         viewModelScope.launch {
             val accountId = accountManager.fetchAccountId()
             if (accountId == null) {
-           //     eventListener.emit(ProductDetailsEvents.GoToProfile)
+                //     eventListener.emit(ProductDetailsEvents.GoToProfile)
                 eventListener.emit(ProductDetailsEvents.GoToPreOrder(id, name, detailPicture))
             } else {
                 eventListener.emit(ProductDetailsEvents.GoToPreOrder(id, name, detailPicture))
@@ -377,7 +387,9 @@ class ProductDetailsFlowViewModel @Inject constructor(
     }
 
     sealed class ProductDetailsEvents : Event {
-        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) : ProductDetailsEvents()
+        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
+            ProductDetailsEvents()
+
         object GoToProfile : ProductDetailsEvents()
         data class SendComment(val id: Long) : ProductDetailsEvents()
     }
@@ -400,6 +412,6 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val detailBuyWith: HomeProducts? = null,
         val detailComments: DetailComments? = null,
         val error: ErrorState? = null,
-        val loadingPage: Boolean = false
+        val loadingPage: Boolean = false,
     ) : State
 }

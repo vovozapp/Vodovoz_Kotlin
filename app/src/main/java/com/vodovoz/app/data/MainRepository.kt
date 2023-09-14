@@ -1741,6 +1741,8 @@ class MainRepository @Inject constructor(
         email = email
     )
 
+    suspend fun logout() = api.fetchCookie()
+
     suspend fun addAvatar(id: Long, image: File): Response<Void> {
         val requestBody = image.asRequestBody(image.extension.toMediaTypeOrNull())
         val filePart = MultipartBody.Part.createFormData("userpic", image.name, requestBody)

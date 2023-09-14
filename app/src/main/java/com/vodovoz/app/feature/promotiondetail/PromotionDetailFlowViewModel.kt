@@ -2,23 +2,18 @@ package com.vodovoz.app.feature.promotiondetail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
-import com.vodovoz.app.common.content.itemadapter.Item
-import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
-import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.banner.ProductsByBannerResponseJsonParser.parseProductsByBannerResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser
-import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponseBundle
-import com.vodovoz.app.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.mapper.PromotionDetailMapper.mapToUI
 import com.vodovoz.app.ui.model.PromotionDetailUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -32,11 +27,14 @@ import javax.inject.Inject
 class PromotionDetailFlowViewModel @Inject constructor(
     private val savedState: SavedStateHandle,
     private val repository: MainRepository,
-    private val dataRepository: DataRepository,
+//    private val dataRepository: DataRepository,
+    private val accountManager: AccountManager,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
-    private val ratingProductManager: RatingProductManager
-) : PagingStateViewModel<PromotionDetailFlowViewModel.PromotionDetailFlowState>(PromotionDetailFlowState()) {
+    private val ratingProductManager: RatingProductManager,
+) : PagingStateViewModel<PromotionDetailFlowViewModel.PromotionDetailFlowState>(
+    PromotionDetailFlowState()
+) {
 
     private var promotionId = savedState.get<Long>("promotionId")
 
@@ -92,7 +90,7 @@ class PromotionDetailFlowViewModel @Inject constructor(
         fetchPromotionDetails()
     }
 
-    fun isLoginAlready() = dataRepository.isAlreadyLogin()
+    fun isLoginAlready() = accountManager.isAlreadyLogin()
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
         viewModelScope.launch {
@@ -114,6 +112,6 @@ class PromotionDetailFlowViewModel @Inject constructor(
 
     data class PromotionDetailFlowState(
         val items: PromotionDetailUI? = null,
-        val errorItem: PromotionDetailResponseJsonParser.PromotionDetailErrorUI? = null
+        val errorItem: PromotionDetailResponseJsonParser.PromotionDetailErrorUI? = null,
     ) : State
 }

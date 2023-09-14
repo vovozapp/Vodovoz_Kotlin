@@ -485,6 +485,10 @@ interface MainApi {
         @Query("email") email: String? = null,
     ): ResponseBody
 
+    //Получить Cookie Session Id
+    @GET("/newmobile/korzina/function/guaty/index.php")
+    suspend fun fetchCookie(): Response<ResponseBody>
+
     //Профиль категории
     @GET("/newmobile/profile/index.php")
     suspend fun fetchProfileCategoriesResponse(

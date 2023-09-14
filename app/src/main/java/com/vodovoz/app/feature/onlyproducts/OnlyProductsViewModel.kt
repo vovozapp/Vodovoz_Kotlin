@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.onlyproducts
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.content.PagingStateViewModel
@@ -11,7 +12,6 @@ import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
-import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.banner.ProductsByBannerResponseJsonParser.parseProductsByBannerResponse
@@ -27,10 +27,11 @@ import javax.inject.Inject
 class OnlyProductsViewModel @Inject constructor(
     private val savedState: SavedStateHandle,
     private val repository: MainRepository,
-    private val dataRepository: DataRepository,
+    //private val dataRepository: DataRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
-    private val ratingProductManager: RatingProductManager
+    private val ratingProductManager: RatingProductManager,
+    private val accountManager: AccountManager,
 ) : PagingStateViewModel<OnlyProductsViewModel.OnlyProductsState>(OnlyProductsState()) {
 
     private var dataSource = savedState.get<ProductsCatalogFragment.DataSource>("dataSource")
@@ -40,7 +41,11 @@ class OnlyProductsViewModel @Inject constructor(
             val dataSource = dataSource ?: return@launch
             flow {
                 when (dataSource) {
-                    is ProductsCatalogFragment.DataSource.BannerProducts -> emit(repository.fetchProductsByBanner(dataSource.categoryId))
+                    is ProductsCatalogFragment.DataSource.BannerProducts -> emit(
+                        repository.fetchProductsByBanner(
+                            dataSource.categoryId
+                        )
+                    )
                 }
             }
                 .flowOn(Dispatchers.IO)
@@ -118,7 +123,7 @@ class OnlyProductsViewModel @Inject constructor(
         }
     }
 
-    fun isLoginAlready() = dataRepository.isAlreadyLogin()
+    fun isLoginAlready() = accountManager.isAlreadyLogin()
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
         viewModelScope.launch {
@@ -139,6 +144,6 @@ class OnlyProductsViewModel @Inject constructor(
     }
 
     data class OnlyProductsState(
-        val itemsList: List<Item> = emptyList()
+        val itemsList: List<Item> = emptyList(),
     ) : State
 }

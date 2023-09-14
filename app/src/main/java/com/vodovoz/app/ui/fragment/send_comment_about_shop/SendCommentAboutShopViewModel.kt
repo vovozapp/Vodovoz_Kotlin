@@ -59,8 +59,8 @@ class SendCommentAboutShopFlowViewModel @Inject constructor(
         rating: Int,
     ) {
         viewModelScope.launch {
+            val userId = accountManager.fetchAccountId() ?: return@launch
             flow {
-                val userId = accountManager.fetchAccountId()
                 emit(
                     repository.sendCommentAboutShop(
                         userId = userId,

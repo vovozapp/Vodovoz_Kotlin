@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.productlistnofilter
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.content.PagingStateViewModel
@@ -11,7 +12,6 @@ import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
-import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.SortType
@@ -26,9 +26,9 @@ import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsBySliderRe
 import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsDiscountResponseJsonParser.parseProductsDiscountResponse
 import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsNoveltiesResponseJsonParser.parseProductsNoveltiesResponse
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
+import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment.DataSource
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
-import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment.DataSource
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -42,10 +42,11 @@ import javax.inject.Inject
 class ProductsListNoFilterFlowViewModel @Inject constructor(
     private val savedState: SavedStateHandle,
     private val repository: MainRepository,
-    private val dataRepository: DataRepository,
+//    private val dataRepository: DataRepository,
+    private val accountManager: AccountManager,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
-    private val ratingProductManager: RatingProductManager
+    private val ratingProductManager: RatingProductManager,
 ) : PagingStateViewModel<ProductsListNoFilterFlowViewModel.ProductListNoFilterState>(
     ProductListNoFilterState()
 ) {
@@ -276,7 +277,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         changeLayoutManager.value = manager
     }
 
-    fun isLoginAlready() = dataRepository.isAlreadyLogin()
+    fun isLoginAlready() = accountManager.isAlreadyLogin()
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
         viewModelScope.launch {

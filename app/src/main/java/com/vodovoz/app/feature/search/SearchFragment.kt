@@ -53,15 +53,13 @@ class SearchFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_search_flow
 
-    private val space8 by lazy { resources.getDimension(R.dimen.space_8) }
-
     private val binding: FragmentSearchFlowBinding by viewBinding {
         FragmentSearchFlowBinding.bind(
             contentView
         )
     }
 
-    private val viewModel: SearchFlowViewModel by viewModels()
+    internal val viewModel: SearchFlowViewModel by viewModels()
 
     @Inject
     lateinit var cartManager: CartManager
@@ -362,7 +360,6 @@ class SearchFragment : BaseFragment() {
 
     private fun buildQueryChip(query: String): Chip {
         val chip = ViewSimpleTextChipBinding.inflate(layoutInflater, null, false).root
-        chip.chipCornerRadius = space8
         chip.text = query
 
         chip.setOnClickListener {

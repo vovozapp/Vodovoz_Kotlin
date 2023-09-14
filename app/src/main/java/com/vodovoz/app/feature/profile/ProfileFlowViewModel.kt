@@ -9,17 +9,14 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
-import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel.ProfileState.Companion.fetchStaticItems
-import com.vodovoz.app.feature.profile.viewholders.models.ProfileHeader
 import com.vodovoz.app.feature.profile.viewholders.models.ProfileLogout
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
 import com.vodovoz.app.feature.sitestate.SiteStateManager
-import com.vodovoz.app.mapper.UserDataMapper.mapToUI
 import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,7 +28,7 @@ import javax.inject.Inject
 class ProfileFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val localDataSource: LocalDataSource,
-    private val dataRepository: DataRepository,
+//    private val dataRepository: DataRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
@@ -39,7 +36,7 @@ class ProfileFlowViewModel @Inject constructor(
     private val siteStateManager: SiteStateManager,
     private val tabManager: TabManager,
     private val application: Application,
-    private val waterAppHelper: WaterAppHelper
+    private val waterAppHelper: WaterAppHelper,
 ) : PagingContractViewModel<ProfileFlowViewModel.ProfileState, ProfileFlowViewModel.ProfileEvents>(
     ProfileState.idle()
 ) {
@@ -52,7 +49,7 @@ class ProfileFlowViewModel @Inject constructor(
 
     fun fetchFirstUserData() {
         viewModelScope.launch {
-            val userId = dataRepository.fetchUserId()
+            val userId = accountManager.fetchAccountId()
             if (userId == null) {
                 uiStateListener.value =
                     state.copy(data = state.data.copy(isLogin = false), loadingPage = false)
@@ -70,7 +67,7 @@ class ProfileFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         firstLoad()
                     } else {
-                       logout()
+                        logout()
                     }
                 }
                 .collect()
@@ -144,7 +141,7 @@ class ProfileFlowViewModel @Inject constructor(
         if (!state.isFirstLoad) {
             uiStateListener.value = state.copy(loadingPage = true)
 
-            val userId = dataRepository.fetchUserId()
+            val userId = accountManager.fetchAccountId()
             if (userId == null) {
                 uiStateListener.value =
                     state.copy(data = state.data.copy(isLogin = false), loadingPage = false)
@@ -210,7 +207,7 @@ class ProfileFlowViewModel @Inject constructor(
 
     fun refresh() {
         if (!state.loadingPage) {
-            val userId = dataRepository.fetchUserId()
+            val userId = accountManager.fetchAccountId()
 
             if (userId == null) {
                 uiStateListener.value = state.copy(data = state.data.copy(isLogin = false))
@@ -257,8 +254,13 @@ class ProfileFlowViewModel @Inject constructor(
     }
 
     fun logout() {
-        dataRepository.logout().subscribe()
+
         viewModelScope.launch {
+            flow { emit(repository.logout()) }
+                .onEach {
+                    localDataSource.removeUserId()
+                    localDataSource.removeCookieSessionId()
+                }.collect()
             tabManager.clearBottomNavProfileState()
             cartManager.clearCart()
             accountManager.removeUserId()

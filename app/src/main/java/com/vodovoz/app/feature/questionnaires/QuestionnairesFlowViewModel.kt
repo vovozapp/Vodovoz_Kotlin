@@ -68,7 +68,7 @@ class QuestionnairesFlowViewModel @Inject constructor(
 
     fun fetchQuestionnaireByType(type: String? = lastQuestionnaireType) {
         lastQuestionnaireType = type
-        val userId = accountManager.fetchAccountId()
+        val userId = accountManager.fetchAccountId() ?: return
         viewModelScope.launch {
             uiStateListener.value = state.copy(loadingPage = true)
             flow {

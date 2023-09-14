@@ -2,11 +2,11 @@ package com.vodovoz.app.feature.all.promotions
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
-import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonParser.parseAllPromotionsResponse
@@ -25,7 +25,8 @@ import javax.inject.Inject
 class AllPromotionsFlowViewModel @Inject constructor(
     private val savedState: SavedStateHandle,
     private val repository: MainRepository,
-    private val dataRepository: DataRepository,
+    //private val dataRepository: DataRepository,
+    private val accountManager: AccountManager,
 ) : PagingStateViewModel<AllPromotionsFlowViewModel.AllPromotionsState>(AllPromotionsState()) {
 
     private var dataSource = savedState.get<AllPromotionsFragment.DataSource>("dataSource")
@@ -35,8 +36,16 @@ class AllPromotionsFlowViewModel @Inject constructor(
             val dataSource = dataSource ?: return@launch
             flow {
                 when (dataSource) {
-                    is AllPromotionsFragment.DataSource.All -> emit(repository.fetchAllPromotions(filterId = state.data.selectedFilterUi.id))
-                    is AllPromotionsFragment.DataSource.ByBanner -> emit(repository.fetchPromotionsByBanner(categoryId = dataSource.categoryId))
+                    is AllPromotionsFragment.DataSource.All -> emit(
+                        repository.fetchAllPromotions(
+                            filterId = state.data.selectedFilterUi.id
+                        )
+                    )
+                    is AllPromotionsFragment.DataSource.ByBanner -> emit(
+                        repository.fetchPromotionsByBanner(
+                            categoryId = dataSource.categoryId
+                        )
+                    )
                 }
             }
                 .flowOn(Dispatchers.IO)
@@ -80,7 +89,7 @@ class AllPromotionsFlowViewModel @Inject constructor(
     }
 
     fun updateBySelectedFilter(filterId: Long) {
-        val filter = state.data.promotionFilterUIList.find {  it.id == filterId } ?: return
+        val filter = state.data.promotionFilterUIList.find { it.id == filterId } ?: return
         uiStateListener.value = state.copy(data = state.data.copy(selectedFilterUi = filter))
         fetchAllPromotions()
     }
@@ -99,15 +108,15 @@ class AllPromotionsFlowViewModel @Inject constructor(
         fetchAllPromotions()
     }
 
-    fun isLoginAlready() = dataRepository.isAlreadyLogin()
+    fun isLoginAlready() = accountManager.isAlreadyLogin()
 
     data class AllPromotionsState(
-        val promotionFilterUIList : List<PromotionFilterUI> = emptyList(),
+        val promotionFilterUIList: List<PromotionFilterUI> = emptyList(),
         val allPromotionBundleUI: AllPromotionBundleUI? = null,
         val selectedFilterUi: PromotionFilterUI = PromotionFilterUI(
             id = 0,
             name = "Все акции",
             code = ""
-        )
+        ),
     ) : State
 }
