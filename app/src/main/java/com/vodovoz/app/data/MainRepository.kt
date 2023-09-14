@@ -3,58 +3,11 @@ package com.vodovoz.app.data
 import androidx.core.net.toUri
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.product.rating.RatingResponse
-import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.config.ShippingAlertConfig
-import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.banner.AdvertisingBannersSliderResponseJsonParser.parseAdvertisingBannersSliderResponse
-import com.vodovoz.app.data.parser.response.banner.CategoryBannersSliderResponseJsonParser.parseCategoryBannersSliderResponse
-import com.vodovoz.app.data.parser.response.brand.BrandsSliderResponseJsonParser.parseBrandsSliderResponse
-import com.vodovoz.app.data.parser.response.comment.CommentsSliderResponseJsonParser.parseCommentsSliderResponse
-import com.vodovoz.app.data.parser.response.country.CountrySliderResponseJsonParser.parseCountriesSliderResponse
-import com.vodovoz.app.data.parser.response.discount.DiscountSliderResponseParser.parseDiscountSliderResponse
-import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseBottomSliderResponse
-import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseTopSliderResponse
-import com.vodovoz.app.data.parser.response.novelties.NoveltiesSliderResponseParser.parseNoveltiesSliderResponse
-import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
-import com.vodovoz.app.data.parser.response.popular.PopularSliderResponseJsonParser.parsePopularSliderResponse
-import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
-import com.vodovoz.app.data.parser.response.promotion.PromotionSliderResponseJsonParser.parsePromotionSliderResponse
-import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
-import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
-import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
-import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
-import com.vodovoz.app.feature.home.HomeFlowViewModel
-import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
-import com.vodovoz.app.feature.home.viewholders.homebrands.HomeBrands
-import com.vodovoz.app.feature.home.viewholders.homecomments.HomeComments
-import com.vodovoz.app.feature.home.viewholders.homecountries.HomeCountries
-import com.vodovoz.app.feature.home.viewholders.homeorders.HomeOrders
-import com.vodovoz.app.feature.home.viewholders.homepopulars.HomePopulars
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
-import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeProductsTabs
-import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.map.api.MapKitFlowApi
-import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import com.vodovoz.app.feature.profile.viewholders.models.*
-import com.vodovoz.app.mapper.BannerMapper.mapToUI
-import com.vodovoz.app.mapper.BrandMapper.mapToUI
-import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
-import com.vodovoz.app.mapper.CategoryMapper.mapToUI
-import com.vodovoz.app.mapper.CommentMapper.mapToUI
-import com.vodovoz.app.mapper.CountriesSliderBundleMapper.mapToUI
-import com.vodovoz.app.mapper.OrderMapper.mapToUI
-import com.vodovoz.app.mapper.PopupNewsMapper.mapToUI
-import com.vodovoz.app.mapper.PromotionMapper.mapToUI
-import com.vodovoz.app.mapper.UserDataMapper.mapToUI
-import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
-import com.vodovoz.app.ui.model.CategoryDetailUI
-import com.vodovoz.app.ui.model.PopupNewsUI
-import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -67,427 +20,51 @@ import javax.inject.Inject
 class MainRepository @Inject constructor(
     private val api: MainApi,
     private val mapKitApi: MapKitFlowApi,
-    private val tabManager: TabManager,
 ) {
 
     //Слайдер рекламных баннеров на главной странице
-    suspend fun fetchAdvertisingBannersSlider(position: Int): List<HomeFlowViewModel.PositionItem> {
-        return coroutineScope {
-            val responseBody = api.fetchAdvBanners(action = "slayder")
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parseAdvertisingBannersSliderResponse()
-                if (response is ResponseEntity.Success) {
-                    listOf(
-                        HomeFlowViewModel.PositionItem(
-                            position,
-                            HomeBanners(position, response.data.mapToUI(), bannerRatio = 0.41)
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
+    suspend fun fetchAdvertisingBannersSlider() = api.fetchAdvBanners(action = "slayder")
 
-    //Слайдер историй на главное странице
+    //Слайдер историй на главной странице
 
     suspend fun fetchHistoriesSlider() =
         api.fetchHistories(blockId = 12, action = "stories", platform = "android")
 
-//    suspend fun fetchHistoriesSlider(
-//        positionTitle: Int,
-//        position: Int,
-//    ): List<HomeFlowViewModel.PositionItem> {
-//        return coroutineScope {
-//            val responseBody =
-//                api.fetchHistories(blockId = 12, action = "stories", platform = "android")
-//            withContext(Dispatchers.Default) {
-//                val response = responseBody.parseHistoriesSliderResponse()
-//                if (response is ResponseEntity.Success) {
-//                    listOf(
-//                        HomeFlowViewModel.PositionItem(
-//                            position,
-//                            HomeHistories(position, response.data.mapToUI())
-//                        ),
-//                        HomeFlowViewModel.PositionItem(
-//                            positionTitle,
-//                            HomeTitle(
-//                                id = positionTitle,
-//                                type = HomeTitle.HISTORIES_TITLE,
-//                                name = "Истории"
-//                            )
-//                        )
-//                    )
-//                } else {
-//                    emptyList()
-//                }
-//            }
-//        }
-//    }
-
     //Слайдер популярных разделов на главной странице
-    suspend fun fetchPopularSlider(
-        positionTitle: Int,
-        position: Int,
-    ): List<HomeFlowViewModel.PositionItem> {
-        return coroutineScope {
-            val responseBody = api.fetchPopulars(action = "popylrazdel")
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parsePopularSliderResponse()
-                if (response is ResponseEntity.Success) {
-                    listOf(
-                        HomeFlowViewModel.PositionItem(
-                            position,
-                            HomePopulars(position, response.data.mapToUI())
-                        ),
-                        HomeFlowViewModel.PositionItem(
-                            positionTitle,
-                            HomeTitle(
-                                id = positionTitle,
-                                type = HomeTitle.POPULARS_TITLE,
-                                name = "Популярные разделы"
-                            )
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
+    suspend fun fetchPopularSlider() = api.fetchPopulars(action = "popylrazdel")
 
     //Слайдер баннеров категорий на главной странице
-    suspend fun fetchCategoryBannersSlider(position: Int): List<HomeFlowViewModel.PositionItem> {
-        return coroutineScope {
-            val responseBody =
-                api.fetchCategoryBanners(action = "slayder", androidVersion = "1.4.84")
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parseCategoryBannersSliderResponse()
-                if (response is ResponseEntity.Success) {
-                    listOf(
-                        HomeFlowViewModel.PositionItem(
-                            position,
-                            HomeBanners(position, response.data.mapToUI(), bannerRatio = 0.5)
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
+    suspend fun fetchCategoryBannersSlider() =
+        api.fetchCategoryBanners(action = "slayder", androidVersion = "1.4.84")
 
     //Слайдер самых выгодных продуктов на главной странице
-    suspend fun fetchDiscountsSlider(
-        positionTitle: Int,
-        position: Int,
-    ): List<HomeFlowViewModel.PositionItem> {
-        return coroutineScope {
-            val responseBody = api.fetchNovelties(action = "specpredlosh")
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parseDiscountSliderResponse()
-                if (response is ResponseEntity.Success) {
-                    val data = response.data.mapToUI()
-                    listOf(
-                        HomeFlowViewModel.PositionItem(
-                            position,
-                            fetchHomeProductsByType(data, HomeProducts.DISCOUNT, position)
-                        ),
-                        HomeFlowViewModel.PositionItem(
-                            positionTitle,
-                            HomeTitle(
-                                id = positionTitle,
-                                type = HomeTitle.DISCOUNT_TITLE,
-                                name = "Самое выгодное",
-                                showAll = true,
-                                showAllName = "СМ.ВСЕ",
-                                categoryProductsName = if (data.size == 1) {
-                                    data.first().name
-                                } else {
-                                    ""
-                                }
-                            )
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
+    suspend fun fetchDiscountsSlider() = api.fetchNovelties(action = "specpredlosh")
 
     //Верхний слайдер на главной странице
-    suspend fun fetchTopSlider(
-        positionTab: Int,
-        position: Int,
-    ): List<HomeFlowViewModel.PositionItem> {
-        return coroutineScope {
-            val responseBody = api.fetchDoubleSlider(action = "topglav", arg = "new")
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parseTopSliderResponse()
-                if (response is ResponseEntity.Success) {
-                    val data = response.data.mapToUI()
-                    listOf(
-                        HomeFlowViewModel.PositionItem(
-                            position,
-                            fetchHomeProductsByType(
-                                response.data.mapToUI(),
-                                HomeProducts.TOP_PROD,
-                                position
-                            )
-                        ),
-                        HomeFlowViewModel.PositionItem(
-                            positionTab,
-                            HomeProductsTabs(id = positionTab, data.mapIndexed { index, cat ->
-                                if (index == 0) {
-                                    cat.copy(isSelected = true, position = positionTab)
-                                } else {
-                                    cat.copy(isSelected = false, position = positionTab)
-                                }
-                            })
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
+    suspend fun fetchTopSlider() = api.fetchDoubleSlider(action = "topglav", arg = "new")
 
     //Информация о слайдере заказов на главной странице
+    suspend fun fetchOrdersSliderProfile(userId: Long) = api.fetchOrderSlider(userId)
 
-    suspend fun fetchOrdersSliderProfile(
-        userId: Long,
-        position: Int,
-    ): List<ProfileFlowViewModel.PositionItem> {
-        return coroutineScope {
-
-            val responseBody = api.fetchOrderSlider(userId)
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parseOrderSliderResponse()
-                if (response is ResponseEntity.Success) {
-                    listOf(
-                        ProfileFlowViewModel.PositionItem(
-                            position,
-                            ProfileOrders(position, response.data.mapToUI())
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
-
-    suspend fun fetchOrdersSlider(
-        userId: Long?,
-        positionTitle: Int,
-        position: Int,
-    ): List<HomeFlowViewModel.PositionItem> {
-        return coroutineScope {
-            if (userId == null) {
-                return@coroutineScope emptyList()
-            }
-
-            val responseBody = api.fetchOrderSlider(userId)
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parseOrderSliderResponse()
-                if (response is ResponseEntity.Success) {
-                    listOf(
-                        HomeFlowViewModel.PositionItem(
-                            position,
-                            HomeOrders(position, response.data.mapToUI())
-                        ),
-                        HomeFlowViewModel.PositionItem(
-                            positionTitle,
-                            HomeTitle(
-                                id = positionTitle,
-                                type = HomeTitle.ORDERS_TITLE,
-                                name = "Мои заказы",
-                                showAll = true,
-                                showAllName = "СМ.ВСЕ"
-                            )
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
+    suspend fun fetchOrdersSlider(userId: Long) = api.fetchOrderSlider(userId)
 
     //Слайдер новинок на главной странице
-    suspend fun fetchNoveltiesSlider(
-        positionTitle: Int,
-        position: Int,
-    ): List<HomeFlowViewModel.PositionItem> {
-        return coroutineScope {
-            val responseBody = api.fetchNovelties(action = "novinki")
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parseNoveltiesSliderResponse()
-                if (response is ResponseEntity.Success) {
-                    val data = response.data.mapToUI()
-                    listOf(
-                        HomeFlowViewModel.PositionItem(
-                            position,
-                            fetchHomeProductsByType(data, HomeProducts.NOVELTIES, position)
-                        ),
-                        HomeFlowViewModel.PositionItem(
-                            positionTitle,
-                            HomeTitle(
-                                id = positionTitle,
-                                type = HomeTitle.NOVELTIES_TITLE,
-                                name = "Новинки",
-                                showAll = true,
-                                showAllName = "СМ.ВСЕ",
-                                categoryProductsName = if (data.size == 1) {
-                                    data.first().name
-                                } else {
-                                    ""
-                                }
-                            )
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
+    suspend fun fetchNoveltiesSlider() = api.fetchNovelties(action = "novinki")
 
     //Слайдер акций на главной странице
-    suspend fun fetchPromotionsSlider(
-        positionTitle: Int,
-        position: Int,
-    ): List<HomeFlowViewModel.PositionItem> {
-        return coroutineScope {
-            val responseBody =
-                api.fetchPromotions(action = "akcii", limit = 10, platform = "android")
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parsePromotionSliderResponse()
-                if (response is ResponseEntity.Success) {
-                    listOf(
-                        HomeFlowViewModel.PositionItem(
-                            position, HomePromotions(
-                                position, PromotionsSliderBundleUI(
-                                    title = "Акции",
-                                    containShowAllButton = true,
-                                    promotionUIList = response.data.mapToUI()
-                                )
-                            )
-                        ),
-                        HomeFlowViewModel.PositionItem(
-                            positionTitle,
-                            HomeTitle(
-                                id = positionTitle,
-                                type = HomeTitle.PROMOTIONS_TITLE,
-                                name = "Акции",
-                                showAll = true,
-                                showAllName = "СМ.ВСЕ",
-                                lightBg = false
-                            )
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
+    suspend fun fetchPromotionsSlider() =
+        api.fetchPromotions(action = "akcii", limit = 10, platform = "android")
 
-    //Нижний слйдер на главнйо странице
-    suspend fun fetchBottomSlider(
-        positionTab: Int,
-        position: Int,
-    ): List<HomeFlowViewModel.PositionItem> {
-        return coroutineScope {
-            val responseBody = api.fetchDoubleSlider(action = "topglav", arg = "new")
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parseBottomSliderResponse()
-                if (response is ResponseEntity.Success) {
-                    val data = response.data.mapToUI()
-                    listOf(
-                        HomeFlowViewModel.PositionItem(
-                            position,
-                            fetchHomeProductsByType(
-                                response.data.mapToUI(),
-                                HomeProducts.BOTTOM_PROD,
-                                position
-                            )
-                        ),
-                        HomeFlowViewModel.PositionItem(
-                            positionTab,
-                            HomeProductsTabs(id = positionTab, data.mapIndexed { index, cat ->
-                                if (index == 0) {
-                                    cat.copy(isSelected = true, position = positionTab)
-                                } else {
-                                    cat.copy(isSelected = false, position = positionTab)
-                                }
-                            })
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
+    //Нижний слайдер на главной странице
+    suspend fun fetchBottomSlider() = api.fetchDoubleSlider(action = "topglav", arg = "new")
 
     //Слайдер брендов на главной странице
-    suspend fun fetchBrandsSlider(
-        positionTitle: Int,
-        position: Int,
-    ): List<HomeFlowViewModel.PositionItem> {
-        return coroutineScope {
-            val responseBody = api.fetchBrands(action = "brand", limit = 10)
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parseBrandsSliderResponse()
-                if (response is ResponseEntity.Success) {
-                    listOf(
-                        HomeFlowViewModel.PositionItem(
-                            position,
-                            HomeBrands(position, response.data.mapToUI())
-                        ),
-                        HomeFlowViewModel.PositionItem(
-                            positionTitle,
-                            HomeTitle(
-                                id = positionTitle,
-                                type = HomeTitle.BRANDS_TITLE,
-                                name = "Бренды",
-                                showAll = true,
-                                showAllName = "СМ.ВСЕ"
-                            )
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
+    suspend fun fetchBrandsSlider() = api.fetchBrands(action = "brand", limit = 10)
 
     //Слайдер стран на главной странице
-    suspend fun fetchCountriesSlider(position: Int): List<HomeFlowViewModel.PositionItem> {
-        return coroutineScope {
-            val responseBody = api.fetchCountries(action = "glav")
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parseCountriesSliderResponse()
-                if (response is ResponseEntity.Success) {
-                    listOf(
-                        HomeFlowViewModel.PositionItem(
-                            position,
-                            HomeCountries(position, response.data.mapToUI())
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
+    suspend fun fetchCountriesSlider() = api.fetchCountries(action = "glav")
 
-//Слайдер ранее просмотренных продуктов
+    //Слайдер ранее просмотренных продуктов
 
     suspend fun fetchViewedProductsSlider(userId: Long?): ResponseBody {
         return api.fetchViewedProducts(
@@ -498,119 +75,10 @@ class MainRepository @Inject constructor(
 
     suspend fun fetchViewedProductsSlider(
         userId: Long,
-        positionTitle: Int,
-        position: Int,
-    ): List<ProfileFlowViewModel.PositionItem> {
-        return coroutineScope {
-
-            val responseBody = api.fetchViewedProducts(action = "viewed", userId = userId)
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parseViewedProductsSliderResponse()
-                if (response is ResponseEntity.Success) {
-                    val data = response.data.mapToUI()
-                    listOf(
-                        ProfileFlowViewModel.PositionItem(
-                            position,
-                            fetchHomeProductsByType(data, HomeProducts.VIEWED, position)
-                        ),
-                        ProfileFlowViewModel.PositionItem(
-                            positionTitle,
-                            HomeTitle(
-                                id = positionTitle,
-                                type = HomeTitle.VIEWED_TITLE,
-                                name = "Вы смотрели",
-                                showAll = false,
-                                showAllName = "СМ.ВСЕ",
-                                categoryProductsName = if (data.size == 1) {
-                                    data.first().name
-                                } else {
-                                    ""
-                                }
-                            )
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
-
-    suspend fun fetchViewedProductsSlider(
-        userId: Long?,
-        positionTitle: Int,
-        position: Int,
-    ): List<HomeFlowViewModel.PositionItem> {
-        return coroutineScope {
-            if (userId == null) {
-                return@coroutineScope emptyList()
-            }
-
-            val responseBody = api.fetchViewedProducts(action = "viewed", userId = userId)
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parseViewedProductsSliderResponse()
-                if (response is ResponseEntity.Success) {
-                    val data = response.data.mapToUI()
-                    listOf(
-                        HomeFlowViewModel.PositionItem(
-                            position,
-                            fetchHomeProductsByType(data, HomeProducts.VIEWED, position)
-                        ),
-                        HomeFlowViewModel.PositionItem(
-                            positionTitle,
-                            HomeTitle(
-                                id = positionTitle,
-                                type = HomeTitle.VIEWED_TITLE,
-                                name = "Вы смотрели",
-                                showAll = false,
-                                showAllName = "СМ.ВСЕ",
-                                categoryProductsName = if (data.size == 1) {
-                                    data.first().name
-                                } else {
-                                    ""
-                                }
-                            )
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
+    ) = api.fetchViewedProducts(action = "viewed", userId = userId)
 
     //Слайдер комментариев на главной странице
-    suspend fun fetchCommentsSlider(
-        positionTitle: Int,
-        position: Int,
-    ): List<HomeFlowViewModel.PositionItem> {
-        return coroutineScope {
-            val responseBody = api.fetchComments(action = "otzivy", limit = 10)
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parseCommentsSliderResponse()
-                if (response is ResponseEntity.Success) {
-                    listOf(
-                        HomeFlowViewModel.PositionItem(
-                            position,
-                            HomeComments(position, response.data.mapToUI())
-                        ),
-                        HomeFlowViewModel.PositionItem(
-                            positionTitle,
-                            HomeTitle(
-                                id = positionTitle,
-                                type = HomeTitle.COMMENTS_TITLE,
-                                name = "Отзывы",
-                                showAll = true,
-                                showAllName = "Написать отзыв"
-                            )
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
+    suspend fun fetchCommentsSlider() = api.fetchComments(action = "otzivy", limit = 10)
 
     suspend fun sendCommentAboutShop(
         userId: Long?,
@@ -623,7 +91,6 @@ class MainRepository @Inject constructor(
         rating = rating
     )
 
-
     //Добавление продукта в корзину
     suspend fun addProductToCart(productId: Long, quantity: Int): ResponseBody {
         return api.fetchAddProductResponse(
@@ -633,7 +100,7 @@ class MainRepository @Inject constructor(
         )
     }
 
-    //Изменение колличества товаров в корзине
+    //Изменение количества товаров в корзине
     suspend fun changeProductsQuantityInCart(productId: Long, quantity: Int): ResponseBody {
         return api.fetchChangeProductsQuantityResponse(
             action = "guaty",
@@ -718,7 +185,7 @@ class MainRepository @Inject constructor(
      * Корзина
      * **/
 
-//Корзина
+    //Корзина
     suspend fun fetchCartResponse(
         action: String? = null,
         userId: Long? = null,
@@ -736,7 +203,7 @@ class MainRepository @Inject constructor(
     }
 
 //Добавление в корзину addProductToCart
-//Изменение колличества товаров в корзине changeProductsQuantityInCart
+//Изменение количества товаров в корзине changeProductsQuantityInCart
 
     //удаление из корзины
     suspend fun fetchDeleteProductResponse(
@@ -757,7 +224,7 @@ class MainRepository @Inject constructor(
      * Продукт
      */
 
-//Продукт
+    //Продукт
     suspend fun fetchProductResponse(
         blockId: Int = 1,
         productId: Long,
@@ -990,7 +457,7 @@ class MainRepository @Inject constructor(
      * only products
      */
 
-//Продукты по баннеру
+    //Продукты  по баннеру
     suspend fun fetchProductsByBanner(categoryId: Long): ResponseBody = api.fetchMainSliderResponse(
         action = "detailtovar",
         categoryId = categoryId
@@ -1007,7 +474,7 @@ class MainRepository @Inject constructor(
      * all promotions
      */
 
-//Информация о всех акциях
+    //Информация о всех акциях
     suspend fun fetchAllPromotions(
         filterId: Long,
     ): ResponseBody = api.fetchPromotionResponse(
@@ -1037,21 +504,12 @@ class MainRepository @Inject constructor(
         )
 
     //Всплывающая новость
-    suspend fun fetchPopupNews(userId: Long?): PopupNewsUI? {
-        return coroutineScope {
-            val response = api.fetchNewsResponse(
-                action = "okno",
-                userId = userId,
-                platform = "android"
-            ).parsePopupNewsResponse()
+    suspend fun fetchPopupNews(userId: Long?) = api.fetchNewsResponse(
+        action = "okno",
+        userId = userId,
+        platform = "android"
+    )
 
-            if (response is ResponseEntity.Success) {
-                response.data.mapToUI()
-            } else {
-                null
-            }
-        }
-    }
 
     /**
      * pre order
@@ -1097,7 +555,7 @@ class MainRepository @Inject constructor(
      * all comments by products
      */
 
-//Все отзывы о продукте
+    //Все отзывы о продукте
     suspend fun fetchAllCommentsByProduct(
         productId: Long,
         page: Int?,
@@ -1111,7 +569,7 @@ class MainRepository @Inject constructor(
      * send comment by product
      */
 
-//Отправить отзыв о продукте
+    //Отправить отзыв о продукте
     suspend fun sendCommentAboutProduct(
         productId: Long,
         rating: Int,
@@ -1172,7 +630,7 @@ class MainRepository @Inject constructor(
      * all orders
      */
 
-//Постраничная загрузка всех заказов
+    //Постраничная загрузка всех заказов
     suspend fun fetchAllOrders(
         userId: Long?,
         appVersion: String?,
@@ -1192,7 +650,7 @@ class MainRepository @Inject constructor(
      * repeat order
      */
 
-//Детальная информация о заказе
+    //Детальная информация о заказе
     suspend fun fetchOrderDetailsResponse(
         userId: Long?,
         appVersion: String?,
@@ -1214,7 +672,7 @@ class MainRepository @Inject constructor(
     /**
      * products filters
      */
-//Все филтры по продуктам для выбранной категории
+    //Все фильтры по продуктам для выбранной категории
     suspend fun fetchAllFiltersByCategory(
         categoryId: Long,
     ) = api.fetchFilterBundleResponse(categoryId = categoryId)
@@ -1229,7 +687,7 @@ class MainRepository @Inject constructor(
      * map
      */
 
-//Информация о зонах доставки
+    //Информация о зонах доставки
     suspend fun fetchDeliveryZonesResponse(): ResponseBody = api.fetchMapResponse(
         action = "tochkakarta"
     )
@@ -1248,117 +706,32 @@ class MainRepository @Inject constructor(
      * profile
      */
 
-//Информация о пользователе
+    //Информация о пользователе
 
     suspend fun fetchUserData(userId: Long) = api.fetchProfileResponse(
         action = "details",
         userId = userId
     )
 
-    suspend fun fetchUserData(
-        userId: Long,
-        position: Int,
-    ): List<ProfileFlowViewModel.PositionItem> {
-        return coroutineScope {
-            val responseBody = api.fetchProfileResponse(action = "details", userId = userId)
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parseUserDataResponse()
-                if (response is ResponseEntity.Success) {
-                    listOf(
-                        ProfileFlowViewModel.PositionItem(
-                            position,
-                            ProfileHeader(
-                                position, response.data.mapToUI()
-                            )
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
-
     //Информация о пользователе
     suspend fun fetchProfileCategories(
-        position: Int,
-        positionBlock: Int,
         userId: Long,
         isTablet: Boolean,
-    ): List<ProfileFlowViewModel.PositionItem> {
-
-        return coroutineScope {
-            val responseBody = api.fetchProfileCategoriesResponse(
-                action = "glav",
-                userId = userId,
-                appVersion = BuildConfig.VERSION_NAME,
-                isTablet = isTablet
-            )
-            withContext(Dispatchers.Default) {
-                if (responseBody.status != null && responseBody.status == "Success") {
-                    val mapped = responseBody.fetchProfileCategoryUIList()
-                    val item = ProfileFlowViewModel.PositionItem(
-                        position,
-                        ProfileMain(items = mapped.list)
-                    )
-
-                    val blockList = responseBody.block
-                    val itemBlock = if (!blockList.isNullOrEmpty()) {
-                        ProfileFlowViewModel.PositionItem(
-                            positionBlock,
-                            ProfileBlock(data = blockList)
-                        )
-                    } else {
-                        null
-                    }
-                    tabManager.saveBottomNavProfileState(mapped.amount)
-
-                    if (itemBlock != null) {
-                        listOf(itemBlock, item)
-                    } else {
-                        listOf(item)
-                    }
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
+    ) = api.fetchProfileCategoriesResponse(
+        action = "glav",
+        userId = userId,
+        appVersion = BuildConfig.VERSION_NAME,
+        isTablet = isTablet
+    )
 
     suspend fun fetchPersonalProducts(
-        position: Int,
         userId: Long,
         page: Int?,
-    ): List<ProfileFlowViewModel.PositionItem> {
-
-        return coroutineScope {
-            val responseBody = api.fetchPersonalProducts(
-                action = "tovarchik",
-                userId = userId,
-                page = page
-            )
-            withContext(Dispatchers.Default) {
-                val response = responseBody.parsePersonalProductsResponse()
-                if (response is ResponseEntity.Success) {
-                    val data = response.data.mapToUI()
-                    val item = ProfileFlowViewModel.PositionItem(
-                        position,
-                        ProfileBestForYou(
-                            data = data.copy(
-                                productUIList = FavoritesMapper.mapFavoritesListByManager(
-                                    "grid",
-                                    data.productUIList
-                                )
-                            )
-                        )
-                    )
-                    listOf(item)
-                } else {
-                    emptyList()
-                }
-            }
-        }
-    }
+    ) = api.fetchPersonalProducts(
+        action = "tovarchik",
+        userId = userId,
+        page = page
+    )
 
     suspend fun fetchQuestionnairesResponse(
         @Query("action") action: String? = null,
@@ -1392,7 +765,7 @@ class MainRepository @Inject constructor(
      * auth
      */
 
-//Авторизация
+    //Авторизация
     suspend fun authByEmail(
         email: String,
         password: String,
@@ -1459,7 +832,7 @@ class MainRepository @Inject constructor(
      * registration
      */
 
-//Регистрация нового пользователя
+    //Регистрация нового пользователя
     suspend fun register(
         firstName: String,
         secondName: String,
@@ -1489,7 +862,7 @@ class MainRepository @Inject constructor(
      * Services
      */
 
-//Общая информация о предоставляемых услугах
+    //Общая информация о предоставляемых услугах
     suspend fun fetchAboutServices(action: String) = api.fetchServicesResponse(
         action = action
     )
@@ -1552,7 +925,7 @@ class MainRepository @Inject constructor(
      * Addresses
      */
 
-//Получить сохраненные адреса
+    //Получить сохраненные адреса
     suspend fun fetchAddressesSaved(
         userId: Long?,
         type: Int?,
@@ -1648,17 +1021,17 @@ class MainRepository @Inject constructor(
         userId: Long?,
         addressId: Long?,
         date: String?,
-        appVerision: String?,
+        appVersion: String?,
     ) = api.fetchInfoAboutOrderingResponse(
         userId = userId,
         addressId = addressId,
         date = date,
-        appVersion = appVerision
+        appVersion = appVersion
     )
 
     suspend fun fetchFreeShippingDaysInfoResponse(
-        appVerision: String?,
-    ) = api.fetchInfoAboutOrderingResponse(appVersion = appVerision)
+        appVersion: String?,
+    ) = api.fetchInfoAboutOrderingResponse(appVersion = appVersion)
 
     suspend fun regOrder(
         orderType: Int?, //Тип заказа (1/2)
@@ -1778,22 +1151,6 @@ class MainRepository @Inject constructor(
         "addtoqua",
         idWithGift = idWithGift
     )
-
-    private fun fetchHomeProductsByType(
-        data: List<CategoryDetailUI>,
-        type: Int,
-        position: Int,
-    ): HomeProducts {
-        return HomeProducts(
-            position,
-            data,
-            productsType = type,
-            productsSliderConfig = ProductsSliderConfig(
-                containShowAllButton = true
-            ),
-            prodList = data.first().productUIList
-        )
-    }
 
     suspend fun fetchSearchDataByQrCode(searchText: String) = coroutineScope {
         api.fetchSearchDataByQrCode(

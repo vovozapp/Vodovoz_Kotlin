@@ -12,11 +12,20 @@ import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
+import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
 import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
+import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
+import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
+import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel.ProfileState.Companion.fetchStaticItems
-import com.vodovoz.app.feature.profile.viewholders.models.ProfileLogout
+import com.vodovoz.app.feature.profile.viewholders.models.*
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
 import com.vodovoz.app.feature.sitestate.SiteStateManager
+import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
+import com.vodovoz.app.mapper.OrderMapper.mapToUI
+import com.vodovoz.app.mapper.UserDataMapper.mapToUI
 import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -86,13 +95,45 @@ class ProfileFlowViewModel @Inject constructor(
     )
 
     private suspend fun fetchProfileData(position: Int, userId: Long): List<PositionItem> {
-        return runCatching { repository.fetchUserData(userId, position) }
+        return runCatching {
+            val responseBody = repository.fetchUserData(userId)
+            withContext(Dispatchers.Default) {
+                val response = responseBody.parseUserDataResponse()
+                if (response is ResponseEntity.Success) {
+                    listOf(
+                        PositionItem(
+                            position,
+                            ProfileHeader(
+                                position, response.data.mapToUI()
+                            )
+                        )
+                    )
+                } else {
+                    emptyList()
+                }
+            }
+        }
             .onFailure { showNetworkError(it) }
             .getOrDefault(emptyList())
     }
 
     private suspend fun fetchOrdersSlider(position: Int, userId: Long): List<PositionItem> {
-        return runCatching { repository.fetchOrdersSliderProfile(userId, position) }
+        return runCatching {
+            val responseBody = repository.fetchOrdersSliderProfile(userId)
+            withContext(Dispatchers.Default) {
+                val response = responseBody.parseOrderSliderResponse()
+                if (response is ResponseEntity.Success) {
+                    listOf(
+                        PositionItem(
+                            position,
+                            ProfileOrders(position, response.data.mapToUI())
+                        )
+                    )
+                } else {
+                    emptyList()
+                }
+            }
+        }
             .onFailure { showNetworkError(it) }
             .getOrDefault(emptyList())
     }
@@ -103,12 +144,38 @@ class ProfileFlowViewModel @Inject constructor(
         userId: Long,
     ): List<PositionItem> {
         return runCatching {
-            repository.fetchProfileCategories(
-                position,
-                positionBlock,
-                userId,
-                application.isTablet()
+            val responseBody = repository.fetchProfileCategories(
+                userId = userId,
+                isTablet = application.isTablet()
             )
+            withContext(Dispatchers.Default) {
+                if (responseBody.status != null && responseBody.status == "Success") {
+                    val mapped = responseBody.fetchProfileCategoryUIList()
+                    val item = PositionItem(
+                        position,
+                        ProfileMain(items = mapped.list)
+                    )
+
+                    val blockList = responseBody.block
+                    val itemBlock = if (!blockList.isNullOrEmpty()) {
+                        PositionItem(
+                            positionBlock,
+                            ProfileBlock(data = blockList)
+                        )
+                    } else {
+                        null
+                    }
+                    tabManager.saveBottomNavProfileState(mapped.amount)
+
+                    if (itemBlock != null) {
+                        listOf(itemBlock, item)
+                    } else {
+                        listOf(item)
+                    }
+                } else {
+                    emptyList()
+                }
+            }
         }
             .onFailure { showNetworkError(it) }
             .getOrDefault(emptyList())
@@ -119,13 +186,73 @@ class ProfileFlowViewModel @Inject constructor(
         position: Int,
         userId: Long,
     ): List<PositionItem> {
-        return runCatching { repository.fetchViewedProductsSlider(userId, positionTitle, position) }
+        return runCatching {
+            val responseBody = repository.fetchViewedProductsSlider(userId = userId)
+            withContext(Dispatchers.Default) {
+                val response = responseBody.parseViewedProductsSliderResponse()
+                if (response is ResponseEntity.Success) {
+                    val data = response.data.mapToUI()
+                    listOf(
+                        PositionItem(
+                            position,
+                            HomeProducts.fetchHomeProductsByType(
+                                data,
+                                HomeProducts.VIEWED,
+                                position
+                            )
+                        ),
+                        PositionItem(
+                            positionTitle,
+                            HomeTitle(
+                                id = positionTitle,
+                                type = HomeTitle.VIEWED_TITLE,
+                                name = "Вы смотрели",
+                                showAll = false,
+                                showAllName = "СМ.ВСЕ",
+                                categoryProductsName = if (data.size == 1) {
+                                    data.first().name
+                                } else {
+                                    ""
+                                }
+                            )
+                        )
+                    )
+                } else {
+                    emptyList()
+                }
+            }
+        }
             .onFailure { showNetworkError(it) }
             .getOrDefault(emptyList())
     }
 
     private suspend fun fetchPersonalProducts(position: Int, userId: Long): List<PositionItem> {
-        return runCatching { repository.fetchPersonalProducts(position, userId, 1) }
+        return runCatching {
+            val responseBody = repository.fetchPersonalProducts(
+                userId = userId,
+                page = 1
+            )
+            withContext(Dispatchers.Default) {
+                val response = responseBody.parsePersonalProductsResponse()
+                if (response is ResponseEntity.Success) {
+                    val data = response.data.mapToUI()
+                    val item = PositionItem(
+                        position,
+                        ProfileBestForYou(
+                            data = data.copy(
+                                productUIList = FavoritesMapper.mapFavoritesListByManager(
+                                    "grid",
+                                    data.productUIList
+                                )
+                            )
+                        )
+                    )
+                    listOf(item)
+                } else {
+                    emptyList()
+                }
+            }
+        }
             .onFailure { showNetworkError(it) }
             .getOrDefault(emptyList())
     }

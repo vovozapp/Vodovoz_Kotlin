@@ -36,5 +36,21 @@ data class HomeProducts(
         const val NOVELTIES = 9
         const val BOTTOM_PROD = 11
         const val VIEWED = 14
+
+        fun fetchHomeProductsByType(
+            data: List<CategoryDetailUI>,
+            type: Int,
+            position: Int,
+        ): HomeProducts {
+            return HomeProducts(
+                position,
+                data,
+                productsType = type,
+                productsSliderConfig = ProductsSliderConfig(
+                    containShowAllButton = true
+                ),
+                prodList = data.first().productUIList
+            )
+        }
     }
 }

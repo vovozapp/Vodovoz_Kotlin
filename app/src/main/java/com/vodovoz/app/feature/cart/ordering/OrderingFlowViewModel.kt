@@ -305,7 +305,7 @@ class OrderingFlowViewModel @Inject constructor(
                         addressId = address.id,
                         userId = userId,
                         date = dateFormatter.format(selectedDate),
-                        appVerision = BuildConfig.VERSION_NAME
+                        appVersion = BuildConfig.VERSION_NAME
                     )
                 )
             }
@@ -374,7 +374,7 @@ class OrderingFlowViewModel @Inject constructor(
 
     fun fetchFreeShippingDaysInfo() {
         viewModelScope.launch {
-            flow { emit(repository.fetchFreeShippingDaysInfoResponse(appVerision = BuildConfig.VERSION_NAME)) }
+            flow { emit(repository.fetchFreeShippingDaysInfoResponse(appVersion = BuildConfig.VERSION_NAME)) }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseFreeShippingDaysResponse()

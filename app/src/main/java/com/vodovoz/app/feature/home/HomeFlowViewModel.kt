@@ -9,15 +9,46 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.response.banner.AdvertisingBannersSliderResponseJsonParser.parseAdvertisingBannersSliderResponse
+import com.vodovoz.app.data.parser.response.banner.CategoryBannersSliderResponseJsonParser.parseCategoryBannersSliderResponse
+import com.vodovoz.app.data.parser.response.brand.BrandsSliderResponseJsonParser.parseBrandsSliderResponse
+import com.vodovoz.app.data.parser.response.comment.CommentsSliderResponseJsonParser.parseCommentsSliderResponse
+import com.vodovoz.app.data.parser.response.country.CountrySliderResponseJsonParser.parseCountriesSliderResponse
+import com.vodovoz.app.data.parser.response.discount.DiscountSliderResponseParser.parseDiscountSliderResponse
+import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseBottomSliderResponse
+import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseTopSliderResponse
 import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonParser.parseHistoriesSliderResponse
+import com.vodovoz.app.data.parser.response.novelties.NoveltiesSliderResponseParser.parseNoveltiesSliderResponse
+import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
+import com.vodovoz.app.data.parser.response.popular.PopularSliderResponseJsonParser.parsePopularSliderResponse
+import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
+import com.vodovoz.app.data.parser.response.promotion.PromotionSliderResponseJsonParser.parsePromotionSliderResponse
+import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
+import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
 import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfo
+import com.vodovoz.app.feature.home.viewholders.homebrands.HomeBrands
+import com.vodovoz.app.feature.home.viewholders.homecomments.HomeComments
+import com.vodovoz.app.feature.home.viewholders.homecountries.HomeCountries
 import com.vodovoz.app.feature.home.viewholders.homehistories.HomeHistories
+import com.vodovoz.app.feature.home.viewholders.homeorders.HomeOrders
+import com.vodovoz.app.feature.home.viewholders.homepopulars.HomePopulars
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeProductsTabs
+import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.home.viewholders.hometriplenav.HomeTripleNav
+import com.vodovoz.app.mapper.BannerMapper.mapToUI
+import com.vodovoz.app.mapper.BrandMapper.mapToUI
+import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
+import com.vodovoz.app.mapper.CategoryMapper.mapToUI
+import com.vodovoz.app.mapper.CommentMapper.mapToUI
+import com.vodovoz.app.mapper.CountriesSliderBundleMapper.mapToUI
 import com.vodovoz.app.mapper.HistoryMapper.mapToUI
+import com.vodovoz.app.mapper.OrderMapper.mapToUI
+import com.vodovoz.app.mapper.PopupNewsMapper.mapToUI
+import com.vodovoz.app.mapper.PromotionMapper.mapToUI
 import com.vodovoz.app.ui.model.PopupNewsUI
+import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -43,10 +74,13 @@ class HomeFlowViewModel @Inject constructor(
                 val start = System.currentTimeMillis()
                 val result = awaitAll(*tasks).flatten()
                 debugLog { "first load task ${System.currentTimeMillis() - start} result size ${result.size}" }
-                val positionItemsSorted = (state.data.positionItems + result).sortedBy { it.position }
+                val positionItemsSorted =
+                    (state.data.positionItems + result).sortedBy { it.position }
                 uiStateListener.value = state.copy(
                     loadingPage = false,
-                    data = state.data.copy(positionItems = positionItemsSorted, items = positionItemsSorted.map { it.item }),
+                    data = state.data.copy(
+                        positionItems = positionItemsSorted,
+                        items = positionItemsSorted.map { it.item }),
                     isFirstLoad = true,
                     error = if (result.isNotEmpty()) {
                         null
@@ -72,10 +106,15 @@ class HomeFlowViewModel @Inject constructor(
                 result
             }
             debugLog { "second load task ${System.currentTimeMillis() - start} result size ${mappedResult.size}" }
-            val positionItemsSorted = (state.data.positionItems + mappedResult).sortedBy { it.position }
+            val positionItemsSorted =
+                (state.data.positionItems + mappedResult).sortedBy { it.position }
             uiStateListener.value = state.copy(
                 loadingPage = false,
-                data = state.data.copy(positionItems = positionItemsSorted, items = positionItemsSorted.map { it.item }, isSecondLoad = true),
+                data = state.data.copy(
+                    positionItems = positionItemsSorted,
+                    items = positionItemsSorted.map { it.item },
+                    isSecondLoad = true
+                ),
                 error = if (mappedResult.isNotEmpty()) {
                     null
                 } else {
@@ -127,7 +166,24 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     private fun CoroutineScope.firstLoadTasks() = arrayOf(
-        homeRequestAsync { repository.fetchAdvertisingBannersSlider(POSITION_1) },
+        homeRequestAsync {
+            coroutineScope {
+                val responseBody = repository.fetchAdvertisingBannersSlider()
+                withContext(Dispatchers.Default) {
+                    val response = responseBody.parseAdvertisingBannersSliderResponse()
+                    if (response is ResponseEntity.Success) {
+                        listOf(
+                            PositionItem(
+                                POSITION_1,
+                                HomeBanners(POSITION_1, response.data.mapToUI(), bannerRatio = 0.41)
+                            )
+                        )
+                    } else {
+                        emptyList()
+                    }
+                }
+            }
+        },
         homeRequestAsync {
             coroutineScope {
                 val responseBody =
@@ -155,21 +211,396 @@ class HomeFlowViewModel @Inject constructor(
                 }
             }
         },
-        homeRequestAsync { repository.fetchPopularSlider(POSITION_4_TITLE, POSITION_5) },
-        homeRequestAsync { repository.fetchDiscountsSlider(POSITION_6_TITLE, POSITION_7) },
-        homeRequestAsync { repository.fetchCategoryBannersSlider(POSITION_8) }
+        homeRequestAsync {
+            coroutineScope {
+                val responseBody = repository.fetchPopularSlider()
+                withContext(Dispatchers.Default) {
+                    val response = responseBody.parsePopularSliderResponse()
+                    if (response is ResponseEntity.Success) {
+                        listOf(
+                            PositionItem(
+                                POSITION_5,
+                                HomePopulars(POSITION_5, response.data.mapToUI())
+                            ),
+                            PositionItem(
+                                POSITION_4_TITLE,
+                                HomeTitle(
+                                    id = POSITION_4_TITLE,
+                                    type = HomeTitle.POPULARS_TITLE,
+                                    name = "Популярные разделы"
+                                )
+                            )
+                        )
+                    } else {
+                        emptyList()
+                    }
+                }
+            }
+        },
+        homeRequestAsync {
+            coroutineScope {
+                val responseBody = repository.fetchDiscountsSlider()
+                withContext(Dispatchers.Default) {
+                    val response = responseBody.parseDiscountSliderResponse()
+                    if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
+                        listOf(
+                            PositionItem(
+                                POSITION_7,
+                                HomeProducts.fetchHomeProductsByType(
+                                    data,
+                                    HomeProducts.DISCOUNT,
+                                    POSITION_7
+                                )
+                            ),
+                            PositionItem(
+                                POSITION_6_TITLE,
+                                HomeTitle(
+                                    id = POSITION_6_TITLE,
+                                    type = HomeTitle.DISCOUNT_TITLE,
+                                    name = "Самое выгодное",
+                                    showAll = true,
+                                    showAllName = "СМ.ВСЕ",
+                                    categoryProductsName = if (data.size == 1) {
+                                        data.first().name
+                                    } else {
+                                        ""
+                                    }
+                                )
+                            )
+                        )
+                    } else {
+                        emptyList()
+                    }
+                }
+            }
+        },
+        homeRequestAsync {
+            coroutineScope {
+                val responseBody = repository.fetchCategoryBannersSlider()
+                withContext(Dispatchers.Default) {
+                    val response = responseBody.parseCategoryBannersSliderResponse()
+                    if (response is ResponseEntity.Success) {
+                        listOf(
+                            PositionItem(
+                                POSITION_8,
+                                HomeBanners(POSITION_8, response.data.mapToUI(), bannerRatio = 0.5)
+                            )
+                        )
+                    } else {
+                        emptyList()
+                    }
+                }
+            }
+        }
     )
 
+//    fun fetchHomeProductsByType(
+//        data: List<CategoryDetailUI>,
+//        type: Int,
+//        position: Int,
+//    ): HomeProducts {
+//        return HomeProducts(
+//            position,
+//            data,
+//            productsType = type,
+//            productsSliderConfig = ProductsSliderConfig(
+//                containShowAllButton = true
+//            ),
+//            prodList = data.first().productUIList
+//        )
+//    }
+
     private fun CoroutineScope.secondLoadTasks(userId: Long?) = arrayOf(
-        homeRequestAsync { repository.fetchTopSlider(POSITION_9_TAB, POSITION_10) },
-        homeRequestAsync { repository.fetchOrdersSlider(userId, POSITION_11_TITLE, POSITION_12) },
-        homeRequestAsync { repository.fetchNoveltiesSlider(POSITION_14_TITLE, POSITION_15) },
-        homeRequestAsync { repository.fetchPromotionsSlider(POSITION_16_TITLE, POSITION_17) },
-        homeRequestAsync { repository.fetchBottomSlider(POSITION_18_TAB, POSITION_19) },
-        homeRequestAsync { repository.fetchBrandsSlider(POSITION_20_TITLE, POSITION_21) },
-        homeRequestAsync { repository.fetchCountriesSlider(POSITION_22) },
-        homeRequestAsync { repository.fetchViewedProductsSlider(userId, POSITION_23_TITLE, POSITION_24) },
-        homeRequestAsync { repository.fetchCommentsSlider(POSITION_25_TITLE, POSITION_26) }
+        homeRequestAsync {
+            coroutineScope {
+                val responseBody = repository.fetchTopSlider()
+                withContext(Dispatchers.Default) {
+                    val response = responseBody.parseTopSliderResponse()
+                    if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
+                        listOf(
+                            PositionItem(
+                                POSITION_10,
+                                HomeProducts.fetchHomeProductsByType(
+                                    data,
+                                    HomeProducts.TOP_PROD,
+                                    POSITION_10
+                                )
+                            ),
+                            PositionItem(
+                                POSITION_9_TAB,
+                                HomeProductsTabs(
+                                    id = POSITION_9_TAB,
+                                    data.mapIndexed { index, cat ->
+                                        if (index == 0) {
+                                            cat.copy(isSelected = true, position = POSITION_9_TAB)
+                                        } else {
+                                            cat.copy(isSelected = false, position = POSITION_9_TAB)
+                                        }
+                                    })
+                            )
+                        )
+                    } else {
+                        emptyList()
+                    }
+                }
+            }
+        },
+        homeRequestAsync {
+            coroutineScope {
+                if (userId == null) {
+                    return@coroutineScope emptyList()
+                }
+                val responseBody = repository.fetchOrdersSlider(userId)
+                withContext(Dispatchers.Default) {
+                    val response = responseBody.parseOrderSliderResponse()
+                    if (response is ResponseEntity.Success) {
+                        listOf(
+                            PositionItem(
+                                POSITION_12,
+                                HomeOrders(POSITION_12, response.data.mapToUI())
+                            ),
+                            PositionItem(
+                                POSITION_11_TITLE,
+                                HomeTitle(
+                                    id = POSITION_11_TITLE,
+                                    type = HomeTitle.ORDERS_TITLE,
+                                    name = "Мои заказы",
+                                    showAll = true,
+                                    showAllName = "СМ.ВСЕ"
+                                )
+                            )
+                        )
+                    } else {
+                        emptyList()
+                    }
+                }
+            }
+        },
+        homeRequestAsync {
+            coroutineScope {
+                val responseBody = repository.fetchNoveltiesSlider()
+                withContext(Dispatchers.Default) {
+                    val response = responseBody.parseNoveltiesSliderResponse()
+                    if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
+                        listOf(
+                            PositionItem(
+                                POSITION_15,
+                                HomeProducts.fetchHomeProductsByType(
+                                    data,
+                                    HomeProducts.NOVELTIES,
+                                    POSITION_15
+                                )
+                            ),
+                            PositionItem(
+                                POSITION_14_TITLE,
+                                HomeTitle(
+                                    id = POSITION_14_TITLE,
+                                    type = HomeTitle.NOVELTIES_TITLE,
+                                    name = "Новинки",
+                                    showAll = true,
+                                    showAllName = "СМ.ВСЕ",
+                                    categoryProductsName = if (data.size == 1) {
+                                        data.first().name
+                                    } else {
+                                        ""
+                                    }
+                                )
+                            )
+                        )
+                    } else {
+                        emptyList()
+                    }
+                }
+            }
+        },
+        homeRequestAsync {
+            coroutineScope {
+                val responseBody = repository.fetchPromotionsSlider()
+                withContext(Dispatchers.Default) {
+                    val response = responseBody.parsePromotionSliderResponse()
+                    if (response is ResponseEntity.Success) {
+                        listOf(
+                            PositionItem(
+                                POSITION_17, HomePromotions(
+                                    POSITION_17, PromotionsSliderBundleUI(
+                                        title = "Акции",
+                                        containShowAllButton = true,
+                                        promotionUIList = response.data.mapToUI()
+                                    )
+                                )
+                            ),
+                            PositionItem(
+                                POSITION_16_TITLE,
+                                HomeTitle(
+                                    id = POSITION_16_TITLE,
+                                    type = HomeTitle.PROMOTIONS_TITLE,
+                                    name = "Акции",
+                                    showAll = true,
+                                    showAllName = "СМ.ВСЕ",
+                                    lightBg = false
+                                )
+                            )
+                        )
+                    } else {
+                        emptyList()
+                    }
+                }
+            }
+        },
+        homeRequestAsync {
+            coroutineScope {
+                val responseBody = repository.fetchBottomSlider()
+                withContext(Dispatchers.Default) {
+                    val response = responseBody.parseBottomSliderResponse()
+                    if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
+                        listOf(
+                            PositionItem(
+                                POSITION_19,
+                                HomeProducts.fetchHomeProductsByType(
+                                    data,
+                                    HomeProducts.BOTTOM_PROD,
+                                    POSITION_19
+                                )
+                            ),
+                            PositionItem(
+                                POSITION_18_TAB,
+                                HomeProductsTabs(
+                                    id = POSITION_18_TAB,
+                                    data.mapIndexed { index, cat ->
+                                        if (index == 0) {
+                                            cat.copy(isSelected = true, position = POSITION_18_TAB)
+                                        } else {
+                                            cat.copy(isSelected = false, position = POSITION_18_TAB)
+                                        }
+                                    })
+                            )
+                        )
+                    } else {
+                        emptyList()
+                    }
+                }
+            }
+        },
+        homeRequestAsync {
+            coroutineScope {
+                val responseBody = repository.fetchBrandsSlider()
+                withContext(Dispatchers.Default) {
+                    val response = responseBody.parseBrandsSliderResponse()
+                    if (response is ResponseEntity.Success) {
+                        listOf(
+                            PositionItem(
+                                POSITION_21,
+                                HomeBrands(POSITION_21, response.data.mapToUI())
+                            ),
+                            PositionItem(
+                                POSITION_20_TITLE,
+                                HomeTitle(
+                                    id = POSITION_20_TITLE,
+                                    type = HomeTitle.BRANDS_TITLE,
+                                    name = "Бренды",
+                                    showAll = true,
+                                    showAllName = "СМ.ВСЕ"
+                                )
+                            )
+                        )
+                    } else {
+                        emptyList()
+                    }
+                }
+            }
+        },
+        homeRequestAsync {
+            coroutineScope {
+                val responseBody = repository.fetchCountriesSlider()
+                withContext(Dispatchers.Default) {
+                    val response = responseBody.parseCountriesSliderResponse()
+                    if (response is ResponseEntity.Success) {
+                        listOf(
+                            PositionItem(
+                                POSITION_22,
+                                HomeCountries(POSITION_22, response.data.mapToUI())
+                            )
+                        )
+                    } else {
+                        emptyList()
+                    }
+                }
+            }
+        },
+        homeRequestAsync {
+            coroutineScope {
+                if (userId == null) {
+                    return@coroutineScope emptyList()
+                }
+
+                val responseBody = repository.fetchViewedProductsSlider(userId)
+                withContext(Dispatchers.Default) {
+                    val response = responseBody.parseViewedProductsSliderResponse()
+                    if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
+                        listOf(
+                            PositionItem(
+                                POSITION_24,
+                                HomeProducts.fetchHomeProductsByType(
+                                    data,
+                                    HomeProducts.VIEWED,
+                                    POSITION_24
+                                )
+                            ),
+                            PositionItem(
+                                POSITION_23_TITLE,
+                                HomeTitle(
+                                    id = POSITION_23_TITLE,
+                                    type = HomeTitle.VIEWED_TITLE,
+                                    name = "Вы смотрели",
+                                    showAll = false,
+                                    showAllName = "СМ.ВСЕ",
+                                    categoryProductsName = if (data.size == 1) {
+                                        data.first().name
+                                    } else {
+                                        ""
+                                    }
+                                )
+                            )
+                        )
+                    } else {
+                        emptyList()
+                    }
+                }
+            }
+        },
+        homeRequestAsync {
+            coroutineScope {
+                val responseBody = repository.fetchCommentsSlider()
+                withContext(Dispatchers.Default) {
+                    val response = responseBody.parseCommentsSliderResponse()
+                    if (response is ResponseEntity.Success) {
+                        listOf(
+                            PositionItem(
+                                POSITION_26,
+                                HomeComments(POSITION_26, response.data.mapToUI())
+                            ),
+                            PositionItem(
+                                POSITION_25_TITLE,
+                                HomeTitle(
+                                    id = POSITION_25_TITLE,
+                                    type = HomeTitle.COMMENTS_TITLE,
+                                    name = "Отзывы",
+                                    showAll = true,
+                                    showAllName = "Написать отзыв"
+                                )
+                            )
+                        )
+                    } else {
+                        emptyList()
+                    }
+                }
+            }
+        }
     )
 
     private inline fun CoroutineScope.homeRequestAsync(crossinline request: suspend () -> List<PositionItem>): Deferred<List<PositionItem>> {
@@ -192,8 +623,16 @@ class HomeFlowViewModel @Inject constructor(
             val userId = accountManager.fetchAccountId()
             flow { emit(repository.fetchPopupNews(userId)) }
                 .flowOn(Dispatchers.IO)
-                .filterNotNull()
-                .onEach { uiStateListener.value = state.copy(data = state.data.copy(news = it)) }
+                .onEach {
+                    val response = it.parsePopupNewsResponse()
+                    if (response is ResponseEntity.Success) {
+                        uiStateListener.value = state.copy(
+                            data = state.data.copy(
+                                news = response.data.mapToUI()
+                            )
+                        )
+                    }
+                }
                 .catch { debugLog { "fetch popup news error ${it.localizedMessage}" } }
                 .collect()
         }
@@ -314,7 +753,7 @@ class HomeFlowViewModel @Inject constructor(
         val items: List<Item>,
         val news: PopupNewsUI? = null,
         val hasShow: Boolean = false,
-        val isSecondLoad: Boolean = false
+        val isSecondLoad: Boolean = false,
     ) : State {
 
         companion object {
@@ -325,7 +764,7 @@ class HomeFlowViewModel @Inject constructor(
                 )
             }
 
-            fun fetchStaticItems() : List<PositionItem> {
+            fun fetchStaticItems(): List<PositionItem> {
                 return listOf(
                     PositionItem(
                         POSITION_13,
