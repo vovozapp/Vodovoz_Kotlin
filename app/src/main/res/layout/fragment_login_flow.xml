@@ -231,7 +231,8 @@
                 android:visibility="gone"
                 tools:visibility="visible"
                 android:layout_marginTop="@dimen/space_12"
-                android:layout_marginEnd="@dimen/space_16" />
+                android:layout_marginEnd="@dimen/space_16"
+                tools:ignore="ContentDescription"/>
 
         </LinearLayout>
 
@@ -240,7 +241,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="visible"
+            android:visibility="gone"
             android:gravity="center_horizontal"
             android:layout_marginTop="@dimen/space_12"
             android:layout_marginBottom="@dimen/space_16">
