@@ -33,7 +33,7 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllList
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
-import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
+import com.vodovoz.app.feature.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable

@@ -2,37 +2,25 @@ package com.vodovoz.app.feature.addresses.add
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.bottomsheet.BottomSheetBehavior.*
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.config.AddressConfig
-import com.vodovoz.app.databinding.BsAddAddressBinding
 import com.vodovoz.app.databinding.BsAddAddressSearchBinding
 import com.vodovoz.app.feature.map.MapController
 import com.vodovoz.app.feature.map.MapFlowViewModel
 import com.vodovoz.app.feature.map.adapter.AddressResult
 import com.vodovoz.app.feature.map.adapter.AddressResultClickListener
-import com.vodovoz.app.ui.base.ViewState
-import com.vodovoz.app.ui.base.ViewStateBaseBottomFragment
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.util.FieldValidationsSettings
-import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.textOrError
 import com.vodovoz.app.util.extensions.updateText
@@ -132,14 +120,16 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
 
     private fun initButtons() {
         binding.btnAdd.setOnClickListener {
-            val type = when(binding.scPersonalHouseDelivery.isChecked) {
+            val type = when (binding.scPersonalHouseDelivery.isChecked) {
                 true -> AddressConfig.PERSONAL_ADDRESS_TYPE
                 false -> AddressConfig.OFFICE_ADDRESS_TYPE
             }
 
             val entrance = binding.etEntrance.text.toString()
-            val floor = binding.tilFloor.textOrError(FieldValidationsSettings.FLOOR_LENGTH) ?: return@setOnClickListener
-            val office = binding.tilFlat.textOrError(FieldValidationsSettings.OFFICE_LENGTH) ?: return@setOnClickListener
+            val floor = binding.tilFloor.textOrError(FieldValidationsSettings.FLOOR_LENGTH)
+                ?: return@setOnClickListener
+            val office = binding.tilFlat.textOrError(FieldValidationsSettings.OFFICE_LENGTH)
+                ?: return@setOnClickListener
             val comment = binding.etComment.text.toString()
 
             viewModel.action(
@@ -158,7 +148,7 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
     }
 
     private fun bindTextWatchers() {
-        binding.searchEdit.doOnTextChanged { _, _,_, count ->
+        binding.searchEdit.doOnTextChanged { _, _, _, count ->
             if (count > 0) {
                 binding.clear.isVisible = true
                 binding.tvFullAddress.isVisible = true
@@ -166,14 +156,14 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
             }
         }
 
-        binding.etEntrance.doOnTextChanged { _, _,_, count ->
-            if (count >0) binding.tilEntrance.isErrorEnabled = false
+        binding.etEntrance.doOnTextChanged { _, _, _, count ->
+            if (count > 0) binding.tilEntrance.isErrorEnabled = false
         }
-        binding.etFloor.doOnTextChanged { _, _,_, count ->
-            if (count >0) binding.tilFloor.isErrorEnabled = false
+        binding.etFloor.doOnTextChanged { _, _, _, count ->
+            if (count > 0) binding.tilFloor.isErrorEnabled = false
         }
-        binding.etFlat.doOnTextChanged { _, _,_, count ->
-            if (count >0) binding.tilFlat.isErrorEnabled = false
+        binding.etFlat.doOnTextChanged { _, _, _, count ->
+            if (count > 0) binding.tilFlat.isErrorEnabled = false
         }
     }
 
@@ -199,13 +189,16 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.observeEvent()
                 .collect {
-                    when(it) {
+                    when (it) {
                         is MapFlowViewModel.MapFlowEvents.AddAddressError -> {
                             requireActivity().snack(it.message)
                         }
                         is MapFlowViewModel.MapFlowEvents.AddAddressSuccess -> {
                             tabManager.setAddressesRefreshState(true)
-                            findNavController().popBackStack(R.id.savedAddressesDialogFragment, false)
+                            findNavController().popBackStack(
+                                R.id.savedAddressesDialogFragment,
+                                false
+                            )
                             dismiss()
                         }
                         is MapFlowViewModel.MapFlowEvents.ShowSearchError -> {
@@ -224,14 +217,14 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
 
     private fun initSwitchGroup() {
         binding.scOfficeDelivery.setOnCheckedChangeListener { _, isCheck ->
-            when(isCheck) {
+            when (isCheck) {
                 true -> binding.scPersonalHouseDelivery.isChecked = false
                 false -> binding.scPersonalHouseDelivery.isChecked = true
             }
         }
 
         binding.scPersonalHouseDelivery.setOnCheckedChangeListener { _, isCheck ->
-            when(isCheck) {
+            when (isCheck) {
                 true -> binding.scOfficeDelivery.isChecked = false
                 false -> binding.scOfficeDelivery.isChecked = true
             }

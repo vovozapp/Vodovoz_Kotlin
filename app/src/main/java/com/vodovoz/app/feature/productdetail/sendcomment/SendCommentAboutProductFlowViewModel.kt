@@ -3,10 +3,7 @@ package com.vodovoz.app.feature.productdetail.sendcomment
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vodovoz.app.common.content.PagingStateViewModel
-import com.vodovoz.app.common.content.State
-import com.vodovoz.app.common.content.toErrorState
-import com.vodovoz.app.data.DataRepository
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.comment.SendCommentAboutProductResponseJsonParser.parseSendCommentAboutProductResponse
@@ -21,7 +18,7 @@ import javax.inject.Inject
 class SendCommentAboutProductFlowViewModel @Inject constructor(
     private val savedState: SavedStateHandle,
     private val repository: MainRepository,
-    private val dataRepository: DataRepository
+    private val accountManager: AccountManager,
 ) : ViewModel() {
 
     private val productId = savedState.get<Long>("productId")
@@ -29,10 +26,10 @@ class SendCommentAboutProductFlowViewModel @Inject constructor(
     private val sendCommentResultListener = MutableSharedFlow<Boolean>()
     fun observeSendCommentResult() = sendCommentResultListener.asSharedFlow()
 
-    fun sendCommentAboutProduct(rating: Int, comment: String, ) {
+    fun sendCommentAboutProduct(rating: Int, comment: String) {
         if (productId == null) return
 
-        val userId = dataRepository.fetchUserId() ?: return
+        val userId = accountManager.fetchAccountId() ?: return
 
         viewModelScope.launch {
             flow { emit(repository.sendCommentAboutProduct(productId, rating, comment, userId)) }

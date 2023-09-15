@@ -1,13 +1,11 @@
 package com.vodovoz.app.common.account.data
 
 import android.content.SharedPreferences
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.messaging.FirebaseMessaging
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume

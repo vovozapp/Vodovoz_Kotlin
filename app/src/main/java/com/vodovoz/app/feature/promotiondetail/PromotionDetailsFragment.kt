@@ -32,7 +32,7 @@ import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickLi
 import com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter.HomePromotionsInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.ui.fragment.slider.products_slider.ProductsSliderConfig
+import com.vodovoz.app.feature.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.PromotionDetailUI
 import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint

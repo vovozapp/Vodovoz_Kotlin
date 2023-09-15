@@ -5,27 +5,24 @@ import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.*
-import com.vodovoz.app.data.DataRepository
+import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.cart.CartResponseJsonParser.parseCartResponse
 import com.vodovoz.app.data.parser.response.cart.ClearCartResponseJsonParser.parseClearCartResponse
-import com.vodovoz.app.mapper.CartBundleMapper.mapUoUI
-import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.common.product.rating.RatingProductManager
-import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.parser.response.cart.MessageTextBasket
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.CartAvailableProducts
 import com.vodovoz.app.feature.cart.viewholders.cartempty.CartEmpty
 import com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts.CartNotAvailableProducts
 import com.vodovoz.app.feature.cart.viewholders.carttotal.CartTotal
-import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
+import com.vodovoz.app.mapper.CartBundleMapper.mapUoUI
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.ProductUI
-import com.vodovoz.app.ui.model.custom.CartBundleUI
 import com.vodovoz.app.util.CalculatedPrices
 import com.vodovoz.app.util.calculatePrice
 import com.vodovoz.app.util.extensions.debugLog
@@ -39,12 +36,11 @@ import javax.inject.Inject
 class CartFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val localDataSource: LocalDataSource,
-    private val dataRepository: DataRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
     private val accountManager: AccountManager,
-    private val tabManager: TabManager
+    private val tabManager: TabManager,
 ) : PagingContractViewModel<CartFlowViewModel.CartState, CartFlowViewModel.CartEvents>(CartState()) {
 
     init {
@@ -144,7 +140,8 @@ class CartFlowViewModel @Inject constructor(
                                     name = "Лучшее для вас",
                                     showAll = false,
                                     showAllName = "СМ.ВСЕ",
-                                    categoryProductsName = mappedData.bestForYouCategoryDetailUI?.name ?: ""
+                                    categoryProductsName = mappedData.bestForYouCategoryDetailUI?.name
+                                        ?: ""
                                 ),
                                 bestForYouProducts = mappedData.bestForYouCategoryDetailUI
                             ),
@@ -268,7 +265,7 @@ class CartFlowViewModel @Inject constructor(
         val total: CartTotal? = null,
         val bestForYouTitle: HomeTitle? = null,
         val bestForYouProducts: CategoryDetailUI? = null,
-        val cartEmpty: CartEmpty = CartEmpty(CART_EMPTY_ID)
+        val cartEmpty: CartEmpty = CartEmpty(CART_EMPTY_ID),
     ) : State
 
 
@@ -277,12 +274,13 @@ class CartFlowViewModel @Inject constructor(
         data class NavigateToOrder(
             val prices: CalculatedPrices?,
             val cart: String,
-            val coupon: String
+            val coupon: String,
         ) : CartEvents()
 
         data class NavigateToGifts(val list: List<ProductUI>) : CartEvents()
         object NavigateToProfile : CartEvents()
-        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) : CartEvents()
+        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
+            CartEvents()
     }
 
     companion object {

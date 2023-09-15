@@ -8,9 +8,7 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
-import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
-import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
@@ -31,13 +29,13 @@ import javax.inject.Inject
 @HiltViewModel
 class FavoriteFlowViewModel @Inject constructor(
     private val repository: MainRepository,
-    private val localDataSource: LocalDataSource,
-    private val dataRepository: DataRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
-    private val accountManager: AccountManager
-) : PagingContractViewModel<FavoriteFlowViewModel.FavoriteState, FavoriteFlowViewModel.FavoriteEvents>(FavoriteState()){
+    private val accountManager: AccountManager,
+) : PagingContractViewModel<FavoriteFlowViewModel.FavoriteState, FavoriteFlowViewModel.FavoriteEvents>(
+    FavoriteState()
+) {
 
     private val changeLayoutManager = MutableStateFlow(LINEAR)
     fun observeChangeLayoutManager() = changeLayoutManager.asStateFlow()
@@ -68,7 +66,13 @@ class FavoriteFlowViewModel @Inject constructor(
 
     fun refreshIdle() {
         changeLayoutManager.value = LINEAR
-        uiStateListener.value = state.copy(loadingPage = true, page = 1, loadMore = false, bottomItem = null, data = FavoriteState())
+        uiStateListener.value = state.copy(
+            loadingPage = true,
+            page = 1,
+            loadMore = false,
+            bottomItem = null,
+            data = FavoriteState()
+        )
         fetchFavoriteProductsHeader()
         fetchFavoriteProductsSorted()
     }
@@ -78,7 +82,14 @@ class FavoriteFlowViewModel @Inject constructor(
         val productIdListStr = likeManager.fetchLikeLocalStr()
 
         viewModelScope.launch {
-            flow { emit(repository.fetchFavoriteProducts(userId = userId, productIdListStr = productIdListStr)) }
+            flow {
+                emit(
+                    repository.fetchFavoriteProducts(
+                        userId = userId,
+                        productIdListStr = productIdListStr
+                    )
+                )
+            }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseFavoriteProductsHeaderBundleResponse()
@@ -111,13 +122,20 @@ class FavoriteFlowViewModel @Inject constructor(
 
     fun firstLoadSorted() {
         if (!state.data.isFirstLoadSorted) {
-            uiStateListener.value = state.copy(data = state.data.copy(isFirstLoadSorted = true), loadingPage = true)
+            uiStateListener.value =
+                state.copy(data = state.data.copy(isFirstLoadSorted = true), loadingPage = true)
             fetchFavoriteProductsSorted()
         }
     }
 
     fun refreshSorted() {
-        uiStateListener.value = state.copy(loadingPage = true, page = 1, loadMore = false, bottomItem = null, data = state.data.copy(selectedCategoryId = -1))
+        uiStateListener.value = state.copy(
+            loadingPage = true,
+            page = 1,
+            loadMore = false,
+            bottomItem = null,
+            data = state.data.copy(selectedCategoryId = -1)
+        )
         fetchFavoriteProductsHeader()
         fetchFavoriteProductsSorted()
     }
@@ -131,11 +149,14 @@ class FavoriteFlowViewModel @Inject constructor(
 
     fun changeLayoutManager() {
         val manager = if (state.data.layoutManager == LINEAR) GRID else LINEAR
-        uiStateListener.value = state.copy(data = state.data.copy(layoutManager = manager, itemsList = FavoritesMapper.mapFavoritesListByManager(
-            manager,
-            state.data.itemsList.filterIsInstance<ProductUI>()
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                layoutManager = manager, itemsList = FavoritesMapper.mapFavoritesListByManager(
+                    manager,
+                    state.data.itemsList.filterIsInstance<ProductUI>()
+                )
+            )
         )
-        ))
         changeLayoutManager.value = manager
     }
 
@@ -148,7 +169,7 @@ class FavoriteFlowViewModel @Inject constructor(
                 emit(
                     repository.fetchFavoriteProductsSorted(
                         userId = userId,
-                        categoryId = when(state.data.selectedCategoryId) {
+                        categoryId = when (state.data.selectedCategoryId) {
                             -1L -> null
                             else -> state.data.selectedCategoryId
                         },
@@ -180,7 +201,7 @@ class FavoriteFlowViewModel @Inject constructor(
                             )
                         } else {
 
-                            val itemsList =  if (state.loadMore) {
+                            val itemsList = if (state.loadMore) {
                                 state.data.itemsList + mappedFeed
                             } else {
                                 mappedFeed
@@ -198,7 +219,12 @@ class FavoriteFlowViewModel @Inject constructor(
 
                     } else {
                         uiStateListener.value =
-                            state.copy(loadingPage = false, error = ErrorState.Error(), page = 1, loadMore = false)
+                            state.copy(
+                                loadingPage = false,
+                                error = ErrorState.Error(),
+                                page = 1,
+                                loadMore = false
+                            )
                     }
                 }
                 .flowOn(Dispatchers.Default)
@@ -250,7 +276,12 @@ class FavoriteFlowViewModel @Inject constructor(
 
     fun updateByIsAvailable(bool: Boolean) {
         if (state.data.isAvailable == bool) return
-        uiStateListener.value = state.copy(data = state.data.copy(isAvailable = bool), page = 1, loadMore = false, loadingPage = true)
+        uiStateListener.value = state.copy(
+            data = state.data.copy(isAvailable = bool),
+            page = 1,
+            loadMore = false,
+            loadingPage = true
+        )
         fetchFavoriteProductsSorted()
     }
 
@@ -316,7 +347,9 @@ class FavoriteFlowViewModel @Inject constructor(
     }
 
     sealed class FavoriteEvents : Event {
-        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) : FavoriteEvents()
+        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
+            FavoriteEvents()
+
         object GoToProfile : FavoriteEvents()
     }
 
@@ -330,7 +363,7 @@ class FavoriteFlowViewModel @Inject constructor(
         val selectedCategoryId: Long = -1,
         val isFirstLoadSorted: Boolean = false,
         val itemsList: List<Item> = emptyList(),
-        val layoutManager: String = LINEAR
+        val layoutManager: String = LINEAR,
     ) : State
 
     companion object {

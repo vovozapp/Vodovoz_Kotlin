@@ -16,7 +16,10 @@ import androidx.fragment.app.viewModels
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.util.extensions.*
+import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.longArgs
+import com.vodovoz.app.util.extensions.millisToItemDate
+import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 

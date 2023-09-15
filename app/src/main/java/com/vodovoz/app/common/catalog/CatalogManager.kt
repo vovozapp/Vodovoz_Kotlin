@@ -16,7 +16,7 @@ class CatalogManager @Inject constructor() {
 
     fun fetchCatalog() = catalogStateListener.value
 
-    fun hasRootItems(selectedCategoryId: Long) : Boolean {
+    fun hasRootItems(selectedCategoryId: Long): Boolean {
         val cat = getRoot(selectedCategoryId) ?: return false
         return cat.categoryUIList.isNotEmpty()
     }
@@ -29,7 +29,7 @@ class CatalogManager @Inject constructor() {
         return null
     }
 
-    private fun findRoot(catalog: List<CategoryUI>, selectedCategoryId: Long): Boolean  {
+    private fun findRoot(catalog: List<CategoryUI>, selectedCategoryId: Long): Boolean {
         for (category in catalog) {
             if (category.id == selectedCategoryId) return true
             if (findRoot(category.categoryUIList, selectedCategoryId)) return true

@@ -10,7 +10,6 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.feature.addresses.adapter.AddressesClickListener
 import com.vodovoz.app.feature.addresses.adapter.AddressesFlowAdapter
-import com.vodovoz.app.ui.adapter.AddressesAdapterItemType
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.util.SwipeToRemoveCallback
@@ -18,7 +17,7 @@ import com.vodovoz.app.util.SwipeToRemoveCallback
 class AddressesController(
     private val viewModel: AddressesFlowViewModel,
     listener: AddressesClickListener,
-    private val context: Context
+    private val context: Context,
 ) {
     private val space16 by lazy { context.resources.getDimension(R.dimen.space_16).toInt() }
     private val spaceLastItemBottomSpace by lazy {
@@ -26,7 +25,7 @@ class AddressesController(
     }
     private val addressesAdapter = AddressesFlowAdapter(listener)
 
-    fun bind(recyclerView: RecyclerView,  refresh: SwipeRefreshLayout) {
+    fun bind(recyclerView: RecyclerView, refresh: SwipeRefreshLayout) {
         initList(recyclerView)
         bindRefresh(refresh)
     }
@@ -58,7 +57,8 @@ class AddressesController(
         ItemTouchHelper(object : SwipeToRemoveCallback(context) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
                 super.onSwiped(viewHolder, i)
-                val item = addressesAdapter.getItem(viewHolder.bindingAdapterPosition) as? AddressUI ?: return
+                val item = addressesAdapter.getItem(viewHolder.bindingAdapterPosition) as? AddressUI
+                    ?: return
                 showDeleteAddressDialog(item.id)
             }
         }).attachToRecyclerView(recyclerView)

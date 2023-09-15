@@ -1,29 +1,21 @@
 package com.vodovoz.app.feature.bottom.services.detail.adapter.inner
 
 import android.graphics.Color
-import android.graphics.Paint
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.RatingBar
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.DiffUtil
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayoutMediator
-import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.core.network.ApiConfig.AMOUNT_CONTROLLER_TIMER
-import com.vodovoz.app.databinding.ViewHolderProductListBinding
 import com.vodovoz.app.databinding.ViewHolderProductListServiceDetailBinding
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowClickListener
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowPagerAdapter
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPicturePager
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.feature.productlist.adapter.SortedAdapter
-import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDepositPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setOrderQuantity
@@ -34,7 +26,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class ServiceDetailProdViewHolder(
     view: View,

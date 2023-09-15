@@ -62,7 +62,7 @@ class MediaManager @Inject constructor() {
         val productId: Long,
         val rate: Int,
         val text: String,
-        val show: Boolean = false
+        val show: Boolean = false,
     )
 
 }
