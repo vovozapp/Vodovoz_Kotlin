@@ -32,11 +32,10 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.feature.products_slider.ProductsSliderConfig
+import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
@@ -74,7 +73,6 @@ class SearchFragment : BaseFragment() {
     lateinit var tabManager: TabManager
 
     private val space: Int by lazy { resources.getDimension(R.dimen.space_16).toInt() }
-    private val compositeDisposable = CompositeDisposable()
 
     private val categoryTabsController by lazy {
         CategoryTabsFlowController(categoryTabsClickListener(), space)
@@ -103,11 +101,6 @@ class SearchFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.firstLoad()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.dispose()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

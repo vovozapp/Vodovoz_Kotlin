@@ -214,7 +214,7 @@ class CartFragment : BaseFragment() {
                     } else {
                         binding.bottom.tvGiftMessage.visibility = View.VISIBLE
                         binding.bottom.tvGiftMessage.text =
-                            cartState.data.giftMessageBottom?.message.fromHtml()
+                            cartState.data.giftMessageBottom?.message?.fromHtml()
                     }
 
                     binding.bottom.llShowGifts.visibility =

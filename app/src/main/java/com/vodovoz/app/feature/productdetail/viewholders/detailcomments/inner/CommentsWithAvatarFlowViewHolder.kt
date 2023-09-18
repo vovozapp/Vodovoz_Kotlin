@@ -30,7 +30,7 @@ class CommentsWithAvatarFlowViewHolder(
 
         binding.date.text = item.date
         binding.tvAuthor.text = item.author
-        binding.tvComment.text = item.text.fromHtml()
+        binding.tvComment.text = item.text?.fromHtml()
 
         imagesAdapter.submitList(item.commentImages ?: emptyList())
 

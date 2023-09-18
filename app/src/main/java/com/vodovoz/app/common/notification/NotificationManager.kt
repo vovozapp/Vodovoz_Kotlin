@@ -55,7 +55,7 @@ class NotificationManager : FirebaseMessagingService() {
         debugLog { "large icon bitmap $bitmap" }
         val bigPictureStyle = NotificationCompat.BigPictureStyle().also {
             it.setBigContentTitle(not.title)
-            it.setSummaryText(not.body.fromHtml())
+            it.setSummaryText(not.body?.fromHtml())
             it.bigPicture(bitmap)
         }
 
