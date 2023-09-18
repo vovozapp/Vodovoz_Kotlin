@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.os.Parcelable
 import android.os.StrictMode
@@ -108,7 +107,7 @@ fun String.makeLink(context: Context, @ColorRes colorRes: Int, foo: () -> Unit):
 inline fun Activity.snack(
     message: String,
     length: Int = Snackbar.LENGTH_LONG,
-    f: Snackbar.() -> Unit = {}
+    f: Snackbar.() -> Unit = {},
 ) {
     /*val snack = Snackbar.make(findViewById(android.R.id.content), message, length)
     val view = snack.view
@@ -126,7 +125,7 @@ inline fun Activity.snack(
 inline fun Activity.snackTop(
     message: String,
     length: Int = Snackbar.LENGTH_LONG,
-    f: Snackbar.() -> Unit = {}
+    f: Snackbar.() -> Unit = {},
 ) {
     val snack = Snackbar.make(findViewById(android.R.id.content), message, length)
     val view = snack.view
@@ -242,7 +241,7 @@ fun <T : Parcelable> parcelableArgs(key: String): ReadOnlyProperty<Fragment, T> 
     }
 }
 
-fun String?.fromHtml(): Spanned {
+fun String.fromHtml(): Spanned {
     val result: Spanned = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY)
     } else {
@@ -316,7 +315,7 @@ fun EditText.updateText(text: String) {
     }
 }
 
-fun fetchCurrentDayInTimeMillis() : Long {
+fun fetchCurrentDayInTimeMillis(): Long {
     return Calendar.getInstance().apply {
         set(Calendar.HOUR, 0)
         set(Calendar.MINUTE, 0)

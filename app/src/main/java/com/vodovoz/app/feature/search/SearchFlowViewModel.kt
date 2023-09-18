@@ -1,6 +1,5 @@
 package com.vodovoz.app.feature.search
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
@@ -9,9 +8,8 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
-import com.vodovoz.app.data.DataRepository
+import com.vodovoz.app.common.search.SearchManager
 import com.vodovoz.app.data.MainRepository
-import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsByQueryResponseJsonParser.parseProductsByQueryResponse
@@ -19,7 +17,6 @@ import com.vodovoz.app.data.parser.response.search.DefaultSearchDataResponseJson
 import com.vodovoz.app.data.parser.response.search.MatchesQueriesResponseJsonParser.parseMatchesQueriesResponse
 import com.vodovoz.app.data.parser.response.search.ProductsByQueryHeaderResponseJsonParser.parseProductsByQueryHeaderResponse
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
-import com.vodovoz.app.feature.pastpurchases.PastPurchasesFlowViewModel
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.DefaultSearchDataBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
@@ -36,13 +33,16 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchFlowViewModel @Inject constructor(
     private val repository: MainRepository,
-    private val localDataSource: LocalDataSource,
-    private val dataRepository: DataRepository,
+//    private val localDataSource: LocalDataSource,
+//    private val dataRepository: DataRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
-    private val accountManager: AccountManager
-) : PagingContractViewModel<SearchFlowViewModel.SearchState, SearchFlowViewModel.SearchEvents>(SearchState()) {
+    private val accountManager: AccountManager,
+    private val searchManager: SearchManager,
+) : PagingContractViewModel<SearchFlowViewModel.SearchState, SearchFlowViewModel.SearchEvents>(
+    SearchState()
+) {
 
     private val changeLayoutManager = MutableStateFlow(LINEAR)
     fun observeChangeLayoutManager() = changeLayoutManager.asStateFlow()
@@ -63,17 +63,31 @@ class SearchFlowViewModel @Inject constructor(
     }
 
     fun updateQuery(query: String) {
-        uiStateListener.value = state.copy(data = state.data.copy(query = query, selectedCategoryId = -1, categoryHeader = null), loadingPage = true, page = 1, loadMore = false)
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                query = query,
+                selectedCategoryId = -1,
+                categoryHeader = null
+            ), loadingPage = true, page = 1, loadMore = false
+        )
         fetchHeader()
         fetchProductsByQuery()
     }
 
     fun clearState() {
-        uiStateListener.value = state.copy(data = state.data.copy(query = "", categoryHeader = null, itemsList = emptyList(), matchesQuery = emptyList()))
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                query = "",
+                categoryHeader = null,
+                itemsList = emptyList(),
+                matchesQuery = emptyList()
+            )
+        )
     }
 
     fun fetchDefaultSearchData() {
-        uiStateListener.value = state.copy(data = state.data.copy(historyQuery = dataRepository.fetchSearchHistory()))
+        uiStateListener.value =
+            state.copy(data = state.data.copy(historyQuery = searchManager.fetchSearchHistory()))
 
         viewModelScope.launch {
             flow { emit(repository.fetchSearchDefaultData()) }
@@ -106,8 +120,9 @@ class SearchFlowViewModel @Inject constructor(
 
     private fun fetchHeader() {
         if (state.data.query.isNotEmpty()) {
-            dataRepository.addQueryToHistory(state.data.query)
-            uiStateListener.value = state.copy(data = state.data.copy(historyQuery = dataRepository.fetchSearchHistory()))
+            searchManager.addQueryToHistory(state.data.query)
+            uiStateListener.value =
+                state.copy(data = state.data.copy(historyQuery = searchManager.fetchSearchHistory()))
         }
 
         viewModelScope.launch {
@@ -141,14 +156,16 @@ class SearchFlowViewModel @Inject constructor(
 
     fun firstLoadSorted() {
         if (!state.data.isFirstLoadSorted) {
-            uiStateListener.value = state.copy(data = state.data.copy(isFirstLoadSorted = true), loadingPage = true)
+            uiStateListener.value =
+                state.copy(data = state.data.copy(isFirstLoadSorted = true), loadingPage = true)
             fetchHeader()
             fetchProductsByQuery()
         }
     }
 
     fun refreshSorted() {
-        uiStateListener.value = state.copy(loadingPage = true, page = 1, loadMore = false, bottomItem = null)
+        uiStateListener.value =
+            state.copy(loadingPage = true, page = 1, loadMore = false, bottomItem = null)
         fetchHeader()
         fetchProductsByQuery()
     }
@@ -162,11 +179,14 @@ class SearchFlowViewModel @Inject constructor(
 
     fun changeLayoutManager() {
         val manager = if (state.data.layoutManager == LINEAR) GRID else LINEAR
-        uiStateListener.value = state.copy(data = state.data.copy(layoutManager = manager, itemsList = FavoritesMapper.mapFavoritesListByManager(
-            manager,
-            state.data.itemsList.filterIsInstance<ProductUI>()
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                layoutManager = manager, itemsList = FavoritesMapper.mapFavoritesListByManager(
+                    manager,
+                    state.data.itemsList.filterIsInstance<ProductUI>()
+                )
+            )
         )
-        ))
         changeLayoutManager.value = manager
     }
 
@@ -177,7 +197,7 @@ class SearchFlowViewModel @Inject constructor(
                 emit(
                     repository.fetchProductsByQuery(
                         query = state.data.query,
-                        categoryId = when(state.data.selectedCategoryId) {
+                        categoryId = when (state.data.selectedCategoryId) {
                             -1L -> null
                             else -> state.data.selectedCategoryId
                         },
@@ -207,7 +227,7 @@ class SearchFlowViewModel @Inject constructor(
                             )
                         } else {
 
-                            val itemsList =  if (state.loadMore) {
+                            val itemsList = if (state.loadMore) {
                                 state.data.itemsList + mappedFeed
                             } else {
                                 mappedFeed
@@ -225,7 +245,12 @@ class SearchFlowViewModel @Inject constructor(
 
                     } else {
                         uiStateListener.value =
-                            state.copy(loadingPage = false, error = ErrorState.Error(), page = 1, loadMore = false)
+                            state.copy(
+                                loadingPage = false,
+                                error = ErrorState.Error(),
+                                page = 1,
+                                loadMore = false
+                            )
                     }
                 }
                 .flowOn(Dispatchers.Default)
@@ -278,7 +303,7 @@ class SearchFlowViewModel @Inject constructor(
     }
 
     fun clearSearchHistory() {
-        dataRepository.clearSearchHistory()
+        searchManager.clearSearchHistory()
         uiStateListener.value = state.copy(data = state.data.copy(historyQuery = emptyList()))
     }
 
@@ -359,7 +384,7 @@ class SearchFlowViewModel @Inject constructor(
         viewModelScope.launch {
             val accountId = accountManager.fetchAccountId()
             if (accountId == null) {
-              //  eventListener.emit(SearchEvents.GoToProfile)
+                //  eventListener.emit(SearchEvents.GoToProfile)
                 eventListener.emit(SearchEvents.GoToPreOrder(id, name, detailPicture))
             } else {
                 eventListener.emit(SearchEvents.GoToPreOrder(id, name, detailPicture))
@@ -368,7 +393,9 @@ class SearchFlowViewModel @Inject constructor(
     }
 
     sealed class SearchEvents : Event {
-        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) : SearchEvents()
+        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
+            SearchEvents()
+
         object GoToProfile : SearchEvents()
     }
 
@@ -383,7 +410,7 @@ class SearchFlowViewModel @Inject constructor(
         val selectedCategoryId: Long = -1,
         val isFirstLoadSorted: Boolean = false,
         val itemsList: List<Item> = emptyList(),
-        val layoutManager: String = LINEAR
+        val layoutManager: String = LINEAR,
     ) : State
 
     companion object {

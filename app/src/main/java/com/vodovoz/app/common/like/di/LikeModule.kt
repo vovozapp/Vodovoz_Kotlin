@@ -19,7 +19,7 @@ abstract class LikeModule {
     companion object {
 
         @Provides
-        fun provideLikeApi(@Named("default") retrofit: Retrofit): LikeApi = retrofit.create()
+        fun provideLikeApi(@Named("main") retrofit: Retrofit): LikeApi = retrofit.create()
     }
 
     @Binds

@@ -1,471 +1,466 @@
 package com.vodovoz.app.data.remote
 
-import io.reactivex.rxjava3.core.Single
-import okhttp3.ResponseBody
-import retrofit2.Response
-import retrofit2.http.*
-
 interface VodovozApi {
 
     //Получить Cookie Session Id
-    @GET("/newmobile/korzina/function/guaty/index.php")
-    fun fetchCookie(): Single<Response<ResponseBody>>
+//    @GET("/newmobile/korzina/function/guaty/index.php")
+//    fun fetchCookie(): Single<Response<ResponseBody>>
 
     //Отзывы
-    @GET("/newmobile/otzivomagaz.php")
-    fun fetchCommentResponse(
-        @Query("otziv") action: String? = null,
-        @Query("limit") limit: Int? = null,
-        @Query("userid") userId: Long? = null,
-        @Query("text") comment: String? = null,
-        @Query("rating") rating: Int? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/otzivomagaz.php")
+//    fun fetchCommentResponse(
+//        @Query("otziv") action: String? = null,
+//        @Query("limit") limit: Int? = null,
+//        @Query("userid") userId: Long? = null,
+//        @Query("text") comment: String? = null,
+//        @Query("rating") rating: Int? = null,
+//    ): Single<ResponseBody>
 
     //"newmobile/otzivomagaz.php?otziv=add&userid=" + User.getInstance().getuser_id().toString() + "&text=".toString() + editTextComments.getText().toString().toString() + "&rating=" + ratingBar.getRating()
 
     //Страны
-    @GET("/newmobile/glavnaya/strany.php")
-    suspend fun fetchCountryResponse(
-        @Query("action") action: String,
-        @Query("id") countryId: Long? = null,
-        @Query("sort") sort: String? = null,
-        @Query("ascdesc") orientation: String? = null,
-        @Query("nav") page: Int? = null,
-        @Query("sect") categoryId: Long? = null,
-    ): Response<ResponseBody>
+//    @GET("/newmobile/glavnaya/strany.php")
+//    suspend fun fetchCountryResponse(
+//        @Query("action") action: String,
+//        @Query("id") countryId: Long? = null,
+//        @Query("sort") sort: String? = null,
+//        @Query("ascdesc") orientation: String? = null,
+//        @Query("nav") page: Int? = null,
+//        @Query("sect") categoryId: Long? = null,
+//    ): Response<ResponseBody>
 
     //Рекламный слайдер
-    @GET("/newmobile/glavnaya/slayders/index.php")
-    fun fetchMainSliderResponse(
-        @Query("action") action: String? = null,
-        @Query("id") categoryId: Long? = null,
-        @Query("baner") baner: String? = "uzkiy"
-    ): Single<ResponseBody>
+//    @GET("/newmobile/glavnaya/slayders/index.php")
+//    fun fetchMainSliderResponse(
+//        @Query("action") action: String? = null,
+//        @Query("id") categoryId: Long? = null,
+//        @Query("baner") baner: String? = "uzkiy"
+//    ): Single<ResponseBody>
 
     //Слайдер категорий
-    @GET("/newmobile/glavnaya/slayders/mini_index.php")
-    fun fetchMiniSliderResponse(
-        @Query("action") action: String,
-        @Query("android") androidVersion: String,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/glavnaya/slayders/mini_index.php")
+//    fun fetchMiniSliderResponse(
+//        @Query("action") action: String,
+//        @Query("android") androidVersion: String,
+//    ): Single<ResponseBody>
 
     //Акции
-    @GET("/newmobile/glavnaya/akcii.php")
-    fun fetchPromotionResponse(
-        @Query("action") action: String? = null,
-        @Query("razdelid") filterId: Long? = null,
-        @Query("id") promotionId: Long? = null,
-        @Query("platforma") platform: String? = null,
-        @Query("limit") limit: Int? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/glavnaya/akcii.php")
+//    fun fetchPromotionResponse(
+//        @Query("action") action: String? = null,
+//        @Query("razdelid") filterId: Long? = null,
+//        @Query("id") promotionId: Long? = null,
+//        @Query("platforma") platform: String? = null,
+//        @Query("limit") limit: Int? = null,
+//    ): Single<ResponseBody>
 
     //Истории
-    @GET("/newmobile/glavnaya/stories")
-    fun fetchHistoryResponse(
-        @Query("iblock_id") blockId: Int,
-        @Query("action") action: String,
-        @Query("platforma") platform: String,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/glavnaya/stories")
+//    fun fetchHistoryResponse(
+//        @Query("iblock_id") blockId: Int,
+//        @Query("action") action: String,
+//        @Query("platforma") platform: String,
+//    ): Single<ResponseBody>
 
     //Популярное
-    @GET("/newmobile/glavnaya/razdel.php")
-    fun fetchPopularResponse(
-        @Query("action") action: String,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/glavnaya/razdel.php")
+//    fun fetchPopularResponse(
+//        @Query("action") action: String,
+//    ): Single<ResponseBody>
 
     //Новинки
-    @GET("/newmobile/glavnaya/novinki.php")
-    suspend fun fetchNoveltiesResponse(
-        @Query("new") action: String,
-        @Query("sort") sort: String? = null,
-        @Query("ascdesc") orientation: String? = null,
-        @Query("nav") page: Int? = null,
-        @Query("sect") categoryId: Long? = null,
-    ): Response<ResponseBody>
+//    @GET("/newmobile/glavnaya/novinki.php")
+//    suspend fun fetchNoveltiesResponse(
+//        @Query("new") action: String,
+//        @Query("sort") sort: String? = null,
+//        @Query("ascdesc") orientation: String? = null,
+//        @Query("nav") page: Int? = null,
+//        @Query("sect") categoryId: Long? = null,
+//    ): Response<ResponseBody>
 
     //Заказы
-    @GET("/newmobile/glavnaya/orderzakaz.php")
-    fun fetchOrderSlider(
-        @Query("userid") userId: Long,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/glavnaya/orderzakaz.php")
+//    fun fetchOrderSlider(
+//        @Query("userid") userId: Long,
+//    ): Single<ResponseBody>
 
     //Просмотренные продукты
-    @GET("/newmobile/viewedproduct/index.php")
-    fun fetchViewedProductSliderResponse(
-        @Query("action") action: String? = null,
-        @Query("userid") userId: Long? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/viewedproduct/index.php")
+//    fun fetchViewedProductSliderResponse(
+//        @Query("action") action: String? = null,
+//        @Query("userid") userId: Long? = null,
+//    ): Single<ResponseBody>
 
     //Бренды
-    @GET("/newmobile/brand.php") //
-    suspend fun fetchBrandResponse(
-        @Query("action") action: String? = null,
-        @Query("limit") limit: Int? = null,
-        @Query("id") brandId: String? = null,
-        @Query("idbrand") brandIdList: String? = null,
-        @Query("sort") sort: String? = null,
-        @Query("ascdesc") orientation: String? = null,
-        @Query("simvolkod") code: String? = null,
-        @Query("nav") page: Int? = null,
-        @Query("sect") categoryId: Long? = null,
-    ): Response<ResponseBody>
+//    @GET("/newmobile/brand.php") //
+//    suspend fun fetchBrandResponse(
+//        @Query("action") action: String? = null,
+//        @Query("limit") limit: Int? = null,
+//        @Query("id") brandId: String? = null,
+//        @Query("idbrand") brandIdList: String? = null,
+//        @Query("sort") sort: String? = null,
+//        @Query("ascdesc") orientation: String? = null,
+//        @Query("simvolkod") code: String? = null,
+//        @Query("nav") page: Int? = null,
+//        @Query("sect") categoryId: Long? = null,
+//    ): Response<ResponseBody>
 
     //Категория
-    @GET("/newmobile/razdel/index.php")
-    suspend fun fetchCategoryResponse(
-        @Query("iblock_id") blockId: Int? = null,
-        @Query("sectionid") categoryId: Long? = null,
-        @Query("sort") sort: String? = null,
-        @Query("ascdesc") orientation: String? = null,
-        @Query("nav") page: Int? = null,
-        @Query("filter") filter: String? = null,
-        @Query("filtervalue") filterValue: String? = null,
-        @Query("price_from") priceFrom: Int? = null,
-        @Query("price_to") priceTo: Int? = null,
-    ): Response<ResponseBody>
+//    @GET("/newmobile/razdel/index.php")
+//    suspend fun fetchCategoryResponse(
+//        @Query("iblock_id") blockId: Int? = null,
+//        @Query("sectionid") categoryId: Long? = null,
+//        @Query("sort") sort: String? = null,
+//        @Query("ascdesc") orientation: String? = null,
+//        @Query("nav") page: Int? = null,
+//        @Query("filter") filter: String? = null,
+//        @Query("filtervalue") filterValue: String? = null,
+//        @Query("price_from") priceFrom: Int? = null,
+//        @Query("price_to") priceTo: Int? = null,
+//    ): Response<ResponseBody>
 
     //Каталог
-    @GET("/newmobile/razdel/category.php?iblock_id=12")
-    fun fetchCatalogResponse(): Single<ResponseBody>
+//    @GET("/newmobile/razdel/category.php?iblock_id=12")
+//    fun fetchCatalogResponse(): Single<ResponseBody>
 
     //Все филтры продуктов
-    @GET("/newmobile/razdel/filtercatalog.php")
-    fun fetchFilterBundleResponse(
-        @Query("action") action: String = "getAllProps",
-        @Query("section") categoryId: Long,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/razdel/filtercatalog.php")
+//    fun fetchFilterBundleResponse(
+//        @Query("action") action: String = "getAllProps",
+//        @Query("section") categoryId: Long,
+//    ): Single<ResponseBody>
 
     //Фильтр продуктов
-    @GET("/newmobile/filterCatalog.php")
-    fun fetchFilterResponse(
-        @Query("action") action: String,
-        @Query("propCode") filterCode: String,
-        @Query("section") categoryId: Long,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/filterCatalog.php")
+//    fun fetchFilterResponse(
+//        @Query("action") action: String,
+//        @Query("propCode") filterCode: String,
+//        @Query("section") categoryId: Long,
+//    ): Single<ResponseBody>
 
     //Продукт
-    @GET("/newmobile/details/index_new.php")
-    fun fetchProductResponse(
-        @Query("iblock_id") blockId: Int,
-        @Query("detail") productId: Long,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/details/index_new.php")
+//    fun fetchProductResponse(
+//        @Query("iblock_id") blockId: Int,
+//        @Query("detail") productId: Long,
+//    ): Single<ResponseBody>
 
     //Бренд выбранного продукта
-    @GET("/newmobile/details/brandtovar.php")
-    fun fetchBrandByProductResponse(
-        @Query("iblock_id") blockId: Int,
-        @Query("productid") productId: Long,
-        @Query("id") brandId: Long,
-        @Query("nav") page: Int,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/details/brandtovar.php")
+//    fun fetchBrandByProductResponse(
+//        @Query("iblock_id") blockId: Int,
+//        @Query("productid") productId: Long,
+//        @Query("id") brandId: Long,
+//        @Query("nav") page: Int,
+//    ): Single<ResponseBody>
 
     //Двойной слайдер
-    @GET("/newmobile/glavnaya/super_top.php")
-    suspend fun fetchDoubleSliderResponse(
-        @Query("action") action: String? = null,
-        @Query("new") arg: String? = null,
-        @Query("android") androidVersion: String? = null,
-        @Query("sort") sort: String? = null,
-        @Query("orientation") orientation: String? = null,
-        @Query("id") categoryId: Long? = null,
-        @Query("nav") page: Int? = null,
-    ): Response<ResponseBody>
+//    @GET("/newmobile/glavnaya/super_top.php")
+//    suspend fun fetchDoubleSliderResponse(
+//        @Query("action") action: String? = null,
+//        @Query("new") arg: String? = null,
+//        @Query("android") androidVersion: String? = null,
+//        @Query("sort") sort: String? = null,
+//        @Query("orientation") orientation: String? = null,
+//        @Query("id") categoryId: Long? = null,
+//        @Query("nav") page: Int? = null,
+//    ): Response<ResponseBody>
 
     //Регистрация
-    @GET("/newmobile/reg.php")
-    fun fetchRegisterResponse(
-        @Query("name") firstName: String,
-        @Query("lastname") secondName: String,
-        @Query("email") email: String,
-        @Query("pass") password: String,
-        @Query("phone") phone: String,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/reg.php")
+//    fun fetchRegisterResponse(
+//        @Query("name") firstName: String,
+//        @Query("lastname") secondName: String,
+//        @Query("email") email: String,
+//        @Query("pass") password: String,
+//        @Query("phone") phone: String,
+//    ): Single<ResponseBody>
 
     //Авторизация
-    @GET("/newmobile/auth.php")
-    fun fetchLoginResponse(
-        @Query("email") email: String,
-        @Query("pass") password: String,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/auth.php")
+//    fun fetchLoginResponse(
+//        @Query("email") email: String,
+//        @Query("pass") password: String,
+//    ): Single<ResponseBody>
 
     //Корзина
-    @GET("/newmobile/korzina/index.php")
-    fun fetchCartResponse(
-        @Query("action") action: String? = null,
-        @Query("userid") userId: Long? = null,
-        @Query("coupon") coupon: String? = null,
-        @Query("quantity") amount: Int? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/korzina/index.php")
+//    fun fetchCartResponse(
+//        @Query("action") action: String? = null,
+//        @Query("userid") userId: Long? = null,
+//        @Query("coupon") coupon: String? = null,
+//        @Query("quantity") amount: Int? = null,
+//    ): Single<ResponseBody>
 
     //Добавление в корзину
-    @GET("/newmobile/korzina/function/add/index.php")
-    fun fetchAddProductResponse(
-        @Query("action") action: String? = null,
-        @Query("id") productId: Long? = null,
-        @Query("quantity") quantity: Int? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/korzina/function/add/index.php")
+//    fun fetchAddProductResponse(
+//        @Query("action") action: String? = null,
+//        @Query("id") productId: Long? = null,
+//        @Query("quantity") quantity: Int? = null,
+//    ): Single<ResponseBody>
 
     //удаление из корзины
-    @GET("/newmobile/korzina/function/deletto/index.php")
-    fun fetchDeleteProductResponse(
-        @Query("action") action: String? = null,
-        @Query("id") productId: Long? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/korzina/function/deletto/index.php")
+//    fun fetchDeleteProductResponse(
+//        @Query("action") action: String? = null,
+//        @Query("id") productId: Long? = null,
+//    ): Single<ResponseBody>
 
     //Изменение колличества товаров в корзине
-    @GET("/newmobile/korzina/function/guaty/index.php")
-    fun fetchChangeProductsQuantityResponse(
-        @Query("action") action: String? = null,
-        @Query("id") productId: Long? = null,
-        @Query("quantity") quantity: Int? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/korzina/function/guaty/index.php")
+//    fun fetchChangeProductsQuantityResponse(
+//        @Query("action") action: String? = null,
+//        @Query("id") productId: Long? = null,
+//        @Query("quantity") quantity: Int? = null,
+//    ): Single<ResponseBody>
 
     //Очистить корзину
-    @GET("newmobile/korzina/function/delkorzina/index.php")
-    fun fetchClearCartResponse(
-        @Query("action") action: String? = null,
-    ): Single<ResponseBody>
+//    @GET("newmobile/korzina/function/delkorzina/index.php")
+//    fun fetchClearCartResponse(
+//        @Query("action") action: String? = null,
+//    ): Single<ResponseBody>
 
-    @GET("newmobile/glavnaya/okno.php")
-    fun fetchNewsResponse(
-        @Query("action") action: String? = null,
-        @Query("id") userId: Long? = null,
-        @Query("platform") platform: String? = null,
-    ): Single<ResponseBody>
+//    @GET("newmobile/glavnaya/okno.php")
+//    fun fetchNewsResponse(
+//        @Query("action") action: String? = null,
+//        @Query("id") userId: Long? = null,
+//        @Query("platform") platform: String? = null,
+//    ): Single<ResponseBody>
 
-    @GET("/newmobile/comments.php")
-    suspend fun fetchCommentsResponse(
-        @Query("iblock_id") blockId: Long? = null,
-        @Query("action") action: String? = null,
-        @Query("id") productId: Long? = null,
-        @Query("nav") page: Int? = null,
-        @Query("rating_value") rating: Int? = null,
-        @Query("message") comment: String? = null,
-        @Query("userid") userId: Long? = null,
-    ): Response<ResponseBody>
+//    @GET("/newmobile/comments.php")
+//    suspend fun fetchCommentsResponse(
+//        @Query("iblock_id") blockId: Long? = null,
+//        @Query("action") action: String? = null,
+//        @Query("id") productId: Long? = null,
+//        @Query("nav") page: Int? = null,
+//        @Query("rating_value") rating: Int? = null,
+//        @Query("message") comment: String? = null,
+//        @Query("userid") userId: Long? = null,
+//    ): Response<ResponseBody>
 
-    @GET("/newmobile/glavnaya/uslygi/uslygi.php")
-    fun fetchServicesResponse(
-        @Query("action") action: String? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/glavnaya/uslygi/uslygi.php")
+//    fun fetchServicesResponse(
+//        @Query("action") action: String? = null,
+//    ): Single<ResponseBody>
 
     //&sort=popylyar&ascdesc=desc&nav
-    @GET("/newmobile/izbrannoe.php?")
-    suspend fun fetchFavoriteResponse(
-        @Query("id") productIdList: String? = null,
-        @Query("userid") userId: Long? = null,
-        @Query("sort") sort: String? = null,
-        @Query("ascdesc") orientation: String? = null,
-        @Query("nav") page: Int? = null,
-        @Query("sect") categoryId: Long? = null,
-        @Query("action") action: String? = null,
-    ): Response<ResponseBody>
+//    @GET("/newmobile/izbrannoe.php?")
+//    suspend fun fetchFavoriteResponse(
+//        @Query("id") productIdList: String? = null,
+//        @Query("userid") userId: Long? = null,
+//        @Query("sort") sort: String? = null,
+//        @Query("ascdesc") orientation: String? = null,
+//        @Query("nav") page: Int? = null,
+//        @Query("sect") categoryId: Long? = null,
+//        @Query("action") action: String? = null,
+//    ): Response<ResponseBody>
 
-    @GET("/newmobile/osnova/izbrannoe/adddel.php")
-    fun fetchChangeFavoriteResponse(
-        @Query("iblock") blockId: Long? = null,
-        @Query("action") action: String? = null,
-        @Query("id") productIdList: String? = null,
-        @Query("userid") userId: Long? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/osnova/izbrannoe/adddel.php")
+//    fun fetchChangeFavoriteResponse(
+//        @Query("iblock") blockId: Long? = null,
+//        @Query("action") action: String? = null,
+//        @Query("id") productIdList: String? = null,
+//        @Query("userid") userId: Long? = null,
+//    ): Single<ResponseBody>
 
-    @GET("/newmobile/profile/karta/index.php")
-    fun fetchMapResponse(
-        @Query("action") action: String? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/profile/karta/index.php")
+//    fun fetchMapResponse(
+//        @Query("action") action: String? = null,
+//    ): Single<ResponseBody>
 
-    @GET("/newmobile/address.php")
-    fun fetchAddressResponse(
-        @Query("city") locality: String? = null,
-        @Query("description") comment: String? = null,
-        @Query("entrance") entrance: String? = null,
-        @Query("flat") office: String? = null,
-        @Query("floor") floor: String? = null,
-        @Query("house") house: String? = null,
-        @Query("street") street: String? = null,
-        @Query("userid") userid: Long? = null,
-        @Query("iblock_id") blockId: Int? = null,
-        @Query("action") action: String? = null,
-        @Query("tip") type: Int? = null,
-        @Query("addressid") addressId: Long? = null,
-    ): Single<Response<ResponseBody>>
+//    @GET("/newmobile/address.php")
+//    fun fetchAddressResponse(
+//        @Query("city") locality: String? = null,
+//        @Query("description") comment: String? = null,
+//        @Query("entrance") entrance: String? = null,
+//        @Query("flat") office: String? = null,
+//        @Query("floor") floor: String? = null,
+//        @Query("house") house: String? = null,
+//        @Query("street") street: String? = null,
+//        @Query("userid") userid: Long? = null,
+//        @Query("iblock_id") blockId: Int? = null,
+//        @Query("action") action: String? = null,
+//        @Query("tip") type: Int? = null,
+//        @Query("addressid") addressId: Long? = null,
+//    ): Single<Response<ResponseBody>>
 
-    @GET("/newmobile/profile/historyorder/spisokzakazov.php")
-    suspend fun fetchOrdersHistoryResponse(
-        @Query("userid") userId: Long? = null,
-        @Query("action") action: String? = null,
-        @Query("nav") page: Int? = null,
-        @Query("android") appVersion: String? = null,
-        @Query("status") status: String? = null,
-        @Query("id") orderId: Long? = null,
-    ): Response<ResponseBody>
+//    @GET("/newmobile/profile/historyorder/spisokzakazov.php")
+//    suspend fun fetchOrdersHistoryResponse(
+//        @Query("userid") userId: Long? = null,
+//        @Query("action") action: String? = null,
+//        @Query("nav") page: Int? = null,
+//        @Query("android") appVersion: String? = null,
+//        @Query("status") status: String? = null,
+//        @Query("id") orderId: Long? = null,
+//    ): Response<ResponseBody>
 
-    @GET("/newmobile/profile/historyorder/detailzakaz.php")
-    fun fetchOrdersResponse(
-        @Query("userid") userId: Long? = null,
-        @Query("action") action: String? = null,
-        @Query("android") appVersion: String? = null,
-        @Query("id") orderId: Long? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/profile/historyorder/detailzakaz.php")
+//    fun fetchOrdersResponse(
+//        @Query("userid") userId: Long? = null,
+//        @Query("action") action: String? = null,
+//        @Query("android") appVersion: String? = null,
+//        @Query("id") orderId: Long? = null,
+//    ): Single<ResponseBody>
 
-    @GET("/newmobile/searching/minipoisk.php")
-    fun fetchMatchesQueries(
-        @Query("action") action: String? = null,
-        @Query("search") query: String? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/searching/minipoisk.php")
+//    fun fetchMatchesQueries(
+//        @Query("action") action: String? = null,
+//        @Query("search") query: String? = null,
+//    ): Single<ResponseBody>
 
-    @GET("/newmobile/searching/index.php")
-    suspend fun fetchSearchResponse(
-        @Query("action") action: String? = null,
-        @Query("search") query: String? = null,
-        @Query("limit") limit: Int? = null,
-        @Query("sort") sort: String? = null,
-        @Query("ascdesc") orientation: String? = null,
-        @Query("nav") page: Int? = null,
-        @Query("sect") categoryId: Long? = null,
-    ): Response<ResponseBody>
+//    @GET("/newmobile/searching/index.php")
+//    suspend fun fetchSearchResponse(
+//        @Query("action") action: String? = null,
+//        @Query("search") query: String? = null,
+//        @Query("limit") limit: Int? = null,
+//        @Query("sort") sort: String? = null,
+//        @Query("ascdesc") orientation: String? = null,
+//        @Query("nav") page: Int? = null,
+//        @Query("sect") categoryId: Long? = null,
+//    ): Response<ResponseBody>
 
-    @GET("/newmobile/profile/historyorder/proshlpokipki.php")
-    suspend fun fetchPastPurchasesResponse(
-        @Query("action") action: String? = null,
-        @Query("userid") userId: Long? = null,
-        @Query("sort") sort: String? = null,
-        @Query("ascdesc") orientation: String? = null,
-        @Query("nav") page: Int? = null,
-        @Query("sect") categoryId: Long? = null,
-        @Query("act") isAvailable: String? = null,
-    ): Response<ResponseBody>
+//    @GET("/newmobile/profile/historyorder/proshlpokipki.php")
+//    suspend fun fetchPastPurchasesResponse(
+//        @Query("action") action: String? = null,
+//        @Query("userid") userId: Long? = null,
+//        @Query("sort") sort: String? = null,
+//        @Query("ascdesc") orientation: String? = null,
+//        @Query("nav") page: Int? = null,
+//        @Query("sect") categoryId: Long? = null,
+//        @Query("act") isAvailable: String? = null,
+//    ): Response<ResponseBody>
 
-    @GET("newmobile/recoverPass.php")
-    fun recoverPassword(
-        @Query("email") email: String? = null,
-        @Query("forgot_password") forgotPassword: String? = null,
-    ): Single<ResponseBody>
+//    @GET("newmobile/recoverPass.php")
+//    fun recoverPassword(
+//        @Query("email") email: String? = null,
+//        @Query("forgot_password") forgotPassword: String? = null,
+//    ): Single<ResponseBody>
 
-    @GET("newmobile/profile/tovary.php")
-    fun fetchPersonalProducts(
-        @Query("action") action: String? = null,
-        @Query("userid") userId: Long? = null,
-        @Query("nav") page: Int? = null,
-    ): Single<ResponseBody>
+//    @GET("newmobile/profile/tovary.php")
+//    fun fetchPersonalProducts(
+//        @Query("action") action: String? = null,
+//        @Query("userid") userId: Long? = null,
+//        @Query("nav") page: Int? = null,
+//    ): Single<ResponseBody>
 
     //Профиль
-    @GET("/newmobile/profile/index.php")
-    fun fetchProfileResponse(
-        @Query("action") action: String? = null,
-        @Query("userid") userId: Long? = null,
-        @Query("name") firstName: String? = null,
-        @Query("lastname") secondName: String? = null,
-        @Query("password") password: String? = null,
-        @Query("phone") phone: String? = null,
-        @Query("gender") sex: String? = null,
-        @Query("birthday") birthday: String? = null,
-        @Query("email") email: String? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/profile/index.php")
+//    fun fetchProfileResponse(
+//        @Query("action") action: String? = null,
+//        @Query("userid") userId: Long? = null,
+//        @Query("name") firstName: String? = null,
+//        @Query("lastname") secondName: String? = null,
+//        @Query("password") password: String? = null,
+//        @Query("phone") phone: String? = null,
+//        @Query("gender") sex: String? = null,
+//        @Query("birthday") birthday: String? = null,
+//        @Query("email") email: String? = null,
+//    ): Single<ResponseBody>
 
-    @GET("/newmobile/profile/aktivacija_karty/index.php")
-    fun fetchDiscountCardBaseRequest(
-        @Query("action") action: String? = null,
-        @Query("userid") userId: Long? = null,
-        @Query("filtervalue") value: String? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/profile/aktivacija_karty/index.php")
+//    fun fetchDiscountCardBaseRequest(
+//        @Query("action") action: String? = null,
+//        @Query("userid") userId: Long? = null,
+//        @Query("filtervalue") value: String? = null,
+//    ): Single<ResponseBody>
 
-    @GET("/newmobile/profile/anketa/index.php")
-    fun fetchQuestionnairesResponse(
-        @Query("action") action: String? = null,
-        @Query("userid") userId: Long? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/profile/anketa/index.php")
+//    fun fetchQuestionnairesResponse(
+//        @Query("action") action: String? = null,
+//        @Query("userid") userId: Long? = null,
+//    ): Single<ResponseBody>
 
-    @FormUrlEncoded
-    @POST("/newmobile/profile/index.php?action=uploadPhoto")
-    fun updateUserPhoto(
-        @Field("userid") userId: Long? = null,
-        @Field("userpic") photo: Any?,
-    ): Single<ResponseBody>
+//    @FormUrlEncoded
+//    @POST("/newmobile/profile/index.php?action=uploadPhoto")
+//    fun updateUserPhoto(
+//        @Field("userid") userId: Long? = null,
+//        @Field("userpic") photo: Any?,
+//    ): Single<ResponseBody>
 
-    @GET("/newmobile/glavnaya/svyssnam.php")
-    fun fetchContactsResponse(
-        @Query("action") action: String? = null,
-        @Query("versiyaan") appVersion: String? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/glavnaya/svyssnam.php")
+//    fun fetchContactsResponse(
+//        @Query("action") action: String? = null,
+//        @Query("versiyaan") appVersion: String? = null,
+//    ): Single<ResponseBody>
 
-    @GET("/newmobile/mail.php")
-    fun sendMail(
-        @Query("name") name: String? = null,
-        @Query("phone") phone: String? = null,
-        @Query("email") email: String? = null,
-        @Query("comment") comment: String? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/mail.php")
+//    fun sendMail(
+//        @Query("name") name: String? = null,
+//        @Query("phone") phone: String? = null,
+//        @Query("email") email: String? = null,
+//        @Query("comment") comment: String? = null,
+//    ): Single<ResponseBody>
 
-    @GET("/newmobile/glavnaya/uslygi/form.php")
-    fun fetchOrderServiceResponse(
-        @Query("action") action: String? = null,
-        @Query("tip") type: String? = null,
-        @Query("userid") userId: Long? = null,
-        @Query("filtervalue") value: String? = null,
-    ): Single<ResponseBody>
+//    @GET("/newmobile/glavnaya/uslygi/form.php")
+//    fun fetchOrderServiceResponse(
+//        @Query("action") action: String? = null,
+//        @Query("tip") type: String? = null,
+//        @Query("userid") userId: Long? = null,
+//        @Query("filtervalue") value: String? = null,
+//    ): Single<ResponseBody>
 
-    @GET("newmobile/getActualDelivery.php")
-    fun fetchInfoAboutOrderingResponse(
-        @Query("address_id") addressId: Long? = null,
-        @Query("userid") userId: Long? = null,
-        @Query("curDate") date: String? = null,
-    ): Single<ResponseBody>
+//    @GET("newmobile/getActualDelivery.php")
+//    fun fetchInfoAboutOrderingResponse(
+//        @Query("address_id") addressId: Long? = null,
+//        @Query("userid") userId: Long? = null,
+//        @Query("curDate") date: String? = null,
+//    ): Single<ResponseBody>
 
-    @POST("newmobile/doorder.php")
-    fun fetchRegOrderResponse(
-        @Query("type") orderType: Int?, //Тип заказа (1/2)
-        @Query("device") device: String?, //Телефон Android:12 Версия: 1.4.83
-        @Query("profile_buyer") addressId: Long?, //адрес id - (150543)
-        @Query("date") date: String?, //23.08.2022
-        @Query("payment") paymentId: Long?, //Pay method Id
-        @Query("operator") needOperatorCall: String?, // Y/N
-        @Query("driver") needShippingAlert: String?, //За 90 минут
-        @Query("comment") comment: String?,
-        @Query("summ") totalPrice: Int?, //Итоговая сумма заказа
-        @Query("delivery_id") shippingId: Long?, //
-        @Query("summdelivery") shippingPrice: Int?, // цена доставки
-        @Query("fio_f") name: String?,
-        @Query("phone_f") phone: String?,
-        @Query("email_f") email: String?,
-        @Query("companyname") companyName: String?,
-        @Query("userid") userId: Long?,
-        @Query("zalogcena") deposit: Int?, //?
-        @Query("sroch") fastShippingPrice: Int?, // 500 р
-        @Query("nacenka") extraShippingPrice: Int?, // из delivery
-        @Query("obichd") commonShippingPrice: Int?, //?
-        @Query("kupon") coupon: String?, // передавать из корзины
-        @Query("indos") shippingIntervalId: Long?, //id Интервал доставки
-        @Query("sdacha") overMoney: Int?, //?
-        @Query("parkovka") parking: Int?, // числовое значение
-    ): Single<ResponseBody>
+//    @POST("newmobile/doorder.php")
+//    fun fetchRegOrderResponse(
+//        @Query("type") orderType: Int?, //Тип заказа (1/2)
+//        @Query("device") device: String?, //Телефон Android:12 Версия: 1.4.83
+//        @Query("profile_buyer") addressId: Long?, //адрес id - (150543)
+//        @Query("date") date: String?, //23.08.2022
+//        @Query("payment") paymentId: Long?, //Pay method Id
+//        @Query("operator") needOperatorCall: String?, // Y/N
+//        @Query("driver") needShippingAlert: String?, //За 90 минут
+//        @Query("comment") comment: String?,
+//        @Query("summ") totalPrice: Int?, //Итоговая сумма заказа
+//        @Query("delivery_id") shippingId: Long?, //
+//        @Query("summdelivery") shippingPrice: Int?, // цена доставки
+//        @Query("fio_f") name: String?,
+//        @Query("phone_f") phone: String?,
+//        @Query("email_f") email: String?,
+//        @Query("companyname") companyName: String?,
+//        @Query("userid") userId: Long?,
+//        @Query("zalogcena") deposit: Int?, //?
+//        @Query("sroch") fastShippingPrice: Int?, // 500 р
+//        @Query("nacenka") extraShippingPrice: Int?, // из delivery
+//        @Query("obichd") commonShippingPrice: Int?, //?
+//        @Query("kupon") coupon: String?, // передавать из корзины
+//        @Query("indos") shippingIntervalId: Long?, //id Интервал доставки
+//        @Query("sdacha") overMoney: Int?, //?
+//        @Query("parkovka") parking: Int?, // числовое значение
+//    ): Single<ResponseBody>
 
-    @GET("newmobile/el.php")
-    fun fetchBottlesResponse(
-        @Query("iblock_id") iBlockId: Int? = null
-    ): Single<ResponseBody>
+//    @GET("newmobile/el.php")
+//    fun fetchBottlesResponse(
+//        @Query("iblock_id") iBlockId: Int? = null
+//    ): Single<ResponseBody>
 
-    @GET("newmobile/changeOrderStatus.php")
-    fun cancelOrder(
-        @Query("orderID") orderId: Long?
-    ): Single<ResponseBody>
+//    @GET("newmobile/changeOrderStatus.php")
+//    fun cancelOrder(
+//        @Query("orderID") orderId: Long?
+//    ): Single<ResponseBody>
 
-    @GET("newmobile/profile/auth/authtelefon.php")
-    fun fetchAuthByPhoneResponse(
-        @Query("action") action: String? = null,
-        @Query("telefon") phone: String? = null,
-        @Query("code") code: String? = null
-    ): Single<ResponseBody>
+//    @GET("newmobile/profile/auth/authtelefon.php")
+//    fun fetchAuthByPhoneResponse(
+//        @Query("action") action: String? = null,
+//        @Query("telefon") phone: String? = null,
+//        @Query("code") code: String? = null
+//    ): Single<ResponseBody>
 
-    @GET("newmobile/osnova/predzakaz.php")
-    fun fetchPreOrderResponse(
-        @Query("action") action: String? = null,
-        @Query("userid") userId: Long? = null,
-        @Query("fio") name: String? = null,
-        @Query("email") email: String? = null,
-        @Query("phone") phone: String? = null,
-        @Query("tovar") productId: Long? = null
-    ): Single<ResponseBody>
+//    @GET("newmobile/osnova/predzakaz.php")
+//    fun fetchPreOrderResponse(
+//        @Query("action") action: String? = null,
+//        @Query("userid") userId: Long? = null,
+//        @Query("fio") name: String? = null,
+//        @Query("email") email: String? = null,
+//        @Query("phone") phone: String? = null,
+//        @Query("tovar") productId: Long? = null
+//    ): Single<ResponseBody>
 
     //action=otpravka&userid=515&fio=test&email=email@mail.ru&phone=+78945612300&tovar=213123
     //http://m.vodovoz.ru/newmobile/profile/auth/authtelefon.php?action=tochkakarta&telefon=номертелефона&code=9267

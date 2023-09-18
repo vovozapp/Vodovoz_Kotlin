@@ -3,11 +3,7 @@ package com.vodovoz.app.common.like
 import android.content.SharedPreferences
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.common.account.data.AccountManager
-import com.vodovoz.app.data.local.LocalData
-import com.vodovoz.app.data.local.LocalDataSource
-import com.vodovoz.app.data.parser.response.favorite.AddToFavoriteResponseJsonParser.parseAddToFavoriteResponse
 import com.vodovoz.app.ui.model.ProductUI
-import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -20,7 +16,7 @@ import javax.inject.Singleton
 class LikeManager @Inject constructor(
     private val repository: LikeRepository,
     private val sharedPrefs: SharedPreferences,
-    private val accountManager: AccountManager
+    private val accountManager: AccountManager,
 ) {
 
     companion object {
@@ -33,6 +29,7 @@ class LikeManager @Inject constructor(
     private val viewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool().apply {
         setMaxRecycledViews(ProductUI.PRODUCT_VIEW_TYPE, 5)
     }
+
     fun fetchViewPool() = viewPool
 
     fun observeLikes() = likesStateListener.asSharedFlow().filter { it.isNotEmpty() }
@@ -84,7 +81,7 @@ class LikeManager @Inject constructor(
         updateLikes(productId, !isFavorite)
     }
 
-    fun fetchLikeLocalStr() : String? {
+    fun fetchLikeLocalStr(): String? {
         return sharedPrefs.getString(FAV_IDS, "")?.dropLast(1)
     }
 

@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.RatingBar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.DiffUtil
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
@@ -19,19 +18,9 @@ import com.vodovoz.app.core.network.ApiConfig.AMOUNT_CONTROLLER_TIMER
 import com.vodovoz.app.databinding.ViewHolderProductGridBinding
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowClickListener
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowPagerAdapter
-import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPicturePager
-import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.feature.productlist.adapter.SortedAdapter
-import com.vodovoz.app.ui.diffUtils.DetailPictureDiffUtilCallback
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setLimitedText
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
-import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 

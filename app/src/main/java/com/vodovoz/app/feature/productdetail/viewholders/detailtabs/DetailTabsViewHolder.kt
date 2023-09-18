@@ -3,13 +3,12 @@ package com.vodovoz.app.feature.productdetail.viewholders.detailtabs
 import android.view.View
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.FragmentProductDetailsTabsBinding
-import com.vodovoz.app.ui.adapter.ProductPropertyGroupsAdapter
+import com.vodovoz.app.feature.productdetail.adapter.ProductPropertyGroupsAdapter
 
 class DetailTabsViewHolder(
     view: View

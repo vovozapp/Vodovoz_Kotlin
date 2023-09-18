@@ -1,10 +1,8 @@
 package com.vodovoz.app.feature.auth.login
 
 import android.app.Activity
-import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.biometric.BiometricManager
@@ -22,7 +20,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
-import com.vodovoz.app.common.account.data.LoginManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentLoginFlowBinding
@@ -69,7 +66,7 @@ class LoginFragment : BaseFragment() {
                     requireActivity().snack("Вход по биометрии не выполнен")
                 }
 
-                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult, ) {
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
                     authByUserSettings()
                 }
@@ -139,7 +136,8 @@ class LoginFragment : BaseFragment() {
 
     private fun checkShowFingerPrint() {
         val userSettings = accountManager.fetchUserSettings()
-        val isSettingsCorrect = userSettings.email.isNotEmpty() && userSettings.password.isNotEmpty()
+        val isSettingsCorrect =
+            userSettings.email.isNotEmpty() && userSettings.password.isNotEmpty()
         if (isSettingsCorrect) checkBiometric()
     }
 
@@ -220,8 +218,18 @@ class LoginFragment : BaseFragment() {
                         LoginFlowViewModel.LoginEvents.TimerFinished -> {
                             debugLog { "TimerFinished" }
                             binding.tvExpired.text = "Отправить код повторно"
-                            binding.tvExpired.setTextColor(ContextCompat.getColor(requireContext(), R.color.bluePrimary))
-                            binding.tvExpired.setTypeface(ResourcesCompat.getFont(requireContext(), R.font.rotonda_normal), Typeface.BOLD)
+                            binding.tvExpired.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.bluePrimary
+                                )
+                            )
+                            binding.tvExpired.setTypeface(
+                                ResourcesCompat.getFont(
+                                    requireContext(),
+                                    R.font.rotonda_normal
+                                ), Typeface.BOLD
+                            )
                             binding.tvExpired.setOnClickListener {
                                 when (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString())) {
                                     true -> viewModel.requestCode(binding.etPhone.text.toString())
@@ -232,8 +240,14 @@ class LoginFragment : BaseFragment() {
                         is LoginFlowViewModel.LoginEvents.TimerTick -> {
                             debugLog { "TimerTick" }
                             binding.tvExpired.setExpiredCodeText(it.tick)
-                            binding.tvExpired.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_gray))
-                            binding.tvExpired.typeface = ResourcesCompat.getFont(requireContext(), R.font.rotonda_normal)
+                            binding.tvExpired.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.text_gray
+                                )
+                            )
+                            binding.tvExpired.typeface =
+                                ResourcesCompat.getFont(requireContext(), R.font.rotonda_normal)
                             binding.tvExpired.visibility = View.VISIBLE
                             binding.btnSignIn.text = "Войти"
                             binding.tilCode.visibility = View.VISIBLE
@@ -303,9 +317,9 @@ class LoginFragment : BaseFragment() {
         binding.tvRecoverPassword.setOnClickListener {
             viewModel.recoverPassword(binding.etEmail.text.toString())
         }
-        binding.tvRegister.setOnClickListener {
-            findNavController().navigate(LoginFragmentDirections.actionToRegisterFragment())
-        }
+//        binding.tvRegister.setOnClickListener {
+//            findNavController().navigate(LoginFragmentDirections.actionToRegisterFragment())
+//        }
         binding.cwAuthByPhoneContainer.setOnClickListener {
             viewModel.changeAuthType()
         }

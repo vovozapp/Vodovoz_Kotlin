@@ -2,7 +2,6 @@ package com.vodovoz.app.common.cart
 
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.MainRepository
-import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.flow.*
@@ -13,8 +12,7 @@ import javax.inject.Singleton
 @Singleton
 class CartManager @Inject constructor(
     private val repository: MainRepository,
-    private val localDataSource: LocalDataSource,
-    private val tabManager: TabManager
+    private val tabManager: TabManager,
 ) {
 
     private val updateCartListListener = MutableStateFlow(false)
@@ -30,8 +28,18 @@ class CartManager @Inject constructor(
 
     fun observeCarts() = cartsStateListener.asSharedFlow().filter { it.isNotEmpty() }
 
-    suspend fun add(id: Long, oldCount: Int, newCount: Int, withUpdate: Boolean = true, repeat: Boolean = false) {
-        val isInCart = if (repeat) { true } else { oldCount == 0 }
+    suspend fun add(
+        id: Long,
+        oldCount: Int,
+        newCount: Int,
+        withUpdate: Boolean = true,
+        repeat: Boolean = false,
+    ) {
+        val isInCart = if (repeat) {
+            true
+        } else {
+            oldCount == 0
+        }
         val plus = newCount >= oldCount
 
         updateCarts(id, newCount)
@@ -81,7 +89,14 @@ class CartManager @Inject constructor(
     }
 
     //Service Details Products
-    suspend fun addWithGift(id: Long, oldCount: Int, newCount: Int, withUpdate: Boolean = true, repeat: Boolean = false, giftId: String) {
+    suspend fun addWithGift(
+        id: Long,
+        oldCount: Int,
+        newCount: Int,
+        withUpdate: Boolean = true,
+        repeat: Boolean = false,
+        giftId: String,
+    ) {
         val plus = newCount >= oldCount
 
         updateCarts(id, newCount)

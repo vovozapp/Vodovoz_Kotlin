@@ -102,7 +102,7 @@ class ServiceDetailFragment : BaseFragment() {
 
                     if (state.data.selectedService != null) {
                         setToolbarDropDownTitle(state.data.selectedService.name, state.data.item?.serviceUIList.isNullOrEmpty().not())
-                        binding.tvDetails.text = state.data.selectedService.detail.fromHtml()
+                        binding.tvDetails.text = state.data.selectedService.detail?.fromHtml()
                     }
 
                     showError(state.error)

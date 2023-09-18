@@ -8,7 +8,6 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
-import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
@@ -16,7 +15,6 @@ import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.data.parser.response.paginatedProducts.FavoriteProductsResponseJsonParser.parseFavoriteProductsResponse
 import com.vodovoz.app.data.parser.response.past_purchases.PastPurchasesHeaderResponseJsonParser.parsePastPurchasesHeaderResponse
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
-import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.mapper.PastPurchasesHeaderBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryUI
@@ -32,12 +30,13 @@ import javax.inject.Inject
 class PastPurchasesFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val localDataSource: LocalDataSource,
-    private val dataRepository: DataRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
-    private val accountManager: AccountManager
-) : PagingContractViewModel<PastPurchasesFlowViewModel.PastPurchasesState, PastPurchasesFlowViewModel.PastPurchasesEvents>(PastPurchasesState()){
+    private val accountManager: AccountManager,
+) : PagingContractViewModel<PastPurchasesFlowViewModel.PastPurchasesState, PastPurchasesFlowViewModel.PastPurchasesEvents>(
+    PastPurchasesState()
+) {
 
     private val changeLayoutManager = MutableStateFlow(LINEAR)
     fun observeChangeLayoutManager() = changeLayoutManager.asStateFlow()
@@ -104,13 +103,20 @@ class PastPurchasesFlowViewModel @Inject constructor(
 
     fun firstLoadSorted() {
         if (!state.data.isFirstLoadSorted) {
-            uiStateListener.value = state.copy(data = state.data.copy(isFirstLoadSorted = true), loadingPage = true)
+            uiStateListener.value =
+                state.copy(data = state.data.copy(isFirstLoadSorted = true), loadingPage = true)
             fetchPastPurchasesSorted()
         }
     }
 
     fun refreshSorted() {
-        uiStateListener.value = state.copy(loadingPage = true, page = 1, loadMore = false, bottomItem = null, data = state.data.copy(selectedCategoryId = -1))
+        uiStateListener.value = state.copy(
+            loadingPage = true,
+            page = 1,
+            loadMore = false,
+            bottomItem = null,
+            data = state.data.copy(selectedCategoryId = -1)
+        )
         fetchPastPurchasesHeader()
         fetchPastPurchasesSorted()
     }
@@ -124,11 +130,14 @@ class PastPurchasesFlowViewModel @Inject constructor(
 
     fun changeLayoutManager() {
         val manager = if (state.data.layoutManager == LINEAR) GRID else LINEAR
-        uiStateListener.value = state.copy(data = state.data.copy(layoutManager = manager, itemsList = FavoritesMapper.mapFavoritesListByManager(
-            manager,
-            state.data.itemsList.filterIsInstance<ProductUI>()
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                layoutManager = manager, itemsList = FavoritesMapper.mapFavoritesListByManager(
+                    manager,
+                    state.data.itemsList.filterIsInstance<ProductUI>()
+                )
+            )
         )
-        ))
         changeLayoutManager.value = manager
     }
 
@@ -140,7 +149,7 @@ class PastPurchasesFlowViewModel @Inject constructor(
                 emit(
                     repository.fetchPastPurchasesProducts(
                         userId = userId,
-                        categoryId = when(state.data.selectedCategoryId) {
+                        categoryId = when (state.data.selectedCategoryId) {
                             -1L -> null
                             else -> state.data.selectedCategoryId
                         },
@@ -171,7 +180,7 @@ class PastPurchasesFlowViewModel @Inject constructor(
                             )
                         } else {
 
-                            val itemsList =  if (state.loadMore) {
+                            val itemsList = if (state.loadMore) {
                                 state.data.itemsList + mappedFeed
                             } else {
                                 mappedFeed
@@ -189,7 +198,12 @@ class PastPurchasesFlowViewModel @Inject constructor(
 
                     } else {
                         uiStateListener.value =
-                            state.copy(loadingPage = false, error = ErrorState.Error(), page = 1, loadMore = false)
+                            state.copy(
+                                loadingPage = false,
+                                error = ErrorState.Error(),
+                                page = 1,
+                                loadMore = false
+                            )
                     }
                 }
                 .flowOn(Dispatchers.Default)
@@ -241,7 +255,12 @@ class PastPurchasesFlowViewModel @Inject constructor(
 
     fun updateByIsAvailable(bool: Boolean) {
         if (state.data.isAvailable == bool) return
-        uiStateListener.value = state.copy(data = state.data.copy(isAvailable = bool), page = 1, loadMore = false, loadingPage = true)
+        uiStateListener.value = state.copy(
+            data = state.data.copy(isAvailable = bool),
+            page = 1,
+            loadMore = false,
+            loadingPage = true
+        )
         fetchPastPurchasesSorted()
     }
 
@@ -307,7 +326,9 @@ class PastPurchasesFlowViewModel @Inject constructor(
     }
 
     sealed class PastPurchasesEvents : Event {
-        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) : PastPurchasesEvents()
+        data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
+            PastPurchasesEvents()
+
         object GoToProfile : PastPurchasesEvents()
     }
 
@@ -322,7 +343,7 @@ class PastPurchasesFlowViewModel @Inject constructor(
         val itemsList: List<Item> = emptyList(),
         val layoutManager: String = LINEAR,
         val emptyTitle: String = "",
-        val emptySubtitle: String = ""
+        val emptySubtitle: String = "",
     ) : State
 
     companion object {

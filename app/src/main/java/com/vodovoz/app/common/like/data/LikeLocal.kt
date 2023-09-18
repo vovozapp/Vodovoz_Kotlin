@@ -1,12 +1,10 @@
 package com.vodovoz.app.common.like.data
 
 import android.content.SharedPreferences
-import com.vodovoz.app.common.account.data.AccountManager
 import javax.inject.Inject
 
 class LikeLocal @Inject constructor(
-    private val sharedPrefs: SharedPreferences,
-    private val accountManager: AccountManager
+    private val sharedPrefs: SharedPreferences
 ) {
 
     fun changeFavoriteStatus(pairList: List<Pair<Long, Boolean>>) {
@@ -25,7 +23,8 @@ class LikeLocal @Inject constructor(
 
     }
 
-    private fun fetchAllFavoriteProducts() = parseFavoriteStr(sharedPrefs.getString(DEFAULT_USER_FAVORITE_LIST, ""))
+    private fun fetchAllFavoriteProducts() =
+        parseFavoriteStr(sharedPrefs.getString(DEFAULT_USER_FAVORITE_LIST, ""))
 
     private fun parseFavoriteStr(favoriteStr: String?): List<Long> {
         if (favoriteStr == null) return emptyList()

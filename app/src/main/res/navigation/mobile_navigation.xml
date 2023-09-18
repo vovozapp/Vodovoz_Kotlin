@@ -147,7 +147,7 @@
     </fragment>
     <dialog
         android:id="@+id/sortProductsSettingsBottomFragment"
-        android:name="com.vodovoz.app.ui.fragment.sort_products.SortProductsSettingsBottomFragment"
+        android:name="com.vodovoz.app.feature.sort_products.SortProductsSettingsBottomFragment"
         android:label="SortProductsSettingsBottomFragment">
         <argument
             android:name="sortType"
@@ -230,7 +230,7 @@
     </fragment>
     <dialog
         android:id="@+id/promotionFiltersBottomFragment"
-        android:name="com.vodovoz.app.ui.fragment.promotion_filters.PromotionFiltersBottomFragment"
+        android:name="com.vodovoz.app.feature.promotion_filters.PromotionFiltersBottomFragment"
         android:label="PromotionFiltersBottomFragment">
         <argument
             android:name="selectedFilterId"
@@ -264,7 +264,7 @@
     </fragment>
     <dialog
         android:id="@+id/miniCatalogBottomFragment"
-        android:name="com.vodovoz.app.ui.fragment.mini_catalog.MiniCatalogBottomFragment"
+        android:name="com.vodovoz.app.feature.mini_catalog.MiniCatalogBottomFragment"
         android:label="MiniCatalogBottomFragment" >
         <argument
             android:name="categoryList"
@@ -473,7 +473,7 @@
     </dialog>
     <dialog
         android:id="@+id/youTubeVideoFragmentDialog"
-        android:name="com.vodovoz.app.ui.fragment.youtube_player_dialog.YouTubeVideoFragmentDialog"
+        android:name="com.vodovoz.app.feature.youtube_player_dialog.YouTubeVideoFragmentDialog"
         android:label="YouTubeVideoFragmentDialog" >
         <argument
             android:name="videoId"
@@ -598,7 +598,7 @@
         android:label="HowToOrderFragment" />
     <dialog
         android:id="@+id/sendCommentAboutShopBottomDialog"
-        android:name="com.vodovoz.app.ui.fragment.send_comment_about_shop.SendCommentAboutShopFlowBottomDialog"
+        android:name="com.vodovoz.app.feature.send_comment_about_shop.SendCommentAboutShopFlowBottomDialog"
         android:label="SendCommentAboutShopBottomDialog" />
     <fragment
         android:id="@+id/searchFragment"
@@ -694,7 +694,7 @@
     </dialog>
     <fragment
         android:id="@+id/serviceOrderFragment"
-        android:name="com.vodovoz.app.ui.fragment.service_order.ServiceOrderFragment"
+        android:name="com.vodovoz.app.feature.service_order.ServiceOrderFragment"
         android:label="ServiceOrderFragment" >
         <argument
             android:name="serviceName"

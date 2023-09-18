@@ -2,7 +2,7 @@ package com.vodovoz.app.feature.home.viewholders.homeorders
 
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
-import com.vodovoz.app.ui.fragment.slider.order_slider.OrdersSliderConfig
+import com.vodovoz.app.feature.order_slider.OrdersSliderConfig
 import com.vodovoz.app.ui.model.OrderUI
 
 data class HomeOrders(

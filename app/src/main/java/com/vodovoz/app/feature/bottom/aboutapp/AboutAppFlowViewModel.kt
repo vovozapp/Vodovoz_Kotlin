@@ -2,9 +2,8 @@ package com.vodovoz.app.feature.bottom.aboutapp
 
 import androidx.lifecycle.ViewModel
 import com.vodovoz.app.R
-import com.vodovoz.app.data.DataRepository
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.feature.bottom.aboutapp.adapter.AboutApp
-import com.vodovoz.app.ui.adapter.AboutAppAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,10 +11,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AboutAppFlowViewModel @Inject constructor(
-    private val dataRepository: DataRepository
+    private val accountManager: AccountManager,
 ) : ViewModel() {
 
-    fun fetchUserId() = dataRepository.fetchUserId()
+    fun fetchUserId() = accountManager.fetchAccountId()
 
     private val aboutAppActionsList = listOf(
         AboutApp(

@@ -2,14 +2,13 @@ package com.vodovoz.app.data.local
 
 import android.content.Context
 import android.util.Log
-import com.vodovoz.app.data.model.common.LastLoginDataEntity
 import com.vodovoz.app.util.LogSettings
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class LocalData @Inject constructor(
     @ApplicationContext
-    private val context: Context
+    private val context: Context,
 ) : LocalDataSource {
 
     companion object {
@@ -38,10 +37,12 @@ class LocalData @Inject constructor(
         private const val SEARCH_HISTORY = "SEARCH_HISTORY"
     }
 
-    private val accountSettings = context.getSharedPreferences(ACCOUNT_SETTINGS, Context.MODE_PRIVATE)
+    private val accountSettings =
+        context.getSharedPreferences(ACCOUNT_SETTINGS, Context.MODE_PRIVATE)
     private val cartSettings = context.getSharedPreferences(CART_SETTINGS, Context.MODE_PRIVATE)
     private val cookieSettings = context.getSharedPreferences(COOKIE_SETTINGS, Context.MODE_PRIVATE)
-    private val favoriteSettings = context.getSharedPreferences(FAVORITE_SETTINGS, Context.MODE_PRIVATE)
+    private val favoriteSettings =
+        context.getSharedPreferences(FAVORITE_SETTINGS, Context.MODE_PRIVATE)
     private val searchSettings = context.getSharedPreferences(SEARCH_SETTINGS, Context.MODE_PRIVATE)
 
     override fun isAvailableCookieSessionId(): Boolean {
@@ -64,25 +65,28 @@ class LocalData @Inject constructor(
         val favoriteList = fetchAllFavoriteProducts().toMutableList()
 
         pairList.forEach { pair ->
-            when(pair.second) {
+            when (pair.second) {
                 true -> favoriteList.add(pair.first)
                 else -> favoriteList.remove(pair.first)
             }
         }
 
-        when(isAlreadyLogin()) {
-            true -> favoriteSettings.edit().putString(fetchUserId().toString(), buildFavoriteStr(favoriteList)).apply()
-            false -> favoriteSettings.edit().putString(DEFAULT_USER_FAVORITE_LIST, buildFavoriteStr(favoriteList)).apply()
+        when (isAlreadyLogin()) {
+            true -> favoriteSettings.edit()
+                .putString(fetchUserId().toString(), buildFavoriteStr(favoriteList)).apply()
+            false -> favoriteSettings.edit()
+                .putString(DEFAULT_USER_FAVORITE_LIST, buildFavoriteStr(favoriteList)).apply()
         }
 
     }
 
-    override fun fetchAllFavoriteProducts() = when(isAlreadyLogin()) {
+    override fun fetchAllFavoriteProducts() = when (isAlreadyLogin()) {
         false -> parseFavoriteStr(favoriteSettings.getString(DEFAULT_USER_FAVORITE_LIST, "")!!)
         true -> parseFavoriteStr(favoriteSettings.getString(fetchUserId().toString(), "")!!)
     }
 
-    override fun fetchAllFavoriteProductsOfDefaultUser() = parseFavoriteStr(favoriteSettings.getString(DEFAULT_USER_FAVORITE_LIST, "")!!)
+    override fun fetchAllFavoriteProductsOfDefaultUser() =
+        parseFavoriteStr(favoriteSettings.getString(DEFAULT_USER_FAVORITE_LIST, "")!!)
 
     override fun clearSearchHistory() {
         searchSettings.edit().remove(SEARCH_HISTORY).apply()
@@ -100,10 +104,11 @@ class LocalData @Inject constructor(
         }
     }
 
-    override fun fetchSearchHistory() = parseSearchHistoryStr(searchSettings.getString(SEARCH_HISTORY, "") ?: "")
+    override fun fetchSearchHistory() =
+        parseSearchHistoryStr(searchSettings.getString(SEARCH_HISTORY, "") ?: "")
 
     private fun parseSearchHistoryStr(searchHistoryStr: String): List<String> {
-        val queryList = searchHistoryStr.split(",").toMutableList()
+        val queryList = searchHistoryStr.split(",")
         return queryList.filter { it.isNotEmpty() }
     }
 
@@ -131,33 +136,33 @@ class LocalData @Inject constructor(
         return favoriteStr.toString()
     }
 
-    override fun fetchLastLoginData(): LastLoginDataEntity {
-        val email = when(accountSettings.contains(EMAIL)) {
-            true -> accountSettings.getString(EMAIL, null)
-            false -> null
-        }
+//    override fun fetchLastLoginData(): LastLoginDataEntity {
+//        val email = when(accountSettings.contains(EMAIL)) {
+//            true -> accountSettings.getString(EMAIL, null)
+//            false -> null
+//        }
+//
+//        val password = when(accountSettings.contains(PASSWORD)) {
+//            true -> accountSettings.getString(PASSWORD, null)
+//            false -> null
+//        }
+//
+//        return LastLoginDataEntity(
+//            email = email,
+//            password = password
+//        )
+//    }
 
-        val password = when(accountSettings.contains(PASSWORD)) {
-            true -> accountSettings.getString(PASSWORD, null)
-            false -> null
-        }
+//    override fun updateLastLoginData(
+//        lastLoginDataEntity: LastLoginDataEntity
+//    ) {
+//        with(accountSettings.edit()) {
+//            lastLoginDataEntity.email?.let { putString(EMAIL, it).apply() }
+//            lastLoginDataEntity.password?.let { putString(PASSWORD, it).apply() }
+//        }
+//    }
 
-        return LastLoginDataEntity(
-            email = email,
-            password = password
-        )
-    }
-
-    override fun updateLastLoginData(
-        lastLoginDataEntity: LastLoginDataEntity
-    ) {
-        with(accountSettings.edit()) {
-            lastLoginDataEntity.email?.let { putString(EMAIL, it).apply() }
-            lastLoginDataEntity.password?.let { putString(PASSWORD, it).apply() }
-        }
-    }
-
-    override fun fetchUserId() = when(accountSettings.contains(USER_ID)) {
+    override fun fetchUserId() = when (accountSettings.contains(USER_ID)) {
         true -> {
             val userId = accountSettings.getLong(USER_ID, 0)
             userId
@@ -179,7 +184,7 @@ class LocalData @Inject constructor(
         accountSettings.edit().putString(PHONE, phone).apply()
     }
 
-    override fun fetchLastAuthPhone() = when(accountSettings.contains(PHONE)) {
+    override fun fetchLastAuthPhone() = when (accountSettings.contains(PHONE)) {
         true -> accountSettings.getString(PHONE, "") ?: ""
         false -> ""
     }
@@ -189,20 +194,22 @@ class LocalData @Inject constructor(
         accountSettings.edit().putLong(LAST_REQUEST_CODE_DATE, time).apply()
     }
 
-    override fun fetchLastRequestCodeDate() = when(accountSettings.contains(LAST_REQUEST_CODE_DATE)) {
-        true -> accountSettings.getLong(LAST_REQUEST_CODE_DATE, 0)
-        false -> 0L
-    }
+    override fun fetchLastRequestCodeDate() =
+        when (accountSettings.contains(LAST_REQUEST_CODE_DATE)) {
+            true -> accountSettings.getLong(LAST_REQUEST_CODE_DATE, 0)
+            false -> 0L
+        }
 
     override fun updateLastRequestCodeTimeOut(time: Int) {
         Log.d(LogSettings.LOCAL_DATA, "TIMEOUT = $time")
         accountSettings.edit().putInt(LAST_REQUEST_CODE_TIME_OUT, time).apply()
     }
 
-    override fun fetchLastRequestCodeTimeOut() = when(accountSettings.contains(LAST_REQUEST_CODE_TIME_OUT)) {
-        true -> accountSettings.getInt(LAST_REQUEST_CODE_TIME_OUT, 0)
-        false -> 0
-    }
+    override fun fetchLastRequestCodeTimeOut() =
+        when (accountSettings.contains(LAST_REQUEST_CODE_TIME_OUT)) {
+            true -> accountSettings.getInt(LAST_REQUEST_CODE_TIME_OUT, 0)
+            false -> 0
+        }
 
     override fun isAlreadyLogin() = fetchUserId() != null
 

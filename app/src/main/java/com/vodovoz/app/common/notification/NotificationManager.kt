@@ -20,11 +20,6 @@ import org.json.JSONObject
 
 class NotificationManager : FirebaseMessagingService() {
 
-    override fun onNewToken(token: String) {
-        super.onNewToken(token)
-
-    }
-
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
@@ -60,7 +55,7 @@ class NotificationManager : FirebaseMessagingService() {
         debugLog { "large icon bitmap $bitmap" }
         val bigPictureStyle = NotificationCompat.BigPictureStyle().also {
             it.setBigContentTitle(not.title)
-            it.setSummaryText(not.body.fromHtml())
+            it.setSummaryText(not.body?.fromHtml())
             it.bigPicture(bitmap)
         }
 

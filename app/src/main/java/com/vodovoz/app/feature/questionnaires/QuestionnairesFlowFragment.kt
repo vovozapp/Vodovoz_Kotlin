@@ -13,7 +13,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentQuestionnairesBinding
 import com.vodovoz.app.feature.questionnaires.adapter.QuestionnaireTypesFlowAdapter
-import com.vodovoz.app.ui.adapter.QuestionsAdapter
+import com.vodovoz.app.feature.questionnaires.adapter.QuestionsAdapter
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import dagger.hilt.android.AndroidEntryPoint

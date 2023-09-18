@@ -11,7 +11,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsCatalogSingleFlowBinding
 import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragment
-import com.vodovoz.app.ui.adapter.SingleRootCatalogAdapter
+import com.vodovoz.app.feature.productlist.singleroot.adapter.SingleRootCatalogAdapter
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import dagger.hilt.android.AndroidEntryPoint
 

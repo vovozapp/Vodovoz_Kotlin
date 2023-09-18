@@ -45,7 +45,7 @@ class PopupNewsBottomFragment : BaseBottomSheetFragment() {
     private fun initView() {
         binding.incHeader.tvTitle.text = popupNewsUI.name
 
-        binding.tvDetails.text = popupNewsUI.detailText.fromHtml()
+        binding.tvDetails.text = popupNewsUI.detailText?.fromHtml()
         binding.tvDetails.isVisible = !popupNewsUI.detailText.isNullOrEmpty()
 
         binding.incHeader.imgClose.setOnClickListener { dismiss() }

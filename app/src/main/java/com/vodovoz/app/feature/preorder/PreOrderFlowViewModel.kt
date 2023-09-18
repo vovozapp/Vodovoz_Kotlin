@@ -2,13 +2,11 @@ package com.vodovoz.app.feature.preorder
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.vodovoz.app.common.cart.CartManager
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
-import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.pre_order.PreOrderFormDataResponseJsonParser.parsePreOrderFormDataResponse
@@ -26,7 +24,7 @@ import javax.inject.Inject
 class PreOrderFlowViewModel @Inject constructor(
     private val savedState: SavedStateHandle,
     private val repository: MainRepository,
-    private val dataRepository: DataRepository
+    private val accountManager: AccountManager,
 ) : PagingStateViewModel<PreOrderFlowViewModel.PreOrderState>(PreOrderState()) {
 
     private val productId = savedState.get<Long>("productId")
@@ -35,7 +33,7 @@ class PreOrderFlowViewModel @Inject constructor(
     fun observePreOrderSuccess() = preOrderSuccess.asSharedFlow()
 
     fun fetchPreOrderFormData() {
-        val userId = dataRepository.fetchUserId() ?: return
+        val userId = accountManager.fetchAccountId() ?: return
         viewModelScope.launch {
             flow { emit(repository.fetchPreOrderFormData(userId)) }
                 .flowOn(Dispatchers.IO)
@@ -69,9 +67,9 @@ class PreOrderFlowViewModel @Inject constructor(
     fun preOrderProduct(
         name: String,
         email: String,
-        phone: String
+        phone: String,
     ) {
-        val userId = dataRepository.fetchUserId() ?: return
+        val userId = accountManager.fetchAccountId() ?: return
         viewModelScope.launch {
             flow { emit(repository.preOrderProduct(userId, productId, name, email, phone)) }
                 .flowOn(Dispatchers.IO)
@@ -98,6 +96,6 @@ class PreOrderFlowViewModel @Inject constructor(
     }
 
     data class PreOrderState(
-        val items: PreOrderFormDataUI? = null
+        val items: PreOrderFormDataUI? = null,
     ) : State
 }

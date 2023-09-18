@@ -7,13 +7,13 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.vodovoz.app.BuildConfig
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.order.CancelOrderResponseJsonParser.parseCancelOrderResponse
@@ -33,9 +33,9 @@ import javax.inject.Inject
 class OrderDetailsFlowViewModel @Inject constructor(
     private val savedState: SavedStateHandle,
     private val repository: MainRepository,
-    private val dataRepository: DataRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
+    private val accountManager: AccountManager
 ) : PagingStateViewModel<OrderDetailsFlowViewModel.OrderDetailsState>(OrderDetailsState()) {
 
     private val firebaseDatabase = FirebaseDatabase.getInstance().reference
@@ -49,7 +49,7 @@ class OrderDetailsFlowViewModel @Inject constructor(
     fun observeCancelResult() = cancelResultListener.asSharedFlow()
 
     private fun fetchOrderDetails() {
-        val userId = dataRepository.fetchUserId() ?: return
+        val userId = accountManager.fetchAccountId() ?: return
         val id = orderId ?: return
         viewModelScope.launch {
             flow {
@@ -94,7 +94,7 @@ class OrderDetailsFlowViewModel @Inject constructor(
     }
 
     fun repeatOrder() {
-        val userId = dataRepository.fetchUserId() ?: return
+        val userId = accountManager.fetchAccountId() ?: return
         val id = orderId ?: return
         viewModelScope.launch {
             flow { emit(repository.fetchOrderDetailsResponse(

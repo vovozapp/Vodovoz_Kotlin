@@ -6,12 +6,10 @@ import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.*
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
-import com.vodovoz.app.data.DataRepository
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.comment.AllCommentsByProductResponseJsonParser.parseAllCommentsByProductResponse
 import com.vodovoz.app.mapper.CommentMapper.mapToUI
-import com.vodovoz.app.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,16 +21,24 @@ import javax.inject.Inject
 class AllCommentsFlowViewModel @Inject constructor(
     private val savedState: SavedStateHandle,
     private val repository: MainRepository,
-    private val dataRepository: DataRepository,
-    private val accountManager: AccountManager
-): PagingContractViewModel<AllCommentsFlowViewModel.AllCommentsState, AllCommentsFlowViewModel.AllCommentsEvents>(AllCommentsState()) {
+    private val accountManager: AccountManager,
+) : PagingContractViewModel<AllCommentsFlowViewModel.AllCommentsState, AllCommentsFlowViewModel.AllCommentsEvents>(
+    AllCommentsState()
+) {
 
     private val productId = savedState.get<Long>("productId")
 
     private fun fetchAllCommentsByProductId() {
         if (productId == null) return
         viewModelScope.launch {
-            flow { emit(repository.fetchAllCommentsByProduct(productId = productId, page = state.page)) }
+            flow {
+                emit(
+                    repository.fetchAllCommentsByProduct(
+                        productId = productId,
+                        page = state.page
+                    )
+                )
+            }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseAllCommentsByProductResponse()
@@ -118,11 +124,11 @@ class AllCommentsFlowViewModel @Inject constructor(
     fun isLoginAlready() = accountManager.isAlreadyLogin()
 
     sealed class AllCommentsEvents : Event {
-        object SendComment: AllCommentsEvents()
-        object GoToProfile: AllCommentsEvents()
+        object SendComment : AllCommentsEvents()
+        object GoToProfile : AllCommentsEvents()
     }
 
     data class AllCommentsState(
-        val itemsList: List<Item> = emptyList()
+        val itemsList: List<Item> = emptyList(),
     ) : State
 }

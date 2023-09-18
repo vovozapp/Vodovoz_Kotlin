@@ -33,7 +33,7 @@ class BannerAdvInfoBottomSheetFragment : BaseBottomSheetFragment() {
         if (arguments != null) {
             binding.titleAdvTv.text = requireArguments().getString("title")
             binding.bodyAdvTv.text = requireArguments().getString("body")
-            binding.dataAdvTv.text = requireArguments().getString("data").fromHtml()
+            binding.dataAdvTv.text = requireArguments().getString("data")?.fromHtml()
         }
     }
 }
