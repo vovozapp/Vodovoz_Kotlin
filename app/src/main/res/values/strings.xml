@@ -86,6 +86,20 @@
     <string name="itogo_text" translatable="false">Итого</string>
     <string name="spasibo_za_zakaz" translatable="false">Спасибо за заказ</string>
     <string name="oplatit_text" translatable="false">Оплатить</string>
+    <string name="vozmozhno_vam_ponravitsya" translatable="false">Возможно, вам понравится</string>
+    <string name="pokazat_escho" translatable="false">Показать еще</string>
+    <string name="kategorii" translatable="false">Категории</string>
+    <string name="nastroiki" translatable="false">Настройки</string>
+    <string name="sbrosit_dannye" translatable="false">Сбросить данные</string>
+    <string name="nastroyki_uvedomleniy" translatable="false">Настройки уведомлений</string>
+    <string name="vasha_norma" translatable="false">Ваша норма</string>
+    <string name="vashe_pravilnoe_potreblenie" translatable="false">Ваше правильное\nежедневное\nпотребление воды</string>
+    <string name="_2500ml" translatable="false">2500мл</string>
+    <string name="nachat" translatable="false">Начать</string>
+    <string name="vash_pol" translatable="false">Ваш пол</string>
+    <string name="dalee" translatable="false">Далее</string>
+    <string name="millilitres" translatable="false">%d мл</string>
+    <string name="reklama" translatable="false">Реклама</string>
 
 
 </resources>
