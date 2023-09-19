@@ -195,7 +195,7 @@ class AvailableProductsViewHolder(
         binding.llRatingContainer.visibility = View.VISIBLE
 
         binding.rbRating.onRatingBarChangeListener =
-            RatingBar.OnRatingBarChangeListener { _, newRating, _ ->
+            RatingBar.OnRatingBarChangeListener { p0, newRating, p2 ->
                 if (newRating != binding.rbRating.rating) {
                     productsClickListener.onChangeRating(item.id, newRating, item.rating)
                 }

@@ -44,7 +44,7 @@ abstract class BaseFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         _viewBinding = FragmentBaseFlowBinding.inflate(inflater, container, false)
 
@@ -82,7 +82,12 @@ abstract class BaseFragment : Fragment() {
                 root.isVisible = true
                 messageTv.text = error.message
                 descTv.text = error.description
-                icon.setImageDrawable(ContextCompat.getDrawable(requireContext(), error.iconDrawable))
+                icon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        error.iconDrawable
+                    )
+                )
             }
             viewBinding.appbarLayout.isEnabled = false
             //showLoaderWithBg(false)
@@ -104,7 +109,13 @@ abstract class BaseFragment : Fragment() {
         _viewBinding = null
     }
 
-    protected fun initSearchToolbar(onContainerClick: () -> Unit, bindEt: () -> Unit, onQrCodeClick: () -> Unit = {}, onMicClick: () -> Unit = {}, showBackBtn: Boolean = false) {
+    protected fun initSearchToolbar(
+        onContainerClick: () -> Unit,
+        bindEt: () -> Unit,
+        onQrCodeClick: () -> Unit = {},
+        onMicClick: () -> Unit = {},
+        showBackBtn: Boolean = false,
+    ) {
         viewBinding.appbarLayout.isVisible = true
         viewBinding.searchAppBar.isVisible = true
         viewBinding.imgBack.setOnClickListener { findNavController().popBackStack() }
@@ -140,7 +151,7 @@ abstract class BaseFragment : Fragment() {
         }
     }
 
-    protected fun initToolbarDropDown(titleText: String, onTitleClick: () -> Unit)  {
+    protected fun initToolbarDropDown(titleText: String, onTitleClick: () -> Unit) {
         viewBinding.appbarLayout.isVisible = true
         viewBinding.appBarDropDown.root.isVisible = true
 
@@ -157,13 +168,30 @@ abstract class BaseFragment : Fragment() {
         viewBinding.appBarDropDown.tvDropDownTitle.text = title
 
         if (showArrowDropDown) {
-            viewBinding.appBarDropDown.tvDropDownTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, requireContext().drawable(R.drawable.ic_drop_down),null)
+            viewBinding.appBarDropDown.tvDropDownTitle.setCompoundDrawablesWithIntrinsicBounds(
+                null,
+                null,
+                requireContext().drawable(R.drawable.ic_drop_down),
+                null
+            )
         } else {
-            viewBinding.appBarDropDown.tvDropDownTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, null,null)
+            viewBinding.appBarDropDown.tvDropDownTitle.setCompoundDrawablesWithIntrinsicBounds(
+                null,
+                null,
+                null,
+                null
+            )
         }
     }
 
-    protected fun initToolbar(titleText: String, showSearch: Boolean = false, showNavBtn: Boolean = true, addAction: Boolean = false, provider: MenuProvider? = null, doAfterTextChanged: (query: String) -> Unit = {}) {
+    protected fun initToolbar(
+        titleText: String,
+        showSearch: Boolean = false,
+        showNavBtn: Boolean = true,
+        addAction: Boolean = false,
+        provider: MenuProvider? = null,
+        doAfterTextChanged: (query: String) -> Unit = {},
+    ) {
         if (addAction) {
             viewBinding.appBarDef.tbToolbar.overflowIcon =
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_more_actions)
@@ -175,10 +203,10 @@ abstract class BaseFragment : Fragment() {
         viewBinding.appBarDef.imgSearch.isVisible = showSearch
         if (showNavBtn) {
             viewBinding.appBarDef.imgBack.isVisible = true
-            viewBinding.appBarDef.tvTitle.setPadding(0,0,0,0)
+            viewBinding.appBarDef.tvTitle.setPadding(0, 0, 0, 0)
         } else {
             viewBinding.appBarDef.imgBack.isVisible = false
-            viewBinding.appBarDef.tvTitle.setPadding(50,0,0,0)
+            viewBinding.appBarDef.tvTitle.setPadding(50, 0, 0, 0)
         }
         viewBinding.appBarDef.root.isVisible = true
         viewBinding.appBarDef.tvTitle.text = titleText
@@ -195,7 +223,7 @@ abstract class BaseFragment : Fragment() {
             viewBinding.appBarDef.llSearchContainer.visibility = View.GONE
         }
         viewBinding.appBarDef.etSearch.doAfterTextChanged { query ->
-            when(query.toString().isEmpty()) {
+            when (query.toString().isEmpty()) {
                 true -> viewBinding.appBarDef.imgClear.visibility = View.GONE
                 false -> viewBinding.appBarDef.imgClear.visibility = View.VISIBLE
             }
@@ -211,11 +239,18 @@ abstract class BaseFragment : Fragment() {
 
     fun setMicroEnabled(enabled: Boolean) {
         if (enabled) {
-            viewBinding.searchContainer.imgMicro.background = requireContext().drawable(R.drawable.green_oval)
-            ImageViewCompat.setImageTintList(viewBinding.searchContainer.imgMicro, ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white)))
+            viewBinding.searchContainer.imgMicro.background =
+                requireContext().drawable(R.drawable.green_oval)
+            ImageViewCompat.setImageTintList(
+                viewBinding.searchContainer.imgMicro,
+                ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
+            )
         } else {
             viewBinding.searchContainer.imgMicro.background = null
-            ImageViewCompat.setImageTintList(viewBinding.searchContainer.imgMicro, ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.micro)))
+            ImageViewCompat.setImageTintList(
+                viewBinding.searchContainer.imgMicro,
+                ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.micro))
+            )
         }
     }
 

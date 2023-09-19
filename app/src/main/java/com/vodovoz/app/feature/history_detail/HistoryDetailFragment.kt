@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.history_detail
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,7 +14,6 @@ import com.vodovoz.app.ui.interfaces.IOnChangeHistory
 import com.vodovoz.app.ui.interfaces.IOnInvokeAction
 import com.vodovoz.app.ui.model.BannerUI
 import com.vodovoz.app.ui.model.HistoryUI
-import com.vodovoz.app.util.extensions.getParcelableSafe
 import jp.shts.android.storiesprogressview.StoriesProgressView
 
 class HistoryDetailFragment : Fragment() {
@@ -40,7 +40,12 @@ class HistoryDetailFragment : Fragment() {
     }
 
     private fun getArgs() {
-        historyUI = requireArguments().getParcelableSafe(HISTORY, HistoryUI::class.java)
+        historyUI = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            @Suppress("DEPRECATION")
+            requireArguments().getParcelable(HISTORY)
+        } else {
+            requireArguments().getParcelable(HISTORY, HistoryUI::class.java)
+        } ?: throw java.lang.RuntimeException("There is not bundle HISTORY")
     }
 
     override fun onCreateView(

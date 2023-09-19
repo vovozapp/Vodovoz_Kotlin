@@ -30,8 +30,8 @@ class ProductDetailFabController(
         oldQuantity: Int,
         circleAmountTv: TextView,
         addIv: ImageView,
-//        reduceIv: ImageView,
-//        increaseIv: ImageView,
+        reduceIv: ImageView,
+        increaseIv: ImageView,
         amountDeployed: LinearLayout,
     ) {
         timer?.cancel()
@@ -74,8 +74,8 @@ class ProductDetailFabController(
                 amountTv,
                 circleAmountTv,
                 addIv,
-//                reduceIv,
-//                increaseIv,
+                reduceIv,
+                increaseIv,
                 amountDeployed
             )
         }
@@ -85,8 +85,8 @@ class ProductDetailFabController(
                 amountTv,
                 circleAmountTv,
                 addIv,
-//                reduceIv,
-//                increaseIv,
+                reduceIv,
+                increaseIv,
                 amountDeployed
             )
         }
@@ -96,8 +96,8 @@ class ProductDetailFabController(
                 amountTv,
                 circleAmountTv,
                 addIv,
-//                reduceIv,
-//                increaseIv,
+                reduceIv,
+                increaseIv,
                 amountDeployed
             )
         }
@@ -188,8 +188,8 @@ class ProductDetailFabController(
         amountTv: TextView,
         circleAmountTv: TextView,
         addIv: ImageView,
-//        reduceIv: ImageView,
-//        increaseIv: ImageView,
+        reduceIv: ImageView,
+        increaseIv: ImageView,
         amountDeployed: LinearLayout,
     ) {
         val oldQ = header.productDetailUI.cartQuantity
@@ -216,8 +216,8 @@ class ProductDetailFabController(
                 oldQ,
                 circleAmountTv,
                 addIv,
-//                reduceIv,
-//                increaseIv,
+                reduceIv,
+                increaseIv,
                 amountDeployed
             )
         }
@@ -228,13 +228,13 @@ class ProductDetailFabController(
         amountTv: TextView,
         circleAmountTv: TextView,
         addIv: ImageView,
-//        reduceIv: ImageView,
-//        increaseIv: ImageView,
+        reduceIv: ImageView,
+        increaseIv: ImageView,
         amountDeployed: LinearLayout,
     ) {
         val oldQ = header.productDetailUI.cartQuantity
         header.productDetailUI.cartQuantity++
-        startTimer(header, oldQ, circleAmountTv, addIv, amountDeployed)
+        startTimer(header, oldQ, circleAmountTv, addIv, reduceIv, increaseIv, amountDeployed)
         updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, circleAmountTv)
     }
 
@@ -243,15 +243,15 @@ class ProductDetailFabController(
         amountTv: TextView,
         circleAmountTv: TextView,
         addIv: ImageView,
-//        reduceIv: ImageView,
-//        increaseIv: ImageView,
+        reduceIv: ImageView,
+        increaseIv: ImageView,
         amountDeployed: LinearLayout,
     ) {
         with(header) {
             val oldQ = productDetailUI.cartQuantity
             productDetailUI.cartQuantity--
             if (productDetailUI.cartQuantity < 0) productDetailUI.cartQuantity = 0
-            startTimer(header, oldQ, circleAmountTv, addIv, amountDeployed)
+            startTimer(header, oldQ, circleAmountTv, addIv, reduceIv, increaseIv, amountDeployed)
             updateFabQuantity(productDetailUI.cartQuantity, amountTv, circleAmountTv)
         }
     }
@@ -261,14 +261,14 @@ class ProductDetailFabController(
         oldQ: Int,
         circleAmountTv: TextView,
         addIv: ImageView,
-//        reduceIv: ImageView,
-//        increaseIv: ImageView,
+        reduceIv: ImageView,
+        increaseIv: ImageView,
         amountDeployed: LinearLayout,
     ) {
         circleAmountTv.visibility = View.GONE
         addIv.visibility = View.GONE
         amountDeployed.visibility = View.VISIBLE
-        startTimer(header, oldQ, circleAmountTv, addIv, amountDeployed)
+        startTimer(header, oldQ, circleAmountTv, addIv, reduceIv, increaseIv, amountDeployed)
     }
 
     internal fun hideAmountController(

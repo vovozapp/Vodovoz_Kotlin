@@ -25,7 +25,7 @@ class ProductPropertyGroupViewHolder(
         ContextCompat.getDrawable(itemView.context, R.drawable.bkg_gray_divider)?.let {
             binding.rvProperties.addItemDecoration(Divider(it, space/2))
         }
-        binding.rvProperties.addMarginDecoration { rect, _, _, _ ->
+        binding.rvProperties.addMarginDecoration { rect, view, parent, state ->
             rect.top = space/2
             rect.bottom = space/2
         }

@@ -205,10 +205,10 @@ class AddressesFragment : BaseFragment() {
     internal fun showDeleteAddressDialog(addressId: Long) {
         MaterialAlertDialogBuilder(requireContext())
             .setMessage("Удалить адрес?")
-            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
+            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which ->
                 dialog.cancel()
             }
-            .setPositiveButton(resources.getString(R.string.confirm)) { dialog, _ ->
+            .setPositiveButton(resources.getString(R.string.confirm)) { dialog, which ->
                 viewModel.deleteAddress(addressId)
                 dialog.cancel()
             }
@@ -218,9 +218,9 @@ class AddressesFragment : BaseFragment() {
 
 }
 
-//enum class AddressType {
-//    Personal, Company
-//}
+enum class AddressType {
+    Personal, Company
+}
 
 enum class OpenMode {
     SelectAddress

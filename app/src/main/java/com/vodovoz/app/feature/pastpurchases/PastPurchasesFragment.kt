@@ -27,6 +27,7 @@ import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFragmentDirections
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
+import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.model.CategoryUI
@@ -44,7 +45,7 @@ class PastPurchasesFragment : BaseFragment() {
         )
     }
 
-    internal val viewModel: PastPurchasesFlowViewModel by viewModels()
+    private val viewModel: PastPurchasesFlowViewModel by viewModels()
 
     @Inject
     lateinit var cartManager: CartManager
@@ -337,14 +338,14 @@ class PastPurchasesFragment : BaseFragment() {
         }
     }
 
-//    private fun getProductsShowClickListener(): ProductsShowAllListener {
-//        return object : ProductsShowAllListener {
-//            override fun showAllDiscountProducts(id: Long) {}
-//            override fun showAllTopProducts(id: Long) {}
-//            override fun showAllNoveltiesProducts(id: Long) {}
-//            override fun showAllBottomProducts(id: Long) {}
-//        }
-//    }
+    private fun getProductsShowClickListener(): ProductsShowAllListener {
+        return object : ProductsShowAllListener {
+            override fun showAllDiscountProducts(id: Long) {}
+            override fun showAllTopProducts(id: Long) {}
+            override fun showAllNoveltiesProducts(id: Long) {}
+            override fun showAllBottomProducts(id: Long) {}
+        }
+    }
 
     private fun initSearch() {
         initSearchToolbar(

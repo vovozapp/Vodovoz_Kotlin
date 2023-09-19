@@ -230,7 +230,7 @@ class TraceOrderFragment : BaseFragment(), InputListener,
                     setCancelable(false)
                     setPositiveButton(
                         "Открыть настройки"
-                    ) { _, _ ->
+                    ) { dialogInterface, i ->
                         val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                         context.startActivity(intent)
                     }

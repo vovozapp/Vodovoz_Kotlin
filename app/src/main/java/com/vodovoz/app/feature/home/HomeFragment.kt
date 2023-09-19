@@ -828,7 +828,7 @@ class HomeFragment : BaseFragment() {
         var back = false
         addOnBackPressedCallback {
             if (!back) {
-                requireActivity().snack("Нажмите назад еще раз, чтобы выйти")
+                requireActivity().snack("Нажмите назад еще раз, чтобы выйти") {}
                 back = true
             } else {
                 requireActivity().finish()

@@ -75,7 +75,7 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
         }
 
         binding.rbRating.onRatingBarChangeListener =
-            RatingBar.OnRatingBarChangeListener { _, _, _ ->
+            RatingBar.OnRatingBarChangeListener { p0, newRating, p2 ->
                 binding.errorTv.isVisible = false
             }
 

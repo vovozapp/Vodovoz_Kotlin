@@ -34,7 +34,7 @@ class HomeBannersSliderViewHolder(
 
     init {
         val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
-        binding.vpBanners.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.vpBanners.orientation = ORIENTATION_HORIZONTAL
         binding.vpBanners.adapter = homeBannersAdapter
         binding.vpBanners.apply {
             clipToPadding = false   // allow full width shown with padding
@@ -140,7 +140,7 @@ class HomeBannersSliderViewHolder(
         registerOnPageChangeCallback(callback)
 
         // Stop auto paging when user touch the view
-        getRecyclerView().setOnTouchListener { _, _ ->
+        getRecyclerView().setOnTouchListener { _, event ->
             scope.cancel()
             scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
             autoTimerTask?.cancel()

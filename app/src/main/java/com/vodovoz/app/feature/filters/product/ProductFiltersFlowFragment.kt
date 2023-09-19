@@ -79,7 +79,7 @@ class ProductFiltersFlowFragment : BaseFragment() {
                 DividerItemDecoration.VERTICAL
             )
         )
-        binding.rvFilters.addMarginDecoration { rect, _, _, _ ->
+        binding.rvFilters.addMarginDecoration { rect, view, parent, state ->
             rect.left = space16
             rect.right = space16
             rect.top = space12

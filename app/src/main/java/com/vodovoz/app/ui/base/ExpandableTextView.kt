@@ -258,7 +258,7 @@ class ExpandableTextView @JvmOverloads constructor(
                 lineSpacingExtra,
                 false,
                 END,
-                targetMaxLines
+                3
             )
         }
     }

@@ -187,7 +187,7 @@ class ServiceDetailProdViewHolder(
         binding.rbRating.rating = item.rating
 
         binding.rbRating.onRatingBarChangeListener =
-            RatingBar.OnRatingBarChangeListener { _, newRating, _ ->
+            RatingBar.OnRatingBarChangeListener { p0, newRating, p2 ->
                 if (newRating != binding.rbRating.rating) {
                     productsClickListener.onChangeRating(item.id, newRating, item.rating)
                 }

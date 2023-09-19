@@ -1,13 +1,12 @@
 package com.vodovoz.app.feature.profile.waterapp.model
 
-import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.feature.profile.waterapp.model.inner.*
 import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.model.*
 
 object WaterAppLists {
 
     val firstList = listOf(
-        WaterAppModelOne(1),
+        WaterAppModelOne(2),
         WaterAppModelTwo(2),
         WaterAppModelThree(3),
         WaterAppModelFour(4),
@@ -73,7 +72,7 @@ object WaterAppLists {
 
     data class IconWithPosition(
         val id: Int,
-        val isSelected: Boolean
+        val isSelected: Boolean,
     )
 
 

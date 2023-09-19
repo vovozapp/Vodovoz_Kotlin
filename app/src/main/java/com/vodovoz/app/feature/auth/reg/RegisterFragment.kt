@@ -136,7 +136,7 @@ class RegisterFragment : BaseFragment() {
             if (count >0) binding.tilPhone.isErrorEnabled = false
         }
 
-        binding.scPersonalInfo.setOnCheckedChangeListener { _, b ->
+        binding.scPersonalInfo.setOnCheckedChangeListener { compoundButton, b ->
             if (b) {
                 binding.scPersonalInfo.error = null
             }
