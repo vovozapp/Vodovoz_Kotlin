@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--deferred-->
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
@@ -9,8 +8,7 @@
     app:behavior_hideable="true"
     app:behavior_peekHeight="50dp"
     android:minHeight="50dp"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-    xmlns:tools="http://schemas.android.com/tools">
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <View
         android:layout_width="match_parent"
@@ -76,7 +74,8 @@
             android:gravity="center"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:textColor="@color/blackTextPrimary" />
+            android:textColor="@color/blackTextPrimary"
+            android:textIsSelectable="true" />
 
         <TextView
             android:id="@+id/update"

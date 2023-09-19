@@ -2,14 +2,14 @@ package com.vodovoz.app.feature.catalog
 
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.catalog.CatalogManager
-import com.vodovoz.app.data.MainRepository
-import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.catalog.CatalogResponseJsonParser.parseCatalogResponse
-import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.stringToErrorState
 import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.data.MainRepository
+import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.response.catalog.CatalogResponseJsonParser.parseCatalogResponse
+import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel

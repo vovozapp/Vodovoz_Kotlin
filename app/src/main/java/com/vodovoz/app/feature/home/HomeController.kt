@@ -13,9 +13,9 @@ import com.vodovoz.app.feature.home.viewholders.homebanners.BottomBannerManager
 import com.vodovoz.app.feature.home.viewholders.homebanners.TopBannerManager
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeTabsClickListener
-import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
+import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 
 class HomeController(
     private val viewModel: HomeFlowViewModel,

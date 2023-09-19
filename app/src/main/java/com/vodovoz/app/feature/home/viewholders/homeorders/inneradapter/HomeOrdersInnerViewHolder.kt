@@ -2,8 +2,8 @@ package com.vodovoz.app.feature.home.viewholders.homeorders.inneradapter
 
 import android.view.View
 import androidx.core.content.ContextCompat
-import com.vodovoz.app.databinding.ViewHolderSliderOrderBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.databinding.ViewHolderSliderOrderBinding
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.OrderUI
 

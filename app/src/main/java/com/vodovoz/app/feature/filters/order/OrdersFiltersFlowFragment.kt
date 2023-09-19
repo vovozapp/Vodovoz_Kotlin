@@ -8,7 +8,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentOrdersFiltersBinding
-import com.vodovoz.app.feature.filters.order.adapter.OrderStatusesAdapter
 import com.vodovoz.app.feature.all.orders.OrdersHistoryFragment
 import com.vodovoz.app.feature.filters.order.adapter.OrderStatusesFlowAdapter
 import com.vodovoz.app.ui.model.OrderStatusUI

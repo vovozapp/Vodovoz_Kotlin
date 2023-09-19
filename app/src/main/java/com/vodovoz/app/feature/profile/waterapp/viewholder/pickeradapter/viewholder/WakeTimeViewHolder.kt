@@ -4,14 +4,10 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
-import com.vodovoz.app.databinding.FragmentWaterAppFifthBinding
 import com.vodovoz.app.databinding.ItemPickerBinding
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppInnerClickListener
-import com.vodovoz.app.feature.profile.waterapp.model.WaterAppModelFive
-import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.model.PickerHeight
-import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.model.PickerSleepTime
 import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.model.PickerWakeTime
 import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.launch

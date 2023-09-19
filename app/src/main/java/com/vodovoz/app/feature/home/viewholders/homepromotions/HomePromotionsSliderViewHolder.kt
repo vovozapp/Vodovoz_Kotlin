@@ -3,11 +3,11 @@ package com.vodovoz.app.feature.home.viewholders.homepromotions
 import android.view.View
 import androidx.viewpager2.widget.ViewPager2
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.databinding.FragmentSliderPromotionBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
+import com.vodovoz.app.databinding.FragmentSliderPromotionBinding
 import com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter.HomePromotionsInnerAdapter
+import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 
 class HomePromotionsSliderViewHolder(
     view: View,

@@ -3,12 +3,9 @@ package com.vodovoz.app.feature.home.ratebottom
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResultCallback
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -33,7 +30,7 @@ class RateBottomFragment : BaseBottomSheetFragment() {
         return R.layout.fragment_rate_bottom
     }
 
-    private val binding: FragmentRateBottomBinding by viewBinding {
+    internal val binding: FragmentRateBottomBinding by viewBinding {
         FragmentRateBottomBinding.bind(contentView)
     }
 

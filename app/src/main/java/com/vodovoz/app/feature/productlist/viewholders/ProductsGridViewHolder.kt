@@ -21,7 +21,9 @@ import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.Det
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setLimitedText
 import com.vodovoz.app.ui.model.ProductUI
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class ProductsGridViewHolder(

@@ -1,6 +1,5 @@
 package com.vodovoz.app.ui.model.custom
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.vodovoz.app.ui.model.OrderStatusUI
 import kotlinx.parcelize.Parcelize

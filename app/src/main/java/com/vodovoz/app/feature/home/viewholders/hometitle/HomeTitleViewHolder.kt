@@ -1,7 +1,6 @@
 package com.vodovoz.app.feature.home.viewholders.hometitle
 
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder

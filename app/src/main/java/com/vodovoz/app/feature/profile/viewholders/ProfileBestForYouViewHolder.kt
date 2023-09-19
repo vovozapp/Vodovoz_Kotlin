@@ -2,7 +2,6 @@ package com.vodovoz.app.feature.profile.viewholders
 
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
@@ -10,12 +9,9 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.ItemProfileBestForYouBinding
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
-import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
-import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.profile.viewholders.models.ProfileBestForYou
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
-import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 
 class ProfileBestForYouViewHolder(
     view: View,

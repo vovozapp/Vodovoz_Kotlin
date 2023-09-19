@@ -3,7 +3,6 @@ package com.vodovoz.app.feature.cart.ordering.intervals
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding

@@ -1,7 +1,10 @@
 package com.vodovoz.app.feature.all.comments
 
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -12,7 +15,6 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentProductCommentsFlowBinding
-
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

@@ -10,10 +10,8 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProductsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
-import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotionsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailbrandproductlist.DetailBrandListViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailcatandbrand.DetailCatAndBrandViewHolder
@@ -24,6 +22,7 @@ import com.vodovoz.app.feature.productdetail.viewholders.detailproductmaybelike.
 import com.vodovoz.app.feature.productdetail.viewholders.detailsearchword.DetailSearchWordViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailservices.DetailServicesViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailtabs.DetailTabsViewHolder
+import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 
 class ProductDetailsAdapter(
     private val clickListener: ProductDetailsClickListener,

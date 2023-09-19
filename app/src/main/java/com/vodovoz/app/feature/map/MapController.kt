@@ -11,11 +11,7 @@ import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.EditText
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
@@ -33,7 +29,10 @@ import com.vodovoz.app.feature.map.adapter.AddressResultFlowAdapter
 import com.vodovoz.app.ui.extensions.ColorExtensions.getColorWithAlpha
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.ui.model.DeliveryZoneUI
-import com.yandex.mapkit.*
+import com.yandex.mapkit.Animation
+import com.yandex.mapkit.MapKit
+import com.yandex.mapkit.RequestPoint
+import com.yandex.mapkit.RequestPointType
 import com.yandex.mapkit.directions.DirectionsFactory
 import com.yandex.mapkit.directions.driving.*
 import com.yandex.mapkit.geometry.*
@@ -50,7 +49,6 @@ import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.Error
 import com.yandex.runtime.image.ImageProvider
-import java.util.ArrayList
 
 class MapController(
     private val mapKit: MapKit,

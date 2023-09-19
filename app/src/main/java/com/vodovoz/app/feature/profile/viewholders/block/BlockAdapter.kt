@@ -5,7 +5,6 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
-import com.vodovoz.app.feature.profile.viewholders.ProfileBlockViewHolder
 
 class BlockAdapter : ItemAdapter() {
 

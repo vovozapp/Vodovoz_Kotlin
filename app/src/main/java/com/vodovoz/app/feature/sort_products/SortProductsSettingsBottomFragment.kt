@@ -10,9 +10,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vodovoz.app.R
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.BsSelectionProductsSortingBinding
+import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragment
 import com.vodovoz.app.feature.sort_products.adapter.ProductsSortingAdapter
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
-import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragment
 
 class SortProductsSettingsBottomFragment : BottomSheetDialogFragment() {
 

@@ -10,7 +10,6 @@ import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppInnerClickListen
 import com.vodovoz.app.feature.profile.waterapp.model.inner.WaterAppModelInnerOne
 import com.vodovoz.app.util.extensions.color
 import com.vodovoz.app.util.extensions.debugLog
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class WaterAppViewHolderInnerFirst(

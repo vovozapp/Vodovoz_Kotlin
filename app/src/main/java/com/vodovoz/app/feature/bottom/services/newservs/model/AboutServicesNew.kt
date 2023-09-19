@@ -5,7 +5,6 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
-import com.vodovoz.app.ui.model.ServiceUI
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

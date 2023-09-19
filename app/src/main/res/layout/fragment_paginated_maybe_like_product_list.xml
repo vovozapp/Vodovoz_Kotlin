@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--new-->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -11,7 +9,7 @@
         style="@style/TextViewHeaderBlackBold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Возможно, вам понравится"
+        android:text="@string/vozmozhno_vam_ponravitsya"
         android:paddingVertical="@dimen/space_8"
         android:paddingHorizontal="@dimen/space_16"/>
 
@@ -25,7 +23,7 @@
         style="@style/TextViewNormalBlue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Показать еще"
+        android:text="@string/pokazat_escho"
         android:paddingVertical="@dimen/space_16"
         android:gravity="center"/>
 

@@ -18,7 +18,6 @@ import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToFullFormat
-import com.vodovoz.app.util.extensions.scrollViewToTop
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,7 +30,7 @@ class NotificationSettingsFragment : BaseFragment() {
         FragmentNotificationSettingsBinding.bind(contentView)
     }
 
-    private val viewModel: NotificationSettingsViewModel by viewModels()
+    internal val viewModel: NotificationSettingsViewModel by viewModels()
 
     private val notSettingsController: NotSettingsController by lazy {
         NotSettingsController(object: NotSettingsClickListener {

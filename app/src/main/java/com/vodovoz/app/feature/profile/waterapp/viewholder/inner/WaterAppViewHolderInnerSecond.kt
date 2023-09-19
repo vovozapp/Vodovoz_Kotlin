@@ -1,6 +1,5 @@
 package com.vodovoz.app.feature.profile.waterapp.viewholder.inner
 
-import android.content.Context
 import android.view.View
 import android.widget.AbsListView
 import androidx.recyclerview.widget.LinearLayoutManager

@@ -1,10 +1,9 @@
 package com.vodovoz.app.feature.home.viewholders.homepopulars.inneradapter
 
 import android.view.View
-import com.vodovoz.app.databinding.ViewHolderSliderPopularCategoryBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.databinding.ViewHolderSliderPopularCategoryBinding
 import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.util.extensions.debugLog
 
 class HomePopularsInnerViewHolder(
     view: View,

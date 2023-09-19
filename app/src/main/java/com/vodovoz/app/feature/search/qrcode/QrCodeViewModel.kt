@@ -3,7 +3,6 @@ package com.vodovoz.app.feature.search.qrcode
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.content.Event
 import com.vodovoz.app.common.content.PagingContractViewModel
-import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.data.MainRepository

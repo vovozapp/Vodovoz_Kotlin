@@ -5,8 +5,6 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ItemProfileInsideCategoryUiBinding
-import com.vodovoz.app.feature.bottom.contacts.adapter.ContactsClickListener
-import com.vodovoz.app.feature.bottom.contacts.adapter.ContactsFlowAdapter
 import com.vodovoz.app.feature.profile.adapter.ProfileFlowClickListener
 import com.vodovoz.app.feature.profile.cats.ProfileInsideCategoryUI
 

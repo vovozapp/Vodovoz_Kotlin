@@ -2,7 +2,6 @@ package com.vodovoz.app.feature.profile.cats
 
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
-import com.vodovoz.app.ui.model.ChatUI
 
 data class ProfileCategoryUI(
     val title: String?,

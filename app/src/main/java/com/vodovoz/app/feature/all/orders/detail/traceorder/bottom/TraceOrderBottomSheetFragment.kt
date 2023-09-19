@@ -15,7 +15,6 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.FragmentTraceOrderBottomBinding
 import com.vodovoz.app.feature.all.orders.detail.traceorder.TraceOrderViewModel
-import com.vodovoz.app.feature.bottom.contacts.ContactsFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -74,7 +73,10 @@ class TraceOrderBottomSheetFragment : BaseBottomSheetFragment() {
                         } else {
                             binding.timeTv.isVisible = true
                             binding.commentTv.isVisible = false
-                            binding.commentTv.text = "Ориентировочное время прибытия: ${it.data.driverPointsEntity.Priblizitelnoe_vremya}"
+                            binding.commentTv.text = buildString {
+                                        append("Ориентировочное время прибытия: ")
+                                        append(it.data.driverPointsEntity.Priblizitelnoe_vremya)
+                                    }
                         }
                     } else {
                         binding.timeTv.isVisible = false

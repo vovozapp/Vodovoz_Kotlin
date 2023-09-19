@@ -1,13 +1,9 @@
 package com.vodovoz.app.feature.main
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateInterpolator
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,7 +11,6 @@ import androidx.navigation.Navigation
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.common.notification.NotificationConfig
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.navigation.setupWithNavController

@@ -11,8 +11,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.BsCatalogMiniBinding
-import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.feature.mini_catalog.adapter.MiniCatalogAdapter
+import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 
 class MiniCatalogBottomFragment : BottomSheetDialogFragment() {

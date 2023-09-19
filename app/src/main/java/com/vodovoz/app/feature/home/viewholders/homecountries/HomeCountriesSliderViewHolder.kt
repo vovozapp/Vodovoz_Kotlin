@@ -7,8 +7,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.FragmentSliderCountryBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.databinding.FragmentSliderCountryBinding
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.viewholders.homecountries.inneradapter.HomeCountriesInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.homecountries.inneradapter.HomeCountriesSliderClickListener
@@ -31,8 +31,8 @@ class HomeCountriesSliderViewHolder(
         binding.rvCountries.layoutManager =
             LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
 
-        binding.rvCountries.addMarginDecoration { rect, view, parent, _ ->
-            if (parent.getChildAdapterPosition(view) == 0) {
+        binding.rvCountries.addMarginDecoration { rect, viewDecor, parent, _ ->
+            if (parent.getChildAdapterPosition(viewDecor) == 0) {
                 rect.left = space
             }
             rect.top = space / 2

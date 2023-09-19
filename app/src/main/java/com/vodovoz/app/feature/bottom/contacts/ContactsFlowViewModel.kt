@@ -1,16 +1,12 @@
 package com.vodovoz.app.feature.bottom.contacts
 
-import android.os.Build
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.content.*
-import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.contacts.ContactsBundleResponseJsonParser.parseContactsBundleResponse
 import com.vodovoz.app.data.parser.response.contacts.SendMailResponseJsonParser.parseSendMailResponse
-import com.vodovoz.app.data.parser.response.service.AboutServicesResponseJsonParser.parseAboutServicesResponse
-import com.vodovoz.app.mapper.AboutServicesBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ContactsBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.ContactsBundleUI
 import com.vodovoz.app.util.extensions.debugLog

@@ -5,14 +5,14 @@ import androidx.lifecycle.ViewModel
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
 import kotlinx.coroutines.flow.MutableSharedFlow
-import java.net.ConnectException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
-import javax.net.ssl.SSLException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import retrofit2.HttpException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
+import javax.net.ssl.SSLException
 
 abstract class PagingStateViewModel<S : State>(
     idleState: S

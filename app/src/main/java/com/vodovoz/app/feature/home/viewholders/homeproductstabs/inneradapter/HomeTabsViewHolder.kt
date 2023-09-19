@@ -6,7 +6,6 @@ import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ViewHolderSliderPopularCategoryBinding
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeTabsClickListener
 import com.vodovoz.app.ui.model.CategoryDetailUI
-import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.util.extensions.color
 
 class HomeTabsViewHolder(

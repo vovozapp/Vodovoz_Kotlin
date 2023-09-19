@@ -9,9 +9,9 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.feature.bottom.services.detail.model.ServiceDetailUI
 import com.vodovoz.app.feature.bottom.services.detail.model.ServicesDetailParser.mapToUI
 import com.vodovoz.app.feature.bottom.services.detail.model.ServicesDetailParser.parseServiceDetail
-import com.vodovoz.app.feature.bottom.services.detail.model.ServiceDetailUI
 import com.vodovoz.app.feature.bottom.services.newservs.model.AboutServicesNew
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel

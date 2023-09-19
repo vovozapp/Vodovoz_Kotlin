@@ -12,7 +12,6 @@ import com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts.inner.N
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.view.Divider
-import com.vodovoz.app.util.extensions.debugLog
 
 class CartNotAvailableProductsViewHolder(
     view: View,

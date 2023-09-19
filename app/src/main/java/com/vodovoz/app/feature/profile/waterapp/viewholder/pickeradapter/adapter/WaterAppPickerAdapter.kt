@@ -8,8 +8,6 @@ import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppInnerClickListener
-import com.vodovoz.app.feature.profile.waterapp.viewholder.*
-import com.vodovoz.app.feature.profile.waterapp.viewholder.inner.*
 import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.viewholder.*
 
 class WaterAppPickerAdapter(

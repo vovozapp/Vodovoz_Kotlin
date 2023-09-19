@@ -1,8 +1,6 @@
 package com.vodovoz.app.ui.extensions
 
-import android.util.Log
 import android.widget.TextView
-import com.vodovoz.app.util.LogSettings
 import kotlin.math.roundToInt
 
 object TextBuilderExtensions {

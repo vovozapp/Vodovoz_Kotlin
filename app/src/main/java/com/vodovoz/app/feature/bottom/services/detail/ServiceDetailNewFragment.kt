@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
@@ -18,20 +16,12 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
-import com.vodovoz.app.databinding.FragmentServiceDetailsFlowBinding
 import com.vodovoz.app.databinding.FragmentServiceDetailsFlowNewBinding
-import com.vodovoz.app.feature.bottom.services.AboutServicesFlowViewModel
-import com.vodovoz.app.feature.bottom.services.detail.adapter.ServiceDetailClickListener
 import com.vodovoz.app.feature.bottom.services.detail.adapter.ServiceDetailController
 import com.vodovoz.app.feature.bottom.services.detail.model.ServiceDetailBlockUI
 import com.vodovoz.app.feature.bottom.services.newservs.AboutServicesNewViewModel
-import com.vodovoz.app.feature.favorite.FavoriteFragmentDirections
-import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
-import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -39,7 +29,7 @@ class ServiceDetailNewFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_service_details_flow_new
 
-    private val viewModel: AboutServicesNewViewModel by viewModels()
+    internal val viewModel: AboutServicesNewViewModel by viewModels()
 
     @Inject
     lateinit var cartManager: CartManager
@@ -50,9 +40,9 @@ class ServiceDetailNewFragment : BaseFragment() {
     @Inject
     lateinit var ratingProductManager: RatingProductManager
 
-    private val serviceDetailController by lazy { ServiceDetailController(cartManager, likeManager, ratingProductManager, getProductsClickListener()) }
+    internal val serviceDetailController by lazy { ServiceDetailController(cartManager, likeManager, ratingProductManager, getProductsClickListener()) }
 
-    private val binding: FragmentServiceDetailsFlowNewBinding by viewBinding {
+    internal val binding: FragmentServiceDetailsFlowNewBinding by viewBinding {
         FragmentServiceDetailsFlowNewBinding.bind(
             contentView
         )

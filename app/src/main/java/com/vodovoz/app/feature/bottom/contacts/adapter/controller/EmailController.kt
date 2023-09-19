@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.ItemController
-import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.feature.bottom.contacts.adapter.ContactsClickListener
 import com.vodovoz.app.feature.bottom.contacts.adapter.ContactsFlowAdapter
 

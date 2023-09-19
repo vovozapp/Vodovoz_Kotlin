@@ -2,16 +2,11 @@ package com.vodovoz.app.feature.home.viewholders.homeproducts
 
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ahmadhamwi.tabsync.TabbedListMediator
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.databinding.FragmentSliderProductBinding
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.BOTTOM_PROD
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.DISCOUNT
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.NOVELTIES
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.TOP_PROD
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.HomeCategoriesInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.HomeProductsInnerAdapter
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener

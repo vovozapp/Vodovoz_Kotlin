@@ -3,11 +3,9 @@ package com.vodovoz.app.feature.profile
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -27,8 +25,9 @@ import com.vodovoz.app.feature.home.viewholders.homeorders.inneradapter.HomeOrde
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.profile.adapter.ProfileFlowClickListener
-import com.vodovoz.app.util.extensions.*
-
+import com.vodovoz.app.util.extensions.startTelegram
+import com.vodovoz.app.util.extensions.startViber
+import com.vodovoz.app.util.extensions.startWhatsUp
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -44,7 +43,7 @@ class ProfileFragment : BaseFragment() {
         )
     }
 
-    private val viewModel: ProfileFlowViewModel by activityViewModels()
+    internal val viewModel: ProfileFlowViewModel by activityViewModels()
     private val flowViewModel: HomeFlowViewModel by activityViewModels()
     private val cartFlowViewModel: CartFlowViewModel by activityViewModels()
     private val favoriteViewModel: FavoriteFlowViewModel by activityViewModels()

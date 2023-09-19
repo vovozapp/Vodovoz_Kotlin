@@ -3,8 +3,8 @@ package com.vodovoz.app.feature.home.viewholders.homecountries.inneradapter
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.vodovoz.app.databinding.ViewHolderSliderCountryBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.databinding.ViewHolderSliderCountryBinding
 import com.vodovoz.app.ui.model.CountryUI
 
 class HomeCountriesInnerViewHolder(

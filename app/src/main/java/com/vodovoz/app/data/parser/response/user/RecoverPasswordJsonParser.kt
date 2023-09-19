@@ -2,7 +2,6 @@ package com.vodovoz.app.data.parser.response.user
 
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.remote.ResponseStatus
-import com.vodovoz.app.util.extensions.debugLog
 import okhttp3.ResponseBody
 import org.json.JSONObject
 

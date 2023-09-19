@@ -3,8 +3,8 @@ package com.vodovoz.app.feature.home.viewholders.homepopulars
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.FragmentSliderPopularBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.databinding.FragmentSliderPopularBinding
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.viewholders.homepopulars.inneradapter.HomePopularCategoriesSliderClickListener
 import com.vodovoz.app.feature.home.viewholders.homepopulars.inneradapter.HomePopularsInnerAdapter
@@ -24,9 +24,9 @@ class HomePopularCategoriesSliderViewHolder(
 
         val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
 
-        binding.rvPopularCategories.addMarginDecoration { rect, view, parent, state ->
-            if (parent.getChildAdapterPosition(view) == 0) rect.left = space
-            if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.right = space
+        binding.rvPopularCategories.addMarginDecoration { rect, viewDecor, parent, state ->
+            if (parent.getChildAdapterPosition(viewDecor) == 0) rect.left = space
+            if (parent.getChildAdapterPosition(viewDecor) == state.itemCount - 1) rect.right = space
             else rect.right = space/2
             rect.top = space / 2
             rect.bottom = space / 2

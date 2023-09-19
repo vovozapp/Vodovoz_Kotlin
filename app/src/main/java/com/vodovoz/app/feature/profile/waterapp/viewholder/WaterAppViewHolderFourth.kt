@@ -1,14 +1,12 @@
 package com.vodovoz.app.feature.profile.waterapp.viewholder
 
 import android.view.View
+import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
-import com.vodovoz.app.databinding.FragmentWaterAppFirstBinding
 import com.vodovoz.app.databinding.FragmentWaterAppFourthBinding
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
 import com.vodovoz.app.feature.profile.waterapp.model.WaterAppModelFour
-import com.vodovoz.app.feature.profile.waterapp.model.WaterAppModelOne
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class WaterAppViewHolderFourth(
@@ -34,8 +32,10 @@ class WaterAppViewHolderFourth(
                 .observeWaterAppRateData()
                 .collect {
                     if (it == null) return@collect
-                    binding.tvYourRate.text = "${it.rate} мл"
-
+                    binding.tvYourRate.text = binding.tvYourRate.context.getString(
+                        R.string.millilitres,
+                        it.rate
+                    )
                 }
         }
 

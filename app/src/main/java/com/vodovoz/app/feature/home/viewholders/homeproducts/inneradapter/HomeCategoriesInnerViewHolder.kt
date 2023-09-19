@@ -4,9 +4,9 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.databinding.ViewHolderSliderProductCategoryBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
+import com.vodovoz.app.databinding.ViewHolderSliderProductCategoryBinding
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.HomeProductsInnerAdapter
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.decoration.ProductSliderMarginDecoration

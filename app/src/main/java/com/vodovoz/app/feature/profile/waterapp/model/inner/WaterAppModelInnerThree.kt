@@ -2,7 +2,6 @@ package com.vodovoz.app.feature.profile.waterapp.model.inner
 
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 
 data class WaterAppModelInnerThree(
     val id: Int = 3

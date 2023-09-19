@@ -1,6 +1,5 @@
 package com.vodovoz.app.ui.model
 
-import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.feature.all.comments.model.CommentImage
 

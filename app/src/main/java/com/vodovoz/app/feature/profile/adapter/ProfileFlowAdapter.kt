@@ -12,7 +12,6 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.home.viewholders.homeorders.inneradapter.HomeOrdersSliderClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProductsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleViewHolder
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.profile.viewholders.*

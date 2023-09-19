@@ -8,7 +8,6 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.databinding.FragmentAllPromotionsBinding
 import com.vodovoz.app.feature.all.AllAdapterController
 import com.vodovoz.app.feature.all.AllClickListener

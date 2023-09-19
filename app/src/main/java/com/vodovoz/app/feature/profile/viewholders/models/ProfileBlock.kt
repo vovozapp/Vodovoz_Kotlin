@@ -3,7 +3,6 @@ package com.vodovoz.app.feature.profile.viewholders.models
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.feature.profile.cats.BLOCKRESPONSE
-import com.vodovoz.app.ui.model.OrderUI
 
 data class ProfileBlock(
     val id: Int = 2,

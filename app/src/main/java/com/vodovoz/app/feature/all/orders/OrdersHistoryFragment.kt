@@ -1,7 +1,7 @@
 package com.vodovoz.app.feature.all.orders
 
 import android.os.Bundle
-import android.view.*
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -31,7 +31,7 @@ class OrdersHistoryFragment : BaseFragment() {
             contentView
         )
     }
-    private val viewModel: AllOrdersFlowViewModel by viewModels()
+    internal val viewModel: AllOrdersFlowViewModel by viewModels()
 
     @Inject
     lateinit var accountManager: AccountManager

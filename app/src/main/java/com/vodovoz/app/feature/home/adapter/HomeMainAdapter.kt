@@ -24,12 +24,12 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProductsSliderV
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeProductsTabsViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeTabsClickListener
-import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotionsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleViewHolder
 import com.vodovoz.app.feature.home.viewholders.hometriplenav.HomeTripleNavViewHolder
+import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 
 class HomeMainAdapter(
     private val clickListener: HomeMainClickListener,

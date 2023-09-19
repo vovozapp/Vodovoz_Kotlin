@@ -6,16 +6,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
-import com.vodovoz.app.databinding.FragmentWaterAppFirstBinding
-import com.vodovoz.app.databinding.FragmentWaterAppInnerFirstBinding
 import com.vodovoz.app.databinding.FragmentWaterAppInnerFourthBinding
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppInnerClickListener
 import com.vodovoz.app.feature.profile.waterapp.model.WaterAppLists
-import com.vodovoz.app.feature.profile.waterapp.model.WaterAppModelOne
 import com.vodovoz.app.feature.profile.waterapp.model.inner.WaterAppModelInnerFour
-import com.vodovoz.app.feature.profile.waterapp.model.inner.WaterAppModelInnerOne
 import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.adapter.WaterAppPickerAdapter
 import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.launch

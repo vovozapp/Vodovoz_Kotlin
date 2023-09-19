@@ -11,7 +11,6 @@ import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.feature.profile.notificationsettings.model.NotSettingsItem
 import com.vodovoz.app.feature.profile.notificationsettings.model.NotificationSettingsModel
-import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

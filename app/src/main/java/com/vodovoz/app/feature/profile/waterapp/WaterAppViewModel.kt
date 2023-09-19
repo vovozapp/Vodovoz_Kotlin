@@ -1,13 +1,10 @@
 package com.vodovoz.app.feature.profile.waterapp
 
-import androidx.lifecycle.viewModelScope
 import com.squareup.moshi.Moshi
 import com.vodovoz.app.common.content.Event
 import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
-import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel

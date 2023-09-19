@@ -1,8 +1,6 @@
 package com.vodovoz.app.feature.onlyproducts
 
 import android.content.Context
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
@@ -11,15 +9,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.ItemController
-import com.vodovoz.app.common.content.itemadapter.Item
-import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlist.adapter.SortedAdapter
-import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.decoration.ListMarginDecoration
-import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel.Companion.LINEAR
 
 class OnlyProductsController(
     private val viewModel: OnlyProductsViewModel,

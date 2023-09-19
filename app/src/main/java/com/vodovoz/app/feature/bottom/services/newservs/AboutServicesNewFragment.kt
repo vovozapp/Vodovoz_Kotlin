@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -18,8 +17,6 @@ import com.vodovoz.app.feature.bottom.services.AboutServicesDialogFragmentDirect
 import com.vodovoz.app.feature.bottom.services.ServicesController
 import com.vodovoz.app.feature.bottom.services.adapter.ServicesClickListener
 import com.vodovoz.app.feature.bottom.services.newservs.model.ServiceNew
-import com.vodovoz.app.ui.model.ServiceUI
-import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

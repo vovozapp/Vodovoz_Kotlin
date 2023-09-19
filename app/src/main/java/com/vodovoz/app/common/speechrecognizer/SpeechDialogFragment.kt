@@ -6,13 +6,9 @@ import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
-import com.vodovoz.app.common.content.BaseBottomSheetFragment
-import com.vodovoz.app.databinding.FragmentSpeechDialogBinding
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*

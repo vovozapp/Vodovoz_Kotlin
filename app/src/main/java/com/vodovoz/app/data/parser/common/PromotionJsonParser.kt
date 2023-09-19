@@ -3,7 +3,6 @@ package com.vodovoz.app.data.parser.common
 import com.vodovoz.app.data.model.common.PromotionEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
-import com.vodovoz.app.feature.home.viewholders.homebanners.model.BannerAdvEntity
 import com.vodovoz.app.feature.home.viewholders.homepromotions.model.PromotionAdvEntity
 import org.json.JSONArray
 import org.json.JSONObject

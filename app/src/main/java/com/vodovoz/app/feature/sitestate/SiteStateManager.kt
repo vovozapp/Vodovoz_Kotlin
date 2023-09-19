@@ -1,7 +1,6 @@
 package com.vodovoz.app.feature.sitestate
 
 import com.vodovoz.app.data.MainRepository
-import com.vodovoz.app.data.parser.common.safeInt
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
 import com.vodovoz.app.util.extensions.debugLog

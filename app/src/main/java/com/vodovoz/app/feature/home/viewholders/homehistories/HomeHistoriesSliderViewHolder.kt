@@ -3,8 +3,8 @@ package com.vodovoz.app.feature.home.viewholders.homehistories
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.FragmentSliderHistoryBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.databinding.FragmentSliderHistoryBinding
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.viewholders.homehistories.inneradapter.HomeHistoriesInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.homehistories.inneradapter.HomeHistoriesSliderClickListener
@@ -26,9 +26,9 @@ class HomeHistoriesSliderViewHolder(
 
         binding.rvHistories.adapter = historiesSliderAdapter
 
-        binding.rvHistories.addMarginDecoration { rect, view, parent, state ->
-            if (parent.getChildAdapterPosition(view) == 0) rect.left = space
-            if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.right = space
+        binding.rvHistories.addMarginDecoration { rect, viewDecor, parent, state ->
+            if (parent.getChildAdapterPosition(viewDecor) == 0) rect.left = space
+            if (parent.getChildAdapterPosition(viewDecor) == state.itemCount - 1) rect.right = space
             else rect.right = space/2
             rect.top = space / 2
             rect.bottom = space / 2

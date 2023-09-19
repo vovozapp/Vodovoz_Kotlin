@@ -1,8 +1,8 @@
 package com.vodovoz.app.feature.home.viewholders.homecomments.inneradapter
 
 import android.view.View
-import com.vodovoz.app.databinding.ViewHolderSliderCommentBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.databinding.ViewHolderSliderCommentBinding
 import com.vodovoz.app.ui.model.CommentUI
 
 class HomeCommentsInnerViewHolder(

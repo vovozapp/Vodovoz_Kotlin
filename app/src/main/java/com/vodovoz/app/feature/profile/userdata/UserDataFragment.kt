@@ -18,12 +18,10 @@ import com.vodovoz.app.common.media.ImagePickerFragment
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.databinding.FragmentUserDataFlowBinding
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel
-import com.vodovoz.app.feature.profile.ProfileFlowViewModel.Companion.POSITION_1
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToFullFormat
-import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.textOrErrorWithEmpty
 import dagger.hilt.android.AndroidEntryPoint

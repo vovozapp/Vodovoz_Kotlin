@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.ItemController
-import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
@@ -30,7 +29,7 @@ class OrderDetailsController(
         ratingProductManager
     )
 ) {
-    private val space: Int by lazy { context.resources.getDimension(R.dimen.space_16).toInt() }
+    internal val space: Int by lazy { context.resources.getDimension(R.dimen.space_16).toInt() }
 
     override fun initList(recyclerView: RecyclerView) {
         super.initList(recyclerView)

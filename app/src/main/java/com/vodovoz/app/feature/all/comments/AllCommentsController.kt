@@ -4,13 +4,11 @@ import android.content.Context
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.ItemController
-import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.feature.productdetail.viewholders.detailcomments.inner.CommentsWithAvatarFlowAdapter
 
 class AllCommentsController(
@@ -18,7 +16,7 @@ class AllCommentsController(
     private val context: Context,
 ) : ItemController(CommentsWithAvatarFlowAdapter()) {
 
-    private val space: Int by lazy { context.resources.getDimension(R.dimen.space_16).toInt() }
+    internal val space: Int by lazy { context.resources.getDimension(R.dimen.space_16).toInt() }
 
     override fun bindRefresh(refresh: SwipeRefreshLayout) {
         refresh.setOnRefreshListener {

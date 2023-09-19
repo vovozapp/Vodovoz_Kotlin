@@ -6,7 +6,6 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeTabsClickListener
-import com.vodovoz.app.ui.model.CategoryUI
 
 class HomeTabsAdapter(
     private val clickListener: HomeTabsClickListener

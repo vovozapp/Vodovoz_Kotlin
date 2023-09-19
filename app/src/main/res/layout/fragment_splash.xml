@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeGlav"
     android:background="#05a4ff">
 
@@ -14,6 +13,7 @@
         android:src="@drawable/logo_new"
         android:scaleType="centerCrop"
         android:forceDarkAllowed="false"
+        tools:ignore="ContentDescription"
         />
 
     <ImageView
@@ -24,7 +24,8 @@
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:src="@drawable/logo_label"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        tools:ignore="ContentDescription"/>
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:layout_width="match_parent"

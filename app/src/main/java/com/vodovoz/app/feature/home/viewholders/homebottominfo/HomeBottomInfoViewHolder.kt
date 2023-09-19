@@ -1,10 +1,9 @@
 package com.vodovoz.app.feature.home.viewholders.homebottominfo
 
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
-import com.vodovoz.app.databinding.FragmentSectionAdditionalInfoBinding
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.databinding.FragmentSectionAdditionalInfoBinding
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 
 class HomeBottomInfoViewHolder(

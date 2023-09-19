@@ -35,9 +35,9 @@ import com.vodovoz.app.feature.productdetail.viewholders.detailsearchword.Detail
 import com.vodovoz.app.feature.productdetail.viewholders.detailsearchword.inner.SearchWordItem
 import com.vodovoz.app.feature.productdetail.viewholders.detailservices.DetailServices
 import com.vodovoz.app.feature.productdetail.viewholders.detailtabs.DetailTabs
+import com.vodovoz.app.feature.products_slider.ProductsSliderConfig
 import com.vodovoz.app.mapper.PaginatedProductListMapper.mapToUI
 import com.vodovoz.app.mapper.ProductDetailBundleMapper.mapToUI
-import com.vodovoz.app.feature.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.ProductDetailUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI

@@ -2,8 +2,8 @@ package com.vodovoz.app.feature.home.viewholders.homehistories.inneradapter
 
 import android.view.View
 import com.bumptech.glide.Glide
-import com.vodovoz.app.databinding.ViewHolderSliderHistoryBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.databinding.ViewHolderSliderHistoryBinding
 import com.vodovoz.app.ui.model.HistoryUI
 
 class HomeHistoriesInnerViewHolder(

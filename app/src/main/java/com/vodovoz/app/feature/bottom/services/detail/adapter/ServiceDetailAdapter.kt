@@ -9,9 +9,7 @@ import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.bottom.services.detail.adapter.inner.ServiceDetailProdViewHolder
-import com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter.inneradapterproducts.HomePromotionsProductInnerViewHolder
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.feature.productlist.viewholders.ProdListViewHolder
 import com.vodovoz.app.ui.model.ProductUI
 
 class ServiceDetailAdapter(

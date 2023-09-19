@@ -30,7 +30,7 @@
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="Реклама" />
+            android:text="@string/reklama" />
 
         <ImageView
             android:id="@+id/imageView2"
@@ -44,7 +44,8 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/advTv"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="#B3434343" />
+            app:tint="#B3434343"
+            tools:ignore="ContentDescription"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

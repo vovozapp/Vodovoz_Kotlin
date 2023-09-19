@@ -1,9 +1,10 @@
 package com.vodovoz.app.feature.profile.waterapp.worker
 
-import android.app.PendingIntent
-import android.app.TaskStackBuilder
+import android.Manifest
 import android.content.Context
-import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.navigation.NavDeepLinkBuilder
@@ -33,7 +34,17 @@ class WaterAppWorker(
                 .setContentIntent(pendingIntent)
                 .build()
 
-        NotificationManagerCompat.from(applicationContext).notify(NotificationConfig.NOTIFICATION_ID, notification)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(
+                    applicationContext,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                NotificationManagerCompat.from(applicationContext).notify(NotificationConfig.NOTIFICATION_ID, notification)
+            }
+        } else {
+            NotificationManagerCompat.from(applicationContext).notify(NotificationConfig.NOTIFICATION_ID, notification)
+        }
         return Result.success()
     }
 }

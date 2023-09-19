@@ -23,7 +23,6 @@ import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
 import com.vodovoz.app.ui.model.OrderDetailsUI
 import com.vodovoz.app.ui.model.OrderStatusUI
 import com.vodovoz.app.util.extensions.debugLog
-import com.yandex.metrica.YandexMetrica
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -37,7 +36,7 @@ class OrderDetailsFragment : BaseFragment() {
             contentView
         )
     }
-    private val viewModel: OrderDetailsFlowViewModel by viewModels()
+    internal val viewModel: OrderDetailsFlowViewModel by viewModels()
 
     private val args: OrderDetailsFragmentArgs by navArgs()
 

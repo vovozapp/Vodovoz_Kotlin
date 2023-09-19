@@ -15,7 +15,6 @@ import com.vodovoz.app.databinding.FragmentContactsFlowBinding
 import com.vodovoz.app.feature.bottom.contacts.adapter.ContactsClickListener
 import com.vodovoz.app.feature.bottom.contacts.adapter.controller.EmailController
 import com.vodovoz.app.feature.bottom.contacts.adapter.controller.PhoneController
-import com.vodovoz.app.feature.profile.ProfileFragmentDirections
 import com.vodovoz.app.ui.model.ChatUI
 import com.vodovoz.app.ui.model.EmailUI
 import com.vodovoz.app.ui.model.PhoneUI

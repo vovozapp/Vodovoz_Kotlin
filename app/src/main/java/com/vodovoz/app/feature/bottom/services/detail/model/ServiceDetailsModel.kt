@@ -3,7 +3,6 @@ package com.vodovoz.app.feature.bottom.services.detail.model
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.data.model.common.ProductEntity
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.ui.model.ProductUI
 
 class ServiceDetailEntity(

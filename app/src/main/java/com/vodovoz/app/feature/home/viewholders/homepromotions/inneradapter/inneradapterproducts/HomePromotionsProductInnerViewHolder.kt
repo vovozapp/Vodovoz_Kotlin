@@ -10,17 +10,16 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.databinding.ViewHolderSliderPromotionProductBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.core.network.ApiConfig.AMOUNT_CONTROLLER_TIMER
+import com.vodovoz.app.databinding.ViewHolderSliderPromotionProductBinding
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class HomePromotionsProductInnerViewHolder(

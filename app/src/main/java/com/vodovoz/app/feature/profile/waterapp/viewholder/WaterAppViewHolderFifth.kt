@@ -1,11 +1,9 @@
 package com.vodovoz.app.feature.profile.waterapp.viewholder
 
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.FragmentWaterAppFifthBinding
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
@@ -35,13 +33,19 @@ class WaterAppViewHolderFifth(
         binding.imgIncrease.setOnClickListener {
             step += changeStep
             if (step + changeStep > 1000) step = 1000
-            binding.tvFillVolume.text = "$step мл"
+            binding.tvFillVolume.text = binding.tvFillVolume.context.getString(
+                    R.string.millilitres,
+                    step
+            )
         }
 
         binding.imgReduce.setOnClickListener {
             step -= changeStep
             if (step < changeStep) step = changeStep
-            binding.tvFillVolume.text = "$step мл"
+            binding.tvFillVolume.text = binding.tvFillVolume.context.getString(
+                R.string.millilitres,
+                step
+            )
         }
 
         binding.imgFill.setOnClickListener {
@@ -80,7 +84,10 @@ class WaterAppViewHolderFifth(
     override fun bind(item: WaterAppModelFive) {
         super.bind(item)
 
-        binding.tvFillVolume.text = "$step мл"
+        binding.tvFillVolume.text = binding.tvFillVolume.context.getString(
+            R.string.millilitres,
+            step
+        )
 
     }
 
@@ -105,7 +112,12 @@ class WaterAppViewHolderFifth(
                 vParams.height = height - 3
             }
             binding.vWaterBackground.layoutParams = vParams
-            binding.tvRate.text = "${currentLevel}/${rate} мл"
+            binding.tvRate.text = buildString {
+                            append(currentLevel)
+                            append("/")
+                            append(rate)
+                            append(" мл")
+                        }
         }
     }
 }

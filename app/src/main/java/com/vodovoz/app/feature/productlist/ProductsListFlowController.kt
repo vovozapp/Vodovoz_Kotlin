@@ -11,14 +11,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.ItemController
-import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlist.adapter.SortedAdapter
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.decoration.ListMarginDecoration
-import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel.Companion.LINEAR
 
 class ProductsListFlowController(
     private val viewModel: ProductsListFlowViewModel,

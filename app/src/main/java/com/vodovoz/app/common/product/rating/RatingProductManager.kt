@@ -3,7 +3,6 @@ package com.vodovoz.app.common.product.rating
 import com.squareup.moshi.JsonClass
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.data.MainRepository
-import com.vodovoz.app.data.local.LocalDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

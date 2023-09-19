@@ -14,9 +14,9 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentFullscreenHistorySliderBinding
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
+import com.vodovoz.app.feature.full_screen_history_slider.adapter.HistoriesDetailStateAdapter
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
-import com.vodovoz.app.feature.full_screen_history_slider.adapter.HistoriesDetailStateAdapter
 import com.vodovoz.app.ui.interfaces.IOnChangeHistory
 import com.vodovoz.app.ui.interfaces.IOnInvokeAction
 import dagger.hilt.android.AndroidEntryPoint

@@ -2,9 +2,6 @@ package com.vodovoz.app.feature.profile.waterapp
 
 import android.app.Application
 import android.content.SharedPreferences
-import android.os.Handler
-import android.os.Looper
-import android.widget.Toast
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest

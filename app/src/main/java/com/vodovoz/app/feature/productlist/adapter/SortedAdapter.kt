@@ -12,7 +12,6 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.productlist.viewholders.ProdListViewHolder
 import com.vodovoz.app.feature.productlist.viewholders.ProductsGridViewHolder
 import com.vodovoz.app.ui.model.ProductUI
-import javax.inject.Inject
 
 class SortedAdapter(
     private val productsClickListener: ProductsClickListener,

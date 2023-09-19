@@ -3,10 +3,8 @@ package com.vodovoz.app.mapper
 import com.vodovoz.app.data.model.common.ProductEntity
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPicturePager
 import com.vodovoz.app.mapper.PriceMapper.mapToUI
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.PriceUI
 import com.vodovoz.app.ui.model.ProductUI
-import com.vodovoz.app.util.extensions.debugLog
 import kotlin.math.roundToInt
 
 object ProductMapper {

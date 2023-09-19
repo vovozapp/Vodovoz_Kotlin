@@ -5,8 +5,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.ViewHolderCatalogCategoryBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.databinding.ViewHolderCatalogCategoryBinding
 import com.vodovoz.app.ui.extensions.CatalogTitleExtensions.setNameWithIndent
 import com.vodovoz.app.ui.model.CategoryUI
 

@@ -1,6 +1,5 @@
 package com.vodovoz.app.feature.bottom.services.detail.model
 
-import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.core.network.ApiConfig.VODOVOZ_URL
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList

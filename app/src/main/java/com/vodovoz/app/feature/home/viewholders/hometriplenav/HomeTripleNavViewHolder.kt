@@ -1,9 +1,9 @@
 package com.vodovoz.app.feature.home.viewholders.hometriplenav
 
 import android.view.View
-import com.vodovoz.app.databinding.FragmentTripleNavigationHomeBinding
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.databinding.FragmentTripleNavigationHomeBinding
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 
 class HomeTripleNavViewHolder(

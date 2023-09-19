@@ -4,7 +4,6 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 
 @JsonClass(generateAdapter = true)
 data class RateBottomModel(

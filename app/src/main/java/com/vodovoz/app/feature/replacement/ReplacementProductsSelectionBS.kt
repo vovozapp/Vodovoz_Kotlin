@@ -2,11 +2,9 @@ package com.vodovoz.app.feature.replacement
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -17,10 +15,7 @@ import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.BsReplacementProductsBinding
-import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
-import com.vodovoz.app.ui.view.Divider
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -38,7 +33,7 @@ class ReplacementProductsSelectionBS : BaseBottomSheetFragment() {
 
     private val binding: BsReplacementProductsBinding by viewBinding { BsReplacementProductsBinding.bind(contentView) }
 
-    private val viewModel: ReplacementFlowViewModel by viewModels()
+    internal val viewModel: ReplacementFlowViewModel by viewModels()
 
     @Inject
     lateinit var cartManager: CartManager

@@ -3,8 +3,8 @@ package com.vodovoz.app.feature.home.viewholders.homecomments
 import android.view.View
 import androidx.viewpager2.widget.ViewPager2
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.FragmentSliderCommentBinding
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.databinding.FragmentSliderCommentBinding
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.viewholders.homecomments.inneradapter.HomeCommentsInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.homecomments.inneradapter.HomeCommentsSliderClickListener

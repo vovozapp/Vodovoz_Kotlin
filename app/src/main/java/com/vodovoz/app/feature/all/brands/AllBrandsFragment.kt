@@ -2,15 +2,12 @@ package com.vodovoz.app.feature.all.brands
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.databinding.FragmentAllBrandsBinding
 import com.vodovoz.app.feature.all.AllAdapterController
 import com.vodovoz.app.feature.all.AllClickListener

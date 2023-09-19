@@ -1,6 +1,5 @@
 package com.vodovoz.app.data.parser.response.cart
 
-import android.util.Log
 import com.vodovoz.app.data.model.common.CategoryDetailEntity
 import com.vodovoz.app.data.model.common.PriceEntity
 import com.vodovoz.app.data.model.common.ProductEntity
@@ -11,8 +10,6 @@ import com.vodovoz.app.data.parser.common.safeDouble
 import com.vodovoz.app.data.parser.common.safeInt
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
-import com.vodovoz.app.util.LogSettings
-import com.vodovoz.app.util.extensions.debugLog
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject

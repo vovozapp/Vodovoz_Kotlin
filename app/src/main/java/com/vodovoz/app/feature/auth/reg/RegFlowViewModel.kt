@@ -15,7 +15,6 @@ import com.vodovoz.app.data.config.AuthConfig
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.user.RegisterResponseJsonParser.parseRegisterResponse
-import com.vodovoz.app.feature.auth.login.LoginFlowViewModel
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel

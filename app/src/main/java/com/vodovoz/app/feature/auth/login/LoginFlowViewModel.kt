@@ -1,7 +1,6 @@
 package com.vodovoz.app.feature.auth.login
 
 import android.os.CountDownTimer
-import android.view.View
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.account.data.LoginManager
@@ -19,9 +18,7 @@ import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLo
 import com.vodovoz.app.data.parser.response.user.RecoverPasswordJsonParser.parseRecoverPasswordResponse
 import com.vodovoz.app.data.parser.response.user.RequestCodeResponseJsonParser.parseRequestCodeResponse
 import com.vodovoz.app.feature.sitestate.SiteStateManager
-import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.ui.model.enum.AuthType
-import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

@@ -11,9 +11,8 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.FragmentProductDetailsMaybeLikeProductListBinding
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
-import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
-import javax.inject.Inject
+import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 
 class DetailMaybeViewHolder(
     view: View,
@@ -27,7 +26,7 @@ class DetailMaybeViewHolder(
 
     private val binding: FragmentProductDetailsMaybeLikeProductListBinding = FragmentProductDetailsMaybeLikeProductListBinding.bind(view)
 
-    private val space: Int by lazy { itemView.context.resources.getDimension(R.dimen.space_16).toInt() }
+    internal val space: Int by lazy { itemView.context.resources.getDimension(R.dimen.space_16).toInt() }
 
     private val productsAdapter = AvailableProductsAdapter(productsClickListener, likeManager, cartManager, ratingProductManager)
 
