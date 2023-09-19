@@ -156,7 +156,7 @@ class MapController(
                     setCancelable(false)
                     setPositiveButton(
                         "Открыть настройки"
-                    ) { dialogInterface, i ->
+                    ) { _, _ ->
                         val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                         context.startActivity(intent)
                     }
@@ -194,7 +194,7 @@ class MapController(
             }
     }
 
-    private fun moveCamera(point: Point, zoom: Float = 10f) {
+    internal fun moveCamera(point: Point, zoom: Float = 10f) {
         mapView.map.move(
             CameraPosition(point, zoom, 0f, 0f),
             Animation(Animation.Type.SMOOTH, 1f),
@@ -307,7 +307,7 @@ class MapController(
                     moveCamera(point)
                     distanceToRouteMap.clear()
                     viewModel.fetchSeveralMinimalLineDistancesToMainPolygonPoints(point)
-                    placeMark(point, com.vodovoz.app.R.drawable.png_map_marker)
+                    placeMark(point, R.drawable.png_map_marker)
                     isShowSearchResult = false
                     showContainer(false)
                 }
@@ -347,7 +347,7 @@ class MapController(
      * add map objects -> UserLocationObjectListener
      */
 
-    private fun placeMark(point: Point, resId: Int) {
+    internal fun placeMark(point: Point, resId: Int) {
         lastPlaceMark?.let {
             try {
                 mapView.map.mapObjects.remove(it)
@@ -410,7 +410,7 @@ class MapController(
     override fun onObjectAdded(userLocationView: UserLocationView) {
         userLocationView.arrow.setIcon(
             ImageProvider.fromResource(
-                context, com.vodovoz.app.R.drawable.png_gps_1
+                context, R.drawable.png_gps_1
             ), IconStyle().setScale(0.1f).setRotationType(RotationType.ROTATE).setZIndex(1f)
         )
 
@@ -418,7 +418,7 @@ class MapController(
 
         pinIcon.setIcon(
             "icon",
-            ImageProvider.fromResource(context, com.vodovoz.app.R.drawable.search_result),
+            ImageProvider.fromResource(context, R.drawable.search_result),
             IconStyle().setAnchor(PointF(0.5f, 0.5f))
                 .setRotationType(RotationType.ROTATE)
                 .setZIndex(0f)
@@ -427,7 +427,7 @@ class MapController(
 
         pinIcon.setIcon(
             "pin",
-            ImageProvider.fromResource(context, com.vodovoz.app.R.drawable.search_result),
+            ImageProvider.fromResource(context, R.drawable.search_result),
             IconStyle()
                 .setAnchor(PointF(0.5f, 0.5f))
                 .setRotationType(RotationType.ROTATE)
@@ -459,7 +459,7 @@ class MapController(
         }
     }
 
-    private fun searchAddresses(query: String) {
+    internal fun searchAddresses(query: String) {
         suggestSession.suggest(query, boundingBox, searchOptions, this)
     }
 

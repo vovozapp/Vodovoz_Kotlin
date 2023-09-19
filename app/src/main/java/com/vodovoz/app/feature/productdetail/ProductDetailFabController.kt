@@ -7,24 +7,20 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
-import androidx.core.widget.NestedScrollView
 import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.feature.productdetail.viewholders.detailheader.DetailHeader
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
-import com.vodovoz.app.ui.extensions.ViewExtensions.onRenderFinished
 
 class ProductDetailFabController(
     private val context: Context,
     private val viewModel: ProductDetailsFlowViewModel,
-    private val navController: NavController
+    private val navController: NavController,
 ) {
 
     private var timer: CountDownTimer? = null
@@ -34,9 +30,9 @@ class ProductDetailFabController(
         oldQuantity: Int,
         circleAmountTv: TextView,
         addIv: ImageView,
-        reduceIv: ImageView,
-        increaseIv: ImageView,
-        amountDeployed: LinearLayout
+//        reduceIv: ImageView,
+//        increaseIv: ImageView,
+        amountDeployed: LinearLayout,
     ) {
         timer?.cancel()
         timer = object : CountDownTimer(2000, 2000) {
@@ -68,7 +64,7 @@ class ProductDetailFabController(
         addIv: ImageView,
         reduceIv: ImageView,
         increaseIv: ImageView,
-        amountDeployed: LinearLayout
+        amountDeployed: LinearLayout,
     ) {
         if (header == null) return
 
@@ -78,8 +74,8 @@ class ProductDetailFabController(
                 amountTv,
                 circleAmountTv,
                 addIv,
-                reduceIv,
-                increaseIv,
+//                reduceIv,
+//                increaseIv,
                 amountDeployed
             )
         }
@@ -89,8 +85,8 @@ class ProductDetailFabController(
                 amountTv,
                 circleAmountTv,
                 addIv,
-                reduceIv,
-                increaseIv,
+//                reduceIv,
+//                increaseIv,
                 amountDeployed
             )
         }
@@ -100,8 +96,8 @@ class ProductDetailFabController(
                 amountTv,
                 circleAmountTv,
                 addIv,
-                reduceIv,
-                increaseIv,
+//                reduceIv,
+//                increaseIv,
                 amountDeployed
             )
         }
@@ -192,9 +188,9 @@ class ProductDetailFabController(
         amountTv: TextView,
         circleAmountTv: TextView,
         addIv: ImageView,
-        reduceIv: ImageView,
-        increaseIv: ImageView,
-        amountDeployed: LinearLayout
+//        reduceIv: ImageView,
+//        increaseIv: ImageView,
+        amountDeployed: LinearLayout,
     ) {
         val oldQ = header.productDetailUI.cartQuantity
         if (header.productDetailUI.leftItems == 0) {
@@ -220,8 +216,8 @@ class ProductDetailFabController(
                 oldQ,
                 circleAmountTv,
                 addIv,
-                reduceIv,
-                increaseIv,
+//                reduceIv,
+//                increaseIv,
                 amountDeployed
             )
         }
@@ -232,13 +228,13 @@ class ProductDetailFabController(
         amountTv: TextView,
         circleAmountTv: TextView,
         addIv: ImageView,
-        reduceIv: ImageView,
-        increaseIv: ImageView,
-        amountDeployed: LinearLayout
+//        reduceIv: ImageView,
+//        increaseIv: ImageView,
+        amountDeployed: LinearLayout,
     ) {
         val oldQ = header.productDetailUI.cartQuantity
         header.productDetailUI.cartQuantity++
-        startTimer(header, oldQ, circleAmountTv, addIv, reduceIv, increaseIv, amountDeployed)
+        startTimer(header, oldQ, circleAmountTv, addIv, amountDeployed)
         updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, circleAmountTv)
     }
 
@@ -247,15 +243,15 @@ class ProductDetailFabController(
         amountTv: TextView,
         circleAmountTv: TextView,
         addIv: ImageView,
-        reduceIv: ImageView,
-        increaseIv: ImageView,
-        amountDeployed: LinearLayout
+//        reduceIv: ImageView,
+//        increaseIv: ImageView,
+        amountDeployed: LinearLayout,
     ) {
         with(header) {
             val oldQ = productDetailUI.cartQuantity
             productDetailUI.cartQuantity--
             if (productDetailUI.cartQuantity < 0) productDetailUI.cartQuantity = 0
-            startTimer(header, oldQ, circleAmountTv, addIv, reduceIv, increaseIv, amountDeployed)
+            startTimer(header, oldQ, circleAmountTv, addIv, amountDeployed)
             updateFabQuantity(productDetailUI.cartQuantity, amountTv, circleAmountTv)
         }
     }
@@ -265,21 +261,21 @@ class ProductDetailFabController(
         oldQ: Int,
         circleAmountTv: TextView,
         addIv: ImageView,
-        reduceIv: ImageView,
-        increaseIv: ImageView,
-        amountDeployed: LinearLayout
+//        reduceIv: ImageView,
+//        increaseIv: ImageView,
+        amountDeployed: LinearLayout,
     ) {
         circleAmountTv.visibility = View.GONE
         addIv.visibility = View.GONE
         amountDeployed.visibility = View.VISIBLE
-        startTimer(header, oldQ, circleAmountTv, addIv, reduceIv, increaseIv, amountDeployed)
+        startTimer(header, oldQ, circleAmountTv, addIv, amountDeployed)
     }
 
-    private fun hideAmountController(
+    internal fun hideAmountController(
         header: DetailHeader,
         circleAmountTv: TextView,
         addIv: ImageView,
-        amountDeployed: LinearLayout
+        amountDeployed: LinearLayout,
     ) {
         if (header.productDetailUI.cartQuantity > 0) {
             circleAmountTv.visibility = View.VISIBLE

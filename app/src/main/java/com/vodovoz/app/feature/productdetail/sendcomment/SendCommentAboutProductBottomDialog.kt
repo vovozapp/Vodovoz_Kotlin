@@ -1,6 +1,5 @@
 package com.vodovoz.app.feature.productdetail.sendcomment
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.RatingBar
@@ -76,13 +75,23 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
         }
 
         binding.rbRating.onRatingBarChangeListener =
-            RatingBar.OnRatingBarChangeListener { p0, newRating, p2 ->
+            RatingBar.OnRatingBarChangeListener { _, _, _ ->
                 binding.errorTv.isVisible = false
             }
 
         binding.images.plusImagePreview.setOnClickListener {
-            mediaManager.saveCommentData(MediaManager.CommentData(args.productId, binding.rbRating.rating.toInt(), binding.etComment.text.toString()))
-            findNavController().navigate(SendCommentAboutProductBottomDialogDirections.actionToImagePickerFragment(ImagePickerFragment.CREATE))
+            mediaManager.saveCommentData(
+                MediaManager.CommentData(
+                    args.productId,
+                    binding.rbRating.rating.toInt(),
+                    binding.etComment.text.toString()
+                )
+            )
+            findNavController().navigate(
+                SendCommentAboutProductBottomDialogDirections.actionToImagePickerFragment(
+                    ImagePickerFragment.CREATE
+                )
+            )
         }
     }
 
@@ -95,7 +104,7 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
         lifecycleScope.launchWhenStarted {
             mediaManager
                 .observePublicationImage()
-                .collect {list ->
+                .collect { list ->
                     debugLog { "list ${list?.size}" }
                     if (list != null) {
                         if (list.size >= 5) {
@@ -137,8 +146,8 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
                             }
                         }
 
-                     // mediaManager.removePublicationImage() //todo
-                     // mediaManager.removeCommentData() //todo
+                        // mediaManager.removePublicationImage() //todo
+                        // mediaManager.removeCommentData() //todo
                     }
                 }
         }
@@ -200,7 +209,11 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
 
             if (binding.etComment.text.toString().length < FieldValidationsSettings.MIN_COMMENT_LENGTH) {
                 binding.errorTv.text =
-                    "Длина отзыва должа быть не менее ${FieldValidationsSettings.MIN_COMMENT_LENGTH} символов"
+                    buildString {
+                        append("Длина отзыва должа быть не менее ")
+                        append(FieldValidationsSettings.MIN_COMMENT_LENGTH)
+                        append(" символов")
+                    }
                 binding.errorTv.isVisible = true
                 return@setOnClickListener
             }

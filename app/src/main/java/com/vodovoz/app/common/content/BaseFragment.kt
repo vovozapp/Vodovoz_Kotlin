@@ -1,16 +1,11 @@
 package com.vodovoz.app.common.content
 
-import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
@@ -21,10 +16,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentBaseFlowBinding
-import com.vodovoz.app.databinding.FragmentBasePageBinding
-import com.vodovoz.app.databinding.ViewSearchBinding
-import com.vodovoz.app.ui.extensions.TextViewExtensions.setDrawableColor
-import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.drawable
 
 abstract class BaseFragment : Fragment() {

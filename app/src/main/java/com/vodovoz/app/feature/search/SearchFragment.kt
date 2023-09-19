@@ -36,6 +36,7 @@ import com.vodovoz.app.feature.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
@@ -165,6 +166,7 @@ class SearchFragment : BaseFragment() {
         }
     }
 
+    @OptIn(FlowPreview::class)
     private fun initSearch() {
         binding.incAppBar.incSearch.imgMicro.visibility = View.GONE
         binding.incAppBar.incSearch.imgQr.visibility = View.GONE

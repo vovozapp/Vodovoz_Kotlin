@@ -185,11 +185,11 @@ class DetailHeaderViewHolder(
         item.productDetailUI.brandUI?.let { binding.tvBrand.text = it.name }
 
         binding.tvName.text = item.productDetailUI.name
-        binding.rbRating.rating = item.productDetailUI.rating.toFloat()
+        binding.rbRating.rating = item.productDetailUI.rating
 
         binding.rbRating.onRatingBarChangeListener =
-            OnRatingBarChangeListener { p0, newRating, p2 ->
-                productsClickListener.onChangeRating(item.productDetailUI.id, newRating, item.productDetailUI.rating.toFloat())
+            OnRatingBarChangeListener { _, newRating, _ ->
+                productsClickListener.onChangeRating(item.productDetailUI.id, newRating, item.productDetailUI.rating)
             }
         binding.rbRating.setIsIndicator(true)
 
@@ -332,7 +332,7 @@ class DetailHeaderViewHolder(
         amountControllerTimer.start()
     }
 
-    private fun hideAmountController(item: ProductDetailUI) {
+    internal fun hideAmountController(item: ProductDetailUI) {
         if (item.cartQuantity > 0) {
             binding.amountController.circleAmount.visibility = View.VISIBLE
         }

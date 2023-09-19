@@ -93,7 +93,7 @@ class ProductsListFlowViewModel @Inject constructor(
             flow {
                 emit(
                     repository.fetchProductsByCategory(
-                        categoryId = categoryId ?: return@flow,
+                        categoryId = categoryId,// ?: return@flow,
                         sort = state.data.sortType.value,
                         orientation = state.data.sortType.orientation,
                         filter = state.data.filterBundle.filterUIList.buildFilterQuery(),

@@ -1,12 +1,10 @@
 package com.vodovoz.app.feature.blockapp
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -31,7 +29,7 @@ class BlockAppFragment : BaseFragment() {
         return R.layout.fragment_block_app
     }
 
-    private val binding: FragmentBlockAppBinding by viewBinding {
+    internal val binding: FragmentBlockAppBinding by viewBinding {
         FragmentBlockAppBinding.bind(contentView)
     }
 
@@ -150,7 +148,7 @@ class BlockAppFragment : BaseFragment() {
     }
 
     private val handler = Handler(Looper.getMainLooper())
-    private var runnable = Runnable {  }
+    private var runnable = Runnable { }
 
     private fun countDownStart(time: String) {
         runnable = object : Runnable {
@@ -162,7 +160,7 @@ class BlockAppFragment : BaseFragment() {
                         Locale.getDefault()
                     )
                     // Please here set your event date//YYYY-MM-DD
-                    val futureDate = dateFormat.parse(time)
+                    val futureDate = dateFormat.parse(time) ?: return
                     val currentDate = Date()
                     if (!currentDate.after(futureDate)) {
                         binding.linearTimeData.visibility = View.VISIBLE

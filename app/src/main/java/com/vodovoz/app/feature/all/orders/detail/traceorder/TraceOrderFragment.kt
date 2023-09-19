@@ -7,12 +7,10 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PointF
-import android.graphics.drawable.Drawable
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
@@ -21,18 +19,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.bumptech.glide.Glide
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.databinding.FragmentTraceOrderBinding
-import com.vodovoz.app.feature.all.orders.detail.traceorder.bottom.TraceOrderBottomSheetFragment
-import com.vodovoz.app.feature.all.orders.detail.traceorder.bottom.TraceOrderBottomSheetFragmentDirections
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.drawable
 import com.yandex.mapkit.Animation
@@ -68,14 +61,24 @@ class TraceOrderFragment : BaseFragment(), InputListener,
 
     private val args: TraceOrderFragmentArgs by navArgs()
 
-    private val userLocationLayer: UserLocationLayer by lazy { mapKit.createUserLocationLayer(binding.mapView.mapWindow) }
+    private val userLocationLayer: UserLocationLayer by lazy {
+        mapKit.createUserLocationLayer(
+            binding.mapView.mapWindow
+        )
+    }
     private val mapKit: MapKit by lazy { MapKitFactory.getInstance() }
     private val permissionsController by lazy { PermissionsController(requireContext()) }
-    private val fusedLocationClient by lazy { LocationServices.getFusedLocationProviderClient(requireActivity()) }
+    private val fusedLocationClient by lazy {
+        LocationServices.getFusedLocationProviderClient(
+            requireActivity()
+        )
+    }
     private val locationManager by lazy { requireContext().getSystemService(Context.LOCATION_SERVICE) as? LocationManager }
     private val center = Point(55.75, 37.62)
     private val traffic by lazy { mapKit.createTrafficLayer(binding.mapView.mapWindow) }
+
     private enum class TrafficState { LOADING, STARTED, EXPIRED }
+
     private var lastPlaceMark: PlacemarkMapObject? = null
 
     override fun onStart() {
@@ -125,7 +128,8 @@ class TraceOrderFragment : BaseFragment(), InputListener,
                 TraceOrderFragmentDirections.actionToWebViewFragment(
                     "http://jivo.chat/mk31km1IlP",
                     "Чат"
-                ))
+                )
+            )
         }
     }
 
@@ -173,11 +177,16 @@ class TraceOrderFragment : BaseFragment(), InputListener,
                         if (driverEntity.DriverDirection == "TRUE") {
                             binding.traceOrderBs.timeTv.isVisible = false
                             binding.traceOrderBs.commentTv.isVisible = true
-                            binding.traceOrderBs.commentTv.text = "Водитель выехал и направляется к Вам."
+                            binding.traceOrderBs.commentTv.text =
+                                "Водитель выехал и направляется к Вам."
                         } else {
                             binding.traceOrderBs.timeTv.isVisible = true
                             binding.traceOrderBs.commentTv.isVisible = false
-                            binding.traceOrderBs.timeTv.text = "Ориентировочное время прибытия: ${it.data.driverPointsEntity.Priblizitelnoe_vremya}"
+                            binding.traceOrderBs.timeTv.text =
+                                buildString {
+                                    append("Ориентировочное время прибытия: ")
+                                    append(it.data.driverPointsEntity.Priblizitelnoe_vremya)
+                                }
                         }
                     } else {
                         binding.traceOrderBs.timeTv.isVisible = false
@@ -221,7 +230,7 @@ class TraceOrderFragment : BaseFragment(), InputListener,
                     setCancelable(false)
                     setPositiveButton(
                         "Открыть настройки"
-                    ) { dialogInterface, i ->
+                    ) { _, _ ->
                         val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                         context.startActivity(intent)
                     }
@@ -294,7 +303,7 @@ class TraceOrderFragment : BaseFragment(), InputListener,
     override fun onObjectAdded(userLocationView: UserLocationView) {
         userLocationView.arrow.setIcon(
             ImageProvider.fromResource(
-                context, com.vodovoz.app.R.drawable.png_gps_1
+                context, R.drawable.png_gps_1
             ), IconStyle().setScale(0.1f).setRotationType(RotationType.ROTATE).setZIndex(1f)
         )
 
@@ -302,7 +311,7 @@ class TraceOrderFragment : BaseFragment(), InputListener,
 
         pinIcon.setIcon(
             "icon",
-            ImageProvider.fromResource(context, com.vodovoz.app.R.drawable.search_result),
+            ImageProvider.fromResource(context, R.drawable.search_result),
             IconStyle().setAnchor(PointF(0.5f, 0.5f))
                 .setRotationType(RotationType.ROTATE)
                 .setZIndex(0f)
@@ -311,7 +320,7 @@ class TraceOrderFragment : BaseFragment(), InputListener,
 
         pinIcon.setIcon(
             "pin",
-            ImageProvider.fromResource(context, com.vodovoz.app.R.drawable.search_result),
+            ImageProvider.fromResource(context, R.drawable.search_result),
             IconStyle()
                 .setAnchor(PointF(0.5f, 0.5f))
                 .setRotationType(RotationType.ROTATE)
@@ -325,9 +334,17 @@ class TraceOrderFragment : BaseFragment(), InputListener,
     override fun onObjectRemoved(p0: UserLocationView) {}
     override fun onObjectUpdated(p0: UserLocationView, p1: ObjectEvent) {}
 
-    override fun onTrafficChanged(p0: TrafficLevel?) { updateLevel(TrafficState.STARTED, p0) }
-    override fun onTrafficLoading() { updateLevel(TrafficState.LOADING) }
-    override fun onTrafficExpired() { updateLevel(TrafficState.EXPIRED) }
+    override fun onTrafficChanged(p0: TrafficLevel?) {
+        updateLevel(TrafficState.STARTED, p0)
+    }
+
+    override fun onTrafficLoading() {
+        updateLevel(TrafficState.LOADING)
+    }
+
+    override fun onTrafficExpired() {
+        updateLevel(TrafficState.EXPIRED)
+    }
 
     private fun updateLevel(state: TrafficState, level: TrafficLevel? = null) {
 
@@ -336,7 +353,7 @@ class TraceOrderFragment : BaseFragment(), InputListener,
             return
         }
 
-        when(state) {
+        when (state) {
             TrafficState.LOADING -> {
                 binding.trafficIv.setImageDrawable(requireContext().drawable(R.drawable.icon_traffic_light_grey))
             }

@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
-import android.os.Parcelable
+import android.os.Bundle
 import android.os.StrictMode
 import android.provider.Settings
 import android.text.Html
@@ -56,13 +56,13 @@ inline fun Fragment.addOnBackPressedCallback(crossinline callback: () -> Unit) {
     )
 }
 
-fun Context.sp(value: Float) = (value * resources.displayMetrics.scaledDensity)
+//fun Context.sp(value: Float) = (value * resources.displayMetrics.scaledDensity)
 
 fun Context.dipF(value: Int): Float = (value * resources.displayMetrics.density)
 fun Context.dipF(value: Float): Float = (value * resources.displayMetrics.density)
-fun Context.dip(value: Int): Int = dipF(value).toInt()
-fun Context.dip(value: Float): Int = dipF(value).toInt()
-fun Context.sp(value: Int): Int = (value * resources.displayMetrics.scaledDensity).toInt()
+//fun Context.dip(value: Int): Int = dipF(value).toInt()
+//fun Context.dip(value: Float): Int = dipF(value).toInt()
+//fun Context.sp(value: Int): Int = (value * resources.displayMetrics.scaledDensity).toInt()
 fun Context.dimen(@DimenRes resource: Int): Int = resources.getDimensionPixelSize(resource)
 
 fun Context.color(@ColorRes colorRes: Int) = ContextCompat.getColor(this, colorRes)
@@ -77,37 +77,37 @@ fun Context.string(@StringRes resId: Int, vararg formatArgs: Any): String {
 
 fun Context.drawable(@DrawableRes drawableRes: Int) = ContextCompat.getDrawable(this, drawableRes)
 
-fun String.isEmailCorrect(): Boolean {
-    return android.util.Patterns.EMAIL_ADDRESS.matcher(this.trim()).matches()
-}
+//fun String.isEmailCorrect(): Boolean {
+//    return android.util.Patterns.EMAIL_ADDRESS.matcher(this.trim()).matches()
+//}
 
-fun String.makeLink(context: Context, @ColorRes colorRes: Int, foo: () -> Unit): SpannableString {
-    val spannableString = SpannableString(this)
-    val clickableSpan = object : ClickableSpan() {
-        override fun updateDrawState(ds: TextPaint) {
-            ds.color = ContextCompat.getColor(context, colorRes)
-            ds.isUnderlineText = false
-        }
+//fun String.makeLink(context: Context, @ColorRes colorRes: Int, foo: () -> Unit): SpannableString {
+//    val spannableString = SpannableString(this)
+//    val clickableSpan = object : ClickableSpan() {
+//        override fun updateDrawState(ds: TextPaint) {
+//            ds.color = ContextCompat.getColor(context, colorRes)
+//            ds.isUnderlineText = false
+//        }
+//
+//        override fun onClick(view: View) {
+//            foo.invoke()
+//        }
+//    }
+//    val start = 0
+//    val end = this.length
+//    spannableString.setSpan(
+//        clickableSpan,
+//        start,
+//        end,
+//        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+//    )
+//    return spannableString
+//}
 
-        override fun onClick(view: View) {
-            foo.invoke()
-        }
-    }
-    val start = 0
-    val end = this.length
-    spannableString.setSpan(
-        clickableSpan,
-        start,
-        end,
-        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-    )
-    return spannableString
-}
-
-inline fun Activity.snack(
+fun Activity.snack(
     message: String,
-    length: Int = Snackbar.LENGTH_LONG,
-    f: Snackbar.() -> Unit = {},
+//    length: Int = Snackbar.LENGTH_LONG,
+//    f: Snackbar.() -> Unit = {},
 ) {
     /*val snack = Snackbar.make(findViewById(android.R.id.content), message, length)
     val view = snack.view
@@ -143,16 +143,16 @@ fun Snackbar.action(action: String, color: Int? = null, listener: (View) -> Unit
     color?.let { setActionTextColor(color) }
 }
 
-fun startStrictMode() {
-    if (BuildConfig.DEBUG) {
-        StrictMode.setThreadPolicy(
-            StrictMode.ThreadPolicy.Builder()
-                .detectAll()
-                .penaltyLog()
-                .build()
-        )
-    }
-}
+//fun startStrictMode() {
+//    if (BuildConfig.DEBUG) {
+//        StrictMode.setThreadPolicy(
+//            StrictMode.ThreadPolicy.Builder()
+//                .detectAll()
+//                .penaltyLog()
+//                .build()
+//        )
+//    }
+//}
 
 fun View.hideKeyboard() {
     if (isKeyboardOpen()) {
@@ -178,21 +178,21 @@ fun Context.unwrap(): Activity? {
     }
 }
 
-fun Activity.hideKeyboard() {
-    var view = currentFocus
-    if (view == null) {
-        view = window.decorView
-    }
+//fun Activity.hideKeyboard() {
+//    var view = currentFocus
+//    if (view == null) {
+//        view = window.decorView
+//    }
+//
+//    view.hideKeyboard()
+//}
 
-    view.hideKeyboard()
-}
-
-fun File.toBase64(): String {
-    FileInputStream(this.path).use {
-        val bytes = it.readBytes()
-        return Base64.encodeToString(bytes, Base64.DEFAULT)
-    }
-}
+//fun File.toBase64(): String {
+//    FileInputStream(this.path).use {
+//        val bytes = it.readBytes()
+//        return Base64.encodeToString(bytes, Base64.DEFAULT)
+//    }
+//}
 
 fun NestedScrollView.scrollViewToTop() {
     this.post {
@@ -233,18 +233,19 @@ fun booleanArgs(key: String): ReadOnlyProperty<Fragment, Boolean> {
     }
 }
 
-fun <T : Parcelable> parcelableArgs(key: String): ReadOnlyProperty<Fragment, T> {
-    return ReadOnlyProperty { thisRef, _ ->
-        val args = thisRef.requireArguments()
-        require(args.containsKey(key)) { "Arguments don't contain key $key" }
-        requireNotNull(args.getParcelable(key)) as T
-    }
-}
+//fun <T : Parcelable> parcelableArgs(key: String): ReadOnlyProperty<Fragment, T> {
+//    return ReadOnlyProperty { thisRef, _ ->
+//        val args = thisRef.requireArguments()
+//        require(args.containsKey(key)) { "Arguments don't contain key $key" }
+//        requireNotNull(args.getParcelable(key)) as T
+//    }
+//}
 
 fun String.fromHtml(): Spanned {
     val result: Spanned = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY)
     } else {
+        @Suppress("DEPRECATION")
         Html.fromHtml(this)
     }
     return result
@@ -329,6 +330,15 @@ fun String.getColorWithAlpha(): Int {
         Color.parseColor(this),
         (35f / 100 * 255).toInt()
     )
+}
+
+fun <T> Bundle.getParcelableSafe(tag: String, clazz: Class<T>): T {
+    return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        @Suppress("DEPRECATION")
+        getParcelable(tag)
+    } else {
+        getParcelable(tag, clazz)
+    } ?: throw java.lang.RuntimeException("There is not bundle HISTORY")
 }
 
 

@@ -38,7 +38,7 @@ class AddressesController(
         with(recyclerView) {
             adapter = addressesAdapter
             layoutManager = LinearLayoutManager(context)
-            addMarginDecoration { rect, view, parent, state ->
+            addMarginDecoration { rect, _, _, _ ->
                 rect.top = space16
             }
         }
@@ -67,11 +67,11 @@ class AddressesController(
     private fun showDeleteAddressDialog(addressId: Long) {
         MaterialAlertDialogBuilder(context)
             .setMessage("Удалить адрес?")
-            .setNegativeButton(context.resources.getString(R.string.cancel)) { dialog, which ->
+            .setNegativeButton(context.resources.getString(R.string.cancel)) { dialog, _ ->
                 addressesAdapter.notifyDataSetChanged()
                 dialog.cancel()
             }
-            .setPositiveButton(context.resources.getString(R.string.confirm)) { dialog, which ->
+            .setPositiveButton(context.resources.getString(R.string.confirm)) { dialog, _ ->
                 viewModel.deleteAddress(addressId)
                 dialog.cancel()
             }

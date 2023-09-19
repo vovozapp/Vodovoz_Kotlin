@@ -246,7 +246,20 @@ class ExpandableTextView @JvmOverloads constructor(
                 .setLineSpacing(lineSpacingExtra, lineSpacingMultiplier)
                 .build()
         } else {
-            TODO("VERSION.SDK_INT < M")
+            @Suppress("DEPRECATION")
+            StaticLayout(
+                text,
+                0,
+                text.length,
+                paint,
+                maximumLineWidth,
+                ALIGN_NORMAL,
+                lineSpacingMultiplier,
+                lineSpacingExtra,
+                false,
+                END,
+                targetMaxLines
+            )
         }
     }
 

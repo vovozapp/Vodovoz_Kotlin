@@ -21,7 +21,7 @@ class RateBottomViewHolder(
             clickListener.dontCommentProduct(itemId)
         }
 
-        binding.ratingBar.setOnRatingBarChangeListener { ratingBar, fl, b ->
+        binding.ratingBar.setOnRatingBarChangeListener { _, fl, _ ->
             val itemId = item?.id?.toLong() ?:return@setOnRatingBarChangeListener
             clickListener.rateProduct(itemId, fl.toInt())
         }

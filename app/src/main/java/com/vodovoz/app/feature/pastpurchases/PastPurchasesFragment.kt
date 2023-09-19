@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,7 +19,6 @@ import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
-import com.vodovoz.app.common.speechrecognizer.SpeechController
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.model.common.SortType
@@ -29,12 +27,9 @@ import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFragmentDirections
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
-import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.util.extensions.debugLog
-import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -49,7 +44,7 @@ class PastPurchasesFragment : BaseFragment() {
         )
     }
 
-    private val viewModel: PastPurchasesFlowViewModel by viewModels()
+    internal val viewModel: PastPurchasesFlowViewModel by viewModels()
 
     @Inject
     lateinit var cartManager: CartManager
@@ -73,7 +68,14 @@ class PastPurchasesFragment : BaseFragment() {
     }
 
     private val favoritesController by lazy {
-        PastPurchasesListController(viewModel, cartManager, likeManager, getProductsClickListener(), requireContext(), ratingProductManager)
+        PastPurchasesListController(
+            viewModel,
+            cartManager,
+            likeManager,
+            getProductsClickListener(),
+            requireContext(),
+            ratingProductManager
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,7 +103,7 @@ class PastPurchasesFragment : BaseFragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.observeEvent()
                 .collect {
-                    when(it) {
+                    when (it) {
                         is PastPurchasesFlowViewModel.PastPurchasesEvents.GoToPreOrder -> {
                             if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
                                 findNavController().popBackStack()
@@ -144,7 +146,11 @@ class PastPurchasesFragment : BaseFragment() {
             viewModel
                 .observeChangeLayoutManager()
                 .collect {
-                    favoritesController.changeLayoutManager(it, binding.productRecycler, binding.imgViewMode)
+                    favoritesController.changeLayoutManager(
+                        it,
+                        binding.productRecycler,
+                        binding.imgViewMode
+                    )
                 }
         }
     }
@@ -204,27 +210,48 @@ class PastPurchasesFragment : BaseFragment() {
         binding.tvProductAmount.text = state.favoriteCategory?.productAmount.toString()
         binding.availableTitle.text = state.availableTitle
         binding.notAvailableTitle.text = state.notAvailableTitle
-        binding.availableContainer.isVisible = state.availableTitle != null || state.notAvailableTitle != null
+        binding.availableContainer.isVisible =
+            state.availableTitle != null || state.notAvailableTitle != null
 
         binding.tvSort.setOnClickListener { showBottomSortSettings(state.sortType) }
         binding.imgCategories.setOnClickListener {
             val category = state.favoriteCategory ?: return@setOnClickListener
-            val id = state.selectedCategoryId ?: return@setOnClickListener
+            val id = state.selectedCategoryId //?: return@setOnClickListener
             showMiniCatalog(category, id)
         }
 
         binding.availableButton.setOnClickListener {
-            binding.availableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.availableButton.setCardBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.white
+                )
+            )
             binding.availableButton.elevation = resources.getDimension(R.dimen.elevation_1)
-            binding.notAvailableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
+            binding.notAvailableButton.setCardBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.light_gray
+                )
+            )
             binding.notAvailableButton.elevation = 0f
             viewModel.updateByIsAvailable(true)
         }
 
         binding.notAvailableButton.setOnClickListener {
-            binding.notAvailableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.notAvailableButton.setCardBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.white
+                )
+            )
             binding.notAvailableButton.elevation = resources.getDimension(R.dimen.elevation_1)
-            binding.availableButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
+            binding.availableButton.setCardBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.light_gray
+                )
+            )
             binding.availableButton.elevation = 0f
             viewModel.updateByIsAvailable(false)
         }
@@ -232,7 +259,7 @@ class PastPurchasesFragment : BaseFragment() {
     }
 
     private fun bindTabsVisibility(vis: Boolean) {
-        when(vis) {
+        when (vis) {
             true -> {
                 binding.categoriesRecycler.visibility = View.VISIBLE
                 binding.imgCategories.visibility = View.VISIBLE
@@ -249,7 +276,7 @@ class PastPurchasesFragment : BaseFragment() {
         binding.favoriteContainer.isVisible = bool
     }
 
-    private fun categoryTabsClickListener() : CategoryTabsFlowClickListener {
+    private fun categoryTabsClickListener(): CategoryTabsFlowClickListener {
         return object : CategoryTabsFlowClickListener {
             override fun onTabClick(id: Long) {
                 viewModel.onTabClick(id)
@@ -270,12 +297,14 @@ class PastPurchasesFragment : BaseFragment() {
 
     private fun observeResultLiveData() {
         findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<Long>(PaginatedProductsCatalogWithoutFiltersFragment.CATEGORY_ID)?.observe(viewLifecycleOwner) { categoryId ->
+            ?.getLiveData<Long>(PaginatedProductsCatalogWithoutFiltersFragment.CATEGORY_ID)
+            ?.observe(viewLifecycleOwner) { categoryId ->
                 viewModel.onTabClick(categoryId)
             }
 
         findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<String>(PaginatedProductsCatalogWithoutFiltersFragment.SORT_TYPE)?.observe(viewLifecycleOwner) { sortType ->
+            ?.getLiveData<String>(PaginatedProductsCatalogWithoutFiltersFragment.SORT_TYPE)
+            ?.observe(viewLifecycleOwner) { sortType ->
                 viewModel.updateBySortType(SortType.valueOf(sortType))
             }
     }
@@ -283,7 +312,11 @@ class PastPurchasesFragment : BaseFragment() {
     private fun getProductsClickListener(): ProductsClickListener {
         return object : ProductsClickListener {
             override fun onProductClick(id: Long) {
-                findNavController().navigate(FavoriteFragmentDirections.actionToProductDetailFragment(id))
+                findNavController().navigate(
+                    FavoriteFragmentDirections.actionToProductDetailFragment(
+                        id
+                    )
+                )
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
@@ -304,14 +337,14 @@ class PastPurchasesFragment : BaseFragment() {
         }
     }
 
-    private fun getProductsShowClickListener() : ProductsShowAllListener {
-        return object : ProductsShowAllListener {
-            override fun showAllDiscountProducts(id: Long) {}
-            override fun showAllTopProducts(id: Long) {}
-            override fun showAllNoveltiesProducts(id: Long) {}
-            override fun showAllBottomProducts(id: Long) {}
-        }
-    }
+//    private fun getProductsShowClickListener(): ProductsShowAllListener {
+//        return object : ProductsShowAllListener {
+//            override fun showAllDiscountProducts(id: Long) {}
+//            override fun showAllTopProducts(id: Long) {}
+//            override fun showAllNoveltiesProducts(id: Long) {}
+//            override fun showAllBottomProducts(id: Long) {}
+//        }
+//    }
 
     private fun initSearch() {
         initSearchToolbar(

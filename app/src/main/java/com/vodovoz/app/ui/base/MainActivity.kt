@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleIntent(intent: Intent) {
-        val appLinkAction = intent.action
+//        val appLinkAction = intent.action
         val appLinkData: Uri? = intent.data
         val path = appLinkData?.lastPathSegment
 

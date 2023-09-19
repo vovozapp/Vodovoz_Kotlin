@@ -16,11 +16,9 @@ import com.vodovoz.app.feature.cart.adapter.CartMainClickListener
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
-import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.view.Divider
 import com.vodovoz.app.util.SwipeToRemoveCallback
-import com.vodovoz.app.util.extensions.debugLog
 
 class CartAvailableProductsViewHolder(
     view: View,
@@ -28,14 +26,22 @@ class CartAvailableProductsViewHolder(
     private val productsClickListener: ProductsClickListener,
     likeManager: LikeManager,
     cartManager: CartManager,
-    ratingProductManager: RatingProductManager
+    ratingProductManager: RatingProductManager,
 ) : ItemViewHolder<CartAvailableProducts>(view) {
 
-    private val binding: ItemCartAvailableProductsBinding = ItemCartAvailableProductsBinding.bind(view)
+    private val binding: ItemCartAvailableProductsBinding =
+        ItemCartAvailableProductsBinding.bind(view)
 
-    private val space: Int by lazy { itemView.context.resources.getDimension(R.dimen.space_8).toInt() }
+    private val space: Int by lazy {
+        itemView.context.resources.getDimension(R.dimen.space_8).toInt()
+    }
 
-    private val productsAdapter = AvailableProductsAdapter(productsClickListener, likeManager, cartManager, ratingProductManager)
+    private val productsAdapter = AvailableProductsAdapter(
+        productsClickListener,
+        likeManager,
+        cartManager,
+        ratingProductManager
+    )
 
     init {
         binding.rvAvailableProductRecycler.layoutManager =
@@ -47,7 +53,7 @@ class CartAvailableProductsViewHolder(
             binding.rvAvailableProductRecycler.addItemDecoration(Divider(it, space))
         }
         binding.cbReturnBottles.setOnCheckedChangeListener { _, isChecked ->
-            when(isChecked) {
+            when (isChecked) {
                 true -> binding.rlChooseBottleBtnContainer.visibility = View.VISIBLE
                 false -> binding.rlChooseBottleBtnContainer.visibility = View.GONE
             }
@@ -59,7 +65,7 @@ class CartAvailableProductsViewHolder(
             rect.top = space
             rect.bottom = space
             rect.right = space
-            rect.left = space/2
+            rect.left = space / 2
         }
 
         bindSwipeToRemove(binding.rvAvailableProductRecycler)
@@ -68,7 +74,7 @@ class CartAvailableProductsViewHolder(
     override fun bind(item: CartAvailableProducts) {
         super.bind(item)
 
-        when(item.giftMessage) {
+        when (item.giftMessage) {
             null -> binding.tvGiftMessage.visibility = View.GONE
             else -> {
                 binding.tvGiftMessage.visibility = View.VISIBLE
@@ -78,7 +84,7 @@ class CartAvailableProductsViewHolder(
 
         binding.rlChooseBottleBtnContainer.visibility = View.GONE
 
-        when(item.showCheckForm || binding.cbReturnBottles.isChecked) {
+        when (item.showCheckForm || binding.cbReturnBottles.isChecked) {
             true -> binding.llReturnBottlesContainer.visibility = View.VISIBLE
             false -> binding.llReturnBottlesContainer.visibility = View.GONE
         }
@@ -91,7 +97,8 @@ class CartAvailableProductsViewHolder(
         ItemTouchHelper(object : SwipeToRemoveCallback(itemView.context) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
                 super.onSwiped(viewHolder, i)
-                val item = productsAdapter.getItem(viewHolder.bindingAdapterPosition) as? ProductUI ?: return
+                val item = productsAdapter.getItem(viewHolder.bindingAdapterPosition) as? ProductUI
+                    ?: return
                 if (item.chipsBan == 5 || item.chipsBan == 4) {
                     clickListener.showSnack("Товар невозможно удалить из корзины.")
                 } else {
@@ -101,14 +108,14 @@ class CartAvailableProductsViewHolder(
         }).attachToRecyclerView(recyclerView)
     }
 
-    private fun showDeleteProductDialog(productId: Long, oldQ: Int) {
+    internal fun showDeleteProductDialog(productId: Long, oldQ: Int) {
         MaterialAlertDialogBuilder(itemView.context)
             .setMessage("Вы уверены, что хотите удалить?")
-            .setNegativeButton("НЕТ") { dialog, which ->
+            .setNegativeButton("НЕТ") { dialog, _ ->
                 productsAdapter.notifyDataSetChanged()
                 dialog.cancel()
             }
-            .setPositiveButton("ДА") { dialog, which ->
+            .setPositiveButton("ДА") { dialog, _ ->
                 productsClickListener.onChangeProductQuantity(productId, 0, oldQ)
                 dialog.cancel()
             }

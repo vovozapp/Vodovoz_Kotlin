@@ -195,7 +195,7 @@ class ProdListViewHolder(
         binding.rbRating.rating = item.rating
 
         binding.rbRating.onRatingBarChangeListener =
-            RatingBar.OnRatingBarChangeListener { p0, newRating, p2 ->
+            RatingBar.OnRatingBarChangeListener { _, newRating, _ ->
                 if (newRating != binding.rbRating.rating) {
                     productsClickListener.onChangeRating(item.id, newRating, item.rating)
                 }
@@ -347,7 +347,7 @@ class ProdListViewHolder(
         amountControllerTimer.start()
     }
 
-    private fun hideAmountController(item: ProductUI) {
+    internal fun hideAmountController(item: ProductUI) {
         if (item.cartQuantity > 0) {
             binding.amountController.circleAmount.visibility = View.VISIBLE
         }

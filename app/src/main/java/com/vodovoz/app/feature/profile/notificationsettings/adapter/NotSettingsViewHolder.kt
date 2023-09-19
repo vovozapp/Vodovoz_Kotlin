@@ -13,7 +13,7 @@ class NotSettingsViewHolder(
     private val binding: ItemNotificationSettingsBinding = ItemNotificationSettingsBinding.bind(view)
 
     init {
-        binding.settingsSwitch.setOnCheckedChangeListener { p0, p1 ->
+        binding.settingsSwitch.setOnCheckedChangeListener { _, p1 ->
             val item = item ?: return@setOnCheckedChangeListener
             clickListener.onItemChecked(item.copy(
                 active = if (p1) {

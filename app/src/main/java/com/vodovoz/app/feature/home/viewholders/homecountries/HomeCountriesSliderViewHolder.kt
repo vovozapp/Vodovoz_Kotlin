@@ -31,7 +31,7 @@ class HomeCountriesSliderViewHolder(
         binding.rvCountries.layoutManager =
             LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
 
-        binding.rvCountries.addMarginDecoration { rect, view, parent, state ->
+        binding.rvCountries.addMarginDecoration { rect, view, parent, _ ->
             if (parent.getChildAdapterPosition(view) == 0) {
                 rect.left = space
             }

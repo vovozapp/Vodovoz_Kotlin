@@ -137,10 +137,9 @@ class Polygon private constructor(val sides: List<Line>, private val _boundingBo
      * @return `True` if both lines intersect, otherwise return `False`
      */
     private fun intersect(ray: Line, side: Line): Boolean {
-        var intersectPoint: Point? = null
 
         // if both vectors aren't from the kind of x=1 lines then go into
-        intersectPoint = if (!ray.isVertical && !side.isVertical) {
+        val intersectPoint: Point = if (!ray.isVertical && !side.isVertical) {
             // check if both vectors are parallel. If they are parallel then no intersection point will exist
             if (ray.a - side.a == 0.0) {
                 return false

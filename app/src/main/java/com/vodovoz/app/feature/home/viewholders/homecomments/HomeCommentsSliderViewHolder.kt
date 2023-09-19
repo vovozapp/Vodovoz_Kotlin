@@ -22,7 +22,7 @@ class HomeCommentsSliderViewHolder(
 
     init {
 
-        binding.vpComments.addMarginDecoration {  rect, view, parent, state ->
+        binding.vpComments.addMarginDecoration { rect, _, _, _ ->
             rect.left = space
             rect.right = space
             rect.bottom = space/2

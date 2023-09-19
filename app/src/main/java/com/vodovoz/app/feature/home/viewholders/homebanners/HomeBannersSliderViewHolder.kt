@@ -2,23 +2,20 @@ package com.vodovoz.app.feature.home.viewholders.homebanners
 
 import android.annotation.SuppressLint
 import android.graphics.Rect
-import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.*
 import com.vodovoz.app.R
+import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentSliderBannerBinding
-import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.viewholders.homebanners.inneradapter.HomeBannersInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.homebanners.inneradapter.HomeBannersSliderClickListener
 import com.vodovoz.app.feature.home.viewholders.homebanners.model.BannerAdvEntity
-import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.*
 import java.util.*
 
@@ -27,7 +24,7 @@ class HomeBannersSliderViewHolder(
     private val clickListener: HomeMainClickListener,
     width: Int,
     ratio: Double,
-    private val manager: BannerManager
+    private val manager: BannerManager,
 ) : ItemViewHolder<HomeBanners>(view) {
 
     private var scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
@@ -52,7 +49,7 @@ class HomeBannersSliderViewHolder(
         binding.vpBanners.setPadding(offsetPx, 0, offsetPx, 0)
 
 // increase this offset to increase distance between 2 items
-        val pageMarginPx = space/2
+        val pageMarginPx = space / 2
         val marginTransformer = MarginPageTransformer(pageMarginPx)
         binding.vpBanners.setPageTransformer(marginTransformer)
 
@@ -62,11 +59,11 @@ class HomeBannersSliderViewHolder(
                     outRect: Rect,
                     view: View,
                     parent: RecyclerView,
-                    state: RecyclerView.State
+                    state: RecyclerView.State,
                 ) {
                     with(outRect) {
-                        top = space/2
-                        bottom = space/2
+                        top = space / 2
+                        bottom = space / 2
                         //left = space
                         //right = space
                     }
@@ -86,7 +83,7 @@ class HomeBannersSliderViewHolder(
         binding.vpBanners.enableAutoScroll(item.items.size)
     }
 
-    private fun getHomeBannersSliderClickListener() : HomeBannersSliderClickListener {
+    private fun getHomeBannersSliderClickListener(): HomeBannersSliderClickListener {
         return object : HomeBannersSliderClickListener {
             override fun onBannerClick(entity: ActionEntity?) {
                 clickListener.onBannerClick(entity)
@@ -114,13 +111,14 @@ class HomeBannersSliderViewHolder(
             }
         }, 0, 4000)
 
-        val callback = object: OnPageChangeCallback() {
+        val callback = object : OnPageChangeCallback() {
             private var settled = false
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
 
                 manager.setPosition(position)
             }
+
             override fun onPageScrollStateChanged(state: Int) {
                 super.onPageScrollStateChanged(state)
                 if (state == SCROLL_STATE_DRAGGING) {
@@ -142,7 +140,7 @@ class HomeBannersSliderViewHolder(
         registerOnPageChangeCallback(callback)
 
         // Stop auto paging when user touch the view
-        getRecyclerView().setOnTouchListener { _, event ->
+        getRecyclerView().setOnTouchListener { _, _ ->
             scope.cancel()
             scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
             autoTimerTask?.cancel()

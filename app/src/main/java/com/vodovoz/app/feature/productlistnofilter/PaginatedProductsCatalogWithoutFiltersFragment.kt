@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -19,7 +18,6 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
-import com.vodovoz.app.common.speechrecognizer.SpeechController
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentProductsWithoutFiltersFlowBinding
@@ -28,8 +26,6 @@ import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowCli
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.util.extensions.debugLog
-import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.Serializable
 import javax.inject.Inject
@@ -50,7 +46,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
         )
     }
 
-    private val viewModel: ProductsListNoFilterFlowViewModel by viewModels()
+    internal val viewModel: ProductsListNoFilterFlowViewModel by viewModels()
 
     @Inject
     lateinit var cartManager: CartManager
@@ -215,7 +211,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
         binding.tvSort.setOnClickListener { showBottomSortSettings(state.sortType) }
         binding.imgCategories.setOnClickListener {
             val category = state.categoryHeader ?: return@setOnClickListener
-            val id = state.selectedCategoryId ?: return@setOnClickListener
+            val id = state.selectedCategoryId //?: return@setOnClickListener
             showMiniCatalog(category, id)
         }
 

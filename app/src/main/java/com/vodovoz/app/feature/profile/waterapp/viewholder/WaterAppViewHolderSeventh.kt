@@ -59,7 +59,7 @@ class WaterAppViewHolderSeventh(
             }
         }
 
-        binding.sw.setOnCheckedChangeListener { compoundButton, b ->
+        binding.sw.setOnCheckedChangeListener { _, b ->
             waterAppHelper.saveNotificationSwitch(b)
         }
     }

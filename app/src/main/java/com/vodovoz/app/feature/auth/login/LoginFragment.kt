@@ -121,7 +121,7 @@ class LoginFragment : BaseFragment() {
         bindFingerPrintBtn()
     }
 
-    private fun authByUserSettings() {
+    internal fun authByUserSettings() {
         val userSettings = accountManager.fetchUserSettings()
         if (userSettings.email.isNotEmpty() && userSettings.password.isNotEmpty()) {
             viewModel.authByEmail(userSettings.email, userSettings.password)
@@ -412,7 +412,7 @@ class LoginFragment : BaseFragment() {
             if (count > 0) binding.tilPhone.isErrorEnabled = false
         }
 
-        binding.scPersonalInfo.setOnCheckedChangeListener { compoundButton, b ->
+        binding.scPersonalInfo.setOnCheckedChangeListener { _, b ->
             if (b) {
                 binding.scPersonalInfo.error = null
             }

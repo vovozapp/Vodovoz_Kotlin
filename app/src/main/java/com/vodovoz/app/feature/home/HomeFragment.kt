@@ -59,7 +59,6 @@ import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.ui.model.CommentUI
 import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.extensions.addOnBackPressedCallback
-import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -538,7 +537,11 @@ class HomeFragment : BaseFragment() {
 
             override fun onPromotionAdvClick(promotionAdvEntity: PromotionAdvEntity?) {
                 BannerAdvInfoBottomSheetFragment
-                    .newInstance(promotionAdvEntity?.titleAdv ?: "", promotionAdvEntity?.bodyAdv ?: "", promotionAdvEntity?.dataAdv ?: "")
+                    .newInstance(
+                        promotionAdvEntity?.titleAdv ?: "",
+                        promotionAdvEntity?.bodyAdv ?: "",
+                        promotionAdvEntity?.dataAdv ?: ""
+                    )
                     .show(childFragmentManager, "TAG")
             }
         }
@@ -608,7 +611,11 @@ class HomeFragment : BaseFragment() {
 
             override fun onBannerAdvClick(entity: BannerAdvEntity?) {
                 BannerAdvInfoBottomSheetFragment
-                    .newInstance(entity?.titleAdv ?: "", entity?.bodyAdv ?: "", entity?.dataAdv ?: "")
+                    .newInstance(
+                        entity?.titleAdv ?: "",
+                        entity?.bodyAdv ?: "",
+                        entity?.dataAdv ?: ""
+                    )
                     .show(childFragmentManager, "TAG")
             }
 
@@ -671,7 +678,12 @@ class HomeFragment : BaseFragment() {
 
             //POSITION_15
             override fun onCommentsClick(item: CommentUI) {
-                HomeCommentsFullBottomSheetFragment.newInstance(title = item.author ?: "Анонимно", content = item.text ?: "", rating = item.rating ?: 5, date = item.date ?: "").show(childFragmentManager, "comm")
+                HomeCommentsFullBottomSheetFragment.newInstance(
+                    title = item.author ?: "Анонимно",
+                    content = item.text ?: "",
+                    rating = item.rating ?: 5,
+                    date = item.date ?: ""
+                ).show(childFragmentManager, "comm")
             }
 
             override fun onSendCommentAboutShop() {
@@ -816,7 +828,7 @@ class HomeFragment : BaseFragment() {
         var back = false
         addOnBackPressedCallback {
             if (!back) {
-                requireActivity().snack("Нажмите назад еще раз, чтобы выйти") {}
+                requireActivity().snack("Нажмите назад еще раз, чтобы выйти")
                 back = true
             } else {
                 requireActivity().finish()

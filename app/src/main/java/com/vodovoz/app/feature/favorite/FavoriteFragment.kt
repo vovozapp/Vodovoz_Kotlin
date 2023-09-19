@@ -46,7 +46,7 @@ class FavoriteFragment : BaseFragment() {
         )
     }
 
-    private val viewModel: FavoriteFlowViewModel by activityViewModels()
+    internal val viewModel: FavoriteFlowViewModel by activityViewModels()
 
     @Inject
     lateinit var cartManager: CartManager
@@ -228,7 +228,7 @@ class FavoriteFragment : BaseFragment() {
         binding.tvSort.setOnClickListener { showBottomSortSettings(state.sortType) }
         binding.imgCategories.setOnClickListener {
             val category = state.favoriteCategory ?: return@setOnClickListener
-            val id = state.selectedCategoryId ?: return@setOnClickListener
+            val id = state.selectedCategoryId //?: return@setOnClickListener
             showMiniCatalog(category, id)
         }
 

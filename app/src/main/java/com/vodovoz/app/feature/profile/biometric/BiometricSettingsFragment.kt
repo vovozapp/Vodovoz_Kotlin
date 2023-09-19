@@ -4,10 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
-import android.widget.CompoundButton
-import android.widget.RadioGroup.OnCheckedChangeListener
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.biometric.BiometricManager
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -15,7 +12,6 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentBiometricSettingsBinding
-import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -33,16 +29,17 @@ class BiometricSettingsFragment : BaseFragment() {
         FragmentBiometricSettingsBinding.bind(contentView)
     }
 
-    private val biometricResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        val resultCode = result.resultCode
-        if (resultCode == Activity.RESULT_OK) {
-            accountManager.saveUseBio(true)
-            binding.personalDataSwitch.isChecked = true
-        } else {
-            binding.personalDataSwitch.isChecked = false
-            accountManager.saveUseBio(false)
+    private val biometricResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val resultCode = result.resultCode
+            if (resultCode == Activity.RESULT_OK) {
+                accountManager.saveUseBio(true)
+                binding.personalDataSwitch.isChecked = true
+            } else {
+                binding.personalDataSwitch.isChecked = false
+                accountManager.saveUseBio(false)
+            }
         }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,7 +48,7 @@ class BiometricSettingsFragment : BaseFragment() {
 
         initToolbar("Безопасность")
 
-        binding.personalDataSwitch.setOnCheckedChangeListener { p0, p1 ->
+        binding.personalDataSwitch.setOnCheckedChangeListener { _, p1 ->
             if (p1) {
                 checkBiometric()
             } else {

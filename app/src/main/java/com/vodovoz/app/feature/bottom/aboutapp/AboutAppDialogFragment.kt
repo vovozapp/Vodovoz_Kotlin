@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.text.Html
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -21,6 +20,7 @@ import com.vodovoz.app.feature.bottom.aboutapp.adapter.AboutAppClickListener
 import com.vodovoz.app.feature.bottom.aboutapp.adapter.AboutAppFlowAdapter
 import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
+import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,7 +40,7 @@ class AboutAppDialogFragment : BaseFragment() {
     private val aboutAppFlowAdapter = AboutAppFlowAdapter(
         object : AboutAppClickListener {
             override fun onActionClick(action: AboutApp) {
-                when(action.id) {
+                when (action.id) {
                     1 -> rate()
                     2 -> writeToDevelopers()
                     0 -> share()
@@ -87,7 +87,7 @@ class AboutAppDialogFragment : BaseFragment() {
         binding.rvActions.adapter = aboutAppFlowAdapter
     }
 
-    private fun share() {
+    internal fun share() {
         val sharingIntent = Intent(Intent.ACTION_SEND)
         sharingIntent.type = "text/plain"
         val shareBodyText = "https://play.google.com/store/apps/details?id=com.m.vodovoz"
@@ -95,32 +95,38 @@ class AboutAppDialogFragment : BaseFragment() {
         startActivity(Intent.createChooser(sharingIntent, "Shearing Option"))
     }
 
-    private fun rate() {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${requireActivity().packageName}"))
+    internal fun rate() {
+        val intent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse("market://details?id=${requireActivity().packageName}")
+        )
         if (intent.resolveActivity(requireContext().packageManager) != null) {
             startActivity(intent)
         }
     }
 
-    private fun writeToDevelopers() {
+    internal fun writeToDevelopers() {
         val aboutDevice = StringBuilder()
             .append("Android:").append(Build.MODEL + " ,Версия:" + Build.VERSION.RELEASE)
-            .append(when(requireContext().isTablet()) {
-                true -> "Планшет "
-                false ->"Телефон "
-            })
+            .append(
+                when (requireContext().isTablet()) {
+                    true -> "Планшет "
+                    false -> "Телефон "
+                }
+            )
 
         val intent = Intent(Intent.ACTION_SENDTO)
         intent.data = Uri.parse("mailto:")
         intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("android@vodovoz.ru"))
         intent.putExtra(Intent.EXTRA_SUBJECT, "Обращение по мобильному приложению")
 
-        intent.putExtra(Intent.EXTRA_TEXT,
-            Html.fromHtml(StringBuilder()
+        intent.putExtra(
+            Intent.EXTRA_TEXT,
+            (StringBuilder()
                 .append("<br><br><br><br><font size=\"2\">${aboutDevice.toString()}</font>")
                 .append("<br>Версия приложения: ${BuildConfig.VERSION_NAME}")
                 .append("<br>User id:" + viewModel.fetchUserId())
-                .toString())
+                .toString()).fromHtml()
         )
 
         startActivity(Intent.createChooser(intent, "Написать разработчиков..."))

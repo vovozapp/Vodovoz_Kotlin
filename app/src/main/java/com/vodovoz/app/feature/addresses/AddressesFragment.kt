@@ -2,12 +2,9 @@ package com.vodovoz.app.feature.addresses
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
@@ -19,7 +16,6 @@ import com.vodovoz.app.feature.map.MapController
 import com.vodovoz.app.feature.map.MapFlowViewModel
 import com.vodovoz.app.feature.map.adapter.AddressResultClickListener
 import com.vodovoz.app.ui.model.AddressUI
-import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
@@ -45,7 +41,7 @@ class AddressesFragment : BaseFragment() {
     @Inject
     lateinit var tabManager: TabManager
 
-    private val viewModel: AddressesFlowViewModel by viewModels()
+    internal val viewModel: AddressesFlowViewModel by viewModels()
     private val mapViewModel: MapFlowViewModel by viewModels()
 
     private val userLocationLayer: UserLocationLayer by lazy {
@@ -58,7 +54,7 @@ class AddressesFragment : BaseFragment() {
     private val mapController by lazy {
         MapController(
             mapKit,
-            object: AddressResultClickListener {},
+            object : AddressResultClickListener {},
             userLocationLayer,
             mapViewModel,
             requireContext(),
@@ -148,7 +144,8 @@ class AddressesFragment : BaseFragment() {
                         }
                         is AddressesFlowViewModel.AddressesEvents.OnAddressClick -> {
                             findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                                SELECTED_ADDRESS, it.address)
+                                SELECTED_ADDRESS, it.address
+                            )
                             findNavController().popBackStack(R.id.orderingFragment, false)
                         }
                         is AddressesFlowViewModel.AddressesEvents.UpdateAddress -> {
@@ -161,7 +158,7 @@ class AddressesFragment : BaseFragment() {
         lifecycleScope.launchWhenStarted {
             mapViewModel.observeEvent()
                 .collect {
-                    when(it) {
+                    when (it) {
                         is MapFlowViewModel.MapFlowEvents.Submit -> {
                             it.list.forEach { point ->
                                 mapController.submitRequest(point, it.startPoint)
@@ -169,7 +166,8 @@ class AddressesFragment : BaseFragment() {
                         }
                         is MapFlowViewModel.MapFlowEvents.UpdatePendingAddressUISuccess -> {
                             findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                                SELECTED_ADDRESS, it.address)
+                                SELECTED_ADDRESS, it.address
+                            )
                             findNavController().popBackStack(R.id.orderingFragment, false)
                         }
                         else -> {}
@@ -204,13 +202,13 @@ class AddressesFragment : BaseFragment() {
         }
     }
 
-    private fun showDeleteAddressDialog(addressId: Long) {
+    internal fun showDeleteAddressDialog(addressId: Long) {
         MaterialAlertDialogBuilder(requireContext())
             .setMessage("Удалить адрес?")
-            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which ->
+            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
                 dialog.cancel()
             }
-            .setPositiveButton(resources.getString(R.string.confirm)) { dialog, which ->
+            .setPositiveButton(resources.getString(R.string.confirm)) { dialog, _ ->
                 viewModel.deleteAddress(addressId)
                 dialog.cancel()
             }
@@ -220,9 +218,9 @@ class AddressesFragment : BaseFragment() {
 
 }
 
-enum class AddressType {
-    Personal, Company
-}
+//enum class AddressType {
+//    Personal, Company
+//}
 
 enum class OpenMode {
     SelectAddress
