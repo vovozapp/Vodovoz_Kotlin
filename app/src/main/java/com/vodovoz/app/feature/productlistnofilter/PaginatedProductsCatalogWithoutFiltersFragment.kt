@@ -210,7 +210,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
         binding.imgViewMode.setOnClickListener { viewModel.changeLayoutManager() }
         binding.tvSort.setOnClickListener { showBottomSortSettings(state.sortType) }
         binding.imgCategories.setOnClickListener {
-            val category = state.categoryHeader ?: return@setOnClickListener
+            val category = state.categoryHeader// ?: return@setOnClickListener
             val id = state.selectedCategoryId //?: return@setOnClickListener
             showMiniCatalog(category, id)
         }
