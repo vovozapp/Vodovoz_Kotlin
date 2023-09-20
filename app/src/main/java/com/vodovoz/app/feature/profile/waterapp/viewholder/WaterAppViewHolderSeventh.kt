@@ -7,7 +7,6 @@ import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.FragmentWaterAppSeventhBinding
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
-import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppInnerClickListener
 import com.vodovoz.app.feature.profile.waterapp.model.WaterAppLists
 import com.vodovoz.app.feature.profile.waterapp.model.WaterAppModelSeven
 import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.adapter.WaterAppPickerAdapter
@@ -18,15 +17,18 @@ class WaterAppViewHolderSeventh(
     view: View,
     clickListener: WaterAppClickListener,
     private val waterAppHelper: WaterAppHelper,
-    innerClickListener: WaterAppInnerClickListener,
 ) : ItemViewHolder<WaterAppModelSeven>(view) {
 
     private val binding: FragmentWaterAppSeventhBinding = FragmentWaterAppSeventhBinding.bind(view)
 
-    private val layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.VERTICAL, false)
+    private val layoutManager =
+        LinearLayoutManager(itemView.context, LinearLayoutManager.VERTICAL, false)
 
-    private val pickerAdapter = WaterAppPickerAdapter(waterAppHelper, clickListener, innerClickListener).apply { submitList(
-        WaterAppLists.durationLists) }
+    private val pickerAdapter = WaterAppPickerAdapter(waterAppHelper).apply {
+        submitList(
+            WaterAppLists.durationLists
+        )
+    }
 
     override fun attach() {
         super.attach()

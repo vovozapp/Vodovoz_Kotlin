@@ -5,17 +5,13 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ItemWaterAppDurationBinding
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
-import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
-import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppInnerClickListener
 import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.model.PickerDuration
 import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.launch
 
 class DurationViewHolder(
     view: View,
-    clickListener: WaterAppClickListener,
     private val waterAppHelper: WaterAppHelper,
-    private val innerClickListener: WaterAppInnerClickListener,
 ) : ItemViewHolder<PickerDuration>(view) {
 
     private val binding: ItemWaterAppDurationBinding = ItemWaterAppDurationBinding.bind(view)
@@ -51,17 +47,37 @@ class DurationViewHolder(
     private fun checkTime(time: String) {
         val item = item ?: return
 
-        when(item.id) {
-            15 -> { select(item.id == time.toInt(), "15 минут") }
-            30 -> { select(item.id == time.toInt(), "30 минут") }
-            45 -> { select(item.id == time.toInt(), "45 минут") }
-            60 -> { select(item.id == time.toInt(), "1 час") }
-            90 -> { select(item.id == time.toInt(), "1.5 часа") }
-            120 -> { select(item.id == time.toInt(), "2 часа") }
-            150 -> { select(item.id == time.toInt(), "2.5 часа") }
-            180 -> { select(item.id == time.toInt(), "3 часа") }
-            210 -> { select(item.id == time.toInt(), "3.5 часа") }
-            240 -> { select(item.id == time.toInt(), "4 часа") }
+        when (item.id) {
+            15 -> {
+                select(item.id == time.toInt(), "15 минут")
+            }
+            30 -> {
+                select(item.id == time.toInt(), "30 минут")
+            }
+            45 -> {
+                select(item.id == time.toInt(), "45 минут")
+            }
+            60 -> {
+                select(item.id == time.toInt(), "1 час")
+            }
+            90 -> {
+                select(item.id == time.toInt(), "1.5 часа")
+            }
+            120 -> {
+                select(item.id == time.toInt(), "2 часа")
+            }
+            150 -> {
+                select(item.id == time.toInt(), "2.5 часа")
+            }
+            180 -> {
+                select(item.id == time.toInt(), "3 часа")
+            }
+            210 -> {
+                select(item.id == time.toInt(), "3.5 часа")
+            }
+            240 -> {
+                select(item.id == time.toInt(), "4 часа")
+            }
         }
     }
 

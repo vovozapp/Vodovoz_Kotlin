@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.FragmentWaterAppInnerSecondBinding
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
-import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
-import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppInnerClickListener
 import com.vodovoz.app.feature.profile.waterapp.model.WaterAppLists
 import com.vodovoz.app.feature.profile.waterapp.model.inner.WaterAppModelInnerTwo
 import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.adapter.WaterAppPickerAdapter
@@ -18,21 +16,20 @@ import kotlinx.coroutines.launch
 
 class WaterAppViewHolderInnerSecond(
     view: View,
-    clickListener: WaterAppClickListener,
     private val waterAppHelper: WaterAppHelper,
-    private val innerClickListener: WaterAppInnerClickListener,
 ) : ItemViewHolder<WaterAppModelInnerTwo>(view) {
 
-    private val binding: FragmentWaterAppInnerSecondBinding = FragmentWaterAppInnerSecondBinding.bind(view)
+    private val binding: FragmentWaterAppInnerSecondBinding =
+        FragmentWaterAppInnerSecondBinding.bind(view)
 
-    private val layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.VERTICAL, false)
+    private val layoutManager =
+        LinearLayoutManager(itemView.context, LinearLayoutManager.VERTICAL, false)
 
-    private val pickerAdapter = WaterAppPickerAdapter(waterAppHelper, clickListener, innerClickListener).apply { submitList(WaterAppLists.listOfHeight) }
+    private val pickerAdapter =
+        WaterAppPickerAdapter(waterAppHelper).apply { submitList(WaterAppLists.listOfHeight) }
 
     override fun attach() {
         super.attach()
-        val item = item ?: return
-        innerClickListener.onChangePosition(item.id)
 
         launch {
             waterAppHelper

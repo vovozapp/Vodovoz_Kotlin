@@ -11,8 +11,7 @@ import com.vodovoz.app.feature.profile.waterapp.viewholder.inner.*
 
 class WaterAppAdapter(
     private val waterAppHelper: WaterAppHelper,
-    private val clickListener: WaterAppClickListener,
-    private val innerClickListener: WaterAppInnerClickListener
+    private val clickListener: WaterAppClickListener
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
@@ -23,14 +22,14 @@ class WaterAppAdapter(
             R.layout.fragment_water_app_fourth -> { WaterAppViewHolderFourth(getViewFromInflater(viewType, parent), clickListener, waterAppHelper) }
             R.layout.fragment_water_app_fifth -> { WaterAppViewHolderFifth(getViewFromInflater(viewType, parent), clickListener, waterAppHelper) }
             R.layout.fragment_water_app_sixth -> { WaterAppViewHolderSixth(getViewFromInflater(viewType, parent), clickListener, waterAppHelper) }
-            R.layout.fragment_water_app_seventh -> { WaterAppViewHolderSeventh(getViewFromInflater(viewType, parent), clickListener, waterAppHelper, innerClickListener) }
+            R.layout.fragment_water_app_seventh -> { WaterAppViewHolderSeventh(getViewFromInflater(viewType, parent), clickListener, waterAppHelper) }
 
-            R.layout.fragment_water_app_inner_first -> { WaterAppViewHolderInnerFirst(getViewFromInflater(viewType, parent), clickListener, waterAppHelper, innerClickListener) }
-            R.layout.fragment_water_app_inner_second -> { WaterAppViewHolderInnerSecond(getViewFromInflater(viewType, parent), clickListener, waterAppHelper, innerClickListener) }
-            R.layout.fragment_water_app_inner_third -> { WaterAppViewHolderInnerThird(getViewFromInflater(viewType, parent), clickListener, waterAppHelper, innerClickListener) }
-            R.layout.fragment_water_app_inner_fourth -> { WaterAppViewHolderInnerFourth(getViewFromInflater(viewType, parent), clickListener, waterAppHelper, innerClickListener) }
-            R.layout.fragment_water_app_inner_fifth -> { WaterAppViewHolderInnerFifth(getViewFromInflater(viewType, parent), clickListener, waterAppHelper, innerClickListener) }
-            R.layout.fragment_water_app_inner_sixth -> { WaterAppViewHolderInnerSixth(getViewFromInflater(viewType, parent), clickListener, waterAppHelper, innerClickListener) }
+            R.layout.fragment_water_app_inner_first -> { WaterAppViewHolderInnerFirst(getViewFromInflater(viewType, parent), waterAppHelper) }
+            R.layout.fragment_water_app_inner_second -> { WaterAppViewHolderInnerSecond(getViewFromInflater(viewType, parent), waterAppHelper) }
+            R.layout.fragment_water_app_inner_third -> { WaterAppViewHolderInnerThird(getViewFromInflater(viewType, parent),  waterAppHelper) }
+            R.layout.fragment_water_app_inner_fourth -> { WaterAppViewHolderInnerFourth(getViewFromInflater(viewType, parent), waterAppHelper) }
+            R.layout.fragment_water_app_inner_fifth -> { WaterAppViewHolderInnerFifth(getViewFromInflater(viewType, parent), waterAppHelper) }
+            R.layout.fragment_water_app_inner_sixth -> { WaterAppViewHolderInnerSixth(getViewFromInflater(viewType, parent), waterAppHelper) }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")
             }

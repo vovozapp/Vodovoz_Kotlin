@@ -6,32 +6,26 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.FragmentWaterAppInnerSixthBinding
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
-import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
-import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppInnerClickListener
 import com.vodovoz.app.feature.profile.waterapp.model.inner.WaterAppModelInnerSix
 import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.launch
 
 class WaterAppViewHolderInnerSixth(
     view: View,
-    clickListener: WaterAppClickListener,
     private val waterAppHelper: WaterAppHelper,
-    private val innerClickListener: WaterAppInnerClickListener,
 ) : ItemViewHolder<WaterAppModelInnerSix>(view) {
 
     private val binding: FragmentWaterAppInnerSixthBinding =
         FragmentWaterAppInnerSixthBinding.bind(view)
 
     init {
-        binding.llLowContainer.setOnClickListener { waterAppHelper.saveSport( "0.25") }
-        binding.llMediumContainer.setOnClickListener { waterAppHelper.saveSport( "0.375") }
+        binding.llLowContainer.setOnClickListener { waterAppHelper.saveSport("0.25") }
+        binding.llMediumContainer.setOnClickListener { waterAppHelper.saveSport("0.375") }
         binding.llHighContainer.setOnClickListener { waterAppHelper.saveSport("0.5") }
     }
 
     override fun attach() {
         super.attach()
-        val item = item ?: return
-        innerClickListener.onChangePosition(item.id)
 
         launch {
             waterAppHelper
@@ -40,7 +34,7 @@ class WaterAppViewHolderInnerSixth(
                     if (it == null || it.sport.isEmpty()) return@collect
                     debugLog { "inner sport ${it.sport} ${it.sport.toFloat()}" }
 
-                    when(it.sport) {
+                    when (it.sport) {
                         "0.25" -> selectLow()
                         "0.375" -> selectMedium()
                         "0.5" -> selectHigh()

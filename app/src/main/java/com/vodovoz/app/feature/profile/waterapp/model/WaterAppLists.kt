@@ -6,24 +6,24 @@ import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.model.*
 object WaterAppLists {
 
     val firstList = listOf(
-        WaterAppModelOne(2),
-        WaterAppModelTwo(2),
-        WaterAppModelThree(3),
-        WaterAppModelFour(4),
-        WaterAppModelSeven(5),
-        WaterAppModelFive(6),
-        WaterAppModelSix(7),
-        WaterAppModelSeven(8)
+        WaterAppModelOne(1),
+//        WaterAppModelTwo(2),
+        WaterAppModelThree(2),
+        WaterAppModelFour(3),
+        WaterAppModelSeven(4),
+        WaterAppModelFive(5),
+        WaterAppModelSix(6),
+        WaterAppModelSeven(7)
     )
 
     val notificationShownList = listOf(
         WaterAppModelOne(1),
-        WaterAppModelTwo(2),
-        WaterAppModelThree(3),
-        WaterAppModelFour(4),
-        WaterAppModelFive(5),
-        WaterAppModelSix(6),
-        WaterAppModelSeven(7)
+//        WaterAppModelTwo(2),
+        WaterAppModelThree(2),
+        WaterAppModelFour(3),
+        WaterAppModelFive(4),
+        WaterAppModelSix(5),
+        WaterAppModelSeven(6)
     )
 
     val startedList = listOf(
@@ -70,10 +70,10 @@ object WaterAppLists {
         PickerDuration(240)
     )
 
-    data class IconWithPosition(
-        val id: Int,
-        val isSelected: Boolean,
-    )
+//    data class IconWithPosition(
+//        val id: Int,
+//        val isSelected: Boolean,
+//    )
 
 
 }

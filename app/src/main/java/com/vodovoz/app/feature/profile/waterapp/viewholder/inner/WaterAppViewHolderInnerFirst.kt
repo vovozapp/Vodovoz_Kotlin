@@ -5,8 +5,6 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.FragmentWaterAppInnerFirstBinding
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
-import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
-import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppInnerClickListener
 import com.vodovoz.app.feature.profile.waterapp.model.inner.WaterAppModelInnerOne
 import com.vodovoz.app.util.extensions.color
 import com.vodovoz.app.util.extensions.debugLog
@@ -14,12 +12,11 @@ import kotlinx.coroutines.launch
 
 class WaterAppViewHolderInnerFirst(
     view: View,
-    private val clickListener: WaterAppClickListener,
     private val waterAppHelper: WaterAppHelper,
-    private val innerClickListener: WaterAppInnerClickListener,
 ) : ItemViewHolder<WaterAppModelInnerOne>(view) {
 
-    private val binding: FragmentWaterAppInnerFirstBinding = FragmentWaterAppInnerFirstBinding.bind(view)
+    private val binding: FragmentWaterAppInnerFirstBinding =
+        FragmentWaterAppInnerFirstBinding.bind(view)
 
     init {
         binding.llMan.setOnClickListener { waterAppHelper.saveGender("man") }
@@ -28,8 +25,6 @@ class WaterAppViewHolderInnerFirst(
 
     override fun attach() {
         super.attach()
-        val item = item ?: return
-        innerClickListener.onChangePosition(item.id)
         launch {
             waterAppHelper
                 .observeWaterAppUserData()
