@@ -2,6 +2,7 @@ package com.vodovoz.app.util
 
 import com.vodovoz.app.ui.model.ProductUI
 import timber.log.Timber
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
@@ -37,7 +38,14 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
                 } else {
                     fullPrice += price.oldPrice * productUI.cartQuantity
                 }
-                discountPrice += productUI.totalDisc.roundToInt() * productUI.cartQuantity
+
+                val totalDisc = if(abs(productUI.totalDisc.roundToInt().toDouble() - productUI.totalDisc) == 0.5){
+                    productUI.totalDisc.toInt()
+                } else {
+                    productUI.totalDisc.roundToInt()
+                }
+
+                discountPrice += totalDisc * productUI.cartQuantity
             }
         }
     }
