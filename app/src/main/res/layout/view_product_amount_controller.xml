@@ -53,7 +53,8 @@
             android:layout_weight="1"
             android:background="@drawable/bkg_number_controller_part_number"
             android:gravity="center"
-            tools:text="1" />
+            tools:text="1"
+            tools:ignore="SelectableText" />
 
         <ImageView
             android:id="@+id/increaseAmount"
@@ -62,7 +63,8 @@
             android:layout_weight="1"
             android:background="@drawable/bkg_number_controller_part_increase"
             android:padding="@dimen/space_6"
-            android:src="@drawable/png_cart"
+            android:src="@drawable/ic_plus"
+            app:tint="@color/white"
             tools:ignore="ContentDescription" />
 
     </LinearLayout>

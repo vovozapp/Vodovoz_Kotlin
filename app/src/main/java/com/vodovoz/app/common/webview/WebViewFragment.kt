@@ -3,6 +3,7 @@ package com.vodovoz.app.common.webview
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.webkit.WebViewClient
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -37,6 +38,7 @@ class WebViewFragment : BaseFragment() {
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView() {
         binding.wvContent.settings.javaScriptEnabled = true
+        binding.wvContent.webViewClient = WebViewClient()
 
         try {
             binding.wvContent.loadUrl(args.url)

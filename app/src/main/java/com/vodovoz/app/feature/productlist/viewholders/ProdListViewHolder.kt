@@ -195,7 +195,7 @@ class ProdListViewHolder(
         binding.rbRating.rating = item.rating
 
         binding.rbRating.onRatingBarChangeListener =
-            RatingBar.OnRatingBarChangeListener { p0, newRating, p2 ->
+            RatingBar.OnRatingBarChangeListener { _, newRating, _ ->
                 if (newRating != binding.rbRating.rating) {
                     productsClickListener.onChangeRating(item.id, newRating, item.rating)
                 }
@@ -254,20 +254,13 @@ class ProdListViewHolder(
             }
         }
 
-        binding.amountController.circleAmount.text = item.cartQuantity.toString()
-        binding.amountController.amount.text = item.cartQuantity.toString()
+        updateCartQuantity(item)
 
-        when (item.cartQuantity > 0) {
-            true -> binding.amountController.circleAmount.visibility = View.VISIBLE
-            false -> binding.amountController.circleAmount.visibility = View.GONE
-        }
-
-        when (item.commentAmount.isEmpty()) {
-            true -> binding.tvCommentAmount.visibility = View.GONE
-            else -> {
-                binding.tvCommentAmount.visibility = View.VISIBLE
-                binding.tvCommentAmount.text = item.commentAmount
-            }
+        if (item.commentAmount.isEmpty()) {
+            binding.tvCommentAmount.visibility = View.GONE
+        } else {
+            binding.tvCommentAmount.visibility = View.VISIBLE
+            binding.tvCommentAmount.text = item.commentAmount
         }
 
         bindFav(item)
@@ -325,7 +318,7 @@ class ProdListViewHolder(
         if (item.isGift) {
             binding.imgFavoriteStatus.visibility = View.INVISIBLE
             binding.cgStatuses.visibility = View.GONE
-            if (item.isGift) binding.tvOldPrice.visibility = View.GONE
+            binding.tvOldPrice.visibility = View.GONE
         }
 
         //If is not available
@@ -358,6 +351,11 @@ class ProdListViewHolder(
     private fun updateCartQuantity(item: ProductUI) {
         if (item.cartQuantity < 0) {
             item.cartQuantity = 0
+        }
+        binding.amountController.circleAmount.visibility = if (item.cartQuantity > 0) {
+            View.VISIBLE
+        } else {
+            View.GONE
         }
         binding.amountController.amount.text = item.cartQuantity.toString()
         binding.amountController.circleAmount.text = item.cartQuantity.toString()

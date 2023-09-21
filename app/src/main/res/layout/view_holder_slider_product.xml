@@ -42,7 +42,8 @@
         app:layout_constraintEnd_toStartOf="@+id/tvDiscountPercent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_goneMarginEnd="5dp"
-        tools:text="Новинк4324224а" />
+        tools:text="Новинк4324224а"
+        tools:ignore="SelectableText" />
 
     <TextView
         android:id="@+id/tvDiscountPercent"
@@ -58,7 +59,8 @@
         android:paddingVertical="@dimen/space_2"
         app:layout_constraintStart_toStartOf="@+id/tvStatus"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="12%" />
+        tools:text="12%"
+        tools:ignore="SelectableText" />
 
     <TextView
         android:id="@+id/tvPricePerUnit"
@@ -68,7 +70,8 @@
         app:layout_constraintBottom_toTopOf="@id/tvCurrentPrice"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="510/кг" />
+        tools:text="510/кг"
+        tools:ignore="SelectableText" />
 
     <TextView
         android:id="@+id/tvCurrentPrice"
@@ -79,7 +82,8 @@
         app:layout_constraintBottom_toTopOf="@id/tvPriceCondition"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="280 Р" />
+        tools:text="280 Р"
+        tools:ignore="SelectableText" />
 
     <TextView
         android:id="@+id/tvOldPrice"
@@ -92,7 +96,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tvCurrentPrice"
-        tools:ignore="RtlSymmetry"
+        tools:ignore="RtlSymmetry,SelectableText"
         tools:text="300 Р" />
 
     <TextView
@@ -177,7 +181,8 @@
         android:layout_height="@dimen/_24sdp"
         android:background="@drawable/bkg_number_controller_part_increase"
         android:padding="@dimen/space_6"
-        android:src="@drawable/png_cart"
+        android:src="@drawable/ic_plus"
+        app:tint="@color/white"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

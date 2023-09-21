@@ -3,15 +3,16 @@ package com.vodovoz.app.mapper
 import com.vodovoz.app.data.model.common.FilterValueEntity
 import com.vodovoz.app.ui.model.FilterValueUI
 
-object FilterValueMapper {
 
-    fun FilterValueEntity.mapToUI() = FilterValueUI(
-        id = id,
-        value = value
-    )
+fun FilterValueEntity.mapToUI() = FilterValueUI(
+    id = id,
+    value = if(value.contains("&lt;")) {
+                value.replaceFirst("&lt;", "<")
+            } else {
+                value
+            }
+)
 
-    fun List<FilterValueEntity>.mapToUI(): List<FilterValueUI> = mutableListOf<FilterValueUI>().also { uiList ->
-        forEach { uiList.add(it.mapToUI()) }
-    }
-
-}
+fun List<FilterValueEntity>.mapToUI() = mutableListOf<FilterValueUI>().also { uiList ->
+    forEach { uiList.add(it.mapToUI()) }
+}.toList()
