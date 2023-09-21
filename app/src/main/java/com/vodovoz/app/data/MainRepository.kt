@@ -1059,7 +1059,7 @@ class MainRepository @Inject constructor(
         shippingIntervalId: Long?, //id Интервал доставки
         overMoney: Int?, //?
         parking: Int?, // числовое значение
-        appVerision: String?,
+        appVersion: String?,
         checkDeliveryValue: Int?,
     ) = api.fetchRegOrderResponse(
         orderType = orderType,
@@ -1087,7 +1087,7 @@ class MainRepository @Inject constructor(
         shippingIntervalId = shippingIntervalId,
         overMoney = overMoney,
         parking = parking,
-        appVersion = appVerision,
+        appVersion = appVersion,
         checkDeliveryValue = checkDeliveryValue
     )
 

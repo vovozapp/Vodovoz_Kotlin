@@ -237,14 +237,16 @@ fun <T : Parcelable> parcelableArgs(key: String): ReadOnlyProperty<Fragment, T> 
     return ReadOnlyProperty { thisRef, _ ->
         val args = thisRef.requireArguments()
         require(args.containsKey(key)) { "Arguments don't contain key $key" }
+        @Suppress("UNCHECKED_CAST", "DEPRECATION")
         requireNotNull(args.getParcelable(key)) as T
     }
 }
 
 fun String.fromHtml(): Spanned {
-    val result: Spanned = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+     val result: Spanned = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY)
     } else {
+         @Suppress("DEPRECATION")
         Html.fromHtml(this)
     }
     return result

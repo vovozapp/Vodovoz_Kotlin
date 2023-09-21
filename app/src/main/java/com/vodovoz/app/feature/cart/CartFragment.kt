@@ -37,12 +37,12 @@ class CartFragment : BaseFragment() {
     }
 
     override fun layout(): Int = R.layout.fragment_main_cart_flow
-    private val binding: FragmentMainCartFlowBinding by viewBinding {
+    internal val binding: FragmentMainCartFlowBinding by viewBinding {
         FragmentMainCartFlowBinding.bind(
             contentView
         )
     }
-    private val viewModel: CartFlowViewModel by activityViewModels()
+    internal val viewModel: CartFlowViewModel by activityViewModels()
 
     @Inject
     lateinit var cartManager: CartManager
@@ -331,7 +331,7 @@ class CartFragment : BaseFragment() {
         }
     }
 
-    private fun clearCart() {
+    internal fun clearCart() {
         MaterialAlertDialogBuilder(requireContext())
             .setMessage("Очистить корзину?")
             .setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }

@@ -73,14 +73,14 @@ object OrderDetailsResponseJsonParser {
             }
         }
 
-        val detailPicture = getString("DETAIL_PICTURE")
+        val detailPicture = safeString("DETAIL_PICTURE")
 
         return ProductEntity(
             id = when(has("PRODUCT_ID")) {
                 true -> getLong("PRODUCT_ID")
                 false -> getLong("ID")
             },
-            name = getString("NAME"),
+            name = safeString("NAME"),
             detailPicture = detailPicture.parseImagePath(),
             priceList = listOf(PriceEntity(price = safeInt("PRICE"), oldPrice = 0, requiredAmount = 0, 0)),
             rating = when(has("")) {

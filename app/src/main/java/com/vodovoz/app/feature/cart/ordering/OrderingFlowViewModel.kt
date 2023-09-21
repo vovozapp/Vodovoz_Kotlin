@@ -143,7 +143,7 @@ class OrderingFlowViewModel @Inject constructor(
                         },
                         parking = state.data.shippingInfoBundleUI?.parkingPrice,
                         userId = userId,
-                        appVerision = BuildConfig.VERSION_NAME,
+                        appVersion = BuildConfig.VERSION_NAME,
                         checkDeliveryValue = state.data.checkDeliveryValue
                     )
                 )
