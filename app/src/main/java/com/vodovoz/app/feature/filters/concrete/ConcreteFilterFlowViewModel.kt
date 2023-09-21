@@ -9,7 +9,7 @@ import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.category.ConcreteFilterResponseJsonParser.parseConcreteFilterResponse
-import com.vodovoz.app.mapper.FilterValueMapper.mapToUI
+import com.vodovoz.app.mapper.mapToUI
 import com.vodovoz.app.ui.model.FilterUI
 import com.vodovoz.app.ui.model.FilterValueUI
 import com.vodovoz.app.ui.model.custom.ConcreteFilterBundleUI
@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ConcreteFilterFlowViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val mainRepository: MainRepository,
 ) : PagingStateViewModel<ConcreteFilterFlowViewModel.ConcreteFilterState>(ConcreteFilterState()) {
 

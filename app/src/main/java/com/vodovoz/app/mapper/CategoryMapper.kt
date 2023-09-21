@@ -1,14 +1,14 @@
 package com.vodovoz.app.mapper
 
 import com.vodovoz.app.data.model.common.CategoryEntity
-import com.vodovoz.app.mapper.FilterValueMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryUI
 
-object CategoryMapper  {
+object CategoryMapper {
 
-    fun List<CategoryEntity>.mapToUI(): List<CategoryUI> = mutableListOf<CategoryUI>().also { uiList ->
-        forEach { uiList.add(it.mapToUI()) }
-    }
+    fun List<CategoryEntity>.mapToUI(): List<CategoryUI> =
+        mutableListOf<CategoryUI>().also { uiList ->
+            forEach { uiList.add(it.mapToUI()) }
+        }
 
     fun CategoryEntity.mapToUI() = CategoryUI(
         id = id,
