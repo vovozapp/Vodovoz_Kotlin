@@ -45,7 +45,7 @@ class MainFragment : BaseFragment() {
         observeTabState()
         observeCartState()
         observeProfileState()
-        observeCartLoading()
+      //  observeCartLoading()
         observeTabVisibility()
     }
 
@@ -61,22 +61,22 @@ class MainFragment : BaseFragment() {
         viewModel.isBottomBarInited = false
     }
 
-    private fun observeCartLoading() {
-        lifecycleScope.launchWhenStarted {
-            tabManager
-                .observeAddToCartLoading()
-                .collect { state ->
-                    if (state == null || state.count == 0) {
-                        binding.circleAmount.isVisible = false
-                        binding.nvNavigation.menu.getItem(2).title = "Корзина"
-                    } else {
-                        binding.circleAmount.text = state.count.toString()
-                        binding.circleAmount.isVisible = true
-                        binding.nvNavigation.menu.getItem(2).title = "..."
-                    }
-                }
-        }
-    }
+//    private fun observeCartLoading() {
+//        lifecycleScope.launchWhenStarted {
+//            tabManager
+//                .observeAddToCartLoading()
+//                .collect { state ->
+//                    if (state == null || state.count == 0) {
+//                        binding.circleAmount.isVisible = false
+//                        binding.nvNavigation.menu.getItem(2).title = "Корзина"
+//                    } else {
+//                        binding.circleAmount.text = state.count.toString()
+//                        binding.circleAmount.isVisible = true
+//                        binding.nvNavigation.menu.getItem(2).title = "..."
+//                    }
+//                }
+//        }
+//    }
 
     private fun observeTabVisibility() {
         lifecycleScope.launchWhenStarted {

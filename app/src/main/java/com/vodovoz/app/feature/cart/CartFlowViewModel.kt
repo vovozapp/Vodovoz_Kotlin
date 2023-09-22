@@ -124,7 +124,7 @@ class CartFlowViewModel @Inject constructor(
                                 availableProducts = CartAvailableProducts(
                                     CART_AVAILABLE_PRODUCTS_ID,
                                     availableProducts,
-                                    showCheckForm = availableProducts.any { it.depositPrice != 0 },
+                                    showCheckForm = availableProducts.any { it.depositPrice != 0 } && isCountOfBottlesLessThenCountOfWater(availableProducts),
                                     showReturnBottleBtn = false,
                                     giftMessage = mappedData.giftMessage
                                 ),
@@ -190,8 +190,36 @@ class CartFlowViewModel @Inject constructor(
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
         viewModelScope.launch {
-            cartManager.add(id = productId, oldCount = oldQuan, newCount = quantity)
+            var quant = quantity
+            state.data.availableProducts?.items?.let{productList ->
+                val product = productList.find { it.id == productId}
+                if(product != null && product.isBottle){
+                    if(oldQuan < quant && !isCountOfBottlesLessThenCountOfWater(productList)){
+                        quant = oldQuan
+                    }
+                }
+            }
+            cartManager.add(id = productId, oldCount = oldQuan, newCount = quant)
         }
+    }
+
+    private fun isCountOfBottlesLessThenCountOfWater(productList: List<ProductUI>): Boolean {
+        val sizeOfWater = productList
+            .filter { it.depositPrice > 0 && !it.isBottle }
+            .sumOf { it.cartQuantity }
+        val sizeOfBottles = productList
+            .filter { it.isBottle }
+            .sumOf {
+                if(it.oldQuantity != 0){
+                    it.oldQuantity
+                } else {
+                    it.cartQuantity
+                }
+            }
+        if(sizeOfBottles >= sizeOfWater){
+            return false
+        }
+        return true
     }
 
     fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {

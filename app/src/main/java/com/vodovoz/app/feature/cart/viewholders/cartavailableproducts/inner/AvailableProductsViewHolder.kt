@@ -47,11 +47,13 @@ class AvailableProductsViewHolder(
             override fun onTick(millisUntilFinished: Long) {}
             override fun onFinish() {
                 val item = item ?: return
-                productsClickListener.onChangeProductQuantity(
-                    item.id,
-                    item.cartQuantity,
-                    item.oldQuantity
-                )
+                if(item.cartQuantity != item.oldQuantity) {
+                    productsClickListener.onChangeProductQuantity(
+                        item.id,
+                        item.cartQuantity,
+                        item.oldQuantity
+                    )
+                }
                 hideAmountController(item)
             }
         }
@@ -213,8 +215,7 @@ class AvailableProductsViewHolder(
             binding.tvPricePerUnit.visibility = View.GONE
         }
 
-        binding.amountController.circleAmount.text = item.cartQuantity.toString()
-        binding.amountController.amount.text = item.cartQuantity.toString()
+        updateCartQuantity(item)
 
         when (item.cartQuantity > 0) {
             true -> binding.amountController.circleAmount.visibility = View.VISIBLE

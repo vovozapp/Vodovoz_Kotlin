@@ -12,7 +12,11 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
     var bottlesPrice = 0
     productUIList.forEach { productUI ->
         if (productUI.isBottle) {
-            bottlesPrice += productUI.depositPrice * productUI.cartQuantity
+            if(productUI.depositPrice != 0){
+                bottlesPrice += productUI.depositPrice * productUI.cartQuantity
+            } else {
+                bottlesPrice += productUI.priceList.first().currentPrice * productUI.cartQuantity
+            }
         } else {
             if (productUI.depositPrice != 0) {
                 deposit += productUI.depositPrice * productUI.cartQuantity

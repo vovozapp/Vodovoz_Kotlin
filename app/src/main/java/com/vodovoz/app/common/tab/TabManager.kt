@@ -25,8 +25,8 @@ class TabManager @Inject constructor() {
     private val bottomNavProfileStateListener = MutableStateFlow<Int?>(null)
     fun observeBottomNavProfileState() = bottomNavProfileStateListener.asStateFlow()
 
-    private val loadingAddToCartListener = MutableSharedFlow<BottomNavCartState>()
-    fun observeAddToCartLoading() = loadingAddToCartListener.asSharedFlow()
+//    private val loadingAddToCartListener = MutableSharedFlow<BottomNavCartState>()
+//    fun observeAddToCartLoading() = loadingAddToCartListener.asSharedFlow()
 
     private val tabReselectListener = MutableStateFlow(DEFAULT_STATE)
     fun observeTabReselect() = tabReselectListener.asStateFlow()
@@ -75,27 +75,27 @@ class TabManager @Inject constructor() {
         tabVisibilityListener.value = vis
     }
 
-    fun loadingAddToCart(load: Boolean, plus: Boolean) {
-        scope.launch {
-            loadingAddToCartListener.emit(
-                if (load) {
-                    if (plus) {
-                        BottomNavCartState(
-                            bottomNavCartStateListener.value?.count?.plus(1) ?: 0,
-                            -1
-                        )
-                    } else {
-                        BottomNavCartState(
-                            bottomNavCartStateListener.value?.count?.minus(1) ?: 0,
-                            -1
-                        )
-                    }
-                } else {
-                    BottomNavCartState(bottomNavCartStateListener.value?.count ?:0, -2)
-                }
-            )
-        }
-    }
+//    fun loadingAddToCart(load: Boolean, plus: Boolean) {
+//        scope.launch {
+//            bottomNavCartStateListener.emit(
+//                if (load) {
+//                    if (plus) {
+//                        BottomNavCartState(
+//                            bottomNavCartStateListener.value?.count?.plus(1) ?: 0,
+//                            -1
+//                        )
+//                    } else {
+//                        BottomNavCartState(
+//                            bottomNavCartStateListener.value?.count?.minus(1) ?: 0,
+//                            -1
+//                        )
+//                    }
+//                } else {
+//                    BottomNavCartState(bottomNavCartStateListener.value?.count ?:0, -2)
+//                }
+//            )
+//        }
+//    }
 
     fun clearBottomNavCartState() {
         bottomNavCartStateListener.value = null
