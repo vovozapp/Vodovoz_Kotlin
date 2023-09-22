@@ -7,9 +7,11 @@ plugins {
     id 'com.google.dagger.hilt.android'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'com.google.devtools.ksp'
 }
 
 android {
+    namespace 'com.vodovoz.app'
     compileSdk 33
 
     defaultConfig {
@@ -81,11 +83,11 @@ dependencies {
     def moshiVersion = '1.15.0'
     implementation "com.squareup.moshi:moshi:$moshiVersion"
     implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
+    ksp "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
 
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.13.1'
-    kapt "com.github.bumptech.glide:compiler:4.13.0"
+    ksp "com.github.bumptech.glide:compiler:4.13.0"
 
     //MapKit
     implementation 'com.yandex.android:maps.mobile:4.0.0-full'
