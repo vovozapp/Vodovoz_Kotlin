@@ -662,6 +662,15 @@ class MainRepository @Inject constructor(
         orderId = orderId
     )
 
+    suspend fun repeatOrder(
+        orderId: Long?,
+        userId: Long?
+    ) = api.repeatOrder(
+        orderId = orderId,
+        userId = userId
+    )
+
+
     //Отмена заказа
     suspend fun cancelOrder(
         orderId: Long?,

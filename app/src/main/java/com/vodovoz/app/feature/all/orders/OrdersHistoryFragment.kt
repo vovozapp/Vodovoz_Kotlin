@@ -6,6 +6,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.BaseFragment
@@ -21,7 +22,7 @@ import javax.inject.Inject
 class OrdersHistoryFragment : BaseFragment() {
 
     companion object {
-        const val FILTERS_BUNDLE =  "FILTERS_BUNDLE"
+        const val FILTERS_BUNDLE = "FILTERS_BUNDLE"
     }
 
     override fun layout(): Int = R.layout.fragment_orders_history_flow
@@ -114,17 +115,31 @@ class OrdersHistoryFragment : BaseFragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.observeEvent()
                 .collect {
-                    when(it) {
+                    when (it) {
                         is AllOrdersFlowViewModel.AllOrdersEvent.GoToFilter -> {
                             if (findNavController().currentBackStackEntry?.destination?.id == R.id.allOrdersFragment) {
-                                findNavController().navigate(OrdersHistoryFragmentDirections.actionToOrdersFiltersDialog(it.bundle))
+                                findNavController().navigate(
+                                    OrdersHistoryFragmentDirections.actionToOrdersFiltersDialog(
+                                        it.bundle
+                                    )
+                                )
                             }
                         }
                         is AllOrdersFlowViewModel.AllOrdersEvent.GoToCart -> {
                             if (it.boolean) {
-                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.allOrdersFragment) {
-                                    findNavController().navigate(OrdersHistoryFragmentDirections.actionToCartFragment())
-                                }
+                                MaterialAlertDialogBuilder(requireContext())
+                                    .setTitle("Товары добавлены в корзину")
+                                    .setMessage("Перейти в корзину?")
+                                    .setPositiveButton("Да") { dialog, _ ->
+                                        dialog.dismiss()
+                                        if (findNavController().currentBackStackEntry?.destination?.id == R.id.allOrdersFragment) {
+                                            findNavController().navigate(
+                                                OrdersHistoryFragmentDirections.actionToCartFragment()
+                                            )
+                                        }
+                                    }
+                                    .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
+                                    .show()
                             }
                         }
                     }
@@ -134,7 +149,8 @@ class OrdersHistoryFragment : BaseFragment() {
 
     private fun observeResultLiveData() {
         findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<OrdersFiltersBundleUI>(FILTERS_BUNDLE)?.observe(viewLifecycleOwner) { filtersBundle ->
+            ?.getLiveData<OrdersFiltersBundleUI>(FILTERS_BUNDLE)
+            ?.observe(viewLifecycleOwner) { filtersBundle ->
                 viewModel.updateFilterBundle(filtersBundle)
             }
     }
@@ -144,7 +160,11 @@ class OrdersHistoryFragment : BaseFragment() {
             override fun onMoreDetailClick(orderId: Long, sendReport: Boolean) {
                 //val eventParameters = "{\"ZakazID\":\"$orderId\"}"
                 //if (sendReport) accountManager.reportYandexMetrica("Зашел в заказ, статус в пути", eventParameters) //todo релиз
-                findNavController().navigate(OrdersHistoryFragmentDirections.actionToOrderDetailsFragment(orderId))
+                findNavController().navigate(
+                    OrdersHistoryFragmentDirections.actionToOrderDetailsFragment(
+                        orderId
+                    )
+                )
             }
 
             override fun onRepeatOrderClick(orderId: Long) {
@@ -152,7 +172,11 @@ class OrdersHistoryFragment : BaseFragment() {
             }
 
             override fun onProductDetailPictureClick(productId: Long) {
-                findNavController().navigate(OrdersHistoryFragmentDirections.actionToProductDetailFragment(productId))
+                findNavController().navigate(
+                    OrdersHistoryFragmentDirections.actionToProductDetailFragment(
+                        productId
+                    )
+                )
             }
         }
     }

@@ -18,32 +18,29 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.order.CancelOrderResponseJsonParser.parseCancelOrderResponse
 import com.vodovoz.app.data.parser.response.order.OrderDetailsResponseJsonParser.parseOrderDetailsResponse
+import com.vodovoz.app.data.parser.response.order.RepeatOrderResponseJsonParser.parseRepeatOrderResponse
 import com.vodovoz.app.feature.all.orders.detail.model.DriverPointsEntity
 import com.vodovoz.app.mapper.OrderDetailsMapper.mapToUI
 import com.vodovoz.app.ui.model.OrderDetailsUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class OrderDetailsFlowViewModel @Inject constructor(
-    private val savedState: SavedStateHandle,
+    savedState: SavedStateHandle,
     private val repository: MainRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
-    private val accountManager: AccountManager
+    private val accountManager: AccountManager,
 ) : PagingStateViewModel<OrderDetailsFlowViewModel.OrderDetailsState>(OrderDetailsState()) {
 
     private val firebaseDatabase = FirebaseDatabase.getInstance().reference
 
     private val orderId = savedState.get<Long>("orderId")
-
-    private val goToCartListener = MutableSharedFlow<Boolean>()
-    fun observeGoToCart() = goToCartListener.asSharedFlow()
 
     private val cancelResultListener = MutableSharedFlow<String>()
     fun observeCancelResult() = cancelResultListener.asSharedFlow()
@@ -96,31 +93,25 @@ class OrderDetailsFlowViewModel @Inject constructor(
     fun repeatOrder() {
         val userId = accountManager.fetchAccountId() ?: return
         val id = orderId ?: return
+        uiStateListener.value = state.copy(loadingPage = true, error = null)
         viewModelScope.launch {
-            flow { emit(repository.fetchOrderDetailsResponse(
-                userId = userId,
-                appVersion = BuildConfig.VERSION_NAME,
-                orderId = id
-            )) }
+            flow {
+                emit(
+                    repository.repeatOrder(
+                        orderId = id,
+                        userId = userId
+                    )
+                )
+            }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseOrderDetailsResponse()
+                .onEach { responseBody ->
+                    val response = responseBody.parseRepeatOrderResponse()
                     if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-
-                        data.productUIList.filter { it.leftItems > 0 }.forEachIndexed {index, product ->
-                            cartManager.add(
-                                id = product.id,
-                                oldCount = product.orderQuantity,
-                                newCount = product.orderQuantity,
-                                withUpdate = index == data.productUIList.lastIndex-1,
-                                repeat = true
-                            )
-                        }
-                        uiStateListener.value = state.copy(loadingPage = true, error = null)
-                        delay(3000)
-                        uiStateListener.value = state.copy(loadingPage = false, error = null)
-                        goToCartListener.emit(true)
+                        cartManager.updateCartListState(true)
+                        uiStateListener.value = state.copy(
+                            loadingPage = false, error = null,
+                            data = state.data.copy(ifRepeatOrder = true)
+                        )
                     } else {
                         uiStateListener.value =
                             state.copy(
@@ -194,35 +185,45 @@ class OrderDetailsFlowViewModel @Inject constructor(
     private fun checkIfDriverExists(driverId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                firebaseDatabase.child(driverId).addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        val list = mutableListOf<DriverPointsEntity?>()
-                        snapshot.child("ListTochki").children.forEach {
-                            val driverPointsEntity = it.getValue(DriverPointsEntity::class.java)
-                            list.add(driverPointsEntity)
-                        }
+                firebaseDatabase.child(driverId)
+                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val list = mutableListOf<DriverPointsEntity?>()
+                            snapshot.child("ListTochki").children.forEach {
+                                val driverPointsEntity = it.getValue(DriverPointsEntity::class.java)
+                                list.add(driverPointsEntity)
+                            }
 
-                        val isExists = list.find { it?.OrderNumber == orderId.toString() }
+                            val isExists = list.find { it?.OrderNumber == orderId.toString() }
 
-                        if (isExists != null) {
-                            uiStateListener.value = state.copy(
-                                data = state.data.copy(
-                                    ifDriverExists = true
+                            if (isExists != null) {
+                                uiStateListener.value = state.copy(
+                                    data = state.data.copy(
+                                        ifDriverExists = true
+                                    )
                                 )
-                            )
+                            }
                         }
-                    }
 
-                    override fun onCancelled(error: DatabaseError) {
+                        override fun onCancelled(error: DatabaseError) {
 
-                    }
-                })
+                        }
+                    })
             }
         }
     }
 
+    fun repeatOrderFlagReset() {
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                ifRepeatOrder = false
+            )
+        )
+    }
+
     data class OrderDetailsState(
         val orderDetailsUI: OrderDetailsUI? = null,
-        val ifDriverExists: Boolean = false
+        val ifDriverExists: Boolean = false,
+        val ifRepeatOrder: Boolean = false,
     ) : State
 }

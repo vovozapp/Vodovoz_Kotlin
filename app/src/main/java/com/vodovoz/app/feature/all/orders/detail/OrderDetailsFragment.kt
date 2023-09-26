@@ -68,7 +68,6 @@ class OrderDetailsFragment : BaseFragment() {
         bindErrorRefresh { viewModel.refreshSorted() }
         initButtons()
         observeUiState()
-        observeGoToCart()
         observeCancelResult()
         initActionBar()
     }
@@ -98,20 +97,6 @@ class OrderDetailsFragment : BaseFragment() {
         }
     }
 
-    private fun observeGoToCart() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeGoToCart()
-                .collect {
-                    if (it) {
-                        if (findNavController().currentBackStackEntry?.destination?.id == R.id.orderDetailsFragment) {
-                            findNavController().navigate(OrderDetailsFragmentDirections.actionToCartFragment())
-                        }
-                    }
-                }
-        }
-    }
-
     private fun observeUiState() {
         lifecycleScope.launchWhenStarted {
             viewModel.observeUiState()
@@ -130,6 +115,21 @@ class OrderDetailsFragment : BaseFragment() {
                     val products = data.orderDetailsUI?.productUIList
                     if (products != null) {
                         orderDetailsController.submitList(products)
+                    }
+
+                    if(data.ifRepeatOrder){
+                        MaterialAlertDialogBuilder(requireContext())
+                            .setTitle("Товары добавлены в корзину")
+                            .setMessage("Перейти в корзину?")
+                            .setPositiveButton("Да") { dialog, _ ->
+                                dialog.dismiss()
+                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.orderDetailsFragment) {
+                                    findNavController().navigate(OrderDetailsFragmentDirections.actionToCartFragment())
+                                }
+                            }
+                            .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
+                            .show()
+                        viewModel.repeatOrderFlagReset()
                     }
 
                     showError(state.error)

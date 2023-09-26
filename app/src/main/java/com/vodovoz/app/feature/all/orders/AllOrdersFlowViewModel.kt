@@ -10,14 +10,12 @@ import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.order.AllOrdersResponseJsonParser.parseAllOrdersSliderResponse
-import com.vodovoz.app.data.parser.response.order.OrderDetailsResponseJsonParser.parseOrderDetailsResponse
-import com.vodovoz.app.mapper.OrderDetailsMapper.mapToUI
+import com.vodovoz.app.data.parser.response.order.RepeatOrderResponseJsonParser.parseRepeatOrderResponse
 import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -144,39 +142,22 @@ class AllOrdersFlowViewModel @Inject constructor(
 
     fun repeatOrder(orderId: Long) {
         val userId =
-            accountManager.fetchAccountId() ?: return//dataRepository.fetchUserId() ?: return
+            accountManager.fetchAccountId() ?: return
+        uiStateListener.value = state.copy(loadingPage = true, error = null)
         viewModelScope.launch {
             flow {
                 emit(
-                    repository.fetchOrderDetailsResponse(
+                    repository.repeatOrder(
                         userId = userId,
-                        appVersion = BuildConfig.VERSION_NAME,
                         orderId = orderId
                     )
                 )
             }
                 .flowOn(Dispatchers.IO)
                 .onEach {
-                    val response = it.parseOrderDetailsResponse()
+                    val response = it.parseRepeatOrderResponse()
                     if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-
-                        data.productUIList.forEach {
-                            debugLog { "spasibo add leftItems ${it.leftItems} id ${it.id} name ${it.name} cartQuantity ${it.cartQuantity} oldQuantity ${it.oldQuantity} orderQuantity ${it.orderQuantity}" }
-                        }
-
-                        data.productUIList.filter { it.leftItems > 0 }
-                            .forEachIndexed { index, product ->
-                                cartManager.add(
-                                    id = product.id,
-                                    oldCount = product.orderQuantity,
-                                    newCount = product.orderQuantity,
-                                    withUpdate = index == data.productUIList.lastIndex - 1,
-                                    repeat = true
-                                )
-                            }
-                        uiStateListener.value = state.copy(loadingPage = true, error = null)
-                        delay(3000)
+                        cartManager.updateCartListState(true)
                         uiStateListener.value = state.copy(loadingPage = false, error = null)
                         eventListener.emit(AllOrdersEvent.GoToCart(true))
                     } else {

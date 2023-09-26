@@ -427,6 +427,12 @@ interface MainApi {
         @Query("id") orderId: Long? = null,
     ): ResponseBody
 
+    @GET("/newmobile/korzina/function/povtor/index.php")
+    suspend fun repeatOrder(
+        @Query("orderID") orderId: Long? = null,
+        @Query("userid") userId: Long? = null
+    ): ResponseBody
+
     @GET("newmobile/changeOrderStatus.php")
     suspend fun cancelOrder(
         @Query("orderID") orderId: Long?,
