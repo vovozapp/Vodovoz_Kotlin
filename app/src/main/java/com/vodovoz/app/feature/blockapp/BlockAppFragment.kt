@@ -13,11 +13,13 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import com.vodovoz.app.databinding.FragmentBlockAppBinding
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.util.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -142,7 +144,17 @@ class BlockAppFragment : BaseFragment() {
                             startActivity(intent)
                         }
 
+                    } else {
+                        showError(ErrorState.Error())
+                        bindErrorRefresh{
+                            lifecycleScope.launch {
+                                if (siteStateManager.fetchSiteStateActive()) {
+                                    findNavController().navigate(R.id.splashFragment)
+                                }
+                            }
+                        }
                     }
+
                 }
         }
     }
