@@ -62,7 +62,7 @@ class NotificationManager : FirebaseMessagingService() {
         val notification =
             NotificationCompat.Builder(this, NotificationChannels.NOTIFICATION_CHANNEL_ID)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setSmallIcon(R.drawable.png_logo)
+                .setSmallIcon(R.drawable.png_logo_notif)
                 .setAutoCancel(false)
                 .setContentIntent(pendingIntent)
                 .setLargeIcon(bitmap)
@@ -99,7 +99,7 @@ class NotificationManager : FirebaseMessagingService() {
             NotificationCompat.Builder(this, NotificationChannels.NOTIFICATION_CHANNEL_ID)
                 .setContentTitle(not.title)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setSmallIcon(R.drawable.png_logo)
+                .setSmallIcon(R.drawable.png_logo_notif)
                 .setAutoCancel(false)
                 .setContentIntent(pendingIntent)
                 .setStyle(inboxStyle)
