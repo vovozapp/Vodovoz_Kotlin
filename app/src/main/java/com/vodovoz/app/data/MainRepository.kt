@@ -269,6 +269,7 @@ class MainRepository @Inject constructor(
         priceFrom: Int,
         priceTo: Int,
         page: Int?,
+        filterMap: HashMap<String, String>
     ): ResponseBody {
         return api.fetchCategoryResponse(
             blockId = 1,
@@ -279,7 +280,8 @@ class MainRepository @Inject constructor(
             filter = filter,
             filterValue = filterValue,
             priceFrom = priceFrom,
-            priceTo = priceTo
+            priceTo = priceTo,
+            filterMap = filterMap
         )
     }
 

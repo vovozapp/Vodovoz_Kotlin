@@ -182,6 +182,7 @@ interface MainApi {
         @Query("filtervalue") filterValue: String? = null,
         @Query("price_from") priceFrom: Int? = null,
         @Query("price_to") priceTo: Int? = null,
+        @QueryMap filterMap: HashMap<String, String> = hashMapOf()
     ): ResponseBody
 
 

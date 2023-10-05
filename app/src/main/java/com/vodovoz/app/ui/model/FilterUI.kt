@@ -9,11 +9,17 @@ import kotlinx.parcelize.Parcelize
 class FilterUI(
     val code: String,
     val name: String,
+    val type: String? = null,
+    val values: ValuesUI? = null,
     var filterValueList: MutableList<FilterValueUI> = mutableListOf(),
 ) : Parcelable, Item {
 
     override fun getItemViewType(): Int {
-        return R.layout.view_holder_filter
+        return if (type == "range_filter") {
+            R.layout.view_holder_filter_range
+        } else {
+            R.layout.view_holder_filter
+        }
     }
 
     override fun areItemsTheSame(item: Item): Boolean {
@@ -22,3 +28,9 @@ class FilterUI(
         return code == item.code
     }
 }
+
+@Parcelize
+class ValuesUI(
+    val min: Float,
+    val max: Float,
+) : Parcelable

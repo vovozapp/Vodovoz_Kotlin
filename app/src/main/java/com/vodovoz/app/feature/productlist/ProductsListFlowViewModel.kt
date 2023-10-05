@@ -28,6 +28,7 @@ import com.vodovoz.app.ui.model.FilterValueUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
 import com.vodovoz.app.util.FilterBuilderExtensions.buildFilterQuery
+import com.vodovoz.app.util.FilterBuilderExtensions.buildFilterRangeQuery
 import com.vodovoz.app.util.FilterBuilderExtensions.buildFilterValueQuery
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +39,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductsListFlowViewModel @Inject constructor(
-    private val savedState: SavedStateHandle,
+    savedState: SavedStateHandle,
     private val repository: MainRepository,
     private val accountManager: AccountManager,
     private val cartManager: CartManager,
@@ -100,7 +101,8 @@ class ProductsListFlowViewModel @Inject constructor(
                         filterValue = state.data.filterBundle.filterUIList.buildFilterValueQuery(),
                         priceFrom = state.data.filterBundle.filterPriceUI.minPrice,
                         priceTo = state.data.filterBundle.filterPriceUI.maxPrice,
-                        page = state.page
+                        page = state.page,
+                        filterMap = state.data.filterBundle.filterUIList.buildFilterRangeQuery()
                     )
                 )
             }

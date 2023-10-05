@@ -45,7 +45,16 @@ class ProductFiltersFlowFragment : BaseFragment() {
 
     private val productFiltersAdapter = ProductFiltersFlowAdapter(
         onFilterClickListener, onFilterClearClickListener
-    )
+    ) {
+        val filterBundleClear = filterBundle?.copy(
+            filterUIList = mutableListOf()
+        )
+        findNavController().previousBackStackEntry?.savedStateHandle?.set(
+            PaginatedProductsCatalogFragment.FILTER_BUNDLE,
+            filterBundleClear
+        )
+        changeConcreteFilter(it)
+    }
 
     private var filterBundle: FiltersBundleUI? = null
     private var defaultBundle: FiltersBundleUI? = null
@@ -66,7 +75,9 @@ class ProductFiltersFlowFragment : BaseFragment() {
 
     private fun initAppBar() {
         binding.incAppBar.tvTitle.text = resources.getString(R.string.products_filters_title)
-        binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
+        binding.incAppBar.imgBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun initFilterRecycler() {
@@ -149,7 +160,8 @@ class ProductFiltersFlowFragment : BaseFragment() {
                 defaultBundle = state.data.defaultBundle
                 if (defaultBundle != null) {
                     fillFilterPrice(defaultBundle!!.filterPriceUI)
-                    fillFilterList(defaultBundle!!.filterUIList)
+                    val filterList =  defaultBundle?.filterUIList ?: mutableListOf()
+                    fillFilterList(filterList)
                 }
 
                 showError(state.error)
