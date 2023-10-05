@@ -100,6 +100,8 @@
     <string name="dalee" translatable="false">Далее</string>
     <string name="millilitres" translatable="false">%d мл</string>
     <string name="reklama" translatable="false">Реклама</string>
+    <string name="from_" translatable="false">От</string>
+    <string name="to_" translatable="false">До</string>
 
 
 </resources>
