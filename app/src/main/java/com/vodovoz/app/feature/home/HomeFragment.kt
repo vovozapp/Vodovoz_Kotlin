@@ -788,6 +788,7 @@ class HomeFragment : BaseFragment() {
             is ActionEntity.Novelties -> HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                 PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
             )
+            is ActionEntity.WaterApp -> HomeFragmentDirections.actionToWaterAppFragment()
         }
         navDirect?.let { navController.navigate(navDirect) }
     }

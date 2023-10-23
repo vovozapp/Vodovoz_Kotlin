@@ -10,6 +10,7 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.catalog.CatalogResponseJsonParser.parseCatalogResponse
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
+import com.vodovoz.app.ui.model.CatalogBannerUI
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,10 +55,13 @@ class CatalogFlowViewModel @Inject constructor(
                             val catalog = response.data.mapToUI()
                             uiStateListener.value = state.copy(
                                 loadingPage = false,
-                                data = state.data.copy(itemsList = catalog),
+                                data = state.data.copy(
+                                    itemsList = catalog.categoryEntityList,
+                                    topCatalogBanner = catalog.topCatalogBanner
+                                ),
                                 error = null
                             )
-                            catalogManager.saveCatalog(catalog)
+                            catalogManager.saveCatalog(catalog.categoryEntityList)
                         }
                     }
                 }
@@ -72,6 +76,7 @@ class CatalogFlowViewModel @Inject constructor(
     }
 
     data class CatalogState(
-        val itemsList: List<CategoryUI> = emptyList()
+        val itemsList: List<CategoryUI> = emptyList(),
+        val topCatalogBanner: CatalogBannerUI? = null
     ) : State
 }

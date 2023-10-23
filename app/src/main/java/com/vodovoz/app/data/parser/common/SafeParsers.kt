@@ -26,17 +26,21 @@ fun JSONObject.safeString(name: String) =  when(has(name)) {
     false -> ""
 }
 
-fun JSONObject.safeStringConvertToBoolean(name: String) =  when(has(name)) {
-    true -> when(isNull(name)) {
-        true -> false
-        false -> when(getString(name)) {
-            "Y" -> true
-            "N" -> false
-            else -> false
-        }
-    }
-    false -> false
-}
+fun JSONObject.safeStringConvertToBoolean(name: String) =  has(name) && !isNull(name) && getString(name) == "Y"
+//    when(has(name)) {
+//    true -> when(isNull(name)) {
+//        true -> false
+//        false -> when(getString(name)) {
+//            "Y" -> true
+//            "N" -> false
+//            else -> false
+//        }
+//    }
+//    false -> false
+//    }
+
+
+
 
 fun JSONObject.safeLong(name: String) = when(has(name)) {
     true -> when(isNull(name)) {

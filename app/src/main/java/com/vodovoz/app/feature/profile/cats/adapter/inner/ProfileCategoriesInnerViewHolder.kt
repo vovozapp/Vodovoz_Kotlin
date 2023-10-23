@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.profile.cats.adapter.inner
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ItemProfileInsideCategoryUiBinding
 import com.vodovoz.app.feature.profile.adapter.ProfileFlowClickListener
@@ -52,6 +53,10 @@ class ProfileCategoriesInnerViewHolder(
         contactsAdapter.submitList(item.chatUiList ?: emptyList())
 
         binding.insideCategoryTv.text = item.name
+
+        if(item.id == "newprilvoda"){
+            binding.insideCategoryIv.setImageResource(R.drawable.wt_water_logo)
+        }
 
         if(item.amount != null) {
             binding.amountTv.text = item.amount.toString()

@@ -1,5 +1,7 @@
 package com.vodovoz.app.data.parser.common
 
+import com.vodovoz.app.data.model.common.ActionEntity
+import com.vodovoz.app.data.model.common.CatalogBanner
 import com.vodovoz.app.data.model.common.CategoryEntity
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import org.json.JSONArray
@@ -33,5 +35,39 @@ object CategoryJsonParser {
         true -> getJSONArray("PODRAZDEL").parseCategoryEntityList()
         else -> listOf()
     }
+
+    fun JSONObject.parseCategoryBanner(): CatalogBanner = CatalogBanner(
+        text = getString("NAME"),
+        textColor = getString("COLORTEXT"),
+        backgroundColor = getString("BACGROUND"),
+        iconUrl = this.parseBannerIcon(),
+        actionEntity = this.parseActionBanner()
+    )
+
+    private fun JSONObject.parseBannerIcon() = when(has("IKONKA")) {
+        true -> when(isNull("IKONKA")) {
+            true -> null
+            else -> getString("IKONKA")
+        }
+        false -> null
+    }
+
+    private fun JSONObject.parseActionBanner(): ActionEntity? {
+        if(has("URL") && !isNull("URL") && getString("URL").isNotEmpty()){
+            return ActionEntity.Link(
+                url = getString("URL")
+            )
+        } else if(has("PEREXODID") && !isNull("PEREXODID")){
+            return when(getString("PEREXODID")){
+                "vseskidki" -> ActionEntity.Discount()
+                "vsenovinki" -> ActionEntity.Novelties()
+                "vseakcii" -> ActionEntity.AllPromotions()
+                "trekervodi" -> ActionEntity.WaterApp()
+                else -> null
+            }
+        }
+        return null
+    }
+
 
 }

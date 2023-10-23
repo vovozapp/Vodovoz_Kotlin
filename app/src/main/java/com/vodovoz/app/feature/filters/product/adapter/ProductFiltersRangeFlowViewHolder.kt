@@ -219,5 +219,4 @@ class ProductFiltersRangeFlowViewHolder(
         }
         onFilterRangeListener(filterUI)
     }
-
 }

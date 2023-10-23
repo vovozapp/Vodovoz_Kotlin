@@ -91,4 +91,11 @@ sealed class ActionEntity(
         action = action,
         actionColor = actionColor
     )
+    class WaterApp(
+        action: String? = null,
+        actionColor: String? = null
+    ) : ActionEntity(
+        action = action,
+        actionColor = actionColor
+    )
 }

@@ -42,7 +42,6 @@ class ProductDetailsController(
         super.initList(recyclerView, fab)
         with(recyclerView) {
             layoutManager = LinearLayoutManager(context)
-
             addOnScrollListener(object : OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)

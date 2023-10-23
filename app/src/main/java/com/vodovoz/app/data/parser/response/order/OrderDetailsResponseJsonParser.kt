@@ -14,7 +14,7 @@ object OrderDetailsResponseJsonParser {
 
     fun ResponseBody.parseOrderDetailsResponse(): ResponseEntity<OrderDetailsEntity> {
         val responseJson = JSONObject(this.string())
-        return when(responseJson.getString("status")) {
+        return when (responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 responseJson.getJSONArray("data").getJSONObject(0).parseOrderDetailsEntity()
             )
@@ -35,17 +35,22 @@ object OrderDetailsResponseJsonParser {
         userPhone = getString("PHONE"),
         address = getString("ADDRESS"),
         deliveryTimeInterval = getString("INTERVAL"),
-        isPayed = when(getString("PAYED")) {
+        isPayed = when (getString("PAYED")) {
             "N" -> false
             "Y" -> true
             else -> throw Exception("Unknown payed status")
         },
         status = OrderStatusEntity.fromId(getString("STATUS_NAME_ID")),
-        payUri = when(getJSONObject("PAYSISTEM").has("URL")) {
-            true -> getJSONObject("PAYSISTEM").getString("URL")
-            false -> ""
+        payUri = if (has("PAYSISTEM") && getJSONObject("PAYSISTEM").has("URL")) {
+            getJSONObject("PAYSISTEM").getString("URL")
+        } else {
+            "Нет данных по оплате"
         },
-        payMethod = getJSONObject("PAYSISTEM").getString("NAME"),
+        payMethod = if (has("PAYSISTEM") && getJSONObject("PAYSISTEM").has("NAME")) {
+            getJSONObject("PAYSISTEM").getString("NAME")
+        } else {
+            "Нет данных по оплате"
+        },
         productEntityList = getJSONArray("ITEMS").parseProductEntityList(),
         driverId = if (has("VODILA") && !isNull("VODILA")) {
             getJSONObject("VODILA").safeString("IDVODILA")
@@ -55,11 +60,12 @@ object OrderDetailsResponseJsonParser {
         } else null,
     )
 
-    private fun JSONArray.parseProductEntityList(): List<ProductEntity> = mutableListOf<ProductEntity>().apply {
-        for (index in 0 until length()) {
-            add(getJSONObject(index).parseProductEntity())
+    private fun JSONArray.parseProductEntityList(): List<ProductEntity> =
+        mutableListOf<ProductEntity>().apply {
+            for (index in 0 until length()) {
+                add(getJSONObject(index).parseProductEntity())
+            }
         }
-    }
 
     fun JSONObject.parseProductEntity(): ProductEntity {
         var status = ""
@@ -76,32 +82,39 @@ object OrderDetailsResponseJsonParser {
         val detailPicture = safeString("DETAIL_PICTURE")
 
         return ProductEntity(
-            id = when(has("PRODUCT_ID")) {
+            id = when (has("PRODUCT_ID")) {
                 true -> getLong("PRODUCT_ID")
                 false -> getLong("ID")
             },
             name = safeString("NAME"),
             detailPicture = detailPicture.parseImagePath(),
-            priceList = listOf(PriceEntity(price = safeInt("PRICE"), oldPrice = 0, requiredAmount = 0, 0)),
-            rating = when(has("")) {
+            priceList = listOf(
+                PriceEntity(
+                    price = safeInt("PRICE"),
+                    oldPrice = 0,
+                    requiredAmount = 0,
+                    0
+                )
+            ),
+            rating = when (has("")) {
                 true -> getDouble("PROPERTY_RATING_VALUE")
                 else -> 0.0
             },
             status = status,
             statusColor = statusColor,
-            commentAmount = when(has("COUTCOMMENTS")) {
+            commentAmount = when (has("COUTCOMMENTS")) {
                 true -> safeString("COUTCOMMENTS")
                 false -> ""
             },
             orderQuantity = getInt("QUANTITY"),
-            isFavorite = when(has("FAVORITE")) {
+            isFavorite = when (has("FAVORITE")) {
                 true -> getBoolean("FAVORITE")
                 false -> false
             },
             detailPictureList = parseDetailPictureList(detailPicture),
             depositPrice = 0,
-            isBottle = when(has("CATALOG")) {
-                true -> when(getJSONObject("CATALOG").getLong("IBLOCK_ID")) {
+            isBottle = when (has("CATALOG")) {
+                true -> when (getJSONObject("CATALOG").getLong("IBLOCK_ID")) {
                     90L -> true
                     else -> false
                 }
@@ -114,8 +127,8 @@ object OrderDetailsResponseJsonParser {
                     }
                 }
             },
-            isGift = when(has("CATALOG")) {
-                true -> when(getJSONObject("CATALOG").getLong("IBLOCK_ID")) {
+            isGift = when (has("CATALOG")) {
+                true -> when (getJSONObject("CATALOG").getLong("IBLOCK_ID")) {
                     26L -> true
                     else -> false
                 }
@@ -128,7 +141,7 @@ object OrderDetailsResponseJsonParser {
                     }
                 }
             },
-            chipsBan = when(has("ZAPRET_FISHKAM")) {
+            chipsBan = when (has("ZAPRET_FISHKAM")) {
                 true -> safeInt("ZAPRET_FISHKAM")
                 false -> null
             },
@@ -145,14 +158,14 @@ object OrderDetailsResponseJsonParser {
             categoryIdList.add(categoryIdJsonArray.getInt(index))
         }
 
-        return when(categoryIdList.find { it == 2991 || it == 2990 || it == 75 }) {
+        return when (categoryIdList.find { it == 2991 || it == 2990 || it == 75 }) {
             null -> false
             else -> true
         }
     }
 
     private fun JSONObject.parseDetailPictureList(
-        detailPicture: String
+        detailPicture: String,
     ): List<String> = mutableListOf<String>().apply {
         add(detailPicture.parseImagePath())
         if (has("MORE_PHOTO")) {

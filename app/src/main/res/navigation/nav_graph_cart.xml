@@ -94,6 +94,16 @@
         <action
             android:id="@+id/action_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_to_allPromotionsFragment"
+            app:destination="@id/allPromotionsFragment" />
+
+        <action android:id="@+id/action_to_waterAppFragment"
+            app:destination="@+id/waterAppFragment"/>
+
+        <action
+            android:id="@+id/action_to_paginatedProductsCatalogWithoutFiltersFragment"
+            app:destination="@id/paginatedProductsCatalogWithoutFiltersFragment" />
     </fragment>
     <fragment
         android:id="@+id/cartFragment"
@@ -443,6 +453,9 @@
         <action
             android:id="@+id/action_to_allPromotionsFragment"
             app:destination="@id/allPromotionsFragment" />
+        <action
+            android:id="@+id/action_to_waterAppFragment"
+            app:destination="@id/waterAppFragment" />
     </fragment>
     <fragment
         android:id="@+id/concreteFilterFragment"

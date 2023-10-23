@@ -5,24 +5,54 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.appcompat.widget.AppCompatTextView
+
+
+<!--    <androidx.appcompat.widget.AppCompatTextView-->
+<!--        android:id="@+id/insideCategoryTv"-->
+<!--        style="@style/TextViewNormalGray"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:drawableEnd="@drawable/ic_pointer_right"-->
+<!--        android:drawableTint="@color/text_gray"-->
+<!--        android:gravity="center_vertical"-->
+<!--        android:paddingStart="@dimen/space_16"-->
+<!--        android:paddingEnd="@dimen/space_16"-->
+<!--        android:textSize="16sp"-->
+<!--        app:drawableTint="#C2CBCE"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        tools:ignore="UseCompatTextViewDrawableXml"-->
+<!--        tools:text="История заказов" />-->
+
+    <TextView
         android:id="@+id/insideCategoryTv"
         style="@style/TextViewNormalGray"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:drawableEnd="@drawable/ic_pointer_right"
-        android:drawableTint="@color/text_gray"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:paddingStart="@dimen/space_16"
-        android:paddingEnd="@dimen/space_16"
         android:textSize="16sp"
-        app:drawableTint="#C2CBCE"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/insideCategoryIv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="UseCompatTextViewDrawableXml"
-        tools:text="История заказов" />
+        tools:text="История заказов"
+        />
+
+    <ImageView
+        android:id="@+id/insideCategoryIv"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_pointer_right"
+        android:layout_marginEnd="@dimen/space_16"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/insideCategoryTv"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription"
+        />
 
     <TextView
         android:translationZ="@dimen/_10sdp"

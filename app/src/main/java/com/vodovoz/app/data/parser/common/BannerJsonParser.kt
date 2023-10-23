@@ -92,6 +92,10 @@ object BannerJsonParser {
             action = parseAction(),
             actionColor = parseActionColor()
         )
+        "trekervodi" -> ActionEntity.WaterApp(
+            action = parseAction(),
+            actionColor = parseActionColor()
+        )
         else -> null
     }
 

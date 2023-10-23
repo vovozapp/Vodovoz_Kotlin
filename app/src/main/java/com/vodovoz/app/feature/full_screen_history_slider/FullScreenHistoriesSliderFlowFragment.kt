@@ -144,6 +144,7 @@ class FullScreenHistoriesSliderFlowFragment : BaseFragment(),
             is ActionEntity.Novelties -> FullScreenHistoriesSliderFlowFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                 PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
             )
+            is ActionEntity.WaterApp -> FullScreenHistoriesSliderFlowFragmentDirections.actionToWaterAppFragment()
         }
         navDirect?.let { navController.navigate(navDirect) }
     }

@@ -1,29 +1,44 @@
 package com.vodovoz.app.feature.catalog
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.bumptech.glide.Glide
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentMainCatalogFlowBinding
+import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.catalog.adapter.CatalogFlowAdapter
 import com.vodovoz.app.feature.catalog.adapter.CatalogFlowClickListener
+import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class CatalogFragment : BaseFragment() {
 
-    private val binding: FragmentMainCatalogFlowBinding by viewBinding { FragmentMainCatalogFlowBinding.bind(contentView) }
+    private val binding: FragmentMainCatalogFlowBinding by viewBinding {
+        FragmentMainCatalogFlowBinding.bind(
+            contentView
+        )
+    }
     private val viewModel: CatalogFlowViewModel by activityViewModels()
 
     private val adapter = CatalogFlowAdapter(
@@ -74,7 +89,7 @@ class CatalogFragment : BaseFragment() {
     private fun observeViewModel() {
         lifecycleScope.launchWhenStarted {
             viewModel.observeUiState()
-                .collect {catalogState ->
+                .collect { catalogState ->
 
                     if (catalogState.loadingPage) {
                         showLoader()
@@ -83,17 +98,80 @@ class CatalogFragment : BaseFragment() {
                     }
 
                     adapter.submitList(catalogState.data.itemsList)
+                    val topCatalogBanner = catalogState.data.topCatalogBanner
+                    with(binding) {
+                        if (topCatalogBanner != null) {
+
+
+                            val backGroundColor = Color.parseColor(topCatalogBanner.backgroundColor)
+                            cvCatalogBanner.backgroundTintList = ColorStateList.valueOf(
+                                backGroundColor
+                            )
+
+                            val textColor = Color.parseColor(topCatalogBanner.textColor)
+                            tvCatalogBanner.setTextColor(textColor)
+                            tvCatalogBanner.text = topCatalogBanner.text
+
+                            if (topCatalogBanner.iconUrl != null && topCatalogBanner.iconUrl.isNotEmpty()) {
+                                Glide.with(requireContext())
+                                    .load(topCatalogBanner.iconUrl)
+                                    .into(iconCatalogBanner)
+                            } else {
+                                iconCatalogBanner.visibility = View.GONE
+                            }
+
+                            cvCatalogBanner.setOnClickListener() {
+                                topCatalogBanner.actionEntity?.invoke()
+                            }
+
+                            cvCatalogBanner.visibility = View.VISIBLE
+                        } else {
+                            cvCatalogBanner.visibility = View.GONE
+                        }
+                    }
 
                     showError(catalogState.error)
                 }
         }
     }
 
+    private fun ActionEntity?.invoke(
+        navController: NavController = findNavController(),
+        activity: FragmentActivity = requireActivity(),
+    ) {
+        val navDirect = when (this) {
+            is ActionEntity.AllPromotions -> CatalogFragmentDirections.actionToAllPromotionsFragment(
+                AllPromotionsFragment.DataSource.All()
+            )
+            is ActionEntity.Link -> {
+                val openLinkIntent = Intent(Intent.ACTION_VIEW, Uri.parse(this.url))
+                activity.startActivity(openLinkIntent)
+                null
+            }
+            is ActionEntity.Discount -> CatalogFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
+            )
+            is ActionEntity.Novelties -> CatalogFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
+            )
+            is ActionEntity.WaterApp -> {
+                CatalogFragmentDirections.actionToWaterAppFragment()
+            }
+            else -> {
+                null
+            }
+        }
+        navDirect?.let { navController.navigate(navDirect) }
+    }
 
-    private fun getCatalogFlowClickListener() : CatalogFlowClickListener {
+    private fun getCatalogFlowClickListener(): CatalogFlowClickListener {
         return object : CatalogFlowClickListener {
             override fun onCategoryClick(categoryId: Long) {
-                findNavController().navigate(CatalogFragmentDirections.actionToPaginatedProductsCatalogFragment(categoryId))
+                findNavController().navigate(
+                    CatalogFragmentDirections.actionToPaginatedProductsCatalogFragment(
+                        categoryId
+                    )
+                )
             }
         }
     }

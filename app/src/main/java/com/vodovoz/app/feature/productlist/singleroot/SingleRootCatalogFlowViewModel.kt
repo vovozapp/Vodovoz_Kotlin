@@ -21,7 +21,7 @@ import javax.inject.Inject
 class SingleRootCatalogFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val catalogManager: CatalogManager,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : PagingContractViewModel<SingleRootCatalogFlowViewModel.SingleRootState, SingleRootCatalogFlowViewModel.SingleRootEvents>(
     SingleRootState(
         selectedCategoryId = savedStateHandle.get<Long>("categoryId")
@@ -56,11 +56,11 @@ class SingleRootCatalogFlowViewModel @Inject constructor(
                             )
                             is ResponseEntity.Success -> {
                                 val catalogFetched = response.data.mapToUI()
-                                val root = getRoot(catalogFetched)
+                                val root = getRoot(catalogFetched.categoryEntityList)
                                 uiStateListener.value = state.copy(
                                     loadingPage = false,
                                     data = state.data.copy(
-                                        items = catalogFetched,
+                                        items = catalogFetched.categoryEntityList,
                                         rootCategory = root,
                                         bundle = buildBundle(root, state.data.selectedCategoryId)
                                     ),
