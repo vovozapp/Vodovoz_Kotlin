@@ -11,6 +11,8 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentFullscreenHistorySliderBinding
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
@@ -21,6 +23,7 @@ import com.vodovoz.app.ui.interfaces.IOnChangeHistory
 import com.vodovoz.app.ui.interfaces.IOnInvokeAction
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FullScreenHistoriesSliderFlowFragment : BaseFragment(),
@@ -35,6 +38,10 @@ class FullScreenHistoriesSliderFlowFragment : BaseFragment(),
     }
 
     private val viewModel: FullScreenHistoriesSliderFlowViewModel by viewModels()
+
+    @Inject
+    lateinit var tabManager: TabManager
+
 
     private var startHistoryId: Long = 0
     private var lastIndex: Int = -1
@@ -54,6 +61,21 @@ class FullScreenHistoriesSliderFlowFragment : BaseFragment(),
 
     override fun initView() {
         observeViewModel()
+        observeViewModelEvents()
+    }
+
+    private fun observeViewModelEvents() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.observeEvent()
+                .collect {
+                    when (it) {
+                        is FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.GoToProfile -> {
+                            tabManager.setAuthRedirect(findNavController().graph.id)
+                            tabManager.selectTab(R.id.graph_profile)
+                        }
+                    }
+                }
+        }
     }
 
     private fun observeViewModel() {
@@ -145,6 +167,14 @@ class FullScreenHistoriesSliderFlowFragment : BaseFragment(),
                 PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
             )
             is ActionEntity.WaterApp -> FullScreenHistoriesSliderFlowFragmentDirections.actionToWaterAppFragment()
+            is ActionEntity.Delivery -> FullScreenHistoriesSliderFlowFragmentDirections.actionToWebViewFragment(
+                ApiConfig.ABOUT_DELIVERY_URL,
+                "О доставке"
+            )
+            is ActionEntity.Profile -> {
+                viewModel.goToProfile()
+                null
+            }
         }
         navDirect?.let { navController.navigate(navDirect) }
     }

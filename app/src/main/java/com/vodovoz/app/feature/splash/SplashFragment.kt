@@ -6,16 +6,19 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.databinding.FragmentSplashBinding
 import com.vodovoz.app.feature.cart.CartFlowViewModel
 import com.vodovoz.app.feature.catalog.CatalogFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import com.vodovoz.app.feature.sitestate.SiteStateManager
+import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
@@ -25,6 +28,10 @@ import javax.inject.Inject
 class SplashFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_splash
+
+    private val binding: FragmentSplashBinding by viewBinding {
+        FragmentSplashBinding.bind(contentView)
+    }
 
     private val viewModel: SplashViewModel by viewModels()
     private val flowViewModel: HomeFlowViewModel by activityViewModels()
@@ -74,6 +81,12 @@ class SplashFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //accountManager.reportYandexMetrica("Зашел в приложение") //todo релиз
+
+        if(requireContext().isTablet()){
+            binding.lottieSplashView.cancelAnimation()
+            binding.lottieSplashView.visibility = View.GONE
+            binding.logoLayout.visibility = View.VISIBLE
+        }
 
         handlePushData()
         observeFlowViewModel()

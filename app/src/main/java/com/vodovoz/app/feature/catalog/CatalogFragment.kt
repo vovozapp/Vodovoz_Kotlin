@@ -22,6 +22,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentMainCatalogFlowBinding
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
@@ -58,11 +59,26 @@ class CatalogFragment : BaseFragment() {
 
     override fun initView() {
         initCategoryRecycler()
-        observeViewModel()
+        observeStateUi()
+        observeEvents()
         initSearch()
         bindErrorRefresh { viewModel.refresh() }
         bindSwipeRefresh()
         observeTabReselect()
+    }
+
+    private fun observeEvents() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.observeEvent()
+                .collect {
+                    when (it) {
+                        is CatalogFlowViewModel.CatalogEvents.GoToProfile -> {
+                            tabManager.setAuthRedirect(findNavController().graph.id)
+                            tabManager.selectTab(R.id.graph_profile)
+                        }
+                    }
+                }
+        }
     }
 
     private fun bindSwipeRefresh() {
@@ -86,7 +102,7 @@ class CatalogFragment : BaseFragment() {
         )
     }
 
-    private fun observeViewModel() {
+    private fun observeStateUi() {
         lifecycleScope.launchWhenStarted {
             viewModel.observeUiState()
                 .collect { catalogState ->
@@ -156,6 +172,16 @@ class CatalogFragment : BaseFragment() {
             )
             is ActionEntity.WaterApp -> {
                 CatalogFragmentDirections.actionToWaterAppFragment()
+            }
+            is ActionEntity.Delivery -> {
+                CatalogFragmentDirections.actionToWebViewFragment(
+                    ApiConfig.ABOUT_DELIVERY_URL,
+                    "О доставке"
+                )
+            }
+            is ActionEntity.Profile -> {
+                viewModel.goToProfile()
+                null
             }
             else -> {
                 null

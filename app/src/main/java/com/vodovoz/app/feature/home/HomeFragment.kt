@@ -308,6 +308,12 @@ class HomeFragment : BaseFragment() {
                                 )
                             )
                         }
+                        "trekervodi" -> {
+                            findNavController().navigate(HomeFragmentDirections.actionToWaterAppFragment())
+                        }
+                        "profil" -> {
+                            flowViewModel.goToProfile()
+                        }
                         null -> {}
                     }
                 }
@@ -789,6 +795,14 @@ class HomeFragment : BaseFragment() {
                 PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
             )
             is ActionEntity.WaterApp -> HomeFragmentDirections.actionToWaterAppFragment()
+            is ActionEntity.Delivery -> HomeFragmentDirections.actionToWebViewFragment(
+                ApiConfig.ABOUT_DELIVERY_URL,
+                "О доставке"
+            )
+            is ActionEntity.Profile -> {
+                flowViewModel.goToProfile()
+                null
+            }
         }
         navDirect?.let { navController.navigate(navDirect) }
     }

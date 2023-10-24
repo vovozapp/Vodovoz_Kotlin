@@ -1,10 +1,7 @@
 package com.vodovoz.app.feature.full_screen_history_slider
 
 import androidx.lifecycle.viewModelScope
-import com.vodovoz.app.common.content.ErrorState
-import com.vodovoz.app.common.content.PagingStateViewModel
-import com.vodovoz.app.common.content.State
-import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.common.content.*
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonParser.parseHistoriesSliderResponse
@@ -20,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FullScreenHistoriesSliderFlowViewModel @Inject constructor(
     private val repository: MainRepository,
-) : PagingStateViewModel<FullScreenHistoriesSliderFlowViewModel.HistoriesSliderState>(
+) : PagingContractViewModel<FullScreenHistoriesSliderFlowViewModel.HistoriesSliderState, FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents>(
     HistoriesSliderState()
 ) {
 
@@ -59,6 +56,16 @@ class FullScreenHistoriesSliderFlowViewModel @Inject constructor(
                 }
                 .collect()
         }
+    }
+
+    fun goToProfile() {
+        viewModelScope.launch {
+            eventListener.emit(HistoriesSliderEvents.GoToProfile)
+        }
+    }
+
+    sealed class HistoriesSliderEvents : Event {
+        object GoToProfile : HistoriesSliderEvents()
     }
 
     data class HistoriesSliderState(

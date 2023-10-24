@@ -98,4 +98,20 @@ sealed class ActionEntity(
         action = action,
         actionColor = actionColor
     )
+
+    class Delivery (
+        action: String? = null,
+        actionColor: String? = null
+    ) : ActionEntity(
+        action = action,
+        actionColor = actionColor
+    )
+
+    class Profile (
+        action: String? = null,
+        actionColor: String? = null
+    ) : ActionEntity(
+        action = action,
+        actionColor = actionColor
+    )
 }

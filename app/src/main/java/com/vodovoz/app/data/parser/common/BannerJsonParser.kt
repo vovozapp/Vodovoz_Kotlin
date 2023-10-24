@@ -96,6 +96,14 @@ object BannerJsonParser {
             action = parseAction(),
             actionColor = parseActionColor()
         )
+        "dostavka" -> ActionEntity.Delivery(
+            action = parseAction(),
+            actionColor = parseActionColor()
+        )
+        "profil" -> ActionEntity.Profile(
+            action = parseAction(),
+            actionColor = parseActionColor()
+        )
         else -> null
     }
 

@@ -2,10 +2,7 @@ package com.vodovoz.app.feature.catalog
 
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.catalog.CatalogManager
-import com.vodovoz.app.common.content.PagingStateViewModel
-import com.vodovoz.app.common.content.State
-import com.vodovoz.app.common.content.stringToErrorState
-import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.common.content.*
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.catalog.CatalogResponseJsonParser.parseCatalogResponse
@@ -22,8 +19,10 @@ import javax.inject.Inject
 @HiltViewModel
 class CatalogFlowViewModel @Inject constructor(
     private val mainRepository: MainRepository,
-    private val catalogManager: CatalogManager
-) : PagingStateViewModel<CatalogFlowViewModel.CatalogState>(CatalogState()) {
+    private val catalogManager: CatalogManager,
+) : PagingContractViewModel<CatalogFlowViewModel.CatalogState, CatalogFlowViewModel.CatalogEvents>(
+    CatalogState()
+) {
 
     fun firstLoad() {
         if (!state.isFirstLoad) {
@@ -75,8 +74,18 @@ class CatalogFlowViewModel @Inject constructor(
         }
     }
 
+    fun goToProfile() {
+        viewModelScope.launch {
+            eventListener.emit(CatalogEvents.GoToProfile)
+        }
+    }
+
+    sealed class CatalogEvents : Event {
+        object GoToProfile : CatalogEvents()
+    }
+
     data class CatalogState(
         val itemsList: List<CategoryUI> = emptyList(),
-        val topCatalogBanner: CatalogBannerUI? = null
+        val topCatalogBanner: CatalogBannerUI? = null,
     ) : State
 }

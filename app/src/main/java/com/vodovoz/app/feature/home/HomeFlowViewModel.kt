@@ -709,6 +709,12 @@ class HomeFlowViewModel @Inject constructor(
         }
     }
 
+    fun goToProfile() {
+        viewModelScope.launch {
+                eventListener.emit(HomeEvents.GoToProfile)
+        }
+    }
+
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
         viewModelScope.launch {
             cartManager.add(id = productId, oldCount = oldQuan, newCount = quantity)

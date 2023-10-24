@@ -10,11 +10,12 @@ import org.json.JSONObject
 object CategoryJsonParser {
 
 
-    fun JSONArray.parseCategoryEntityList(): List<CategoryEntity> = mutableListOf<CategoryEntity>().apply {
-        for (index in 0 until length()) {
-            add(getJSONObject(index).parseCategoryEntity())
+    fun JSONArray.parseCategoryEntityList(): List<CategoryEntity> =
+        mutableListOf<CategoryEntity>().apply {
+            for (index in 0 until length()) {
+                add(getJSONObject(index).parseCategoryEntity())
+            }
         }
-    }
 
     fun JSONObject.parseCategoryEntity() = CategoryEntity(
         id = getLong("ID"),
@@ -23,8 +24,8 @@ object CategoryJsonParser {
         subCategoryEntityList = this.parseSubCategoryEntityList()
     )
 
-    private fun JSONObject.parseDetailImage() = when(has("PICTURE")) {
-        true -> when(isNull("PICTURE")) {
+    private fun JSONObject.parseDetailImage() = when (has("PICTURE")) {
+        true -> when (isNull("PICTURE")) {
             true -> null
             else -> getString("PICTURE").parseImagePath()
         }
@@ -44,8 +45,8 @@ object CategoryJsonParser {
         actionEntity = this.parseActionBanner()
     )
 
-    private fun JSONObject.parseBannerIcon() = when(has("IKONKA")) {
-        true -> when(isNull("IKONKA")) {
+    private fun JSONObject.parseBannerIcon() = when (has("IKONKA")) {
+        true -> when (isNull("IKONKA")) {
             true -> null
             else -> getString("IKONKA")
         }
@@ -53,16 +54,18 @@ object CategoryJsonParser {
     }
 
     private fun JSONObject.parseActionBanner(): ActionEntity? {
-        if(has("URL") && !isNull("URL") && getString("URL").isNotEmpty()){
+        if (has("URL") && !isNull("URL") && getString("URL").isNotEmpty()) {
             return ActionEntity.Link(
                 url = getString("URL")
             )
-        } else if(has("PEREXODID") && !isNull("PEREXODID")){
-            return when(getString("PEREXODID")){
+        } else if (has("PEREXODID") && !isNull("PEREXODID")) {
+            return when (getString("PEREXODID")) {
                 "vseskidki" -> ActionEntity.Discount()
                 "vsenovinki" -> ActionEntity.Novelties()
                 "vseakcii" -> ActionEntity.AllPromotions()
                 "trekervodi" -> ActionEntity.WaterApp()
+                "dostavka" -> ActionEntity.Delivery()
+                "profil" -> ActionEntity.Profile()
                 else -> null
             }
         }

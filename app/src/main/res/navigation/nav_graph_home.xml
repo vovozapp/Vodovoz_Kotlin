@@ -108,6 +108,10 @@
         <action
             android:id="@+id/action_to_paginatedProductsCatalogWithoutFiltersFragment"
             app:destination="@id/paginatedProductsCatalogWithoutFiltersFragment" />
+
+        <action
+            android:id="@+id/action_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
     </fragment>
     <fragment
         android:id="@+id/cartFragment"
@@ -460,6 +464,10 @@
 
         <action android:id="@+id/action_to_waterAppFragment"
             app:destination="@+id/waterAppFragment"/>
+
+        <action
+            android:id="@+id/action_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
     </fragment>
     <fragment
         android:id="@+id/concreteFilterFragment"

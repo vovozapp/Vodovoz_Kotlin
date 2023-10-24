@@ -21,9 +21,10 @@ object ContextExtensions {
 
     fun Context.getDeviceInfo(): String {
         val builder = StringBuilder()
-        when (isTablet()) {
-            true -> builder.append("Планшет Android:")
-            false -> builder.append("Телефон Android:")
+        if (isTablet()) {
+            builder.append("Планшет Android:")
+        } else {
+            builder.append("Телефон Android:")
         }
         builder
             .append(" ").append(VERSION.RELEASE)

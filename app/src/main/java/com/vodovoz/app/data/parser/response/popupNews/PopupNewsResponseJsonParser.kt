@@ -15,7 +15,7 @@ object PopupNewsResponseJsonParser {
     fun ResponseBody.parsePopupNewsResponse(): ResponseEntity<PopupNewsEntity> {
         val responseJson = JSONObject(this.string())
         Log.d(LogSettings.RESPONSE_BODY_LOG, responseJson.toString(2))
-        return when(responseJson.getString("status")) {
+        return when (responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 responseJson.getJSONObject("data").parsePopupNewsEntity()
             )
@@ -31,7 +31,7 @@ object PopupNewsResponseJsonParser {
         androidVersion = getString("versiya_android")
     )
 
-    private fun JSONObject.parseBannerActionEntity(link: String) = when(getString("id")) {
+    private fun JSONObject.parseBannerActionEntity(link: String) = when (getString("id")) {
         "TOVAR" -> parseProductBannerActionEntity()
         "TOVARY" -> parseProductsBannerActionEntity()
         "ACTION" -> parsePromotionBannerActionEntity()
@@ -45,12 +45,12 @@ object PopupNewsResponseJsonParser {
         else -> null
     }
 
-    private fun JSONObject.parseAction() = when(has("KNOPKA")) {
+    private fun JSONObject.parseAction() = when (has("KNOPKA")) {
         true -> getJSONObject("KNOPKA").getString("NAME")
         false -> null
     }
 
-    private fun JSONObject.parseActionColor() = when(has("KNOPKA")) {
+    private fun JSONObject.parseActionColor() = when (has("KNOPKA")) {
         true -> getJSONObject("KNOPKA").getString("COLOR")
         false -> null
     }
@@ -66,25 +66,34 @@ object PopupNewsResponseJsonParser {
         actionColor = parseActionColor()
     )
 
-    private fun JSONObject.parseCustomBannerActionEntity() = when(getJSONObject("DANNYE").getString("DANNYEVSE")) {
-        "vseskidki" -> ActionEntity.Discount(
-            action = parseAction(),
-            actionColor = parseActionColor()
-        )
-        "vsenovinki" -> ActionEntity.Novelties(
-            action = parseAction(),
-            actionColor = parseActionColor()
-        )
-        "vseakcii" -> ActionEntity.AllPromotions(
-            action = parseAction(),
-            actionColor = parseActionColor()
-        )
-        "trekervodi" -> ActionEntity.WaterApp(
-            action = parseAction(),
-            actionColor = parseActionColor()
-        )
-        else -> null
-    }
+    private fun JSONObject.parseCustomBannerActionEntity() =
+        when (getJSONObject("DANNYE").getString("DANNYEVSE")) {
+            "vseskidki" -> ActionEntity.Discount(
+                action = parseAction(),
+                actionColor = parseActionColor()
+            )
+            "vsenovinki" -> ActionEntity.Novelties(
+                action = parseAction(),
+                actionColor = parseActionColor()
+            )
+            "vseakcii" -> ActionEntity.AllPromotions(
+                action = parseAction(),
+                actionColor = parseActionColor()
+            )
+            "trekervodi" -> ActionEntity.WaterApp(
+                action = parseAction(),
+                actionColor = parseActionColor()
+            )
+            "dostavka" -> ActionEntity.Delivery(
+                action = parseAction(),
+                actionColor = parseActionColor()
+            )
+            "profil" -> ActionEntity.Profile(
+                action = parseAction(),
+                actionColor = parseActionColor()
+            )
+            else -> null
+        }
 
     private fun JSONObject.parseProductsBannerActionEntity() = ActionEntity.Products(
         categoryId = getJSONObject("DANNYE").getLong("TOVARY"),
