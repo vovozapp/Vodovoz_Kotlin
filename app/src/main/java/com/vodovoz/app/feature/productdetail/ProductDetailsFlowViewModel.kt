@@ -50,7 +50,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductDetailsFlowViewModel @Inject constructor(
-    private val savedState: SavedStateHandle,
+    savedState: SavedStateHandle,
     //   private val dataRepository: DataRepository,
     private val mainRepository: MainRepository,
     private val localDataSource: LocalDataSource,
@@ -88,8 +88,9 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
     fun fetchProductDetail() {
         viewModelScope.launch {
+            val productId = productId ?: return@launch
             uiStateListener.value = state.copy(loadingPage = true)
-            flow { emit(mainRepository.fetchProductResponse(productId = productId ?: return@flow)) }
+            flow { emit(mainRepository.fetchProductResponse(productId = productId)) }
                 .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseProductDetailsResponse()

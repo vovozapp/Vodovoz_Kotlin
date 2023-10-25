@@ -114,10 +114,10 @@ class CatalogFragment : BaseFragment() {
                     }
 
                     adapter.submitList(catalogState.data.itemsList)
+
                     val topCatalogBanner = catalogState.data.topCatalogBanner
                     with(binding) {
                         if (topCatalogBanner != null) {
-
 
                             val backGroundColor = Color.parseColor(topCatalogBanner.backgroundColor)
                             cvCatalogBanner.backgroundTintList = ColorStateList.valueOf(
