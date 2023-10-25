@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--new -->
+<?xml version="1.0" encoding="utf-8"?><!--new -->
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/bkg_bs"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -18,14 +16,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="22dp"
-            tools:text="Что делать при отсутствии товара?"
+            android:paddingHorizontal="22dp"
+            android:paddingTop="22dp"
+            android:paddingBottom="8dp"
+            android:text="@string/warn_driver_title"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/warnAntispamTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/antispam_warn"
             android:textSize="14sp" />
 
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/mtDivider"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvShippingAlerts"
@@ -41,7 +51,7 @@
             android:layout_margin="16dp"
             android:layout_marginTop="18dp"
             android:gravity="center"
-            android:text="Закрыть"
+            android:text="@string/close"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="16sp"

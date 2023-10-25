@@ -40,7 +40,6 @@ class ShippingAlertsSelectionBS : BaseBottomSheetFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.headerTv.text = "Предупредить о приезде водителя"
         binding.cancelWarnBs.setOnClickListener {
             findNavController().previousBackStackEntry?.savedStateHandle?.set(
                 OrderingFragment.SELECTED_SHIPPING_ALERT,

@@ -102,6 +102,9 @@
     <string name="reklama" translatable="false">Реклама</string>
     <string name="from_" translatable="false">От</string>
     <string name="to_" translatable="false">До</string>
+    <string name="warn_driver_title" translatable="false">Предупредить о приезде водителя</string>
+    <string name="antispam_warn" translatable="false">Уважаемый клиент, мы не дозвонимся до Вас,\nесли установлен АНТИСПАМ.</string>
+    <string name="close" translatable="false">Закрыть</string>
 
 
 </resources>
