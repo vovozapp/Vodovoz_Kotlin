@@ -20,12 +20,14 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class NetworkModule {
 
     @Binds
+    @Singleton
     @IntoSet
     abstract fun providerHeaderInterceptor(
         vodovozInterceptor: VodovozInterceptor,
@@ -34,6 +36,7 @@ abstract class NetworkModule {
     companion object {
 
         @Provides
+        @Singleton
         fun providesOkHttpClient(
             interceptors: Set<@JvmSuppressWildcards Interceptor>,
         ): OkHttpClient {
@@ -49,6 +52,7 @@ abstract class NetworkModule {
         }
 
         @Provides
+        @Singleton
         @IntoSet
         fun provideLoggingInterceptor(): Interceptor {
             return HttpLoggingInterceptor()
@@ -67,6 +71,7 @@ abstract class NetworkModule {
 //        }
 
         @Provides
+        @Singleton
         @Named("main")
         fun providesMainRetrofit(okHttpClient: OkHttpClient): Retrofit {
             return Retrofit.Builder()
@@ -77,6 +82,7 @@ abstract class NetworkModule {
         }
 
         @Provides
+        @Singleton
         @Named("mapkit")
         fun providesMapKitRetrofit(okHttpClient: OkHttpClient): Retrofit {
             return Retrofit.Builder()
@@ -87,6 +93,7 @@ abstract class NetworkModule {
         }
 
         @Provides
+        @Singleton
         fun providesMoshi(): Moshi {
             return Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
@@ -97,12 +104,14 @@ abstract class NetworkModule {
 //        fun provideApi(@Named("default") retrofit: Retrofit): VodovozApi = retrofit.create()
 
         @Provides
+        @Singleton
         fun provideMainApi(@Named("main") retrofit: Retrofit): MainApi = retrofit.create()
 
 //        @Provides
 //        fun provideMapKitApi(@Named("mapkit") retrofit: Retrofit): MapKitApi = retrofit.create()
 
         @Provides
+        @Singleton
         fun provideMapKitFlowApi(@Named("mapkit") retrofit: Retrofit): MapKitFlowApi =
             retrofit.create()
     }
