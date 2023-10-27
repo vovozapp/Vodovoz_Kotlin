@@ -8,7 +8,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class VodovozInterceptor @Inject constructor(
-    private val localDataSource: LocalDataSource
+    private val localDataSource: LocalDataSource,
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -26,7 +26,9 @@ class VodovozInterceptor @Inject constructor(
             chain.proceed(chain.request())
         }
 
-        if (!localDataSource.isAvailableCookieSessionId()) {
+        if (!localDataSource.isAvailableCookieSessionId() ||
+            (localDataSource.isOldCookie())
+        ) {
             localDataSource.updateCookieSessionId(
                 originalResponse.headers.values("Set-Cookie").first()
             )

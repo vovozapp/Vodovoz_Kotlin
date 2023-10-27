@@ -9,7 +9,7 @@ import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.common.token.TokenManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
@@ -30,12 +30,12 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginFlowViewModel @Inject constructor(
     private val repository: MainRepository,
-    private val tabManager: TabManager,
     private val localDataSource: LocalDataSource,
     private val accountManager: AccountManager,
+    private val tokenManager: TokenManager,
     private val loginManager: LoginManager,
     private val siteStateManager: SiteStateManager,
-    private val likeManager: LikeManager
+    private val likeManager: LikeManager,
 ) : PagingContractViewModel<LoginFlowViewModel.LoginState, LoginFlowViewModel.LoginEvents>(
     LoginState()
 ) {
@@ -118,7 +118,7 @@ class LoginFlowViewModel @Inject constructor(
                                 state.copy(error = null, loadingPage = false)
                             clearData()
                             eventListener.emit(LoginEvents.AuthSuccess)
-                            accountManager.sendFirebaseToken()
+                            tokenManager.sendFirebaseToken()
                         }
                         is ResponseEntity.Error -> {
                             uiStateListener.value =
@@ -161,7 +161,7 @@ class LoginFlowViewModel @Inject constructor(
                                 state.copy(error = null, loadingPage = false)
                             clearData()
                             eventListener.emit(LoginEvents.AuthSuccess)
-                            accountManager.sendFirebaseToken()
+                            tokenManager.sendFirebaseToken()
                         }
                         is ResponseEntity.Error -> {
                             uiStateListener.value =
@@ -341,6 +341,6 @@ class LoginFlowViewModel @Inject constructor(
         val authType: AuthType = AuthType.PHONE,
         val requestUrl: String? = null,
         val settings: AccountManager.UserSettings? = null,
-        val lastAuthPhone: String? = null
+        val lastAuthPhone: String? = null,
     ) : State
 }

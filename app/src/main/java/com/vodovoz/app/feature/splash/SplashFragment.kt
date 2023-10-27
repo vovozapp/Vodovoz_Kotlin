@@ -82,7 +82,7 @@ class SplashFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         //accountManager.reportYandexMetrica("Зашел в приложение") //todo релиз
 
-        if(requireContext().isTablet()){
+        if (requireContext().isTablet()) {
             binding.lottieSplashView.cancelAnimation()
             binding.lottieSplashView.visibility = View.GONE
             binding.logoLayout.visibility = View.VISIBLE
@@ -131,6 +131,7 @@ class SplashFragment : BaseFragment() {
         val active = siteStateManager.fetchSiteStateActive()
         debugLog { "site state active $active" }
         if (active) {
+            flowViewModel.secondLoad()
             findNavController().navigate(R.id.mainFragment)
         } else {
             findNavController().navigate(R.id.blockAppFragment)

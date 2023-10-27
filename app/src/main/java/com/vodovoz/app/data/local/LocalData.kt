@@ -2,21 +2,25 @@ package com.vodovoz.app.data.local
 
 import android.content.Context
 import android.util.Log
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.util.LogSettings
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class LocalData @Inject constructor(
     @ApplicationContext
     private val context: Context,
+    private val accountManager: AccountManager,
 ) : LocalDataSource {
 
     companion object {
         //Account Settings
         private const val ACCOUNT_SETTINGS = "account_settings"
         private const val USER_ID = "USER_ID"
-        private const val EMAIL = "EMAIL"
-        private const val PASSWORD = "PASSWORD"
+//        private const val EMAIL = "EMAIL"
+//        private const val PASSWORD = "PASSWORD"
         private const val PHONE = "PHONE"
         private const val LAST_REQUEST_CODE_DATE = "LAST_REQUEST_CODE_DATE"
         private const val LAST_REQUEST_CODE_TIME_OUT = "LAST_REQUEST_CODE_TIME_OUT"
@@ -27,6 +31,9 @@ class LocalData @Inject constructor(
         //Cookie Settings
         private const val COOKIE_SETTINGS = "COOKIE_SETTINGS"
         private const val COOKIE_SESSION_ID = "cookie_SESSION_id"
+        private const val COOKIE_LAST_ENTIRE = "COOKIE_LAST_ENTIRE"
+        private const val COOKIES_LIFE_TIME_IN_MIN = 120
+        private const val COOKIES_LIFE_TIME_IN_MILLIS = COOKIES_LIFE_TIME_IN_MIN * 60 * 1000
 
         //Favorite Settings
         private const val FAVORITE_SETTINGS = "favorite_settings"
@@ -55,10 +62,28 @@ class LocalData @Inject constructor(
         cookieSettings.edit().apply {
             putString(COOKIE_SESSION_ID, cookieSessionId)
         }.apply()
+        setLastEntire()
     }
 
     override fun removeCookieSessionId() {
         cookieSettings.edit().remove(COOKIE_SESSION_ID).apply()
+    }
+
+    override fun isOldCookie(): Boolean {
+
+        if (!accountManager.isAlreadyLogin()) {
+            val currentEntire = System.currentTimeMillis()
+            val lastEntire = cookieSettings.getLong(COOKIE_LAST_ENTIRE, 0)
+            val diff = currentEntire - lastEntire
+            return diff > COOKIES_LIFE_TIME_IN_MILLIS
+        }
+        return false
+    }
+
+    private fun setLastEntire() {
+        cookieSettings.edit().apply {
+            putLong(COOKIE_LAST_ENTIRE, System.currentTimeMillis())
+        }.apply()
     }
 
     override fun changeFavoriteStatus(pairList: List<Pair<Long, Boolean>>) {

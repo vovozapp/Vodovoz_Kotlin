@@ -90,11 +90,11 @@ class HomeFlowViewModel @Inject constructor(
                 )
             }
 
-            secondLoad()
+
         }
     }
 
-    private fun secondLoad() {
+    fun secondLoad() {
         viewModelScope.launch {
             val userId = accountManager.fetchAccountId()
             val tasks = secondLoadTasks(userId)
@@ -711,7 +711,7 @@ class HomeFlowViewModel @Inject constructor(
 
     fun goToProfile() {
         viewModelScope.launch {
-                eventListener.emit(HomeEvents.GoToProfile)
+            eventListener.emit(HomeEvents.GoToProfile)
         }
     }
 
