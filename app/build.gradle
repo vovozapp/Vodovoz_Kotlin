@@ -24,10 +24,20 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            storeFile file('/home/VODOVOZ/rk_sotin/Projects/VodovozJava/VodovozVersion1.jks')
+            keyAlias 'zinou'
+            storePassword 'zinou123'
+            keyPassword 'zinou123'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {

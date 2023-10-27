@@ -25,6 +25,12 @@ import javax.inject.Named
 @InstallIn(SingletonComponent::class)
 abstract class NetworkModule {
 
+    @Binds
+    @IntoSet
+    abstract fun providerHeaderInterceptor(
+        vodovozInterceptor: VodovozInterceptor,
+    ): Interceptor
+
     companion object {
 
         @Provides
@@ -100,10 +106,4 @@ abstract class NetworkModule {
         fun provideMapKitFlowApi(@Named("mapkit") retrofit: Retrofit): MapKitFlowApi =
             retrofit.create()
     }
-
-    @Binds
-    @IntoSet
-    abstract fun providerHeaderInterceptor(
-        vodovozInterceptor: VodovozInterceptor,
-    ): Interceptor
 }
