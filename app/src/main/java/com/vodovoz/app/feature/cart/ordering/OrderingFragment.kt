@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.cart.ordering
 
 import android.app.DatePickerDialog
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -10,7 +11,6 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -57,7 +57,7 @@ class OrderingFragment : BaseFragment() {
         FragmentOrderingFlowBinding.bind(contentView)
     }
 
-    private val args: OrderingFragmentArgs by navArgs()
+//    private val args: OrderingFragmentArgs by navArgs()
 
     private val viewModel: OrderingFlowViewModel by viewModels()
 
@@ -162,7 +162,7 @@ class OrderingFragment : BaseFragment() {
                         )
                     }
 
-                    if(state.data.selectedShippingAlertUI != null){
+                    if (state.data.selectedShippingAlertUI != null) {
                         showPhoneForDriver()
                     } else {
                         hidePhoneForDriver()
@@ -176,6 +176,8 @@ class OrderingFragment : BaseFragment() {
                     } else {
                         showError(state.error)
                     }
+
+                    checkTitlesColor()
                 }
         }
     }
@@ -356,9 +358,9 @@ class OrderingFragment : BaseFragment() {
             }
 
 
-            if(binding.scShippingAlert.isChecked){
+            if (binding.scShippingAlert.isChecked) {
                 val phone = binding.etPhoneForDriver.text.toString()
-                if(phone.isNotEmpty() && !validatePhone(binding.etPhoneForDriver, phone)) {
+                if (phone.isNotEmpty() && !validatePhone(binding.etPhoneForDriver, phone)) {
                     return@setOnClickListener
                 }
             }
@@ -463,6 +465,7 @@ class OrderingFragment : BaseFragment() {
                     )
                 )
             }
+            checkTitlesColor()
         }
 
         binding.etPhone.doOnTextChanged { _, _, _, count ->
@@ -474,6 +477,7 @@ class OrderingFragment : BaseFragment() {
                     )
                 )
             }
+            checkTitlesColor()
         }
 
         binding.etEmail.doOnTextChanged { _, _, _, count ->
@@ -485,6 +489,7 @@ class OrderingFragment : BaseFragment() {
                     )
                 )
             }
+            checkTitlesColor()
         }
 
         binding.etCompanyName.doOnTextChanged { _, _, _, count ->
@@ -496,6 +501,18 @@ class OrderingFragment : BaseFragment() {
                     )
                 )
             }
+            checkTitlesColor()
+        }
+
+        binding.etPhoneForDriver.doOnTextChanged { _, _, _, count ->
+            checkTitlesColor()
+        }
+
+        binding.etComment.doOnTextChanged { _, _, _, count ->
+            checkTitlesColor()
+        }
+        binding.etInputCash.doOnTextChanged { _, _, _, count ->
+            checkTitlesColor()
         }
     }
 
@@ -510,7 +527,7 @@ class OrderingFragment : BaseFragment() {
             binding.tvDate.text = dateFormatter.format(date)
 
             viewModel.setSelectedDate(date)
-            binding.tvShippingInterval.text = "Время"
+            binding.tvShippingInterval.text = ""
             if (currentYear == year && currentMonth == month && currentDay == day) {
                 viewModel.fetchShippingInfo(today = true)
             }
@@ -585,17 +602,18 @@ class OrderingFragment : BaseFragment() {
         binding.etCompanyName.text = null
         binding.etName.text = null
         binding.etEmail.text = null
-        binding.tvAddress.text = "Адрес"
-        binding.tvDate.text = "Дата"
+        binding.tvAddress.text = ""
+        binding.tvDate.text = ""
         binding.etPhone.setText("")
-        binding.tvShippingInterval.text = "Время"
+        binding.tvShippingInterval.text = ""
         binding.tvShippingPrice.setPriceText(0)
         binding.tvParkingPrice.setPriceText(0)
-        binding.tvPayMethod.text = "Выберите способ оплаты"
+        binding.tvPayMethod.text = ""
         binding.etInputCash.text = null
         binding.mtBetweenPayMethodAndInputCash.visibility = View.GONE
         binding.etInputCash.visibility = View.GONE
         binding.etComment.text = null
+        checkTitlesColor()
     }
 
     private fun observeResultLiveData() {
@@ -630,6 +648,7 @@ class OrderingFragment : BaseFragment() {
                         R.color.text_black
                     )
                 )
+                checkTitlesColor()
             }
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<Long>(SELECTED_SHIPPING_ALERT)
@@ -658,6 +677,7 @@ class OrderingFragment : BaseFragment() {
                         R.color.text_black
                     )
                 )
+                checkTitlesColor()
             }
     }
 
@@ -738,6 +758,59 @@ class OrderingFragment : BaseFragment() {
                 true
             }
         }
+
+    private fun checkTitlesColor() {
+        with(binding) {
+            setTextViewStyle(tvAddress.text.isNotEmpty(), tvNameAddress, tvAddress)
+            setTextViewStyle(
+                etCompanyName.text.toString().isNotEmpty(),
+                tvNameCompanyName,
+                etCompanyName
+            )
+            setTextViewStyle(etName.text.toString().isNotEmpty(), tvNameName, etName)
+            setTextViewStyle(etEmail.text.toString().isNotEmpty(), tvNameEmail, etEmail)
+            setTextViewStyle(etPhone.text.toString().isNotEmpty(), tvNamePhone, etPhone)
+            setTextViewStyle(tvDate.text.isNotEmpty(), tvNameDate, tvDate)
+            setTextViewStyle(tvShippingInterval.text.isNotEmpty(), null, tvShippingInterval)
+            setTextViewStyle(tvPayMethod.text.isNotEmpty(), tvNamePayMethod, tvPayMethod)
+            setTextViewStyle(
+                tvCheckDelivery.text.isNotEmpty(),
+                tvNameCheckDelivery,
+                tvCheckDelivery
+            )
+            setTextViewStyle(scShippingAlert.isChecked, tvShippingAlert, scShippingAlert)
+            setTextViewStyle(etPhoneForDriver.text.toString().isNotEmpty(), null, etPhoneForDriver)
+            setTextViewStyle(etComment.text.toString().isNotEmpty(), null, etComment)
+        }
+    }
+
+    private fun setTextViewStyle(
+        condition: Boolean,
+        textViewTitle: TextView? = null,
+        textViewEdit: TextView,
+    ) {
+        if (condition) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                textViewTitle?.setTextAppearance(R.style.NormalTextOrder)
+                textViewEdit.setTextAppearance(R.style.EditTextViewOrderBoldBlack)
+            } else {
+                @Suppress("DEPRECATION")
+                textViewTitle?.setTextAppearance(requireContext(), R.style.NormalTextOrder)
+                @Suppress("DEPRECATION")
+                textViewEdit.setTextAppearance(requireContext(), R.style.EditTextViewOrderBoldBlack)
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                textViewTitle?.setTextAppearance(R.style.BoldTextOrder)
+                textViewEdit.setTextAppearance(R.style.EditTextViewOrderNormal)
+            } else {
+                @Suppress("DEPRECATION")
+                textViewTitle?.setTextAppearance(requireContext(), R.style.BoldTextOrder)
+                @Suppress("DEPRECATION")
+                textViewEdit.setTextAppearance(requireContext(), R.style.EditTextViewOrderNormal)
+            }
+        }
+    }
 
 }
 

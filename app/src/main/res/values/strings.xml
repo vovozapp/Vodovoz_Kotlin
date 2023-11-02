@@ -75,7 +75,7 @@
     <string name="neobhodimoe_deystvie" translatable="false">Выберите необходимое действие</string>
     <string name="zvonok_operatore_text" translatable="false">Требуется звонок оператора</string>
     <string name="predupredit_o_priezde" translatable="false">Предупредить о приезде водителя</string>
-    <string name="telephone_dlya_voditelya" translatable="false">Телефон для водителя</string>
+    <string name="telephone_dlya_voditelya" translatable="false">Телефон по доставке</string>
     <string name="kommentariy_k_zakazu" translatable="false">Комментарий к заказу</string>
     <string name="tsena_text" translatable="false">Цена</string>
     <string name="stoimost_tovarov" translatable="false">Стоимость товаров</string>
@@ -105,10 +105,10 @@
     <string name="warn_driver_title" translatable="false">Предупредить о приезде водителя</string>
     <string name="antispam_warn" translatable="false">Уважаемый клиент, мы не дозвонимся до Вас,\nесли установлен АНТИСПАМ.</string>
     <string name="close" translatable="false">Закрыть</string>
-    <string name="your_norm">Ваша норма</string>
-    <string name="target_daily">Цель ежедневного потребления</string>
-    <string name="_200ml">200 мл</string>
-    <string name="enter_for_add_water">Нажмите, чтобы добавить воду</string>
+    <string name="your_norm" translatable="false">Ваша норма</string>
+    <string name="target_daily" translatable="false">Цель ежедневного потребления</string>
+    <string name="_200ml" translatable="false">200 мл</string>
+    <string name="enter_for_add_water" translatable="false">Нажмите, чтобы добавить воду</string>
 
 
 </resources>

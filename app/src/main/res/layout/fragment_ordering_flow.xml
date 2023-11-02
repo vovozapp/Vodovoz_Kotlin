@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--new-->
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--new-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -26,25 +24,25 @@
                     android:id="@+id/btnPersonal"
                     style="@style/BlueButton"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="@dimen/button_small_height"
-                    android:layout_marginTop="@dimen/space_8"
-                    android:layout_marginBottom="@dimen/space_16"
                     android:layout_marginStart="@dimen/space_16"
+                    android:layout_marginTop="@dimen/space_8"
                     android:layout_marginEnd="@dimen/space_8"
-                    android:text="@string/personal_btn_text"/>
+                    android:layout_marginBottom="@dimen/space_16"
+                    android:layout_weight="1"
+                    android:text="@string/personal_btn_text" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnCompany"
                     style="@style/GrayButton"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="@dimen/button_small_height"
-                    android:layout_marginTop="@dimen/space_8"
-                    android:layout_marginBottom="@dimen/space_16"
-                    android:layout_marginEnd="@dimen/space_16"
                     android:layout_marginStart="@dimen/space_8"
-                    android:text="@string/company_btn_text"/>
+                    android:layout_marginTop="@dimen/space_8"
+                    android:layout_marginEnd="@dimen/space_16"
+                    android:layout_marginBottom="@dimen/space_16"
+                    android:layout_weight="1"
+                    android:text="@string/company_btn_text" />
 
             </LinearLayout>
 
@@ -63,32 +61,32 @@
                         android:id="@+id/tvNameAddress"
                         style="@style/TextViewNormalBlackBold"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="match_parent"
-                        android:paddingHorizontal="@dimen/space_16"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="@string/kuda_vopros"/>
+                        android:paddingHorizontal="@dimen/space_16"
+                        android:text="@string/kuda_vopros" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvFreeShipping"
                         style="@style/TextViewNormalBlue"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:paddingHorizontal="@dimen/space_16"
                         android:gravity="center_vertical"
-                        tools:text="Еликабельная подсказка"/>
+                        android:paddingHorizontal="@dimen/space_16"
+                        tools:text="Кликабельная подсказка" />
 
                 </LinearLayout>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvAddress"
-                    style="@style/EditTextViewNormalGray"
+                    style="@style/EditTextViewOrderNormal"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/field_height"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:hint="@string/address_text"/>
+                    android:gravity="center_vertical"
+                    android:hint="@string/address_text"
+                    android:paddingHorizontal="@dimen/space_16" />
 
             </LinearLayout>
 
@@ -96,28 +94,28 @@
                 android:id="@+id/llCompanyNameContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvNameCompanyName"
                     style="@style/TextViewNormalBlackBold"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/field_height"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/light_gray"
-                    android:text="@string/nazvanie_kompanii"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="@string/nazvanie_kompanii" />
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/etCompanyName"
-                    style="@style/EditTextViewNormalGray"
+                    style="@style/EditTextViewOrderNormal"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/field_height"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:hint="@string/vvedite_nazvanie"/>
+                    android:gravity="center_vertical"
+                    android:hint="@string/vvedite_nazvanie"
+                    android:paddingHorizontal="@dimen/space_16" />
 
             </LinearLayout>
 
@@ -131,20 +129,20 @@
                     style="@style/TextViewNormalBlackBold"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/field_height"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/light_gray"
-                    android:text="@string/fio_text"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="@string/fio_text" />
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/etName"
-                    style="@style/EditTextViewNormalGray"
+                    style="@style/EditTextViewOrderNormal"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/field_height"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:hint="@string/fio_text"/>
+                    android:gravity="center_vertical"
+                    android:hint="@string/fio_text"
+                    android:paddingHorizontal="@dimen/space_16" />
 
             </LinearLayout>
 
@@ -158,20 +156,20 @@
                     style="@style/TextViewNormalBlackBold"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/field_height"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/light_gray"
-                    android:text="@string/email_text"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="@string/email_text" />
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/etEmail"
-                    style="@style/EditTextViewNormalGray"
+                    style="@style/EditTextViewOrderNormal"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/field_height"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:hint="@string/email_text"/>
+                    android:gravity="center_vertical"
+                    android:hint="@string/email_text"
+                    android:paddingHorizontal="@dimen/space_16" />
 
             </LinearLayout>
 
@@ -185,20 +183,20 @@
                     style="@style/TextViewNormalBlackBold"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/field_height"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/light_gray"
-                    android:text="@string/telephone_text"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="@string/telephone_text" />
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/etPhone"
-                    style="@style/EditTextViewNormalGray"
+                    style="@style/EditTextViewOrderNormal"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/field_height"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:hint="@string/telephone_text" />
+                    android:gravity="center_vertical"
+                    android:hint="@string/telephone_text"
+                    android:paddingHorizontal="@dimen/space_16" />
 
             </LinearLayout>
 
@@ -212,35 +210,35 @@
                     style="@style/TextViewNormalBlackBold"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/field_height"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/light_gray"
-                    android:text="@string/kogda_vopros"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="@string/kogda_vopros" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvDate"
-                    style="@style/EditTextViewNormalGray"
+                    style="@style/EditTextViewOrderNormal"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/field_height"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:text="@string/data_text"/>
+                    android:gravity="center_vertical"
+                    android:hint="@string/data_text"
+                    android:paddingHorizontal="@dimen/space_16" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:dividerColor="@color/divider_gray_color"/>
+                    app:dividerColor="@color/divider_gray_color" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvShippingInterval"
-                    style="@style/EditTextViewNormalGray"
+                    style="@style/EditTextViewOrderNormal"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/field_height"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:text="@string/vremya_text"/>
+                    android:gravity="center_vertical"
+                    android:hint="@string/vremya_text"
+                    android:paddingHorizontal="@dimen/space_16" />
 
             </LinearLayout>
 
@@ -254,39 +252,39 @@
                     style="@style/TextViewNormalBlackBold"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/field_height"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/light_gray"
-                    android:text="@string/oplata_text"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="@string/oplata_text" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvPayMethod"
-                    style="@style/EditTextViewNormalGray"
+                    style="@style/EditTextViewOrderNormal"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/field_height"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/white"
-                    android:hint="@string/vyberite_sposob_oplaty"/>
+                    android:gravity="center_vertical"
+                    android:hint="@string/vyberite_sposob_oplaty"
+                    android:paddingHorizontal="@dimen/space_16" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/mtBetweenPayMethodAndInputCash"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
-                    app:dividerColor="@color/divider_gray_color"/>
+                    app:dividerColor="@color/divider_gray_color" />
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/etInputCash"
-                    style="@style/EditTextViewNormalGray"
+                    style="@style/EditTextViewOrderNormal"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/field_height"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
-                    android:visibility="gone"
                     android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:hint="@string/sdacha_text"
                     android:inputType="number"
-                    android:hint="@string/sdacha_text"/>
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -295,72 +293,89 @@
                 style="@style/TextViewNormalBlackBold"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
-                android:paddingHorizontal="@dimen/space_16"
-                android:gravity="center_vertical"
                 android:background="@color/light_gray"
-                android:text="@string/zvonok_operatore_vopros"/>
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/space_16"
+                android:text="@string/zvonok_operatore_vopros" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvCheckDelivery"
-                style="@style/EditTextViewNormalGray"
+                style="@style/EditTextViewOrderNormal"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
-                android:paddingHorizontal="@dimen/space_16"
+                android:background="@color/white"
                 android:drawableEnd="@drawable/baseline_arrow_right_24"
                 android:gravity="center_vertical"
-                android:background="@color/white"
-                android:hint="@string/neobhodimoe_deystvie"/>
+                android:hint="@string/neobhodimoe_deystvie"
+                android:paddingHorizontal="@dimen/space_16" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/scOperatorCall"
-                android:visibility="gone"
                 style="@style/TextViewNormalBlackBold"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
-                android:paddingHorizontal="@dimen/space_16"
-                android:gravity="center_vertical"
                 android:background="@color/light_gray"
-                android:text="@string/zvonok_operatore_text"/>
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/space_16"
+                android:text="@string/zvonok_operatore_text"
+                android:visibility="gone" />
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/scShippingAlert"
-                style="@style/TextViewNormalBlackBold"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/field_height"
-                android:paddingHorizontal="@dimen/space_16"
-                android:gravity="center_vertical"
-                android:background="@color/light_gray"
-                android:text="@string/predupredit_o_priezde"/>
+                android:layout_height="wrap_content"
+                android:background="@color/light_gray">
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/scShippingAlert"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/field_height"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvShippingAlert"
+                    style="@style/TextViewNormalBlackBold"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/field_height"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="@string/predupredit_o_priezde"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/etPhoneForDriver"
-                style="@style/EditTextViewNormalGray"
+                style="@style/EditTextViewOrderNormal"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
-                android:paddingHorizontal="@dimen/space_16"
-                android:gravity="center_vertical"
                 android:background="@color/white"
+                android:gravity="center_vertical"
                 android:hint="@string/telephone_dlya_voditelya"
-                android:visibility="gone"/>
+                android:paddingHorizontal="@dimen/space_16"
+                android:visibility="gone" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/etComment"
-                style="@style/EditTextViewNormalGray"
+                style="@style/EditTextViewOrderNormal"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
-                android:paddingHorizontal="@dimen/space_16"
-                android:gravity="center_vertical"
                 android:background="@color/white"
-                android:hint="@string/kommentariy_k_zakazu"/>
+                android:gravity="center_vertical"
+                android:hint="@string/kommentariy_k_zakazu"
+                android:paddingHorizontal="@dimen/space_16" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/TextViewNormalBlackBold"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/field_height"
-                android:paddingHorizontal="@dimen/space_16"
-                android:gravity="center_vertical"
                 android:background="@color/light_gray"
-                android:text="@string/tsena_text"/>
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/space_16"
+                android:text="@string/tsena_text" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -370,22 +385,22 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/TextViewNormalBlack"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
+                    android:layout_weight="1"
                     android:background="@color/white"
-                    android:text="@string/stoimost_tovarov"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="@string/stoimost_tovarov" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvFullPrice"
                     style="@style/TextViewMediumBlackBold"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/white"
-                    tools:text="200 P"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    tools:text="200 P" />
 
             </LinearLayout>
 
@@ -397,22 +412,22 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/TextViewNormalBlack"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
+                    android:layout_weight="1"
                     android:background="@color/white"
-                    android:text="@string/zalog_text"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="@string/zalog_text" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvDepositPrice"
                     style="@style/TextViewMediumBlackBold"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/white"
-                    tools:text="200 P"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    tools:text="200 P" />
 
             </LinearLayout>
 
@@ -424,22 +439,22 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/TextViewNormalBlack"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
+                    android:layout_weight="1"
                     android:background="@color/white"
-                    android:text="@string/skidka_po_akciyam"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="@string/skidka_po_akciyam" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvDiscountPrice"
                     style="@style/TextViewMediumBlackBold"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/white"
-                    tools:text="200 P"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    tools:text="200 P" />
 
             </LinearLayout>
 
@@ -452,22 +467,22 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/TextViewNormalBlack"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
+                    android:layout_weight="1"
                     android:background="@color/white"
-                    android:text="@string/dostavka_text"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="@string/dostavka_text" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvShippingPrice"
                     style="@style/TextViewMediumBlackBold"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/white"
-                    tools:text="200 P"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    tools:text="200 P" />
 
             </LinearLayout>
 
@@ -480,22 +495,22 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/TextViewNormalBlack"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
+                    android:layout_weight="1"
                     android:background="@color/white"
-                    android:text="@string/oplata_parkovki"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="@string/oplata_parkovki" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvParkingPrice"
                     style="@style/TextViewMediumBlackBold"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/white"
-                    tools:text="200 P"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    tools:text="200 P" />
 
             </LinearLayout>
 
@@ -507,22 +522,22 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/TextViewNormalBlack"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
+                    android:layout_weight="1"
                     android:background="@color/white"
-                    android:text="@string/itogo_text"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="@string/itogo_text" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvTotalPrice"
                     style="@style/TextViewMediumBlackBold"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:gravity="center_vertical"
                     android:background="@color/white"
-                    tools:text="200 P"/>
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    tools:text="200 P" />
 
             </LinearLayout>
 
@@ -535,7 +550,7 @@
                 android:layout_marginTop="@dimen/space_16"
                 android:layout_marginEnd="@dimen/space_16"
                 android:layout_marginBottom="@dimen/space_16"
-                android:text="@string/order_btn_text"/>
+                android:text="@string/order_btn_text" />
 
         </LinearLayout>
 
@@ -559,14 +574,14 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="@dimen/_150sdp"
             android:layout_height="@dimen/_150sdp"
-            android:src="@drawable/png_ordering_complete"/>
+            android:src="@drawable/png_ordering_complete" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/TextViewNormalBlack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_8"
-            android:text="@string/spasibo_za_zakaz"/>
+            android:text="@string/spasibo_za_zakaz" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvOrderId"
@@ -574,7 +589,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_8"
-            tools:text="Заказ №1168143 успешно оформлен"/>
+            tools:text="Заказ №1168143 успешно оформлен" />
 
         <View
             android:layout_width="match_parent"
@@ -586,7 +601,7 @@
             style="@style/BlueButton"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_normal_height"
-            android:text="@string/oplatit_text"/>
+            android:text="@string/oplatit_text" />
 
     </LinearLayout>
 

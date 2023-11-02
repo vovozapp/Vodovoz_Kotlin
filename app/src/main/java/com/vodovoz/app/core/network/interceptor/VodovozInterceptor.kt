@@ -17,6 +17,7 @@ class VodovozInterceptor @Inject constructor(
 
         val builder = chain.request().newBuilder()
         localDataSource.fetchCookieSessionId()?.let { cookieSessionId ->
+
             builder.addHeader("Cookie", cookieSessionId)
         }
 
@@ -29,9 +30,11 @@ class VodovozInterceptor @Inject constructor(
         if (!localDataSource.isAvailableCookieSessionId() ||
             (localDataSource.isOldCookie())
         ) {
-            localDataSource.updateCookieSessionId(
-                originalResponse.headers.values("Set-Cookie").first()
-            )
+            if(originalResponse.headers.values("Set-Cookie").isNotEmpty()) {
+                localDataSource.updateCookieSessionId(
+                    originalResponse.headers.values("Set-Cookie").first()
+                )
+            }
         }
 
         return originalResponse
