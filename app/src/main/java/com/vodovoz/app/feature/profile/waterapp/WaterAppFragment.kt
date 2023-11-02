@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.profile.waterapp
 
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -11,6 +12,7 @@ import com.vodovoz.app.databinding.FragmentWaterAppBinding
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppAdapter
 import com.vodovoz.app.feature.profile.waterapp.adapter.WaterAppClickListener
 import com.vodovoz.app.feature.profile.waterapp.model.WaterAppLists
+import com.vodovoz.app.util.extensions.addOnBackPressedCallback
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -93,6 +95,17 @@ class WaterAppFragment : BaseFragment() {
             }
         } else {
             waterAppAdapter.submitList(WaterAppLists.startedList)
+        }
+
+        binding.imgClose.setOnClickListener {
+            findNavController().popBackStack()
+        }
+        bindBackPressed()
+    }
+
+    private fun bindBackPressed() {
+        addOnBackPressedCallback {
+            findNavController().popBackStack()
         }
     }
 

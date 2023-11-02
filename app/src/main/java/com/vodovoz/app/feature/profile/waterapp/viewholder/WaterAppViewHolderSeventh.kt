@@ -54,7 +54,7 @@ class WaterAppViewHolderSeventh(
         binding.tvConfirm.setOnClickListener {
             val item = item ?: return@setOnClickListener
             waterAppHelper.saveWaterAppNotificationData()
-            if (item.id == 5) {
+            if (item.id == 4) {
                 clickListener.onNextClick(item.id)
             } else {
                 clickListener.onPrevClick(item.id)

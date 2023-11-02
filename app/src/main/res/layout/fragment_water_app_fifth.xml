@@ -14,14 +14,14 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgSettings"
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:layout_marginEnd="@dimen/_20sdp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
         android:src="@drawable/ic_water_settings"
         app:cardCornerRadius="@dimen/_100sdp"
         app:cardElevation="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -32,7 +32,7 @@
         android:layout_marginTop="@dimen/_30sdp"
         android:layout_marginBottom="@dimen/_20sdp"
         android:fontFamily="@font/rotonda_bold"
-        android:text="Ваша норма"
+        android:text="@string/your_norm"
         android:textColor="@color/white"
         android:textSize="@dimen/_26ssp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +62,7 @@
                 android:fontFamily="@font/rotondac"
                 android:gravity="center"
                 android:lineSpacingExtra="@dimen/_6sdp"
-                android:text="Цель ежедневного потребления"
+                android:text="@string/target_daily"
                 android:textColor="@color/bluePrimary"
                 android:textSize="@dimen/_18ssp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -148,7 +148,7 @@
                             android:layout_height="match_parent"
                             android:fontFamily="@font/rotonda_bold"
                             android:gravity="center"
-                            android:text="200 мл"
+                            android:text="@string/_200ml"
                             android:textColor="@color/bluePrimary"
                             android:textSize="@dimen/_22ssp" />
 
@@ -196,7 +196,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:fontFamily="@font/rotondac"
-                android:text="Нажмите, чтобы добавить воду"
+                android:text="@string/enter_for_add_water"
                 android:textColor="@color/bluePrimary"
                 android:textSize="@dimen/_11ssp"
                 app:layout_constraintEnd_toEndOf="parent"

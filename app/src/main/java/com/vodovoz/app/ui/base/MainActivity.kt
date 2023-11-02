@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.messaging.RemoteMessage
 import com.vodovoz.app.common.product.rating.RatingProductManager
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var siteStateManager: SiteStateManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         MapKitFactory.initialize(this)
         binding = ActivityMainBinding.inflate(layoutInflater).apply { setContentView(root) }
