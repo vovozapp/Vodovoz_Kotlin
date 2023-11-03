@@ -1,4 +1,4 @@
-package com.vodovoz.app.ui.base
+package com.vodovoz.app.ui.view
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -71,7 +71,6 @@ class ExpandableTextView @JvmOverloads constructor(
 
     var collapsed = true
         private set
-    val expanded get() = !collapsed
 
     private var oldTextWidth = 0
     private var animator: Animator? = null

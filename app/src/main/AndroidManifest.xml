@@ -79,7 +79,9 @@
         </service>
 
         <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/png_logo_notif" />
+            android:resource="@mipmap/notification_icon" />
+        <meta-data android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/bluePrimary" />
     </application>
 
 </manifest>

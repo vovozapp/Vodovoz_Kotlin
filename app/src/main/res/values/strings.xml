@@ -109,6 +109,10 @@
     <string name="target_daily" translatable="false">Цель ежедневного потребления</string>
     <string name="_200ml" translatable="false">200 мл</string>
     <string name="enter_for_add_water" translatable="false">Нажмите, чтобы добавить воду</string>
+    <string name="description" translatable="false">ОПИСАНИЕ</string>
+    <string name="characteristics" translatable="false">ХАРАКТЕРИСТИКИ</string>
+    <string name="all_characteristics" translatable="false">Все характеристики</string>
+    <string name="consumer_information" translatable="false">Потребительская информация</string>
 
 
 </resources>

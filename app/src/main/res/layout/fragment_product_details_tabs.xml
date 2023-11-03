@@ -28,16 +28,16 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ОПИСАНИЕ" />
+            android:text="@string/description" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ХАРАКТЕРИСТИКИ" />
+            android:text="@string/characteristics" />
 
     </com.google.android.material.tabs.TabLayout>
 
-    <com.vodovoz.app.ui.base.ExpandableTextView
+    <com.vodovoz.app.ui.view.ExpandableTextView
         style="@style/TextViewMediumBlack"
         android:id="@+id/tvAboutProduct"
         android:layout_width="match_parent"
@@ -74,7 +74,7 @@
             android:layout_marginEnd="@dimen/space_16"
             android:fontFamily="@font/rotonda_normal"
             android:textSize="16sp"
-            android:text="Все характеристики"
+            android:text="@string/all_characteristics"
             android:textColor="@color/bluePrimary" />
 
     </LinearLayout>
@@ -88,13 +88,13 @@
         android:textSize="12sp"
         android:layout_marginTop="@dimen/space_16"
         android:layout_marginEnd="@dimen/space_16"
-        android:text="Потребительская информация" />
+        android:text="@string/consumer_information" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvConsumerInfo"
         style="@style/TextViewSmallGray"
         android:textColor="@color/text_gray_light"
-        android:textSize="10sp"
+        android:textSize="11sp"
         android:lineSpacingExtra="1.4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
