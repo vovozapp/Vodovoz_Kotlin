@@ -496,13 +496,16 @@ interface MainApi {
     @GET("/newmobile/korzina/function/guaty/index.php")
     suspend fun fetchCookie(): Response<ResponseBody>
 
+    @GET("newmobile/user.php?action=logout")
+    suspend fun logout(): Response<ResponseBody>
+
     //Профиль категории
     @GET("/newmobile/profile/index.php")
     suspend fun fetchProfileCategoriesResponse(
         @Query("action") action: String? = null,
         @Query("userid") userId: Long? = null,
         @Query("versiyaan") appVersion: String? = null,
-        @Query("device_type_android") isTablet: Boolean = false,
+        @Query("device_type_android") isTablet: String = "phone",
     ): ProfileCategoriesModel
 
     @GET("newmobile/profile/tovary.php")

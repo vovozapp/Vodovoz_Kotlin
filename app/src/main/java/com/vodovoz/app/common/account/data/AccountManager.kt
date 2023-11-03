@@ -20,14 +20,10 @@ class AccountManager @Inject constructor(
         return id
     }
 
-    private fun fetchUserId() = when (sharedPrefs.contains(USER_ID)) {
-        true -> {
-            val userId = sharedPrefs.getLong(USER_ID, 0)
-            userId
-        }
-        false -> {
-            null
-        }
+    private fun fetchUserId() = if (sharedPrefs.contains(USER_ID)) {
+        sharedPrefs.getLong(USER_ID, 0)
+    } else {
+        null
     }
 
     fun updateUserId(userId: Long) {

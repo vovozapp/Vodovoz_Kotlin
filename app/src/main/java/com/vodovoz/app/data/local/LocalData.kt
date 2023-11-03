@@ -5,6 +5,7 @@ import android.util.Log
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.util.LogSettings
 import dagger.hilt.android.qualifiers.ApplicationContext
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -62,6 +63,7 @@ class LocalData @Inject constructor(
         cookieSettings.edit().apply {
             putString(COOKIE_SESSION_ID, cookieSessionId)
         }.apply()
+        Timber.tag("Cookie updated").d(cookieSessionId)
         setLastEntire()
     }
 
@@ -215,7 +217,7 @@ class LocalData @Inject constructor(
     }
 
     override fun updateLastRequestCodeDate(time: Long) {
-        Log.d(LogSettings.LOCAL_DATA, "DATE = $time")
+        Timber.tag(LogSettings.LOCAL_DATA).d("DATE = $time")
         accountSettings.edit().putLong(LAST_REQUEST_CODE_DATE, time).apply()
     }
 
@@ -226,7 +228,7 @@ class LocalData @Inject constructor(
         }
 
     override fun updateLastRequestCodeTimeOut(time: Int) {
-        Log.d(LogSettings.LOCAL_DATA, "TIMEOUT = $time")
+        Timber.tag(LogSettings.LOCAL_DATA).d("TIMEOUT = $time")
         accountSettings.edit().putInt(LAST_REQUEST_CODE_TIME_OUT, time).apply()
     }
 

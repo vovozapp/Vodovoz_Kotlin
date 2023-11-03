@@ -17,7 +17,7 @@ class VodovozInterceptor @Inject constructor(
 
         val builder = chain.request().newBuilder()
         localDataSource.fetchCookieSessionId()?.let { cookieSessionId ->
-
+            Timber.tag("Cookie added").d(cookieSessionId)
             builder.addHeader("Cookie", cookieSessionId)
         }
 

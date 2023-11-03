@@ -35,7 +35,7 @@ class MainRepository @Inject constructor(
 
     //Слайдер баннеров категорий на главной странице
     suspend fun fetchCategoryBannersSlider() =
-        api.fetchCategoryBanners(action = "slayder", androidVersion = "1.4.84")
+        api.fetchCategoryBanners(action = "slayder", androidVersion = BuildConfig.VERSION_NAME)
 
     //Слайдер самых выгодных продуктов на главной странице
     suspend fun fetchDiscountsSlider() = api.fetchNovelties(action = "specpredlosh")
@@ -732,7 +732,7 @@ class MainRepository @Inject constructor(
         action = "glav",
         userId = userId,
         appVersion = BuildConfig.VERSION_NAME,
-        isTablet = isTablet
+        isTablet = if(isTablet) "ipad" else "phone"
     )
 
     suspend fun fetchPersonalProducts(
@@ -1125,7 +1125,7 @@ class MainRepository @Inject constructor(
         email = email
     )
 
-    suspend fun logout() = api.fetchCookie()
+    suspend fun logout() = api.logout()
 
     suspend fun addAvatar(id: Long, image: File): Response<Void> {
         val requestBody = image.asRequestBody(image.extension.toMediaTypeOrNull())
