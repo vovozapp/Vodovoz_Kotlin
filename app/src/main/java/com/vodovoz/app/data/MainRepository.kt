@@ -35,7 +35,7 @@ class MainRepository @Inject constructor(
 
     //Слайдер баннеров категорий на главной странице
     suspend fun fetchCategoryBannersSlider() =
-        api.fetchCategoryBanners(action = "slayder", androidVersion = BuildConfig.VERSION_NAME)
+        api.fetchCategoryBanners(action = "slayder", androidVersion = "1.4.84"/*BuildConfig.VERSION_NAME*/)
 
     //Слайдер самых выгодных продуктов на главной странице
     suspend fun fetchDiscountsSlider() = api.fetchNovelties(action = "specpredlosh")
