@@ -31,19 +31,24 @@ class ProductsGridViewHolder(
     val productsClickListener: ProductsClickListener,
     private val likeManager: LikeManager,
     private val cartManager: CartManager,
-    private val ratingProductManager: RatingProductManager
+    private val ratingProductManager: RatingProductManager,
 ) : ItemViewHolder<ProductUI>(view) {
 
     private val binding: ViewHolderProductGridBinding = ViewHolderProductGridBinding.bind(view)
 
-    private val amountControllerTimer = object : CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
-        override fun onTick(millisUntilFinished: Long) {}
-        override fun onFinish() {
-            val item = item ?: return
-            productsClickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
-            hideAmountController(item)
+    private val amountControllerTimer =
+        object : CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
+            override fun onTick(millisUntilFinished: Long) {}
+            override fun onFinish() {
+                val item = item ?: return
+                productsClickListener.onChangeProductQuantity(
+                    item.id,
+                    item.cartQuantity,
+                    item.oldQuantity
+                )
+                hideAmountController(item)
+            }
         }
-    }
 
     private val detailPictureFlowPagerAdapter = DetailPictureFlowPagerAdapter(
         clickListener = object : DetailPictureFlowClickListener {
@@ -66,7 +71,7 @@ class ProductsGridViewHolder(
             val item = item ?: return@launch
             ratingProductManager
                 .observeRatings()
-                .filter{ it.containsKey(item.id) }
+                .filter { it.containsKey(item.id) }
                 .onEach {
                     item.rating = it[item.id] ?: item.rating
                     binding.rbRating.rating = item.rating
@@ -78,7 +83,7 @@ class ProductsGridViewHolder(
             val item = item ?: return@launch
             likeManager
                 .observeLikes()
-                .filter{ it.containsKey(item.id) }
+                .filter { it.containsKey(item.id) }
                 .onEach {
                     item.isFavorite = it[item.id] ?: item.isFavorite
                     bindFav(item)
@@ -125,7 +130,11 @@ class ProductsGridViewHolder(
             val item = item ?: return@setOnClickListener
             if (item.isGift) return@setOnClickListener
             if (item.leftItems == 0) {
-                productsClickListener.onNotifyWhenBeAvailable(item.id, item.name, item.detailPicture)
+                productsClickListener.onNotifyWhenBeAvailable(
+                    item.id,
+                    item.name,
+                    item.detailPicture
+                )
                 return@setOnClickListener
             }
 
@@ -156,7 +165,7 @@ class ProductsGridViewHolder(
 
         binding.imgFavoriteStatus.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            when(item.isFavorite) {
+            when (item.isFavorite) {
                 true -> {
                     item.isFavorite = false
                     binding.imgFavoriteStatus.isSelected = false
@@ -188,7 +197,7 @@ class ProductsGridViewHolder(
         binding.amountController.add.isSelected = item.leftItems == 0
 
         //Price per unit / or order quantity
-        when(item.pricePerUnit != 0) {
+        when (item.pricePerUnit != 0) {
             true -> {
                 binding.llPricesContainer.tvPricePerUnit.visibility = View.VISIBLE
                 binding.llPricesContainer.tvPricePerUnit.text = item.pricePerUnitStringBuilder
@@ -197,7 +206,7 @@ class ProductsGridViewHolder(
         }
 
         //Price
-        when(item.priceList.size) {
+        when (item.priceList.size) {
             1 -> {
                 binding.llPricesContainer.tvCurrentPrice.text = item.currentPriceStringBuilder
                 binding.llPricesContainer.tvOldPrice.text = item.oldPriceStringBuilder
@@ -211,15 +220,22 @@ class ProductsGridViewHolder(
             }
         }
 
-        when(item.haveDiscount) {
-            true -> {
-                binding.llPricesContainer.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
-                binding.llPricesContainer.tvOldPrice.visibility = View.VISIBLE
-            }
-            false -> {
-                binding.llPricesContainer.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_new_black))
-                binding.llPricesContainer.tvOldPrice.visibility = View.GONE
-            }
+        if (item.haveDiscount) {
+            binding.llPricesContainer.tvCurrentPrice.setTextColor(
+                ContextCompat.getColor(
+                    itemView.context,
+                    R.color.red
+                )
+            )
+            binding.llPricesContainer.tvOldPrice.visibility = View.VISIBLE
+        } else {
+            binding.llPricesContainer.tvCurrentPrice.setTextColor(
+                ContextCompat.getColor(
+                    itemView.context,
+                    R.color.text_black
+                )
+            )
+            binding.llPricesContainer.tvOldPrice.visibility = View.GONE
         }
 
         //Cart amount
@@ -250,7 +266,7 @@ class ProductsGridViewHolder(
         }
 
         //DiscountPercent
-        when(item.priceList.size == 1 &&
+        when (item.priceList.size == 1 &&
                 item.priceList.first().currentPrice < item.priceList.first().oldPrice) {
             true -> {
                 isNotHaveStatuses = false
@@ -260,7 +276,7 @@ class ProductsGridViewHolder(
             false -> binding.cgStatuses.cwDiscountContainer.visibility = View.GONE
         }
 
-        when(isNotHaveStatuses) {
+        when (isNotHaveStatuses) {
             true -> binding.cgStatuses.root.visibility = View.GONE
             false -> binding.cgStatuses.root.visibility = View.VISIBLE
         }

@@ -106,7 +106,7 @@ class NotAvailableProductsViewHolder(
                 binding.tvOldPrice.visibility = View.VISIBLE
             }
             false -> {
-                binding.tvPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_new_black))
+                binding.tvPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
                 binding.tvOldPrice.visibility = View.GONE
             }
         }

@@ -9,15 +9,16 @@
     tools:ignore="RtlSymmetry">
 
     <TextView
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/tvPricePerUnit"
         style="@style/TextViewSmallLightGray"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="start|bottom"
-        tools:text="510/кг" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="510/кг"
+        tools:ignore="SelectableText" />
 
     <TextView
         android:id="@+id/tvCurrentPrice"
@@ -29,33 +30,33 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvPricePerUnit"
-        tools:text="280 Р" />
+        tools:text="280 Р"
+        tools:ignore="SelectableText" />
 
     <TextView
         android:id="@+id/tvOldPrice"
         style="@style/TextViewSmallLightGray"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingStart="@dimen/space_4"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/tvCurrentPrice"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tvCurrentPrice"
-        app:layout_constraintTop_toBottomOf="@id/tvPricePerUnit"
-        tools:ignore="RtlSymmetry"
+        app:layout_constraintTop_toTopOf="@id/tvCurrentPrice"
+        tools:ignore="RtlSymmetry,SelectableText"
         tools:text="300 Р" />
 
     <TextView
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvCurrentPrice"
         android:id="@+id/tvPriceCondition"
         style="@style/TextViewSmallGray"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="start|bottom"
         android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCurrentPrice"
         tools:text="При условии покупки от 10 шт" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

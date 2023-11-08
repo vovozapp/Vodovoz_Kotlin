@@ -218,12 +218,11 @@
                 style="@style/TextViewSmallLightGrayBold"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:gravity="center"
+                android:gravity="bottom"
                 android:paddingStart="@dimen/space_4"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/tvPrice"
                 app:layout_constraintStart_toEndOf="@+id/tvPrice"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvPrice"
                 tools:ignore="RtlSymmetry"
                 tools:text="x5 = 2200Р" />
 

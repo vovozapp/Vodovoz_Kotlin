@@ -47,7 +47,7 @@ class AvailableProductsViewHolder(
             override fun onTick(millisUntilFinished: Long) {}
             override fun onFinish() {
                 val item = item ?: return
-                if(item.cartQuantity != item.oldQuantity) {
+                if (item.cartQuantity != item.oldQuantity) {
                     productsClickListener.onChangeProductQuantity(
                         item.id,
                         item.cartQuantity,
@@ -121,7 +121,7 @@ class AvailableProductsViewHolder(
 
         binding.tlIndicators.attachTo(binding.vpPictures)
 
-        binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        binding.llPricesContainer.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 
         binding.root.setOnClickListener {
             val item = item ?: return@setOnClickListener
@@ -188,8 +188,8 @@ class AvailableProductsViewHolder(
 
         binding.imgFavoriteStatus.visibility = View.VISIBLE
         binding.cgStatuses.visibility = View.VISIBLE
-        binding.clPricesContainer.visibility = View.VISIBLE
-        binding.tvOldPrice.visibility = View.VISIBLE
+        binding.llPricesContainer.root.visibility = View.VISIBLE
+        binding.llPricesContainer.tvOldPrice.visibility = View.VISIBLE
         binding.amountController.root.visibility = View.VISIBLE
 
         binding.tvName.text = item.name
@@ -206,13 +206,13 @@ class AvailableProductsViewHolder(
         binding.amountController.add.isSelected = false
 
         if (item.pricePerUnit != 0) {
-            binding.tvPricePerUnit.visibility = View.VISIBLE
-            binding.tvPricePerUnit.setPricePerUnitText(item.pricePerUnit)
+            binding.llPricesContainer.tvPricePerUnit.visibility = View.VISIBLE
+            binding.llPricesContainer.tvPricePerUnit.setPricePerUnitText(item.pricePerUnit)
         } else if (item.orderQuantity != 0) {
-            binding.tvPricePerUnit.visibility = View.VISIBLE
-            binding.tvPricePerUnit.setOrderQuantity(item.orderQuantity)
+            binding.llPricesContainer.tvPricePerUnit.visibility = View.VISIBLE
+            binding.llPricesContainer.tvPricePerUnit.setOrderQuantity(item.orderQuantity)
         } else {
-            binding.tvPricePerUnit.visibility = View.GONE
+            binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
         }
 
         updateCartQuantity(item)
@@ -251,7 +251,7 @@ class AvailableProductsViewHolder(
         if (item.isBottle) {
             binding.imgFavoriteStatus.visibility = View.INVISIBLE
             binding.cgStatuses.visibility = View.GONE
-            binding.bottomPrContainer.visibility = View.GONE
+            binding.llPricesContainer.root.visibility = View.GONE
             binding.tvDepositPrice.visibility = View.VISIBLE
             binding.tvDepositPrice.setDepositPriceText(item.priceList.first().currentPrice)
             binding.rbRating.isVisible = false
@@ -266,7 +266,7 @@ class AvailableProductsViewHolder(
         if (item.isGift) {
             binding.imgFavoriteStatus.visibility = View.INVISIBLE
             binding.cgStatuses.visibility = View.GONE
-            binding.tvOldPrice.visibility = View.GONE
+            binding.llPricesContainer.tvOldPrice.visibility = View.GONE
             binding.rbRating.isVisible = false
         }
 
@@ -333,7 +333,7 @@ class AvailableProductsViewHolder(
 
         when (item.priceList.size) {
             1 -> {
-                binding.tvPriceCondition.visibility = View.GONE
+                binding.llPricesContainer.tvPriceCondition.visibility = View.GONE
                 bindDiscountPrice(
                     item,
                     item.priceList.first().currentPrice,
@@ -350,8 +350,8 @@ class AvailableProductsViewHolder(
                         sortedPriceList.find { item.cartQuantity in it.requiredAmount..it.requiredAmountTo }
                     } ?: sortedPriceList.first()
 
-                binding.tvPriceCondition.visibility = View.VISIBLE
-                binding.tvPriceCondition.text =
+                binding.llPricesContainer.tvPriceCondition.visibility = View.VISIBLE
+                binding.llPricesContainer.tvPriceCondition.text =
                     itemView.context.getString(
                         R.string.price_condition,
                         minimalPrice.requiredAmount
@@ -359,24 +359,26 @@ class AvailableProductsViewHolder(
 //                    "При условии покупки от ${minimalPrice.requiredAmount} шт"
 
                 bindDiscountPrice(item, minimalPrice.currentPrice, minimalPrice.oldPrice)
-                binding.tvPricePerUnit.visibility = View.GONE
+                binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
             }
         }
 
-        when (item.totalDisc > 0 || item.isGift) {
-            true -> {
-                binding.tvPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
-                binding.tvOldPrice.visibility = View.VISIBLE
-            }
-            false -> {
-                binding.tvPrice.setTextColor(
-                    ContextCompat.getColor(
-                        itemView.context,
-                        R.color.text_new_black
-                    )
+        if (item.totalDisc > 0 || item.isGift) {
+            binding.llPricesContainer.tvCurrentPrice.setTextColor(
+                ContextCompat.getColor(
+                    itemView.context,
+                    R.color.red
                 )
-                binding.tvOldPrice.visibility = View.GONE
-            }
+            )
+            binding.llPricesContainer.tvOldPrice.visibility = View.VISIBLE
+        } else {
+            binding.llPricesContainer.tvCurrentPrice.setTextColor(
+                ContextCompat.getColor(
+                    itemView.context,
+                    R.color.text_black
+                )
+            )
+            binding.llPricesContainer.tvOldPrice.visibility = View.GONE
         }
     }
 
@@ -385,15 +387,21 @@ class AvailableProductsViewHolder(
 
             if (oldPrice == 0) {
                 val priceWithDesc = (currentPrice.toDouble() - item.totalDisc).roundToInt()
-                binding.tvPrice.setPriceText(priceWithDesc, itCanBeGift = true)
-                binding.tvOldPrice.setPriceText(currentPrice, itCanBeGift = true)
+                binding.llPricesContainer.tvCurrentPrice.setPriceText(
+                    priceWithDesc,
+                    itCanBeGift = true
+                )
+                binding.llPricesContainer.tvOldPrice.setPriceText(currentPrice, itCanBeGift = true)
                 binding.tvDiscountPercent.setDiscountPercent(
                     newPrice = priceWithDesc,
                     oldPrice = currentPrice
                 )
             } else {
-                binding.tvPrice.setPriceText(currentPrice, itCanBeGift = true)
-                binding.tvOldPrice.setPriceText(oldPrice, itCanBeGift = true)
+                binding.llPricesContainer.tvCurrentPrice.setPriceText(
+                    currentPrice,
+                    itCanBeGift = true
+                )
+                binding.llPricesContainer.tvOldPrice.setPriceText(oldPrice, itCanBeGift = true)
                 binding.tvDiscountPercent.setDiscountPercent(
                     newPrice = currentPrice,
                     oldPrice = oldPrice
@@ -403,8 +411,8 @@ class AvailableProductsViewHolder(
             binding.cwDiscountContainer.visibility = View.VISIBLE
 
         } else {
-            binding.tvPrice.setPriceText(currentPrice, itCanBeGift = true)
-            binding.tvOldPrice.isVisible = false
+            binding.llPricesContainer.tvCurrentPrice.setPriceText(currentPrice, itCanBeGift = true)
+            binding.llPricesContainer.tvOldPrice.isVisible = false
 
             if (item.status.isNotEmpty()) {
                 binding.cwDiscountContainer.visibility = View.GONE
