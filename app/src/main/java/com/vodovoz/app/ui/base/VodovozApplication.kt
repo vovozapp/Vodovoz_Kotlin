@@ -1,7 +1,9 @@
 package com.vodovoz.app.ui.base
 
 import android.app.Application
+import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.notification.NotificationChannels
+import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.util.Keys
 import com.vodovoz.app.util.Keys.YANDEX_METRICA_KEY
 import com.yandex.mapkit.MapKitFactory
@@ -23,7 +25,13 @@ class VodovozApplication : Application() {
 
     private fun initYandexMetrica() {
         val config: YandexMetricaConfig =
-            YandexMetricaConfig.newConfigBuilder(YANDEX_METRICA_KEY).build()
+            YandexMetricaConfig.newConfigBuilder(YANDEX_METRICA_KEY)
+                .withNativeCrashReporting(false)
+                .withLocationTracking(false)
+                .withAppVersion(BuildConfig.VERSION_NAME)
+                .withUserProfileID(ApiConfig.VODOVOZ_URL)
+                .withLogs()
+                .build()
         YandexMetrica.activate(this, config)
         YandexMetrica.enableActivityAutoTracking(this)
     }
