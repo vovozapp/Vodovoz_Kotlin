@@ -89,7 +89,8 @@
                 android:paddingEnd="@dimen/space_16"
                 android:singleLine="true"
                 android:textColor="@color/blackTextDark"
-                android:textColorHint="@color/blackTextPrimary" />
+                android:textColorHint="@color/blackTextPrimary"
+                tools:ignore="Autofill" />
 
             <ImageView
                 android:id="@+id/clear"

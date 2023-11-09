@@ -1,6 +1,5 @@
 package com.vodovoz.app.data.parser.response.past_purchases
 
-import android.util.Log
 import com.vodovoz.app.data.model.common.CategoryEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.features.PastPurchasesHeaderBundleEntity
@@ -9,23 +8,24 @@ import com.vodovoz.app.util.LogSettings
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
+import timber.log.Timber
 
 object PastPurchasesHeaderResponseJsonParser {
 
     fun ResponseBody.parsePastPurchasesHeaderResponse(): ResponseEntity<PastPurchasesHeaderBundleEntity> {
         val responseJson = JSONObject(string())
-        Log.d(LogSettings.RESPONSE_BODY_LOG, responseJson.toString(2))
+        Timber.tag(LogSettings.RESPONSE_BODY_LOG).d(responseJson.toString(2))
         return ResponseEntity.Success(
             PastPurchasesHeaderBundleEntity(
-                favoriteCategoryEntity = when(responseJson.has("glavtitle")) {
+                favoriteCategoryEntity = when (responseJson.has("glavtitle")) {
                     true -> responseJson.parseFavoriteCategoryEntity()
                     false -> null
                 },
-                availableTitle = when(responseJson.has("nalichie") && !responseJson.isNull("nalichie")) {
+                availableTitle = when (responseJson.has("nalichie") && !responseJson.isNull("nalichie")) {
                     true -> responseJson.getJSONObject("nalichie").getString("NAMENALICHIE")
                     false -> null
                 },
-                notAvailableTitle = when(responseJson.has("nalichie") && !responseJson.isNull("nalichie")) {
+                notAvailableTitle = when (responseJson.has("nalichie") && !responseJson.isNull("nalichie")) {
                     true -> responseJson.getJSONObject("nalichie").getString("NAMENETNALICHIE")
                     false -> null
                 },

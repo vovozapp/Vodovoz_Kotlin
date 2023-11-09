@@ -21,7 +21,8 @@
             android:src="@drawable/ic_check_round"
             app:layout_constraintBottom_toBottomOf="@+id/tvPrice"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tvPrice" />
+            app:layout_constraintTop_toTopOf="@+id/tvPrice"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/tvStatus"
@@ -72,14 +73,14 @@
             android:layout_height="45dp"
             android:background="@color/bluePrimary"
             android:layout_marginTop="@dimen/space_16"
-            android:drawableEnd="@drawable/ic_pointer_right"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/space_16"
             android:paddingEnd="@dimen/space_16"
             android:text="@string/more_details_about_order_btn_text"
             app:drawableTint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvAddress" />
+            app:layout_constraintTop_toBottomOf="@+id/tvAddress"
+            app:drawableEndCompat="@drawable/ic_pointer_right" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

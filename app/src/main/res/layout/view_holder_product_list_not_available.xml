@@ -37,7 +37,8 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/space_4"
             android:paddingVertical="@dimen/space_2"
-            android:text="@string/not_available" />
+            android:text="@string/not_available"
+            tools:ignore="SmallSp" />
 
     </androidx.cardview.widget.CardView>
 

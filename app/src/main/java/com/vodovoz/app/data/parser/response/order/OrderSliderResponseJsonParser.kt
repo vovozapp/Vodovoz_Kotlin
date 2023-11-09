@@ -1,6 +1,5 @@
 package com.vodovoz.app.data.parser.response.order
 
-import android.util.Log
 import com.vodovoz.app.data.model.common.OrderEntity
 import com.vodovoz.app.data.model.common.OrderStatusEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
@@ -10,14 +9,17 @@ import com.vodovoz.app.util.LogSettings
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
+import timber.log.Timber
 
 object OrderSliderResponseJsonParser {
 
     fun ResponseBody.parseOrderSliderResponse(): ResponseEntity<List<OrderEntity>> {
         val responseJson = JSONObject(this.string())
-        Log.d(LogSettings.RESPONSE_BODY_LOG, responseJson.toString(2))
-        return when(responseJson.getString("status")) {
-            ResponseStatus.SUCCESS -> ResponseEntity.Success(responseJson.getJSONArray("data").parseOrderEntityList())
+        Timber.tag(LogSettings.RESPONSE_BODY_LOG).d(responseJson.toString(2))
+        return when (responseJson.getString("status")) {
+            ResponseStatus.SUCCESS -> ResponseEntity.Success(
+                responseJson.getJSONArray("data").parseOrderEntityList()
+            )
             else -> ResponseEntity.Error("Ошибка парсинга заказы")
         }
     }

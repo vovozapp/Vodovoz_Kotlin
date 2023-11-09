@@ -23,7 +23,7 @@ interface LocalDataSource {
 
     fun isAvailableCookieSessionId(): Boolean
     fun fetchCookieSessionId(): String?
-    fun updateCookieSessionId(cookieSessionId: String)
+    fun updateCookieSessionId(cookieSessionId: String?)
     fun removeCookieSessionId()
     fun isOldCookie(): Boolean
 

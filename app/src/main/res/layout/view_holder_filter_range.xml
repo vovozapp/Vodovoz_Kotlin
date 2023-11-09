@@ -72,7 +72,8 @@
                         android:inputType="numberDecimal"
                         android:layout_weight="1"
                         android:imeOptions="actionDone"
-                        android:background="@drawable/bkg_rectangle_light_gray"/>
+                        android:background="@drawable/bkg_rectangle_light_gray"
+                        tools:ignore="Autofill" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -97,7 +98,8 @@
                         app:fontFamily="@font/rotondac"
                         android:layout_weight="1"
                         android:imeOptions="actionDone"
-                        android:background="@drawable/bkg_rectangle_light_gray"/>
+                        android:background="@drawable/bkg_rectangle_light_gray"
+                        tools:ignore="Autofill" />
                 </LinearLayout>
 
         </LinearLayout>

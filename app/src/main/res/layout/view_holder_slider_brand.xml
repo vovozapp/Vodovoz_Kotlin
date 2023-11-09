@@ -3,6 +3,7 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/brand_slider_card_width"
     android:layout_height="@dimen/brand_slider_card_height"
     app:cardCornerRadius="@dimen/corner_5"
@@ -13,6 +14,6 @@
         android:id="@+id/imgPicture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-         />
+        tools:ignore="ContentDescription" />
 
 </androidx.cardview.widget.CardView>

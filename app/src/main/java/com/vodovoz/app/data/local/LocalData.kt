@@ -1,7 +1,6 @@
 package com.vodovoz.app.data.local
 
 import android.content.Context
-import android.util.Log
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.util.LogSettings
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -20,7 +19,8 @@ class LocalData @Inject constructor(
         //Account Settings
         private const val ACCOUNT_SETTINGS = "account_settings"
         private const val USER_ID = "USER_ID"
-//        private const val EMAIL = "EMAIL"
+
+        //        private const val EMAIL = "EMAIL"
 //        private const val PASSWORD = "PASSWORD"
         private const val PHONE = "PHONE"
         private const val LAST_REQUEST_CODE_DATE = "LAST_REQUEST_CODE_DATE"
@@ -59,12 +59,15 @@ class LocalData @Inject constructor(
 
     override fun fetchCookieSessionId() = cookieSettings.getString(COOKIE_SESSION_ID, null)
 
-    override fun updateCookieSessionId(cookieSessionId: String) {
-        cookieSettings.edit().apply {
-            putString(COOKIE_SESSION_ID, cookieSessionId)
-        }.apply()
-        Timber.tag("Cookie updated").d(cookieSessionId)
-        setLastEntire()
+    override fun updateCookieSessionId(cookieSessionId: String?) {
+        cookieSessionId?.let {
+            cookieSettings.edit().apply {
+                putString(COOKIE_SESSION_ID, cookieSessionId)
+            }.apply()
+            Timber.tag("Cookie updated").d(cookieSessionId)
+            setLastEntire()
+        }
+
     }
 
     override fun removeCookieSessionId() {

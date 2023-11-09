@@ -32,8 +32,8 @@ class Polygon private constructor(val sides: List<Line>, private val _boundingBo
 
             // add line (edge) to the polygon
             if (_vertexes.size > 1) {
-                val Line = Line(_vertexes[_vertexes.size - 2], point)
-                _sides.add(Line)
+                val line = Line(_vertexes[_vertexes.size - 2], point)
+                _sides.add(line)
             }
             return this
         }
