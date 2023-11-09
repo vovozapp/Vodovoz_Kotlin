@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
@@ -41,6 +42,9 @@ class FullScreenHistoriesSliderFlowFragment : BaseFragment(),
 
     @Inject
     lateinit var tabManager: TabManager
+
+    @Inject
+    lateinit var accountManager: AccountManager
 
 
     private var startHistoryId: Long = 0
@@ -166,7 +170,11 @@ class FullScreenHistoriesSliderFlowFragment : BaseFragment(),
             is ActionEntity.Novelties -> FullScreenHistoriesSliderFlowFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                 PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
             )
-            is ActionEntity.WaterApp -> FullScreenHistoriesSliderFlowFragmentDirections.actionToWaterAppFragment()
+            is ActionEntity.WaterApp -> {
+                val eventParameters = "\"source\":\"stories\""
+                accountManager.reportYandexMetrica("trekervodi_zapysk", eventParameters)
+                FullScreenHistoriesSliderFlowFragmentDirections.actionToWaterAppFragment()
+            }
             is ActionEntity.Delivery -> FullScreenHistoriesSliderFlowFragmentDirections.actionToWebViewFragment(
                 ApiConfig.ABOUT_DELIVERY_URL,
                 "О доставке"

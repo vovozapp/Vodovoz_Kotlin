@@ -182,8 +182,8 @@ class OrderDetailsFragment : BaseFragment() {
 
                         binding.btnTraceOrder.setOnClickListener {
                             if (orderDetailsUI.driverId == null || orderDetailsUI.id == null) return@setOnClickListener
-                            val eventParameters = "{\"ZakazNumber\":\"${orderDetailsUI.id}\"}"
-                            //accountManager.reportYandexMetrica("Где мой заказ", eventParameters) //todo релиз
+                            val eventParameters = "\"ZakazNumber\":\"${orderDetailsUI.id}\""
+                            accountManager.reportYandexMetrica("Где мой заказ", eventParameters)
 
                             debugLog { "driverId ${orderDetailsUI.driverId}" }
 

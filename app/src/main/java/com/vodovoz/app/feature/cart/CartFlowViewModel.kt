@@ -54,8 +54,6 @@ class CartFlowViewModel @Inject constructor(
                     }
                 }
         }
-
-        //accountManager.reportYandexMetrica("Зашел в корзину") //todo релиз
     }
 
     fun firstLoad() {

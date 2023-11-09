@@ -59,8 +59,10 @@ class SiteStateManager @Inject constructor(
         val subsections = json.safeString("SUBSECTIONS")
         val orderId = json.safeString("NumberZakaz")
         val section = json.safeString("NAME_RAZDEL")
+        val action = json.safeString("ACTION")
+
         if (path.isNotEmpty()) {
-            pushListener.value = PushData(id, section, orderId, subsections, path)
+            pushListener.value = PushData(id, section, orderId, subsections, action, path)
         }
     }
 
@@ -78,6 +80,7 @@ class SiteStateManager @Inject constructor(
         val section: String? = null,
         val orderId: String? = null,
         val subsections: String? = null,
+        val action: String? = null,
         val path: String
     )
 }

@@ -15,6 +15,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.databinding.FragmentOrderingFlowBinding
@@ -40,6 +41,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class OrderingFragment : BaseFragment() {
@@ -63,6 +65,9 @@ class OrderingFragment : BaseFragment() {
 
     private val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
+    @Inject
+    lateinit var accountManager: AccountManager
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -75,6 +80,7 @@ class OrderingFragment : BaseFragment() {
         binding.etPhone.setPhoneValidator {}
         binding.etPhoneForDriver.setPhoneValidator {}
         bindTextWatchers()
+        accountManager.reportYandexMetrica("Зашел на экран оформления заказа")
     }
 
     private fun observeUiState() {

@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
@@ -55,6 +56,9 @@ class CartFragment : BaseFragment() {
 
     @Inject
     lateinit var tabManager: TabManager
+
+    @Inject
+    lateinit var accountManager: AccountManager
 
     private val cartController by lazy {
         CartController(
@@ -142,6 +146,7 @@ class CartFragment : BaseFragment() {
         bindErrorRefresh { viewModel.refresh() }
         bindSwipeRefresh()
         observeTabReselect()
+        accountManager.reportYandexMetrica("Зашел в корзину")
     }
 
     override fun onStart() {

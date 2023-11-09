@@ -7,6 +7,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.squareup.moshi.Moshi
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.feature.profile.waterapp.worker.WaterAppWorker
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.fetchCurrentDayInTimeMillis
@@ -19,8 +20,9 @@ import javax.inject.Singleton
 @Singleton
 class WaterAppHelper @Inject constructor(
     private val sharedPrefs: SharedPreferences,
-    private val moshi: Moshi,
-    private val applicationContext: Application
+    moshi: Moshi,
+    private val applicationContext: Application,
+    private val accountManager: AccountManager,
 ) {
 
     companion object {
@@ -43,7 +45,7 @@ class WaterAppHelper @Inject constructor(
     fun observeWaterAppRateData() = waterAppRateDataListener.asStateFlow()
 
     fun fetchWaterAppUserData() {
-        if(sharedPrefs.contains(WATER_APP_USER_DATA)) {
+        if (sharedPrefs.contains(WATER_APP_USER_DATA)) {
             val json = sharedPrefs.getString(WATER_APP_USER_DATA, "")
             debugLog { "json contains $json" }
             if (!json.isNullOrEmpty()) {
@@ -114,7 +116,7 @@ class WaterAppHelper @Inject constructor(
         )
     }
 
-    fun saveRate() : Int {
+    fun saveRate(): Int {
         val rate = calculateRate()
         waterAppRateDataListener.value = waterAppRateDataListener.value?.copy(rate = rate)
         saveWaterAppRateData()
@@ -123,7 +125,7 @@ class WaterAppHelper @Inject constructor(
 
     fun fetchWaterAppRateData() {
         val currentDate = fetchCurrentDayInTimeMillis()
-        if(sharedPrefs.contains(WATER_APP_RATE)) {
+        if (sharedPrefs.contains(WATER_APP_RATE)) {
             val json = sharedPrefs.getString(WATER_APP_RATE, "")
             debugLog { "json contains $json" }
             if (!json.isNullOrEmpty()) {
@@ -150,7 +152,14 @@ class WaterAppHelper @Inject constructor(
         }
     }
 
+    fun startCalculate() {
+
+        accountManager.reportYandexMetrica("trekervodi_vhod")
+    }
+
     fun tryToChangeWaterLevel(step: Int) {
+
+        accountManager.reportYandexMetrica("trekervodi_chasha")
 
         val rateState = waterAppRateDataListener.value ?: return
 
@@ -218,7 +227,7 @@ class WaterAppHelper @Inject constructor(
     }
 
     fun fetchWaterAppNotificationData() {
-        if(sharedPrefs.contains(WATER_APP_NOTIFICATION_DATA)) {
+        if (sharedPrefs.contains(WATER_APP_NOTIFICATION_DATA)) {
             val json = sharedPrefs.getString(WATER_APP_NOTIFICATION_DATA, "")
             debugLog { "json contains $json" }
             if (!json.isNullOrEmpty()) {
@@ -268,7 +277,7 @@ class WaterAppHelper @Inject constructor(
     }
 
     fun fetchAppNotificationData(): WaterAppNotificationData {
-        if(sharedPrefs.contains(WATER_APP_NOTIFICATION_DATA)) {
+        if (sharedPrefs.contains(WATER_APP_NOTIFICATION_DATA)) {
             val json = sharedPrefs.getString(WATER_APP_NOTIFICATION_DATA, "")
             debugLog { "json contains $json" }
             if (!json.isNullOrEmpty()) {
@@ -315,6 +324,6 @@ class WaterAppHelper @Inject constructor(
         val rate: Int = 2300,
         val currentLevel: Int = 0,
         val lastSavedDate: Long = 0,
-        val canFill: Boolean = true
+        val canFill: Boolean = true,
     )
 }

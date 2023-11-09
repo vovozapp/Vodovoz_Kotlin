@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
@@ -58,6 +59,9 @@ class ProfileFragment : BaseFragment() {
     lateinit var tabManager: TabManager
 
     @Inject
+    lateinit var accountManager: AccountManager
+
+    @Inject
     lateinit var ratingProductManager: RatingProductManager
 
     private val profileController by lazy {
@@ -100,7 +104,7 @@ class ProfileFragment : BaseFragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.observeEvent()
                 .collect {
-                    when(it) {
+                    when (it) {
                         is ProfileFlowViewModel.ProfileEvents.Logout -> {
                             binding.profileFlowRv.isVisible = false
                             binding.noLoginContainer.isVisible = true
@@ -147,7 +151,7 @@ class ProfileFragment : BaseFragment() {
         }
     }
 
-    private fun getProfileFlowClickListener() : ProfileFlowClickListener {
+    private fun getProfileFlowClickListener(): ProfileFlowClickListener {
         return object : ProfileFlowClickListener {
             override fun onHeaderClick() {
                 findNavController().navigate(ProfileFragmentDirections.actionToUserDataFragment())
@@ -163,10 +167,12 @@ class ProfileFragment : BaseFragment() {
 
             override fun onUrlClick(url: String?) {
                 if (url == null) return
-                findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
-                    url,
-                    "Стоимость доставки"
-                ))
+                findNavController().navigate(
+                    ProfileFragmentDirections.actionToWebViewFragment(
+                        url,
+                        "Стоимость доставки"
+                    )
+                )
             }
 
             override fun onUrlTwoClick(url: String?) {
@@ -187,17 +193,21 @@ class ProfileFragment : BaseFragment() {
             }
 
             override fun onRepairClick() {
-                findNavController().navigate(ProfileFragmentDirections.actionToServiceDetailFragment(
-                    listOf("sanitar", "remont").toTypedArray(),
-                    "remont"
-                ))
+                findNavController().navigate(
+                    ProfileFragmentDirections.actionToServiceDetailFragment(
+                        listOf("sanitar", "remont").toTypedArray(),
+                        "remont"
+                    )
+                )
             }
 
             override fun onOzonClick() {
-                findNavController().navigate(ProfileFragmentDirections.actionToServiceDetailFragment(
-                    listOf("sanitar", "remont").toTypedArray(),
-                    "sanitar"
-                ))
+                findNavController().navigate(
+                    ProfileFragmentDirections.actionToServiceDetailFragment(
+                        listOf("sanitar", "remont").toTypedArray(),
+                        "sanitar"
+                    )
+                )
             }
 
             override fun onQuestionnaireClick() {
@@ -205,29 +215,35 @@ class ProfileFragment : BaseFragment() {
             }
 
             override fun onNotificationsClick() {
-             //   openNotificationSettingsForApp(requireContext())
+                //   openNotificationSettingsForApp(requireContext())
                 findNavController().navigate(R.id.notificationSettingsFragment)
             }
 
             override fun onAboutDeliveryClick() {
-                findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
-                    ApiConfig.ABOUT_DELIVERY_URL,
-                    "Стоимость доставки"
-                ))
+                findNavController().navigate(
+                    ProfileFragmentDirections.actionToWebViewFragment(
+                        ApiConfig.ABOUT_DELIVERY_URL,
+                        "Стоимость доставки"
+                    )
+                )
             }
 
             override fun onAboutPaymentClick() {
-                findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
-                    ApiConfig.ABOUT_PAY_URL,
-                    "Об оплате"
-                ))
+                findNavController().navigate(
+                    ProfileFragmentDirections.actionToWebViewFragment(
+                        ApiConfig.ABOUT_PAY_URL,
+                        "Об оплате"
+                    )
+                )
             }
 
             override fun onMyChatClick() {
-                findNavController().navigate(ProfileFragmentDirections.actionToWebViewFragment(
-                    "http://jivo.chat/mk31km1IlP",
-                    "Чат"
-                ))
+                findNavController().navigate(
+                    ProfileFragmentDirections.actionToWebViewFragment(
+                        "http://jivo.chat/mk31km1IlP",
+                        "Чат"
+                    )
+                )
             }
 
             override fun onSafetyClick() {
@@ -243,6 +259,8 @@ class ProfileFragment : BaseFragment() {
             }
 
             override fun onNewWaterApp() {
+                val eventParameters = "\"source\":\"profile\""
+                accountManager.reportYandexMetrica("trekervodi_zapysk", eventParameters)
                 findNavController().navigate(R.id.waterAppFragment)
             }
 
@@ -278,13 +296,19 @@ class ProfileFragment : BaseFragment() {
     private fun getProductsClickListener(): ProductsClickListener {
         return object : ProductsClickListener {
             override fun onProductClick(id: Long) {
-                findNavController().navigate(ProfileFragmentDirections.actionToProductDetailFragment(id))
+                findNavController().navigate(
+                    ProfileFragmentDirections.actionToProductDetailFragment(
+                        id
+                    )
+                )
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-                findNavController().navigate(ProfileFragmentDirections.actionToPreOrderBS(
-                    id, name, detailPicture
-                ))
+                findNavController().navigate(
+                    ProfileFragmentDirections.actionToPreOrderBS(
+                        id, name, detailPicture
+                    )
+                )
             }
 
             override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {
@@ -301,11 +325,15 @@ class ProfileFragment : BaseFragment() {
         }
     }
 
-    private fun getHomeOrdersSliderClickListener() : HomeOrdersSliderClickListener {
+    private fun getHomeOrdersSliderClickListener(): HomeOrdersSliderClickListener {
         return object : HomeOrdersSliderClickListener {
             override fun onOrderClick(id: Long?) {
                 if (id == null) return
-                findNavController().navigate(ProfileFragmentDirections.actionToOrderDetailsFragment(id))
+                findNavController().navigate(
+                    ProfileFragmentDirections.actionToOrderDetailsFragment(
+                        id
+                    )
+                )
             }
         }
     }

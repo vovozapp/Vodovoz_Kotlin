@@ -162,7 +162,7 @@ class HomeFragment : BaseFragment() {
                         "AKCII" -> {
                             val promotionId = it.id
                             if (!promotionId.isNullOrEmpty()) {
-                                val eventParameters = "ID_AKCII: $promotionId"
+                                val eventParameters = "\"ID_AKCII\": \"$promotionId\""
                                 accountManager.reportYandexMetrica(
                                     "Зашел в акцию (push)",
                                     eventParameters
@@ -178,7 +178,7 @@ class HomeFragment : BaseFragment() {
                         "TOVAR" -> {
                             val productId = it.id
                             if (!productId.isNullOrEmpty()) {
-                                val eventParameters = "ID_Product: $productId"
+                                val eventParameters = "\"ID_Product\": \"$productId\""
                                 accountManager.reportYandexMetrica(
                                     "Зашел в товар (push)",
                                     eventParameters
@@ -194,7 +194,7 @@ class HomeFragment : BaseFragment() {
                         "RAZDEL" -> {
                             val sectionId = it.id
                             if (!sectionId.isNullOrEmpty()) {
-                                val eventParameters = "Secition_ID: $sectionId"
+                                val eventParameters = "\"Secition_ID\": \"$sectionId\""
                                 accountManager.reportYandexMetrica(
                                     "Зашел в раздел (push)",
                                     eventParameters
@@ -210,7 +210,7 @@ class HomeFragment : BaseFragment() {
                         "Karta" -> {
                             val orderId = it.orderId
                             if (!orderId.isNullOrEmpty()) {
-                                val eventParameters = "ID_Zakaz: $orderId"
+                                val eventParameters = "\"ID_Zakaz\": \"$orderId\""
                                 accountManager.reportYandexMetrica(
                                     "Зашел в заказ, статус в пути (push)",
                                     eventParameters
@@ -309,12 +309,23 @@ class HomeFragment : BaseFragment() {
                             )
                         }
                         "trekervodi" -> {
+                            val eventName = "trekervodi_push"
+                            accountManager.reportYandexMetrica(eventName)
                             findNavController().navigate(HomeFragmentDirections.actionToWaterAppFragment())
                         }
                         "profil" -> {
                             flowViewModel.goToProfile()
                         }
                         null -> {}
+                    }
+                    it?.action?.let { action ->
+                        if (action.contains("SOBNEW")) {
+                            val eventParameters = "\"SOBNEW_NAME\": \"${it.id}\""
+                            accountManager.reportYandexMetrica(
+                                "Зашел в приложение (push)",
+                                eventParameters
+                            )
+                        }
                     }
                 }
         }
@@ -384,6 +395,8 @@ class HomeFragment : BaseFragment() {
                             siteStateManager.clearDeepLinkListener()
                         }
                         "kalkulyator_vody/" -> {
+                            val eventName = "trekervodi_ssilka"
+                            accountManager.reportYandexMetrica(eventName)
                             findNavController().navigate(HomeFragmentDirections.actionToWaterAppFragment())
                         }
                         null -> {
@@ -612,6 +625,12 @@ class HomeFragment : BaseFragment() {
 
             //POSITION_1
             override fun onBannerClick(actionEntity: ActionEntity?) {
+                actionEntity?.let {
+                    if (it is ActionEntity.WaterApp) {
+                        val eventParameters = "\"source\":\"slayder\""
+                        accountManager.reportYandexMetrica("trekervodi_zapysk", eventParameters)
+                    }
+                }
                 actionEntity?.invoke(findNavController(), requireActivity())
             }
 
@@ -794,7 +813,9 @@ class HomeFragment : BaseFragment() {
             is ActionEntity.Novelties -> HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                 PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
             )
-            is ActionEntity.WaterApp -> HomeFragmentDirections.actionToWaterAppFragment()
+            is ActionEntity.WaterApp -> {
+                HomeFragmentDirections.actionToWaterAppFragment()
+            }
             is ActionEntity.Delivery -> HomeFragmentDirections.actionToWebViewFragment(
                 ApiConfig.ABOUT_DELIVERY_URL,
                 "О доставке"
@@ -820,6 +841,10 @@ class HomeFragment : BaseFragment() {
     private fun newsClickListener(): NewsClickListener {
         return object : NewsClickListener {
             override fun onClick(actionEntity: ActionEntity) {
+                if (actionEntity is ActionEntity.WaterApp) {
+                    val eventParameters = "\"source\":\"bottom_alert\""
+                    accountManager.reportYandexMetrica("trekervodi_zapysk", eventParameters)
+                }
                 actionEntity.invoke()
             }
         }

@@ -10,7 +10,7 @@ import com.vodovoz.app.feature.profile.waterapp.model.WaterAppModelOne
 class WaterAppViewHolderFirst(
     view: View,
     clickListener: WaterAppClickListener,
-    waterAppHelper: WaterAppHelper
+    waterAppHelper: WaterAppHelper,
 ) : ItemViewHolder<WaterAppModelOne>(view) {
 
     private val binding: FragmentWaterAppFirstBinding = FragmentWaterAppFirstBinding.bind(view)
@@ -18,13 +18,12 @@ class WaterAppViewHolderFirst(
     init {
         binding.cwNext.setOnClickListener {
             val item = item ?: return@setOnClickListener
+            waterAppHelper.startCalculate()
             clickListener.onNextClick(item.id)
         }
     }
 
     override fun bind(item: WaterAppModelOne) {
         super.bind(item)
-
-
     }
 }

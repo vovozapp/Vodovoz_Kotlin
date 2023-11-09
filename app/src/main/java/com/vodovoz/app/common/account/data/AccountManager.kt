@@ -65,7 +65,8 @@ class AccountManager @Inject constructor(
     fun isAlreadyLogin() = fetchUserId() != null
 
     fun reportYandexMetrica(text: String, eventParam: String? = null) {
-        val eventParameters = eventParam ?: "{\"UserID\":\"${accountIdListener.value ?: "0"}\"}"
+        val eventParameters = "{\"UserID\":\"${accountIdListener.value ?: "0"}\"" +
+                if(eventParam != null) ",$eventParam}" else "}"
         //YandexMetrica.reportEvent(text, eventParameters) //todo релиз
     }
 

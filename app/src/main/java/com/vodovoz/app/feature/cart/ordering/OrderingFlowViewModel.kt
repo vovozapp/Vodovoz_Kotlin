@@ -31,7 +31,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OrderingFlowViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val repository: MainRepository,
     private val accountManager: AccountManager,
     private val application: Application,
@@ -57,7 +57,6 @@ class OrderingFlowViewModel @Inject constructor(
     private val coupon = savedStateHandle.get<String>("coupon") ?: ""
 
     init {
-        //accountManager.reportYandexMetrica("Зашел на экран оформления заказа") //todo релиз
 
         debugLog { "full ${state.data.full}, discount ${state.data.discount}" }
     }
@@ -163,7 +162,7 @@ class OrderingFlowViewModel @Inject constructor(
                                 loadingPage = false,
                                 error = null
                             )
-                            //accountManager.reportYandexMetrica("Заказ оформлен")//todo релиз
+                            accountManager.reportYandexMetrica("Заказ оформлен")
                             eventListener.emit(OrderingEvents.OrderSuccess(data))
                         }
                         is ResponseEntity.Error -> {

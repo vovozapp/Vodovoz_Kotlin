@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
@@ -49,6 +50,9 @@ class CatalogFragment : BaseFragment() {
 
     @Inject
     lateinit var tabManager: TabManager
+
+    @Inject
+    lateinit var accountManager: AccountManager
 
     override fun layout(): Int = R.layout.fragment_main_catalog_flow
 
@@ -171,6 +175,8 @@ class CatalogFragment : BaseFragment() {
                 PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
             )
             is ActionEntity.WaterApp -> {
+                val eventParameters = "\"source\":\"catalog\""
+                accountManager.reportYandexMetrica("trekervodi_zapysk", eventParameters)
                 CatalogFragmentDirections.actionToWaterAppFragment()
             }
             is ActionEntity.Delivery -> {
