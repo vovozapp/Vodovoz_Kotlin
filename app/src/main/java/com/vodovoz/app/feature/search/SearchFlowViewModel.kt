@@ -12,10 +12,6 @@ import com.vodovoz.app.common.search.SearchManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.SortType
-import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsByQueryResponseJsonParser.parseProductsByQueryResponse
-import com.vodovoz.app.data.parser.response.search.DefaultSearchDataResponseJsonParser.parseDefaultSearchDataResponse
-import com.vodovoz.app.data.parser.response.search.MatchesQueriesResponseJsonParser.parseMatchesQueriesResponse
-import com.vodovoz.app.data.parser.response.search.ProductsByQueryHeaderResponseJsonParser.parseProductsByQueryHeaderResponse
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.DefaultSearchDataBundleMapper.mapToUI
@@ -92,8 +88,7 @@ class SearchFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.fetchSearchDefaultData()) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseDefaultSearchDataResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         uiStateListener.value = state.copy(
@@ -128,8 +123,7 @@ class SearchFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.fetchProductsByQueryHeader(query = state.data.query)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseProductsByQueryHeaderResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         uiStateListener.value = state.copy(
@@ -208,8 +202,7 @@ class SearchFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseProductsByQueryResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         val mappedFeed = FavoritesMapper.mapFavoritesListByManager(
@@ -273,8 +266,7 @@ class SearchFlowViewModel @Inject constructor(
                         state.copy(error = it.toErrorState(), loadingPage = false)
                 }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseMatchesQueriesResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(
                             data = state.data.copy(

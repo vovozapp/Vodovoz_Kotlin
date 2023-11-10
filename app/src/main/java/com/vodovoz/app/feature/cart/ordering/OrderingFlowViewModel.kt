@@ -10,9 +10,6 @@ import com.vodovoz.app.common.content.*
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.config.ShippingAlertConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.ordering.RegOrderResponseJsonParser.parseRegOrderResponse
-import com.vodovoz.app.data.parser.response.shipping.FreeShippingDaysResponseJsonParser.parseFreeShippingDaysResponse
-import com.vodovoz.app.data.parser.response.shipping.ShippingInfoResponseJsonParser.parseShippingInfoResponse
 import com.vodovoz.app.mapper.FreeShippingDaysInfoBundleMapper.mapToUI
 import com.vodovoz.app.mapper.OrderingCompletedInfoBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ShippingInfoBundleMapper.mapToUI
@@ -148,8 +145,7 @@ class OrderingFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseRegOrderResponse()
+                .onEach { response ->
                     when (response) {
                         is ResponseEntity.Success -> {
                             val data = response.data.mapToUI()
@@ -309,8 +305,7 @@ class OrderingFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseShippingInfoResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         val full = state.data.full
@@ -375,8 +370,7 @@ class OrderingFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.fetchFreeShippingDaysInfoResponse(appVersion = BuildConfig.VERSION_NAME)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseFreeShippingDaysResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         uiStateListener.value = state.copy(

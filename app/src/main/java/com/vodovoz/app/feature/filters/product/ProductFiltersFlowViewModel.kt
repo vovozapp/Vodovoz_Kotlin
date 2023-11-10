@@ -8,7 +8,6 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.category.AllFiltersByCategoryResponseJsonParser.parseAllFiltersByCategoryResponse
 import com.vodovoz.app.mapper.FilterBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.FilterUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
@@ -21,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductFiltersFlowViewModel @Inject constructor(
-    private val savedState: SavedStateHandle,
+    savedState: SavedStateHandle,
     private val repository: MainRepository,
 ) : PagingStateViewModel<ProductFiltersFlowViewModel.ProductFiltersState>(ProductFiltersState()) {
 
@@ -33,8 +32,7 @@ class ProductFiltersFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.fetchAllFiltersByCategory(id)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseAllFiltersByCategoryResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val defaultBundle = response.data.mapToUI()
                         val filterBundle = filterBundle

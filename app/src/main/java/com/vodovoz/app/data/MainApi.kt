@@ -598,7 +598,7 @@ interface MainApi {
         @Query("id") id: String? = null,
     ): ResponseBody
 
-    @GET("http://szorinvodovoz.tw1.ru/local/components/semap/delivery.calc/order.php")
+    @GET("https://szorin.vodovoz.ru/local/components/semap/delivery.calc/order.php")
     suspend fun sendTestMapRequest(
         @Query("SOURCE") sourse: String,
         @Query("ADDRESS", encoded = false) address: String,

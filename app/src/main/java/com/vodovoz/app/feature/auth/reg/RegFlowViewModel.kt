@@ -13,7 +13,6 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.config.AuthConfig
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.user.RegisterResponseJsonParser.parseRegisterResponse
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -41,8 +40,8 @@ class RegFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.register(firstName, secondName, email, password, phone)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    when (val response = it.parseRegisterResponse()) {
+                .onEach { response ->
+                    when (response) {
                         is ResponseEntity.Success -> {
                             accountManager.updateUserId(response.data)
                             likeManager.updateLikesAfterLogin(response.data)

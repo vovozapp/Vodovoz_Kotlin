@@ -9,7 +9,6 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.stringToErrorState
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.cart.BottlesResponseJsonParser.parseBottlesResponse
 import com.vodovoz.app.mapper.BottleMapper.mapToUI
 import com.vodovoz.app.ui.model.BottleUI
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,8 +37,8 @@ class AllBottlesFlowViewModel @Inject constructor(
             uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
             flow { emit(mainRepository.fetchBottles()) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    when (val response = it.parseBottlesResponse()) {
+                .onEach { response ->
+                    when (response) {
                         is ResponseEntity.Hide -> {}
                         is ResponseEntity.Error -> state.copy(
                             error = response.errorMessage.stringToErrorState(),

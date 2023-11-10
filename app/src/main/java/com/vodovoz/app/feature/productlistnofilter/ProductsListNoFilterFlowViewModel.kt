@@ -15,16 +15,6 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.SortType
-import com.vodovoz.app.data.parser.response.brand.BrandHeaderResponseJsonParser.parseBrandHeaderResponse
-import com.vodovoz.app.data.parser.response.country.CountryHeaderResponseJsonParser.parseCountryHeaderResponse
-import com.vodovoz.app.data.parser.response.discount.DiscountHeaderResponseJsonParser.parseDiscountHeaderResponse
-import com.vodovoz.app.data.parser.response.doubleSlider.SliderHeaderResponseJsonParser.parseSliderHeaderResponse
-import com.vodovoz.app.data.parser.response.novelties.NoveltiesHeaderResponseJsonParser.parseNoveltiesHeaderResponse
-import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsByBrandResponseJsonParser.parseProductsByBrandResponse
-import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsByCountryResponseJsonParser.parseProductsByCountryResponse
-import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsBySliderResponseJsonParser.parseProductsBySliderResponse
-import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsDiscountResponseJsonParser.parseProductsDiscountResponse
-import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsNoveltiesResponseJsonParser.parseProductsNoveltiesResponse
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment.DataSource
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
@@ -40,9 +30,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductsListNoFilterFlowViewModel @Inject constructor(
-    private val savedState: SavedStateHandle,
+    savedState: SavedStateHandle,
     private val repository: MainRepository,
-//    private val dataRepository: DataRepository,
     private val accountManager: AccountManager,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
@@ -69,14 +58,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                 }
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = when (dataSource) {
-                        is DataSource.Brand -> it.parseBrandHeaderResponse()
-                        is DataSource.Country -> it.parseCountryHeaderResponse()
-                        is DataSource.Discount -> it.parseDiscountHeaderResponse()
-                        is DataSource.Novelties -> it.parseNoveltiesHeaderResponse()
-                        is DataSource.Slider -> it.parseSliderHeaderResponse()
-                    }
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
 
@@ -169,14 +151,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                 }
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = when (dataSource) {
-                        is DataSource.Brand -> it.parseProductsByBrandResponse()
-                        is DataSource.Country -> it.parseProductsByCountryResponse()
-                        is DataSource.Discount -> it.parseProductsDiscountResponse()
-                        is DataSource.Novelties -> it.parseProductsNoveltiesResponse()
-                        is DataSource.Slider -> it.parseProductsBySliderResponse()
-                    }
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         val mappedFeed = FavoritesMapper.mapFavoritesListByManager(

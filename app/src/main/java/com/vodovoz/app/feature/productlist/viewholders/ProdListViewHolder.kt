@@ -142,7 +142,9 @@ class ProdListViewHolder(
             }
 
             item.oldQuantity = item.cartQuantity
-            item.cartQuantity++
+            if(item.cartQuantity == 0) {
+                item.cartQuantity++
+            }
             updateCartQuantity(item)
             showAmountController()
         }

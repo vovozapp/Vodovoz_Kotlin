@@ -11,7 +11,6 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.feature.bottom.services.detail.model.ServiceDetailUI
 import com.vodovoz.app.feature.bottom.services.detail.model.ServicesDetailParser.mapToUI
-import com.vodovoz.app.feature.bottom.services.detail.model.ServicesDetailParser.parseServiceDetail
 import com.vodovoz.app.feature.bottom.services.newservs.model.AboutServicesNew
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,8 +26,10 @@ class AboutServicesNewViewModel @Inject constructor(
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
     private val accountManager: AccountManager,
-    private val savedStateHandle: SavedStateHandle
-) : PagingContractViewModel<AboutServicesNewViewModel.AboutServicesState, AboutServicesNewViewModel.AboutServicesEvents>(AboutServicesState()) {
+    savedStateHandle: SavedStateHandle,
+) : PagingContractViewModel<AboutServicesNewViewModel.AboutServicesState, AboutServicesNewViewModel.AboutServicesEvents>(
+    AboutServicesState()
+) {
 
     private val serviceId = savedStateHandle.get<String>("serviceId")
 
@@ -74,8 +75,7 @@ class AboutServicesNewViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.fetchServicesNewDetails("details", id)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseServiceDetail()
+                .onEach { response ->
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         state.copy(
@@ -106,7 +106,12 @@ class AboutServicesNewViewModel @Inject constructor(
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int, giftId: String) {
         viewModelScope.launch {
-            cartManager.addWithGift(id = productId, oldCount = oldQuan, newCount = quantity, giftId = giftId)
+            cartManager.addWithGift(
+                id = productId,
+                oldCount = oldQuan,
+                newCount = quantity,
+                giftId = giftId
+            )
         }
     }
 
@@ -128,6 +133,6 @@ class AboutServicesNewViewModel @Inject constructor(
 
     data class AboutServicesState(
         val item: AboutServicesNew? = null,
-        val detailItem: ServiceDetailUI? = null
+        val detailItem: ServiceDetailUI? = null,
     ) : State
 }

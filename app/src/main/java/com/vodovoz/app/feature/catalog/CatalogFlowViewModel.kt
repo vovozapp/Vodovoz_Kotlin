@@ -5,7 +5,6 @@ import com.vodovoz.app.common.catalog.CatalogManager
 import com.vodovoz.app.common.content.*
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.catalog.CatalogResponseJsonParser.parseCatalogResponse
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.ui.model.CatalogBannerUI
 import com.vodovoz.app.ui.model.CategoryUI
@@ -41,9 +40,7 @@ class CatalogFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(mainRepository.fetchCatalogResponse()) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseCatalogResponse()
-
+                .onEach { response ->
                     when (response) {
                         is ResponseEntity.Hide -> {}
                         is ResponseEntity.Error -> state.copy(

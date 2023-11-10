@@ -17,8 +17,6 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.config.FiltersConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.SortType
-import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
-import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsByCategoryResponseJsonParser.parseProductsByCategoryResponse
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
@@ -57,8 +55,7 @@ class ProductsListFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.fetchCategoryHeader(categoryId)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseCategoryHeaderResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
 
@@ -107,8 +104,7 @@ class ProductsListFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseProductsByCategoryResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         val mappedFeed = FavoritesMapper.mapFavoritesListByManager(

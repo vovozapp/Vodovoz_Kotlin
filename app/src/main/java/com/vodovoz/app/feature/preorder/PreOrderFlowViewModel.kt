@@ -9,8 +9,6 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.pre_order.PreOrderFormDataResponseJsonParser.parsePreOrderFormDataResponse
-import com.vodovoz.app.data.parser.response.pre_order.PreOrderProductResponseJsonParser.parsePreOrderProductResponse
 import com.vodovoz.app.mapper.PreOrderFormDataMapper.mapToUI
 import com.vodovoz.app.ui.model.PreOrderFormDataUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -22,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PreOrderFlowViewModel @Inject constructor(
-    private val savedState: SavedStateHandle,
+    savedState: SavedStateHandle,
     private val repository: MainRepository,
     private val accountManager: AccountManager,
 ) : PagingStateViewModel<PreOrderFlowViewModel.PreOrderState>(PreOrderState()) {
@@ -37,8 +35,7 @@ class PreOrderFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.fetchPreOrderFormData(userId)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parsePreOrderFormDataResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         uiStateListener.value = state.copy(
@@ -73,8 +70,7 @@ class PreOrderFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.preOrderProduct(userId, productId, name, email, phone)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parsePreOrderProductResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(
                             loadingPage = false,

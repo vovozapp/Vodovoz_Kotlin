@@ -5,6 +5,89 @@ import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.product.rating.RatingResponse
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.config.ShippingAlertConfig
+import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.response.banner.AdvertisingBannersSliderResponseJsonParser.parseAdvertisingBannersSliderResponse
+import com.vodovoz.app.data.parser.response.banner.CategoryBannersSliderResponseJsonParser.parseCategoryBannersSliderResponse
+import com.vodovoz.app.data.parser.response.banner.ProductsByBannerResponseJsonParser.parseProductsByBannerResponse
+import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.parseAllBrandsResponse
+import com.vodovoz.app.data.parser.response.brand.BrandHeaderResponseJsonParser.parseBrandHeaderResponse
+import com.vodovoz.app.data.parser.response.brand.BrandsSliderResponseJsonParser.parseBrandsSliderResponse
+import com.vodovoz.app.data.parser.response.cart.BottlesResponseJsonParser.parseBottlesResponse
+import com.vodovoz.app.data.parser.response.cart.CartResponseJsonParser.parseCartResponse
+import com.vodovoz.app.data.parser.response.cart.ClearCartResponseJsonParser.parseClearCartResponse
+import com.vodovoz.app.data.parser.response.catalog.CatalogResponseJsonParser.parseCatalogResponse
+import com.vodovoz.app.data.parser.response.category.AllFiltersByCategoryResponseJsonParser.parseAllFiltersByCategoryResponse
+import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
+import com.vodovoz.app.data.parser.response.category.ConcreteFilterResponseJsonParser.parseConcreteFilterResponse
+import com.vodovoz.app.data.parser.response.comment.AllCommentsByProductResponseJsonParser.parseAllCommentsByProductResponse
+import com.vodovoz.app.data.parser.response.comment.CommentsSliderResponseJsonParser.parseCommentsSliderResponse
+import com.vodovoz.app.data.parser.response.comment.SendCommentAboutProductResponseJsonParser.parseSendCommentAboutProductResponse
+import com.vodovoz.app.data.parser.response.comment.SendCommentAboutShopResponseJsonParser.parseSendCommentAboutShopResponse
+import com.vodovoz.app.data.parser.response.contacts.ContactsBundleResponseJsonParser.parseContactsBundleResponse
+import com.vodovoz.app.data.parser.response.contacts.SendMailResponseJsonParser.parseSendMailResponse
+import com.vodovoz.app.data.parser.response.country.CountryHeaderResponseJsonParser.parseCountryHeaderResponse
+import com.vodovoz.app.data.parser.response.country.CountrySliderResponseJsonParser.parseCountriesSliderResponse
+import com.vodovoz.app.data.parser.response.discount.DiscountHeaderResponseJsonParser.parseDiscountHeaderResponse
+import com.vodovoz.app.data.parser.response.discount.DiscountSliderResponseParser.parseDiscountSliderResponse
+import com.vodovoz.app.data.parser.response.discount_card.ActivateDiscountCardInfoJsonParser.parseActivateDiscountCardInfoResponse
+import com.vodovoz.app.data.parser.response.discount_card.ActivateDiscountCardJsonParser.parseActivateDiscountCardResponse
+import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseBottomSliderResponse
+import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseTopSliderResponse
+import com.vodovoz.app.data.parser.response.doubleSlider.SliderHeaderResponseJsonParser.parseSliderHeaderResponse
+import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
+import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonParser.parseHistoriesSliderResponse
+import com.vodovoz.app.data.parser.response.map.AddAddressResponseJsonParser.parseAddAddressResponse
+import com.vodovoz.app.data.parser.response.map.AddressByGeocodeResponseJsonParser.parseAddressByGeocodeResponse
+import com.vodovoz.app.data.parser.response.map.DeleteAddressResponseJsonParser.parseDeleteAddressResponse
+import com.vodovoz.app.data.parser.response.map.DeliveryZonesBundleResponseJsonParser.parseDeliveryZonesBundleResponse
+import com.vodovoz.app.data.parser.response.map.FetchAddressesSavedResponseJsonParser.parseFetchAddressesSavedResponse
+import com.vodovoz.app.data.parser.response.map.UpdateAddressResponseJsonParser.parseUpdateAddressResponse
+import com.vodovoz.app.data.parser.response.novelties.NoveltiesHeaderResponseJsonParser.parseNoveltiesHeaderResponse
+import com.vodovoz.app.data.parser.response.novelties.NoveltiesSliderResponseParser.parseNoveltiesSliderResponse
+import com.vodovoz.app.data.parser.response.order.AllOrdersResponseJsonParser.parseAllOrdersSliderResponse
+import com.vodovoz.app.data.parser.response.order.CancelOrderResponseJsonParser.parseCancelOrderResponse
+import com.vodovoz.app.data.parser.response.order.OrderDetailsResponseJsonParser.parseOrderDetailsResponse
+import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
+import com.vodovoz.app.data.parser.response.order.RepeatOrderResponseJsonParser.parseRepeatOrderResponse
+import com.vodovoz.app.data.parser.response.ordering.RegOrderResponseJsonParser.parseRegOrderResponse
+import com.vodovoz.app.data.parser.response.paginatedProducts.FavoriteProductsResponseJsonParser.parseFavoriteProductsResponse
+import com.vodovoz.app.data.parser.response.paginatedProducts.MaybeLikeProductsResponseJsonParser.parseMaybeLikeProductsResponse
+import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsByBrandResponseJsonParser.parseProductsByBrandResponse
+import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsByCategoryResponseJsonParser.parseProductsByCategoryResponse
+import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsByCountryResponseJsonParser.parseProductsByCountryResponse
+import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsByQueryResponseJsonParser.parseProductsByQueryResponse
+import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsBySliderResponseJsonParser.parseProductsBySliderResponse
+import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsDiscountResponseJsonParser.parseProductsDiscountResponse
+import com.vodovoz.app.data.parser.response.paginatedProducts.ProductsNoveltiesResponseJsonParser.parseProductsNoveltiesResponse
+import com.vodovoz.app.data.parser.response.paginatedProducts.SomeProductsByBrandResponseJsonParser.parseSomeProductsByBrandResponse
+import com.vodovoz.app.data.parser.response.past_purchases.PastPurchasesHeaderResponseJsonParser.parsePastPurchasesHeaderResponse
+import com.vodovoz.app.data.parser.response.popular.PopularSliderResponseJsonParser.parsePopularSliderResponse
+import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
+import com.vodovoz.app.data.parser.response.pre_order.PreOrderFormDataResponseJsonParser.parsePreOrderFormDataResponse
+import com.vodovoz.app.data.parser.response.pre_order.PreOrderProductResponseJsonParser.parsePreOrderProductResponse
+import com.vodovoz.app.data.parser.response.product.ProductDetailsResponseJsonParser.parseProductDetailsResponse
+import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonParser.parseAllPromotionsResponse
+import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponseBundle
+import com.vodovoz.app.data.parser.response.promotion.PromotionSliderResponseJsonParser.parsePromotionSliderResponse
+import com.vodovoz.app.data.parser.response.promotion.PromotionsByBannerResponseJsonParser.parsePromotionsByBannerResponse
+import com.vodovoz.app.data.parser.response.questionnaires.QuestionnaireResponseJsonParser.parseQuestionnaireResponse
+import com.vodovoz.app.data.parser.response.search.DefaultSearchDataResponseJsonParser.parseDefaultSearchDataResponse
+import com.vodovoz.app.data.parser.response.search.MatchesQueriesResponseJsonParser.parseMatchesQueriesResponse
+import com.vodovoz.app.data.parser.response.search.ProductsByQueryHeaderResponseJsonParser.parseProductsByQueryHeaderResponse
+import com.vodovoz.app.data.parser.response.service.OrderServiceResponseJsonParser.parseOrderServiceResponse
+import com.vodovoz.app.data.parser.response.service.ServiceOrderFormResponseJsonParser.parseServiceOrderFormResponse
+import com.vodovoz.app.data.parser.response.shipping.FreeShippingDaysResponseJsonParser.parseFreeShippingDaysResponse
+import com.vodovoz.app.data.parser.response.shipping.ShippingInfoResponseJsonParser.parseShippingInfoResponse
+import com.vodovoz.app.data.parser.response.user.AuthByPhoneJsonParser.parseAuthByPhoneResponse
+import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
+import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
+import com.vodovoz.app.data.parser.response.user.RecoverPasswordJsonParser.parseRecoverPasswordResponse
+import com.vodovoz.app.data.parser.response.user.RegisterResponseJsonParser.parseRegisterResponse
+import com.vodovoz.app.data.parser.response.user.RequestCodeResponseJsonParser.parseRequestCodeResponse
+import com.vodovoz.app.data.parser.response.user.UpdateUserDataResponseJsonParser.parseUpdateUserDataResponse
+import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
+import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
+import com.vodovoz.app.feature.bottom.services.detail.model.ServicesDetailParser.parseServiceDetail
 import com.vodovoz.app.feature.map.api.MapKitFlowApi
 import com.vodovoz.app.feature.profile.viewholders.models.*
 import kotlinx.coroutines.coroutineScope
@@ -23,46 +106,61 @@ class MainRepository @Inject constructor(
 ) {
 
     //Слайдер рекламных баннеров на главной странице
-    suspend fun fetchAdvertisingBannersSlider() = api.fetchAdvBanners(action = "slayder")
+    suspend fun fetchAdvertisingBannersSlider() =
+        api.fetchAdvBanners(action = "slayder").parseAdvertisingBannersSliderResponse()
 
     //Слайдер историй на главной странице
 
     suspend fun fetchHistoriesSlider() =
         api.fetchHistories(blockId = 12, action = "stories", platform = "android")
+            .parseHistoriesSliderResponse()
 
     //Слайдер популярных разделов на главной странице
-    suspend fun fetchPopularSlider() = api.fetchPopulars(action = "popylrazdel")
+    suspend fun fetchPopularSlider() =
+        api.fetchPopulars(action = "popylrazdel").parsePopularSliderResponse()
 
     //Слайдер баннеров категорий на главной странице
     suspend fun fetchCategoryBannersSlider() =
-        api.fetchCategoryBanners(action = "slayder", androidVersion = "1.4.84"/*BuildConfig.VERSION_NAME*/)
+        api.fetchCategoryBanners(
+            action = "slayder",
+            androidVersion = "1.4.84"/*BuildConfig.VERSION_NAME*/
+        ).parseCategoryBannersSliderResponse()
 
     //Слайдер самых выгодных продуктов на главной странице
-    suspend fun fetchDiscountsSlider() = api.fetchNovelties(action = "specpredlosh")
+    suspend fun fetchDiscountsSlider() =
+        api.fetchNovelties(action = "specpredlosh").parseDiscountSliderResponse()
 
     //Верхний слайдер на главной странице
-    suspend fun fetchTopSlider() = api.fetchDoubleSlider(action = "topglav", arg = "new")
+    suspend fun fetchTopSlider() =
+        api.fetchDoubleSlider(action = "topglav", arg = "new").parseTopSliderResponse()
 
     //Информация о слайдере заказов на главной странице
-    suspend fun fetchOrdersSliderProfile(userId: Long) = api.fetchOrderSlider(userId)
+    suspend fun fetchOrdersSliderProfile(userId: Long) =
+        api.fetchOrderSlider(userId).parseOrderSliderResponse()
 
-    suspend fun fetchOrdersSlider(userId: Long) = api.fetchOrderSlider(userId)
+//    suspend fun fetchOrdersSlider(userId: Long) =
+//        api.fetchOrderSlider(userId).parseOrderSliderResponse()
 
     //Слайдер новинок на главной странице
-    suspend fun fetchNoveltiesSlider() = api.fetchNovelties(action = "novinki")
+    suspend fun fetchNoveltiesSlider() =
+        api.fetchNovelties(action = "novinki").parseNoveltiesSliderResponse()
 
     //Слайдер акций на главной странице
     suspend fun fetchPromotionsSlider() =
         api.fetchPromotions(action = "akcii", limit = 10, platform = "android")
+            .parsePromotionSliderResponse()
 
     //Нижний слайдер на главной странице
-    suspend fun fetchBottomSlider() = api.fetchDoubleSlider(action = "topglav", arg = "new")
+    suspend fun fetchBottomSlider() =
+        api.fetchDoubleSlider(action = "topglav", arg = "new").parseBottomSliderResponse()
 
     //Слайдер брендов на главной странице
-    suspend fun fetchBrandsSlider() = api.fetchBrands(action = "brand", limit = 10)
+    suspend fun fetchBrandsSlider() =
+        api.fetchBrands(action = "brand", limit = 10).parseBrandsSliderResponse()
 
     //Слайдер стран на главной странице
-    suspend fun fetchCountriesSlider() = api.fetchCountries(action = "glav")
+    suspend fun fetchCountriesSlider() =
+        api.fetchCountries(action = "glav").parseCountriesSliderResponse()
 
     //Слайдер ранее просмотренных продуктов
 
@@ -76,9 +174,11 @@ class MainRepository @Inject constructor(
     suspend fun fetchViewedProductsSlider(
         userId: Long,
     ) = api.fetchViewedProducts(action = "viewed", userId = userId)
+        .parseViewedProductsSliderResponse()
 
     //Слайдер комментариев на главной странице
-    suspend fun fetchCommentsSlider() = api.fetchComments(action = "otzivy", limit = 10)
+    suspend fun fetchCommentsSlider() =
+        api.fetchComments(action = "otzivy", limit = 10).parseCommentsSliderResponse()
 
     suspend fun sendCommentAboutShop(
         userId: Long?,
@@ -89,7 +189,7 @@ class MainRepository @Inject constructor(
         userId = userId,
         comment = comment,
         rating = rating
-    )
+    ).parseSendCommentAboutShopResponse()
 
     //Добавление продукта в корзину
     suspend fun addProductToCart(productId: Long, quantity: Int): ResponseBody {
@@ -143,13 +243,11 @@ class MainRepository @Inject constructor(
     suspend fun fetchFavoriteProducts(
         userId: Long?,
         productIdListStr: String?,
-    ): ResponseBody {
-        return api.fetchFavoriteResponse(
-            userId = userId,
-            productIdList = productIdListStr,
-            action = "nalichie"
-        )
-    }
+    ) = api.fetchFavoriteResponse(
+        userId = userId,
+        productIdList = productIdListStr,
+        action = "nalichie"
+    ).parseFavoriteProductsHeaderBundleResponse()
 
     //Основная информация об избранных продуктах
     suspend fun fetchFavoriteProductsSorted(
@@ -160,26 +258,22 @@ class MainRepository @Inject constructor(
         orientation: String?,
         page: Int?,
         isAvailable: Boolean?,
-    ): ResponseBody {
-        return api.fetchFavoriteResponse(
-            userId = userId,
-            productIdList = productIdListStr,
-            categoryId = categoryId,
-            sort = sort,
-            orientation = orientation,
-            action = when (isAvailable) {
-                true -> "nalichie"
-                false -> "netnalichi"
-                else -> null
-            },
-            page = page
-        )
-    }
+    ) = api.fetchFavoriteResponse(
+        userId = userId,
+        productIdList = productIdListStr,
+        categoryId = categoryId,
+        sort = sort,
+        orientation = orientation,
+        action = when (isAvailable) {
+            true -> "nalichie"
+            false -> "netnalichi"
+            else -> null
+        },
+        page = page
+    ).parseFavoriteProductsResponse()
 
     //Каталог
-    suspend fun fetchCatalogResponse(): ResponseBody {
-        return api.fetchCatalogResponse()
-    }
+    suspend fun fetchCatalogResponse() = api.fetchCatalogResponse().parseCatalogResponse()
 
     /**
      * Корзина
@@ -192,15 +286,13 @@ class MainRepository @Inject constructor(
         coupon: String? = null,
         amount: Int? = null,
         appVersion: String? = null,
-    ): ResponseBody {
-        return api.fetchCartResponse(
-            action = action,
-            userId = userId,
-            coupon = coupon,
-            amount = amount,
-            appVersion = appVersion
-        )
-    }
+    ) = api.fetchCartResponse(
+        action = action,
+        userId = userId,
+        coupon = coupon,
+        amount = amount,
+        appVersion = appVersion
+    ).parseCartResponse()
 
 //Добавление в корзину addProductToCart
 //Изменение количества товаров в корзине changeProductsQuantityInCart
@@ -216,9 +308,7 @@ class MainRepository @Inject constructor(
     //Очистить корзину
     suspend fun fetchClearCartResponse(
         action: String? = null,
-    ): ResponseBody {
-        return api.fetchClearCartResponse(action)
-    }
+    ) = api.fetchClearCartResponse(action).parseClearCartResponse()
 
     /**
      * Продукт
@@ -228,9 +318,7 @@ class MainRepository @Inject constructor(
     suspend fun fetchProductResponse(
         blockId: Int = 1,
         productId: Long,
-    ): ResponseBody {
-        return api.fetchProductResponse(blockId, productId)
-    }
+    ) = api.fetchProductResponse(blockId, productId).parseProductDetailsResponse()
 
     //Продукты выбранного бренда
     suspend fun fetchProductsByBrandResponse(
@@ -238,26 +326,21 @@ class MainRepository @Inject constructor(
         productId: Long,
         brandId: Long,
         page: Int,
-    ): ResponseBody {
-        return api.fetchProductsByBrandResponse(blockId, productId, brandId, page)
-    }
+    ) = api.fetchProductsByBrandResponse(blockId, productId, brandId, page)
+        .parseSomeProductsByBrandResponse()
 
     //Продукты могут понравиться
     suspend fun fetchMaybeLikeProductsResponse(
         page: Int,
-    ): ResponseBody {
-        return api.fetchNovelties(action = "details", page = page)
-    }
+    ) = api.fetchNovelties(action = "details", page = page).parseMaybeLikeProductsResponse()
 
     //Главная информация о категории
     suspend fun fetchCategoryHeader(
         categoryId: Long,
-    ): ResponseBody {
-        return api.fetchCategoryResponse(
-            blockId = 1,
-            categoryId = categoryId
-        )
-    }
+    ) = api.fetchCategoryResponse(
+        blockId = 1,
+        categoryId = categoryId
+    ).parseCategoryHeaderResponse()
 
     //Постраничная загрузка продуктов для выбранной категории
     suspend fun fetchProductsByCategory(
@@ -269,38 +352,33 @@ class MainRepository @Inject constructor(
         priceFrom: Int,
         priceTo: Int,
         page: Int?,
-        filterMap: HashMap<String, String>
-    ): ResponseBody {
-        return api.fetchCategoryResponse(
-            blockId = 1,
-            categoryId = categoryId,
-            page = page,
-            sort = sort,
-            orientation = orientation,
-            filter = filter,
-            filterValue = filterValue,
-            priceFrom = priceFrom,
-            priceTo = priceTo,
-            filterMap = filterMap
-        )
-    }
+        filterMap: HashMap<String, String>,
+    ) = api.fetchCategoryResponse(
+        blockId = 1,
+        categoryId = categoryId,
+        page = page,
+        sort = sort,
+        orientation = orientation,
+        filter = filter,
+        filterValue = filterValue,
+        priceFrom = priceFrom,
+        priceTo = priceTo,
+        filterMap = filterMap
+    ).parseProductsByCategoryResponse()
 
     /**
      * Поиск
      */
 
-    suspend fun fetchSearchDefaultData(): ResponseBody {
-        return api.fetchSearchResponse(action = "glav")
-    }
+    suspend fun fetchSearchDefaultData() =
+        api.fetchSearchResponse(action = "glav").parseDefaultSearchDataResponse()
 
-    suspend fun fetchProductsByQueryHeader(query: String): ResponseBody {
-        return api.fetchSearchResponse(
-            action = "search",
-            query = query,
-            limit = 10,
-            page = 1
-        )
-    }
+    suspend fun fetchProductsByQueryHeader(query: String) = api.fetchSearchResponse(
+        action = "search",
+        query = query,
+        limit = 10,
+        page = 1
+    ).parseProductsByQueryHeaderResponse()
 
     suspend fun fetchProductsByQuery(
         query: String,
@@ -308,24 +386,20 @@ class MainRepository @Inject constructor(
         sort: String,
         orientation: String,
         page: Int?,
-    ): ResponseBody {
-        return api.fetchSearchResponse(
-            action = "search",
-            limit = 10,
-            query = query,
-            categoryId = categoryId,
-            sort = sort,
-            orientation = orientation,
-            page = page
-        )
-    }
+    ) = api.fetchSearchResponse(
+        action = "search",
+        limit = 10,
+        query = query,
+        categoryId = categoryId,
+        sort = sort,
+        orientation = orientation,
+        page = page
+    ).parseProductsByQueryResponse()
 
-    suspend fun fetchMatchesQueries(query: String): ResponseBody {
-        return api.fetchMatchesQueries(
-            action = "glav",
-            query = query
-        )
-    }
+    suspend fun fetchMatchesQueries(query: String) = api.fetchMatchesQueries(
+        action = "glav",
+        query = query
+    ).parseMatchesQueriesResponse()
 
     /**
      * Продукты без фильтра
@@ -333,12 +407,10 @@ class MainRepository @Inject constructor(
 
     suspend fun fetchBrandHeader(
         brandId: Long,
-    ): ResponseBody {
-        return api.fetchBrandResponse(
-            action = "detail",
-            brandId = brandId.toString()
-        )
-    }
+    ) = api.fetchBrandResponse(
+        action = "detail",
+        brandId = brandId.toString()
+    ).parseBrandHeaderResponse()
 
     suspend fun fetchProductsByBrand(
         brandId: Long?,
@@ -347,26 +419,22 @@ class MainRepository @Inject constructor(
         sort: String?,
         orientation: String?,
         page: Int?,
-    ): ResponseBody {
-        return api.fetchBrandResponse(
-            action = "detail",
-            brandId = brandId.toString(),
-            code = code,
-            categoryId = categoryId,
-            orientation = orientation,
-            sort = sort,
-            page = page
-        )
-    }
+    ) = api.fetchBrandResponse(
+        action = "detail",
+        brandId = brandId.toString(),
+        code = code,
+        categoryId = categoryId,
+        orientation = orientation,
+        sort = sort,
+        page = page
+    ).parseProductsByBrandResponse()
 
     suspend fun fetchCountryHeader(
         countryId: Long,
-    ): ResponseBody {
-        return api.fetchCountryResponse(
-            action = "details",
-            countryId = countryId
-        )
-    }
+    ) = api.fetchCountryResponse(
+        action = "details",
+        countryId = countryId
+    ).parseCountryHeaderResponse()
 
     suspend fun fetchProductsByCountry(
         countryId: Long,
@@ -374,103 +442,90 @@ class MainRepository @Inject constructor(
         orientation: String?,
         categoryId: Long?,
         page: Int?,
-    ): ResponseBody {
-        return api.fetchCountryResponse(
-            action = "details",
-            countryId = countryId,
-            sort = sort,
-            orientation = orientation,
-            page = page,
-            categoryId = categoryId
-        )
-    }
+    ) = api.fetchCountryResponse(
+        action = "details",
+        countryId = countryId,
+        sort = sort,
+        orientation = orientation,
+        page = page,
+        categoryId = categoryId
+    ).parseProductsByCountryResponse()
 
-    suspend fun fetchDiscountHeader(): ResponseBody {
-        return api.fetchNoveltiesResponse(
-            action = "specpredlosh",
-            page = 1
-        )
-    }
+    suspend fun fetchDiscountHeader() = api.fetchNoveltiesResponse(
+        action = "specpredlosh",
+        page = 1
+    ).parseDiscountHeaderResponse()
 
     suspend fun fetchProductsByDiscount(
         categoryId: Long?,
         sort: String?,
         orientation: String?,
         page: Int?,
-    ): ResponseBody {
-        return api.fetchNoveltiesResponse(
-            action = "specpredlosh",
-            categoryId = categoryId,
-            sort = sort,
-            orientation = orientation,
-            page = page
-        )
-    }
+    ) = api.fetchNoveltiesResponse(
+        action = "specpredlosh",
+        categoryId = categoryId,
+        sort = sort,
+        orientation = orientation,
+        page = page
+    ).parseProductsDiscountResponse()
 
-    suspend fun fetchNoveltiesHeader(): ResponseBody {
-        return api.fetchNoveltiesResponse(
-            action = "novinki",
-            page = 1
-        )
-    }
+    suspend fun fetchNoveltiesHeader() = api.fetchNoveltiesResponse(
+        action = "novinki",
+        page = 1
+    ).parseNoveltiesHeaderResponse()
 
     suspend fun fetchProductsByNovelties(
         categoryId: Long?,
         sort: String?,
         orientation: String?,
         page: Int?,
-    ): ResponseBody {
-        return api.fetchNoveltiesResponse(
-            action = "novinki",
-            categoryId = categoryId,
-            sort = sort,
-            orientation = orientation,
-            page = page
-        )
-    }
+    ) = api.fetchNoveltiesResponse(
+        action = "novinki",
+        categoryId = categoryId,
+        sort = sort,
+        orientation = orientation,
+        page = page
+    ).parseProductsNoveltiesResponse()
 
     suspend fun fetchDoubleSliderHeader(
         categoryId: Long,
-    ): ResponseBody {
-        return api.fetchDoubleSlider(
-            action = "details",
-            androidVersion = BuildConfig.VERSION_NAME,
-            categoryId = categoryId
-        )
-    }
+    ) = api.fetchDoubleSlider(
+        action = "details",
+        androidVersion = BuildConfig.VERSION_NAME,
+        categoryId = categoryId
+    ).parseSliderHeaderResponse()
 
     suspend fun fetchProductsByDoubleSlider(
         categoryId: Long?,
         page: Int?,
         sort: String?,
         orientation: String?,
-    ): ResponseBody {
-        return api.fetchDoubleSlider(
-            action = "details",
-            androidVersion = BuildConfig.VERSION_NAME,
-            categoryId = categoryId,
-            sort = sort,
-            orientation = orientation,
-            page = page,
-        )
-    }
+    ) = api.fetchDoubleSlider(
+        action = "details",
+        androidVersion = BuildConfig.VERSION_NAME,
+        categoryId = categoryId,
+        sort = sort,
+        orientation = orientation,
+        page = page,
+    ).parseProductsBySliderResponse()
 
     /**
      * only products
      */
 
     //Продукты  по баннеру
-    suspend fun fetchProductsByBanner(categoryId: Long): ResponseBody = api.fetchMainSliderResponse(
+    suspend fun fetchProductsByBanner(categoryId: Long) = api.fetchMainSliderResponse(
         action = "detailtovar",
         categoryId = categoryId
-    )
+    ).parseProductsByBannerResponse()
 
     /**
      * promo details
      */
 
-    suspend fun fetchPromotionDetails(promotionId: Long): ResponseBody =
+    suspend fun fetchPromotionDetails(promotionId: Long) =
         api.fetchPromotionResponse(action = "detail", promotionId = promotionId)
+            .parsePromotionDetailResponseBundle()
 
     /**
      * all promotions
@@ -479,22 +534,22 @@ class MainRepository @Inject constructor(
     //Информация о всех акциях
     suspend fun fetchAllPromotions(
         filterId: Long,
-    ): ResponseBody = api.fetchPromotionResponse(
+    ) = api.fetchPromotionResponse(
         action = "akcii",
         filterId = filterId
-    )
+    ).parseAllPromotionsResponse()
 
     //Акции по баннеру
-    suspend fun fetchPromotionsByBanner(categoryId: Long): ResponseBody =
+    suspend fun fetchPromotionsByBanner(categoryId: Long) =
         api.fetchMainSliderResponse(
             action = "detailaction",
             categoryId = categoryId
-        )
+        ).parsePromotionsByBannerResponse()
 
     //Все бренды
     suspend fun fetchAllBrands(
         brandIdList: List<Long>,
-    ): ResponseBody =
+    ) =
         api.fetchBrandResponse(
             action = "brand",
             brandIdList = StringBuilder().apply {
@@ -503,14 +558,14 @@ class MainRepository @Inject constructor(
                     append(",")
                 }
             }.toString()
-        )
+        ).parseAllBrandsResponse()
 
     //Всплывающая новость
     suspend fun fetchPopupNews(userId: Long?) = api.fetchNewsResponse(
         action = "okno",
         userId = userId,
         platform = "android"
-    )
+    ).parsePopupNewsResponse()
 
 
     /**
@@ -519,10 +574,10 @@ class MainRepository @Inject constructor(
 
     suspend fun fetchPreOrderFormData(
         userId: Long?,
-    ): ResponseBody = api.fetchPreOrderResponse(
+    ) = api.fetchPreOrderResponse(
         action = "predzakaz",
         userId = userId
-    )
+    ).parsePreOrderFormDataResponse()
 
     suspend fun preOrderProduct(
         userId: Long?,
@@ -530,14 +585,14 @@ class MainRepository @Inject constructor(
         name: String?,
         email: String?,
         phone: String?,
-    ): ResponseBody = api.fetchPreOrderResponse(
+    ) = api.fetchPreOrderResponse(
         action = "otpravka",
         userId = userId,
         productId = productId,
         email = email,
         phone = phone,
         name = name
-    )
+    ).parsePreOrderProductResponse()
 
     /**
      * rate product
@@ -565,7 +620,7 @@ class MainRepository @Inject constructor(
         action = "detail",
         productId = productId,
         page = page
-    )
+    ).parseAllCommentsByProductResponse()
 
     /**
      * send comment by product
@@ -584,7 +639,7 @@ class MainRepository @Inject constructor(
         rating = rating,
         comment = comment,
         userId = userId
-    )
+    ).parseSendCommentAboutProductResponse()
 
     suspend fun dontCommentProduct(
         productId: Long,
@@ -605,7 +660,7 @@ class MainRepository @Inject constructor(
         action = "getLastFifty",
         userId = userId,
         page = 1
-    )
+    ).parsePastPurchasesHeaderResponse()
 
     suspend fun fetchPastPurchasesProducts(
         userId: Long?,
@@ -626,7 +681,7 @@ class MainRepository @Inject constructor(
             false -> "netnalichi"
             else -> null
         }
-    )
+    ).parseFavoriteProductsResponse()
 
     /**
      * all orders
@@ -646,7 +701,7 @@ class MainRepository @Inject constructor(
         orderId = orderId,
         status = status,
         page = page
-    )
+    ).parseAllOrdersSliderResponse()
 
     /**
      * repeat order
@@ -662,15 +717,15 @@ class MainRepository @Inject constructor(
         userId = userId,
         appVersion = appVersion,
         orderId = orderId
-    )
+    ).parseOrderDetailsResponse()
 
     suspend fun repeatOrder(
         orderId: Long?,
-        userId: Long?
+        userId: Long?,
     ) = api.repeatOrder(
         orderId = orderId,
         userId = userId
-    )
+    ).parseRepeatOrderResponse()
 
 
     //Отмена заказа
@@ -678,7 +733,7 @@ class MainRepository @Inject constructor(
         orderId: Long?,
     ) = api.cancelOrder(
         orderId = orderId
-    )
+    ).parseCancelOrderResponse()
 
     /**
      * products filters
@@ -686,12 +741,13 @@ class MainRepository @Inject constructor(
     //Все фильтры по продуктам для выбранной категории
     suspend fun fetchAllFiltersByCategory(
         categoryId: Long,
-    ) = api.fetchFilterBundleResponse(categoryId = categoryId)
+    ) = api.fetchFilterBundleResponse(categoryId = categoryId).parseAllFiltersByCategoryResponse()
 
     suspend fun fetchProductFilterById(
         categoryId: Long,
         filterCode: String,
     ) = api.fetchFilterResponse(categoryId = categoryId, filterCode = filterCode)
+        .parseConcreteFilterResponse()
 
 
     /**
@@ -699,9 +755,9 @@ class MainRepository @Inject constructor(
      */
 
     //Информация о зонах доставки
-    suspend fun fetchDeliveryZonesResponse(): ResponseBody = api.fetchMapResponse(
+    suspend fun fetchDeliveryZonesResponse() = api.fetchMapResponse(
         action = "tochkakarta"
-    )
+    ).parseDeliveryZonesBundleResponse()
 
     //Адрес по координатам
     suspend fun fetchAddressByGeocodeResponse(
@@ -711,7 +767,7 @@ class MainRepository @Inject constructor(
         apiKey = "346ef353-b4b2-44b3-b597-210d62eeb66b",
         geocode = "$longitude,$latitude",
         format = "json"
-    )
+    ).parseAddressByGeocodeResponse()
 
     /**
      * profile
@@ -722,7 +778,7 @@ class MainRepository @Inject constructor(
     suspend fun fetchUserData(userId: Long) = api.fetchProfileResponse(
         action = "details",
         userId = userId
-    )
+    ).parseUserDataResponse()
 
     //Информация о пользователе
     suspend fun fetchProfileCategories(
@@ -732,7 +788,7 @@ class MainRepository @Inject constructor(
         action = "glav",
         userId = userId,
         appVersion = BuildConfig.VERSION_NAME,
-        isTablet = if(isTablet) "ipad" else "phone"
+        isTablet = if (isTablet) "ipad" else "phone"
     )
 
     suspend fun fetchPersonalProducts(
@@ -742,7 +798,7 @@ class MainRepository @Inject constructor(
         action = "tovarchik",
         userId = userId,
         page = page
-    )
+    ).parsePersonalProductsResponse()
 
     suspend fun fetchQuestionnairesResponse(
         @Query("action") action: String? = null,
@@ -750,7 +806,7 @@ class MainRepository @Inject constructor(
     ) = api.fetchQuestionnairesResponse(
         action = action,
         userId = userId
-    )
+    ).parseQuestionnaireResponse()
 
     suspend fun fetchFormForOrderService(
         type: String?,
@@ -759,7 +815,7 @@ class MainRepository @Inject constructor(
         action = "glav",
         type = type,
         userId = userId
-    )
+    ).parseServiceOrderFormResponse()
 
     suspend fun orderService(
         type: String?,
@@ -770,7 +826,7 @@ class MainRepository @Inject constructor(
         type = type,
         userId = userId,
         value = value
-    )
+    ).parseOrderServiceResponse()
 
     /**
      * auth
@@ -783,13 +839,13 @@ class MainRepository @Inject constructor(
     ) = api.fetchLoginResponse(
         email = email,
         password = password
-    )
+    ).parseLoginResponse()
 
     suspend fun authByPhone(
         phone: String?,
         url: String,
         code: String?,
-    ): ResponseBody {
+    ): ResponseEntity<Long> {
 
         val uri = ApiConfig.VODOVOZ_URL
             .toUri()
@@ -801,13 +857,13 @@ class MainRepository @Inject constructor(
             .build()
             .toString()
 
-        return api.fetchAuthByPhoneResponse(uri)
+        return api.fetchAuthByPhoneResponse(uri).parseAuthByPhoneResponse()
     }
 
     suspend fun requestCode(
         phone: String?,
         url: String,
-    ): ResponseBody {
+    ): ResponseEntity<Int> {
 
         val uri = ApiConfig.VODOVOZ_URL
             .toUri()
@@ -818,7 +874,7 @@ class MainRepository @Inject constructor(
             .build()
             .toString()
 
-        return api.fetchAuthByPhoneResponse(uri)
+        return api.fetchAuthByPhoneResponse(uri).parseRequestCodeResponse()
     }
 
     /**
@@ -830,7 +886,7 @@ class MainRepository @Inject constructor(
     ) = api.recoverPassword(
         forgotPassword = "yes",
         email = email
-    )
+    ).parseRecoverPasswordResponse()
 
     /**
      * site state
@@ -856,7 +912,7 @@ class MainRepository @Inject constructor(
         email = email,
         password = password,
         phone = phone
-    )
+    ).parseRegisterResponse()
 
     //Firebase Token
     suspend fun sendFirebaseToken(
@@ -888,7 +944,7 @@ class MainRepository @Inject constructor(
         api.fetchServicesNewDetailsResponse(
             action = action,
             id = id
-        )
+        ).parseServiceDetail()
 
     suspend fun fetchTestMapResponse(
         address: String,
@@ -914,7 +970,7 @@ class MainRepository @Inject constructor(
     suspend fun fetchContacts(appVersion: String) = api.fetchContactsResponse(
         action = "dannyesvyazi",
         appVersion = appVersion
-    )
+    ).parseContactsBundleResponse()
 
     /**
      * Send Mail
@@ -930,7 +986,7 @@ class MainRepository @Inject constructor(
         phone = phone,
         email = email,
         comment = comment
-    )
+    ).parseSendMailResponse()
 
     /**
      * Addresses
@@ -945,7 +1001,7 @@ class MainRepository @Inject constructor(
         action = "get",
         userid = userId,
         type = type
-    )
+    ).parseFetchAddressesSavedResponse()
 
     //Удалить адресс
     suspend fun deleteAddress(
@@ -956,7 +1012,7 @@ class MainRepository @Inject constructor(
         userid = userId,
         action = "del",
         blockId = 102
-    )
+    ).parseDeleteAddressResponse()
 
     //Добавить адрес в сохраненные
     suspend fun addAddress(
@@ -988,7 +1044,7 @@ class MainRepository @Inject constructor(
         fullAddress = fullAddress,
         length = length,
         longAndLat = "$lat,$longitude"
-    )
+    ).parseAddAddressResponse()
 
     //Обновить адрес
     suspend fun updateAddress(
@@ -1022,7 +1078,7 @@ class MainRepository @Inject constructor(
         fullAddress = fullAddress,
         length = length,
         longAndLat = "$lat,$longitude"
-    )
+    ).parseUpdateAddressResponse()
 
     /**
      * Ordering
@@ -1038,11 +1094,11 @@ class MainRepository @Inject constructor(
         addressId = addressId,
         date = date,
         appVersion = appVersion
-    )
+    ).parseShippingInfoResponse()
 
     suspend fun fetchFreeShippingDaysInfoResponse(
         appVersion: String?,
-    ) = api.fetchInfoAboutOrderingResponse(appVersion = appVersion)
+    ) = api.fetchInfoAboutOrderingResponse(appVersion = appVersion).parseFreeShippingDaysResponse()
 
     suspend fun regOrder(
         orderType: Int?, //Тип заказа (1/2)
@@ -1100,7 +1156,7 @@ class MainRepository @Inject constructor(
         parking = parking,
         appVersion = appVersion,
         checkDeliveryValue = checkDeliveryValue
-    )
+    ).parseRegOrderResponse()
 
     fun fetchShippingAlertEntityList() = ShippingAlertConfig.shippingAlertEntityList
 
@@ -1123,7 +1179,7 @@ class MainRepository @Inject constructor(
         sex = sex,
         birthday = birthday,
         email = email
-    )
+    ).parseUpdateUserDataResponse()
 
     suspend fun logout() = api.logout()
 
@@ -1138,7 +1194,7 @@ class MainRepository @Inject constructor(
     ) = api.fetchDiscountCardBaseRequest(
         action = "glav",
         userId = userId
-    )
+    ).parseActivateDiscountCardInfoResponse()
 
     suspend fun activateDiscountCard(
         userId: Long?,
@@ -1147,7 +1203,7 @@ class MainRepository @Inject constructor(
         action = "edit",
         userId = userId,
         value = value
-    )
+    ).parseActivateDiscountCardResponse()
 
     suspend fun fetchRateBottomData(
         userId: Long?,
@@ -1174,5 +1230,5 @@ class MainRepository @Inject constructor(
         api.fetchNotificationSettingsData(uri)
     }
 
-    suspend fun fetchBottles() = api.fetchBottles()
+    suspend fun fetchBottles() = api.fetchBottles().parseBottlesResponse()
 }

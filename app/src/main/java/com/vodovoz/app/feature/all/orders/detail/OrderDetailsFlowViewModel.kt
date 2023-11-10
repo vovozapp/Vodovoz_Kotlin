@@ -16,9 +16,6 @@ import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.order.CancelOrderResponseJsonParser.parseCancelOrderResponse
-import com.vodovoz.app.data.parser.response.order.OrderDetailsResponseJsonParser.parseOrderDetailsResponse
-import com.vodovoz.app.data.parser.response.order.RepeatOrderResponseJsonParser.parseRepeatOrderResponse
 import com.vodovoz.app.feature.all.orders.detail.model.DriverPointsEntity
 import com.vodovoz.app.mapper.OrderDetailsMapper.mapToUI
 import com.vodovoz.app.ui.model.OrderDetailsUI
@@ -59,8 +56,7 @@ class OrderDetailsFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseOrderDetailsResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val orderDetails = response.data.mapToUI()
                         if (orderDetails.status?.id == "E" && orderDetails.driverId != null) {
@@ -104,8 +100,7 @@ class OrderDetailsFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach { responseBody ->
-                    val response = responseBody.parseRepeatOrderResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         cartManager.updateCartListState(true)
                         uiStateListener.value = state.copy(
@@ -136,8 +131,7 @@ class OrderDetailsFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.cancelOrder(id)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseCancelOrderResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(loadingPage = false)
                         cancelResultListener.emit(response.data)

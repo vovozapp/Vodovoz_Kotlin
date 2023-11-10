@@ -11,15 +11,8 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
-import com.vodovoz.app.data.LocalSyncExtensions.syncCartQuantity
-import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
-import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteStatus
 import com.vodovoz.app.data.MainRepository
-import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.paginatedProducts.MaybeLikeProductsResponseJsonParser.parseMaybeLikeProductsResponse
-import com.vodovoz.app.data.parser.response.paginatedProducts.SomeProductsByBrandResponseJsonParser.parseSomeProductsByBrandResponse
-import com.vodovoz.app.data.parser.response.product.ProductDetailsResponseJsonParser.parseProductDetailsResponse
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.DISCOUNT
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.VIEWED
@@ -51,9 +44,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductDetailsFlowViewModel @Inject constructor(
     savedState: SavedStateHandle,
-    //   private val dataRepository: DataRepository,
     private val mainRepository: MainRepository,
-    private val localDataSource: LocalDataSource,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
@@ -92,22 +83,21 @@ class ProductDetailsFlowViewModel @Inject constructor(
             uiStateListener.value = state.copy(loadingPage = true)
             flow { emit(mainRepository.fetchProductResponse(productId = productId)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseProductDetailsResponse()
+                .onEach { response ->
                     uiStateListener.value = if (response is ResponseEntity.Success) {
 
                         fetchMaybeLikeProducts()
 
-                        response.data.let { entity ->
-                            entity.productDetailEntity.syncCartQuantity(localDataSource)
-                            entity.productDetailEntity.syncFavoriteStatus(localDataSource)
-                            entity.buyWithProductEntityList.syncCartQuantity(localDataSource)
-                            entity.buyWithProductEntityList.syncFavoriteProducts(localDataSource)
-                            entity.maybeLikeProductEntityList.syncCartQuantity(localDataSource)
-                            entity.maybeLikeProductEntityList.syncFavoriteProducts(localDataSource)
-                            entity.recommendProductEntityList.syncCartQuantity(localDataSource)
-                            entity.recommendProductEntityList.syncFavoriteProducts(localDataSource)
-                        }
+//                        response.data.let { entity ->
+//                            entity.productDetailEntity.syncCartQuantity(localDataSource)
+//                            entity.productDetailEntity.syncFavoriteStatus(localDataSource)
+//                            entity.buyWithProductEntityList.syncCartQuantity(localDataSource)
+//                            entity.buyWithProductEntityList.syncFavoriteProducts(localDataSource)
+//                            entity.maybeLikeProductEntityList.syncCartQuantity(localDataSource)
+//                            entity.maybeLikeProductEntityList.syncFavoriteProducts(localDataSource)
+//                            entity.recommendProductEntityList.syncCartQuantity(localDataSource)
+//                            entity.recommendProductEntityList.syncFavoriteProducts(localDataSource)
+//                        }
 
                         val mappedData = response.data.mapToUI()
 
@@ -227,8 +217,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseSomeProductsByBrandResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(
                             detailBrandList = state.detailBrandList.copy(
@@ -262,8 +251,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(mainRepository.fetchMaybeLikeProductsResponse(page = state.detailMaybeLikeProducts.pageIndex)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseMaybeLikeProductsResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(
                             detailMaybeLikeProducts = state.detailMaybeLikeProducts.copy(

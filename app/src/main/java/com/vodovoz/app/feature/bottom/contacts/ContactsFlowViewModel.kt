@@ -5,8 +5,6 @@ import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.content.*
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.contacts.ContactsBundleResponseJsonParser.parseContactsBundleResponse
-import com.vodovoz.app.data.parser.response.contacts.SendMailResponseJsonParser.parseSendMailResponse
 import com.vodovoz.app.mapper.ContactsBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.ContactsBundleUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -18,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ContactsFlowViewModel @Inject constructor(
-    private val repository: MainRepository
+    private val repository: MainRepository,
 ) : PagingContractViewModel<ContactsFlowViewModel.ContactsState, ContactsFlowViewModel.ContactsEvents>(
     ContactsState()
 ) {
@@ -27,8 +25,7 @@ class ContactsFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.fetchContacts(BuildConfig.VERSION_NAME)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseContactsBundleResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
 
@@ -62,7 +59,7 @@ class ContactsFlowViewModel @Inject constructor(
         name: String,
         phone: String,
         email: String,
-        descriptions: String
+        descriptions: String,
     ) {
         uiStateListener.value = state.copy(loadingPage = true)
 
@@ -78,8 +75,7 @@ class ContactsFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseSendMailResponse()
+                .onEach { response ->
                     uiStateListener.value = state.copy(
                         loadingPage = false,
                         error = null
@@ -109,7 +105,7 @@ class ContactsFlowViewModel @Inject constructor(
     }
 
     data class ContactsState(
-        val item: ContactsBundleUI? = null
+        val item: ContactsBundleUI? = null,
     ) : State
 
     sealed class ContactsEvents : Event {

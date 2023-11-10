@@ -12,8 +12,6 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.SortType
-import com.vodovoz.app.data.parser.response.paginatedProducts.FavoriteProductsResponseJsonParser.parseFavoriteProductsResponse
-import com.vodovoz.app.data.parser.response.past_purchases.PastPurchasesHeaderResponseJsonParser.parsePastPurchasesHeaderResponse
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.mapper.PastPurchasesHeaderBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
@@ -71,8 +69,7 @@ class PastPurchasesFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.fetchPastPurchasesHeader(userId = userId)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parsePastPurchasesHeaderResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         uiStateListener.value = state.copy(
@@ -161,8 +158,7 @@ class PastPurchasesFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseFavoriteProductsResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         val mappedFeed = FavoritesMapper.mapFavoritesListByManager(

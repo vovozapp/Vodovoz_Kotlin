@@ -8,7 +8,6 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.comment.AllCommentsByProductResponseJsonParser.parseAllCommentsByProductResponse
 import com.vodovoz.app.mapper.CommentMapper.mapToUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AllCommentsFlowViewModel @Inject constructor(
-    private val savedState: SavedStateHandle,
+    savedState: SavedStateHandle,
     private val repository: MainRepository,
     private val accountManager: AccountManager,
 ) : PagingContractViewModel<AllCommentsFlowViewModel.AllCommentsState, AllCommentsFlowViewModel.AllCommentsEvents>(
@@ -40,8 +39,7 @@ class AllCommentsFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseAllCommentsByProductResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         uiStateListener.value = if (data.isEmpty() && !state.loadMore) {

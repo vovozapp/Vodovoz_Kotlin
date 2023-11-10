@@ -12,10 +12,6 @@ import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
-import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
-import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
-import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
@@ -37,7 +33,6 @@ import javax.inject.Inject
 class ProfileFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val localDataSource: LocalDataSource,
-//    private val dataRepository: DataRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
@@ -72,8 +67,7 @@ class ProfileFlowViewModel @Inject constructor(
                         state.copy(error = it.toErrorState(), loadingPage = false)
                 }
                 .onEach {
-                    val response = it.parseUserDataResponse()
-                    if (response is ResponseEntity.Success) {
+                    if (it is ResponseEntity.Success) {
                         firstLoad()
                     } else {
                         logout()
@@ -96,9 +90,9 @@ class ProfileFlowViewModel @Inject constructor(
 
     private suspend fun fetchProfileData(position: Int, userId: Long): List<PositionItem> {
         return runCatching {
-            val responseBody = repository.fetchUserData(userId)
+            val response = repository.fetchUserData(userId)
             withContext(Dispatchers.Default) {
-                val response = responseBody.parseUserDataResponse()
+//                val response = responseBody.parseUserDataResponse()
                 if (response is ResponseEntity.Success) {
                     listOf(
                         PositionItem(
@@ -119,9 +113,9 @@ class ProfileFlowViewModel @Inject constructor(
 
     private suspend fun fetchOrdersSlider(position: Int, userId: Long): List<PositionItem> {
         return runCatching {
-            val responseBody = repository.fetchOrdersSliderProfile(userId)
+            val response = repository.fetchOrdersSliderProfile(userId)
             withContext(Dispatchers.Default) {
-                val response = responseBody.parseOrderSliderResponse()
+//                val response = responseBody.parseOrderSliderResponse()
                 if (response is ResponseEntity.Success) {
                     listOf(
                         PositionItem(
@@ -187,9 +181,9 @@ class ProfileFlowViewModel @Inject constructor(
         userId: Long,
     ): List<PositionItem> {
         return runCatching {
-            val responseBody = repository.fetchViewedProductsSlider(userId = userId)
+            val response = repository.fetchViewedProductsSlider(userId = userId)
             withContext(Dispatchers.Default) {
-                val response = responseBody.parseViewedProductsSliderResponse()
+//                val response = responseBody.parseViewedProductsSliderResponse()
                 if (response is ResponseEntity.Success) {
                     val data = response.data.mapToUI()
                     listOf(
@@ -228,12 +222,11 @@ class ProfileFlowViewModel @Inject constructor(
 
     private suspend fun fetchPersonalProducts(position: Int, userId: Long): List<PositionItem> {
         return runCatching {
-            val responseBody = repository.fetchPersonalProducts(
+            val response = repository.fetchPersonalProducts(
                 userId = userId,
                 page = 1
             )
             withContext(Dispatchers.Default) {
-                val response = responseBody.parsePersonalProductsResponse()
                 if (response is ResponseEntity.Success) {
                     val data = response.data.mapToUI()
                     val item = PositionItem(

@@ -3,7 +3,6 @@ package com.vodovoz.app.feature.map.manager
 import android.location.Location
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.map.DeliveryZonesBundleResponseJsonParser.parseDeliveryZonesBundleResponse
 import com.vodovoz.app.mapper.DeliveryZonesBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.custom.DeliveryZonesBundleUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -16,11 +15,11 @@ import javax.inject.Singleton
 
 @Singleton
 class DeliveryZonesManager @Inject constructor(
-    private val repository: MainRepository
+    private val repository: MainRepository,
 ) {
 
     companion object {
-        const val CENTER_COLOR = "#16c60c"
+//        const val CENTER_COLOR = "#16c60c"
         const val MO_COLOR = "#dfdddd"
     }
 
@@ -30,14 +29,15 @@ class DeliveryZonesManager @Inject constructor(
     suspend fun fetchDeliveryZonesBundle() {
         flow { emit(repository.fetchDeliveryZonesResponse()) }
             .flowOn(Dispatchers.IO)
-            .onEach {
-                val response = it.parseDeliveryZonesBundleResponse()
+            .onEach { response ->
                 if (response is ResponseEntity.Success) {
                     val data = response.data.mapToUI()
                     val centerPoints =
-                        data.deliveryZoneUIList.filter { it.isCenter }.takeIf { it.isNotEmpty() }?.get(0)?.pointList ?: emptyList()
+                        data.deliveryZoneUIList.filter { it.isCenter }.takeIf { it.isNotEmpty() }
+                            ?.get(0)?.pointList ?: emptyList()
                     val moPoints =
-                        data.deliveryZoneUIList.filter { it.color == MO_COLOR }.takeIf { it.isNotEmpty() }?.get(0)?.pointList ?: emptyList()
+                        data.deliveryZoneUIList.filter { it.color == MO_COLOR }
+                            .takeIf { it.isNotEmpty() }?.get(0)?.pointList ?: emptyList()
                     deliveryZonesStateListener.value = DeliveryZonesState(
                         deliveryZonesBundleUI = data,
                         centerPoints = centerPoints,
@@ -118,7 +118,7 @@ class DeliveryZonesManager @Inject constructor(
 
     data class LocationFloatToPoint(
         val distance: Float,
-        val point: Point
+        val point: Point,
     )
 
 }

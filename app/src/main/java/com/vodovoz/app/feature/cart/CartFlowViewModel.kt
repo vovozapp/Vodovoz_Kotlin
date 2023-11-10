@@ -8,12 +8,9 @@ import com.vodovoz.app.common.content.*
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
-import com.vodovoz.app.data.LocalSyncExtensions.syncFavoriteProducts
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.cart.CartResponseJsonParser.parseCartResponse
-import com.vodovoz.app.data.parser.response.cart.ClearCartResponseJsonParser.parseClearCartResponse
 import com.vodovoz.app.data.parser.response.cart.MessageTextBasket
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.CartAvailableProducts
 import com.vodovoz.app.feature.cart.viewholders.cartempty.CartEmpty
@@ -86,25 +83,24 @@ class CartFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseCartResponse()
+                .onEach { response ->
                     uiStateListener.value = if (response is ResponseEntity.Success) {
-                        response.data.let { cartBundleEntity ->
-                            localDataSource.clearCart()
-                            cartBundleEntity.availableProductEntityList.forEach { productUI ->
-                                localDataSource.changeProductQuantityInCart(
-                                    productId = productUI.id,
-                                    quantity = productUI.cartQuantity
-                                )
-                            }
-                            cartBundleEntity.availableProductEntityList.syncFavoriteProducts(
-                                localDataSource
-                            )
-                            cartBundleEntity.notAvailableProductEntityList.syncFavoriteProducts(
-                                localDataSource
-                            )
-                            localDataSource.fetchCart()
-                        }
+//                        response.data.let { cartBundleEntity ->
+//                            localDataSource.clearCart()
+//                            cartBundleEntity.availableProductEntityList.forEach { productUI ->
+//                                localDataSource.changeProductQuantityInCart(
+//                                    productId = productUI.id,
+//                                    quantity = productUI.cartQuantity
+//                                )
+//                            }
+//                            cartBundleEntity.availableProductEntityList.syncFavoriteProducts(
+//                                localDataSource
+//                            )
+//                            cartBundleEntity.notAvailableProductEntityList.syncFavoriteProducts(
+//                                localDataSource
+//                            )
+//                            localDataSource.fetchCart()
+//                        }
                         val mappedData = response.data.mapUoUI()
                         val availableProducts = mappedData.availableProductUIList.reversed()
                         if (availableProducts.isEmpty()) tabManager.clearBottomNavCartState()
@@ -122,7 +118,9 @@ class CartFlowViewModel @Inject constructor(
                                 availableProducts = CartAvailableProducts(
                                     CART_AVAILABLE_PRODUCTS_ID,
                                     availableProducts,
-                                    showCheckForm = availableProducts.any { it.depositPrice != 0 } && isCountOfBottlesLessThenCountOfWater(availableProducts),
+                                    showCheckForm = availableProducts.any { it.depositPrice != 0 } && isCountOfBottlesLessThenCountOfWater(
+                                        availableProducts
+                                    ),
                                     showReturnBottleBtn = false,
                                     giftMessage = mappedData.giftMessage
                                 ),
@@ -164,8 +162,7 @@ class CartFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.fetchClearCartResponse(action = "delkorzina")) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseClearCartResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(data = CartState(), false)
                         cartManager.clearCart()
@@ -189,10 +186,10 @@ class CartFlowViewModel @Inject constructor(
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
         viewModelScope.launch {
             var quant = quantity
-            state.data.availableProducts?.items?.let{productList ->
-                val product = productList.find { it.id == productId}
-                if(product != null && product.isBottle){
-                    if(oldQuan < quant && !isCountOfBottlesLessThenCountOfWater(productList)){
+            state.data.availableProducts?.items?.let { productList ->
+                val product = productList.find { it.id == productId }
+                if (product != null && product.isBottle) {
+                    if (oldQuan < quant && !isCountOfBottlesLessThenCountOfWater(productList)) {
                         quant = oldQuan
                     }
                 }
@@ -208,13 +205,13 @@ class CartFlowViewModel @Inject constructor(
         val sizeOfBottles = productList
             .filter { it.isBottle }
             .sumOf {
-                if(it.oldQuantity != 0){
+                if (it.oldQuantity != 0) {
                     it.oldQuantity
                 } else {
                     it.cartQuantity
                 }
             }
-        if(sizeOfBottles >= sizeOfWater){
+        if (sizeOfBottles >= sizeOfWater) {
             return false
         }
         return true

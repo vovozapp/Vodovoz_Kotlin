@@ -13,7 +13,6 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser
-import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser.parsePromotionDetailResponseBundle
 import com.vodovoz.app.mapper.PromotionDetailMapper.mapToUI
 import com.vodovoz.app.ui.model.PromotionDetailUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -25,9 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PromotionDetailFlowViewModel @Inject constructor(
-    private val savedState: SavedStateHandle,
+    savedState: SavedStateHandle,
     private val repository: MainRepository,
-//    private val dataRepository: DataRepository,
     private val accountManager: AccountManager,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
@@ -43,8 +41,7 @@ class PromotionDetailFlowViewModel @Inject constructor(
             val promoId = promotionId ?: return@launch
             flow { emit(repository.fetchPromotionDetails(promoId)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parsePromotionDetailResponseBundle()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.detail?.mapToUI()
                         val dataError = response.data.detailError?.mapToUI()

@@ -1,8 +1,6 @@
 package com.vodovoz.app.data.parser.response.questionnaires
 
-import com.vodovoz.app.data.model.common.LinkEntity
-import com.vodovoz.app.data.model.common.QuestionEntity
-import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
@@ -11,13 +9,18 @@ import org.json.JSONObject
 
 object QuestionnaireResponseJsonParser {
 
-    fun ResponseBody.parseQuestionnaireResponse(): ResponseEntity<List<QuestionEntity>> {
+    fun ResponseBody.parseQuestionnaireResponse(): ResponseEntity<QuestionnaireEntity> {
         val responseJson = JSONObject(this.string())
         return when(responseJson.getString("status")) {
-            ResponseStatus.SUCCESS -> ResponseEntity.Success(responseJson.getJSONArray("data").parseQuestionEntityList())
+            ResponseStatus.SUCCESS -> ResponseEntity.Success(responseJson.getJSONArray("data").parseQuestionnaireEntity())
             else -> ResponseEntity.Error("Неправильный запрос")
         }
     }
+
+    private fun JSONArray.parseQuestionnaireEntity(): QuestionnaireEntity = QuestionnaireEntity(
+        questionTypeList = parseQuestionnaireTypeList(),
+        questionList = parseQuestionEntityList()
+    )
 
     private fun JSONArray.parseQuestionEntityList(): List<QuestionEntity> = mutableListOf<QuestionEntity>().also { list ->
         for (index in 0 until length()) list.add(getJSONObject(index).parseQuestion())
@@ -82,5 +85,15 @@ object QuestionnaireResponseJsonParser {
             list.add(getString(index))
         }
     }
+
+    private fun JSONArray.parseQuestionnaireTypeList(): List<QuestionTypeEntity> =
+        mutableListOf<QuestionTypeEntity>().also { list ->
+            for (index in 0 until length()) list.add(getJSONObject(index).parseQuestionnaireType())
+        }
+
+    private fun JSONObject.parseQuestionnaireType() = QuestionTypeEntity(
+        name = safeString("NAME"),
+        type = safeString("URL")
+    )
 
 }

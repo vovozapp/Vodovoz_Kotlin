@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.content.*
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonParser.parseHistoriesSliderResponse
 import com.vodovoz.app.mapper.HistoryMapper.mapToUI
 import com.vodovoz.app.ui.model.HistoryUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -30,9 +29,9 @@ class FullScreenHistoriesSliderFlowViewModel @Inject constructor(
                 )
             }.flowOn(Dispatchers.IO)
                 .onEach {
-                    val response = it.parseHistoriesSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        response.data.mapToUI().let { data ->
+//                    val response = it.parseHistoriesSliderResponse()
+                    if (it is ResponseEntity.Success) {
+                        it.data.mapToUI().let { data ->
                             uiStateListener.value = state.copy(
                                 data = state.data.copy(
                                     historyUIList = data

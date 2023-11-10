@@ -14,7 +14,6 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.banner.ProductsByBannerResponseJsonParser.parseProductsByBannerResponse
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,9 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OnlyProductsViewModel @Inject constructor(
-    private val savedState: SavedStateHandle,
+    savedState: SavedStateHandle,
     private val repository: MainRepository,
-    //private val dataRepository: DataRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
@@ -49,10 +47,7 @@ class OnlyProductsViewModel @Inject constructor(
                 }
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = when (dataSource) {
-                        is ProductsCatalogFragment.DataSource.BannerProducts -> it.parseProductsByBannerResponse()
-                    }
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
 

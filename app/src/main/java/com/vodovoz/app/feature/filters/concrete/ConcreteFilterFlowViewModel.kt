@@ -8,7 +8,6 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.category.ConcreteFilterResponseJsonParser.parseConcreteFilterResponse
 import com.vodovoz.app.mapper.mapToUI
 import com.vodovoz.app.ui.model.FilterUI
 import com.vodovoz.app.ui.model.FilterValueUI
@@ -44,8 +43,7 @@ class ConcreteFilterFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseConcreteFilterResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         response.data.mapToUI().let { data ->
                             validateData(data)

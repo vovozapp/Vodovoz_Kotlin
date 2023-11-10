@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.comment.SendCommentAboutProductResponseJsonParser.parseSendCommentAboutProductResponse
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SendCommentAboutProductFlowViewModel @Inject constructor(
-    private val savedState: SavedStateHandle,
+    savedState: SavedStateHandle,
     private val repository: MainRepository,
     private val accountManager: AccountManager,
 ) : ViewModel() {
@@ -34,8 +33,7 @@ class SendCommentAboutProductFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.sendCommentAboutProduct(productId, rating, comment, userId)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseSendCommentAboutProductResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         sendCommentResultListener.emit(true)
                     } else {

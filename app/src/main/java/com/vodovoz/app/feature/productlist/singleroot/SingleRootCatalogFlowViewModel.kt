@@ -6,7 +6,6 @@ import com.vodovoz.app.common.catalog.CatalogManager
 import com.vodovoz.app.common.content.*
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.catalog.CatalogResponseJsonParser.parseCatalogResponse
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.custom.SingleRootCatalogBundleUI
@@ -21,7 +20,7 @@ import javax.inject.Inject
 class SingleRootCatalogFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val catalogManager: CatalogManager,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : PagingContractViewModel<SingleRootCatalogFlowViewModel.SingleRootState, SingleRootCatalogFlowViewModel.SingleRootEvents>(
     SingleRootState(
         selectedCategoryId = savedStateHandle.get<Long>("categoryId")
@@ -45,9 +44,7 @@ class SingleRootCatalogFlowViewModel @Inject constructor(
             } else {
                 flow { emit(repository.fetchCatalogResponse()) }
                     .flowOn(Dispatchers.IO)
-                    .onEach {
-                        val response = it.parseCatalogResponse()
-
+                    .onEach { response ->
                         when (response) {
                             is ResponseEntity.Hide -> {}
                             is ResponseEntity.Error -> state.copy(
@@ -80,7 +77,10 @@ class SingleRootCatalogFlowViewModel @Inject constructor(
         }
     }
 
-    private fun buildBundle(root: CategoryUI?, selectedId: Long? = null): SingleRootCatalogBundleUI? {
+    private fun buildBundle(
+        root: CategoryUI?,
+        selectedId: Long? = null,
+    ): SingleRootCatalogBundleUI? {
         val rootCat = root ?: return null
         val selected = selectedId ?: return null
         return SingleRootCatalogBundleUI(
@@ -117,7 +117,7 @@ class SingleRootCatalogFlowViewModel @Inject constructor(
     private fun findWay(
         way: MutableList<CategoryUI> = mutableListOf(),
         currentPoint: CategoryUI,
-        endPointId: Long
+        endPointId: Long,
     ): List<CategoryUI>? {
         if (currentPoint.id == endPointId) {
             way.add(currentPoint)
@@ -159,6 +159,6 @@ class SingleRootCatalogFlowViewModel @Inject constructor(
         val items: List<CategoryUI>? = null,
         val rootCategory: CategoryUI? = null,
         val selectedCategoryId: Long? = null,
-        val bundle: SingleRootCatalogBundleUI? = null
+        val bundle: SingleRootCatalogBundleUI? = null,
     ) : State
 }

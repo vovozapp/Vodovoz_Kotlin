@@ -9,21 +9,6 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.banner.AdvertisingBannersSliderResponseJsonParser.parseAdvertisingBannersSliderResponse
-import com.vodovoz.app.data.parser.response.banner.CategoryBannersSliderResponseJsonParser.parseCategoryBannersSliderResponse
-import com.vodovoz.app.data.parser.response.brand.BrandsSliderResponseJsonParser.parseBrandsSliderResponse
-import com.vodovoz.app.data.parser.response.comment.CommentsSliderResponseJsonParser.parseCommentsSliderResponse
-import com.vodovoz.app.data.parser.response.country.CountrySliderResponseJsonParser.parseCountriesSliderResponse
-import com.vodovoz.app.data.parser.response.discount.DiscountSliderResponseParser.parseDiscountSliderResponse
-import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseBottomSliderResponse
-import com.vodovoz.app.data.parser.response.doubleSlider.DoubleSliderResponseJsonParser.parseTopSliderResponse
-import com.vodovoz.app.data.parser.response.history.HistoriesSliderResponseJsonParser.parseHistoriesSliderResponse
-import com.vodovoz.app.data.parser.response.novelties.NoveltiesSliderResponseParser.parseNoveltiesSliderResponse
-import com.vodovoz.app.data.parser.response.order.OrderSliderResponseJsonParser.parseOrderSliderResponse
-import com.vodovoz.app.data.parser.response.popular.PopularSliderResponseJsonParser.parsePopularSliderResponse
-import com.vodovoz.app.data.parser.response.popupNews.PopupNewsResponseJsonParser.parsePopupNewsResponse
-import com.vodovoz.app.data.parser.response.promotion.PromotionSliderResponseJsonParser.parsePromotionSliderResponse
-import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
 import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfo
 import com.vodovoz.app.feature.home.viewholders.homebrands.HomeBrands
@@ -168,9 +153,9 @@ class HomeFlowViewModel @Inject constructor(
     private fun CoroutineScope.firstLoadTasks() = arrayOf(
         homeRequestAsync {
             coroutineScope {
-                val responseBody = repository.fetchAdvertisingBannersSlider()
+                val response = repository.fetchAdvertisingBannersSlider()
                 withContext(Dispatchers.Default) {
-                    val response = responseBody.parseAdvertisingBannersSliderResponse()
+//                    val response = responseBody.parseAdvertisingBannersSliderResponse()
                     if (response is ResponseEntity.Success) {
                         listOf(
                             PositionItem(
@@ -186,10 +171,10 @@ class HomeFlowViewModel @Inject constructor(
         },
         homeRequestAsync {
             coroutineScope {
-                val responseBody =
+                val response =
                     repository.fetchHistoriesSlider()
                 withContext(Dispatchers.Default) {
-                    val response = responseBody.parseHistoriesSliderResponse()
+//                    val response = responseBody.parseHistoriesSliderResponse()
                     if (response is ResponseEntity.Success) {
                         listOf(
                             PositionItem(
@@ -213,9 +198,9 @@ class HomeFlowViewModel @Inject constructor(
         },
         homeRequestAsync {
             coroutineScope {
-                val responseBody = repository.fetchPopularSlider()
+                val response = repository.fetchPopularSlider()
                 withContext(Dispatchers.Default) {
-                    val response = responseBody.parsePopularSliderResponse()
+//                    val response = responseBody.parsePopularSliderResponse()
                     if (response is ResponseEntity.Success) {
                         listOf(
                             PositionItem(
@@ -239,9 +224,9 @@ class HomeFlowViewModel @Inject constructor(
         },
         homeRequestAsync {
             coroutineScope {
-                val responseBody = repository.fetchDiscountsSlider()
+                val response = repository.fetchDiscountsSlider()
                 withContext(Dispatchers.Default) {
-                    val response = responseBody.parseDiscountSliderResponse()
+//                    val response = responseBody.parseDiscountSliderResponse()
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         listOf(
@@ -277,9 +262,9 @@ class HomeFlowViewModel @Inject constructor(
         },
         homeRequestAsync {
             coroutineScope {
-                val responseBody = repository.fetchCategoryBannersSlider()
+                val response = repository.fetchCategoryBannersSlider()
                 withContext(Dispatchers.Default) {
-                    val response = responseBody.parseCategoryBannersSliderResponse()
+//                    val response = responseBody.parseCategoryBannersSliderResponse()
                     if (response is ResponseEntity.Success) {
                         listOf(
                             PositionItem(
@@ -314,9 +299,9 @@ class HomeFlowViewModel @Inject constructor(
     private fun CoroutineScope.secondLoadTasks(userId: Long?) = arrayOf(
         homeRequestAsync {
             coroutineScope {
-                val responseBody = repository.fetchTopSlider()
+                val response = repository.fetchTopSlider()
                 withContext(Dispatchers.Default) {
-                    val response = responseBody.parseTopSliderResponse()
+//                    val response = responseBody.parseTopSliderResponse()
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         listOf(
@@ -352,9 +337,9 @@ class HomeFlowViewModel @Inject constructor(
                 if (userId == null) {
                     return@coroutineScope emptyList()
                 }
-                val responseBody = repository.fetchOrdersSlider(userId)
+                val response = repository.fetchOrdersSliderProfile(userId)
                 withContext(Dispatchers.Default) {
-                    val response = responseBody.parseOrderSliderResponse()
+//                    val response = responseBody.parseOrderSliderResponse()
                     if (response is ResponseEntity.Success) {
                         listOf(
                             PositionItem(
@@ -380,9 +365,9 @@ class HomeFlowViewModel @Inject constructor(
         },
         homeRequestAsync {
             coroutineScope {
-                val responseBody = repository.fetchNoveltiesSlider()
+                val response = repository.fetchNoveltiesSlider()
                 withContext(Dispatchers.Default) {
-                    val response = responseBody.parseNoveltiesSliderResponse()
+//                    val response = responseBody.parseNoveltiesSliderResponse()
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         listOf(
@@ -418,9 +403,9 @@ class HomeFlowViewModel @Inject constructor(
         },
         homeRequestAsync {
             coroutineScope {
-                val responseBody = repository.fetchPromotionsSlider()
+                val response = repository.fetchPromotionsSlider()
                 withContext(Dispatchers.Default) {
-                    val response = responseBody.parsePromotionSliderResponse()
+//                    val response = responseBody.parsePromotionSliderResponse()
                     if (response is ResponseEntity.Success) {
                         listOf(
                             PositionItem(
@@ -452,9 +437,9 @@ class HomeFlowViewModel @Inject constructor(
         },
         homeRequestAsync {
             coroutineScope {
-                val responseBody = repository.fetchBottomSlider()
+                val response = repository.fetchBottomSlider()
                 withContext(Dispatchers.Default) {
-                    val response = responseBody.parseBottomSliderResponse()
+//                    val response = responseBody.parseBottomSliderResponse()
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         listOf(
@@ -487,9 +472,9 @@ class HomeFlowViewModel @Inject constructor(
         },
         homeRequestAsync {
             coroutineScope {
-                val responseBody = repository.fetchBrandsSlider()
+                val response = repository.fetchBrandsSlider()
                 withContext(Dispatchers.Default) {
-                    val response = responseBody.parseBrandsSliderResponse()
+//                    val response = responseBody.parseBrandsSliderResponse()
                     if (response is ResponseEntity.Success) {
                         listOf(
                             PositionItem(
@@ -515,9 +500,9 @@ class HomeFlowViewModel @Inject constructor(
         },
         homeRequestAsync {
             coroutineScope {
-                val responseBody = repository.fetchCountriesSlider()
+                val response = repository.fetchCountriesSlider()
                 withContext(Dispatchers.Default) {
-                    val response = responseBody.parseCountriesSliderResponse()
+//                    val response = responseBody.parseCountriesSliderResponse()
                     if (response is ResponseEntity.Success) {
                         listOf(
                             PositionItem(
@@ -537,9 +522,9 @@ class HomeFlowViewModel @Inject constructor(
                     return@coroutineScope emptyList()
                 }
 
-                val responseBody = repository.fetchViewedProductsSlider(userId)
+                val response = repository.fetchViewedProductsSlider(userId)
                 withContext(Dispatchers.Default) {
-                    val response = responseBody.parseViewedProductsSliderResponse()
+//                    val response = responseBody.parseViewedProductsSliderResponse()
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         listOf(
@@ -575,9 +560,9 @@ class HomeFlowViewModel @Inject constructor(
         },
         homeRequestAsync {
             coroutineScope {
-                val responseBody = repository.fetchCommentsSlider()
+                val response = repository.fetchCommentsSlider()
                 withContext(Dispatchers.Default) {
-                    val response = responseBody.parseCommentsSliderResponse()
+//                    val response = responseBody.parseCommentsSliderResponse()
                     if (response is ResponseEntity.Success) {
                         listOf(
                             PositionItem(
@@ -623,8 +608,7 @@ class HomeFlowViewModel @Inject constructor(
             val userId = accountManager.fetchAccountId()
             flow { emit(repository.fetchPopupNews(userId)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parsePopupNewsResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(
                             data = state.data.copy(

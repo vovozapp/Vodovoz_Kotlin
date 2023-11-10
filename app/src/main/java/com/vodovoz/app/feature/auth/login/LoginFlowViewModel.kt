@@ -13,10 +13,6 @@ import com.vodovoz.app.common.token.TokenManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.user.AuthByPhoneJsonParser.parseAuthByPhoneResponse
-import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
-import com.vodovoz.app.data.parser.response.user.RecoverPasswordJsonParser.parseRecoverPasswordResponse
-import com.vodovoz.app.data.parser.response.user.RequestCodeResponseJsonParser.parseRequestCodeResponse
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.ui.model.enum.AuthType
 import com.vodovoz.app.util.extensions.debugLog
@@ -100,8 +96,8 @@ class LoginFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.authByEmail(email, password)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    when (val response = it.parseLoginResponse()) {
+                .onEach { response ->
+                    when (response) {
                         is ResponseEntity.Hide -> {}
                         is ResponseEntity.Success -> {
                             accountManager.updateLastLoginSetting(
@@ -144,8 +140,8 @@ class LoginFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.authByPhone(phone = phone, url = url, code = code)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    when (val response = it.parseAuthByPhoneResponse()) {
+                .onEach { response ->
+                    when (response) {
                         is ResponseEntity.Hide -> {
                             uiStateListener.value =
                                 state.copy(loadingPage = false)
@@ -186,8 +182,8 @@ class LoginFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.requestCode(phone = phone, url = url)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    when (val response = it.parseRequestCodeResponse()) {
+                .onEach { response ->
+                    when (response) {
                         is ResponseEntity.Hide -> {
                             uiStateListener.value =
                                 state.copy(loadingPage = false)
@@ -259,8 +255,7 @@ class LoginFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.recoverPassword(email)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseRecoverPasswordResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value =
                             state.copy(error = null, loadingPage = false)

@@ -7,8 +7,6 @@ import com.vodovoz.app.common.content.*
 import com.vodovoz.app.common.media.MediaManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.user.UpdateUserDataResponseJsonParser.parseUpdateUserDataResponse
-import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.parseUserDataResponse
 import com.vodovoz.app.mapper.UserDataMapper.mapToUI
 import com.vodovoz.app.ui.model.UserDataUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -22,9 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class UserDataFlowViewModel @Inject constructor(
     private val repository: MainRepository,
-    private val savedStateHandle: SavedStateHandle,
     private val accountManager: AccountManager,
-    private val mediaManager: MediaManager
+    private val mediaManager: MediaManager,
 ) : PagingContractViewModel<UserDataFlowViewModel.UserDataState, UserDataFlowViewModel.UserDataEvents>(
     UserDataState()
 ) {
@@ -66,7 +63,7 @@ class UserDataFlowViewModel @Inject constructor(
                     clearAvatarState()
                     uiStateListener.value =
                         state.copy(
-                            error =  it.toErrorState(),
+                            error = it.toErrorState(),
                             loadingPage = false,
                             loadMore = false,
                             bottomItem = null
@@ -98,9 +95,9 @@ class UserDataFlowViewModel @Inject constructor(
             flow { emit(repository.fetchUserData(userId)) }
                 .flowOn(Dispatchers.IO)
                 .onEach {
-                    val response = it.parseUserDataResponse()
-                    uiStateListener.value = if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
+//                    val response = it.parseUserDataResponse()
+                    uiStateListener.value = if (it is ResponseEntity.Success) {
+                        val data = it.data.mapToUI()
                         state.copy(
                             loadingPage = false,
                             data = state.data.copy(
@@ -133,7 +130,7 @@ class UserDataFlowViewModel @Inject constructor(
         birthday: String,
         email: String,
         phone: String,
-        password: String
+        password: String,
     ) {
         viewModelScope.launch {
             val userId = accountManager.fetchAccountId() ?: return@launch
@@ -153,8 +150,7 @@ class UserDataFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseUpdateUserDataResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(
                             loadingPage = false,
@@ -232,7 +228,7 @@ class UserDataFlowViewModel @Inject constructor(
 
     data class UserDataState(
         val item: UserDataUI? = null,
-        val canChangeBirthDay: Boolean = true
+        val canChangeBirthDay: Boolean = true,
     ) : State
 
 }

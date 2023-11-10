@@ -9,7 +9,6 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.parseAllBrandsResponse
 import com.vodovoz.app.mapper.BrandMapper.mapToUI
 import com.vodovoz.app.ui.model.BrandUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -21,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AllBrandsFlowViewModel @Inject constructor(
-    private val savedState: SavedStateHandle,
+    savedState: SavedStateHandle,
     private val repository: MainRepository,
 //    private val dataRepository: DataRepository,
     private val accountManager: AccountManager,
@@ -36,8 +35,7 @@ class AllBrandsFlowViewModel @Inject constructor(
 
             flow { emit(repository.fetchAllBrands(list)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseAllBrandsResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
 

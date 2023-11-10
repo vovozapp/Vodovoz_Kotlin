@@ -8,10 +8,7 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.questionnaires.QuestionnaireResponseJsonParser.parseQuestionnaireResponse
-import com.vodovoz.app.data.parser.response.questionnaires.QuestionnaireTypesResponseJsonParser.parseQuestionnaireTypesResponse
-import com.vodovoz.app.mapper.QuestionMapper.mapToUI
-import com.vodovoz.app.mapper.QuestionnaireTypeMapper.mapToUI
+import com.vodovoz.app.mapper.QuestionnaireMapper.mapToUI
 import com.vodovoz.app.ui.model.QuestionUI
 import com.vodovoz.app.ui.model.QuestionnaireTypeUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -37,13 +34,12 @@ class QuestionnairesFlowViewModel @Inject constructor(
                 emit(repository.fetchQuestionnairesResponse())
             }
                 .flowOn(Dispatchers.IO)
-                .onEach { it ->
-                    val response = it.parseQuestionnaireTypesResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
-                        response.data.mapToUI().let { list ->
+                        response.data.mapToUI().let { questionnaire ->
                             uiStateListener.value = state.copy(
                                 data = state.data.copy(
-                                    questionnaireTypeUIList = list
+                                    questionnaireTypeUIList = questionnaire.questionUiTypeList
                                 ),
                                 loadingPage = false,
                                 error = null
@@ -79,13 +75,12 @@ class QuestionnairesFlowViewModel @Inject constructor(
                     )
                 )
             }.flowOn(Dispatchers.Main)
-                .onEach {
-                    val response = it.parseQuestionnaireResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
-                        response.data.mapToUI().let { list ->
+                        response.data.mapToUI().let { questionnaire ->
                             uiStateListener.value = state.copy(
                                 data = state.data.copy(
-                                    questionUIList = list
+                                    questionUIList = questionnaire.questionUiList
                                 ),
                                 loadingPage = false,
                                 error = null

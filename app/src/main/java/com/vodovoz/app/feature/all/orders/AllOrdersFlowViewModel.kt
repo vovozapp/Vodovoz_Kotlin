@@ -9,8 +9,6 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.order.AllOrdersResponseJsonParser.parseAllOrdersSliderResponse
-import com.vodovoz.app.data.parser.response.order.RepeatOrderResponseJsonParser.parseRepeatOrderResponse
 import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -58,8 +56,7 @@ class AllOrdersFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseAllOrdersSliderResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         uiStateListener.value = if (data.isEmpty() && !state.loadMore) {
@@ -154,8 +151,7 @@ class AllOrdersFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseRepeatOrderResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         cartManager.updateCartListState(true)
                         uiStateListener.value = state.copy(loadingPage = false, error = null)

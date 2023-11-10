@@ -8,7 +8,6 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.comment.SendCommentAboutShopResponseJsonParser.parseSendCommentAboutShopResponse
 import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -70,7 +69,7 @@ class SendCommentAboutShopFlowViewModel @Inject constructor(
                 )
             }.flowOn(Dispatchers.IO)
                 .onEach {
-                    val response = it.parseSendCommentAboutShopResponse()
+                    val response = it
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(
                             data = SendCommentState(sendComplete = true),

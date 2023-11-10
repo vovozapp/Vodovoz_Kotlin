@@ -9,8 +9,6 @@ import com.vodovoz.app.common.content.*
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.map.DeleteAddressResponseJsonParser.parseDeleteAddressResponse
-import com.vodovoz.app.data.parser.response.map.FetchAddressesSavedResponseJsonParser.parseFetchAddressesSavedResponse
 import com.vodovoz.app.feature.cart.ordering.OrderType
 import com.vodovoz.app.mapper.AddressMapper.mapToUI
 import com.vodovoz.app.ui.model.AddressFlowTitle
@@ -24,11 +22,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddressesFlowViewModel @Inject constructor(
-    private val savedState: SavedStateHandle,
+    savedState: SavedStateHandle,
     private val repository: MainRepository,
     private val accountManager: AccountManager,
-    private val application: Application
-) : PagingContractViewModel<AddressesFlowViewModel.AddressesState, AddressesFlowViewModel.AddressesEvents>(AddressesState()){
+    private val application: Application,
+) : PagingContractViewModel<AddressesFlowViewModel.AddressesState, AddressesFlowViewModel.AddressesEvents>(
+    AddressesState()
+) {
 
     private val openMode = savedState.get<String>("openMode")
     private val addressType = savedState.get<String>("addressType")
@@ -47,7 +47,7 @@ class AddressesFlowViewModel @Inject constructor(
 
     private fun fetchAddresses() {
         val userId = accountManager.fetchAccountId() ?: return
-        val type = when(addressType) {
+        val type = when (addressType) {
             "RERSONAL" -> 1
             "COMPANY" -> 2
             else -> null
@@ -55,9 +55,7 @@ class AddressesFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.fetchAddressesSaved(userId, type)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseFetchAddressesSavedResponse()
-
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
 
@@ -67,10 +65,26 @@ class AddressesFlowViewModel @Inject constructor(
                             val company = data.filter { it.type == OrderType.COMPANY.value }
                             val fullList = mutableListOf<Item>()
                             if (personal.isNotEmpty()) {
-                                fullList.addAll(listOf(AddressFlowTitle(application.resources.getString(R.string.personal_addresses_title))) + personal)
+                                fullList.addAll(
+                                    listOf(
+                                        AddressFlowTitle(
+                                            application.resources.getString(
+                                                R.string.personal_addresses_title
+                                            )
+                                        )
+                                    ) + personal
+                                )
                             }
                             if (company.isNotEmpty()) {
-                                fullList.addAll(listOf(AddressFlowTitle(application.resources.getString(R.string.company_addresses_title))) + company)
+                                fullList.addAll(
+                                    listOf(
+                                        AddressFlowTitle(
+                                            application.resources.getString(
+                                                R.string.company_addresses_title
+                                            )
+                                        )
+                                    ) + company
+                                )
                             }
 
                             uiStateListener.value = state.copy(
@@ -112,9 +126,9 @@ class AddressesFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.deleteAddress(addressId = addressId, userId = userId)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
+                .onEach { response ->
 
-                    when (val response = it.parseDeleteAddressResponse()) {
+                    when (response) {
                         is ResponseEntity.Success -> {
 
                             val list = state.data.items.filter { it.id != addressId }
@@ -123,10 +137,26 @@ class AddressesFlowViewModel @Inject constructor(
 
                             val fullList = mutableListOf<Item>()
                             if (personal.isNotEmpty()) {
-                                fullList.addAll(listOf(AddressFlowTitle(application.resources.getString(R.string.personal_addresses_title))) + personal)
+                                fullList.addAll(
+                                    listOf(
+                                        AddressFlowTitle(
+                                            application.resources.getString(
+                                                R.string.personal_addresses_title
+                                            )
+                                        )
+                                    ) + personal
+                                )
                             }
                             if (company.isNotEmpty()) {
-                                fullList.addAll(listOf(AddressFlowTitle(application.resources.getString(R.string.company_addresses_title))) + company)
+                                fullList.addAll(
+                                    listOf(
+                                        AddressFlowTitle(
+                                            application.resources.getString(
+                                                R.string.company_addresses_title
+                                            )
+                                        )
+                                    ) + company
+                                )
                             }
 
                             uiStateListener.value = state.copy(
@@ -179,6 +209,6 @@ class AddressesFlowViewModel @Inject constructor(
         val items: List<AddressUI> = emptyList(),
         val companyItems: List<AddressUI> = emptyList(),
         val personalItems: List<AddressUI> = emptyList(),
-        val fullList: List<Item> = emptyList()
+        val fullList: List<Item> = emptyList(),
     ) : State
 }

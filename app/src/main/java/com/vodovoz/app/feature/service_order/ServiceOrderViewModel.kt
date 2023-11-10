@@ -9,8 +9,6 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.service.OrderServiceResponseJsonParser.parseOrderServiceResponse
-import com.vodovoz.app.data.parser.response.service.ServiceOrderFormResponseJsonParser.parseServiceOrderFormResponse
 import com.vodovoz.app.mapper.ServiceOrderFormFieldMapper.mapToUI
 import com.vodovoz.app.ui.model.ServiceOrderFormFieldUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -24,7 +22,7 @@ import javax.inject.Inject
 class ServiceOrderViewModel @Inject constructor(
     private val repository: MainRepository,
     private val accountManager: AccountManager,
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
 ) : PagingStateViewModel<ServiceOrderViewModel.ServiceOrderState>(ServiceOrderState()) {
 
     private val serviceType = savedStateHandle.get<String>("serviceType")
@@ -43,8 +41,7 @@ class ServiceOrderViewModel @Inject constructor(
                     )
                 )
             }.flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseServiceOrderFormResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         response.data.mapToUI().let { data ->
                             uiStateListener.value = state.copy(
@@ -87,8 +84,7 @@ class ServiceOrderViewModel @Inject constructor(
                     )
                 )
             }.flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseOrderServiceResponse()
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(
                             data = state.data.copy(

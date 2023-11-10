@@ -10,11 +10,13 @@ object LocalSyncExtensions {
 
     fun PagingData<ProductEntity>?.syncFavoriteProducts(localDataSource: LocalDataSource) {
         val favoriteList = localDataSource.fetchAllFavoriteProducts()
-        this?.map { productEntity -> productEntity.apply {
-            favoriteList.find { it == productEntity.id }?.let {
-                productEntity.isFavorite = true
+        this?.map { productEntity ->
+            productEntity.apply {
+                favoriteList.find { it == productEntity.id }?.let {
+                    productEntity.isFavorite = true
+                }
             }
-        } }
+        }
     }
 
     fun PagingData<ProductEntity>?.syncCartQuantity(localDataSource: LocalDataSource) {
@@ -29,11 +31,13 @@ object LocalSyncExtensions {
 
     fun List<ProductEntity>?.syncFavoriteProducts(localDataSource: LocalDataSource) {
         val favoriteList = localDataSource.fetchAllFavoriteProducts()
-        this?.map { productEntity -> productEntity.apply {
-            favoriteList.find { it == productEntity.id }?.let {
-                productEntity.isFavorite = true
+        this?.map { productEntity ->
+            productEntity.apply {
+                favoriteList.find { it == productEntity.id }?.let {
+                    productEntity.isFavorite = true
+                }
             }
-        } }
+        }
     }
 
     fun ProductDetailEntity?.syncFavoriteStatus(localDataSource: LocalDataSource) {
@@ -45,15 +49,20 @@ object LocalSyncExtensions {
 
     fun List<ProductEntity>?.syncCartQuantity(localDataSource: LocalDataSource) {
         val localCart = localDataSource.fetchCart()
-        this?.map { productEntity -> productEntity.apply {
-            localCart[productEntity.id]?.let { localQuantity -> productEntity.cartQuantity = localQuantity}
-        } }
+        this?.map { productEntity ->
+            productEntity.apply {
+                localCart[productEntity.id]?.let { localQuantity ->
+                    productEntity.cartQuantity = localQuantity
+                }
+            }
+        }
     }
 
     fun ProductDetailEntity.syncCartQuantity(localDataSource: LocalDataSource) {
         val localCart = localDataSource.fetchCart()
-        localCart[id]?.let { localQuantity -> cartQuantity = localQuantity}
+        localCart[id]?.let { localQuantity ->
+            cartQuantity = localQuantity
+        }
     }
-
 
 }

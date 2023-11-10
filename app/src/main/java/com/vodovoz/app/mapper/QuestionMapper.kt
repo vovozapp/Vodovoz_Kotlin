@@ -7,11 +7,12 @@ import com.vodovoz.app.ui.model.QuestionUI
 
 object QuestionMapper {
 
-    fun List<QuestionEntity>.mapToUI(): List<QuestionUI> = mutableListOf<QuestionUI>().also { uiList ->
-        forEach { uiList.add(it.mapToUI()) }
-    }
+    fun List<QuestionEntity>.mapToUI(): List<QuestionUI> =
+        mutableListOf<QuestionUI>().also { uiList ->
+            forEach { uiList.add(it.mapToUI()) }
+        }
 
-    fun QuestionEntity.mapToUI(): QuestionUI = when(this) {
+    fun QuestionEntity.mapToUI(): QuestionUI = when (this) {
         is QuestionEntity.MultiAnswer -> QuestionUI.MultiAnswer(
             name = name,
             code = code,
@@ -40,5 +41,4 @@ object QuestionMapper {
             linkList = linkList.mapToUI()
         )
     }
-
 }

@@ -9,8 +9,6 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.promotion.AllPromotionsResponseJsonParser.parseAllPromotionsResponse
-import com.vodovoz.app.data.parser.response.promotion.PromotionsByBannerResponseJsonParser.parsePromotionsByBannerResponse
 import com.vodovoz.app.mapper.AllPromotionBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.PromotionFilterUI
 import com.vodovoz.app.ui.model.custom.AllPromotionBundleUI
@@ -23,9 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AllPromotionsFlowViewModel @Inject constructor(
-    private val savedState: SavedStateHandle,
+    savedState: SavedStateHandle,
     private val repository: MainRepository,
-    //private val dataRepository: DataRepository,
     private val accountManager: AccountManager,
 ) : PagingStateViewModel<AllPromotionsFlowViewModel.AllPromotionsState>(AllPromotionsState()) {
 
@@ -49,11 +46,7 @@ class AllPromotionsFlowViewModel @Inject constructor(
                 }
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = when (dataSource) {
-                        is AllPromotionsFragment.DataSource.All -> it.parseAllPromotionsResponse()
-                        is AllPromotionsFragment.DataSource.ByBanner -> it.parsePromotionsByBannerResponse()
-                    }
+                .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
 

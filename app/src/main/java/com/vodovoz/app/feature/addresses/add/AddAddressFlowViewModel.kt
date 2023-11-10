@@ -9,8 +9,6 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.map.AddAddressResponseJsonParser.parseAddAddressResponse
-import com.vodovoz.app.data.parser.response.map.UpdateAddressResponseJsonParser.parseUpdateAddressResponse
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,12 +19,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddAddressFlowViewModel @Inject constructor(
-    private val savedState: SavedStateHandle,
+    savedState: SavedStateHandle,
     private val repository: MainRepository,
-    private val accountManager: AccountManager
+    private val accountManager: AccountManager,
 ) : PagingContractViewModel<AddAddressFlowViewModel.AddAddressState, AddAddressFlowViewModel.AddAddressEvents>(
     AddAddressState(item = savedState.get<AddressUI>("address"))
-){
+) {
 
     fun action(
         locality: String?,
@@ -36,7 +34,7 @@ class AddAddressFlowViewModel @Inject constructor(
         floor: String?,
         office: String?,
         comment: String?,
-        type: Int?
+        type: Int?,
     ) {
         val userId = accountManager.fetchAccountId() ?: return
         val addressId = state.data.item?.id
@@ -47,9 +45,38 @@ class AddAddressFlowViewModel @Inject constructor(
         val fullAddress = state.data.item?.fullAddress?.substringAfter("Россия, ") ?: ""
 
         if (addressId == null || addressId == 0L) {
-            addAddress(locality, street, house, entrance, floor, office, comment, type, userId, lat, longitude, length, fullAddress)
+            addAddress(
+                locality,
+                street,
+                house,
+                entrance,
+                floor,
+                office,
+                comment,
+                type,
+                userId,
+                lat,
+                longitude,
+                length,
+                fullAddress
+            )
         } else {
-            updateAddress(locality, street, house, entrance, floor, office, comment, type, userId, addressId, lat, longitude, length, fullAddress)
+            updateAddress(
+                locality,
+                street,
+                house,
+                entrance,
+                floor,
+                office,
+                comment,
+                type,
+                userId,
+                addressId,
+                lat,
+                longitude,
+                length,
+                fullAddress
+            )
         }
     }
 
@@ -66,7 +93,7 @@ class AddAddressFlowViewModel @Inject constructor(
         lat: String,
         longitude: String,
         length: String,
-        fullAddress: String
+        fullAddress: String,
     ) {
         uiStateListener.value = state.copy(loadingPage = true)
 
@@ -91,16 +118,23 @@ class AddAddressFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseAddAddressResponse()
+                .onEach { response ->
                     uiStateListener.value = state.copy(
                         loadingPage = false,
                         error = null
                     )
                     when (response) {
                         is ResponseEntity.Success -> eventListener.emit(AddAddressEvents.AddAddressSuccess)
-                        is ResponseEntity.Error -> eventListener.emit(AddAddressEvents.AddAddressError(response.errorMessage))
-                        is ResponseEntity.Hide -> eventListener.emit(AddAddressEvents.AddAddressError("Неизвестная ошибка"))
+                        is ResponseEntity.Error -> eventListener.emit(
+                            AddAddressEvents.AddAddressError(
+                                response.errorMessage
+                            )
+                        )
+                        is ResponseEntity.Hide -> eventListener.emit(
+                            AddAddressEvents.AddAddressError(
+                                "Неизвестная ошибка"
+                            )
+                        )
                     }
                 }
                 .flowOn(Dispatchers.Default)
@@ -127,7 +161,7 @@ class AddAddressFlowViewModel @Inject constructor(
         lat: String,
         longitude: String,
         length: String,
-        fullAddress: String
+        fullAddress: String,
     ) {
         uiStateListener.value = state.copy(loadingPage = true)
 
@@ -153,16 +187,23 @@ class AddAddressFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseUpdateAddressResponse()
+                .onEach { response ->
                     uiStateListener.value = state.copy(
                         loadingPage = false,
                         error = null
                     )
                     when (response) {
                         is ResponseEntity.Success -> eventListener.emit(AddAddressEvents.AddAddressSuccess)
-                        is ResponseEntity.Error -> eventListener.emit(AddAddressEvents.AddAddressError(response.errorMessage))
-                        is ResponseEntity.Hide -> eventListener.emit(AddAddressEvents.AddAddressError("Неизвестная ошибка"))
+                        is ResponseEntity.Error -> eventListener.emit(
+                            AddAddressEvents.AddAddressError(
+                                response.errorMessage
+                            )
+                        )
+                        is ResponseEntity.Hide -> eventListener.emit(
+                            AddAddressEvents.AddAddressError(
+                                "Неизвестная ошибка"
+                            )
+                        )
                     }
                 }
                 .flowOn(Dispatchers.Default)
@@ -182,6 +223,6 @@ class AddAddressFlowViewModel @Inject constructor(
     }
 
     data class AddAddressState(
-        val item: AddressUI? = null
+        val item: AddressUI? = null,
     ) : State
 }

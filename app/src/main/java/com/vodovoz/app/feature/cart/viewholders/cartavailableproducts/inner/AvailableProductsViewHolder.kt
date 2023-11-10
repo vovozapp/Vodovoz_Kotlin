@@ -143,7 +143,9 @@ class AvailableProductsViewHolder(
             if (item.isGift || item.chipsBan == 2 || item.chipsBan == 3 || item.chipsBan == 5) return@setOnClickListener
 
             item.oldQuantity = item.cartQuantity
-//            item.cartQuantity++
+            if(item.cartQuantity == 0) {
+                item.cartQuantity++
+            }
             updateCartQuantity(item)
             showAmountController()
         }

@@ -5,8 +5,6 @@ import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.*
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.parser.response.discount_card.ActivateDiscountCardInfoJsonParser.parseActivateDiscountCardInfoResponse
-import com.vodovoz.app.data.parser.response.discount_card.ActivateDiscountCardJsonParser.parseActivateDiscountCardResponse
 import com.vodovoz.app.mapper.ActivateDiscountCardBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.custom.ActivateDiscountCardBundleUI
 import com.vodovoz.app.util.FieldValidationsSettings
@@ -20,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DiscountCardFlowViewModel @Inject constructor(
     private val repository: MainRepository,
-    private val accountManager: AccountManager
+    private val accountManager: AccountManager,
 ) : PagingContractViewModel<DiscountCardFlowViewModel.DiscountCardState, DiscountCardFlowViewModel.DiscountCardEvents>(
     DiscountCardState()
 ) {
@@ -38,7 +36,8 @@ class DiscountCardFlowViewModel @Inject constructor(
     }
 
     fun changeCardValue(value: String) {
-        state.data.activateDiscountCardBundleUI?.discountCardPropertyUIList?.find { it.code == "TELEFON" }?.value = value
+        state.data.activateDiscountCardBundleUI?.discountCardPropertyUIList?.find { it.code == "TELEFON" }?.value =
+            value
     }
 
 
@@ -48,8 +47,7 @@ class DiscountCardFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.fetchActivateDiscountCardInfo(userId)) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseActivateDiscountCardInfoResponse()
+                .onEach { response ->
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         state.copy(
@@ -113,8 +111,7 @@ class DiscountCardFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.activateDiscountCard(userId, valueBuilder.toString())) }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it.parseActivateDiscountCardResponse()
+                .onEach { response ->
 
                     when (response) {
                         is ResponseEntity.Hide -> {
@@ -146,7 +143,7 @@ class DiscountCardFlowViewModel @Inject constructor(
 
 
     data class DiscountCardState(
-        val activateDiscountCardBundleUI: ActivateDiscountCardBundleUI? = null
+        val activateDiscountCardBundleUI: ActivateDiscountCardBundleUI? = null,
     ) : State
 
     sealed class DiscountCardEvents : Event {

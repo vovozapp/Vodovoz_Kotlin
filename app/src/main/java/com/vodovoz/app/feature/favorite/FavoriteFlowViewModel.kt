@@ -11,8 +11,6 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.SortType
-import com.vodovoz.app.data.parser.response.favorite.FavoriteHeaderResponseJsonParser.parseFavoriteProductsHeaderBundleResponse
-import com.vodovoz.app.data.parser.response.paginatedProducts.FavoriteProductsResponseJsonParser.parseFavoriteProductsResponse
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.mapper.FavoriteProductsHeaderBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
@@ -92,7 +90,7 @@ class FavoriteFlowViewModel @Inject constructor(
             }
                 .flowOn(Dispatchers.IO)
                 .onEach {
-                    val response = it.parseFavoriteProductsHeaderBundleResponse()
+                    val response = it
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         uiStateListener.value = state.copy(
@@ -183,7 +181,7 @@ class FavoriteFlowViewModel @Inject constructor(
             }
                 .flowOn(Dispatchers.IO)
                 .onEach {
-                    val response = it.parseFavoriteProductsResponse()
+                    val response = it
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         val mappedFeed = FavoritesMapper.mapFavoritesListByManager(
