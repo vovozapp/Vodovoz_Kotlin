@@ -5,9 +5,7 @@ import com.vodovoz.app.ui.model.BannerUI
 
 object BannerMapper {
 
-    fun List<BannerEntity>.mapToUI(): List<BannerUI> = mutableListOf<BannerUI>().also { uiList ->
-        forEach { uiList.add(it.mapToUI()) }
-    }
+    fun List<BannerEntity>.mapToUI() = map { it.mapToUI() }
 
     fun BannerEntity.mapToUI() = BannerUI(
         id = id,

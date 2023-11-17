@@ -5,9 +5,7 @@ import com.vodovoz.app.ui.model.BottleUI
 
 object BottleMapper {
 
-    fun List<BottleEntity>.mapToUI(): List<BottleUI> = mutableListOf<BottleUI>().also { uiList ->
-        forEach { uiList.add(it.mapToUI()) }
-    }
+    fun List<BottleEntity>.mapToUI() = map { it.mapToUI() }
 
     fun BottleEntity.mapToUI() = BottleUI(
         id = id,

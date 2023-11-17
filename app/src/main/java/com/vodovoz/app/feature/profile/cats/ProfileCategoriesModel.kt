@@ -4,6 +4,9 @@ import android.os.Parcelable
 import com.squareup.moshi.JsonClass
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.data.model.common.OrderStatusEntity
+import com.vodovoz.app.mapper.OrderStatusMapper.mapToUI
+import com.vodovoz.app.ui.model.OrderUI
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -62,7 +65,23 @@ data class Zakaz(
     val PRICE: Int?,
     val STATUS_NAME: String?,
     val STATUS_NAME_ID: String?,
-) : Parcelable
+) : Parcelable {
+
+    fun mapToUi() = OrderUI (
+        id = ID?.toLong(),
+        price = PRICE,
+        date = (DATE_OUT ?: "") + ", " + (INTERVAL ?: ""),
+        orderStatusUI = OrderStatusEntity.fromId(STATUS_NAME_ID ?: "").mapToUI(),
+        address = ADRESSDOSTAVKI,
+        productUIList = listOf()
+    )
+}
+
+fun List<Zakaz>.mapToUi(): List<OrderUI> {
+    return this.map { it.mapToUi() }
+}
+
+
 
 @Parcelize
 @JsonClass(generateAdapter = true)

@@ -16,11 +16,11 @@ import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel.ProfileState.Companion.fetchStaticItems
+import com.vodovoz.app.feature.profile.cats.mapToUi
 import com.vodovoz.app.feature.profile.viewholders.models.*
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
-import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.mapper.UserDataMapper.mapToUI
 import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
 import com.vodovoz.app.util.extensions.debugLog
@@ -79,8 +79,14 @@ class ProfileFlowViewModel @Inject constructor(
 
     private fun CoroutineScope.firstLoadTasks(userId: Long) = arrayOf(
         async(Dispatchers.IO) { fetchProfileData(POSITION_1, userId) },
-        async(Dispatchers.IO) { fetchProfileCategories(POSITION_2, POSITION_4, userId) },
-        async(Dispatchers.IO) { fetchOrdersSlider(POSITION_3, userId) }
+        async(Dispatchers.IO) {
+            fetchProfileCategories(
+                POSITION_2,
+                POSITION_3,
+                POSITION_4,
+                userId
+            )
+        }
     )
 
     private fun CoroutineScope.secondLoadTasks(userId: Long) = arrayOf(
@@ -92,7 +98,6 @@ class ProfileFlowViewModel @Inject constructor(
         return runCatching {
             val response = repository.fetchUserData(userId)
             withContext(Dispatchers.Default) {
-//                val response = responseBody.parseUserDataResponse()
                 if (response is ResponseEntity.Success) {
                     listOf(
                         PositionItem(
@@ -111,29 +116,9 @@ class ProfileFlowViewModel @Inject constructor(
             .getOrDefault(emptyList())
     }
 
-    private suspend fun fetchOrdersSlider(position: Int, userId: Long): List<PositionItem> {
-        return runCatching {
-            val response = repository.fetchOrdersSliderProfile(userId)
-            withContext(Dispatchers.Default) {
-//                val response = responseBody.parseOrderSliderResponse()
-                if (response is ResponseEntity.Success) {
-                    listOf(
-                        PositionItem(
-                            position,
-                            ProfileOrders(position, response.data.mapToUI())
-                        )
-                    )
-                } else {
-                    emptyList()
-                }
-            }
-        }
-            .onFailure { showNetworkError(it) }
-            .getOrDefault(emptyList())
-    }
-
     private suspend fun fetchProfileCategories(
         positionBlock: Int,
+        positionOrders: Int,
         position: Int,
         userId: Long,
     ): List<PositionItem> {
@@ -159,12 +144,31 @@ class ProfileFlowViewModel @Inject constructor(
                     } else {
                         null
                     }
+
+                    val ordersList = responseBody.zakaz
+                    val itemOrders = if (!ordersList.isNullOrEmpty()) {
+                        PositionItem(
+                            positionOrders,
+                            ProfileOrders(position, ordersList.mapToUi())
+                        )
+                    } else {
+                        null
+                    }
+
                     tabManager.saveBottomNavProfileState(mapped.amount)
 
                     if (itemBlock != null) {
-                        listOf(itemBlock, item)
+                        if (itemOrders != null) {
+                            listOf(itemBlock, itemOrders, item)
+                        } else {
+                            listOf(itemBlock, item)
+                        }
                     } else {
-                        listOf(item)
+                        if (itemOrders != null) {
+                            listOf(itemOrders, item)
+                        } else {
+                            listOf(item)
+                        }
                     }
                 } else {
                     emptyList()

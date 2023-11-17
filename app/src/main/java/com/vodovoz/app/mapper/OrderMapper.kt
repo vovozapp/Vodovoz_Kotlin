@@ -7,9 +7,8 @@ import com.vodovoz.app.ui.model.OrderUI
 
 object OrderMapper {
 
-    fun List<OrderEntity>.mapToUI(): List<OrderUI> = mutableListOf<OrderUI>().also { uiList ->
-        forEach { uiList.add(it.mapToUI()) }
-    }
+    fun List<OrderEntity>.mapToUI() = map { it.mapToUI() }
+
 
     fun OrderEntity.mapToUI() = OrderUI(
         id = id,

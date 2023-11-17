@@ -339,7 +339,6 @@ class HomeFlowViewModel @Inject constructor(
                 }
                 val response = repository.fetchOrdersSliderProfile(userId)
                 withContext(Dispatchers.Default) {
-//                    val response = responseBody.parseOrderSliderResponse()
                     if (response is ResponseEntity.Success) {
                         listOf(
                             PositionItem(

@@ -6,9 +6,7 @@ import com.vodovoz.app.ui.model.CategoryDetailUI
 
 object CategoryDetailMapper  {
 
-    fun List<CategoryDetailEntity>.mapToUI(): List<CategoryDetailUI> = mutableListOf<CategoryDetailUI>().also { uiList ->
-        forEach { uiList.add(it.mapToUI()) }
-    }
+    fun List<CategoryDetailEntity>.mapToUI() = map { it.mapToUI() }
 
     fun CategoryDetailEntity.mapToUI() = CategoryDetailUI(
         id = id,

@@ -5,9 +5,7 @@ import com.vodovoz.app.ui.model.BrandUI
 
 object BrandMapper {
 
-    fun List<BrandEntity>.mapToUI(): List<BrandUI> = mutableListOf<BrandUI>().also { uiList ->
-        forEach { uiList.add(it.mapToUI()) }
-    }
+    fun List<BrandEntity>.mapToUI() = map { it.mapToUI() }
 
     fun BrandEntity.mapToUI() = BrandUI(
         id = id,
