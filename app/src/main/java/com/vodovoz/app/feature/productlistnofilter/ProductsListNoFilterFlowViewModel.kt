@@ -14,13 +14,13 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment.DataSource
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.ui.model.SortTypeUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -65,7 +65,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
                                 categoryHeader = checkSelectedFilter(data),
-                                categoryId = data.id ?: -1,
+                                categoryId = data.id ?: -1
                             ),
                             loadingPage = false,
                             error = null
@@ -178,7 +178,9 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                             state.copy(
                                 page = if (mappedFeed.isEmpty()) null else state.page?.plus(1),
                                 loadingPage = false,
-                                data = state.data.copy(itemsList = itemsList),
+                                data = state.data.copy(
+                                    itemsList = itemsList
+                                ),
                                 error = null,
                                 loadMore = false,
                                 bottomItem = null
@@ -281,7 +283,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                     categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == categoryId) }
                 ),
                 selectedCategoryId = categoryId,
-                sortType = SortType.NO_SORT
+                sortType = SortTypeUI()
             ),
             page = 1,
             loadMore = false,
@@ -299,7 +301,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                     categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == id) }
                 ),
                 selectedCategoryId = id,
-                sortType = SortType.NO_SORT
+                sortType = SortTypeUI()
             ),
             page = 1,
             loadMore = false
@@ -307,7 +309,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         fetchProductsByDataSource()
     }
 
-    fun updateBySortType(sortType: SortType) {
+    fun updateBySortType(sortType: SortTypeUI) {
         if (state.data.sortType == sortType) return
         val categoryUI = state.data.categoryHeader
         uiStateListener.value = state.copy(
@@ -344,7 +346,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
     data class ProductListNoFilterState(
         val categoryId: Long = -1,
         val categoryHeader: CategoryUI? = null,
-        val sortType: SortType = SortType.NO_SORT,
+        val sortType: SortTypeUI = SortTypeUI(),
         val isFirstLoadSorted: Boolean = false,
         val itemsList: List<Item> = emptyList(),
         val layoutManager: String = LINEAR,

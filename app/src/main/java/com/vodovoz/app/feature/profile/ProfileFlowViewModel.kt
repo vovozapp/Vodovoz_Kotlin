@@ -420,6 +420,43 @@ class ProfileFlowViewModel @Inject constructor(
         }
     }
 
+    fun repeatOrder(orderId: Long) {
+        val userId =
+            accountManager.fetchAccountId() ?: return
+        uiStateListener.value = state.copy(loadingPage = true, error = null)
+        viewModelScope.launch {
+            flow {
+                emit(
+                    repository.repeatOrder(
+                        userId = userId,
+                        orderId = orderId
+                    )
+                )
+            }
+                .flowOn(Dispatchers.IO)
+                .onEach { response ->
+                    if (response is ResponseEntity.Success) {
+                        cartManager.updateCartListState(true)
+                        uiStateListener.value = state.copy(loadingPage = false, error = null)
+                        eventListener.emit(ProfileEvents.GoToCart)
+                    } else {
+                        uiStateListener.value =
+                            state.copy(
+                                loadingPage = false,
+                                error = ErrorState.Error()
+                            )
+                    }
+                }
+                .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "repeat order error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
+                .collect()
+        }
+    }
+
     data class ProfileState(
         val positionItems: List<PositionItem>,
         val items: List<Item>,
@@ -447,6 +484,7 @@ class ProfileFlowViewModel @Inject constructor(
 
     sealed class ProfileEvents : Event {
         object Logout : ProfileEvents()
+        object GoToCart : ProfileEvents()
     }
 
     data class PositionItem(

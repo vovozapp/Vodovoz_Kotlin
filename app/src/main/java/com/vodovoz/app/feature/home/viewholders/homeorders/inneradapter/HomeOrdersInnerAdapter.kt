@@ -8,14 +8,21 @@ import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.ui.model.OrderUI.Companion.ORDER_VIEW_TYPE
 
 class HomeOrdersInnerAdapter(
-    private val clickListener: HomeOrdersSliderClickListener
+    private val clickListener: HomeOrdersSliderClickListener,
+    private val repeatOrderClickListener: (Long) -> Unit,
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
 
-        return when(viewType) {
-            ORDER_VIEW_TYPE-> {
-                HomeOrdersInnerViewHolder(getViewFromInflater(R.layout.view_holder_slider_order, parent), clickListener)
+        return when (viewType) {
+            ORDER_VIEW_TYPE -> {
+                HomeOrdersInnerViewHolder(
+                    getViewFromInflater(
+                        R.layout.view_holder_slider_order,
+                        parent
+                    ), clickListener,
+                    repeatOrderClickListener
+                )
             }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")

@@ -30,6 +30,7 @@ class HomeController(
     topBannerManager: TopBannerManager,
     bottomBannerManager: BottomBannerManager,
     private val showRateBottomSheetFragment: () -> Unit,
+    repeatOrderClickListener: (Long) -> Unit,
 ) : ItemController(
     HomeMainAdapter(
         clickListener = listener,
@@ -41,7 +42,8 @@ class HomeController(
         homeTitleClickListener = homeTitleClickListener,
         homeTabsClickListener = homeTabsClickListener,
         topBannerManager = topBannerManager,
-        bottomBannerManager = bottomBannerManager
+        bottomBannerManager = bottomBannerManager,
+        repeatOrderClickListener = repeatOrderClickListener
     )
 ) {
 

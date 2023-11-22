@@ -133,10 +133,10 @@ class HomePromotionsProductInnerViewHolder(
         binding.add.isSelected = item.leftItems == 0
 
         //Price per unit / or order quantity
-        when(item.pricePerUnit != 0) {
+        when(item.pricePerUnit.isNotEmpty()) {
             true -> {
                 binding.tvPricePerUnit.visibility = View.VISIBLE
-                binding.tvPricePerUnit.text = item.pricePerUnitStringBuilder
+                binding.tvPricePerUnit.text = item.pricePerUnit
             }
             false -> binding.tvPricePerUnit.visibility = View.GONE
         }

@@ -199,10 +199,10 @@ class ProductsGridViewHolder(
         binding.amountController.add.isSelected = item.leftItems == 0
 
         //Price per unit / or order quantity
-        when (item.pricePerUnit != 0) {
+        when (item.pricePerUnit.isNotEmpty()) {
             true -> {
                 binding.llPricesContainer.tvPricePerUnit.visibility = View.VISIBLE
-                binding.llPricesContainer.tvPricePerUnit.text = item.pricePerUnitStringBuilder
+                binding.llPricesContainer.tvPricePerUnit.text = item.pricePerUnit
             }
             false -> binding.llPricesContainer.tvPricePerUnit.visibility = View.INVISIBLE
         }

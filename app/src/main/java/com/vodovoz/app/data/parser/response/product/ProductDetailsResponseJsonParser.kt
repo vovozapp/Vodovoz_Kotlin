@@ -139,7 +139,16 @@ object ProductDetailsResponseJsonParser {
                     false -> 0
                 }
             },
-            pricePerUnit = safeInt("PROPERTY_TSENA_ZA_EDINITSU_TOVARA_VALUE")
+            pricePerUnit =if (has("DOPTSENA_ZA_EDINICY")) {
+                safeString("DOPTSENA_ZA_EDINICY")
+            } else if (has("PROPERTY_TSENA_ZA_EDINITSU_TOVARA_VALUE") && safeInt("PROPERTY_TSENA_ZA_EDINITSU_TOVARA_VALUE") != 0) {
+                StringBuilder()
+                    .append(safeInt("PROPERTY_TSENA_ZA_EDINITSU_TOVARA_VALUE"))
+                    .append(" ₽/кг")
+                    .toString()
+            } else {
+                ""
+            }
         )
     }
 

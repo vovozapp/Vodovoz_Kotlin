@@ -33,7 +33,6 @@ object ProductMapper {
         isGift = isGift,
         replacementProductUIList = replacementProductEntityList.mapToUI(),
         detailPictureList = detailPictureList,
-        pricePerUnitStringBuilder = getPricePerUnitStringBuilder(pricePerUnit),
         currentPriceStringBuilder = getCurrentPrice(priceList.mapToUI(), isGift),
         oldPriceStringBuilder = getOldPrice(priceList.mapToUI(), isGift),
         minimalPriceStringBuilder = getMinimalPrice(priceList.mapToUI()),
@@ -45,16 +44,16 @@ object ProductMapper {
         totalDisc = totalDisc
     )
 
-    private fun getPricePerUnitStringBuilder(pricePerUnit: Int): String {
-        return if (pricePerUnit == 0) {
-            ""
-        } else {
-            StringBuilder()
-                .append(pricePerUnit)
-                .append(" ₽/кг")
-                .toString()
-        }
-    }
+//    private fun getPricePerUnitStringBuilder(pricePerUnit: Int): String {
+//        return if (pricePerUnit == 0) {
+//            ""
+//        } else {
+//            StringBuilder()
+//                .append(pricePerUnit)
+//                .append(" ₽/кг")
+//                .toString()
+//        }
+//    }
 
     private fun getCurrentPrice(list: List<PriceUI>, isGift: Boolean, isNegative: Boolean = false) : String {
         if (list.isEmpty()) return ""

@@ -19,7 +19,6 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDepositPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setOrderQuantity
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
 import kotlinx.coroutines.flow.collect
@@ -32,20 +31,27 @@ class ServiceDetailProdViewHolder(
     val productsClickListener: ProductsClickListener,
     private val likeManager: LikeManager,
     private val cartManager: CartManager,
-    private val ratingProductManager: RatingProductManager
+    private val ratingProductManager: RatingProductManager,
 ) : ItemViewHolder<ProductUI>(view) {
 
-    private val binding: ViewHolderProductListServiceDetailBinding = ViewHolderProductListServiceDetailBinding.bind(view)
+    private val binding: ViewHolderProductListServiceDetailBinding =
+        ViewHolderProductListServiceDetailBinding.bind(view)
 
-    private val amountControllerTimer = object : CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
-        override fun onTick(millisUntilFinished: Long) {}
-        override fun onFinish() {
-            val item = item ?: return
-            val giftId = item.serviceGiftId ?: return
-            productsClickListener.onChangeProductQuantityServiceDetails(item.id, item.cartQuantity, item.oldQuantity, giftId)
-            hideAmountController(item)
+    private val amountControllerTimer =
+        object : CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
+            override fun onTick(millisUntilFinished: Long) {}
+            override fun onFinish() {
+                val item = item ?: return
+                val giftId = item.serviceGiftId ?: return
+                productsClickListener.onChangeProductQuantityServiceDetails(
+                    item.id,
+                    item.cartQuantity,
+                    item.oldQuantity,
+                    giftId
+                )
+                hideAmountController(item)
+            }
         }
-    }
 
     private val detailPictureFlowPagerAdapter = DetailPictureFlowPagerAdapter(
         clickListener = object : DetailPictureFlowClickListener {
@@ -67,7 +73,7 @@ class ServiceDetailProdViewHolder(
             val item = item ?: return@launch
             ratingProductManager
                 .observeRatings()
-                .filter{ it.containsKey(item.id) }
+                .filter { it.containsKey(item.id) }
                 .onEach {
                     item.rating = it[item.id] ?: item.rating
                     binding.rbRating.rating = item.rating
@@ -79,7 +85,7 @@ class ServiceDetailProdViewHolder(
             val item = item ?: return@launch
             likeManager
                 .observeLikes()
-                .filter{ it.containsKey(item.id) }
+                .filter { it.containsKey(item.id) }
                 .onEach {
                     item.isFavorite = it[item.id] ?: item.isFavorite
                     bindFav(item)
@@ -125,7 +131,11 @@ class ServiceDetailProdViewHolder(
             val coef = item.serviceDetailCoef ?: return@setOnClickListener
             if (item.isGift) return@setOnClickListener
             if (item.leftItems == 0) {
-                productsClickListener.onNotifyWhenBeAvailable(item.id, item.name, item.detailPicture)
+                productsClickListener.onNotifyWhenBeAvailable(
+                    item.id,
+                    item.name,
+                    item.detailPicture
+                )
                 return@setOnClickListener
             }
 
@@ -160,7 +170,7 @@ class ServiceDetailProdViewHolder(
 
         binding.imgFavoriteStatus.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            when(item.isFavorite) {
+            when (item.isFavorite) {
                 true -> {
                     item.isFavorite = false
                     binding.imgFavoriteStatus.isSelected = false
@@ -197,9 +207,9 @@ class ServiceDetailProdViewHolder(
         //If left items = 0
         binding.amountController.add.isSelected = item.leftItems == 0
 
-        if (item.pricePerUnit != 0) {
+        if (item.pricePerUnit.isNotEmpty()) {
             binding.tvPricePerUnit.visibility = View.VISIBLE
-            binding.tvPricePerUnit.setPricePerUnitText(item.pricePerUnit)
+            binding.tvPricePerUnit.text = item.pricePerUnit
         } else if (item.orderQuantity != 0) {
             binding.tvPricePerUnit.visibility = View.VISIBLE
             binding.tvPricePerUnit.setOrderQuantity(item.orderQuantity)
@@ -208,9 +218,12 @@ class ServiceDetailProdViewHolder(
         }
 
         var haveDiscount = false
-        when(item.priceList.size) {
+        when (item.priceList.size) {
             1 -> {
-                binding.tvPrice.setPriceText(item.priceList.first().currentPrice, itCanBeGift = true)
+                binding.tvPrice.setPriceText(
+                    item.priceList.first().currentPrice,
+                    itCanBeGift = true
+                )
                 if (item.serviceDetailCoef != null) {
                     binding.tvOldPrice.text =
                         buildString {
@@ -223,10 +236,12 @@ class ServiceDetailProdViewHolder(
                 }
 
                 binding.tvPriceCondition.visibility = View.GONE
-                if (item.priceList.first().currentPrice < item.priceList.first().oldPrice || item.isGift) haveDiscount = true
+                if (item.priceList.first().currentPrice < item.priceList.first().oldPrice || item.isGift) haveDiscount =
+                    true
             }
             else -> {
-                val minimalPrice = item.priceList.sortedBy { it.requiredAmount }.find { it.requiredAmount >= item.cartQuantity }
+                val minimalPrice = item.priceList.sortedBy { it.requiredAmount }
+                    .find { it.requiredAmount >= item.cartQuantity }
                 minimalPrice?.let {
                     binding.tvPrice.setPriceText(minimalPrice.currentPrice)
                     if (item.serviceDetailCoef != null) {
@@ -246,17 +261,16 @@ class ServiceDetailProdViewHolder(
         }
 
 
-
-       /* when(haveDiscount) {
-            true -> {
-                binding.tvPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
-                binding.tvOldPrice.visibility = View.VISIBLE
-            }
-            false -> {
-                binding.tvPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_new_black))
-                binding.tvOldPrice.visibility = View.GONE
-            }
-        }*/
+        /* when(haveDiscount) {
+             true -> {
+                 binding.tvPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
+                 binding.tvOldPrice.visibility = View.VISIBLE
+             }
+             false -> {
+                 binding.tvPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_new_black))
+                 binding.tvOldPrice.visibility = View.GONE
+             }
+         }*/
 
         binding.amountController.circleAmount.text = item.cartQuantity.toString()
         binding.amountController.amount.text = item.cartQuantity.toString()
@@ -287,7 +301,7 @@ class ServiceDetailProdViewHolder(
             }
         }
 
-        when(item.depositPrice != 0) {
+        when (item.depositPrice != 0) {
             true -> {
                 binding.tvDepositPrice.visibility = View.VISIBLE
                 binding.tvDepositPrice.setDepositPriceText(item.depositPrice)
@@ -295,7 +309,7 @@ class ServiceDetailProdViewHolder(
             false -> binding.tvDepositPrice.visibility = View.GONE
         }
 
-        when(item.priceList.size == 1 &&
+        when (item.priceList.size == 1 &&
                 item.priceList.first().currentPrice < item.priceList.first().oldPrice) {
             true -> {
                 isNotHaveStatuses = false
@@ -308,7 +322,7 @@ class ServiceDetailProdViewHolder(
             false -> binding.cwDiscountContainer.visibility = View.GONE
         }
 
-        when(isNotHaveStatuses) {
+        when (isNotHaveStatuses) {
             true -> binding.cgStatuses.visibility = View.GONE
             false -> binding.cgStatuses.visibility = View.VISIBLE
         }

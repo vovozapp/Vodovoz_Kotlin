@@ -7,7 +7,7 @@ class ProductEntity(
     val depositPrice: Int = 0,
     val rating: Double = 0.0,
     var leftItems: Int = 0,
-    val pricePerUnit: Int = 0,
+    val pricePerUnit: String = "",
     val name: String = "",
     var detailPicture: String = "",
     val commentAmount: String = "",

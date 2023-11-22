@@ -3,6 +3,7 @@ package com.vodovoz.app.data.parser.response.category
 import com.vodovoz.app.data.model.common.CategoryEntity
 import com.vodovoz.app.data.model.common.FilterValueEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.common.SortTypeListJsonParser.parseSortTypeList
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
@@ -46,6 +47,10 @@ object CategoryHeaderResponseJsonParser {
                         shareUrl = when(isNull("detail_page_url")) {
                             true -> ""
                             false -> responseJson.getString("detail_page_url")
+                        },
+                        sortTypeList = when(responseJson.has("sortirovka")){
+                            false -> null
+                            true -> responseJson.getJSONObject("sortirovka").parseSortTypeList()
                         }
                     )
                 )

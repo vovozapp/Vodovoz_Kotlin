@@ -11,12 +11,12 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.mapper.PastPurchasesHeaderBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.ui.model.SortTypeUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -269,7 +269,7 @@ class PastPurchasesFlowViewModel @Inject constructor(
                     categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == id) }
                 ),
                 selectedCategoryId = id,
-                sortType = SortType.NO_SORT
+                sortType = SortTypeUI()
             ),
             page = 1,
             loadMore = false
@@ -282,7 +282,7 @@ class PastPurchasesFlowViewModel @Inject constructor(
         uiStateListener.value = state.copy(
             data = state.data.copy(
                 selectedCategoryId = categoryId ?: -1,
-                sortType = SortType.NO_SORT,
+                sortType = SortTypeUI(),
             ),
             page = 1,
             loadMore = false,
@@ -291,7 +291,7 @@ class PastPurchasesFlowViewModel @Inject constructor(
         fetchPastPurchasesSorted()
     }
 
-    fun updateBySortType(sortType: SortType) {
+    fun updateBySortType(sortType: SortTypeUI) {
         if (state.data.sortType == sortType) return
         val categoryUI = state.data.favoriteCategory
         uiStateListener.value = state.copy(
@@ -332,7 +332,7 @@ class PastPurchasesFlowViewModel @Inject constructor(
         val favoriteCategory: CategoryUI? = null,
         val availableTitle: String? = null,
         val notAvailableTitle: String? = null,
-        val sortType: SortType = SortType.NO_SORT,
+        val sortType: SortTypeUI = SortTypeUI(),
         val isAvailable: Boolean = true,
         val selectedCategoryId: Long = -1,
         val isFirstLoadSorted: Boolean = false,

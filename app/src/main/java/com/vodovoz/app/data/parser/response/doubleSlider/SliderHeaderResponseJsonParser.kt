@@ -2,6 +2,7 @@ package com.vodovoz.app.data.parser.response.doubleSlider
 
 import com.vodovoz.app.data.model.common.CategoryEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.common.SortTypeListJsonParser.parseSortTypeList
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
 import org.json.JSONArray
@@ -28,6 +29,10 @@ object SliderHeaderResponseJsonParser {
         subCategoryEntityList = when(getJSONObject("razdel").isNull("LISTRAZDEL")) {
             true -> listOf()
             false -> getJSONObject("razdel").getJSONArray("LISTRAZDEL").parseSubCategoryEntityList()
+        },
+        sortTypeList = when (has("sortirovka")) {
+            false -> null
+            true -> getJSONObject("sortirovka").parseSortTypeList()
         }
     )
 

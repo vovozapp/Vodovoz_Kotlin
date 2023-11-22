@@ -21,7 +21,6 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
-import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentSearchFlowBinding
 import com.vodovoz.app.databinding.ViewSimpleTextChipBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
@@ -35,6 +34,8 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.ui.model.SortTypeListUI
+import com.vodovoz.app.ui.model.SortTypeUI
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -284,14 +285,25 @@ class SearchFragment : BaseFragment() {
         binding.tvCategoryName.text = state.categoryHeader?.productAmount
 
         binding.imgViewMode.setOnClickListener { viewModel.changeLayoutManager() }
-        binding.tvSort.setOnClickListener { showBottomSortSettings(state.sortType) }
+
+        binding.tvSort.visibility = View.INVISIBLE
+        state.categoryHeader?.sortTypeList?.let {sortTypeList->
+            binding.tvSort.setOnClickListener {
+                showBottomSortSettings(
+                    state.sortType,
+                    sortTypeList
+                )
+            }
+            binding.tvSort.text = state.sortType.sortName
+            binding.tvSort.visibility = View.VISIBLE
+        }
+
         binding.imgCategories.setOnClickListener {
             val category = state.categoryHeader ?: return@setOnClickListener
             val id = state.selectedCategoryId
             showMiniCatalog(category, id)
         }
         binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
-        binding.tvSort.text = state.sortType.sortName
 
         if (state.categoryHeader != null) {
             showContainer(true)
@@ -431,9 +443,17 @@ class SearchFragment : BaseFragment() {
         )
     )
 
-    private fun showBottomSortSettings(sortType: SortType) = findNavController().navigate(
-        SearchFragmentDirections.actionToSortProductsSettingsBottomFragment(sortType.name)
-    )
+    private fun showBottomSortSettings(
+        sortType: SortTypeUI,
+        sortTypeList: SortTypeListUI?,
+    ) = sortTypeList?.let {
+        findNavController().navigate(
+            SearchFragmentDirections.actionToSortProductsSettingsBottomFragment(
+                sortType,
+                it
+            )
+        )
+    }
 
     private fun observeResultLiveData() {
         findNavController().currentBackStackEntry?.savedStateHandle
@@ -442,8 +462,8 @@ class SearchFragment : BaseFragment() {
             }
 
         findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<String>(SORT_TYPE)?.observe(viewLifecycleOwner) { sortType ->
-                viewModel.updateBySortType(SortType.valueOf(sortType))
+            ?.getLiveData<SortTypeUI>(SORT_TYPE)?.observe(viewLifecycleOwner) { sortType ->
+                viewModel.updateBySortType(sortType)
             }
     }
 

@@ -20,7 +20,6 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
-import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentProductsFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
@@ -28,6 +27,8 @@ import com.vodovoz.app.feature.productlist.brand.BrandFlowClickListener
 import com.vodovoz.app.feature.productlist.brand.BrandFlowController
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.FilterValueUI
+import com.vodovoz.app.ui.model.SortTypeListUI
+import com.vodovoz.app.ui.model.SortTypeUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -64,7 +65,14 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
 
     private val brandController by lazy { BrandFlowController(brandClickListener(), space) }
     private val productsListFlowController by lazy {
-        ProductsListFlowController(viewModel, cartManager, likeManager, getProductsClickListener(), requireContext(), ratingProductManager)
+        ProductsListFlowController(
+            viewModel,
+            cartManager,
+            likeManager,
+            getProductsClickListener(),
+            requireContext(),
+            ratingProductManager
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,7 +124,11 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
             viewModel
                 .observeChangeLayoutManager()
                 .collect {
-                    productsListFlowController.changeLayoutManager(it, binding.productRecycler, binding.imgViewMode)
+                    productsListFlowController.changeLayoutManager(
+                        it,
+                        binding.productRecycler,
+                        binding.imgViewMode
+                    )
                 }
         }
     }
@@ -180,7 +192,17 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
         if (state.categoryHeader == null) return
 
         binding.imgViewMode.setOnClickListener { viewModel.changeLayoutManager() }
-        binding.tvSort.setOnClickListener { showBottomSortSettings(state.sortType) }
+        binding.tvSort.visibility = View.INVISIBLE
+        state.categoryHeader.sortTypeList?.let {sortTypeList->
+            binding.tvSort.setOnClickListener {
+                showBottomSortSettings(
+                    state.sortType,
+                    sortTypeList
+                )
+            }
+            binding.tvSort.text = state.sortType.sortName
+            binding.tvSort.visibility = View.VISIBLE
+        }
         binding.imgFilters.setOnClickListener {
             val filterBundle = state.filterBundle
             val id = state.categoryId
@@ -196,9 +218,7 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
             showSingleRootCatalogCatalog(id)
         }
 
-        binding.tvSort.text = state.sortType.sortName
-
-        when(state.filtersAmount) {
+        when (state.filtersAmount) {
             0 -> binding.tvFiltersAmount.visibility = View.INVISIBLE
             else -> {
                 binding.tvFiltersAmount.text = state.filtersAmount.toString()
@@ -213,7 +233,7 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
 
         val brandList = state.categoryHeader.primaryFilterValueList
 
-        when(brandList.isNotEmpty()) {
+        when (brandList.isNotEmpty()) {
             true -> {
                 binding.brandTabsContainer.visibility = View.VISIBLE
             }
@@ -224,7 +244,7 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
         brandController.submitList(brandList)
     }
 
-    private fun brandClickListener() : BrandFlowClickListener {
+    private fun brandClickListener(): BrandFlowClickListener {
         return object : BrandFlowClickListener {
             override fun onBrandClick(filterValue: FilterValueUI) {
                 viewModel.addPrimaryFilterValue(filterValue)
@@ -233,17 +253,29 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
         }
     }
 
-    private fun showAllFiltersFragment(filterBundle: FiltersBundleUI, id: Long) = findNavController().navigate(
-        PaginatedProductsCatalogFragmentDirections.actionToProductFiltersFragment(filterBundle, id)
-    )
+    private fun showAllFiltersFragment(filterBundle: FiltersBundleUI, id: Long) =
+        findNavController().navigate(
+            PaginatedProductsCatalogFragmentDirections.actionToProductFiltersFragment(
+                filterBundle,
+                id
+            )
+        )
 
     private fun showSingleRootCatalogCatalog(id: Long) = findNavController().navigate(
         PaginatedProductsCatalogFragmentDirections.actionToSingleRootCatalogBottomFragment(id)
     )
 
-    private fun showBottomSortSettings(sortType: SortType) = findNavController().navigate(
-        PaginatedProductsCatalogFragmentDirections.actionToSortProductsSettingsBottomFragment(sortType.name)
-    )
+    private fun showBottomSortSettings(
+        sortType: SortTypeUI,
+        sortTypeList: SortTypeListUI?,
+    ) = sortTypeList?.let {
+        findNavController().navigate(
+            PaginatedProductsCatalogFragmentDirections.actionToSortProductsSettingsBottomFragment(
+                sortType,
+                it
+            )
+        )
+    }
 
     private fun observeResultLiveData() {
         findNavController().currentBackStackEntry?.savedStateHandle
@@ -252,12 +284,13 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
             }
 
         findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<String>(SORT_TYPE)?.observe(viewLifecycleOwner) { sortType ->
-                viewModel.updateBySortType(SortType.valueOf(sortType))
+            ?.getLiveData<SortTypeUI>(SORT_TYPE)?.observe(viewLifecycleOwner) { sortType ->
+                viewModel.updateBySortType(sortType)
             }
 
         findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<FiltersBundleUI>(FILTER_BUNDLE)?.observe(viewLifecycleOwner) { filterBundle ->
+            ?.getLiveData<FiltersBundleUI>(FILTER_BUNDLE)
+            ?.observe(viewLifecycleOwner) { filterBundle ->
                 viewModel.updateFilterBundle(filterBundle)
             }
     }
@@ -265,7 +298,11 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
     private fun getProductsClickListener(): ProductsClickListener {
         return object : ProductsClickListener {
             override fun onProductClick(id: Long) {
-                findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToProductDetailFragment(id))
+                findNavController().navigate(
+                    PaginatedProductsCatalogFragmentDirections.actionToProductDetailFragment(
+                        id
+                    )
+                )
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {

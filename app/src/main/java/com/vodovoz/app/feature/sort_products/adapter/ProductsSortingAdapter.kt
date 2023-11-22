@@ -6,29 +6,29 @@ import android.view.ViewGroup
 import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
-import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.ViewHolderProductsSortingBinding
+import com.vodovoz.app.ui.model.SortTypeUI
 
 class ProductsSortingAdapter : RecyclerView.Adapter<ProductsSortingVH>() {
 
-    private var sortingList = listOf<SortType>()
-    private var selectedSorting: SortType? = null
-    private lateinit var selectSorting: (SortType) -> Unit
+    private var sortingList = listOf<SortTypeUI>()
+    private var selectedSorting: SortTypeUI? = null
+    private lateinit var selectSorting: (SortTypeUI) -> Unit
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateData(sortingList: List<SortType>, selectedSorting: SortType) {
+    fun updateData(sortingList: List<SortTypeUI>, selectedSorting: SortTypeUI) {
         this.sortingList = sortingList
         this.selectedSorting = selectedSorting
         notifyDataSetChanged()
     }
 
-    fun setupListeners(selectSorting: (SortType) -> Unit) {
+    fun setupListeners(selectSorting: (SortTypeUI) -> Unit) {
         this.selectSorting = selectSorting
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ) = ProductsSortingVH(
         ViewHolderProductsSortingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     ) { sortType ->
@@ -42,7 +42,7 @@ class ProductsSortingAdapter : RecyclerView.Adapter<ProductsSortingVH>() {
 
     override fun onBindViewHolder(
         holder: ProductsSortingVH,
-        position: Int
+        position: Int,
     ) = holder.onBind(sortingList[position], sortingList[position] == selectedSorting)
 
     override fun getItemCount() = sortingList.size
@@ -51,17 +51,19 @@ class ProductsSortingAdapter : RecyclerView.Adapter<ProductsSortingVH>() {
 
 class ProductsSortingVH(
     private val binding: ViewHolderProductsSortingBinding,
-    private val selectSort: (SortType) -> Unit
+    private val selectSort: (SortTypeUI) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    init { binding.root.setOnClickListener { selectSort(sortType) } }
+    init {
+        binding.root.setOnClickListener { selectSort(sortType) }
+    }
 
-    private lateinit var sortType: SortType
+    private lateinit var sortType: SortTypeUI
 
-    fun onBind(sortType: SortType, isSelected: Boolean) {
+    fun onBind(sortType: SortTypeUI, isSelected: Boolean) {
         this.sortType = sortType
         binding.tvName.text = sortType.sortName
-        when(isSelected) {
+        when (isSelected) {
             true -> TextViewCompat.setTextAppearance(binding.tvName, R.style.TextViewNormalBlue)
             false -> TextViewCompat.setTextAppearance(binding.tvName, R.style.TextViewNormalGray)
         }

@@ -21,7 +21,6 @@ import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.common.tab.TabManager
-import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentPastPurchasesFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFragmentDirections
@@ -31,6 +30,8 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllList
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.ui.model.SortTypeListUI
+import com.vodovoz.app.ui.model.SortTypeUI
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -45,7 +46,7 @@ class PastPurchasesFragment : BaseFragment() {
         )
     }
 
-    private val viewModel: PastPurchasesFlowViewModel by viewModels()
+    internal val viewModel: PastPurchasesFlowViewModel by viewModels()
 
     @Inject
     lateinit var cartManager: CartManager
@@ -214,7 +215,17 @@ class PastPurchasesFragment : BaseFragment() {
         binding.availableContainer.isVisible =
             state.availableTitle != null || state.notAvailableTitle != null
 
-        binding.tvSort.setOnClickListener { showBottomSortSettings(state.sortType) }
+        binding.tvSort.visibility = View.INVISIBLE
+        state.favoriteCategory?.sortTypeList?.let {sortTypeList->
+            binding.tvSort.setOnClickListener {
+                showBottomSortSettings(
+                    state.sortType,
+                    sortTypeList
+                )
+            }
+            binding.tvSort.text = state.sortType.sortName
+            binding.tvSort.visibility = View.VISIBLE
+        }
         binding.imgCategories.setOnClickListener {
             val category = state.favoriteCategory ?: return@setOnClickListener
             val id = state.selectedCategoryId //?: return@setOnClickListener
@@ -292,9 +303,17 @@ class PastPurchasesFragment : BaseFragment() {
         )
     )
 
-    private fun showBottomSortSettings(sortType: SortType) = findNavController().navigate(
-        FavoriteFragmentDirections.actionToSortProductsSettingsBottomFragment(sortType.name)
-    )
+    private fun showBottomSortSettings(
+        sortType: SortTypeUI,
+        sortTypeList: SortTypeListUI?,
+    ) = sortTypeList?.let {
+        findNavController().navigate(
+            FavoriteFragmentDirections.actionToSortProductsSettingsBottomFragment(
+                sortType,
+                it
+            )
+        )
+    }
 
     private fun observeResultLiveData() {
         findNavController().currentBackStackEntry?.savedStateHandle
@@ -304,9 +323,9 @@ class PastPurchasesFragment : BaseFragment() {
             }
 
         findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<String>(PaginatedProductsCatalogWithoutFiltersFragment.SORT_TYPE)
+            ?.getLiveData<SortTypeUI>(PaginatedProductsCatalogWithoutFiltersFragment.SORT_TYPE)
             ?.observe(viewLifecycleOwner) { sortType ->
-                viewModel.updateBySortType(SortType.valueOf(sortType))
+                viewModel.updateBySortType(sortType)
             }
     }
 

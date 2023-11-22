@@ -131,8 +131,8 @@ class HomeProductsInnerViewHolder(
         binding.add.isSelected = item.leftItems == 0
 
         //Price per unit / or order quantity
-        binding.tvPricePerUnit.isVisible = item.pricePerUnit != 0
-        binding.tvPricePerUnit.text = item.pricePerUnitStringBuilder
+        binding.tvPricePerUnit.isVisible = item.pricePerUnit.isNotEmpty()
+        binding.tvPricePerUnit.text = item.pricePerUnit
 
         //Price
         when (item.priceList.size) {

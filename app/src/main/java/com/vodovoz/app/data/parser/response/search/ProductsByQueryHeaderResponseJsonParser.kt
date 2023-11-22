@@ -2,6 +2,7 @@ package com.vodovoz.app.data.parser.response.search
 
 import com.vodovoz.app.data.model.common.CategoryEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.common.SortTypeListJsonParser.parseSortTypeList
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
@@ -27,6 +28,10 @@ object ProductsByQueryHeaderResponseJsonParser {
         subCategoryEntityList = when(getJSONObject("razdel").isNull("LISTRAZDEL")) {
             true -> listOf()
             false -> getJSONObject("razdel").getJSONArray("LISTRAZDEL").parseSubCategoryEntityList()
+        },
+        sortTypeList = when (has("sortirovka")) {
+            false -> null
+            true -> getJSONObject("sortirovka").parseSortTypeList()
         }
     )
 

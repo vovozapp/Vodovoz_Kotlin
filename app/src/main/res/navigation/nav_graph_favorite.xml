@@ -171,7 +171,10 @@
         android:label="SortProductsSettingsBottomFragment">
         <argument
             android:name="sortType"
-            app:argType="string" />
+            app:argType="com.vodovoz.app.ui.model.SortTypeUI" />
+        <argument
+            android:name="sortTypeList"
+            app:argType="com.vodovoz.app.ui.model.SortTypeListUI" />
     </dialog>
     <fragment
         android:id="@+id/productDetailFragment"

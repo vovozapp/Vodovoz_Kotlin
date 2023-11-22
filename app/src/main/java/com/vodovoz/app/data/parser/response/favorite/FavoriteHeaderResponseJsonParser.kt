@@ -5,6 +5,7 @@ import com.vodovoz.app.data.model.common.CategoryEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.features.FavoriteProductsHeaderBundleEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
+import com.vodovoz.app.data.parser.common.SortTypeListJsonParser.parseSortTypeList
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
@@ -46,6 +47,10 @@ object FavoriteHeaderResponseJsonParser {
         subCategoryEntityList = when(getJSONObject("razdel").isNull("LISTRAZDEL")) {
             true -> listOf()
             false -> getJSONObject("razdel").getJSONArray("LISTRAZDEL").parseSubCategoryEntityList()
+        },
+        sortTypeList = when (has("sortirovka")) {
+            false -> null
+            true -> getJSONObject("sortirovka").parseSortTypeList()
         }
     )
 

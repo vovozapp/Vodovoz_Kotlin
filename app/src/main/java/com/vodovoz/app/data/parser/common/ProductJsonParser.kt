@@ -9,11 +9,12 @@ import kotlin.math.roundToInt
 
 object ProductJsonParser {
 
-    fun JSONArray.parseProductEntityList(): List<ProductEntity> = mutableListOf<ProductEntity>().apply {
-        for (index in 0 until length()) {
-            add(getJSONObject(index).parseProductEntity())
+    fun JSONArray.parseProductEntityList(): List<ProductEntity> =
+        mutableListOf<ProductEntity>().apply {
+            for (index in 0 until length()) {
+                add(getJSONObject(index).parseProductEntity())
+            }
         }
-    }
 
     fun JSONObject.parseProductEntity(): ProductEntity {
         var status = ""
@@ -30,37 +31,38 @@ object ProductJsonParser {
         val detailPicture = getString("DETAIL_PICTURE")
 
         return ProductEntity(
-            id = when(has("PRODUCT_ID")) {
+            id = when (has("PRODUCT_ID")) {
                 true -> getLong("PRODUCT_ID")
                 false -> getLong("ID")
             },
             name = getString("NAME"),
             detailPicture = detailPicture.parseImagePath(),
             priceList = getJSONArray("EXTENDED_PRICE").parsePriceList(),
-            rating = when(has("PROPERTY_RATING_VALUE")) {
+            rating = when (has("PROPERTY_RATING_VALUE")) {
                 true -> getDouble("PROPERTY_RATING_VALUE")
                 else -> 0.0
             },
             status = status,
             statusColor = statusColor,
-            commentAmount = when(has("COUTCOMMENTS")) {
+            commentAmount = when (has("COUTCOMMENTS")) {
                 true -> getString("COUTCOMMENTS")
                 false -> ""
             },
-            cartQuantity = when(has("QUANTITY")) {
+            cartQuantity = when (has("QUANTITY")) {
                 true -> getInt("QUANTITY")
                 false -> 0
             },
-            isFavorite = when(has("FAVORITE")) {
+            isFavorite = when (has("FAVORITE")) {
                 true -> getBoolean("FAVORITE")
                 false -> false
             },
             detailPictureList = parseDetailPictureList(detailPicture),
-            depositPrice = when(has("PROPERTY_ZALOGCIFR_VALUE")) {
+            depositPrice = when (has("PROPERTY_ZALOGCIFR_VALUE")) {
                 true -> safeInt("PROPERTY_ZALOGCIFR_VALUE")
-                false -> when(isNull("PROPERTY_ZALOG_VALUE")) {
+                false -> when (isNull("PROPERTY_ZALOG_VALUE")) {
                     true -> 0
-                    false -> when(safeString("PROPERTY_ZALOG_VALUE").filter { it.isDigit() }.isEmpty()) {
+                    false -> when (safeString("PROPERTY_ZALOG_VALUE").filter { it.isDigit() }
+                        .isEmpty()) {
                         true -> 0
                         false -> {
                             val zal = safeString("PROPERTY_ZALOG_VALUE").filter { it.isDigit() }
@@ -73,8 +75,8 @@ object ProductJsonParser {
                     }
                 }
             },
-            isBottle = when(has("CATALOG")) {
-                true -> when(getJSONObject("CATALOG").getLong("IBLOCK_ID")) {
+            isBottle = when (has("CATALOG")) {
+                true -> when (getJSONObject("CATALOG").getLong("IBLOCK_ID")) {
                     90L -> true
                     else -> false
                 }
@@ -87,8 +89,8 @@ object ProductJsonParser {
                     }
                 }
             },
-            isGift = when(has("CATALOG")) {
-                true -> when(getJSONObject("CATALOG").getLong("IBLOCK_ID")) {
+            isGift = when (has("CATALOG")) {
+                true -> when (getJSONObject("CATALOG").getLong("IBLOCK_ID")) {
                     26L -> true
                     else -> false
                 }
@@ -101,19 +103,28 @@ object ProductJsonParser {
                     }
                 }
             },
-            leftItems = when(has("CATALOG_QUANTITY")) {
+            leftItems = when (has("CATALOG_QUANTITY")) {
                 true -> safeInt("CATALOG_QUANTITY")
-                false -> when(has("CATALOG")) {
+                false -> when (has("CATALOG")) {
                     true -> getJSONObject("CATALOG").safeInt("CATALOG_QUANTITY")
                     false -> 0
                 }
             },
-            pricePerUnit = safeInt("PROPERTY_TSENA_ZA_EDINITSU_TOVARA_VALUE"),
-            replacementProductEntityList = when(has("nettovar") && !isNull("nettovar")) {
+            pricePerUnit = if (has("DOPTSENA_ZA_EDINICY")) {
+                safeString("DOPTSENA_ZA_EDINICY")
+            } else if (has("PROPERTY_TSENA_ZA_EDINITSU_TOVARA_VALUE") && safeInt("PROPERTY_TSENA_ZA_EDINITSU_TOVARA_VALUE") != 0) {
+                StringBuilder()
+                    .append(safeInt("PROPERTY_TSENA_ZA_EDINITSU_TOVARA_VALUE"))
+                    .append(" ₽/кг")
+                    .toString()
+            } else {
+                ""
+            },
+            replacementProductEntityList = when (has("nettovar") && !isNull("nettovar")) {
                 false -> listOf()
                 true -> getJSONObject("nettovar").getJSONArray("data").parseProductEntityList()
             },
-            chipsBan = when(has("ZAPRET_FISHKAM")) {
+            chipsBan = when (has("ZAPRET_FISHKAM")) {
                 true -> safeInt("ZAPRET_FISHKAM")
                 false -> null
             },
@@ -121,9 +132,10 @@ object ProductJsonParser {
         )
     }
 
-    private fun JSONArray.parsePriceList(): List<PriceEntity> = mutableListOf<PriceEntity>().also { list ->
-        for (index in 0 until length()) list.add(getJSONObject(index).parsePriceEntity())
-    }
+    private fun JSONArray.parsePriceList(): List<PriceEntity> =
+        mutableListOf<PriceEntity>().also { list ->
+            for (index in 0 until length()) list.add(getJSONObject(index).parsePriceEntity())
+        }
 
     private fun JSONObject.parsePriceEntity() = PriceEntity(
         price = safeDouble("PRICE").roundToInt(),
@@ -140,14 +152,14 @@ object ProductJsonParser {
             categoryIdList.add(categoryIdJsonArray.getInt(index))
         }
 
-        return when(categoryIdList.find { it == 2991 || it == 2990 || it == 75 }) {
+        return when (categoryIdList.find { it == 2991 || it == 2990 || it == 75 }) {
             null -> false
             else -> true
         }
     }
 
     private fun JSONObject.parseDetailPictureList(
-        detailPicture: String
+        detailPicture: String,
     ): List<String> = mutableListOf<String>().apply {
         add(detailPicture.parseImagePath())
         if (has("MORE_PHOTO")) {

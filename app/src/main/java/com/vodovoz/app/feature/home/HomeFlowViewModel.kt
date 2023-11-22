@@ -724,6 +724,43 @@ class HomeFlowViewModel @Inject constructor(
         )
     }
 
+    fun repeatOrder(orderId: Long) {
+        val userId =
+            accountManager.fetchAccountId() ?: return
+        uiStateListener.value = state.copy(loadingPage = true, error = null)
+        viewModelScope.launch {
+            flow {
+                emit(
+                    repository.repeatOrder(
+                        userId = userId,
+                        orderId = orderId
+                    )
+                )
+            }
+                .flowOn(Dispatchers.IO)
+                .onEach { response ->
+                    if (response is ResponseEntity.Success) {
+                        cartManager.updateCartListState(true)
+                        uiStateListener.value = state.copy(loadingPage = false, error = null)
+                        eventListener.emit(HomeEvents.GoToCart)
+                    } else {
+                        uiStateListener.value =
+                            state.copy(
+                                loadingPage = false,
+                                error = ErrorState.Error()
+                            )
+                    }
+                }
+                .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "repeat order error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
+                .collect()
+        }
+    }
+
     data class PositionItem(
         val position: Int,
         val item: Item,
@@ -735,6 +772,7 @@ class HomeFlowViewModel @Inject constructor(
 
         object GoToProfile : HomeEvents()
         object SendComment : HomeEvents()
+        object GoToCart : HomeEvents()
     }
 
     data class HomeState(

@@ -13,12 +13,14 @@ import com.vodovoz.app.feature.home.viewholders.homeorders.inneradapter.HomeOrde
 
 class HomeOrdersSliderViewHolder(
     view: View,
-    private val clickListener: HomeMainClickListener
+    private val clickListener: HomeMainClickListener,
+    repeatOrderClickListener: (Long) -> Unit,
 ) : ItemViewHolder<HomeOrders>(view) {
 
     private val binding: FragmentSliderOrderBinding = FragmentSliderOrderBinding.bind(view)
     private val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
-    private val homeOrdersAdapter = HomeOrdersInnerAdapter(getHomeOrdersSliderClickListener())
+    private val homeOrdersAdapter =
+        HomeOrdersInnerAdapter(getHomeOrdersSliderClickListener(), repeatOrderClickListener)
 
     init {
 
@@ -32,7 +34,7 @@ class HomeOrdersSliderViewHolder(
                     outRect: Rect,
                     view: View,
                     parent: RecyclerView,
-                    state: RecyclerView.State
+                    state: RecyclerView.State,
                 ) {
                     with(outRect) {
                         left = space
@@ -52,7 +54,7 @@ class HomeOrdersSliderViewHolder(
 
     }
 
-    private fun getHomeOrdersSliderClickListener() : HomeOrdersSliderClickListener {
+    private fun getHomeOrdersSliderClickListener(): HomeOrdersSliderClickListener {
         return object : HomeOrdersSliderClickListener {
             override fun onOrderClick(id: Long?) {
                 clickListener.onOrderClick(id)

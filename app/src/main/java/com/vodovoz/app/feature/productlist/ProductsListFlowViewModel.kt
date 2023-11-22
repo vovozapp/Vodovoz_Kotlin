@@ -16,14 +16,10 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.config.FiltersConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
-import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.ui.model.FilterUI
-import com.vodovoz.app.ui.model.FilterValueUI
-import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.ui.model.*
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
 import com.vodovoz.app.util.FilterBuilderExtensions.buildFilterQuery
 import com.vodovoz.app.util.FilterBuilderExtensions.buildFilterRangeQuery
@@ -242,7 +238,7 @@ class ProductsListFlowViewModel @Inject constructor(
         fetchProductsByCategory()
     }
 
-    fun updateBySortType(sortType: SortType) {
+    fun updateBySortType(sortType: SortTypeUI) {
         if (state.data.sortType == sortType) return
         val categoryUI = state.data.categoryHeader
         uiStateListener.value = state.copy(
@@ -325,7 +321,7 @@ class ProductsListFlowViewModel @Inject constructor(
         val categoryHeader: CategoryUI? = null,
         val filterBundle: FiltersBundleUI = FiltersBundleUI(),
         val filtersAmount: Int = 0,
-        val sortType: SortType = SortType.NO_SORT,
+        val sortType: SortTypeUI = SortTypeUI(),
         val isFirstLoadSorted: Boolean = false,
         val itemsList: List<Item> = emptyList(),
         val layoutManager: String = LINEAR,

@@ -38,7 +38,8 @@ object CategoryMapper {
         primaryFilterName = primaryFilterName,
         primaryFilterValueList = primaryFilterValueList.mapToUI(),
         categoryUIList = subCategoryEntityList.mapToUI(),
-        filterCode = filterCode
+        filterCode = filterCode,
+        sortTypeList = sortTypeList?.mapToUI()
     )
 
 }

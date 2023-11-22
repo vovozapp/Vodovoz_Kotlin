@@ -47,6 +47,8 @@ class OrdersHistoryFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeAccount()
+        observeUiState()
+        observeEvents()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,11 +59,8 @@ class OrdersHistoryFragment : BaseFragment() {
         bindErrorRefresh { viewModel.refreshSorted() }
 
         initFilterToolbar(true) { viewModel.goToFilter() }
-
-        observeUiState()
         observeResultLiveData()
         bindSwipeRefresh()
-        observeEvents()
     }
 
     private fun observeAccount() {
@@ -126,21 +125,19 @@ class OrdersHistoryFragment : BaseFragment() {
                             }
                         }
                         is AllOrdersFlowViewModel.AllOrdersEvent.GoToCart -> {
-                            if (it.boolean) {
-                                MaterialAlertDialogBuilder(requireContext())
-                                    .setTitle("Товары добавлены в корзину")
-                                    .setMessage("Перейти в корзину?")
-                                    .setPositiveButton("Да") { dialog, _ ->
-                                        dialog.dismiss()
-                                        if (findNavController().currentBackStackEntry?.destination?.id == R.id.allOrdersFragment) {
-                                            findNavController().navigate(
-                                                OrdersHistoryFragmentDirections.actionToCartFragment()
-                                            )
-                                        }
+                            MaterialAlertDialogBuilder(requireContext())
+                                .setTitle("Товары добавлены в корзину")
+                                .setMessage("Перейти в корзину?")
+                                .setPositiveButton("Да") { dialog, _ ->
+                                    dialog.dismiss()
+                                    if (findNavController().currentBackStackEntry?.destination?.id == R.id.allOrdersFragment) {
+                                        findNavController().navigate(
+                                            OrdersHistoryFragmentDirections.actionToCartFragment()
+                                        )
                                     }
-                                    .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
-                                    .show()
-                            }
+                                }
+                                .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
+                                .show()
                         }
                     }
                 }
@@ -160,7 +157,10 @@ class OrdersHistoryFragment : BaseFragment() {
             override fun onMoreDetailClick(orderId: Long, sendReport: Boolean) {
                 if (sendReport) {
                     val eventParameters = "\"ZakazID\":\"$orderId\""
-                    accountManager.reportYandexMetrica("Зашел в заказ, статус в пути", eventParameters)
+                    accountManager.reportYandexMetrica(
+                        "Зашел в заказ, статус в пути",
+                        eventParameters
+                    )
                 }
                 findNavController().navigate(
                     OrdersHistoryFragmentDirections.actionToOrderDetailsFragment(

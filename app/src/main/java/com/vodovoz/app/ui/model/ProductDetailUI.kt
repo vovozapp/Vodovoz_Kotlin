@@ -14,7 +14,7 @@ class ProductDetailUI(
     val status: String = "",
     val statusColor: String = "",
     val consumerInfo: String = "",
-    val pricePerUnit: Int = 0,
+    val pricePerUnit: String = "",
     val commentsAmount: Int = 0,
     val brandUI: BrandUI? = null,
     var cartQuantity: Int = 0,

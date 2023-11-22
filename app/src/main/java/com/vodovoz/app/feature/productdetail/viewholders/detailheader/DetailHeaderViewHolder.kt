@@ -26,7 +26,6 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setCommentQuantity
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductDetailUI
 import kotlinx.coroutines.flow.collect
@@ -40,10 +39,11 @@ class DetailHeaderViewHolder(
     private val productsClickListener: ProductsClickListener,
     private val likeManager: LikeManager,
     private val cartManager: CartManager,
-    private val ratingProductManager: RatingProductManager
+    private val ratingProductManager: RatingProductManager,
 ) : ItemViewHolder<DetailHeader>(view) {
 
-    private val binding: FragmentProductDetailsHeaderBinding = FragmentProductDetailsHeaderBinding.bind(view)
+    private val binding: FragmentProductDetailsHeaderBinding =
+        FragmentProductDetailsHeaderBinding.bind(view)
 
     private val detailPictureFlowPagerAdapter = DetailPictureFlowPagerAdapter(
         clickListener = object : DetailPictureFlowClickListener {
@@ -62,18 +62,19 @@ class DetailHeaderViewHolder(
         }
     )
 
-    private val amountControllerTimer = object : CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
-        override fun onTick(millisUntilFinished: Long) {}
-        override fun onFinish() {
-            val item = item?.productDetailUI ?: return
-            productsClickListener.onChangeProductQuantity(
-                id = item.id,
-                cartQuantity = item.cartQuantity,
-                oldQuantity = item.oldQuantity
-            )
-            hideAmountController(item)
+    private val amountControllerTimer =
+        object : CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
+            override fun onTick(millisUntilFinished: Long) {}
+            override fun onFinish() {
+                val item = item?.productDetailUI ?: return
+                productsClickListener.onChangeProductQuantity(
+                    id = item.id,
+                    cartQuantity = item.cartQuantity,
+                    oldQuantity = item.oldQuantity
+                )
+                hideAmountController(item)
+            }
         }
-    }
 
     init {
 
@@ -81,7 +82,7 @@ class DetailHeaderViewHolder(
             val item = item?.productDetailUI ?: return@launch
             ratingProductManager
                 .observeRatings()
-                .filter{ it.containsKey(item.id) }
+                .filter { it.containsKey(item.id) }
                 .onEach {
                     item.rating = it[item.id] ?: item.rating
                     binding.rbRating.rating = item.rating
@@ -93,7 +94,7 @@ class DetailHeaderViewHolder(
             val item = item?.productDetailUI ?: return@launch
             likeManager
                 .observeLikes()
-                .filter{ it.containsKey(item.id) }
+                .filter { it.containsKey(item.id) }
                 .onEach {
                     item.isFavorite = it[item.id] ?: item.isFavorite
                     bindFav(item)
@@ -134,14 +135,24 @@ class DetailHeaderViewHolder(
 
         binding.imgFavorite.setOnClickListener {
             val item = item?.productDetailUI ?: return@setOnClickListener
-            when(item.isFavorite) {
+            when (item.isFavorite) {
                 true -> {
                     item.isFavorite = false
-                    binding.imgFavorite.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
+                    binding.imgFavorite.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            itemView.context,
+                            R.drawable.ic_favorite_black
+                        )
+                    )
                 }
                 false -> {
                     item.isFavorite = true
-                    binding.imgFavorite.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
+                    binding.imgFavorite.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            itemView.context,
+                            R.drawable.png_ic_favorite_red
+                        )
+                    )
                 }
             }
             productsClickListener.onFavoriteClick(item.id, item.isFavorite)
@@ -189,25 +200,34 @@ class DetailHeaderViewHolder(
 
         binding.rbRating.onRatingBarChangeListener =
             OnRatingBarChangeListener { p0, newRating, p2 ->
-                productsClickListener.onChangeRating(item.productDetailUI.id, newRating, item.productDetailUI.rating)
+                productsClickListener.onChangeRating(
+                    item.productDetailUI.id,
+                    newRating,
+                    item.productDetailUI.rating
+                )
             }
         binding.rbRating.setIsIndicator(true)
 
-        when(item.productDetailUI.youtubeVideoCode.isEmpty()) {
+        when (item.productDetailUI.youtubeVideoCode.isEmpty()) {
             true -> binding.cwPlayVideo.visibility = View.GONE
             false -> binding.cwPlayVideo.visibility = View.VISIBLE
         }
 
         //If left items = 0
-        when(item.productDetailUI.leftItems == 0) {
+        when (item.productDetailUI.leftItems == 0) {
             true -> {
-                when(item.replacementProductsCategoryDetail?.productUIList?.isEmpty()) {
+                when (item.replacementProductsCategoryDetail?.productUIList?.isEmpty()) {
                     true -> {
                         binding.amountController.add.isSelected = true
                     }
                     false -> {
                         binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_orange_circle_normal)
-                        binding.amountController.add.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_swap))
+                        binding.amountController.add.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                itemView.context,
+                                R.drawable.ic_swap
+                            )
+                        )
                     }
                     else -> {}
                 }
@@ -218,39 +238,51 @@ class DetailHeaderViewHolder(
         }
 
         //Price per unit / or order quantity
-        when(item.productDetailUI.pricePerUnit != 0) {
+        when (item.productDetailUI.pricePerUnit.isNotEmpty()) {
             true -> {
                 binding.tvPricePerUnit.visibility = View.VISIBLE
-                binding.tvPricePerUnit.setPricePerUnitText(item.productDetailUI.pricePerUnit)
+                binding.tvPricePerUnit.text = item.productDetailUI.pricePerUnit
             }
             false -> binding.tvPricePerUnit.visibility = View.GONE
         }
 
         //Price
         var haveDiscount = false
-        when(item.productDetailUI.priceUIList.size) {
+        when (item.productDetailUI.priceUIList.size) {
             1 -> {
                 binding.tvCurrentPrice.setPriceText(item.productDetailUI.priceUIList.first().currentPrice)
                 binding.tvOldPrice.setPriceText(item.productDetailUI.priceUIList.first().oldPrice)
                 binding.tvPriceCondition.visibility = View.GONE
                 if (item.productDetailUI.priceUIList.first().currentPrice <
-                    item.productDetailUI.priceUIList.first().oldPrice) haveDiscount = true
+                    item.productDetailUI.priceUIList.first().oldPrice
+                ) haveDiscount = true
             }
             else -> {
-                val minimalPrice = item.productDetailUI.priceUIList.maxByOrNull { it.requiredAmount }!!
+                val minimalPrice =
+                    item.productDetailUI.priceUIList.maxByOrNull { it.requiredAmount }!!
                 binding.tvCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice)
                 binding.tvPriceCondition.setPriceCondition(minimalPrice.requiredAmount)
                 binding.tvPriceCondition.visibility = View.VISIBLE
                 binding.tvPricePerUnit.visibility = View.GONE
             }
         }
-        when(haveDiscount) {
+        when (haveDiscount) {
             true -> {
-                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
+                binding.tvCurrentPrice.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.red
+                    )
+                )
                 binding.tvOldPrice.visibility = View.VISIBLE
             }
             false -> {
-                binding.tvCurrentPrice.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
+                binding.tvCurrentPrice.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.text_black
+                    )
+                )
                 binding.tvOldPrice.visibility = View.GONE
             }
         }
@@ -272,11 +304,21 @@ class DetailHeaderViewHolder(
         when (item.productDetailUI.commentsAmount == 0) {
             true -> {
                 binding.tvCommentAmount.text = ""
-                binding.tvCommentAmount.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_gray))
+                binding.tvCommentAmount.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.text_gray
+                    )
+                )
             }
             else -> {
                 binding.tvCommentAmount.setCommentQuantity(item.productDetailUI.commentsAmount)
-                binding.tvCommentAmount.setTextColor(ContextCompat.getColor(itemView.context, R.color.bluePrimary))
+                binding.tvCommentAmount.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.bluePrimary
+                    )
+                )
             }
         }
 
@@ -296,7 +338,7 @@ class DetailHeaderViewHolder(
         }
 
         //DiscountPercent
-        when(item.productDetailUI.priceUIList.size == 1 &&
+        when (item.productDetailUI.priceUIList.size == 1 &&
                 item.productDetailUI.priceUIList.first().currentPrice <
                 item.productDetailUI.priceUIList.first().oldPrice) {
             true -> {
@@ -309,19 +351,33 @@ class DetailHeaderViewHolder(
             false -> binding.cwDiscountContainer.visibility = View.GONE
         }
 
-        when(isNotHaveStatuses) {
+        when (isNotHaveStatuses) {
             true -> binding.cwStatusContainer.visibility = View.GONE
             false -> binding.cwStatusContainer.visibility = View.VISIBLE
         }
 
-        detailPictureFlowPagerAdapter.submitList(item.productDetailUI.detailPictureList.map { DetailPicturePager(it) })
+        detailPictureFlowPagerAdapter.submitList(item.productDetailUI.detailPictureList.map {
+            DetailPicturePager(
+                it
+            )
+        })
 
     }
 
     private fun bindFav(item: ProductDetailUI) {
-        when(item.isFavorite) {
-            false -> binding.imgFavorite.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_favorite_black))
-            true -> binding.imgFavorite.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.png_ic_favorite_red))
+        when (item.isFavorite) {
+            false -> binding.imgFavorite.setImageDrawable(
+                ContextCompat.getDrawable(
+                    itemView.context,
+                    R.drawable.ic_favorite_black
+                )
+            )
+            true -> binding.imgFavorite.setImageDrawable(
+                ContextCompat.getDrawable(
+                    itemView.context,
+                    R.drawable.png_ic_favorite_red
+                )
+            )
         }
     }
 
@@ -361,9 +417,13 @@ class DetailHeaderViewHolder(
 
     private fun add(item: DetailHeader) {
         if (item.productDetailUI.leftItems == 0) {
-            when(item.replacementProductsCategoryDetail?.productUIList?.isEmpty()) {
+            when (item.replacementProductsCategoryDetail?.productUIList?.isEmpty()) {
                 true -> {
-                    productsClickListener.onNotifyWhenBeAvailable(item.productDetailUI.id, item.productDetailUI.name, item.productDetailUI.detailPictureList.first())
+                    productsClickListener.onNotifyWhenBeAvailable(
+                        item.productDetailUI.id,
+                        item.productDetailUI.name,
+                        item.productDetailUI.detailPictureList.first()
+                    )
                 }
                 false -> {
                     clickListener.navigateToReplacement(

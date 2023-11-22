@@ -19,13 +19,14 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
-import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.FragmentProductsWithoutFiltersFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.ui.model.SortTypeListUI
+import com.vodovoz.app.ui.model.SortTypeUI
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.Serializable
 import javax.inject.Inject
@@ -208,25 +209,41 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
         categoryTabsController.submitList(categoryUIList, "")
 
         binding.imgViewMode.setOnClickListener { viewModel.changeLayoutManager() }
-        binding.tvSort.setOnClickListener { showBottomSortSettings(state.sortType) }
+
+        binding.tvSort.visibility = View.INVISIBLE
+        state.categoryHeader.sortTypeList?.let { sortTypeList ->
+            binding.tvSort.setOnClickListener {
+                showBottomSortSettings(
+                    state.sortType,
+                    sortTypeList
+                )
+            }
+            binding.tvSort.text = state.sortType.sortName
+            binding.tvSort.visibility = View.VISIBLE
+        }
+
         binding.imgCategories.setOnClickListener {
             val category = state.categoryHeader// ?: return@setOnClickListener
             val id = state.selectedCategoryId //?: return@setOnClickListener
             showMiniCatalog(category, id)
         }
 
-        binding.tvSort.text = state.sortType.sortName
-
         binding.tvCategoryName.text = state.categoryHeader.name
         binding.tvProductAmount.text = state.categoryHeader.productAmount.toString()
 
     }
 
-    private fun showBottomSortSettings(sortType: SortType) = findNavController().navigate(
-        PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToSortProductsSettingsBottomFragment(
-            sortType.name
+    private fun showBottomSortSettings(
+        sortType: SortTypeUI,
+        sortTypeList: SortTypeListUI?,
+    ) = sortTypeList?.let {
+        findNavController().navigate(
+            PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToSortProductsSettingsBottomFragment(
+                sortType,
+                it
+            )
         )
-    )
+    }
 
     private fun showMiniCatalog(categoryUI: CategoryUI, id: Long) = findNavController().navigate(
         PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToMiniCatalogBottomFragment(
@@ -243,10 +260,10 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
             }
 
         findNavController().currentBackStackEntry?.savedStateHandle
-            ?.getLiveData<String>(SORT_TYPE)
+            ?.getLiveData<SortTypeUI>(SORT_TYPE)
             ?.observe(viewLifecycleOwner) { sortType ->
-                viewModel.updateBySortType(SortType.valueOf(sortType))
-                binding.tvSort.text = SortType.valueOf(sortType).sortName
+                viewModel.updateBySortType(sortType)
+                binding.tvSort.text = sortType.sortName
             }
     }
 

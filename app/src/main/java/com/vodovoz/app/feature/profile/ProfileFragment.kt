@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
@@ -74,7 +75,16 @@ class ProfileFragment : BaseFragment() {
             productsShowAllListener = getProductsShowClickListener(),
             productsClickListener = getProductsClickListener(),
             homeOrdersSliderClickListener = getHomeOrdersSliderClickListener()
-        )
+        ) {
+            viewModel.repeatOrder(it)
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        observeUiState()
+        observeEvents()
+        observeTabReselect()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -83,10 +93,7 @@ class ProfileFragment : BaseFragment() {
         profileController.bind(binding.profileFlowRv, binding.refreshContainer)
 
         bindErrorRefresh { viewModel.refresh() }
-        observeUiState()
-        observeEvents()
         bindRegOrLoginBtn()
-        observeTabReselect()
     }
 
     override fun onResume() {
@@ -101,7 +108,7 @@ class ProfileFragment : BaseFragment() {
     }
 
     private fun observeEvents() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             viewModel.observeEvent()
                 .collect {
                     when (it) {
@@ -112,6 +119,17 @@ class ProfileFragment : BaseFragment() {
                             flowViewModel.refresh()
                             cartFlowViewModel.refreshIdle()
                             favoriteViewModel.refreshIdle()
+                        }
+                        is ProfileFlowViewModel.ProfileEvents.GoToCart -> {
+                            MaterialAlertDialogBuilder(requireContext())
+                                .setTitle("Товары добавлены в корзину")
+                                .setMessage("Перейти в корзину?")
+                                .setPositiveButton("Да") { dialog, _ ->
+                                    dialog.dismiss()
+                                    tabManager.selectTab(R.id.graph_cart)
+                                }
+                                .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
+                                .show()
                         }
                     }
                 }

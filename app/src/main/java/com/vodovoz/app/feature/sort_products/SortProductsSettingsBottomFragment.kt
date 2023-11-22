@@ -5,14 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vodovoz.app.R
-import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.databinding.BsSelectionProductsSortingBinding
 import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragment
 import com.vodovoz.app.feature.sort_products.adapter.ProductsSortingAdapter
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
+import com.vodovoz.app.ui.model.SortTypeListUI
+import com.vodovoz.app.ui.model.SortTypeUI
 
 class SortProductsSettingsBottomFragment : BottomSheetDialogFragment() {
 
@@ -20,11 +22,10 @@ class SortProductsSettingsBottomFragment : BottomSheetDialogFragment() {
 
     private val productsSortingAdapter = ProductsSortingAdapter()
 
-    private lateinit var selectedSorting: SortType
+    private val args: SortProductsSettingsBottomFragmentArgs by navArgs()
 
-    private val sortingList = listOf(
-        SortType.POPULAR, SortType.ALPHABET, SortType.INCREASE_PRICE, SortType.REDUCE_PRICE
-    )
+    private lateinit var selectedSorting: SortTypeUI
+    private lateinit var sortingList: SortTypeListUI
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,13 +33,14 @@ class SortProductsSettingsBottomFragment : BottomSheetDialogFragment() {
     }
 
     private fun getArgs() {
-        selectedSorting = SortType.valueOf(SortProductsSettingsBottomFragmentArgs.fromBundle(requireArguments()).sortType)
+        selectedSorting = args.sortType
+        sortingList = args.sortTypeList
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ) = BsSelectionProductsSortingBinding.inflate(
         inflater,
         container,
@@ -60,11 +62,12 @@ class SortProductsSettingsBottomFragment : BottomSheetDialogFragment() {
         }
         productsSortingAdapter.setupListeners { sortType ->
             findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                PaginatedProductsCatalogFragment.SORT_TYPE, sortType.name)
+                PaginatedProductsCatalogFragment.SORT_TYPE, sortType
+            )
             dismiss()
         }
         productsSortingAdapter.updateData(
-            sortingList = sortingList,
+            sortingList = sortingList.sortTypeList,
             selectedSorting = selectedSorting
         )
     }

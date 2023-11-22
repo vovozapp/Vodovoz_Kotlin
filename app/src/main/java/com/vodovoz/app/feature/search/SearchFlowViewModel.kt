@@ -11,7 +11,6 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.search.SearchManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.data.model.common.SortType
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.DefaultSearchDataBundleMapper.mapToUI
@@ -19,6 +18,7 @@ import com.vodovoz.app.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.ui.model.SortTypeUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -345,7 +345,7 @@ class SearchFlowViewModel @Inject constructor(
                     categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == id) }
                 ),
                 selectedCategoryId = id,
-                sortType = SortType.NO_SORT
+                sortType = SortTypeUI()
             ),
             page = 1,
             loadMore = false,
@@ -354,7 +354,7 @@ class SearchFlowViewModel @Inject constructor(
         fetchProductsByQuery()
     }
 
-    fun updateBySortType(sortType: SortType) {
+    fun updateBySortType(sortType: SortTypeUI) {
         if (state.data.sortType == sortType) return
         val categoryUI = state.data.categoryHeader
         uiStateListener.value = state.copy(
@@ -398,7 +398,7 @@ class SearchFlowViewModel @Inject constructor(
         val popularQuery: List<String> = emptyList(),
         val historyQuery: List<String> = emptyList(),
         val matchesQuery: List<String> = emptyList(),
-        val sortType: SortType = SortType.NO_SORT,
+        val sortType: SortTypeUI = SortTypeUI(),
         val selectedCategoryId: Long = -1,
         val isFirstLoadSorted: Boolean = false,
         val itemsList: List<Item> = emptyList(),

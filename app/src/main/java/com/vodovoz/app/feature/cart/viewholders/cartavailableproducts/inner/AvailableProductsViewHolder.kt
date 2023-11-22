@@ -22,7 +22,6 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDepositPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setOrderQuantity
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -143,7 +142,7 @@ class AvailableProductsViewHolder(
             if (item.isGift || item.chipsBan == 2 || item.chipsBan == 3 || item.chipsBan == 5) return@setOnClickListener
 
             item.oldQuantity = item.cartQuantity
-            if(item.cartQuantity == 0) {
+            if (item.cartQuantity == 0) {
                 item.cartQuantity++
             }
             updateCartQuantity(item)
@@ -207,9 +206,9 @@ class AvailableProductsViewHolder(
 
         binding.amountController.add.isSelected = false
 
-        if (item.pricePerUnit != 0) {
+        if (item.pricePerUnit.isNotEmpty()) {
             binding.llPricesContainer.tvPricePerUnit.visibility = View.VISIBLE
-            binding.llPricesContainer.tvPricePerUnit.setPricePerUnitText(item.pricePerUnit)
+            binding.llPricesContainer.tvPricePerUnit.text = item.pricePerUnit
         } else if (item.orderQuantity != 0) {
             binding.llPricesContainer.tvPricePerUnit.visibility = View.VISIBLE
             binding.llPricesContainer.tvPricePerUnit.setOrderQuantity(item.orderQuantity)

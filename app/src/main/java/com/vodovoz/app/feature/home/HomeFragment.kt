@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
@@ -116,20 +117,30 @@ class HomeFragment : BaseFragment() {
             homeTitleClickListener = getTitleClickListener(),
             homeTabsClickListener = getHomeTabsClickListener(),
             topBannerManager = topBannerManager,
-            bottomBannerManager = bottomBannerManager
-        ) {
-            if (siteStateManager.showRateBottom != null) {
-                if (!siteStateManager.showRateBottom!!) {
-                    siteStateManager.showRateBottom = true
-                    RateBottomFragment().show(childFragmentManager, "TAG")
+            bottomBannerManager = bottomBannerManager,
+            showRateBottomSheetFragment = {
+                if (siteStateManager.showRateBottom != null) {
+                    if (!siteStateManager.showRateBottom!!) {
+                        siteStateManager.showRateBottom = true
+                        RateBottomFragment().show(childFragmentManager, "TAG")
+                    }
                 }
             }
+        ) {
+            flowViewModel.repeatOrder(it)
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         rateBottomViewModel.firstLoad()
+        observeUiState()
+        observeTabReselect()
+        observeEvents()
+        observeDeepLinkFromSiteState()
+        observeMediaManager()
+        observePushFromSiteState()
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -144,13 +155,7 @@ class HomeFragment : BaseFragment() {
             { startSpeechRecognizer() }
         )
         bindErrorRefresh { flowViewModel.refresh() }
-        observeUiState()
-        observeTabReselect()
-        observeEvents()
         bindBackPressed()
-        observeDeepLinkFromSiteState()
-        observeMediaManager()
-        observePushFromSiteState()
     }
 
     private fun observePushFromSiteState() {
@@ -433,6 +438,17 @@ class HomeFragment : BaseFragment() {
                                 findNavController().popBackStack()
                             }
                             findNavController().navigate(HomeFragmentDirections.actionToSendCommentAboutShopBottomDialog())
+                        }
+                        is HomeFlowViewModel.HomeEvents.GoToCart -> {
+                            MaterialAlertDialogBuilder(requireContext())
+                                .setTitle("Товары добавлены в корзину")
+                                .setMessage("Перейти в корзину?")
+                                .setPositiveButton("Да") { dialog, _ ->
+                                    dialog.dismiss()
+                                    tabManager.selectTab(R.id.graph_cart)
+                                }
+                                .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
+                                .show()
                         }
                     }
                 }

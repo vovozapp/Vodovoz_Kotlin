@@ -9,15 +9,24 @@ import com.vodovoz.app.ui.model.OrderUI
 
 class HomeOrdersInnerViewHolder(
     view: View,
-    private val clickListener: HomeOrdersSliderClickListener
+    private val clickListener: HomeOrdersSliderClickListener,
+    private val repeatOrderClickListener: (Long) -> Unit,
 ) : ItemViewHolder<OrderUI>(view) {
 
     private val binding: ViewHolderSliderOrderBinding = ViewHolderSliderOrderBinding.bind(view)
 
     init {
-        binding.root.setOnClickListener {
+        binding.infoLayout.setOnClickListener {
             val item = item ?: return@setOnClickListener
             clickListener.onOrderClick(item.id)
+        }
+        binding.tvAction.setOnClickListener {
+            val item = item ?: return@setOnClickListener
+            if (item.orderStatusUI != null && item.orderStatusUI.id == "F") {
+                repeatOrderClickListener(item.id ?: throw RuntimeException("Order's id is null"))
+            } else {
+                clickListener.onOrderClick(item.id)
+            }
         }
     }
 
@@ -25,6 +34,13 @@ class HomeOrdersInnerViewHolder(
         super.bind(item)
 
         binding.tvStatus.text = item.orderStatusUI?.statusName
+
+        binding.tvAction.text = if (item.orderStatusUI?.id == "F") {
+            "Повторить"
+        } else {
+            "Подробнее"
+        }
+
         binding.tvAddress.text = StringBuilder()
             .append("№")
             .append(item.id)
@@ -37,10 +53,30 @@ class HomeOrdersInnerViewHolder(
             binding.tvPrice.setPriceText(item.price)
         }
         item.orderStatusUI?.let {
-            binding.tvAction.setBackgroundColor(ContextCompat.getColor(itemView.context, item.orderStatusUI.color))
-            binding.tvStatus.setTextColor(ContextCompat.getColor(itemView.context, item.orderStatusUI.color))
-            binding.imgStatus.setImageDrawable(ContextCompat.getDrawable(itemView.context, item.orderStatusUI.image))
-            binding.imgStatus.setColorFilter(ContextCompat.getColor(itemView.context, item.orderStatusUI.color))
+            binding.tvAction.setBackgroundColor(
+                ContextCompat.getColor(
+                    itemView.context,
+                    item.orderStatusUI.color
+                )
+            )
+            binding.tvStatus.setTextColor(
+                ContextCompat.getColor(
+                    itemView.context,
+                    item.orderStatusUI.color
+                )
+            )
+            binding.imgStatus.setImageDrawable(
+                ContextCompat.getDrawable(
+                    itemView.context,
+                    item.orderStatusUI.image
+                )
+            )
+            binding.imgStatus.setColorFilter(
+                ContextCompat.getColor(
+                    itemView.context,
+                    item.orderStatusUI.color
+                )
+            )
         }
     }
 }

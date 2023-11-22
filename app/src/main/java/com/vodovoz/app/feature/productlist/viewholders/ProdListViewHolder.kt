@@ -22,7 +22,6 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDepositPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setOrderQuantity
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPricePerUnitText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
 import kotlinx.coroutines.flow.collect
@@ -142,7 +141,7 @@ class ProdListViewHolder(
             }
 
             item.oldQuantity = item.cartQuantity
-            if(item.cartQuantity == 0) {
+            if (item.cartQuantity == 0) {
                 item.cartQuantity++
             }
             updateCartQuantity(item)
@@ -207,9 +206,9 @@ class ProdListViewHolder(
         //If left items = 0
         binding.amountController.add.isSelected = item.leftItems == 0
 
-        if (item.pricePerUnit != 0) {
+        if (item.pricePerUnit.isNotEmpty()) {
             binding.llPricesContainer.tvPricePerUnit.visibility = View.VISIBLE
-            binding.llPricesContainer.tvPricePerUnit.setPricePerUnitText(item.pricePerUnit)
+            binding.llPricesContainer.tvPricePerUnit.text = item.pricePerUnit
         } else if (item.orderQuantity != 0) {
             binding.llPricesContainer.tvPricePerUnit.visibility = View.VISIBLE
             binding.llPricesContainer.tvPricePerUnit.setOrderQuantity(item.orderQuantity)

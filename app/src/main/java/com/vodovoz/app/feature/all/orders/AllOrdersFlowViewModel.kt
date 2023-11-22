@@ -155,7 +155,7 @@ class AllOrdersFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         cartManager.updateCartListState(true)
                         uiStateListener.value = state.copy(loadingPage = false, error = null)
-                        eventListener.emit(AllOrdersEvent.GoToCart(true))
+                        eventListener.emit(AllOrdersEvent.GoToCart)
                     } else {
                         uiStateListener.value =
                             state.copy(
@@ -182,7 +182,7 @@ class AllOrdersFlowViewModel @Inject constructor(
     ) : State
 
     sealed class AllOrdersEvent : Event {
-        data class GoToCart(val boolean: Boolean) : AllOrdersEvent()
+        object GoToCart : AllOrdersEvent()
         data class GoToFilter(val bundle: OrdersFiltersBundleUI) : AllOrdersEvent()
     }
 }

@@ -13,13 +13,14 @@ import com.vodovoz.app.feature.profile.viewholders.models.ProfileOrders
 
 class ProfileOrderSliderViewHolder(
     view: View,
-    clickListener: HomeOrdersSliderClickListener
+    clickListener: HomeOrdersSliderClickListener,
+    repeatOrderClickListener: (Long) -> Unit,
 ) : ItemViewHolder<ProfileOrders>(view) {
 
     private val binding: ItemProfileOrderSliderBinding = ItemProfileOrderSliderBinding.bind(view)
 
     private val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
-    private val homeOrdersAdapter = HomeOrdersInnerAdapter(clickListener)
+    private val homeOrdersAdapter = HomeOrdersInnerAdapter(clickListener, repeatOrderClickListener)
 
     init {
         binding.vpOrders.orientation = ViewPager2.ORIENTATION_HORIZONTAL
@@ -32,7 +33,7 @@ class ProfileOrderSliderViewHolder(
                     outRect: Rect,
                     view: View,
                     parent: RecyclerView,
-                    state: RecyclerView.State
+                    state: RecyclerView.State,
                 ) {
                     with(outRect) {
                         left = space

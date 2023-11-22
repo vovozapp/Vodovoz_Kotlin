@@ -3,6 +3,7 @@ package com.vodovoz.app.data.parser.response.past_purchases
 import com.vodovoz.app.data.model.common.CategoryEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.features.PastPurchasesHeaderBundleEntity
+import com.vodovoz.app.data.parser.common.SortTypeListJsonParser.parseSortTypeList
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.util.LogSettings
 import okhttp3.ResponseBody
@@ -49,6 +50,10 @@ object PastPurchasesHeaderResponseJsonParser {
                 false -> getJSONObject("razdel").getJSONArray("LISTRAZDEL").parseSubCategoryEntityList()
             }
             false -> listOf()
+        },
+        sortTypeList = when (has("sortirovka")) {
+            false -> null
+            true -> getJSONObject("sortirovka").parseSortTypeList()
         }
     )
 
