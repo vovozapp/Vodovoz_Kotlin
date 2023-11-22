@@ -2,6 +2,7 @@ package com.vodovoz.app.core.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.vodovoz.app.core.network.interceptor.ChangeUrlInterceptor
 import com.vodovoz.app.core.network.interceptor.VodovozInterceptor
 import com.vodovoz.app.data.MainApi
 import com.vodovoz.app.feature.map.api.MapKitFlowApi
@@ -29,9 +30,18 @@ abstract class NetworkModule {
     @Binds
     @Singleton
     @IntoSet
+    abstract fun providerUrlInterceptor(
+        changeUrlInterceptor: ChangeUrlInterceptor
+    ): Interceptor
+
+    @Binds
+    @Singleton
+    @IntoSet
     abstract fun providerHeaderInterceptor(
         vodovozInterceptor: VodovozInterceptor,
     ): Interceptor
+
+
 
     companion object {
 
