@@ -1,5 +1,6 @@
 package com.vodovoz.app.data
 
+import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.product.rating.RatingResponse
 import com.vodovoz.app.feature.bottom.services.newservs.model.AboutServicesNew
 import com.vodovoz.app.feature.home.ratebottom.model.RateBottomModel
@@ -50,6 +51,7 @@ interface MainApi {
         @Query("ascdesc") orientation: String? = null,
         @Query("nav") page: Int? = null,
         @Query("sect") categoryId: Long? = null,
+        @Query("versiyaan") version: String = BuildConfig.VERSION_NAME,
     ): ResponseBody
 
     //Двойной слайдер
@@ -182,7 +184,7 @@ interface MainApi {
         @Query("filtervalue") filterValue: String? = null,
         @Query("price_from") priceFrom: Int? = null,
         @Query("price_to") priceTo: Int? = null,
-        @QueryMap filterMap: HashMap<String, String> = hashMapOf()
+        @QueryMap filterMap: HashMap<String, String> = hashMapOf(),
     ): ResponseBody
 
 
@@ -294,6 +296,7 @@ interface MainApi {
         @Query("ascdesc") orientation: String? = null,
         @Query("nav") page: Int? = null,
         @Query("sect") categoryId: Long? = null,
+        @Query("versiyaan") version: String = BuildConfig.VERSION_NAME,
     ): ResponseBody
 
     //Двойной слайдер
@@ -431,7 +434,7 @@ interface MainApi {
     @GET("/newmobile/korzina/function/povtor/index.php")
     suspend fun repeatOrder(
         @Query("orderID") orderId: Long? = null,
-        @Query("userid") userId: Long? = null
+        @Query("userid") userId: Long? = null,
     ): ResponseBody
 
     @GET("newmobile/changeOrderStatus.php")
