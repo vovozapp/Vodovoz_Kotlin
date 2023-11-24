@@ -15,13 +15,6 @@ import retrofit2.http.*
 
 interface MainApi {
 
-    //Рекламный слайдер
-    @GET("/newmobile/glavnaya/slayders/index.php")
-    suspend fun fetchAdvBanners(
-        @Query("action") action: String? = null,
-        @Query("id") categoryId: Long? = null,
-    ): ResponseBody
-
     //Истории
     @GET("/newmobile/glavnaya/stories")
     suspend fun fetchHistories(
@@ -72,42 +65,6 @@ interface MainApi {
         @Query("userid") userId: Long,
     ): ResponseBody
 
-    //Акции
-    @GET("/newmobile/glavnaya/akcii.php")
-    suspend fun fetchPromotions(
-        @Query("action") action: String? = null,
-        @Query("razdelid") filterId: Long? = null,
-        @Query("id") promotionId: Long? = null,
-        @Query("platforma") platform: String? = null,
-        @Query("limit") limit: Int? = null,
-    ): ResponseBody
-
-    //Бренды
-    @GET("/newmobile/brand.php") //
-    suspend fun fetchBrands(
-        @Query("action") action: String? = null,
-        @Query("limit") limit: Int? = null,
-        @Query("id") brandId: String? = null,
-        @Query("idbrand") brandIdList: String? = null,
-        @Query("sort") sort: String? = null,
-        @Query("ascdesc") orientation: String? = null,
-        @Query("simvolkod") code: String? = null,
-        @Query("nav") page: Int? = null,
-        @Query("sect") categoryId: Long? = null,
-    ): ResponseBody
-
-
-    //Страны
-    @GET("/newmobile/glavnaya/strany.php")
-    suspend fun fetchCountries(
-        @Query("action") action: String,
-        @Query("id") countryId: Long? = null,
-        @Query("sort") sort: String? = null,
-        @Query("ascdesc") orientation: String? = null,
-        @Query("nav") page: Int? = null,
-        @Query("sect") categoryId: Long? = null,
-    ): ResponseBody
-
     //Просмотренные продукты
     @GET("/newmobile/viewedproduct/index.php")
     suspend fun fetchViewedProducts(
@@ -125,13 +82,13 @@ interface MainApi {
         @Query("rating") rating: Int? = null,
     ): ResponseBody
 
-    @GET("/newmobile/osnova/izbrannoe/adddel.php")
-    suspend fun fetchChangeFavoriteResponse(
-        @Query("iblock") blockId: Long? = null,
-        @Query("action") action: String? = null,
-        @Query("id") productIdList: String? = null,
-        @Query("userid") userId: Long? = null,
-    ): ResponseBody
+//    @GET("/newmobile/osnova/izbrannoe/adddel.php")
+//    suspend fun fetchChangeFavoriteResponse(
+//        @Query("iblock") blockId: Long? = null,
+//        @Query("action") action: String? = null,
+//        @Query("id") productIdList: String? = null,
+//        @Query("userid") userId: Long? = null,
+//    ): ResponseBody
 
     //Добавление в корзину
     @GET("/newmobile/korzina/function/add/index.php")
@@ -139,6 +96,7 @@ interface MainApi {
         @Query("action") action: String? = null,
         @Query("id") productId: Long? = null,
         @Query("quantity") quantity: Int? = null,
+        @Query("idquanit", encoded = true) idWithGift: String? = null,
     ): ResponseBody
 
     //Изменение количества товаров в корзине
@@ -187,7 +145,6 @@ interface MainApi {
         @QueryMap filterMap: HashMap<String, String> = hashMapOf(),
     ): ResponseBody
 
-
     /**
      * Корзина
      * **/
@@ -206,11 +163,11 @@ interface MainApi {
     //Изменение колличества товаров в корзине fetchChangeProductsQuantityResponse
 
     //Удаление из корзины
-    @GET("/newmobile/korzina/function/deletto/index.php")
-    suspend fun fetchDeleteProductResponse(
-        @Query("action") action: String? = null,
-        @Query("id") productId: Long? = null,
-    ): ResponseBody
+//    @GET("/newmobile/korzina/function/deletto/index.php")
+//    suspend fun fetchDeleteProductResponse(
+//        @Query("action") action: String? = null,
+//        @Query("id") productId: Long? = null,
+//    ): ResponseBody
 
     //Очистить корзину
     @GET("newmobile/korzina/function/delkorzina/index.php")
@@ -288,30 +245,7 @@ interface MainApi {
         @Query("sect") categoryId: Long? = null,
     ): ResponseBody
 
-    //Новинки
-    @GET("/newmobile/glavnaya/novinki.php")
-    suspend fun fetchNoveltiesResponse(
-        @Query("new") action: String,
-        @Query("sort") sort: String? = null,
-        @Query("ascdesc") orientation: String? = null,
-        @Query("nav") page: Int? = null,
-        @Query("sect") categoryId: Long? = null,
-        @Query("versiyaan") version: String = BuildConfig.VERSION_NAME,
-    ): ResponseBody
-
-    //Двойной слайдер
-    @GET("/newmobile/glavnaya/super_top.php")
-    suspend fun fetchDoubleSliderResponse(
-        @Query("action") action: String? = null,
-        @Query("new") arg: String? = null,
-        @Query("android") androidVersion: String? = null,
-        @Query("sort") sort: String? = null,
-        @Query("orientation") orientation: String? = null,
-        @Query("id") categoryId: Long? = null,
-        @Query("nav") page: Int? = null,
-    ): ResponseBody
-
-    /**
+     /**
      * only products
      */
 
@@ -380,13 +314,6 @@ interface MainApi {
         @Query("nav") page: Int? = null,
         @Query("rating_value") rating: Int? = null,
         @Query("message") comment: String? = null,
-        @Query("userid") userId: Long? = null,
-    ): ResponseBody
-
-    @GET("/newmobile/glavnaya/otzivtovari.php")
-    suspend fun dontCommentProduct(
-        @Query("action") action: String? = null,
-        @Query("id") productId: Long? = null,
         @Query("userid") userId: Long? = null,
     ): ResponseBody
 
@@ -495,10 +422,6 @@ interface MainApi {
         @Query("email") email: String? = null,
     ): ResponseBody
 
-    //Получить Cookie Session Id
-    @GET("/newmobile/korzina/function/guaty/index.php")
-    suspend fun fetchCookie(): Response<ResponseBody>
-
     @GET("newmobile/user.php?action=logout")
     suspend fun logout(): Response<ResponseBody>
 
@@ -601,15 +524,15 @@ interface MainApi {
         @Query("id") id: String? = null,
     ): ResponseBody
 
-    @GET("https://szorin.vodovoz.ru/local/components/semap/delivery.calc/order.php")
-    suspend fun sendTestMapRequest(
-        @Query("SOURCE") sourse: String,
-        @Query("ADDRESS", encoded = false) address: String,
-        @Query("COORDS_FROM[0]", encoded = false) latitude: String,
-        @Query("COORDS_FROM[1]", encoded = false) longitude: String,
-        @Query("LENGTH") length: String,
-        @Query("DELIVERY_DATE", encoded = true) date: String,
-    ): ResponseBody
+//    @GET("https://szorin.vodovoz.ru/local/components/semap/delivery.calc/order.php")
+//    suspend fun sendTestMapRequest(
+//        @Query("SOURCE") sourse: String,
+//        @Query("ADDRESS", encoded = false) address: String,
+//        @Query("COORDS_FROM[0]", encoded = false) latitude: String,
+//        @Query("COORDS_FROM[1]", encoded = false) longitude: String,
+//        @Query("LENGTH") length: String,
+//        @Query("DELIVERY_DATE", encoded = true) date: String,
+//    ): ResponseBody
 
     /**
      * Contacts
@@ -716,15 +639,9 @@ interface MainApi {
     @GET("/newmobile/glavnaya/otzivtovari.php")
     suspend fun fetchRateBottomData(
         @Query("action") action: String? = null,
+        @Query("id") productId: Long? = null,
         @Query("userid") userId: Long? = null,
     ): RateBottomModel
-
-    //Добавление в корзину из списка услуг
-    @GET("/newmobile/korzina/function/add/index.php")
-    suspend fun addProductFromServiceDetails(
-        @Query("action") action: String? = null,
-        @Query("idquanit", encoded = true) idWithGift: String? = null,
-    ): ResponseBody
 
     @GET("newmobile/el.php")
     suspend fun fetchSearchDataByQrCode(
