@@ -6,16 +6,16 @@ import com.vodovoz.app.data.model.features.PastPurchasesHeaderBundleEntity
 import com.vodovoz.app.data.parser.common.SortTypeListJsonParser.parseSortTypeList
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.util.LogSettings
+import com.vodovoz.app.util.extensions.debugLog
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
-import timber.log.Timber
 
 object PastPurchasesHeaderResponseJsonParser {
 
     fun ResponseBody.parsePastPurchasesHeaderResponse(): ResponseEntity<PastPurchasesHeaderBundleEntity> {
         val responseJson = JSONObject(string())
-        Timber.tag(LogSettings.RESPONSE_BODY_LOG).d(responseJson.toString(2))
+        debugLog { LogSettings.RESPONSE_BODY_LOG + " ${responseJson.toString(2)}" }
         return ResponseEntity.Success(
             PastPurchasesHeaderBundleEntity(
                 favoriteCategoryEntity = when (responseJson.has("glavtitle")) {
@@ -40,14 +40,15 @@ object PastPurchasesHeaderResponseJsonParser {
         id = 0,
         shareUrl = safeString("detail_page_url"),
         name = getString("glavtitle"),
-        productAmount = when(isNull("tovarvsego")) {
+        productAmount = when (isNull("tovarvsego")) {
             true -> "Нет товаров"
             false -> safeString("tovarvsego")
         },
-        subCategoryEntityList = when(has("razdel")) {
-            true -> when(getJSONObject("razdel").isNull("LISTRAZDEL")) {
+        subCategoryEntityList = when (has("razdel")) {
+            true -> when (getJSONObject("razdel").isNull("LISTRAZDEL")) {
                 true -> listOf()
-                false -> getJSONObject("razdel").getJSONArray("LISTRAZDEL").parseSubCategoryEntityList()
+                false -> getJSONObject("razdel").getJSONArray("LISTRAZDEL")
+                    .parseSubCategoryEntityList()
             }
             false -> listOf()
         },
@@ -57,11 +58,12 @@ object PastPurchasesHeaderResponseJsonParser {
         }
     )
 
-    private fun JSONArray.parseSubCategoryEntityList(): List<CategoryEntity> = mutableListOf<CategoryEntity>().apply {
-        for (index in 0 until length()) {
-            add(getJSONObject(index).parseSubCategoryEntityList())
+    private fun JSONArray.parseSubCategoryEntityList(): List<CategoryEntity> =
+        mutableListOf<CategoryEntity>().apply {
+            for (index in 0 until length()) {
+                add(getJSONObject(index).parseSubCategoryEntityList())
+            }
         }
-    }
 
     private fun JSONObject.parseSubCategoryEntityList() = CategoryEntity(
         id = getString("ID").toLong(),

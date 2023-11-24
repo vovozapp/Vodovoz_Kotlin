@@ -6,15 +6,15 @@ import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.remote.ResponseStatus
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import com.vodovoz.app.util.LogSettings
+import com.vodovoz.app.util.extensions.debugLog
 import okhttp3.ResponseBody
 import org.json.JSONObject
-import timber.log.Timber
 
 object PopupNewsResponseJsonParser {
 
     fun ResponseBody.parsePopupNewsResponse(): ResponseEntity<PopupNewsEntity> {
         val responseJson = JSONObject(this.string())
-        Timber.tag(LogSettings.RESPONSE_BODY_LOG).d(responseJson.toString(2))
+        debugLog { LogSettings.RESPONSE_BODY_LOG + " ${responseJson.toString(2)}" }
         return when (responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 responseJson.getJSONObject("data").parsePopupNewsEntity()

@@ -1,7 +1,7 @@
 package com.vodovoz.app.util
 
 import com.vodovoz.app.ui.model.ProductUI
-import timber.log.Timber
+import com.vodovoz.app.util.extensions.debugLog
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -12,7 +12,7 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
     var bottlesPrice = 0
     productUIList.forEach { productUI ->
         if (productUI.isBottle) {
-            if(productUI.depositPrice != 0){
+            if (productUI.depositPrice != 0) {
                 bottlesPrice += productUI.depositPrice * productUI.cartQuantity
             } else {
                 bottlesPrice += productUI.priceList.first().currentPrice * productUI.cartQuantity
@@ -43,7 +43,10 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
                     fullPrice += price.oldPrice * productUI.cartQuantity
                 }
 
-                val totalDisc = if(abs(productUI.totalDisc.roundToInt().toDouble() - productUI.totalDisc) == 0.5){
+                val totalDisc = if (abs(
+                        productUI.totalDisc.roundToInt().toDouble() - productUI.totalDisc
+                    ) == 0.5
+                ) {
                     productUI.totalDisc.toInt()
                 } else {
                     productUI.totalDisc.roundToInt()
@@ -54,11 +57,12 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
         }
     }
 
-    Timber.d("" +
-            "fullPrice $fullPrice\n" +
-            "discountPrice $discountPrice\n" +
-            "deposit $deposit\n" +
-            "bottlesPrice $bottlesPrice\n")
+    debugLog {
+        "fullPrice $fullPrice\n" +
+                "discountPrice $discountPrice\n" +
+                "deposit $deposit\n" +
+                "bottlesPrice $bottlesPrice\n"
+    }
 
     deposit -= bottlesPrice
     if (deposit < 0) deposit = 0
@@ -70,5 +74,5 @@ data class CalculatedPrices(
     val fullPrice: Int,
     val discountPrice: Int,
     val deposit: Int,
-    val total: Int
+    val total: Int,
 )

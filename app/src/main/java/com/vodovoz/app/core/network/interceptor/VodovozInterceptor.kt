@@ -1,10 +1,9 @@
 package com.vodovoz.app.core.network.interceptor
 
 import com.vodovoz.app.data.local.LocalDataSource
-import com.vodovoz.app.util.LogSettings
+import com.vodovoz.app.util.extensions.debugLog
 import okhttp3.Interceptor
 import okhttp3.Response
-import timber.log.Timber
 import javax.inject.Inject
 
 class VodovozInterceptor @Inject constructor(
@@ -13,11 +12,12 @@ class VodovozInterceptor @Inject constructor(
 
     override fun intercept(chain: Interceptor.Chain): Response {
 
-        Timber.tag(LogSettings.NETWORK_LOG).d(chain.request().toString())
+
+        debugLog { "LogSettings.NETWORK_LOG: ${chain.request()}" }
 
         val builder = chain.request().newBuilder()
         localDataSource.fetchCookieSessionId()?.let { cookieSessionId ->
-            Timber.tag("Cookie added").d(cookieSessionId)
+            debugLog { "Cookie added: $cookieSessionId" }
             builder.addHeader("Cookie", cookieSessionId)
         }
 
@@ -31,9 +31,10 @@ class VodovozInterceptor @Inject constructor(
             (localDataSource.isOldCookie())
         ) {
             val setCookie = originalResponse.headers.values("Set-Cookie")
-            if(setCookie.isNotEmpty()) {
+            if (setCookie.isNotEmpty()) {
                 localDataSource.updateCookieSessionId(
-                    originalResponse.headers.values("Set-Cookie").firstOrNull { it.contains("PHPSESSID") }
+                    originalResponse.headers.values("Set-Cookie")
+                        .firstOrNull { it.contains("PHPSESSID") }
                 )
             }
         }
