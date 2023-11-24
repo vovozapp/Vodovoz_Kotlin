@@ -2,6 +2,7 @@ package com.vodovoz.app.core.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.core.network.interceptor.ChangeUrlInterceptor
 import com.vodovoz.app.core.network.interceptor.VodovozInterceptor
 import com.vodovoz.app.data.MainApi
@@ -52,7 +53,11 @@ abstract class NetworkModule {
         ): OkHttpClient {
             val okHttpClient = OkHttpClient.Builder()
             interceptors.forEach {
-                okHttpClient.addInterceptor(it)
+                if(BuildConfig.DEBUG) {
+                    okHttpClient.addInterceptor(it)
+                } else if(it !is HttpLoggingInterceptor) {
+                    okHttpClient.addInterceptor(it)
+                }
             }
             return okHttpClient
                 .connectTimeout(20, TimeUnit.SECONDS)

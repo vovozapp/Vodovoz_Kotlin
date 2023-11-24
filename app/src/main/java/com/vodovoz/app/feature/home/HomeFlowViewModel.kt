@@ -124,7 +124,9 @@ class HomeFlowViewModel @Inject constructor(
             viewModelScope.launch {
                 val userId = accountManager.fetchAccountId()
                 val tasks = firstLoadTasks() + secondLoadTasks(userId)
+                val start = System.currentTimeMillis()
                 val result = awaitAll(*tasks).flatten()
+                debugLog { "refresh load task ${System.currentTimeMillis() - start} result size ${result.size}" }
                 val mappedResult = if (result.isNotEmpty()) {
                     result + HomeState.fetchStaticItems()
                 } else {
