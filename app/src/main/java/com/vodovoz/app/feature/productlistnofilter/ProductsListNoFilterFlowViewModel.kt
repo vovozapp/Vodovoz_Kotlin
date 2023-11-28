@@ -65,7 +65,9 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
                                 categoryHeader = checkSelectedFilter(data),
-                                categoryId = data.id ?: -1
+                                categoryId = data.id ?: -1,
+                                sortType = data.sortTypeList?.sortTypeList?.firstOrNull { it.value == "default" }
+                                ?: SortTypeUI(sortName = "По популярности")
                             ),
                             loadingPage = false,
                             error = null

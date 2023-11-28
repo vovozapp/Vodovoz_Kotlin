@@ -128,7 +128,9 @@ class SearchFlowViewModel @Inject constructor(
                         val data = response.data.mapToUI()
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
-                                categoryHeader = checkSelectedFilter(data)
+                                categoryHeader = checkSelectedFilter(data),
+                                sortType = data.sortTypeList?.sortTypeList?.firstOrNull { it.value == "default" }
+                                    ?: SortTypeUI(sortName = "По популярности")
                             ),
                             loadingPage = false,
                             error = null

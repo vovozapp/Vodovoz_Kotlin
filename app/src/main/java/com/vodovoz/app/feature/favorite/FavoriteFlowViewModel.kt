@@ -99,6 +99,8 @@ class FavoriteFlowViewModel @Inject constructor(
                                 bestForYouCategoryDetailUI = data.bestForYouCategoryDetailUI,
                                 availableTitle = data.availableTitle,
                                 notAvailableTitle = data.notAvailableTitle,
+                                sortType = data.favoriteCategoryUI?.sortTypeList?.sortTypeList?.firstOrNull { it.value == "default" }
+                                    ?: SortTypeUI(sortName = "По популярности")
                             ),
                             loadingPage = false,
                             error = null

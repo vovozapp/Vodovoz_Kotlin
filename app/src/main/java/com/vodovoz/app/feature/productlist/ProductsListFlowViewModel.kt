@@ -62,7 +62,9 @@ class ProductsListFlowViewModel @Inject constructor(
                                 showCategoryContainer = catalogManager.hasRootItems(categoryId),
                                 filterCode = data.filterCode.ifEmpty {
                                     state.data.filterCode
-                                }
+                                },
+                                sortType = data.sortTypeList?.sortTypeList?.firstOrNull { it.value == "default" }
+                                    ?: SortTypeUI(sortName = "По популярности")
                             ),
                             loadingPage = false,
                             error = null

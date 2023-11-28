@@ -78,7 +78,9 @@ class PastPurchasesFlowViewModel @Inject constructor(
                                 availableTitle = data.availableTitle,
                                 notAvailableTitle = data.notAvailableTitle,
                                 emptyTitle = response.data.emptyTitle,
-                                emptySubtitle = response.data.emptySubtitle
+                                emptySubtitle = response.data.emptySubtitle,
+                                sortType = data.favoriteCategoryUI?.sortTypeList?.sortTypeList?.firstOrNull { it.value == "default" }
+                                    ?: SortTypeUI(sortName = "По популярности")
                             ),
                             loadingPage = false,
                             error = null

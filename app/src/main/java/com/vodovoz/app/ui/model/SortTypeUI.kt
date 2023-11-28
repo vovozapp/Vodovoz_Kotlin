@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class SortTypeUI(
-    val sortName: String = "Выбрать сортировку",
+    val sortName: String = "",
     val value: String = "",
     val orientation: String = ""
 ) : Parcelable
