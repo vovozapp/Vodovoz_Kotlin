@@ -4,7 +4,6 @@ import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.FragmentProductDetailsBlocksBinding
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
@@ -19,7 +18,7 @@ class DetailBlocksViewHolder(
         FragmentProductDetailsBlocksBinding.bind(view)
     private val adapter: BlocksFlowAdapter = BlocksFlowAdapter(clickListener)
     internal val space: Int by lazy {
-        itemView.context.resources.getDimension(R.dimen.space_8).toInt()
+        itemView.context.resources.getDimensionPixelOffset(com.intuit.sdp.R.dimen._4sdp)
     }
 
     init {
@@ -35,12 +34,7 @@ class DetailBlocksViewHolder(
                     parent: RecyclerView,
                     state: RecyclerView.State,
                 ) {
-                    val item = item ?: return
-                    with(outRect) {
-                        if (parent.getChildAdapterPosition(view) != item.items.lastIndex) {
-                            bottom = space
-                        }
-                    }
+                    outRect.top = space
                 }
             }
         )
