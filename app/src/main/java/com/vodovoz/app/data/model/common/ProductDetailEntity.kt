@@ -20,5 +20,6 @@ class ProductDetailEntity(
     val brandEntity: BrandEntity? = null,
     val propertiesGroupEntityList: List<PropertiesGroupEntity> = listOf(),
     val priceEntityList: List<PriceEntity> = listOf(),
-    val detailPictureList: List<String> = listOf()
+    val detailPictureList: List<String> = listOf(),
+    val blockList: List<BlockEntity> = listOf()
 )

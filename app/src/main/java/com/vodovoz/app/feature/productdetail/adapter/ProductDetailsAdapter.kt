@@ -13,6 +13,7 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllList
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotionsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleViewHolder
+import com.vodovoz.app.feature.productdetail.viewholders.detailblocks.DetailBlocksViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailbrandproductlist.DetailBrandListViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailcatandbrand.DetailCatAndBrandViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailcomments.DetailCommentsViewHolder
@@ -45,6 +46,10 @@ class ProductDetailsAdapter(
             //Prices
             R.layout.fragment_product_details_prices -> {
                 DetailPricesViewHolder(getViewFromInflater(viewType, parent))
+            }
+
+            R.layout.fragment_product_details_blocks -> {
+                DetailBlocksViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
 
             //Services

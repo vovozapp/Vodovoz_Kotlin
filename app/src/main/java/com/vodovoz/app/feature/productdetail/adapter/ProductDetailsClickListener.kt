@@ -24,4 +24,6 @@ interface ProductDetailsClickListener {
     fun onSendComment(id: Long)
     fun onShowAllComments(id: Long)
 
+    fun onBlockButtonClick(productId: String, extProductId: String)
+
 }

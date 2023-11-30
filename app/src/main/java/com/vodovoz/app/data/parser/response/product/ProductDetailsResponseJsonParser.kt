@@ -139,7 +139,7 @@ object ProductDetailsResponseJsonParser {
                     false -> 0
                 }
             },
-            pricePerUnit =if (has("DOPTSENA_ZA_EDINICY")) {
+            pricePerUnit = if (has("DOPTSENA_ZA_EDINICY")) {
                 safeString("DOPTSENA_ZA_EDINICY")
             } else if (has("PROPERTY_TSENA_ZA_EDINITSU_TOVARA_VALUE") && safeInt("PROPERTY_TSENA_ZA_EDINITSU_TOVARA_VALUE") != 0) {
                 StringBuilder()
@@ -148,6 +148,11 @@ object ProductDetailsResponseJsonParser {
                     .toString()
             } else {
                 ""
+            },
+            blockList = if (!isNull("BLOKI")) {
+                getJSONArray("BLOKI").parseBlockList()
+            } else {
+                listOf()
             }
         )
     }
@@ -283,5 +288,30 @@ object ProductDetailsResponseJsonParser {
         name = getString("glavtitle"),
         productEntityList = getJSONArray("data").parseProductEntityList()
     )
+
+    private fun JSONArray.parseBlockList(): List<BlockEntity> = mutableListOf<BlockEntity>().apply {
+        for (index in 0 until length()) {
+            add(getJSONObject(index).parseBlock())
+        }
+    }
+
+    private fun JSONObject.parseBlock() = BlockEntity(
+        description = safeString("OPISANIE"),
+        button = if (!isNull("KNOPKA")) {
+            getJSONObject("KNOPKA").parseButton()
+        } else {
+            ButtonEntity()
+        },
+        productId = safeString("IDTOVAR"),
+        extProductId = safeString("DOPTOVAR")
+
+    )
+
+    private fun JSONObject.parseButton() = ButtonEntity(
+        name = safeString("NAME"),
+        background = safeString("BACKGROUND"),
+        textColor = safeString("COLORTEXT")
+    )
+
 
 }

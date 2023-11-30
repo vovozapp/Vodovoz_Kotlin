@@ -21,5 +21,6 @@ class ProductDetailUI(
     val propertiesGroupUIList: List<PropertiesGroupUI> = listOf(),
     val priceUIList: List<PriceUI> = listOf(),
     val detailPictureList: List<String> = listOf(),
-    var oldQuantity: Int = 0
+    var oldQuantity: Int = 0,
+    val blockList: List<BlockUI> = listOf()
 )

@@ -31,13 +31,13 @@ class ProductDetailsFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_product_details_flow
 
-    private val binding: FragmentProductDetailsFlowBinding by viewBinding {
+    internal val binding: FragmentProductDetailsFlowBinding by viewBinding {
         FragmentProductDetailsFlowBinding.bind(
             contentView
         )
     }
 
-    private val viewModel: ProductDetailsFlowViewModel by viewModels()
+    internal val viewModel: ProductDetailsFlowViewModel by viewModels()
 
     @Inject
     lateinit var cartManager: CartManager
@@ -77,12 +77,12 @@ class ProductDetailsFragment : BaseFragment() {
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) {
-            viewModel.fetchProductDetail()
-        }
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        if (savedInstanceState == null) {
+//            viewModel.fetchProductDetail()
+//        }
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -93,6 +93,7 @@ class ProductDetailsFragment : BaseFragment() {
         bindErrorRefresh { viewModel.fetchProductDetail() }
         observeEvents()
         observeMediaManager()
+        viewModel.fetchProductDetail()
 
         productDetailsController.bind(binding.mainRv, binding.floatingAmountControllerContainer)
     }
@@ -182,6 +183,7 @@ class ProductDetailsFragment : BaseFragment() {
                         listOfNotNull(
                             detailState.detailHeader,
                             detailState.detailPrices.takeIf { it?.priceUiList?.size != 1 },
+                            detailState.detailBlocks.takeIf { it?.items?.size != 0 },
                             detailState.detailServices.takeIf { it?.items?.size != 0 },
                             detailState.detailTabs,
                             detailState.detailCatAndBrand,
@@ -307,6 +309,10 @@ class ProductDetailsFragment : BaseFragment() {
                         id
                     )
                 )
+            }
+
+            override fun onBlockButtonClick(productId: String, extProductId: String) {
+                viewModel.changeCart(productId, extProductId)
             }
         }
     }

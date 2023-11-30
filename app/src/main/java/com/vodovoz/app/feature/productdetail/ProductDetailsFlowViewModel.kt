@@ -18,6 +18,7 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Compan
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.VIEWED
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
+import com.vodovoz.app.feature.productdetail.viewholders.detailblocks.DetailBlocks
 import com.vodovoz.app.feature.productdetail.viewholders.detailbrandproductlist.DetailBrandList
 import com.vodovoz.app.feature.productdetail.viewholders.detailcatandbrand.DetailCatAndBrand
 import com.vodovoz.app.feature.productdetail.viewholders.detailcomments.DetailComments
@@ -117,7 +118,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                 mappedData.categoryUI.id
                             ),
                             detailPrices = DetailPrices(2, mappedData.productDetailUI.priceUIList),
-                            detailServices = DetailServices(3, mappedData.serviceUIList),
+                            detailBlocks = DetailBlocks(123, mappedData.productDetailUI.blockList),
+                            detailServices = DetailServices(4, mappedData.serviceUIList),
                             detailTabs = DetailTabs(4, mappedData.productDetailUI),
                             detailCatAndBrand = DetailCatAndBrand(
                                 5,
@@ -339,6 +341,18 @@ class ProductDetailsFlowViewModel @Inject constructor(
             cartManager.add(id = productId, oldCount = oldQuan, newCount = quantity)
         }
     }
+    fun changeCart(productId: String, giftId: String) {
+        viewModelScope.launch {
+            val (id, count) = productId.trim().split("-")
+            cartManager.addWithGift(
+                id = id.toLong(),
+                oldCount = 0,
+                newCount = count.toInt(),
+                giftId = giftId
+            )
+        }
+    }
+
 
     fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
         viewModelScope.launch {
@@ -388,6 +402,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val productDetailUI: ProductDetailUI? = null,
         val detailHeader: DetailHeader? = null,
         val detailPrices: DetailPrices? = null,
+        val detailBlocks: DetailBlocks? = null,
         val detailServices: DetailServices? = null,
         val detailTabs: DetailTabs? = null,
         val detailCatAndBrand: DetailCatAndBrand? = null,
