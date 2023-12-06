@@ -19,10 +19,14 @@ import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
+import com.vodovoz.app.util.SplashFileConfig
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
+import java.io.FileInputStream
+import java.io.InputStream
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class SplashFragment : BaseFragment() {
@@ -80,12 +84,23 @@ class SplashFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //accountManager.reportYandexMetrica("Зашел в приложение") //todo релиз
+        accountManager.reportYandexMetrica("Зашел в приложение")
 
         if (requireContext().isTablet()) {
             binding.lottieSplashView.cancelAnimation()
             binding.lottieSplashView.visibility = View.GONE
             binding.logoLayout.visibility = View.VISIBLE
+        } else {
+            binding.lottieSplashView.setOutlineMasksAndMattes(true)
+            binding.lottieSplashView.enableMergePathsForKitKatAndAbove(true)
+            val file = SplashFileConfig.getSplashFile(requireContext())
+            if (!file.exists()) {
+                debugLog { "file is not exist" }
+                binding.lottieSplashView.visibility = View.GONE
+                binding.logoLayout.visibility = View.VISIBLE
+            } else {
+                initAnimation()
+            }
         }
 
         handlePushData()
@@ -94,6 +109,33 @@ class SplashFragment : BaseFragment() {
             refreshLoad()
         }
     }
+
+    private fun initAnimation() {
+        val localFile = SplashFileConfig.getSplashFile(requireContext())
+        val inputStream: InputStream = FileInputStream(localFile)
+        if (localFile.exists()) {
+            binding.lottieSplashView.setAnimation(inputStream, null)
+            binding.lottieSplashView.playAnimation()
+        } else {
+            debugLog { "setAnimationFromLocal but file not exist" }
+        }
+    }
+
+//    private suspend fun download(link: String, path: String, doAfter: (String) -> Unit) {
+//        withContext(Dispatchers.IO) {
+//            URL(link).openStream()
+//        }.use { input ->
+//            val file = File(requireContext().filesDir, path)
+//            if (!file.exists()) {
+//                file.createNewFile()
+//            }
+//            FileOutputStream(file).use { output ->
+//                input.copyTo(output)
+//                doAfter(path)
+//            }
+//
+//        }
+//    }
 
     private fun handlePushData() {
         debugLog { "splash args $arguments" }
