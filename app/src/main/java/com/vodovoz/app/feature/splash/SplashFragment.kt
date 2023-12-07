@@ -38,7 +38,7 @@ class SplashFragment : BaseFragment() {
     }
 
     private val viewModel: SplashViewModel by viewModels()
-    private val flowViewModel: HomeFlowViewModel by activityViewModels()
+    private val homeViewModel: HomeFlowViewModel by activityViewModels()
     private val catalogViewModel: CatalogFlowViewModel by activityViewModels()
     private val cartFlowViewModel: CartFlowViewModel by activityViewModels()
     private val favoriteViewModel: FavoriteFlowViewModel by activityViewModels()
@@ -60,7 +60,7 @@ class SplashFragment : BaseFragment() {
             siteStateManager.requestSiteState()
         }
         viewModel.sendFirebaseToken()
-        flowViewModel.firstLoad()
+        homeViewModel.firstLoad()
         catalogViewModel.firstLoad()
         cartFlowViewModel.firstLoad()
         favoriteViewModel.firstLoad()
@@ -74,7 +74,7 @@ class SplashFragment : BaseFragment() {
             siteStateManager.requestSiteState()
         }
         viewModel.sendFirebaseToken()
-        flowViewModel.refresh()
+        homeViewModel.refresh()
         catalogViewModel.refresh()
         cartFlowViewModel.refreshIdle()
         favoriteViewModel.refreshIdle()
@@ -104,7 +104,7 @@ class SplashFragment : BaseFragment() {
         }
 
         handlePushData()
-        observeFlowViewModel()
+        observeHomeViewModel()
         bindErrorRefresh {
             refreshLoad()
         }
@@ -153,15 +153,15 @@ class SplashFragment : BaseFragment() {
         }
     }
 
-    private fun observeFlowViewModel() {
+    private fun observeHomeViewModel() {
         lifecycleScope.launchWhenStarted {
-            flowViewModel.observeUiState()
+            homeViewModel.observeUiState()
                 .collect { state ->
                     if (state.isFirstLoad) {
                         if (state.error is ErrorState.NetworkError) {
                             showError(state.error)
                         } else {
-                            checkSiteStateWithNavigate()
+                            checkSiteStateWithNavigate(state.data.isSecondLoad)
                         }
                     }
 
@@ -169,11 +169,15 @@ class SplashFragment : BaseFragment() {
         }
     }
 
-    private suspend fun checkSiteStateWithNavigate() {
+    private suspend fun checkSiteStateWithNavigate(isSecond: Boolean) {
+        if(isSecond){
+            findNavController().navigate(R.id.mainFragment)
+            return
+        }
         val active = siteStateManager.fetchSiteStateActive()
         debugLog { "site state active $active" }
         if (active) {
-            flowViewModel.secondLoad()
+            homeViewModel.secondLoad()
             findNavController().navigate(R.id.mainFragment)
         } else {
             findNavController().navigate(R.id.blockAppFragment)

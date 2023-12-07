@@ -192,43 +192,45 @@ abstract class BaseFragment : Fragment() {
         provider: MenuProvider? = null,
         doAfterTextChanged: (query: String) -> Unit = {},
     ) {
-        if (addAction) {
-            viewBinding.appBarDef.tbToolbar.overflowIcon =
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_more_actions)
-        }
-        if (provider != null) {
-            viewBinding.appBarDef.tbToolbar.addMenuProvider(provider)
-        }
-        viewBinding.appbarLayout.isVisible = true
-        viewBinding.appBarDef.imgSearch.isVisible = showSearch
-        if (showNavBtn) {
-            viewBinding.appBarDef.imgBack.isVisible = true
-            viewBinding.appBarDef.tvTitle.setPadding(0, 0, 0, 0)
-        } else {
-            viewBinding.appBarDef.imgBack.isVisible = false
-            viewBinding.appBarDef.tvTitle.setPadding(50, 0, 0, 0)
-        }
-        viewBinding.appBarDef.root.isVisible = true
-        viewBinding.appBarDef.tvTitle.text = titleText
-
-        viewBinding.appBarDef.imgBack.setOnClickListener { findNavController().popBackStack() }
-
-        viewBinding.appBarDef.imgSearch.setOnClickListener {
-            viewBinding.appBarDef.llTitleContainer.visibility = View.GONE
-            viewBinding.appBarDef.llSearchContainer.visibility = View.VISIBLE
-        }
-        viewBinding.appBarDef.imgClear.setOnClickListener {
-            viewBinding.appBarDef.etSearch.setText("")
-            viewBinding.appBarDef.llTitleContainer.visibility = View.VISIBLE
-            viewBinding.appBarDef.llSearchContainer.visibility = View.GONE
-        }
-        viewBinding.appBarDef.etSearch.doAfterTextChanged { query ->
-            when (query.toString().isEmpty()) {
-                true -> viewBinding.appBarDef.imgClear.visibility = View.GONE
-                false -> viewBinding.appBarDef.imgClear.visibility = View.VISIBLE
+        with(viewBinding.appBarDef) {
+            if (addAction) {
+                tbToolbar.overflowIcon =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_more_actions)
             }
+            if (provider != null) {
+                tbToolbar.addMenuProvider(provider)
+            }
+            viewBinding.appbarLayout.isVisible = true
+            imgSearch.isVisible = showSearch
+            if (showNavBtn) {
+                imgBack.isVisible = true
+                tvTitle.setPadding(0, 0, 0, 0)
+            } else {
+                imgBack.isVisible = false
+                tvTitle.setPadding(50, 0, 0, 0)
+            }
+            root.isVisible = true
+            tvTitle.text = titleText
 
-            doAfterTextChanged.invoke(query.toString())
+            imgBack.setOnClickListener { findNavController().popBackStack() }
+
+            imgSearch.setOnClickListener {
+                llTitleContainer.visibility = View.GONE
+                llSearchContainer.visibility = View.VISIBLE
+            }
+            imgClear.setOnClickListener {
+                etSearch.setText("")
+                llTitleContainer.visibility = View.VISIBLE
+                llSearchContainer.visibility = View.GONE
+            }
+            etSearch.doAfterTextChanged { query ->
+                when (query.toString().isEmpty()) {
+                    true -> imgClear.visibility = View.GONE
+                    false -> imgClear.visibility = View.VISIBLE
+                }
+
+                doAfterTextChanged.invoke(query.toString())
+            }
         }
     }
 
