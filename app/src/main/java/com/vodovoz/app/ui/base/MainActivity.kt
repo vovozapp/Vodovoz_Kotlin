@@ -11,6 +11,7 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.ActivityMainBinding
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.util.extensions.debugLog
+import com.vodovoz.app.util.extensions.enableFullScreen
 import com.vodovoz.app.util.extensions.snack
 import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+        enableFullScreen()
         MapKitFactory.initialize(this)
         binding = ActivityMainBinding.inflate(layoutInflater).apply { setContentView(root) }
 

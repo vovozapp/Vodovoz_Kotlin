@@ -189,7 +189,7 @@ class OrderingFragment : BaseFragment() {
     }
 
     private fun initArgs(data: OrderingFlowViewModel.OrderingState) {
-        debugLog { "full ${data.full}, discount ${data.discount}" }
+        debugLog { "full ${data.full}, discount ${data.discount}, total ${data.total}" }
         binding.tvFullPrice.setPriceText(data.full)
         binding.tvDepositPrice.setPriceText(data.deposit)
         binding.tvDiscountPrice.setPriceText(data.discount, true)

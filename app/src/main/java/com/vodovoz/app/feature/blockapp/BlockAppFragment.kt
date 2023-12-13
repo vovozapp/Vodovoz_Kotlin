@@ -40,7 +40,7 @@ class BlockAppFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        requireActivity().disableFullScreen()
         observeSiteState()
         addOnBackPressedCallback { }
     }

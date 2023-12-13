@@ -11,17 +11,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
+        android:id="@+id/llShowGifts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:id="@+id/llShowGifts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="@dimen/space_16"
             android:layout_marginTop="@dimen/space_4"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/space_16">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="20dp"
@@ -32,18 +32,18 @@
                 tools:ignore="ContentDescription" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/yourGiftsTv"
                 style="@style/TextViewMediumGreenBold"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textSize="16sp"
-                android:id="@+id/yourGiftsTv"
-                android:textColor="@color/bluePrimary"
                 android:fontFamily="@font/rotonda_normal"
                 android:gravity="center"
-                android:text="Ваши подарки"
                 android:paddingStart="@dimen/space_16"
-                android:paddingEnd="@dimen/space_16"/>
+                android:paddingEnd="@dimen/space_16"
+                android:text="Ваши подарки"
+                android:textColor="@color/bluePrimary"
+                android:textSize="16sp" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="20dp"
@@ -64,18 +64,17 @@
     </FrameLayout>
 
 
-
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvGiftMessage"
         style="@style/TextViewNormalBlack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:paddingHorizontal="@dimen/space_16"
         android:paddingVertical="@dimen/space_8"
         android:visibility="gone"
-        tools:visibility="visible"
-        android:background="@color/white"
-        tools:text="Для получения более интересного подарка осталось 984 Р" />
+        tools:text="Для получения более интересного подарка осталось 984 Р"
+        tools:visibility="visible" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnRegOrderFlow"

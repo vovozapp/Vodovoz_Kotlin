@@ -15,6 +15,7 @@ import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.navigation.setupWithNavController
 import com.vodovoz.app.databinding.FragmentMainBinding
+import com.vodovoz.app.util.extensions.disableFullScreen
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -51,6 +52,7 @@ class MainFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
+        requireActivity().disableFullScreen()
         if (!viewModel.isBottomBarInited) {
             setupBottomNavigationBar()
         }

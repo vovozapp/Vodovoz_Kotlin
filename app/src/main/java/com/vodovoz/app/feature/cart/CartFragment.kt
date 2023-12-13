@@ -129,17 +129,16 @@ class CartFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        observeUiState()
-        observeEvents()
-        observeTabReselect()
         viewModel.firstLoad()
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observeUiState()
         bindButtons()
         initActionBar()
+        observeEvents()
+        observeTabReselect()
         cartController.bind(binding.mainRv)
         bindErrorRefresh { viewModel.refresh() }
         bindSwipeRefresh()

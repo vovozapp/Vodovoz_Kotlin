@@ -137,7 +137,7 @@ class OrderingFlowViewModel @Inject constructor(
                         } else {
                             inputCash.toInt()
                         },
-                        parking = state.data.shippingInfoBundleUI?.parkingPrice,
+                        parking = state.data.parkingPrice,
                         userId = userId,
                         appVersion = BuildConfig.VERSION_NAME,
                         checkDeliveryValue = state.data.checkDeliveryValue
@@ -286,10 +286,10 @@ class OrderingFlowViewModel @Inject constructor(
 
             val selectedDate = state.data.selectedDate
 
-            if (selectedDate == null) {
-                eventListener.emit(OrderingEvents.OrderingErrorInfo("Выберите дату!"))
-                return@launch
-            }
+//            if (selectedDate == null) {
+//                eventListener.emit(OrderingEvents.OrderingErrorInfo("Выберите дату!"))
+//                return@launch
+//            }
 
             val userId = accountManager.fetchAccountId() ?: return@launch
 
@@ -299,7 +299,7 @@ class OrderingFlowViewModel @Inject constructor(
                     repository.fetchShippingInfo(
                         addressId = address.id,
                         userId = userId,
-                        date = dateFormatter.format(selectedDate),
+                        date = if(selectedDate != null) dateFormatter.format(selectedDate) else null,
                         appVersion = BuildConfig.VERSION_NAME
                     )
                 )
@@ -309,12 +309,16 @@ class OrderingFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         val full = state.data.full
+                        val diposit = state.data.deposit
                         val discount = state.data.discount
                         val total = state.data.total
-                        val newTotal = if (full != null && discount != null && total != null) {
-                            full - discount + data.shippingPrice + data.parkingPrice
+                        var newTotal = if (full != null && discount != null && total != null) {
+                            full - discount + data.shippingPrice
                         } else {
                             state.data.total
+                        }
+                        if(diposit != null && newTotal != null) {
+                            newTotal += diposit
                         }
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
