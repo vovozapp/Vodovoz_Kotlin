@@ -5,7 +5,9 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.firebase.messaging.RemoteMessage
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.ActivityMainBinding
@@ -38,8 +40,10 @@ class MainActivity : AppCompatActivity() {
         MapKitFactory.initialize(this)
         binding = ActivityMainBinding.inflate(layoutInflater).apply { setContentView(root) }
 
-        lifecycleScope.launchWhenStarted {
-            siteStateManager.requestSiteState()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                siteStateManager.requestSiteState()
+            }
         }
 
         observeRatingSnackbar()
@@ -68,8 +72,10 @@ class MainActivity : AppCompatActivity() {
 
         debugLog { "jsonData $jsonData" }
 
-        lifecycleScope.launchWhenStarted {
-            if (jsonData != null) siteStateManager.savePushData(jsonData)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                if (jsonData != null) siteStateManager.savePushData(jsonData)
+            }
         }
     }
 
@@ -85,12 +91,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeRatingSnackbar() {
-        lifecycleScope.launchWhenStarted {
-            ratingProductManager
-                .observeRatingSnackbar()
-                .collect {
-                    this@MainActivity.snack(it)
-                }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                ratingProductManager
+                    .observeRatingSnackbar()
+                    .collect {
+                        this@MainActivity.snack(it)
+                    }
+            }
         }
     }
 

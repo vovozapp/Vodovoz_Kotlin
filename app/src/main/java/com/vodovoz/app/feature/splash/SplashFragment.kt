@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -22,6 +24,7 @@ import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
 import com.vodovoz.app.util.SplashFileConfig
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.FileInputStream
 import java.io.InputStream
@@ -56,8 +59,10 @@ class SplashFragment : BaseFragment() {
     }
 
     private fun firstLoad() {
-        lifecycleScope.launchWhenStarted {
-            siteStateManager.requestSiteState()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                siteStateManager.requestSiteState()
+            }
         }
         viewModel.sendFirebaseToken()
         homeViewModel.firstLoad()
@@ -70,8 +75,10 @@ class SplashFragment : BaseFragment() {
     }
 
     private fun refreshLoad() {
-        lifecycleScope.launchWhenStarted {
-            siteStateManager.requestSiteState()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                siteStateManager.requestSiteState()
+            }
         }
         viewModel.sendFirebaseToken()
         homeViewModel.refresh()
@@ -145,8 +152,10 @@ class SplashFragment : BaseFragment() {
                 val extra = requireArguments().getString("push")
                 debugLog { "splash get push extra $extra" }
                 if (!extra.isNullOrEmpty()) {
-                    lifecycleScope.launchWhenCreated {
-                        siteStateManager.savePushData(JSONObject(extra))
+                    lifecycleScope.launch {
+                        repeatOnLifecycle(Lifecycle.State.CREATED) {
+                            siteStateManager.savePushData(JSONObject(extra))
+                        }
                     }
                 }
             }
@@ -154,18 +163,20 @@ class SplashFragment : BaseFragment() {
     }
 
     private fun observeHomeViewModel() {
-        lifecycleScope.launchWhenStarted {
-            homeViewModel.observeUiState()
-                .collect { state ->
-                    if (state.isFirstLoad) {
-                        if (state.error is ErrorState.NetworkError) {
-                            showError(state.error)
-                        } else {
-                            checkSiteStateWithNavigate(state.data.isSecondLoad)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                homeViewModel.observeUiState()
+                    .collect { state ->
+                        if (state.isFirstLoad) {
+                            if (state.error is ErrorState.NetworkError) {
+                                showError(state.error)
+                            } else {
+                                checkSiteStateWithNavigate(state.data.isSecondLoad)
+                            }
                         }
-                    }
 
-                }
+                    }
+            }
         }
     }
 

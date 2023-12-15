@@ -6,7 +6,9 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -17,6 +19,7 @@ import com.vodovoz.app.core.navigation.setupWithNavController
 import com.vodovoz.app.databinding.FragmentMainBinding
 import com.vodovoz.app.util.extensions.disableFullScreen
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -81,66 +84,75 @@ class MainFragment : BaseFragment() {
 //    }
 
     private fun observeTabVisibility() {
-        lifecycleScope.launchWhenStarted {
-            tabManager
-                .observeTabVisibility()
-                .collect {
-                    binding.nvNavigation.isVisible = it
-                }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tabManager
+                    .observeTabVisibility()
+                    .collect {
+                        binding.nvNavigation.isVisible = it
+                    }
+            }
         }
     }
 
     private fun observeCartState() {
-        lifecycleScope.launchWhenStarted {
-            tabManager
-                .observeBottomNavCartState()
-                .collect { state ->
-                    if (state == null || state.count == 0) {
-                        binding.circleAmount.isVisible = false
-                        binding.nvNavigation.menu.getItem(2).title = "Корзина"
-                    } else {
-                        binding.circleAmount.text = state.count.toString()
-                        binding.circleAmount.isVisible = true
-                        binding.circleAmount
-                            .animate()
-                            .scaleX(1.4f)
-                            .scaleY(1.4f)
-                            .setDuration(300)
-                            .setInterpolator(AccelerateInterpolator())
-                            .withEndAction {
-                                binding.circleAmount.animate()
-                                    .scaleX(1f)
-                                    .scaleY(1f)
-                            }
-                            .start()
-                        binding.nvNavigation.menu.getItem(2).title = state.total.toString() + " ₽"
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tabManager
+                    .observeBottomNavCartState()
+                    .collect { state ->
+                        if (state == null || state.count == 0) {
+                            binding.circleAmount.isVisible = false
+                            binding.nvNavigation.menu.getItem(2).title = "Корзина"
+                        } else {
+                            binding.circleAmount.text = state.count.toString()
+                            binding.circleAmount.isVisible = true
+                            binding.circleAmount
+                                .animate()
+                                .scaleX(1.4f)
+                                .scaleY(1.4f)
+                                .setDuration(300)
+                                .setInterpolator(AccelerateInterpolator())
+                                .withEndAction {
+                                    binding.circleAmount.animate()
+                                        .scaleX(1f)
+                                        .scaleY(1f)
+                                }
+                                .start()
+                            binding.nvNavigation.menu.getItem(2).title =
+                                state.total.toString() + " ₽"
+                        }
                     }
-                }
+            }
         }
     }
 
     private fun observeProfileState() {
-        lifecycleScope.launchWhenStarted {
-            tabManager
-                .observeBottomNavProfileState()
-                .collect { state ->
-                    if (state == null) {
-                        binding.circleAmountProfile.isVisible = false
-                    } else {
-                        binding.circleAmountProfile.text = state.toString()
-                        binding.circleAmountProfile.isVisible = true
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tabManager
+                    .observeBottomNavProfileState()
+                    .collect { state ->
+                        if (state == null) {
+                            binding.circleAmountProfile.isVisible = false
+                        } else {
+                            binding.circleAmountProfile.text = state.toString()
+                            binding.circleAmountProfile.isVisible = true
+                        }
                     }
-                }
+            }
         }
     }
 
     private fun observeTabState() {
-        lifecycleScope.launchWhenStarted {
-            tabManager
-                .observeTabState()
-                .collect {
-                    binding.nvNavigation.selectedItemId = it
-                }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tabManager
+                    .observeTabState()
+                    .collect {
+                        binding.nvNavigation.selectedItemId = it
+                    }
+            }
         }
     }
 
