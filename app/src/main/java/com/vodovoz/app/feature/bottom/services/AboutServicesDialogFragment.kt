@@ -6,7 +6,9 @@ import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -17,6 +19,7 @@ import com.vodovoz.app.feature.bottom.services.adapter.ServicesClickListener
 import com.vodovoz.app.feature.bottom.services.newservs.AboutServicesNewViewModel
 import com.vodovoz.app.feature.bottom.services.newservs.model.ServiceNew
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AboutServicesDialogFragment : BaseFragment() {
@@ -50,36 +53,43 @@ class AboutServicesDialogFragment : BaseFragment() {
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeEvent()
-                .collect {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeEvent()
+                    .collect {
 
-                }
+                    }
+            }
         }
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { state ->
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                      //  hideLoader()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { state ->
+                        if (state.loadingPage) {
+                            showLoader()
+                        } else {
+                            //  hideLoader()
+                        }
+
+                        val description = state.data.item?.aboutServicesData?.description ?: ""
+                        val title = state.data.item?.aboutServicesData?.title
+                            ?: resources.getString(R.string.services_title)
+
+                        initWebView(description)
+
+                        initToolbar(title)
+
+                        servicesController.submitList(
+                            state.data.item?.aboutServicesData?.servicesList ?: emptyList()
+                        )
+
+                        showError(state.error)
+
                     }
-
-                    val description = state.data.item?.aboutServicesData?.description ?: ""
-                    val title = state.data.item?.aboutServicesData?.title ?: resources.getString(R.string.services_title)
-
-                    initWebView(description)
-
-                    initToolbar(title)
-
-                    servicesController.submitList(state.data.item?.aboutServicesData?.servicesList ?: emptyList())
-
-                    showError(state.error)
-
-                }
+            }
         }
     }
 

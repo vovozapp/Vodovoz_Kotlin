@@ -3,7 +3,9 @@ package com.vodovoz.app.feature.bottom.howtoorder
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.tabs.TabLayoutMediator
@@ -12,6 +14,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentHowToOrderFlowBinding
 import com.vodovoz.app.feature.bottom.howtoorder.adapter.HowToOrderFlowAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HowToOrderFragment : BaseFragment() {
@@ -35,14 +38,19 @@ class HowToOrderFragment : BaseFragment() {
     }
 
     private fun observeList() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeHowToOrderSteps()
-                .collect {
-                    binding.vpHowOrder.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-                    howToOrderAdapter.submitList(it)
-                    binding.vpHowOrder.adapter = howToOrderAdapter
-                    TabLayoutMediator(binding.tlIndicators, binding.vpHowOrder) { _, _ -> }.attach()
-                }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeHowToOrderSteps()
+                    .collect {
+                        binding.vpHowOrder.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+                        howToOrderAdapter.submitList(it)
+                        binding.vpHowOrder.adapter = howToOrderAdapter
+                        TabLayoutMediator(
+                            binding.tlIndicators,
+                            binding.vpHowOrder
+                        ) { _, _ -> }.attach()
+                    }
+            }
         }
     }
 

@@ -26,10 +26,10 @@ object OrderDetailsResponseJsonParser {
         id = getString("ID").toLong(),
         dateOrder = getString("DATE_START"),
         dateDelivery = getString("DATE_OUT"),
-        productsPrice = safeInt("PRICE_GOODS_ITOGO"),//getString("PRICE_GOODS_ITOGO").toDouble().toInt(),
+        //productsPrice = safeInt("PRICE_GOODS_ITOGO"),//getString("PRICE_GOODS_ITOGO").toDouble().toInt(),
         depositPrice = safeInt("ZALOG_ITOGO"),//getString("ZALOG_ITOGO").toDouble().toInt(),
         totalPrice = getString("PRICE").toDouble().toInt(),
-        deliveryPrice = getString("PRICE_DELIVERY").toDouble().toInt(),
+        //deliveryPrice = getString("PRICE_DELIVERY").toDouble().toInt(),
         userFirstName = getString("USER_NAME"),
         userSecondName = getString("USER_LAST_NAME"),
         userPhone = getString("PHONE"),
@@ -58,6 +58,9 @@ object OrderDetailsResponseJsonParser {
         driverName = if (has("VODILA") && !isNull("VODILA")) {
             getJSONObject("VODILA").safeString("NAME")
         } else null,
+        orderPricesEntityList = if(has("ITOG_DANNYE")){
+            getJSONArray("ITOG_DANNYE").parseOrderPricesList()
+        } else listOf()
     )
 
     private fun JSONArray.parseProductEntityList(): List<ProductEntity> =
@@ -174,6 +177,20 @@ object OrderDetailsResponseJsonParser {
                 add(detailPictureJSONArray.getString(index).parseImagePath())
             }
         }
+    }
+
+    private fun JSONArray.parseOrderPricesList(): List<OrderPricesEntity> =
+        mutableListOf<OrderPricesEntity>().apply {
+            for (index in 0 until length()) {
+                add(getJSONObject(index).parseOrderPrices())
+            }
+        }
+
+    private fun JSONObject.parseOrderPrices(): OrderPricesEntity {
+        return OrderPricesEntity(
+            name = safeString("NAME"),
+            result = safeString("RESULT")
+        )
     }
 
 }

@@ -510,14 +510,14 @@ class OrderingFragment : BaseFragment() {
             checkTitlesColor()
         }
 
-        binding.etPhoneForDriver.doOnTextChanged { _, _, _, count ->
+        binding.etPhoneForDriver.doOnTextChanged { _, _, _, _ ->
             checkTitlesColor()
         }
 
-        binding.etComment.doOnTextChanged { _, _, _, count ->
+        binding.etComment.doOnTextChanged { _, _, _, _ ->
             checkTitlesColor()
         }
-        binding.etInputCash.doOnTextChanged { _, _, _, count ->
+        binding.etInputCash.doOnTextChanged { _, _, _, _ ->
             checkTitlesColor()
         }
     }

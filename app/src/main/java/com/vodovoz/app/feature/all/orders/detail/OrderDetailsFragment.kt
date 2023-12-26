@@ -5,9 +5,10 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
@@ -17,6 +18,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.FragmentOrderDetailsFlowBinding
+import com.vodovoz.app.feature.all.orders.detail.prices.OrderPricesAdapter
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
@@ -24,6 +26,7 @@ import com.vodovoz.app.ui.model.OrderDetailsUI
 import com.vodovoz.app.ui.model.OrderStatusUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -38,7 +41,7 @@ class OrderDetailsFragment : BaseFragment() {
     }
     internal val viewModel: OrderDetailsFlowViewModel by viewModels()
 
-    private val args: OrderDetailsFragmentArgs by navArgs()
+//    private val args: OrderDetailsFragmentArgs by navArgs()
 
     @Inject
     lateinit var cartManager: CartManager
@@ -53,7 +56,13 @@ class OrderDetailsFragment : BaseFragment() {
     lateinit var ratingProductManager: RatingProductManager
 
     private val orderDetailsController by lazy {
-        OrderDetailsController(cartManager, likeManager, getProductsClickListener(), requireContext(), ratingProductManager)
+        OrderDetailsController(
+            cartManager,
+            likeManager,
+            getProductsClickListener(),
+            requireContext(),
+            ratingProductManager
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,62 +88,81 @@ class OrderDetailsFragment : BaseFragment() {
     }
 
     private fun observeCancelResult() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeCancelResult()
-                .collect {message ->
-                    binding.llStatusContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), OrderStatusUI.CANCELED.color))
-                    binding.llActionsContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), OrderStatusUI.CANCELED.color))
-                    binding.imgStatus.setImageDrawable(ContextCompat.getDrawable(requireContext(), OrderStatusUI.CANCELED.image))
-                    binding.tvStatus.text = "Отменен"
-                    binding.tvCancelOrder.visibility = View.INVISIBLE
-                    binding.llPayOrder.visibility = View.GONE
-                    MaterialAlertDialogBuilder(requireContext())
-                        .setMessage(message)
-                        .setPositiveButton("Ок") { dialog, _ -> dialog.dismiss() }
-                        .show()
-                }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel
+                    .observeCancelResult()
+                    .collect { message ->
+                        binding.llStatusContainer.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                OrderStatusUI.CANCELED.color
+                            )
+                        )
+                        binding.llActionsContainer.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                OrderStatusUI.CANCELED.color
+                            )
+                        )
+                        binding.imgStatus.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                requireContext(),
+                                OrderStatusUI.CANCELED.image
+                            )
+                        )
+                        binding.tvStatus.text = "Отменен"
+                        binding.tvCancelOrder.visibility = View.INVISIBLE
+                        binding.llPayOrder.visibility = View.GONE
+                        MaterialAlertDialogBuilder(requireContext())
+                            .setMessage(message)
+                            .setPositiveButton("Ок") { dialog, _ -> dialog.dismiss() }
+                            .show()
+                    }
+            }
         }
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { state ->
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { state ->
 
-                    showLoaderWithBg(state.loadingPage)
+                        showLoaderWithBg(state.loadingPage)
 
-                    binding.llPayOrder.setOnClickListener {
-                        val url = state.data.orderDetailsUI?.payUri ?: return@setOnClickListener
-                        binding.root.openLink(url)
-                    }
+                        binding.llPayOrder.setOnClickListener {
+                            val url = state.data.orderDetailsUI?.payUri ?: return@setOnClickListener
+                            binding.root.openLink(url)
+                        }
 
-                    val data = state.data
-                    fillOrderData(data)
+                        val data = state.data
+                        fillOrderData(data)
 
-                    val products = data.orderDetailsUI?.productUIList
-                    if (products != null) {
-                        orderDetailsController.submitList(products)
-                    }
+                        val products = data.orderDetailsUI?.productUIList
+                        if (products != null) {
+                            orderDetailsController.submitList(products)
+                        }
 
-                    if(data.ifRepeatOrder){
-                        MaterialAlertDialogBuilder(requireContext())
-                            .setTitle("Товары добавлены в корзину")
-                            .setMessage("Перейти в корзину?")
-                            .setPositiveButton("Да") { dialog, _ ->
-                                dialog.dismiss()
-                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.orderDetailsFragment) {
-                                    findNavController().navigate(OrderDetailsFragmentDirections.actionToCartFragment())
+                        if (data.ifRepeatOrder) {
+                            MaterialAlertDialogBuilder(requireContext())
+                                .setTitle("Товары добавлены в корзину")
+                                .setMessage("Перейти в корзину?")
+                                .setPositiveButton("Да") { dialog, _ ->
+                                    dialog.dismiss()
+                                    if (findNavController().currentBackStackEntry?.destination?.id == R.id.orderDetailsFragment) {
+                                        findNavController().navigate(OrderDetailsFragmentDirections.actionToCartFragment())
+                                    }
                                 }
-                            }
-                            .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
-                            .show()
-                        viewModel.repeatOrderFlagReset()
+                                .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
+                                .show()
+                            viewModel.repeatOrderFlagReset()
+                        }
+
+                        showError(state.error)
+
                     }
-
-                    showError(state.error)
-
-                }
+            }
         }
     }
 
@@ -149,7 +177,7 @@ class OrderDetailsFragment : BaseFragment() {
                 .append("№")
                 .append(orderDetailsUI.id)
                 .toString()
-            when(orderDetailsUI.status) {
+            when (orderDetailsUI.status) {
                 OrderStatusUI.COMPLETED,
                 OrderStatusUI.DELIVERED,
                 OrderStatusUI.CANCELED,
@@ -157,7 +185,7 @@ class OrderDetailsFragment : BaseFragment() {
                 else -> binding.tvCancelOrder.visibility = View.VISIBLE
             }
 
-            when(orderDetailsUI.isPayed) {
+            when (orderDetailsUI.isPayed) {
                 true -> {
                     binding.tvPayStatus.text = "Оплачен"
                     binding.payedStatus.isVisible = true
@@ -165,7 +193,7 @@ class OrderDetailsFragment : BaseFragment() {
                     binding.payedStatus.isVisible = false
                 }
                 false -> {
-                    when(orderDetailsUI.payUri.isEmpty()) {
+                    when (orderDetailsUI.payUri.isEmpty()) {
                         true -> binding.llPayOrder.visibility = View.GONE
                         false -> binding.llPayOrder.visibility = View.VISIBLE
                     }
@@ -174,7 +202,7 @@ class OrderDetailsFragment : BaseFragment() {
                 }
             }
 
-            when(orderDetailsUI.status?.id) {
+            when (orderDetailsUI.status?.id) {
                 "E" -> {
                     if (data.ifDriverExists && orderDetailsUI.driverName != null) {
                         binding.btnTraceOrder.isVisible = true
@@ -187,9 +215,13 @@ class OrderDetailsFragment : BaseFragment() {
 
                             debugLog { "driverId ${orderDetailsUI.driverId}" }
 
-                            findNavController().navigate(OrderDetailsFragmentDirections.actionToTraceOrderFragment(
-                                orderDetailsUI.driverId, orderDetailsUI.driverName, orderDetailsUI.id.toString()
-                            ))
+                            findNavController().navigate(
+                                OrderDetailsFragmentDirections.actionToTraceOrderFragment(
+                                    orderDetailsUI.driverId,
+                                    orderDetailsUI.driverName,
+                                    orderDetailsUI.id.toString()
+                                )
+                            )
                         }
 
                     } else {
@@ -200,26 +232,56 @@ class OrderDetailsFragment : BaseFragment() {
                 "R" -> binding.payedStatus.isVisible = false
             } //todo
 
-            llStatusContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), orderDetailsUI.status!!.color))
-            llActionsContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), orderDetailsUI.status.color))
-            tvTotalPriceHeader.setBackgroundColor(ContextCompat.getColor(requireContext(), orderDetailsUI.status.color))
-            imgStatus.setImageDrawable(ContextCompat.getDrawable(requireContext(), orderDetailsUI.status.image))
+            llStatusContainer.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    orderDetailsUI.status!!.color
+                )
+            )
+            llActionsContainer.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    orderDetailsUI.status.color
+                )
+            )
+            tvTotalPriceHeader.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    orderDetailsUI.status.color
+                )
+            )
+            imgStatus.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    orderDetailsUI.status.image
+                )
+            )
             tvTotalPriceHeader.setPriceText(orderDetailsUI.totalPrice)
             tvShippingDate.text = orderDetailsUI.dateDelivery
             tvShippingInterval.text = orderDetailsUI.deliveryTimeInterval
             tvPayMethod.text = orderDetailsUI.payMethod
             tvStatus.text = orderDetailsUI.status.statusName
-            tvStatus.setTextColor(ContextCompat.getColor(requireContext(), orderDetailsUI.status.color))
+            tvStatus.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    orderDetailsUI.status.color
+                )
+            )
             tvAddress.text = orderDetailsUI.address
             tvConsumerName.text = StringBuilder()
                 .append(orderDetailsUI.userFirstName)
                 .append(" ")
                 .append(orderDetailsUI.userSecondName)
             tvConsumerPhone.text = orderDetailsUI.userPhone
-            tvProductsPrice.setPriceText(orderDetailsUI.productsPrice)
-            tvDepositPrice.setPriceText(orderDetailsUI.depositPrice)
-            tvShippingPrice.setPriceText(orderDetailsUI.deliveryPrice)
-            tvTotalPrice.setPriceText(orderDetailsUI.totalPrice)
+
+            rvPrices.adapter = OrderPricesAdapter().apply {
+                submitList(orderDetailsUI.orderPricesUIList)
+            }
+
+//            tvProductsPrice.setPriceText(orderDetailsUI.productsPrice)
+//            tvDepositPrice.setPriceText(orderDetailsUI.depositPrice)
+//            tvShippingPrice.setPriceText(orderDetailsUI.deliveryPrice)
+//            tvTotalPrice.setPriceText(orderDetailsUI.totalPrice)
         }
     }
 
@@ -243,13 +305,19 @@ class OrderDetailsFragment : BaseFragment() {
     private fun getProductsClickListener(): ProductsClickListener {
         return object : ProductsClickListener {
             override fun onProductClick(id: Long) {
-                findNavController().navigate(OrderDetailsFragmentDirections.actionToProductDetailFragment(id))
+                findNavController().navigate(
+                    OrderDetailsFragmentDirections.actionToProductDetailFragment(
+                        id
+                    )
+                )
             }
 
             override fun onNotifyWhenBeAvailable(id: Long, name: String, detailPicture: String) {
-                findNavController().navigate(OrderDetailsFragmentDirections.actionToPreOrderBS(
-                    id, name, detailPicture
-                ))
+                findNavController().navigate(
+                    OrderDetailsFragmentDirections.actionToPreOrderBS(
+                        id, name, detailPicture
+                    )
+                )
             }
 
             override fun onChangeProductQuantity(id: Long, cartQuantity: Int, oldQuantity: Int) {

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -25,28 +24,28 @@
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:src="@drawable/ic_arrow_left"
-                app:tint="@color/text_black"/>
+                app:tint="@color/text_black" />
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center_vertical">
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvTitle"
                     style="@style/TextViewMediumBlackBold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:text="Дата заказа"/>
+                    tools:text="Дата заказа" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvSubtitle"
                     style="@style/TextViewSmallGray"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:text="Номер заказа"/>
+                    tools:text="Номер заказа" />
 
             </LinearLayout>
 
@@ -57,7 +56,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="@dimen/space_16"
-                android:text="Отменить"/>
+                android:text="@string/do_cancel" />
 
         </LinearLayout>
 
@@ -77,30 +76,30 @@
                 android:id="@+id/llStatusContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/space_16"
                 android:gravity="center"
                 android:orientation="horizontal"
+                android:paddingTop="@dimen/space_16"
                 app:layout_scrollFlags="enterAlways|scroll">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/payedStatus"
-                    android:visibility="visible"
                     android:layout_width="@dimen/_40sdp"
-                    android:layout_marginEnd="@dimen/space_8"
                     android:layout_height="@dimen/_40sdp"
-                    android:src="@drawable/ic_check_round"
+                    android:layout_marginEnd="@dimen/space_8"
                     android:background="@drawable/bkg_order_status_image"
                     android:padding="@dimen/space_4"
-                    app:tint="@color/white"/>
+                    android:src="@drawable/ic_check_round"
+                    android:visibility="visible"
+                    app:tint="@color/white" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imgStatus"
                     android:layout_width="@dimen/_40sdp"
                     android:layout_height="@dimen/_40sdp"
-                    android:src="@drawable/ic_order_in_processing"
                     android:background="@drawable/bkg_order_status_image"
                     android:padding="@dimen/space_4"
-                    app:tint="@color/white"/>
+                    android:src="@drawable/ic_order_in_processing"
+                    app:tint="@color/white" />
 
 
             </LinearLayout>
@@ -113,23 +112,23 @@
                 android:gravity="center"
                 android:paddingTop="@dimen/space_8"
                 app:layout_scrollFlags="enterAlways|scroll"
-                tools:text="2123 Р"/>
+                tools:text="2123 Р" />
 
             <LinearLayout
                 android:id="@+id/llActionsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:orientation="horizontal"
+                android:baselineAligned="false"
                 android:gravity="center"
-                android:baselineAligned="false">
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/llRepeatOrder"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/imgRepeat"
@@ -144,18 +143,18 @@
                         style="@style/TextViewMediumWhiteBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Повторить"
-                        android:layout_marginStart="4dp"/>
+                        android:layout_marginStart="4dp"
+                        android:text="@string/do_repeat" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/llPayOrder"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/imgPay"
@@ -170,8 +169,8 @@
                         style="@style/TextViewMediumWhiteBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Оплатить"
-                        android:layout_marginStart="@dimen/space_8"/>
+                        android:layout_marginStart="@dimen/space_8"
+                        android:text="@string/do_pay" />
 
                 </LinearLayout>
 
@@ -197,7 +196,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_16"
                     android:layout_marginTop="@dimen/space_16"
-                    android:text="Информация о заказе"
+                    android:text="@string/info_about_order"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -232,7 +231,7 @@
                     android:layout_marginEnd="@dimen/space_16"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Не оплачен"/>
+                    tools:text="Не оплачен" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvStatus"
@@ -244,7 +243,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvPayStatus"
                     tools:text="Принят"
-                    tools:textColor="@color/yellow"/>
+                    tools:textColor="@color/yellow" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvPayMethod"
@@ -264,9 +263,9 @@
                     android:layout_height="@dimen/button_normal_height"
                     android:layout_margin="@dimen/space_16"
                     android:visibility="gone"
-                    tools:visibility="visible"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPayMethod"
                     tools:text="Перейти к покупкам"
-                    app:layout_constraintTop_toBottomOf="@+id/tvPayMethod" />
+                    tools:visibility="visible" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/mdDividerAfterMainInfo"
@@ -274,7 +273,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_16"
                     app:dividerColor="@color/divider_gray_color"
-                    app:layout_constraintTop_toBottomOf="@+id/btnTraceOrder"/>
+                    app:layout_constraintTop_toBottomOf="@+id/btnTraceOrder" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvAddressTitle"
@@ -282,8 +281,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_16"
-                    android:text="Информация о заказе"
                     android:layout_marginTop="@dimen/space_16"
+                    android:text="@string/info_about_order"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/mdDividerAfterMainInfo" />
 
@@ -304,7 +303,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_16"
                     app:dividerColor="@color/divider_gray_color"
-                    app:layout_constraintTop_toBottomOf="@+id/tvAddress"/>
+                    app:layout_constraintTop_toBottomOf="@+id/tvAddress" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvConsumerTitle"
@@ -312,8 +311,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_16"
-                    android:text="Получатель"
                     android:layout_marginTop="@dimen/space_16"
+                    android:text="@string/recipient"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/mdDividerAfterAddress" />
 
@@ -345,7 +344,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_16"
                     app:dividerColor="@color/divider_gray_color"
-                    app:layout_constraintTop_toBottomOf="@+id/tvConsumerPhone"/>
+                    app:layout_constraintTop_toBottomOf="@+id/tvConsumerPhone" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvProducts"
@@ -354,128 +353,144 @@
                     android:translationZ="@dimen/elevation_3"
                     app:layout_constraintTop_toBottomOf="@+id/mdAfterConsumerInfo" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvPriceTitle"
-                    style="@style/TextViewNormalBlackBold"
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/mdRvProducts"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/field_height"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:background="@color/dark_white"
-                    android:text="Стоимость без учета доставки"
+                    android:layout_height="wrap_content"
+                    app:dividerColor="@color/divider_gray_color"
                     app:layout_constraintTop_toBottomOf="@+id/rvProducts" />
 
-                <LinearLayout
-                    android:id="@+id/llProductsPriceContainer"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvPrices"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/field_height"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    app:layout_constraintTop_toBottomOf="@id/tvPriceTitle">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@+id/mdRvProducts"
+                    tools:listitem="@layout/view_holder_order_details_prices" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/TextViewNormalBlack"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Стоимость товаров"
-                        android:background="@color/white"/>
+                <!--                <androidx.appcompat.widget.AppCompatTextView-->
+                <!--                    android:id="@+id/tvPriceTitle"-->
+                <!--                    style="@style/TextViewNormalBlackBold"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="@dimen/field_height"-->
+                <!--                    android:gravity="center_vertical"-->
+                <!--                    android:paddingHorizontal="@dimen/space_16"-->
+                <!--                    android:background="@color/dark_white"-->
+                <!--                    android:text="Стоимость без учета доставки"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@+id/rvProducts" />-->
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tvProductsPrice"
-                        style="@style/TextViewMediumBlackBold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1135 Р"
-                        android:background="@color/white"/>
+                <!--                <LinearLayout-->
+                <!--                    android:id="@+id/llProductsPriceContainer"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="@dimen/field_height"-->
+                <!--                    android:orientation="horizontal"-->
+                <!--                    android:paddingHorizontal="@dimen/space_16"-->
+                <!--                    android:background="@color/white"-->
+                <!--                    android:gravity="center_vertical"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@id/tvPriceTitle">-->
 
-                </LinearLayout>
+                <!--                    <androidx.appcompat.widget.AppCompatTextView-->
+                <!--                        style="@style/TextViewNormalBlack"-->
+                <!--                        android:layout_width="0dp"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:layout_weight="1"-->
+                <!--                        android:text="Стоимость товаров"-->
+                <!--                        android:background="@color/white"/>-->
 
-                <LinearLayout
-                    android:id="@+id/llDepositPriceContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/field_height"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    app:layout_constraintTop_toBottomOf="@id/llProductsPriceContainer">
+                <!--                    <androidx.appcompat.widget.AppCompatTextView-->
+                <!--                        android:id="@+id/tvProductsPrice"-->
+                <!--                        style="@style/TextViewMediumBlackBold"-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:text="1135 Р"-->
+                <!--                        android:background="@color/white"/>-->
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/TextViewNormalBlack"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Залог"
-                        android:background="@color/white"/>
+                <!--                </LinearLayout>-->
 
-                    <TextView
-                        android:id="@+id/tvDepositPrice"
-                        style="@style/TextViewMediumBlackBold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1135 Р"
-                        android:background="@color/white"/>
+                <!--                <LinearLayout-->
+                <!--                    android:id="@+id/llDepositPriceContainer"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="@dimen/field_height"-->
+                <!--                    android:orientation="horizontal"-->
+                <!--                    android:paddingHorizontal="@dimen/space_16"-->
+                <!--                    android:background="@color/white"-->
+                <!--                    android:gravity="center_vertical"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@id/llProductsPriceContainer">-->
 
-                </LinearLayout>
+                <!--                    <androidx.appcompat.widget.AppCompatTextView-->
+                <!--                        style="@style/TextViewNormalBlack"-->
+                <!--                        android:layout_width="0dp"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:layout_weight="1"-->
+                <!--                        android:text="Залог"-->
+                <!--                        android:background="@color/white"/>-->
 
-                <LinearLayout
-                    android:id="@+id/llShippingPriceContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/field_height"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    app:layout_constraintTop_toBottomOf="@id/llDepositPriceContainer">
+                <!--                    <TextView-->
+                <!--                        android:id="@+id/tvDepositPrice"-->
+                <!--                        style="@style/TextViewMediumBlackBold"-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:text="1135 Р"-->
+                <!--                        android:background="@color/white"/>-->
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/TextViewNormalBlack"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Доставка"
-                        android:background="@color/white"/>
+                <!--                </LinearLayout>-->
 
-                    <TextView
-                        android:id="@+id/tvShippingPrice"
-                        style="@style/TextViewMediumBlackBold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1135 Р"
-                        android:background="@color/white"/>
+                <!--                <LinearLayout-->
+                <!--                    android:id="@+id/llShippingPriceContainer"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="@dimen/field_height"-->
+                <!--                    android:orientation="horizontal"-->
+                <!--                    android:paddingHorizontal="@dimen/space_16"-->
+                <!--                    android:background="@color/white"-->
+                <!--                    android:gravity="center_vertical"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@id/llDepositPriceContainer">-->
 
-                </LinearLayout>
+                <!--                    <androidx.appcompat.widget.AppCompatTextView-->
+                <!--                        style="@style/TextViewNormalBlack"-->
+                <!--                        android:layout_width="0dp"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:layout_weight="1"-->
+                <!--                        android:text="Доставка"-->
+                <!--                        android:background="@color/white"/>-->
 
-                <LinearLayout
-                    android:id="@+id/llTotalPriceContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/field_height"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    app:layout_constraintTop_toBottomOf="@id/llShippingPriceContainer">
+                <!--                    <TextView-->
+                <!--                        android:id="@+id/tvShippingPrice"-->
+                <!--                        style="@style/TextViewMediumBlackBold"-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:text="1135 Р"-->
+                <!--                        android:background="@color/white"/>-->
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/TextViewNormalBlack"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Итого"
-                        android:background="@color/white"/>
+                <!--                </LinearLayout>-->
 
-                    <TextView
-                        android:id="@+id/tvTotalPrice"
-                        style="@style/TextViewMediumBlackBold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1135 Р"
-                        android:background="@color/white"/>
+                <!--                <LinearLayout-->
+                <!--                    android:id="@+id/llTotalPriceContainer"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="@dimen/field_height"-->
+                <!--                    android:orientation="horizontal"-->
+                <!--                    android:paddingHorizontal="@dimen/space_16"-->
+                <!--                    android:background="@color/white"-->
+                <!--                    android:gravity="center_vertical"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@id/llShippingPriceContainer">-->
 
-                </LinearLayout>
+                <!--                    <androidx.appcompat.widget.AppCompatTextView-->
+                <!--                        style="@style/TextViewNormalBlack"-->
+                <!--                        android:layout_width="0dp"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:layout_weight="1"-->
+                <!--                        android:text="Итого"-->
+                <!--                        android:background="@color/white"/>-->
+
+                <!--                    <TextView-->
+                <!--                        android:id="@+id/tvTotalPrice"-->
+                <!--                        style="@style/TextViewMediumBlackBold"-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:text="1135 Р"-->
+                <!--                        android:background="@color/white"/>-->
+
+                <!--                </LinearLayout>-->
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

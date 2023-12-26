@@ -113,6 +113,11 @@
     <string name="characteristics" translatable="false">ХАРАКТЕРИСТИКИ</string>
     <string name="all_characteristics" translatable="false">Все характеристики</string>
     <string name="consumer_information" translatable="false">Потребительская информация</string>
+    <string name="do_cancel" translatable="false">Отменить</string>
+    <string name="do_repeat" translatable="false">Повторить</string>
+    <string name="do_pay" translatable="false">Оплатить</string>
+    <string name="info_about_order" translatable="false">Информация о заказе</string>
+    <string name="recipient" translatable="false">Получатель</string>
 
 
 </resources>

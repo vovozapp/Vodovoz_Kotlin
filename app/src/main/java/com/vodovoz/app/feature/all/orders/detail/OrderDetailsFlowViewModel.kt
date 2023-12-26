@@ -17,7 +17,7 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.feature.all.orders.detail.model.DriverPointsEntity
-import com.vodovoz.app.mapper.OrderDetailsMapper.mapToUI
+import com.vodovoz.app.mapper.mapToUI
 import com.vodovoz.app.ui.model.OrderDetailsUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel

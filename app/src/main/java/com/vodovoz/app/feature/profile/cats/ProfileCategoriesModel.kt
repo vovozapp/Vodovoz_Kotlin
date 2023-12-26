@@ -25,7 +25,7 @@ data class ProfileCategoriesModel(
             ProfileCategoryUI(
                 dannieLambda.RAZDEL,
                 dannieLambda.PODRAZDEL?.map {
-                    if (it.ZNACHENI != null) {
+                    if (it.ZNACHENI != null && it.ID == "moyzakaz") {
                         amount = it.ZNACHENI
                     }
                     ProfileInsideCategoryUI(

@@ -7,7 +7,9 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -25,6 +27,7 @@ import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -75,7 +78,7 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
         }
 
         binding.rbRating.onRatingBarChangeListener =
-            RatingBar.OnRatingBarChangeListener { p0, newRating, p2 ->
+            RatingBar.OnRatingBarChangeListener { _, _, _ ->
                 binding.errorTv.isVisible = false
             }
 
@@ -101,55 +104,57 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
     }
 
     private fun observeMediaManager() {
-        lifecycleScope.launchWhenStarted {
-            mediaManager
-                .observePublicationImage()
-                .collect { list ->
-                    debugLog { "list ${list?.size}" }
-                    if (list != null) {
-                        if (list.size >= 5) {
-                            binding.images.plusImagePreview.visibility = View.GONE
-                        }
-                        list.forEachIndexed { index, file ->
-                            when (index) {
-                                0 -> {
-                                    setImage(file.path, binding.images.previewImage1)
-                                    if (list.size == 1) {
-                                        binding.images.previewImage2.visibility = View.GONE
-                                        binding.images.previewImage3.visibility = View.GONE
-                                        binding.images.previewImage4.visibility = View.GONE
-                                        binding.images.previewImage5.visibility = View.GONE
-                                    }
-                                }
-                                1 -> {
-                                    setImage(file.path, binding.images.previewImage2)
-                                    if (list.size == 2) {
-                                        binding.images.previewImage3.visibility = View.GONE
-                                        binding.images.previewImage4.visibility = View.GONE
-                                        binding.images.previewImage5.visibility = View.GONE
-                                    }
-                                }
-                                2 -> {
-                                    setImage(file.path, binding.images.previewImage3)
-                                    if (list.size == 3) {
-                                        binding.images.previewImage4.visibility = View.GONE
-                                        binding.images.previewImage5.visibility = View.GONE
-                                    }
-                                }
-                                3 -> {
-                                    setImage(file.path, binding.images.previewImage4)
-                                    if (list.size == 4) {
-                                        binding.images.previewImage5.visibility = View.GONE
-                                    }
-                                }
-                                4 -> setImage(file.path, binding.images.previewImage5)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mediaManager
+                    .observePublicationImage()
+                    .collect { list ->
+                        debugLog { "list ${list?.size}" }
+                        if (list != null) {
+                            if (list.size >= 5) {
+                                binding.images.plusImagePreview.visibility = View.GONE
                             }
-                        }
+                            list.forEachIndexed { index, file ->
+                                when (index) {
+                                    0 -> {
+                                        setImage(file.path, binding.images.previewImage1)
+                                        if (list.size == 1) {
+                                            binding.images.previewImage2.visibility = View.GONE
+                                            binding.images.previewImage3.visibility = View.GONE
+                                            binding.images.previewImage4.visibility = View.GONE
+                                            binding.images.previewImage5.visibility = View.GONE
+                                        }
+                                    }
+                                    1 -> {
+                                        setImage(file.path, binding.images.previewImage2)
+                                        if (list.size == 2) {
+                                            binding.images.previewImage3.visibility = View.GONE
+                                            binding.images.previewImage4.visibility = View.GONE
+                                            binding.images.previewImage5.visibility = View.GONE
+                                        }
+                                    }
+                                    2 -> {
+                                        setImage(file.path, binding.images.previewImage3)
+                                        if (list.size == 3) {
+                                            binding.images.previewImage4.visibility = View.GONE
+                                            binding.images.previewImage5.visibility = View.GONE
+                                        }
+                                    }
+                                    3 -> {
+                                        setImage(file.path, binding.images.previewImage4)
+                                        if (list.size == 4) {
+                                            binding.images.previewImage5.visibility = View.GONE
+                                        }
+                                    }
+                                    4 -> setImage(file.path, binding.images.previewImage5)
+                                }
+                            }
 
-                        // mediaManager.removePublicationImage() //todo
-                        // mediaManager.removeCommentData() //todo
+                            // mediaManager.removePublicationImage() //todo
+                            // mediaManager.removeCommentData() //todo
+                        }
                     }
-                }
+            }
         }
     }
 
@@ -162,13 +167,15 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
     }
 
     private fun observeSiteState() {
-        lifecycleScope.launchWhenStarted {
-            siteStateManager
-                .observeSiteState()
-                .collect {
-                    val showComment = it?.showComments ?: false
-                    binding.images.root.isVisible = showComment
-                }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                siteStateManager
+                    .observeSiteState()
+                    .collect {
+                        val showComment = it?.showComments ?: false
+                        binding.images.root.isVisible = showComment
+                    }
+            }
         }
     }
 
@@ -180,16 +187,18 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
     }
 
     private fun observeSendResult() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeSendCommentResult()
-                .collect {
-                    if (it) {
-                        requireActivity().snack("Отзыв успешно добавлен!")
-                        dialog?.cancel()
-                    } else {
-                        requireActivity().snack("Ошибка, попробуйте снова.")
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeSendCommentResult()
+                    .collect {
+                        if (it) {
+                            requireActivity().snack("Отзыв успешно добавлен!")
+                            dialog?.cancel()
+                        } else {
+                            requireActivity().snack("Ошибка, попробуйте снова.")
+                        }
                     }
-                }
+            }
         }
     }
 

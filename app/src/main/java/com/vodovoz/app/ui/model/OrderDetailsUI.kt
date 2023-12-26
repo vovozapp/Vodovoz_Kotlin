@@ -4,8 +4,8 @@ class OrderDetailsUI(
     val id: Long? = null,
     val dateOrder: String = "",
     val dateDelivery: String = "",
-    val productsPrice: Int = 0,
-    val deliveryPrice: Int = 0,
+//    val productsPrice: Int = 0,
+//    val deliveryPrice: Int = 0,
     val depositPrice: Int = 0,
     val totalPrice: Int = 0,
     val userFirstName: String = "",
@@ -19,5 +19,6 @@ class OrderDetailsUI(
     val address: String = "",
     val productUIList: List<ProductUI> = listOf(),
     val driverId: String? = null,
-    val driverName: String? = null
+    val driverName: String? = null,
+    val orderPricesUIList: List<OrderPricesUI> = listOf(),
 )
