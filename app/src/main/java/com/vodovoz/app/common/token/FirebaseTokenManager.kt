@@ -10,7 +10,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @Singleton
-class TokenManager @Inject constructor(
+class FirebaseTokenManager @Inject constructor(
     private val accountManager: AccountManager,
     private val repository: MainRepository,
 ) {

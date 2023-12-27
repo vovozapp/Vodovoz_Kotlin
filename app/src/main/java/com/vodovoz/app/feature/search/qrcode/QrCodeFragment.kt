@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.zxing.Result
@@ -12,6 +14,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentQrCodeBinding
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import me.dm7.barcodescanner.zxing.ZXingScannerView
 
 @AndroidEntryPoint
@@ -32,25 +35,31 @@ class QrCodeFragment : Fragment(R.layout.fragment_qr_code), ZXingScannerView.Res
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeEvent()
-                .collect {
-                    when(it) {
-                        is QrCodeViewModel.QrCodeEvents.Success -> {
-                            findNavController().navigate(QrCodeFragmentDirections.actionToProductDetailFragment(it.id.toLong()))
-                        }
-                        is QrCodeViewModel.QrCodeEvents.Error -> {
-                            requireActivity().snack(it.message)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeEvent()
+                    .collect {
+                        when (it) {
+                            is QrCodeViewModel.QrCodeEvents.Success -> {
+                                findNavController().navigate(
+                                    QrCodeFragmentDirections.actionToProductDetailFragment(
+                                        it.id.toLong()
+                                    )
+                                )
+                            }
+                            is QrCodeViewModel.QrCodeEvents.Error -> {
+                                requireActivity().snack(it.message)
+                            }
                         }
                     }
-                }
+            }
         }
     }
 
     override fun onResume() {
         super.onResume()
         scannerView?.setResultHandler(this)
-        scannerView?.startCamera();
+        scannerView?.startCamera()
     }
 
     override fun onPause() {

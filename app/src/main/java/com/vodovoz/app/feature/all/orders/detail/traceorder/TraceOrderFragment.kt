@@ -15,7 +15,9 @@ import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -46,6 +48,7 @@ import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TraceOrderFragment : BaseFragment(), InputListener,
@@ -151,48 +154,50 @@ class TraceOrderFragment : BaseFragment(), InputListener,
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect {
 
-                    if (it.data.driverPoint != null && it.data.autoBitmap != null) {
-                        moveCamera(it.data.driverPoint)
-                        placeMark(it.data.driverPoint, it.data.autoBitmap)
-                    }
-
-                    val driverEntity = it.data.driverPointsEntity
-
-                    if (driverEntity != null && it.data.homeBitmap != null) {
-                        val lat = driverEntity.Position?.Latitude
-                        val lon = driverEntity.Position?.Longitude
-                        if (!lat.isNullOrEmpty() && !lon.isNullOrEmpty()) {
-                            placeMark(Point(lat.toDouble(), lon.toDouble()), it.data.homeBitmap)
+                        if (it.data.driverPoint != null && it.data.autoBitmap != null) {
+                            moveCamera(it.data.driverPoint)
+                            placeMark(it.data.driverPoint, it.data.autoBitmap)
                         }
-                    }
 
-                    binding.traceOrderBs.driverNameTv.text = it.data.name ?: ""
-                    binding.traceOrderBs.carNumberTv.text = it.data.car ?: ""
+                        val driverEntity = it.data.driverPointsEntity
 
-                    if (driverEntity != null) {
-                        if (driverEntity.DriverDirection == "TRUE") {
-                            binding.traceOrderBs.timeTv.isVisible = false
-                            binding.traceOrderBs.commentTv.isVisible = true
-                            binding.traceOrderBs.commentTv.text =
-                                "Водитель выехал и направляется к Вам."
+                        if (driverEntity != null && it.data.homeBitmap != null) {
+                            val lat = driverEntity.Position?.Latitude
+                            val lon = driverEntity.Position?.Longitude
+                            if (!lat.isNullOrEmpty() && !lon.isNullOrEmpty()) {
+                                placeMark(Point(lat.toDouble(), lon.toDouble()), it.data.homeBitmap)
+                            }
+                        }
+
+                        binding.traceOrderBs.driverNameTv.text = it.data.name ?: ""
+                        binding.traceOrderBs.carNumberTv.text = it.data.car ?: ""
+
+                        if (driverEntity != null) {
+                            if (driverEntity.DriverDirection == "TRUE") {
+                                binding.traceOrderBs.timeTv.isVisible = false
+                                binding.traceOrderBs.commentTv.isVisible = true
+                                binding.traceOrderBs.commentTv.text =
+                                    "Водитель выехал и направляется к Вам."
+                            } else {
+                                binding.traceOrderBs.timeTv.isVisible = true
+                                binding.traceOrderBs.commentTv.isVisible = false
+                                binding.traceOrderBs.timeTv.text =
+                                    buildString {
+                                        append("Ориентировочное время прибытия: ")
+                                        append(it.data.driverPointsEntity.Priblizitelnoe_vremya)
+                                    }
+                            }
                         } else {
-                            binding.traceOrderBs.timeTv.isVisible = true
+                            binding.traceOrderBs.timeTv.isVisible = false
                             binding.traceOrderBs.commentTv.isVisible = false
-                            binding.traceOrderBs.timeTv.text =
-                                buildString {
-                                    append("Ориентировочное время прибытия: ")
-                                    append(it.data.driverPointsEntity.Priblizitelnoe_vremya)
-                                }
                         }
-                    } else {
-                        binding.traceOrderBs.timeTv.isVisible = false
-                        binding.traceOrderBs.commentTv.isVisible = false
                     }
-                }
+            }
         }
     }
 
@@ -230,7 +235,7 @@ class TraceOrderFragment : BaseFragment(), InputListener,
                     setCancelable(false)
                     setPositiveButton(
                         "Открыть настройки"
-                    ) { dialogInterface, i ->
+                    ) { _, _ ->
                         val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                         context.startActivity(intent)
                     }

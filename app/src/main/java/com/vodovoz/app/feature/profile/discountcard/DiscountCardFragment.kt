@@ -3,7 +3,9 @@ package com.vodovoz.app.feature.profile.discountcard
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -14,6 +16,7 @@ import com.vodovoz.app.feature.profile.discountcard.adapter.DiscountCardClickLis
 import com.vodovoz.app.util.extensions.fromHtml
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DiscountCardFragment : BaseFragment() {
@@ -21,7 +24,7 @@ class DiscountCardFragment : BaseFragment() {
     private val binding: FragmentDiscountCardBinding by viewBinding {
         FragmentDiscountCardBinding.bind(contentView)
     }
-    private val viewModel: DiscountCardFlowViewModel by viewModels()
+    internal val viewModel: DiscountCardFlowViewModel by viewModels()
 
     private val adapter: DiscountCardAdapter = DiscountCardAdapter(
         object : DiscountCardClickListener {
@@ -54,39 +57,43 @@ class DiscountCardFragment : BaseFragment() {
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeUiState()
-                .collect { state ->
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
-                    }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel
+                    .observeUiState()
+                    .collect { state ->
+                        if (state.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                        }
 
-                    val bundle = state.data.activateDiscountCardBundleUI
-                    if (bundle != null) {
-                        initToolbar(bundle.title)
-                        binding.info.text = bundle.details.fromHtml()
-                        adapter.submitList(bundle.discountCardPropertyUIList)
-                    }
+                        val bundle = state.data.activateDiscountCardBundleUI
+                        if (bundle != null) {
+                            initToolbar(bundle.title)
+                            binding.info.text = bundle.details.fromHtml()
+                            adapter.submitList(bundle.discountCardPropertyUIList)
+                        }
 
-                    showError(state.error)
-                }
+                        showError(state.error)
+                    }
+            }
         }
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeEvent()
-                .collect {
-                    when (it) {
-                        is DiscountCardFlowViewModel.DiscountCardEvents.ActivateResult -> {
-                            requireActivity().snack(it.message)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel
+                    .observeEvent()
+                    .collect {
+                        when (it) {
+                            is DiscountCardFlowViewModel.DiscountCardEvents.ActivateResult -> {
+                                requireActivity().snack(it.message)
+                            }
                         }
                     }
-                }
+            }
         }
     }
 

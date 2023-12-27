@@ -8,7 +8,7 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.common.token.TokenManager
+import com.vodovoz.app.common.token.FirebaseTokenManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.config.AuthConfig
 import com.vodovoz.app.data.local.LocalDataSource
@@ -25,7 +25,7 @@ class RegFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val localDataSource: LocalDataSource,
     private val accountManager: AccountManager,
-    private val tokenManager: TokenManager,
+    private val firebaseTokenManager: FirebaseTokenManager,
     private val likeManager: LikeManager,
 ) : PagingContractViewModel<RegFlowViewModel.RegState, RegFlowViewModel.RegEvents>(RegState()) {
 
@@ -56,7 +56,7 @@ class RegFlowViewModel @Inject constructor(
                             uiStateListener.value =
                                 state.copy(error = null, loadingPage = false)
                             eventListener.emit(RegEvents.RegSuccess)
-                            tokenManager.sendFirebaseToken()
+                            firebaseTokenManager.sendFirebaseToken()
                         }
                         is ResponseEntity.Error -> {
                             uiStateListener.value =

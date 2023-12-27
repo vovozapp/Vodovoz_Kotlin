@@ -18,7 +18,7 @@ class AddressesFlowAdapter(
                 AddressFlowViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
             R.layout.view_holder_addresses_type_title -> {
-                AddressTitleFlowViewHolder(getViewFromInflater(viewType, parent), clickListener)
+                AddressTitleFlowViewHolder(getViewFromInflater(viewType, parent))
             }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")

@@ -48,7 +48,7 @@ class BiometricSettingsFragment : BaseFragment() {
 
         initToolbar("Безопасность")
 
-        binding.personalDataSwitch.setOnCheckedChangeListener { p0, p1 ->
+        binding.personalDataSwitch.setOnCheckedChangeListener { _, p1 ->
             if (p1) {
                 checkBiometric()
             } else {

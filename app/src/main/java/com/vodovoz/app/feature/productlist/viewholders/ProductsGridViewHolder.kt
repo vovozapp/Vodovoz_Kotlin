@@ -180,7 +180,7 @@ class ProductsGridViewHolder(
             productsClickListener.onFavoriteClick(item.id, item.isFavorite)
         }
 
-        RatingBar.OnRatingBarChangeListener { p0, newRating, p2 ->
+        RatingBar.OnRatingBarChangeListener { _, newRating, _ ->
             val item = item ?: return@OnRatingBarChangeListener
             if (newRating != binding.rbRating.rating) {
                 productsClickListener.onChangeRating(item.id, newRating, item.rating)

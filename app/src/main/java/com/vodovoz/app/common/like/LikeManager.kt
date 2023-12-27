@@ -130,7 +130,7 @@ class LikeManager @Inject constructor(
         val localLikesListString = sharedPrefs.getString(FAV_IDS, "")?.dropLast(1) ?: ""
 
         runCatching {
-            val resp = repository.like(productIdListStr = localLikesListString, userId = userId)
+            repository.like(productIdListStr = localLikesListString, userId = userId)
             sharedPrefs.edit().remove(FAV_IDS).apply()
         }
     }

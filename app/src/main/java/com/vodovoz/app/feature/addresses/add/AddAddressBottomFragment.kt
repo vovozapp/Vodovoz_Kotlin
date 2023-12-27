@@ -7,7 +7,9 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -28,6 +30,7 @@ import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.user_location.UserLocationLayer
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -35,7 +38,7 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
 
     override fun layout(): Int = R.layout.bs_add_address_search
 
-    private val binding: BsAddAddressSearchBinding by viewBinding {
+    internal val binding: BsAddAddressSearchBinding by viewBinding {
         BsAddAddressSearchBinding.bind(
             contentView
         )
@@ -53,7 +56,7 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
         MapKitFactory.getInstance()
     }
 
-    private val mapController by lazy {
+    internal val mapController by lazy {
         MapController(
             mapKit,
             fetchAddressResultClickListener(),
@@ -168,50 +171,54 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { state ->
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { state ->
 
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
+                        if (state.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                        }
+
+                        buildAddressFields(state.data.addressUI)
+
+                        showError(state.error)
                     }
-
-                    buildAddressFields(state.data.addressUI)
-
-                    showError(state.error)
-                }
+            }
         }
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeEvent()
-                .collect {
-                    when (it) {
-                        is MapFlowViewModel.MapFlowEvents.AddAddressError -> {
-                            requireActivity().snack(it.message)
-                        }
-                        is MapFlowViewModel.MapFlowEvents.AddAddressSuccess -> {
-                            tabManager.setAddressesRefreshState(true)
-                            findNavController().popBackStack(
-                                R.id.savedAddressesDialogFragment,
-                                false
-                            )
-                            dismiss()
-                        }
-                        is MapFlowViewModel.MapFlowEvents.ShowSearchError -> {
-                            binding.searchErrorTv.isVisible = true
-                        }
-                        is MapFlowViewModel.MapFlowEvents.Submit -> {
-                            it.list.forEach { point ->
-                                mapController.submitRequest(point, it.startPoint)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeEvent()
+                    .collect {
+                        when (it) {
+                            is MapFlowViewModel.MapFlowEvents.AddAddressError -> {
+                                requireActivity().snack(it.message)
                             }
+                            is MapFlowViewModel.MapFlowEvents.AddAddressSuccess -> {
+                                tabManager.setAddressesRefreshState(true)
+                                findNavController().popBackStack(
+                                    R.id.savedAddressesDialogFragment,
+                                    false
+                                )
+                                dismiss()
+                            }
+                            is MapFlowViewModel.MapFlowEvents.ShowSearchError -> {
+                                binding.searchErrorTv.isVisible = true
+                            }
+                            is MapFlowViewModel.MapFlowEvents.Submit -> {
+                                it.list.forEach { point ->
+                                    mapController.submitRequest(point, it.startPoint)
+                                }
+                            }
+                            else -> {}
                         }
-                        else -> {}
                     }
-                }
+            }
         }
     }
 

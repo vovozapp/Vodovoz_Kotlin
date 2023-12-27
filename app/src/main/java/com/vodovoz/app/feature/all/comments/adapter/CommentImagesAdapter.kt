@@ -7,13 +7,13 @@ import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 
 class CommentImagesAdapter(
-    private val clickListener: CommentImagesClickListener,
+//    private val clickListener: CommentImagesClickListener,
 ): ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
         return when (viewType) {
             R.layout.item_comment_image -> {
-                CommentImagesViewHolder(getViewFromInflater(viewType, parent), clickListener)
+                CommentImagesViewHolder(getViewFromInflater(viewType, parent))
             }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")

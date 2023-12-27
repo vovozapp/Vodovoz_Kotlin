@@ -52,7 +52,7 @@ import com.yandex.runtime.image.ImageProvider
 
 class MapController(
     private val mapKit: MapKit,
-    private val addressResultClickListener: AddressResultClickListener,
+    addressResultClickListener: AddressResultClickListener,
     private val userLocationLayer: UserLocationLayer,
     private val viewModel: MapFlowViewModel,
     private val context: Context,
@@ -154,7 +154,7 @@ class MapController(
                     setCancelable(false)
                     setPositiveButton(
                         "Открыть настройки"
-                    ) { dialogInterface, i ->
+                    ) { _, _ ->
                         val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                         context.startActivity(intent)
                     }

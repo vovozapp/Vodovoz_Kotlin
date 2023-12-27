@@ -7,7 +7,9 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -16,6 +18,7 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentProductCommentsFlowBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -70,51 +73,55 @@ class AllCommentsByProductDialogFragment : BaseFragment() {
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeEvent()
-                .collect {
-                    when(it) {
-                        is AllCommentsFlowViewModel.AllCommentsEvents.GoToProfile -> {
-                            tabManager.setAuthRedirect(findNavController().graph.id)
-                            tabManager.selectTab(R.id.graph_profile)
-                        }
-                        is AllCommentsFlowViewModel.AllCommentsEvents.SendComment -> {
-                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutProductFragment) {
-                                findNavController().popBackStack()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeEvent()
+                    .collect {
+                        when (it) {
+                            is AllCommentsFlowViewModel.AllCommentsEvents.GoToProfile -> {
+                                tabManager.setAuthRedirect(findNavController().graph.id)
+                                tabManager.selectTab(R.id.graph_profile)
                             }
-                            findNavController().navigate(
-                                AllCommentsByProductDialogFragmentDirections.actionToSendCommentAboutProductFragment(
-                                    args.productId
+                            is AllCommentsFlowViewModel.AllCommentsEvents.SendComment -> {
+                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutProductFragment) {
+                                    findNavController().popBackStack()
+                                }
+                                findNavController().navigate(
+                                    AllCommentsByProductDialogFragmentDirections.actionToSendCommentAboutProductFragment(
+                                        args.productId
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
-                }
+            }
         }
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { state ->
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { state ->
 
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
-                        binding.apAppBar.elevation = 4F
+                        if (state.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                            binding.apAppBar.elevation = 4F
+                        }
+
+                        val data = state.data
+                        if (state.bottomItem != null) {
+                            allCommentsFlowController.submitList(data.itemsList + state.bottomItem)
+                        } else {
+                            allCommentsFlowController.submitList(data.itemsList)
+                        }
+
+                        showError(state.error)
+
                     }
-
-                    val data = state.data
-                    if (state.bottomItem != null) {
-                        allCommentsFlowController.submitList(data.itemsList + state.bottomItem)
-                    } else {
-                        allCommentsFlowController.submitList(data.itemsList)
-                    }
-
-                    showError(state.error)
-
-                }
+            }
         }
     }
 

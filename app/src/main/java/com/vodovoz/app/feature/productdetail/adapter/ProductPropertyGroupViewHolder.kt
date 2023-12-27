@@ -13,8 +13,8 @@ import com.vodovoz.app.ui.view.Divider
 
 class ProductPropertyGroupViewHolder(
     private val binding: ViewHolderPropertiesGroupBinding,
-    private val context: Context,
-    private val space: Int
+    context: Context,
+    private val space: Int,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private val productPropertiesAdapter = ProductPropertiesAdapter()
@@ -23,16 +23,19 @@ class ProductPropertyGroupViewHolder(
         binding.rvProperties.layoutManager = LinearLayoutManager(context)
         binding.rvProperties.adapter = productPropertiesAdapter
         ContextCompat.getDrawable(itemView.context, R.drawable.bkg_gray_divider)?.let {
-            binding.rvProperties.addItemDecoration(Divider(it, space/2))
+            binding.rvProperties.addItemDecoration(Divider(it, space / 2))
         }
-        binding.rvProperties.addMarginDecoration { rect, view, parent, state ->
-            rect.top = space/2
-            rect.bottom = space/2
+        binding.rvProperties.addMarginDecoration { rect, _, _, _ ->
+            rect.top = space / 2
+            rect.bottom = space / 2
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun onBind(propertiesGroupUI: PropertiesGroupUI, viewMode: ProductPropertyGroupsAdapter.ViewMode) {
+    fun onBind(
+        propertiesGroupUI: PropertiesGroupUI,
+        viewMode: ProductPropertyGroupsAdapter.ViewMode,
+    ) {
         binding.tvName.text = propertiesGroupUI.name
         productPropertiesAdapter.viewMode = viewMode
         productPropertiesAdapter.propertyUIList = propertiesGroupUI.propertyUIList

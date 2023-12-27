@@ -203,7 +203,7 @@ class HomeProductsInnerViewHolder(
         binding.imgFavoriteStatus.isSelected = item.isFavorite
     }
 
-    private fun hideAmountController() {
+    internal fun hideAmountController() {
         val product = item
         product?.let {
             if (product.cartQuantity > 0) {
@@ -215,7 +215,7 @@ class HomeProductsInnerViewHolder(
         }
     }
 
-    private fun updateCartQuantity(item: ProductUI, showCircleAmount: Boolean = true) {
+    private fun updateCartQuantity(item: ProductUI) {
         if (item.cartQuantity < 0) {
             item.cartQuantity = 0
         }

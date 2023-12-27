@@ -8,7 +8,7 @@ import com.vodovoz.app.feature.all.comments.model.CommentImage
 
 class CommentImagesViewHolder(
     view: View,
-    clickListener: CommentImagesClickListener,
+//    clickListener: CommentImagesClickListener,
 ) : ItemViewHolder<CommentImage>(view) {
 
     private val binding: ItemCommentImageBinding = ItemCommentImageBinding.bind(view)

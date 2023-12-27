@@ -9,7 +9,7 @@ import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.common.token.TokenManager
+import com.vodovoz.app.common.token.FirebaseTokenManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
@@ -28,7 +28,7 @@ class LoginFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val localDataSource: LocalDataSource,
     private val accountManager: AccountManager,
-    private val tokenManager: TokenManager,
+    private val firebaseTokenManager: FirebaseTokenManager,
     private val loginManager: LoginManager,
     private val siteStateManager: SiteStateManager,
     private val likeManager: LikeManager,
@@ -114,7 +114,7 @@ class LoginFlowViewModel @Inject constructor(
                                 state.copy(error = null, loadingPage = false)
                             clearData()
                             eventListener.emit(LoginEvents.AuthSuccess)
-                            tokenManager.sendFirebaseToken()
+                            firebaseTokenManager.sendFirebaseToken()
                         }
                         is ResponseEntity.Error -> {
                             uiStateListener.value =
@@ -157,7 +157,7 @@ class LoginFlowViewModel @Inject constructor(
                                 state.copy(error = null, loadingPage = false)
                             clearData()
                             eventListener.emit(LoginEvents.AuthSuccess)
-                            tokenManager.sendFirebaseToken()
+                            firebaseTokenManager.sendFirebaseToken()
                         }
                         is ResponseEntity.Error -> {
                             uiStateListener.value =

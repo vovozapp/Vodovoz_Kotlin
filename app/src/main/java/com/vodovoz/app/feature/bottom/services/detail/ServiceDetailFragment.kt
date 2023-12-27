@@ -3,7 +3,9 @@ package com.vodovoz.app.feature.bottom.services.detail
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -13,6 +15,7 @@ import com.vodovoz.app.databinding.FragmentServiceDetailsFlowBinding
 import com.vodovoz.app.feature.bottom.services.AboutServicesFlowViewModel
 import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ServiceDetailFragment : BaseFragment() {
@@ -58,55 +61,69 @@ class ServiceDetailFragment : BaseFragment() {
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeAboutServicesEvents()
-                .collect {
-                    when(it) {
-                        is AboutServicesFlowViewModel.AboutServicesEvents.OnTitleClick -> {
-                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.serviceOrderFragment) {
-                                findNavController().popBackStack()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel
+                    .observeAboutServicesEvents()
+                    .collect {
+                        when (it) {
+                            is AboutServicesFlowViewModel.AboutServicesEvents.OnTitleClick -> {
+                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.serviceOrderFragment) {
+                                    findNavController().popBackStack()
+                                }
+                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.serviceSelectionBS) {
+                                    findNavController().popBackStack()
+                                }
+                                findNavController().navigate(
+                                    ServiceDetailFragmentDirections.actionToServiceSelectionBS(
+                                        emptyArray(), ""
+                                    )
+                                )
                             }
-                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.serviceSelectionBS) {
-                                findNavController().popBackStack()
+                            is AboutServicesFlowViewModel.AboutServicesEvents.NavigateToOrder -> {
+                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.serviceOrderFragment) {
+                                    findNavController().popBackStack()
+                                }
+                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.serviceSelectionBS) {
+                                    findNavController().popBackStack()
+                                }
+                                findNavController().navigate(
+                                    ServiceDetailFragmentDirections.actionToServiceOrderFragment(
+                                        it.name,
+                                        it.type
+                                    )
+                                )
                             }
-                            findNavController().navigate(ServiceDetailFragmentDirections.actionToServiceSelectionBS(
-                                emptyArray(), ""
-                            ))
+                            else -> {}
                         }
-                        is AboutServicesFlowViewModel.AboutServicesEvents.NavigateToOrder -> {
-                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.serviceOrderFragment) {
-                                findNavController().popBackStack()
-                            }
-                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.serviceSelectionBS) {
-                                findNavController().popBackStack()
-                            }
-                            findNavController().navigate(ServiceDetailFragmentDirections.actionToServiceOrderFragment(it.name, it.type))
-                        }
-                        else -> {}
                     }
-                }
+            }
         }
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeUiState()
-                .collect { state ->
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
-                    }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel
+                    .observeUiState()
+                    .collect { state ->
+                        if (state.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                        }
 
-                    if (state.data.selectedService != null) {
-                        setToolbarDropDownTitle(state.data.selectedService.name, state.data.item?.serviceUIList.isNullOrEmpty().not())
-                        binding.tvDetails.text = state.data.selectedService.detail?.fromHtml()
-                    }
+                        if (state.data.selectedService != null) {
+                            setToolbarDropDownTitle(
+                                state.data.selectedService.name,
+                                state.data.item?.serviceUIList.isNullOrEmpty().not()
+                            )
+                            binding.tvDetails.text = state.data.selectedService.detail?.fromHtml()
+                        }
 
-                    showError(state.error)
-                }
+                        showError(state.error)
+                    }
+            }
         }
     }
 

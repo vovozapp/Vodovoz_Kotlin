@@ -11,7 +11,9 @@ import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,6 +33,7 @@ import com.vodovoz.app.feature.catalog.adapter.CatalogFlowAdapter
 import com.vodovoz.app.feature.catalog.adapter.CatalogFlowClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -72,16 +75,18 @@ class CatalogFragment : BaseFragment() {
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeEvent()
-                .collect {
-                    when (it) {
-                        is CatalogFlowViewModel.CatalogEvents.GoToProfile -> {
-                            tabManager.setAuthRedirect(findNavController().graph.id)
-                            tabManager.selectTab(R.id.graph_profile)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeEvent()
+                    .collect {
+                        when (it) {
+                            is CatalogFlowViewModel.CatalogEvents.GoToProfile -> {
+                                tabManager.setAuthRedirect(findNavController().graph.id)
+                                tabManager.selectTab(R.id.graph_profile)
+                            }
                         }
                     }
-                }
+            }
         }
     }
 
@@ -107,51 +112,54 @@ class CatalogFragment : BaseFragment() {
     }
 
     private fun observeStateUi() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { catalogState ->
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { catalogState ->
 
-                    if (catalogState.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
-                    }
-
-                    adapter.submitList(catalogState.data.itemsList)
-
-                    val topCatalogBanner = catalogState.data.topCatalogBanner
-                    with(binding) {
-                        if (topCatalogBanner != null) {
-
-                            val backGroundColor = Color.parseColor(topCatalogBanner.backgroundColor)
-                            cvCatalogBanner.backgroundTintList = ColorStateList.valueOf(
-                                backGroundColor
-                            )
-
-                            val textColor = Color.parseColor(topCatalogBanner.textColor)
-                            tvCatalogBanner.setTextColor(textColor)
-                            tvCatalogBanner.text = topCatalogBanner.text
-
-                            if (topCatalogBanner.iconUrl != null && topCatalogBanner.iconUrl.isNotEmpty()) {
-                                Glide.with(requireContext())
-                                    .load(topCatalogBanner.iconUrl)
-                                    .into(iconCatalogBanner)
-                            } else {
-                                iconCatalogBanner.visibility = View.GONE
-                            }
-
-                            cvCatalogBanner.setOnClickListener() {
-                                topCatalogBanner.actionEntity?.invoke()
-                            }
-
-                            cvCatalogBanner.visibility = View.VISIBLE
+                        if (catalogState.loadingPage) {
+                            showLoader()
                         } else {
-                            cvCatalogBanner.visibility = View.GONE
+                            hideLoader()
                         }
-                    }
 
-                    showError(catalogState.error)
-                }
+                        adapter.submitList(catalogState.data.itemsList)
+
+                        val topCatalogBanner = catalogState.data.topCatalogBanner
+                        with(binding) {
+                            if (topCatalogBanner != null) {
+
+                                val backGroundColor =
+                                    Color.parseColor(topCatalogBanner.backgroundColor)
+                                cvCatalogBanner.backgroundTintList = ColorStateList.valueOf(
+                                    backGroundColor
+                                )
+
+                                val textColor = Color.parseColor(topCatalogBanner.textColor)
+                                tvCatalogBanner.setTextColor(textColor)
+                                tvCatalogBanner.text = topCatalogBanner.text
+
+                                if (topCatalogBanner.iconUrl != null && topCatalogBanner.iconUrl.isNotEmpty()) {
+                                    Glide.with(requireContext())
+                                        .load(topCatalogBanner.iconUrl)
+                                        .into(iconCatalogBanner)
+                                } else {
+                                    iconCatalogBanner.visibility = View.GONE
+                                }
+
+                                cvCatalogBanner.setOnClickListener() {
+                                    topCatalogBanner.actionEntity?.invoke()
+                                }
+
+                                cvCatalogBanner.visibility = View.VISIBLE
+                            } else {
+                                cvCatalogBanner.visibility = View.GONE
+                            }
+                        }
+
+                        showError(catalogState.error)
+                    }
+            }
         }
     }
 
@@ -209,16 +217,18 @@ class CatalogFragment : BaseFragment() {
     }
 
     private fun observeTabReselect() {
-        lifecycleScope.launchWhenStarted {
-            tabManager.observeTabReselect()
-                .collect {
-                    if (it != TabManager.DEFAULT_STATE && it == R.id.catalogFragment) {
-                        binding.categoryRecycler.post {
-                            binding.categoryRecycler.smoothScrollToPosition(0)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tabManager.observeTabReselect()
+                    .collect {
+                        if (it != TabManager.DEFAULT_STATE && it == R.id.catalogFragment) {
+                            binding.categoryRecycler.post {
+                                binding.categoryRecycler.smoothScrollToPosition(0)
+                            }
+                            tabManager.setDefaultState()
                         }
-                        tabManager.setDefaultState()
                     }
-                }
+            }
         }
     }
 

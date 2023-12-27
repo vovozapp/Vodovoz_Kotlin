@@ -5,7 +5,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -23,6 +25,7 @@ import com.vodovoz.app.util.extensions.startTelegram
 import com.vodovoz.app.util.extensions.startViber
 import com.vodovoz.app.util.extensions.startWhatsUp
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ContactsFragment : BaseFragment() {
@@ -58,48 +61,52 @@ class ContactsFragment : BaseFragment() {
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeEvent()
-                .collect {
-                    when (it) {
-                        is ContactsFlowViewModel.ContactsEvents.SendEmailSuccess -> {
-                            requireActivity().snack(it.message)
-                        }
-                        is ContactsFlowViewModel.ContactsEvents.SendEmailError -> {
-                            requireActivity().snack(it.message)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeEvent()
+                    .collect {
+                        when (it) {
+                            is ContactsFlowViewModel.ContactsEvents.SendEmailSuccess -> {
+                                requireActivity().snack(it.message)
+                            }
+                            is ContactsFlowViewModel.ContactsEvents.SendEmailError -> {
+                                requireActivity().snack(it.message)
+                            }
                         }
                     }
-                }
+            }
         }
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { state ->
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { state ->
 
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
-                    }
-
-                    if (state.data.item != null) {
-
-                        emailController.submitList(state.data.item.emailUIList)
-                        val chatBundle = state.data.item.chatsBundleUI
-                        val mappedList = if (chatBundle != null) {
-                            state.data.item.phoneUIList + state.data.item.chatsBundleUI
+                        if (state.loadingPage) {
+                            showLoader()
                         } else {
-                            state.data.item.phoneUIList
+                            hideLoader()
                         }
 
-                        phoneController.submitList(mappedList)
+                        if (state.data.item != null) {
+
+                            emailController.submitList(state.data.item.emailUIList)
+                            val chatBundle = state.data.item.chatsBundleUI
+                            val mappedList = if (chatBundle != null) {
+                                state.data.item.phoneUIList + state.data.item.chatsBundleUI
+                            } else {
+                                state.data.item.phoneUIList
+                            }
+
+                            phoneController.submitList(mappedList)
+                        }
+
+                        showError(state.error)
+
                     }
-
-                    showError(state.error)
-
-                }
+            }
         }
     }
 

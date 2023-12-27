@@ -6,7 +6,9 @@ import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
@@ -22,6 +24,7 @@ import com.vodovoz.app.feature.bottom.services.detail.model.ServiceDetailBlockUI
 import com.vodovoz.app.feature.bottom.services.newservs.AboutServicesNewViewModel
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -62,34 +65,42 @@ class ServiceDetailNewFragment : BaseFragment() {
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeEvent()
-                .collect {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeEvent()
+                    .collect {
 
-                }
+                    }
+            }
         }
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { state ->
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                      //  hideLoader()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { state ->
+                        if (state.loadingPage) {
+                            showLoader()
+                        } else {
+                            //  hideLoader()
+                        }
+
+                        val description = state.data.detailItem?.description ?: ""
+                        val title = state.data.detailItem?.name ?: ""
+
+                        initWebView(
+                            description,
+                            state.data.detailItem?.preview,
+                            state.data.detailItem?.blocksList
+                        )
+
+                        initToolbar(title)
+
+                        showError(state.error)
+
                     }
-
-                    val description = state.data.detailItem?.description ?: ""
-                    val title = state.data.detailItem?.name ?: ""
-
-                    initWebView(description, state.data.detailItem?.preview, state.data.detailItem?.blocksList)
-
-                    initToolbar(title)
-
-                    showError(state.error)
-
-                }
+            }
         }
     }
 

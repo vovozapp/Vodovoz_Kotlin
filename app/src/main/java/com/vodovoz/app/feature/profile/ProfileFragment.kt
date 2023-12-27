@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -137,35 +139,37 @@ class ProfileFragment : BaseFragment() {
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { profileState ->
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { profileState ->
 
-                    if (profileState.loadingPage) {
-                        showLoaderWithBg(true)
-                    } else {
-                        showLoaderWithBg(false)
+                        if (profileState.loadingPage) {
+                            showLoaderWithBg(true)
+                        } else {
+                            showLoaderWithBg(false)
+                        }
+
+                        if (profileState.data.isLogin) {
+                            binding.profileFlowRv.isVisible = true
+                            binding.noLoginContainer.isVisible = false
+                        } else {
+                            binding.profileFlowRv.isVisible = false
+                            binding.noLoginContainer.isVisible = true
+                        }
+
+                        val list = profileState.data.items
+                        val progressList = if (!profileState.data.isSecondLoad) {
+                            list + BottomProgressItem()
+                        } else {
+                            list
+                        }
+                        profileController.submitList(progressList)
+
+                        showError(profileState.error)
+
                     }
-
-                    if (profileState.data.isLogin) {
-                        binding.profileFlowRv.isVisible = true
-                        binding.noLoginContainer.isVisible = false
-                    } else {
-                        binding.profileFlowRv.isVisible = false
-                        binding.noLoginContainer.isVisible = true
-                    }
-
-                    val list = profileState.data.items
-                    val progressList = if (!profileState.data.isSecondLoad) {
-                        list + BottomProgressItem()
-                    } else {
-                        list
-                    }
-                    profileController.submitList(progressList)
-
-                    showError(profileState.error)
-
-                }
+            }
         }
     }
 
@@ -357,16 +361,18 @@ class ProfileFragment : BaseFragment() {
     }
 
     private fun observeTabReselect() {
-        lifecycleScope.launchWhenStarted {
-            tabManager.observeTabReselect()
-                .collect {
-                    if (it != TabManager.DEFAULT_STATE && it == R.id.profileFragment) {
-                        binding.profileFlowRv.post {
-                            binding.profileFlowRv.smoothScrollToPosition(0)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tabManager.observeTabReselect()
+                    .collect {
+                        if (it != TabManager.DEFAULT_STATE && it == R.id.profileFragment) {
+                            binding.profileFlowRv.post {
+                                binding.profileFlowRv.smoothScrollToPosition(0)
+                            }
+                            tabManager.setDefaultState()
                         }
-                        tabManager.setDefaultState()
                     }
-                }
+            }
         }
     }
 

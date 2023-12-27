@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -23,6 +25,7 @@ import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToFullFormat
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -59,26 +62,32 @@ class PreOrderBS : BaseBottomSheetFragment() {
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect {
-                    val detail = it.data.items ?: return@collect
-                    binding.etName.setText(detail.name)
-                    binding.etPhone.setText(detail.phone.convertPhoneToBaseFormat().convertPhoneToFullFormat())
-                    binding.etEmail.setText(detail.email)
-                }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect {
+                        val detail = it.data.items ?: return@collect
+                        binding.etName.setText(detail.name)
+                        binding.etPhone.setText(
+                            detail.phone.convertPhoneToBaseFormat().convertPhoneToFullFormat()
+                        )
+                        binding.etEmail.setText(detail.email)
+                    }
+            }
         }
     }
 
     private fun observePreOrderSuccess() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observePreOrderSuccess()
-                .collect {
-                    requireContext().showSimpleMessageDialog(message = it) { dialog ->
-                        dialog.dismiss()
-                        findNavController().popBackStack()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observePreOrderSuccess()
+                    .collect {
+                        requireContext().showSimpleMessageDialog(message = it) { dialog ->
+                            dialog.dismiss()
+                            findNavController().popBackStack()
+                        }
                     }
-                }
+            }
         }
     }
 

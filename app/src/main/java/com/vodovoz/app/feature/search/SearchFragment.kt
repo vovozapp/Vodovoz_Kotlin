@@ -10,7 +10,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -130,40 +132,44 @@ class SearchFragment : BaseFragment() {
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeEvent()
-                .collect {
-                    when (it) {
-                        is SearchFlowViewModel.SearchEvents.GoToPreOrder -> {
-                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
-                                findNavController().popBackStack()
-                            }
-                            findNavController().navigate(
-                                SearchFragmentDirections.actionToPreOrderBS(
-                                    it.id,
-                                    it.name,
-                                    it.detailPicture
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeEvent()
+                    .collect {
+                        when (it) {
+                            is SearchFlowViewModel.SearchEvents.GoToPreOrder -> {
+                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
+                                    findNavController().popBackStack()
+                                }
+                                findNavController().navigate(
+                                    SearchFragmentDirections.actionToPreOrderBS(
+                                        it.id,
+                                        it.name,
+                                        it.detailPicture
+                                    )
                                 )
-                            )
-                        }
-                        is SearchFlowViewModel.SearchEvents.GoToProfile -> {
-                            tabManager.setAuthRedirect(findNavController().graph.id)
-                            tabManager.selectTab(R.id.graph_profile)
+                            }
+                            is SearchFlowViewModel.SearchEvents.GoToProfile -> {
+                                tabManager.setAuthRedirect(findNavController().graph.id)
+                                tabManager.selectTab(R.id.graph_profile)
+                            }
                         }
                     }
-                }
+            }
         }
     }
 
     private fun observeNoMatchesToast() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeNoMatchesToast()
-                .collect {
-                    if (it) {
-                        //  Toast.makeText(requireContext(), "Ничего не найдено", Toast.LENGTH_SHORT).show()
-                        binding.emptyResultContainer.isVisible = true
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeNoMatchesToast()
+                    .collect {
+                        if (it) {
+                            //  Toast.makeText(requireContext(), "Ничего не найдено", Toast.LENGTH_SHORT).show()
+                            binding.emptyResultContainer.isVisible = true
+                        }
                     }
-                }
+            }
         }
     }
 
@@ -235,44 +241,48 @@ class SearchFragment : BaseFragment() {
     }
 
     private fun observeChangeLayoutManager() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeChangeLayoutManager()
-                .collect {
-                    productsController.changeLayoutManager(
-                        it,
-                        binding.productRecycler,
-                        binding.imgViewMode
-                    )
-                }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel
+                    .observeChangeLayoutManager()
+                    .collect {
+                        productsController.changeLayoutManager(
+                            it,
+                            binding.productRecycler,
+                            binding.imgViewMode
+                        )
+                    }
+            }
         }
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { state ->
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { state ->
 
-                    bindHeader(state.data)
+                        bindHeader(state.data)
 
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
+                        if (state.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                        }
+
+                        bindShare(state.data.categoryHeader)
+
+                        val data = state.data
+                        if (state.bottomItem != null && state.data.layoutManager == FavoriteFlowViewModel.LINEAR) {
+                            productsController.submitList(data.itemsList + state.bottomItem)
+                        } else {
+                            productsController.submitList(data.itemsList)
+                        }
+
+                        showError(state.error)
+
                     }
-
-                    bindShare(state.data.categoryHeader)
-
-                    val data = state.data
-                    if (state.bottomItem != null && state.data.layoutManager == FavoriteFlowViewModel.LINEAR) {
-                        productsController.submitList(data.itemsList + state.bottomItem)
-                    } else {
-                        productsController.submitList(data.itemsList)
-                    }
-
-                    showError(state.error)
-
-                }
+            }
         }
     }
 

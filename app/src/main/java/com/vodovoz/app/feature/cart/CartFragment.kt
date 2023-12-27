@@ -6,7 +6,9 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -28,6 +30,7 @@ import com.vodovoz.app.util.extensions.fromHtml
 import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.snackTop
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -193,134 +196,139 @@ class CartFragment : BaseFragment() {
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { cartState ->
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { cartState ->
 
-                    if (cartState.error != null) {
-                        binding.bottom.root.isVisible = false
-                        binding.mainRv.isVisible = false
-                    } else {
-                        binding.bottom.root.isVisible = true
-                        binding.mainRv.isVisible = true
-                    }
-
-                    showError(cartState.error)
-
-                    if (cartState.data.infoMessage?.message?.isNotEmpty() == true) {
-                        requireActivity().snackTop(cartState.data.infoMessage.message)
-                    }
-
-                    if (cartState.data.giftMessageBottom?.message?.isEmpty() == true) {
-                        binding.bottom.tvGiftMessage.visibility = View.GONE
-                    } else {
-                        binding.bottom.tvGiftMessage.visibility = View.VISIBLE
-                        binding.bottom.tvGiftMessage.text =
-                            cartState.data.giftMessageBottom?.message?.fromHtml()
-                    }
-
-                    binding.bottom.llShowGifts.visibility =
-                        if (cartState.data.giftProductUIList.isEmpty()) {
-                            View.GONE
-                        } else {
-                            View.VISIBLE
-                        }
-
-                    if (cartState.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
-                    }
-
-                    val availableItems = cartState.data.availableProducts?.items
-                    val notAvailableItems = cartState.data.notAvailableProducts?.items
-
-                    if (cartState.data.total != null) {
-                        binding.bottom.btnRegOrderFlow.text =
-                            StringBuilder().append("Оформить заказ на ")
-                                .append(cartState.data.total.prices.total).append(" ₽").toString()
-                    }
-
-                    showHideDefToolbarItem(R.id.clearCart, availableItems.isNullOrEmpty().not())
-
-                    if (availableItems != null) {
-                        if (availableItems.isEmpty()) {
+                        if (cartState.error != null) {
                             binding.bottom.root.isVisible = false
-                            cartController.submitList(
-                                listOfNotNull(
-                                    cartState.data.cartEmpty,
-                                    cartState.data.bestForYouTitle,
-                                    cartState.data.bestForYouProducts
-                                )
-                            )
+                            binding.mainRv.isVisible = false
                         } else {
                             binding.bottom.root.isVisible = true
-                            cartController.submitList(
-                                listOfNotNull(
-                                    cartState.data.notAvailableProducts.takeIf {
-                                        notAvailableItems.isNullOrEmpty().not()
-                                    },
-                                    cartState.data.availableProducts,
-                                    cartState.data.total
-                                )
-                            )
+                            binding.mainRv.isVisible = true
                         }
-                    }
-                }
-        }
-    }
 
-    private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeEvent()
-                .collect {
-                    when (it) {
-                        is CartFlowViewModel.CartEvents.NavigateToOrder -> {
-                            if (it.prices != null) {
-                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.orderingFragment) {
-                                    findNavController().popBackStack()
-                                }
-                                findNavController().navigate(
-                                    CartFragmentDirections.actionToOrderingFragment(
-                                        it.prices.total,
-                                        it.prices.discountPrice,
-                                        it.prices.deposit,
-                                        it.prices.fullPrice,
-                                        it.cart,
-                                        it.coupon
+                        showError(cartState.error)
+
+                        if (cartState.data.infoMessage?.message?.isNotEmpty() == true) {
+                            requireActivity().snackTop(cartState.data.infoMessage.message)
+                        }
+
+                        if (cartState.data.giftMessageBottom?.message?.isEmpty() == true) {
+                            binding.bottom.tvGiftMessage.visibility = View.GONE
+                        } else {
+                            binding.bottom.tvGiftMessage.visibility = View.VISIBLE
+                            binding.bottom.tvGiftMessage.text =
+                                cartState.data.giftMessageBottom?.message?.fromHtml()
+                        }
+
+                        binding.bottom.llShowGifts.visibility =
+                            if (cartState.data.giftProductUIList.isEmpty()) {
+                                View.GONE
+                            } else {
+                                View.VISIBLE
+                            }
+
+                        if (cartState.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                        }
+
+                        val availableItems = cartState.data.availableProducts?.items
+                        val notAvailableItems = cartState.data.notAvailableProducts?.items
+
+                        if (cartState.data.total != null) {
+                            binding.bottom.btnRegOrderFlow.text =
+                                StringBuilder().append("Оформить заказ на ")
+                                    .append(cartState.data.total.prices.total).append(" ₽")
+                                    .toString()
+                        }
+
+                        showHideDefToolbarItem(R.id.clearCart, availableItems.isNullOrEmpty().not())
+
+                        if (availableItems != null) {
+                            if (availableItems.isEmpty()) {
+                                binding.bottom.root.isVisible = false
+                                cartController.submitList(
+                                    listOfNotNull(
+                                        cartState.data.cartEmpty,
+                                        cartState.data.bestForYouTitle,
+                                        cartState.data.bestForYouProducts
+                                    )
+                                )
+                            } else {
+                                binding.bottom.root.isVisible = true
+                                cartController.submitList(
+                                    listOfNotNull(
+                                        cartState.data.notAvailableProducts.takeIf {
+                                            notAvailableItems.isNullOrEmpty().not()
+                                        },
+                                        cartState.data.availableProducts,
+                                        cartState.data.total
                                     )
                                 )
                             }
                         }
-                        is CartFlowViewModel.CartEvents.NavigateToGifts -> {
-                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.giftsBottomFragment) {
-                                findNavController().popBackStack()
-                            }
+                    }
+            }
+        }
+    }
 
-                            findNavController().navigate(
-                                CartFragmentDirections.actionToGiftsBottomFragment(
-                                    it.list.toTypedArray()
-                                )
-                            )
-                        }
-                        is CartFlowViewModel.CartEvents.NavigateToProfile -> {
-                            tabManager.setAuthRedirect(findNavController().graph.id)
-                            tabManager.selectTab(R.id.graph_profile)
-                        }
-                        is CartFlowViewModel.CartEvents.GoToPreOrder -> {
-                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
-                                findNavController().popBackStack()
+    private fun observeEvents() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeEvent()
+                    .collect {
+                        when (it) {
+                            is CartFlowViewModel.CartEvents.NavigateToOrder -> {
+                                if (it.prices != null) {
+                                    if (findNavController().currentBackStackEntry?.destination?.id == R.id.orderingFragment) {
+                                        findNavController().popBackStack()
+                                    }
+                                    findNavController().navigate(
+                                        CartFragmentDirections.actionToOrderingFragment(
+                                            it.prices.total,
+                                            it.prices.discountPrice,
+                                            it.prices.deposit,
+                                            it.prices.fullPrice,
+                                            it.cart,
+                                            it.coupon
+                                        )
+                                    )
+                                }
                             }
-                            findNavController().navigate(
-                                CartFragmentDirections.actionToPreOrderBS(
-                                    it.id,
-                                    it.name,
-                                    it.detailPicture
+                            is CartFlowViewModel.CartEvents.NavigateToGifts -> {
+                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.giftsBottomFragment) {
+                                    findNavController().popBackStack()
+                                }
+
+                                findNavController().navigate(
+                                    CartFragmentDirections.actionToGiftsBottomFragment(
+                                        it.list.toTypedArray()
+                                    )
                                 )
-                            )
+                            }
+                            is CartFlowViewModel.CartEvents.NavigateToProfile -> {
+                                tabManager.setAuthRedirect(findNavController().graph.id)
+                                tabManager.selectTab(R.id.graph_profile)
+                            }
+                            is CartFlowViewModel.CartEvents.GoToPreOrder -> {
+                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
+                                    findNavController().popBackStack()
+                                }
+                                findNavController().navigate(
+                                    CartFragmentDirections.actionToPreOrderBS(
+                                        it.id,
+                                        it.name,
+                                        it.detailPicture
+                                    )
+                                )
+                            }
                         }
                     }
-                }
+            }
         }
     }
 
@@ -373,16 +381,18 @@ class CartFragment : BaseFragment() {
     }
 
     private fun observeTabReselect() {
-        lifecycleScope.launchWhenStarted {
-            tabManager.observeTabReselect()
-                .collect {
-                    if (it != TabManager.DEFAULT_STATE && it == R.id.cartFragment) {
-                        binding.mainRv.post {
-                            binding.mainRv.smoothScrollToPosition(0)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tabManager.observeTabReselect()
+                    .collect {
+                        if (it != TabManager.DEFAULT_STATE && it == R.id.cartFragment) {
+                            binding.mainRv.post {
+                                binding.mainRv.smoothScrollToPosition(0)
+                            }
+                            tabManager.setDefaultState()
                         }
-                        tabManager.setDefaultState()
                     }
-                }
+            }
         }
     }
 

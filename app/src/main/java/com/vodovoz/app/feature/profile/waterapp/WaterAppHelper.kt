@@ -259,7 +259,7 @@ class WaterAppHelper @Inject constructor(
                 .build()
             WorkManager
                 .getInstance(applicationContext)
-                .enqueueUniquePeriodicWork("water", ExistingPeriodicWorkPolicy.REPLACE, work)
+                .enqueueUniquePeriodicWork("water", ExistingPeriodicWorkPolicy.UPDATE, work)
         } else {
             WorkManager
                 .getInstance(applicationContext)

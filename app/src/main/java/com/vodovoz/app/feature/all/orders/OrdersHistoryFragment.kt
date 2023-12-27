@@ -3,7 +3,9 @@ package com.vodovoz.app.feature.all.orders
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -16,6 +18,7 @@ import com.vodovoz.app.databinding.FragmentOrdersHistoryFlowBinding
 import com.vodovoz.app.feature.all.AllClickListener
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -64,83 +67,89 @@ class OrdersHistoryFragment : BaseFragment() {
     }
 
     private fun observeAccount() {
-        lifecycleScope.launchWhenStarted {
-            accountManager
-                .observeAccountId()
-                .collect {
-                    if (it == null) {
-                        findNavController().popBackStack()
-                        tabManager.setAuthRedirect(findNavController().graph.id)
-                        tabManager.selectTab(R.id.graph_profile)
-                    } else {
-                        viewModel.firstLoadSorted()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                accountManager
+                    .observeAccountId()
+                    .collect {
+                        if (it == null) {
+                            findNavController().popBackStack()
+                            tabManager.setAuthRedirect(findNavController().graph.id)
+                            tabManager.selectTab(R.id.graph_profile)
+                        } else {
+                            viewModel.firstLoadSorted()
+                        }
                     }
-                }
+            }
         }
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { state ->
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { state ->
 
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
+                        if (state.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                        }
+
+                        binding.llEmptyHistoryContainer.visibility = View.GONE
+                        binding.refreshContainer.visibility = View.VISIBLE
+
+                        val data = state.data
+                        if (state.bottomItem != null) {
+                            allOrdersController.submitList(data.itemsList + state.bottomItem)
+                        } else {
+                            allOrdersController.submitList(data.itemsList)
+                        }
+                        if (state.error is ErrorState.Empty) {
+                            binding.llEmptyHistoryContainer.visibility = View.VISIBLE
+                            binding.refreshContainer.visibility = View.GONE
+                        } else {
+                            showError(state.error)
+                        }
+
                     }
-
-                    binding.llEmptyHistoryContainer.visibility = View.GONE
-                    binding.refreshContainer.visibility = View.VISIBLE
-
-                    val data = state.data
-                    if (state.bottomItem != null) {
-                        allOrdersController.submitList(data.itemsList + state.bottomItem)
-                    } else {
-                        allOrdersController.submitList(data.itemsList)
-                    }
-                    if (state.error is ErrorState.Empty) {
-                        binding.llEmptyHistoryContainer.visibility = View.VISIBLE
-                        binding.refreshContainer.visibility = View.GONE
-                    } else {
-                        showError(state.error)
-                    }
-
-                }
+            }
         }
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeEvent()
-                .collect {
-                    when (it) {
-                        is AllOrdersFlowViewModel.AllOrdersEvent.GoToFilter -> {
-                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.allOrdersFragment) {
-                                findNavController().navigate(
-                                    OrdersHistoryFragmentDirections.actionToOrdersFiltersDialog(
-                                        it.bundle
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeEvent()
+                    .collect {
+                        when (it) {
+                            is AllOrdersFlowViewModel.AllOrdersEvent.GoToFilter -> {
+                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.allOrdersFragment) {
+                                    findNavController().navigate(
+                                        OrdersHistoryFragmentDirections.actionToOrdersFiltersDialog(
+                                            it.bundle
+                                        )
                                     )
-                                )
+                                }
+                            }
+                            is AllOrdersFlowViewModel.AllOrdersEvent.GoToCart -> {
+                                MaterialAlertDialogBuilder(requireContext())
+                                    .setTitle("Товары добавлены в корзину")
+                                    .setMessage("Перейти в корзину?")
+                                    .setPositiveButton("Да") { dialog, _ ->
+                                        dialog.dismiss()
+                                        if (findNavController().currentBackStackEntry?.destination?.id == R.id.allOrdersFragment) {
+                                            findNavController().navigate(
+                                                OrdersHistoryFragmentDirections.actionToCartFragment()
+                                            )
+                                        }
+                                    }
+                                    .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
+                                    .show()
                             }
                         }
-                        is AllOrdersFlowViewModel.AllOrdersEvent.GoToCart -> {
-                            MaterialAlertDialogBuilder(requireContext())
-                                .setTitle("Товары добавлены в корзину")
-                                .setMessage("Перейти в корзину?")
-                                .setPositiveButton("Да") { dialog, _ ->
-                                    dialog.dismiss()
-                                    if (findNavController().currentBackStackEntry?.destination?.id == R.id.allOrdersFragment) {
-                                        findNavController().navigate(
-                                            OrdersHistoryFragmentDirections.actionToCartFragment()
-                                        )
-                                    }
-                                }
-                                .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
-                                .show()
-                        }
                     }
-                }
+            }
         }
     }
 

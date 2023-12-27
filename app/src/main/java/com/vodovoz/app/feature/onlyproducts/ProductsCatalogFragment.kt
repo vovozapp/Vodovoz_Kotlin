@@ -7,7 +7,9 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -21,6 +23,7 @@ import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.databinding.FragmentFixAmountProductsBinding
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.io.Serializable
 import javax.inject.Inject
 
@@ -95,28 +98,30 @@ class ProductsCatalogFragment : BaseFragment() {
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { state ->
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { state ->
 
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
+                        if (state.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                        }
+
+                        val data = state.data
+                        if (state.bottomItem != null) {
+                            onlyProductsController.submitList(data.itemsList + state.bottomItem)
+                        } else {
+                            onlyProductsController.submitList(data.itemsList)
+                        }
+
+                        if (state.error !is ErrorState.Empty) {
+                            showError(state.error)
+                        }
+
                     }
-
-                    val data = state.data
-                    if (state.bottomItem != null) {
-                        onlyProductsController.submitList(data.itemsList + state.bottomItem)
-                    } else {
-                        onlyProductsController.submitList(data.itemsList)
-                    }
-
-                    if (state.error !is ErrorState.Empty) {
-                        showError(state.error)
-                    }
-
-                }
+            }
         }
     }
 

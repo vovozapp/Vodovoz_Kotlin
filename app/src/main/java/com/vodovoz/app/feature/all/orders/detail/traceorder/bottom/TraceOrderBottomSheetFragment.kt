@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -16,6 +18,7 @@ import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.FragmentTraceOrderBottomBinding
 import com.vodovoz.app.feature.all.orders.detail.traceorder.TraceOrderViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TraceOrderBottomSheetFragment : BaseBottomSheetFragment() {
@@ -59,30 +62,32 @@ class TraceOrderBottomSheetFragment : BaseBottomSheetFragment() {
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect {
-                    binding.driverNameTv.text = it.data.name ?: ""
-                    binding.carNumberTv.text = it.data.car ?: ""
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect {
+                        binding.driverNameTv.text = it.data.name ?: ""
+                        binding.carNumberTv.text = it.data.car ?: ""
 
-                    if (it.data.driverPointsEntity != null) {
-                        if (it.data.driverPointsEntity.DriverDirection == "TRUE") {
-                            binding.timeTv.isVisible = false
-                            binding.commentTv.isVisible = true
-                            binding.commentTv.text = "Водитель выехал и направляется к Вам."
+                        if (it.data.driverPointsEntity != null) {
+                            if (it.data.driverPointsEntity.DriverDirection == "TRUE") {
+                                binding.timeTv.isVisible = false
+                                binding.commentTv.isVisible = true
+                                binding.commentTv.text = "Водитель выехал и направляется к Вам."
+                            } else {
+                                binding.timeTv.isVisible = true
+                                binding.commentTv.isVisible = false
+                                binding.commentTv.text = buildString {
+                                    append("Ориентировочное время прибытия: ")
+                                    append(it.data.driverPointsEntity.Priblizitelnoe_vremya)
+                                }
+                            }
                         } else {
-                            binding.timeTv.isVisible = true
+                            binding.timeTv.isVisible = false
                             binding.commentTv.isVisible = false
-                            binding.commentTv.text = buildString {
-                                        append("Ориентировочное время прибытия: ")
-                                        append(it.data.driverPointsEntity.Priblizitelnoe_vremya)
-                                    }
                         }
-                    } else {
-                        binding.timeTv.isVisible = false
-                        binding.commentTv.isVisible = false
                     }
-                }
+            }
         }
     }
 

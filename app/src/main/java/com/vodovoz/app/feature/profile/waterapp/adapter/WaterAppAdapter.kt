@@ -17,7 +17,7 @@ class WaterAppAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
         return when (viewType) {
             R.layout.fragment_water_app_first -> { WaterAppViewHolderFirst(getViewFromInflater(viewType, parent), clickListener, waterAppHelper) }
-            R.layout.fragment_water_app_second -> { WaterAppViewHolderSecond(getViewFromInflater(viewType, parent), clickListener, waterAppHelper) }
+            R.layout.fragment_water_app_second -> { WaterAppViewHolderSecond(getViewFromInflater(viewType, parent), clickListener) }
             R.layout.fragment_water_app_third -> { WaterAppViewHolderThird(getViewFromInflater(viewType, parent), clickListener, waterAppHelper) }
             R.layout.fragment_water_app_fourth -> { WaterAppViewHolderFourth(getViewFromInflater(viewType, parent), clickListener, waterAppHelper) }
             R.layout.fragment_water_app_fifth -> { WaterAppViewHolderFifth(getViewFromInflater(viewType, parent), clickListener, waterAppHelper) }

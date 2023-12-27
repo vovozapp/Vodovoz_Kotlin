@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -24,6 +26,7 @@ import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWitho
 import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.ProductUI
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -99,122 +102,130 @@ class ProductDetailsFragment : BaseFragment() {
     }
 
     private fun observeMediaManager() {
-        lifecycleScope.launchWhenStarted {
-            mediaManager
-                .observeCommentData()
-                .collect {
-                    if(it != null && it.show) {
-                        mediaManager.dontShow()
-                        if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutProductFragment) {
-                            findNavController().popBackStack()
-                        }
-                        findNavController().navigate(
-                            ProductDetailsFragmentDirections.actionToSendCommentAboutProductFragment(
-                                it.productId,
-                                it.rate
-                            )
-                        )
-                    }
-                }
-        }
-    }
-
-    private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeEvent()
-                .collect {
-                    when (it) {
-                        is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToPreOrder -> {
-                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
-                                findNavController().popBackStack()
-                            }
-                            findNavController().navigate(
-                                ProductDetailsFragmentDirections.actionToPreOrderBS(
-                                    it.id,
-                                    it.name,
-                                    it.detailPicture
-                                )
-                            )
-                        }
-                        is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProfile -> {
-                            tabManager.setAuthRedirect(findNavController().graph.id)
-                            tabManager.selectTab(R.id.graph_profile)
-                        }
-                        is ProductDetailsFlowViewModel.ProductDetailsEvents.SendComment -> {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mediaManager
+                    .observeCommentData()
+                    .collect {
+                        if (it != null && it.show) {
+                            mediaManager.dontShow()
                             if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutProductFragment) {
                                 findNavController().popBackStack()
                             }
                             findNavController().navigate(
                                 ProductDetailsFragmentDirections.actionToSendCommentAboutProductFragment(
-                                    it.id
+                                    it.productId,
+                                    it.rate
                                 )
                             )
                         }
                     }
-                }
+            }
+        }
+    }
+
+    private fun observeEvents() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeEvent()
+                    .collect {
+                        when (it) {
+                            is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToPreOrder -> {
+                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
+                                    findNavController().popBackStack()
+                                }
+                                findNavController().navigate(
+                                    ProductDetailsFragmentDirections.actionToPreOrderBS(
+                                        it.id,
+                                        it.name,
+                                        it.detailPicture
+                                    )
+                                )
+                            }
+                            is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProfile -> {
+                                tabManager.setAuthRedirect(findNavController().graph.id)
+                                tabManager.selectTab(R.id.graph_profile)
+                            }
+                            is ProductDetailsFlowViewModel.ProductDetailsEvents.SendComment -> {
+                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutProductFragment) {
+                                    findNavController().popBackStack()
+                                }
+                                findNavController().navigate(
+                                    ProductDetailsFragmentDirections.actionToSendCommentAboutProductFragment(
+                                        it.id
+                                    )
+                                )
+                            }
+                        }
+                    }
+            }
         }
     }
 
     private fun observeFabCartState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeUpdateFab()
-                .collect {
-                    productDetailFabController.updateFabQuantity(
-                        cartQuantity = it,
-                        amountTv = binding.floatingAmountController.amount,
-                        circleAmountTv = binding.floatingAmountController.circleAmount,
-                    )
-                }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel
+                    .observeUpdateFab()
+                    .collect {
+                        productDetailFabController.updateFabQuantity(
+                            cartQuantity = it,
+                            amountTv = binding.floatingAmountController.amount,
+                            circleAmountTv = binding.floatingAmountController.circleAmount,
+                        )
+                    }
+            }
         }
     }
 
     private fun observeState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { detailState ->
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { detailState ->
 
-                    if (detailState.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
-                    }
-                    productDetailsController.submitList(
-                        listOfNotNull(
-                            detailState.detailHeader,
-                            detailState.detailPrices.takeIf { it?.priceUiList?.size != 1 },
-                            detailState.detailBlocks.takeIf { it?.items?.size != 0 },
-                            detailState.detailServices.takeIf { it?.items?.size != 0 },
-                            detailState.detailTabs,
-                            detailState.detailCatAndBrand,
-                            detailState.detailBrandList.takeIf { it.productUiList.isNotEmpty() },
-                            detailState.detailRecommendsProductsTitle.takeIf { detailState.detailRecommendsProducts?.items?.first()?.productUIList?.size != 0 },
-                            detailState.detailRecommendsProducts.takeIf { it?.items?.first()?.productUIList?.size != 0 },
-                            detailState.detailPromotions.takeIf { it?.items?.promotionUIList?.size != 0 },
-                            detailState.detailMaybeLikeProducts.takeIf { it.productUiList.isNotEmpty() },
-                            detailState.detailSearchWord.takeIf { it?.searchWordList?.size != 0 },
-                            detailState.detailBuyWithTitle.takeIf { detailState.detailBuyWith?.items?.first()?.productUIList?.size != 0 },
-                            detailState.detailBuyWith.takeIf { it?.items?.first()?.productUIList?.size != 0 },
-                            detailState.detailComments
+                        if (detailState.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                        }
+                        productDetailsController.submitList(
+                            listOfNotNull(
+                                detailState.detailHeader,
+                                detailState.detailPrices.takeIf { it?.priceUiList?.size != 1 },
+                                detailState.detailBlocks.takeIf { it?.items?.size != 0 },
+                                detailState.detailServices.takeIf { it?.items?.size != 0 },
+                                detailState.detailTabs,
+                                detailState.detailCatAndBrand,
+                                detailState.detailBrandList.takeIf { it.productUiList.isNotEmpty() },
+                                detailState.detailRecommendsProductsTitle.takeIf { detailState.detailRecommendsProducts?.items?.first()?.productUIList?.size != 0 },
+                                detailState.detailRecommendsProducts.takeIf { it?.items?.first()?.productUIList?.size != 0 },
+                                detailState.detailPromotions.takeIf { it?.items?.promotionUIList?.size != 0 },
+                                detailState.detailMaybeLikeProducts.takeIf { it.productUiList.isNotEmpty() },
+                                detailState.detailSearchWord.takeIf { it?.searchWordList?.size != 0 },
+                                detailState.detailBuyWithTitle.takeIf { detailState.detailBuyWith?.items?.first()?.productUIList?.size != 0 },
+                                detailState.detailBuyWith.takeIf { it?.items?.first()?.productUIList?.size != 0 },
+                                detailState.detailComments
+                            )
                         )
-                    )
 
-                    productDetailFabController.bindFab(
-                        header = detailState.detailHeader,
-                        oldPriceTv = binding.tvFloatingOldPrice,
-                        miniDetailIv = binding.miniDetailImage,
-                        currentPriceTv = binding.tvFloatingCurrentPrice,
-                        conditionTv = binding.tvFloatingPriceCondition,
-                        amountTv = binding.floatingAmountController.amount,
-                        circleAmountTv = binding.floatingAmountController.circleAmount,
-                        addIv = binding.floatingAmountController.add,
-                        reduceIv = binding.floatingAmountController.reduceAmount,
-                        increaseIv = binding.floatingAmountController.increaseAmount,
-                        amountDeployed = binding.floatingAmountController.amountControllerDeployed
-                    )
+                        productDetailFabController.bindFab(
+                            header = detailState.detailHeader,
+                            oldPriceTv = binding.tvFloatingOldPrice,
+                            miniDetailIv = binding.miniDetailImage,
+                            currentPriceTv = binding.tvFloatingCurrentPrice,
+                            conditionTv = binding.tvFloatingPriceCondition,
+                            amountTv = binding.floatingAmountController.amount,
+                            circleAmountTv = binding.floatingAmountController.circleAmount,
+                            addIv = binding.floatingAmountController.add,
+                            reduceIv = binding.floatingAmountController.reduceAmount,
+                            increaseIv = binding.floatingAmountController.increaseAmount,
+                            amountDeployed = binding.floatingAmountController.amountControllerDeployed
+                        )
 
-                    showError(detailState.error)
-                }
+                        showError(detailState.error)
+                    }
+            }
         }
     }
 

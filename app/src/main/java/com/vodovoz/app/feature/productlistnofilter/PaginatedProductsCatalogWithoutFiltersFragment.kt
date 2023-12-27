@@ -9,7 +9,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -28,6 +30,7 @@ import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.SortTypeListUI
 import com.vodovoz.app.ui.model.SortTypeUI
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.io.Serializable
 import javax.inject.Inject
 
@@ -127,46 +130,50 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
     }
 
     private fun observeChangeLayoutManager() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeChangeLayoutManager()
-                .collect {
-                    productsListNoFilterFlowController.changeLayoutManager(
-                        it,
-                        binding.productRecycler,
-                        binding.imgViewMode
-                    )
-                }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel
+                    .observeChangeLayoutManager()
+                    .collect {
+                        productsListNoFilterFlowController.changeLayoutManager(
+                            it,
+                            binding.productRecycler,
+                            binding.imgViewMode
+                        )
+                    }
+            }
         }
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { state ->
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { state ->
 
-                    bindHeader(state.data)
+                        bindHeader(state.data)
 
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
-                        binding.sortContainer.isVisible = true
-                        binding.appBar.elevation = 4F
+                        if (state.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                            binding.sortContainer.isVisible = true
+                            binding.appBar.elevation = 4F
+                        }
+
+                        bindShare(state.data.categoryHeader)
+
+                        val data = state.data
+                        if (state.bottomItem != null && state.data.layoutManager == FavoriteFlowViewModel.LINEAR) {
+                            productsListNoFilterFlowController.submitList(data.itemsList + state.bottomItem)
+                        } else {
+                            productsListNoFilterFlowController.submitList(data.itemsList)
+                        }
+
+                        showError(state.error)
+
                     }
-
-                    bindShare(state.data.categoryHeader)
-
-                    val data = state.data
-                    if (state.bottomItem != null && state.data.layoutManager == FavoriteFlowViewModel.LINEAR) {
-                        productsListNoFilterFlowController.submitList(data.itemsList + state.bottomItem)
-                    } else {
-                        productsListNoFilterFlowController.submitList(data.itemsList)
-                    }
-
-                    showError(state.error)
-
-                }
+            }
         }
     }
 

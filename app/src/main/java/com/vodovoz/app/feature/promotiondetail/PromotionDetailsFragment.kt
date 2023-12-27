@@ -11,7 +11,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -36,6 +38,7 @@ import com.vodovoz.app.feature.products_slider.ProductsSliderConfig
 import com.vodovoz.app.ui.model.PromotionDetailUI
 import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -49,7 +52,7 @@ class PromotionDetailsFragment : BaseFragment() {
         )
     }
 
-    private val viewModel: PromotionDetailFlowViewModel by viewModels()
+    internal val viewModel: PromotionDetailFlowViewModel by viewModels()
 
     @Inject
     lateinit var cartManager: CartManager
@@ -122,56 +125,58 @@ class PromotionDetailsFragment : BaseFragment() {
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { state ->
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { state ->
 
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
-                        binding.timeLeftContainer.isVisible = true
-                        binding.customerCategoryCard.isVisible = true
+                        if (state.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                            binding.timeLeftContainer.isVisible = true
+                            binding.customerCategoryCard.isVisible = true
+
+                        }
+
+                        bindHeader(state.data.items)
+                        bindErrorHeader(state.data.errorItem)
+
+                        if (state.data.items?.forYouCategoryDetailUI != null) {
+                            val homeProducts = HomeProducts(
+                                1,
+                                listOf(state.data.items.forYouCategoryDetailUI),
+                                ProductsSliderConfig(
+                                    containShowAllButton = false,
+                                    largeTitle = true
+                                ),
+                                HomeProducts.DISCOUNT,
+                                prodList = state.data.items.forYouCategoryDetailUI.productUIList
+                            )
+                            val homeTitle = HomeTitle(
+                                id = 1,
+                                type = HomeTitle.VIEWED_TITLE,
+                                name = "Лучшее для вас",
+                                showAll = false,
+                                showAllName = "СМ.ВСЕ",
+                                categoryProductsName = state.data.items.forYouCategoryDetailUI.name
+                            )
+                            bestForYouController.submitList(listOf(homeTitle, homeProducts))
+                        }
+
+                        state.data.items?.promotionCategoryDetailUI?.let {
+                            binding.promotionProductsTitle.visibility = View.VISIBLE
+                            binding.productRecycler.visibility = View.VISIBLE
+                            productsController.submitList(state.data.items.promotionCategoryDetailUI.productUIList)
+                        } ?: {
+                            binding.promotionProductsTitle.visibility = View.GONE
+                            binding.productRecycler.visibility = View.GONE
+                        }
+
+                        showError(state.error)
 
                     }
-
-                    bindHeader(state.data.items)
-                    bindErrorHeader(state.data.errorItem)
-
-                    if (state.data.items?.forYouCategoryDetailUI != null) {
-                        val homeProducts = HomeProducts(
-                            1,
-                            listOf(state.data.items.forYouCategoryDetailUI),
-                            ProductsSliderConfig(
-                                containShowAllButton = false,
-                                largeTitle = true
-                            ),
-                            HomeProducts.DISCOUNT,
-                            prodList = state.data.items.forYouCategoryDetailUI.productUIList
-                        )
-                        val homeTitle = HomeTitle(
-                            id = 1,
-                            type = HomeTitle.VIEWED_TITLE,
-                            name = "Лучшее для вас",
-                            showAll = false,
-                            showAllName = "СМ.ВСЕ",
-                            categoryProductsName = state.data.items.forYouCategoryDetailUI.name
-                        )
-                        bestForYouController.submitList(listOf(homeTitle, homeProducts))
-                    }
-
-                    state.data.items?.promotionCategoryDetailUI?.let {
-                        binding.promotionProductsTitle.visibility = View.VISIBLE
-                        binding.productRecycler.visibility = View.VISIBLE
-                        productsController.submitList(state.data.items.promotionCategoryDetailUI.productUIList)
-                    } ?: {
-                        binding.promotionProductsTitle.visibility = View.GONE
-                        binding.productRecycler.visibility = View.GONE
-                    }
-
-                    showError(state.error)
-
-                }
+            }
         }
     }
 

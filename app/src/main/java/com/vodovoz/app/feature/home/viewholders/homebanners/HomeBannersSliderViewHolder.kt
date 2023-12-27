@@ -140,7 +140,7 @@ class HomeBannersSliderViewHolder(
         registerOnPageChangeCallback(callback)
 
         // Stop auto paging when user touch the view
-        getRecyclerView().setOnTouchListener { _, event ->
+        getRecyclerView().setOnTouchListener { _, _ ->
             scope.cancel()
             scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
             autoTimerTask?.cancel()

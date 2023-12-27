@@ -199,7 +199,7 @@ class DetailHeaderViewHolder(
         binding.rbRating.rating = item.productDetailUI.rating
 
         binding.rbRating.onRatingBarChangeListener =
-            OnRatingBarChangeListener { p0, newRating, p2 ->
+            OnRatingBarChangeListener { _, newRating, _ ->
                 productsClickListener.onChangeRating(
                     item.productDetailUI.id,
                     newRating,

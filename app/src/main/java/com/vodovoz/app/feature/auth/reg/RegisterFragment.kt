@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
@@ -16,6 +18,7 @@ import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.textOrError
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RegisterFragment : BaseFragment() {
@@ -83,35 +86,39 @@ class RegisterFragment : BaseFragment() {
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeUiState()
-                .collect {
-                    if (it.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
-                    }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel
+                    .observeUiState()
+                    .collect {
+                        if (it.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                        }
 
-                    showError(it.error)
-                }
+                        showError(it.error)
+                    }
+            }
         }
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeEvent()
-                .collect {
-                    when(it) {
-                        is RegFlowViewModel.RegEvents.RegError -> {
-                            Snackbar.make(binding.root, it.message, Snackbar.LENGTH_LONG).show()
-                        }
-                        is RegFlowViewModel.RegEvents.RegSuccess -> {
-                            findNavController().popBackStack() //todo
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel
+                    .observeEvent()
+                    .collect {
+                        when (it) {
+                            is RegFlowViewModel.RegEvents.RegError -> {
+                                Snackbar.make(binding.root, it.message, Snackbar.LENGTH_LONG).show()
+                            }
+                            is RegFlowViewModel.RegEvents.RegSuccess -> {
+                                findNavController().popBackStack() //todo
+                            }
                         }
                     }
-                }
+            }
         }
     }
 
@@ -136,7 +143,7 @@ class RegisterFragment : BaseFragment() {
             if (count >0) binding.tilPhone.isErrorEnabled = false
         }
 
-        binding.scPersonalInfo.setOnCheckedChangeListener { compoundButton, b ->
+        binding.scPersonalInfo.setOnCheckedChangeListener { _, b ->
             if (b) {
                 binding.scPersonalInfo.error = null
             }

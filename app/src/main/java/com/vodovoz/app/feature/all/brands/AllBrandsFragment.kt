@@ -3,7 +3,9 @@ package com.vodovoz.app.feature.all.brands
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -13,6 +15,7 @@ import com.vodovoz.app.feature.all.AllAdapterController
 import com.vodovoz.app.feature.all.AllClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AllBrandsFragment : BaseFragment() {
@@ -55,21 +58,23 @@ class AllBrandsFragment : BaseFragment() {
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { state ->
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { state ->
 
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
+                        if (state.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                        }
+
+                        allAdapterController.submitList(state.data.filteredItems)
+
+                        showError(state.error)
+
                     }
-
-                    allAdapterController.submitList(state.data.filteredItems)
-
-                    showError(state.error)
-
-                }
+            }
         }
     }
 

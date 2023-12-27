@@ -6,7 +6,9 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +21,7 @@ import com.vodovoz.app.feature.cart.bottles.adapter.OnBottleClickListener
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.BottleUI
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -32,7 +35,7 @@ class AllBottlesFlowFragment : BaseFragment() {
         )
     }
 
-    private val viewModel: AllBottlesFlowViewModel by viewModels()
+    internal val viewModel: AllBottlesFlowViewModel by viewModels()
 
     private val allBottlesAdapter = AllBottlesFlowAdapter(getOnBottleClickListener())
 
@@ -107,22 +110,24 @@ class AllBottlesFlowFragment : BaseFragment() {
     }
 
     private fun observeViewModel() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { state ->
-                    if (state.loadingPage) {
-                        showLoaderWithBg(true)
-                    } else {
-                        showLoaderWithBg(false)
-                    }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { state ->
+                        if (state.loadingPage) {
+                            showLoaderWithBg(true)
+                        } else {
+                            showLoaderWithBg(false)
+                        }
 
-                    if (state.data.itemsList.isNotEmpty()) {
-                        allBottlesWithoutFilter = state.data.itemsList
-                        filterBottlesAndSubmit()
-                    }
+                        if (state.data.itemsList.isNotEmpty()) {
+                            allBottlesWithoutFilter = state.data.itemsList
+                            filterBottlesAndSubmit()
+                        }
 
-                    showError(state.error)
-                }
+                        showError(state.error)
+                    }
+            }
         }
 
         viewModel.addBottleCompletedLD.observe(viewLifecycleOwner) {

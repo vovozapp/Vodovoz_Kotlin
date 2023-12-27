@@ -45,15 +45,17 @@ object FilterBuilderExtensions {
 
     fun List<FilterUI>?.buildFilterRangeQuery(): HashMap<String, String> {
         return hashMapOf<String, String>().also { hashMap ->
-            this?.let { filterList ->
-                filter { it.type == "range_filter" }
-                    .forEach {
-                        hashMap[it.filterValueList.first().id
-                            ?: (it.code.lowercase(Locale.ROOT) + "_from")] =
-                            it.filterValueList.first().value
-                        hashMap[it.filterValueList.last().id
-                            ?: (it.code.lowercase(Locale.ROOT) + "_to")] =
-                            it.filterValueList.last().value
+            this?.let {
+                filter {filter ->
+                    filter.type == "range_filter"
+                }
+                    .forEach {filter->
+                        hashMap[filter.filterValueList.first().id
+                            ?: (filter.code.lowercase(Locale.ROOT) + "_from")] =
+                            filter.filterValueList.first().value
+                        hashMap[filter.filterValueList.last().id
+                            ?: (filter.code.lowercase(Locale.ROOT) + "_to")] =
+                            filter.filterValueList.last().value
                     }
             }
         }

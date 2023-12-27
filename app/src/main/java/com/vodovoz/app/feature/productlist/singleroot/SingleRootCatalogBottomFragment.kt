@@ -3,7 +3,9 @@ package com.vodovoz.app.feature.productlist.singleroot
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -14,6 +16,7 @@ import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragment
 import com.vodovoz.app.feature.productlist.singleroot.adapter.SingleRootCatalogAdapter
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SingleRootCatalogBottomFragment : BaseBottomSheetFragment() {
@@ -52,43 +55,48 @@ class SingleRootCatalogBottomFragment : BaseBottomSheetFragment() {
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeEvent()
-                .collect {
-                    when (it) {
-                        is SingleRootCatalogFlowViewModel.SingleRootEvents.NavigateToCatalog -> {
-                            findNavController().previousBackStackEntry
-                                ?.savedStateHandle?.set(
-                                    PaginatedProductsCatalogFragment.CATEGORY_ID,
-                                    it.id
-                                )
-                            dialog?.dismiss()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel
+                    .observeEvent()
+                    .collect {
+                        when (it) {
+                            is SingleRootCatalogFlowViewModel.SingleRootEvents.NavigateToCatalog -> {
+                                findNavController().previousBackStackEntry
+                                    ?.savedStateHandle?.set(
+                                        PaginatedProductsCatalogFragment.CATEGORY_ID,
+                                        it.id
+                                    )
+                                dialog?.dismiss()
+                            }
                         }
                     }
-                }
+            }
         }
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeUiState()
-                .collect { state ->
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
-                    }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel
+                    .observeUiState()
+                    .collect { state ->
+                        if (state.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                        }
 
-                    if (state.data.bundle != null) {
-                        singleRootCatalogAdapter.categoryUIList = state.data.bundle.categoryUIList
-                        singleRootCatalogAdapter.way = state.data.bundle.way
-                        singleRootCatalogAdapter.notifyDataSetChanged()
-                    }
+                        if (state.data.bundle != null) {
+                            singleRootCatalogAdapter.categoryUIList =
+                                state.data.bundle.categoryUIList
+                            singleRootCatalogAdapter.way = state.data.bundle.way
+                            singleRootCatalogAdapter.notifyDataSetChanged()
+                        }
 
-                    showError(state.error)
-                }
+                        showError(state.error)
+                    }
+            }
         }
     }
 

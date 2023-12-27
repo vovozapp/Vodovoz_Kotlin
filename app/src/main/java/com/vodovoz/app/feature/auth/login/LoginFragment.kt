@@ -13,7 +13,9 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -35,6 +37,7 @@ import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.textOrError
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.concurrent.Executor
 import javax.inject.Inject
 
@@ -142,122 +145,124 @@ class LoginFragment : BaseFragment() {
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeEvent()
-                .collect {
-                    when (it) {
-                        LoginFlowViewModel.LoginEvents.AuthByPhone -> {
-                            when (binding.tilCode.visibility == View.VISIBLE) {
-                                true -> {
-                                    debugLog { "authByPhone" }
-                                    viewModel.authByPhone(
-                                        binding.etPhone.text.toString(),
-                                        binding.etCode.text.toString()
-                                    )
-                                }
-                                false -> {
-                                    when (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString())) {
-                                        true -> {
-                                            debugLog { "requestCode" }
-                                            viewModel.requestCode(binding.etPhone.text.toString())
-                                        }
-                                        false -> {
-                                            debugLog { "Неверный формат телефона" }
-                                            binding.tilPhone.error = "Неверный формат телефона"
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel
+                    .observeEvent()
+                    .collect {
+                        when (it) {
+                            LoginFlowViewModel.LoginEvents.AuthByPhone -> {
+                                when (binding.tilCode.visibility == View.VISIBLE) {
+                                    true -> {
+                                        debugLog { "authByPhone" }
+                                        viewModel.authByPhone(
+                                            binding.etPhone.text.toString(),
+                                            binding.etCode.text.toString()
+                                        )
+                                    }
+                                    false -> {
+                                        when (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString())) {
+                                            true -> {
+                                                debugLog { "requestCode" }
+                                                viewModel.requestCode(binding.etPhone.text.toString())
+                                            }
+                                            false -> {
+                                                debugLog { "Неверный формат телефона" }
+                                                binding.tilPhone.error = "Неверный формат телефона"
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
-                        LoginFlowViewModel.LoginEvents.AuthByEmail -> {
-                            val email = validateEmail()
-                            if (!email) return@collect
-                            val password = binding.tilPassword.textOrError(3) ?: return@collect
-                            debugLog { "AuthByEmail ${binding.etEmail.text.toString()}" }
-                            viewModel.authByEmail(
-                                binding.etEmail.text.toString(),
-                                password
-                            )
-                        }
-                        is LoginFlowViewModel.LoginEvents.AuthError -> {
-                            debugLog { "AuthError" }
-                            binding.tilPassword.error = it.message
-                        }
-                        LoginFlowViewModel.LoginEvents.AuthSuccess -> {
-                            debugLog { "AuthSuccess" }
-                            flowViewModel.refresh()
-                            cartFlowViewModel.refreshIdle()
-                            favoriteViewModel.refreshIdle()
-                            profileViewModel.refresh()
-                            val redirect = tabManager.fetchAuthRedirect()
-                            if (redirect == TabManager.DEFAULT_AUTH_REDIRECT) {
-                                findNavController().popBackStack()
-                            } else {
-                                tabManager.selectTab(redirect)
-                                tabManager.setDefaultAuthRedirect()
-                            }
-                        }
-                        LoginFlowViewModel.LoginEvents.CodeComplete -> {
-                            debugLog { "CodeComplete" }
-                            binding.tilCode.requestFocus()
-                        }
-                        is LoginFlowViewModel.LoginEvents.PasswordRecoverError -> {
-                            debugLog { "PasswordRecoverError" }
-                            Snackbar.make(binding.root, it.message, Snackbar.LENGTH_LONG).show()
-                        }
-                        is LoginFlowViewModel.LoginEvents.PasswordRecoverSuccess -> {
-                            debugLog { "PasswordRecoverSuccess" }
-                            MaterialAlertDialogBuilder(requireContext())
-                                .setMessage(it.message)
-                                .setPositiveButton("Ок") { dialog, _ ->
-                                    dialog.dismiss()
-                                }
-                                .show()
-                        }
-                        LoginFlowViewModel.LoginEvents.TimerFinished -> {
-                            debugLog { "TimerFinished" }
-                            binding.tvExpired.text = "Отправить код повторно"
-                            binding.tvExpired.setTextColor(
-                                ContextCompat.getColor(
-                                    requireContext(),
-                                    R.color.bluePrimary
+                            LoginFlowViewModel.LoginEvents.AuthByEmail -> {
+                                val email = validateEmail()
+                                if (!email) return@collect
+                                val password = binding.tilPassword.textOrError(3) ?: return@collect
+                                debugLog { "AuthByEmail ${binding.etEmail.text.toString()}" }
+                                viewModel.authByEmail(
+                                    binding.etEmail.text.toString(),
+                                    password
                                 )
-                            )
-                            binding.tvExpired.setTypeface(
-                                ResourcesCompat.getFont(
-                                    requireContext(),
-                                    R.font.rotonda_normal
-                                ), Typeface.BOLD
-                            )
-                            binding.tvExpired.setOnClickListener {
-                                when (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString())) {
-                                    true -> viewModel.requestCode(binding.etPhone.text.toString())
-                                    false -> binding.tilPhone.error = "Неверный формат телефона"
+                            }
+                            is LoginFlowViewModel.LoginEvents.AuthError -> {
+                                debugLog { "AuthError" }
+                                binding.tilPassword.error = it.message
+                            }
+                            LoginFlowViewModel.LoginEvents.AuthSuccess -> {
+                                debugLog { "AuthSuccess" }
+                                flowViewModel.refresh()
+                                cartFlowViewModel.refreshIdle()
+                                favoriteViewModel.refreshIdle()
+                                profileViewModel.refresh()
+                                val redirect = tabManager.fetchAuthRedirect()
+                                if (redirect == TabManager.DEFAULT_AUTH_REDIRECT) {
+                                    findNavController().popBackStack()
+                                } else {
+                                    tabManager.selectTab(redirect)
+                                    tabManager.setDefaultAuthRedirect()
                                 }
                             }
-                        }
-                        is LoginFlowViewModel.LoginEvents.TimerTick -> {
-                            debugLog { "TimerTick" }
-                            binding.tvExpired.setExpiredCodeText(it.tick)
-                            binding.tvExpired.setTextColor(
-                                ContextCompat.getColor(
-                                    requireContext(),
-                                    R.color.text_gray
+                            LoginFlowViewModel.LoginEvents.CodeComplete -> {
+                                debugLog { "CodeComplete" }
+                                binding.tilCode.requestFocus()
+                            }
+                            is LoginFlowViewModel.LoginEvents.PasswordRecoverError -> {
+                                debugLog { "PasswordRecoverError" }
+                                Snackbar.make(binding.root, it.message, Snackbar.LENGTH_LONG).show()
+                            }
+                            is LoginFlowViewModel.LoginEvents.PasswordRecoverSuccess -> {
+                                debugLog { "PasswordRecoverSuccess" }
+                                MaterialAlertDialogBuilder(requireContext())
+                                    .setMessage(it.message)
+                                    .setPositiveButton("Ок") { dialog, _ ->
+                                        dialog.dismiss()
+                                    }
+                                    .show()
+                            }
+                            LoginFlowViewModel.LoginEvents.TimerFinished -> {
+                                debugLog { "TimerFinished" }
+                                binding.tvExpired.text = "Отправить код повторно"
+                                binding.tvExpired.setTextColor(
+                                    ContextCompat.getColor(
+                                        requireContext(),
+                                        R.color.bluePrimary
+                                    )
                                 )
-                            )
-                            binding.tvExpired.typeface =
-                                ResourcesCompat.getFont(requireContext(), R.font.rotonda_normal)
-                            binding.tvExpired.visibility = View.VISIBLE
-                            binding.btnSignIn.text = "Войти"
-                            binding.tilCode.visibility = View.VISIBLE
-                        }
-                        is LoginFlowViewModel.LoginEvents.SetupByPhone -> {
-                            debugLog { "SetupByPhone" }
-                            setupAuthByPhone(it.time, it.phone)
+                                binding.tvExpired.setTypeface(
+                                    ResourcesCompat.getFont(
+                                        requireContext(),
+                                        R.font.rotonda_normal
+                                    ), Typeface.BOLD
+                                )
+                                binding.tvExpired.setOnClickListener {
+                                    when (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString())) {
+                                        true -> viewModel.requestCode(binding.etPhone.text.toString())
+                                        false -> binding.tilPhone.error = "Неверный формат телефона"
+                                    }
+                                }
+                            }
+                            is LoginFlowViewModel.LoginEvents.TimerTick -> {
+                                debugLog { "TimerTick" }
+                                binding.tvExpired.setExpiredCodeText(it.tick)
+                                binding.tvExpired.setTextColor(
+                                    ContextCompat.getColor(
+                                        requireContext(),
+                                        R.color.text_gray
+                                    )
+                                )
+                                binding.tvExpired.typeface =
+                                    ResourcesCompat.getFont(requireContext(), R.font.rotonda_normal)
+                                binding.tvExpired.visibility = View.VISIBLE
+                                binding.btnSignIn.text = "Войти"
+                                binding.tilCode.visibility = View.VISIBLE
+                            }
+                            is LoginFlowViewModel.LoginEvents.SetupByPhone -> {
+                                debugLog { "SetupByPhone" }
+                                setupAuthByPhone(it.time, it.phone)
+                            }
                         }
                     }
-                }
+            }
         }
     }
 
@@ -270,36 +275,38 @@ class LoginFragment : BaseFragment() {
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect {
 
-                    if (it.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
-                    }
-
-                    if (it.data.settings != null) {
-                        binding.etEmail.setText(it.data.settings.email)
-                        binding.etPassword.setText(it.data.settings.password)
-                    }
-
-                    if (!it.data.lastAuthPhone.isNullOrEmpty()) {
-                        binding.etPhone.setText(it.data.lastAuthPhone)
-                    }
-
-                    when (it.data.authType) {
-                        AuthType.EMAIL -> {
-                            bindEmailBtn()
+                        if (it.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
                         }
-                        AuthType.PHONE -> {
-                            bindPhoneBtn()
-                        }
-                    }
 
-                    showError(it.error)
-                }
+                        if (it.data.settings != null) {
+                            binding.etEmail.setText(it.data.settings.email)
+                            binding.etPassword.setText(it.data.settings.password)
+                        }
+
+                        if (!it.data.lastAuthPhone.isNullOrEmpty()) {
+                            binding.etPhone.setText(it.data.lastAuthPhone)
+                        }
+
+                        when (it.data.authType) {
+                            AuthType.EMAIL -> {
+                                bindEmailBtn()
+                            }
+                            AuthType.PHONE -> {
+                                bindPhoneBtn()
+                            }
+                        }
+
+                        showError(it.error)
+                    }
+            }
         }
 
     }
@@ -412,7 +419,7 @@ class LoginFragment : BaseFragment() {
             if (count > 0) binding.tilPhone.isErrorEnabled = false
         }
 
-        binding.scPersonalInfo.setOnCheckedChangeListener { compoundButton, b ->
+        binding.scPersonalInfo.setOnCheckedChangeListener { _, b ->
             if (b) {
                 binding.scPersonalInfo.error = null
             }

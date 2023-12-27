@@ -6,7 +6,9 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
@@ -20,6 +22,7 @@ import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToBaseFormat
 import com.vodovoz.app.util.PhoneSingleFormatUtil.convertPhoneToFullFormat
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class NotificationSettingsFragment : BaseFragment() {
@@ -69,43 +72,55 @@ class NotificationSettingsFragment : BaseFragment() {
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeEvent()
-                .collect {
-                    when(it) {
-                        is NotificationSettingsViewModel.NotSettingsEvents.Success -> {
-                            requireActivity().snack(it.message)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel
+                    .observeEvent()
+                    .collect {
+                        when (it) {
+                            is NotificationSettingsViewModel.NotSettingsEvents.Success -> {
+                                requireActivity().snack(it.message)
+                            }
+                            is NotificationSettingsViewModel.NotSettingsEvents.Failure -> {
+                                requireActivity().snack(it.message)
+                            }
                         }
-                        is NotificationSettingsViewModel.NotSettingsEvents.Failure -> {
-                            requireActivity().snack(it.message)
-                        }
-                    }
 
-                }
+                    }
+            }
         }
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeUiState()
-                .collect {
-                    if (it.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel
+                    .observeUiState()
+                    .collect {
+                        if (it.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                        }
+
+                        binding.phoneNubmerHeaderTv.text =
+                            it.data.item?.notSettingsData?.myPhone?.name
+                                ?: "Ваш номер мобильного телефона"
+                        binding.infoTv.text = it.data.item?.notSettingsData?.title
+                            ?: "Для отказа от СМС-оповещений активируйте чекбокс и сохраните настройки."
+                        binding.etPhone.setPhoneValidator { }
+                        binding.etPhone.setText(
+                            it.data.item?.notSettingsData?.myPhone?.active?.convertPhoneToBaseFormat()
+                                ?.convertPhoneToFullFormat() ?: ""
+                        )
+
+                        notSettingsController.submitList(
+                            it.data.item?.notSettingsData?.settingsList ?: emptyList()
+                        )
+
+                        showError(it.error)
                     }
-
-                    binding.phoneNubmerHeaderTv.text = it.data.item?.notSettingsData?.myPhone?.name ?: "Ваш номер мобильного телефона"
-                    binding.infoTv.text = it.data.item?.notSettingsData?.title ?: "Для отказа от СМС-оповещений активируйте чекбокс и сохраните настройки."
-                    binding.etPhone.setPhoneValidator {  }
-                    binding.etPhone.setText(it.data.item?.notSettingsData?.myPhone?.active?.convertPhoneToBaseFormat()?.convertPhoneToFullFormat() ?: "")
-
-                    notSettingsController.submitList(it.data.item?.notSettingsData?.settingsList ?: emptyList())
-
-                    showError(it.error)
-                }
+            }
         }
     }
 

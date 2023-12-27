@@ -8,7 +8,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
@@ -34,6 +36,7 @@ import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.SortTypeListUI
 import com.vodovoz.app.ui.model.SortTypeUI
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -110,71 +113,77 @@ class FavoriteFragment : BaseFragment() {
     }
 
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeEvent()
-                .collect {
-                    when (it) {
-                        is FavoriteFlowViewModel.FavoriteEvents.GoToProfile -> {
-                            tabManager.setAuthRedirect(findNavController().graph.id)
-                            tabManager.selectTab(R.id.graph_profile)
-                        }
-                        is FavoriteFlowViewModel.FavoriteEvents.GoToPreOrder -> {
-                            if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
-                                findNavController().popBackStack()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel
+                    .observeEvent()
+                    .collect {
+                        when (it) {
+                            is FavoriteFlowViewModel.FavoriteEvents.GoToProfile -> {
+                                tabManager.setAuthRedirect(findNavController().graph.id)
+                                tabManager.selectTab(R.id.graph_profile)
                             }
-                            findNavController().navigate(
-                                FavoriteFragmentDirections.actionToPreOrderBS(
-                                    it.id,
-                                    it.name,
-                                    it.detailPicture
+                            is FavoriteFlowViewModel.FavoriteEvents.GoToPreOrder -> {
+                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
+                                    findNavController().popBackStack()
+                                }
+                                findNavController().navigate(
+                                    FavoriteFragmentDirections.actionToPreOrderBS(
+                                        it.id,
+                                        it.name,
+                                        it.detailPicture
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
-                }
+            }
         }
     }
 
     private fun observeChangeLayoutManager() {
-        lifecycleScope.launchWhenStarted {
-            viewModel
-                .observeChangeLayoutManager()
-                .collect {
-                    favoritesController.changeLayoutManager(
-                        it,
-                        binding.productRecycler,
-                        binding.imgViewMode
-                    )
-                }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel
+                    .observeChangeLayoutManager()
+                    .collect {
+                        favoritesController.changeLayoutManager(
+                            it,
+                            binding.productRecycler,
+                            binding.imgViewMode
+                        )
+                    }
+            }
         }
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { state ->
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { state ->
 
-                    bindHeader(state.data)
+                        bindHeader(state.data)
 
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
+                        if (state.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                        }
+
+                        val data = state.data
+                        if (state.bottomItem != null && state.data.layoutManager == FavoriteFlowViewModel.LINEAR && state.page != 2) {
+                            favoritesController.submitList(data.itemsList + state.bottomItem)
+                        } else {
+                            favoritesController.submitList(data.itemsList)
+                        }
+
+                        if (state.error !is ErrorState.Empty) {
+                            showError(state.error)
+                        }
+
                     }
-
-                    val data = state.data
-                    if (state.bottomItem != null && state.data.layoutManager == FavoriteFlowViewModel.LINEAR && state.page != 2) {
-                        favoritesController.submitList(data.itemsList + state.bottomItem)
-                    } else {
-                        favoritesController.submitList(data.itemsList)
-                    }
-
-                    if (state.error !is ErrorState.Empty) {
-                        showError(state.error)
-                    }
-
-                }
+            }
         }
     }
 

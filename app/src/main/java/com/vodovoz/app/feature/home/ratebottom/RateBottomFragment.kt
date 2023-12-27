@@ -5,7 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -21,6 +23,7 @@ import com.vodovoz.app.feature.home.ratebottom.adapter.RateBottomViewPagerAdapte
 import com.vodovoz.app.feature.productdetail.sendcomment.SendCommentAboutProductBottomDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -111,41 +114,44 @@ class RateBottomFragment : BaseBottomSheetFragment() {
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-            dialog?.setCancelable(false)
+                dialog?.setCancelable(false)
 
-            viewModel
-                .observeUiState()
-                .collect { state ->
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
-                    }
-
-                    if (state.data.item != null) {
-                        binding.expandedHeaderTv.text = state.data.item.rateBottomData?.titleProduct
-                        val prList = state.data.item.rateBottomData?.productsList
-                        if (!prList.isNullOrEmpty()) {
-                            rateBottomViewPagerAdapter.submitList(prList)
-                            binding.dotsIndicator.isVisible = prList.size > 1
+                viewModel
+                    .observeUiState()
+                    .collect { state ->
+                        if (state.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
                         }
-                    }
 
-                    if (state.data.collapsedData != null) {
-                        binding.collapsedBodyTv.text = state.data.collapsedData.body
-                        binding.collapsedHeaderTv.text = state.data.collapsedData.title
-                        if (!state.data.collapsedData.imageList.isNullOrEmpty()) {
-                            collapsedImagesAdapter.submitList(state.data.collapsedData.imageList)
+                        if (state.data.item != null) {
+                            binding.expandedHeaderTv.text =
+                                state.data.item.rateBottomData?.titleProduct
+                            val prList = state.data.item.rateBottomData?.productsList
+                            if (!prList.isNullOrEmpty()) {
+                                rateBottomViewPagerAdapter.submitList(prList)
+                                binding.dotsIndicator.isVisible = prList.size > 1
+                            }
                         }
+
+                        if (state.data.collapsedData != null) {
+                            binding.collapsedBodyTv.text = state.data.collapsedData.body
+                            binding.collapsedHeaderTv.text = state.data.collapsedData.title
+                            if (!state.data.collapsedData.imageList.isNullOrEmpty()) {
+                                collapsedImagesAdapter.submitList(state.data.collapsedData.imageList)
+                            }
+                        }
+
+                        showError(state.error)
+
+                        delay(2000)
+                        dialog?.setCancelable(true)
                     }
-
-                    showError(state.error)
-
-                    delay(2000)
-                    dialog?.setCancelable(true)
-                }
+            }
         }
     }
 }

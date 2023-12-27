@@ -87,7 +87,7 @@ class QuestionnairesFlowFragment : BaseFragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setBackDoor() {
-        binding.questionnairesContainer.setOnTouchListener { v, event ->
+        binding.questionnairesContainer.setOnTouchListener { _, event ->
             val handled = true
             val action = event.action
             val count = event.pointerCount

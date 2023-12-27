@@ -105,10 +105,9 @@ fun String.makeLink(context: Context, @ColorRes colorRes: Int, foo: () -> Unit):
     return spannableString
 }
 
-inline fun Activity.snack(
+fun Activity.snack(
     message: String,
     length: Int = Snackbar.LENGTH_LONG,
-    f: Snackbar.() -> Unit = {},
 ) {
     /*val snack = Snackbar.make(findViewById(android.R.id.content), message, length)
     val view = snack.view
@@ -120,7 +119,7 @@ inline fun Activity.snack(
     snack.f()
     snack.show()*/
 
-    Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+    Snackbar.make(findViewById(android.R.id.content), message, length).show()
 }
 
 inline fun Activity.snackTop(
@@ -244,10 +243,10 @@ fun <T : Parcelable> parcelableArgs(key: String): ReadOnlyProperty<Fragment, T> 
 }
 
 fun String.fromHtml(): Spanned {
-     val result: Spanned = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+    val result: Spanned = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY)
     } else {
-         @Suppress("DEPRECATION")
+        @Suppress("DEPRECATION")
         Html.fromHtml(this)
     }
     return result

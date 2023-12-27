@@ -7,7 +7,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -22,6 +24,7 @@ import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AboutAppDialogFragment : BaseFragment() {
@@ -58,11 +61,13 @@ class AboutAppDialogFragment : BaseFragment() {
     }
 
     private fun observeList() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeAboutAppList()
-                .collect {
-                    aboutAppFlowAdapter.submitList(it)
-                }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeAboutAppList()
+                    .collect {
+                        aboutAppFlowAdapter.submitList(it)
+                    }
+            }
         }
     }
 

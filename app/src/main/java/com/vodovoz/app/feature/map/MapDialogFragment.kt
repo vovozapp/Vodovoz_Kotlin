@@ -8,7 +8,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -30,7 +32,7 @@ class MapDialogFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_map_flow
 
-    private val binding: FragmentMapFlowBinding by viewBinding {
+    internal val binding: FragmentMapFlowBinding by viewBinding {
         FragmentMapFlowBinding.bind(
             contentView
         )
@@ -46,7 +48,7 @@ class MapDialogFragment : BaseFragment() {
         MapKitFactory.getInstance()
     }
 
-    private val mapController by lazy {
+    internal val mapController by lazy {
         MapController(
             mapKit,
             fetchAddressResultClickListener(),
@@ -106,32 +108,35 @@ class MapDialogFragment : BaseFragment() {
     }
 
     private fun observeUiState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.observeUiState()
-                .collect { state ->
-                    if (state.loadingPage) {
-                        showLoader()
-                    } else {
-                        hideLoader()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeUiState()
+                    .collect { state ->
+                        if (state.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                        }
+
+                        val data = state.data
+                        if (!state.data.updateZones) {
+                            mapController.drawDeliveryZones(data.deliveryZonesBundleUI?.deliveryZoneUIList)
+                        }
+
+                        val full =
+                            state.data.addressUI?.fullAddress?.substringAfter("Россия, ") ?: ""
+                        binding.searchEdit.setText(full)
+                        binding.streetNameTv.isVisible = true
+                        binding.streetNameTv.text = full
+
+                        showError(state.error)
                     }
-
-                    val data = state.data
-                    if (!state.data.updateZones) {
-                        mapController.drawDeliveryZones(data.deliveryZonesBundleUI?.deliveryZoneUIList)
-                    }
-
-                    val full = state.data.addressUI?.fullAddress?.substringAfter("Россия, ") ?: ""
-                    binding.searchEdit.setText(full)
-                    binding.streetNameTv.isVisible = true
-                    binding.streetNameTv.text = full
-
-                    showError(state.error)
-                }
+            }
         }
     }
 
     private fun observeEvents() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             viewModel.observeEvent()
                 .collect {
                     when (it) {

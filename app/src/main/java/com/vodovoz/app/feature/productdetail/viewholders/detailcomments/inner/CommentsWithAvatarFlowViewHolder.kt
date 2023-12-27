@@ -8,20 +8,21 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ViewHolderCommentWithAvatarBinding
 import com.vodovoz.app.feature.all.comments.adapter.CommentImagesAdapter
-import com.vodovoz.app.feature.all.comments.adapter.CommentImagesClickListener
 import com.vodovoz.app.ui.model.CommentUI
 import com.vodovoz.app.util.extensions.fromHtml
 
 class CommentsWithAvatarFlowViewHolder(
-    view: View
+    view: View,
 ) : ItemViewHolder<CommentUI>(view) {
 
-    private val binding: ViewHolderCommentWithAvatarBinding = ViewHolderCommentWithAvatarBinding.bind(view)
+    private val binding: ViewHolderCommentWithAvatarBinding =
+        ViewHolderCommentWithAvatarBinding.bind(view)
 
-    private val imagesAdapter = CommentImagesAdapter(object : CommentImagesClickListener{})
+    private val imagesAdapter = CommentImagesAdapter()
 
     init {
-        binding.rvImages.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvImages.layoutManager =
+            LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvImages.adapter = imagesAdapter
     }
 

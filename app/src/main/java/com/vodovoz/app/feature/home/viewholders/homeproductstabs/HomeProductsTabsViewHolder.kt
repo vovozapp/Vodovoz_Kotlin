@@ -22,9 +22,9 @@ class HomeProductsTabsViewHolder(
 
         val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
 
-        binding.rvTabs.addMarginDecoration { rect, view, parent, state ->
-            if (parent.getChildAdapterPosition(view) == 0) rect.left = space
-            if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.right = space
+        binding.rvTabs.addMarginDecoration { rect, viewTab, parent, state ->
+            if (parent.getChildAdapterPosition(viewTab) == 0) rect.left = space
+            if (parent.getChildAdapterPosition(viewTab) == state.itemCount - 1) rect.right = space
             else rect.right = space/2
             rect.top = space / 2
             rect.bottom = space / 2

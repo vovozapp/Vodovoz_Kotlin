@@ -197,7 +197,7 @@ class ServiceDetailProdViewHolder(
         binding.rbRating.rating = item.rating
 
         binding.rbRating.onRatingBarChangeListener =
-            RatingBar.OnRatingBarChangeListener { p0, newRating, p2 ->
+            RatingBar.OnRatingBarChangeListener { _, newRating, _ ->
                 if (newRating != binding.rbRating.rating) {
                     productsClickListener.onChangeRating(item.id, newRating, item.rating)
                 }
@@ -217,7 +217,7 @@ class ServiceDetailProdViewHolder(
             binding.tvPricePerUnit.visibility = View.GONE
         }
 
-        var haveDiscount = false
+//        var haveDiscount = false
         when (item.priceList.size) {
             1 -> {
                 binding.tvPrice.setPriceText(
@@ -236,8 +236,9 @@ class ServiceDetailProdViewHolder(
                 }
 
                 binding.tvPriceCondition.visibility = View.GONE
-                if (item.priceList.first().currentPrice < item.priceList.first().oldPrice || item.isGift) haveDiscount =
-                    true
+//                if (item.priceList.first().currentPrice < item.priceList.first().oldPrice || item.isGift) {
+//                    haveDiscount = true
+//                }
             }
             else -> {
                 val minimalPrice = item.priceList.sortedBy { it.requiredAmount }
