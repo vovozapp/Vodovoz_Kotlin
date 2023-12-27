@@ -13,10 +13,8 @@
         android:layout_height="match_parent"
         android:scaleType="fitXY"
         app:lottie_loop="true"
-        app:lottie_autoPlay="true"
         app:lottie_renderMode="software"
-        app:lottie_speed="1"
-        app:lottie_url="https://vodovoz.ru/images/zastavka/zastavkamobil.json" />
+        app:lottie_speed="1" />
     <!--    app:lottie_url="https://vodovoz.ru/images/zastavka/zastavkamobil.json"-->
     <!--    app:lottie_autoPlay="true"-->
     <!--    app:lottie_cacheComposition="false"-->

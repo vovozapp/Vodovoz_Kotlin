@@ -98,16 +98,16 @@ class SplashFragment : BaseFragment() {
             binding.lottieSplashView.visibility = View.GONE
             binding.logoLayout.visibility = View.VISIBLE
         } else {
-//            binding.lottieSplashView.setOutlineMasksAndMattes(true)
-//            binding.lottieSplashView.enableMergePathsForKitKatAndAbove(true)
-//            val file = SplashFileConfig.getSplashFile(requireContext())
-//            if (!file.exists()) {
-//                debugLog { "file is not exist" }
-//                binding.lottieSplashView.visibility = View.GONE
-//                binding.logoLayout.visibility = View.VISIBLE
-//            } else {
-//                initAnimation()
-//            }
+            binding.lottieSplashView.setOutlineMasksAndMattes(true)
+            binding.lottieSplashView.enableMergePathsForKitKatAndAbove(true)
+            val file = SplashFileConfig.getSplashFile(requireContext())
+            if (!file.exists()) {
+                debugLog { "file is not exist" }
+                binding.lottieSplashView.visibility = View.GONE
+                binding.logoLayout.visibility = View.VISIBLE
+            } else {
+                initAnimation()
+            }
         }
 
         handlePushData()

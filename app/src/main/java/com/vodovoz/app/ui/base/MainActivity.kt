@@ -3,6 +3,7 @@ package com.vodovoz.app.ui.base
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
@@ -33,8 +34,15 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var siteStateManager: SiteStateManager
 
+    private val viewModel: SplashFileViewModel by viewModels()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
+                viewModel.isLoading.value
+            }
+        }
         super.onCreate(savedInstanceState)
         enableFullScreen()
         MapKitFactory.initialize(this)
@@ -80,7 +88,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleIntent(intent: Intent) {
-       // val appLinkAction = intent.action
+        // val appLinkAction = intent.action
         val appLinkData: Uri? = intent.data
         val path = appLinkData?.lastPathSegment
 
@@ -105,7 +113,7 @@ class MainActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
