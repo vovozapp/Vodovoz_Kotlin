@@ -44,7 +44,7 @@ class LoginFlowViewModel @Inject constructor(
                     if (it != null) {
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
-                                requestUrl = it.requestPhone
+                                requestUrl = it.requestUrl
                             )
                         )
                     } else {

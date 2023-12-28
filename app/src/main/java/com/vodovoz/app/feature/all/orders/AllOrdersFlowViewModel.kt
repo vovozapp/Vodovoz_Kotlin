@@ -36,7 +36,7 @@ class AllOrdersFlowViewModel @Inject constructor(
 
     private fun fetchAllOrders() {
         val userId =
-            accountManager.fetchAccountId() ?: return//dataRepository.fetchUserId() ?: return
+            accountManager.fetchAccountId() ?: return
         viewModelScope.launch {
             flow {
                 emit(

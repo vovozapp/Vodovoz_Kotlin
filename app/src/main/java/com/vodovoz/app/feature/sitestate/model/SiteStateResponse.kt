@@ -10,7 +10,7 @@ data class SiteStateResponse(
     @Json(name = "DATA")
     val data: SiteStateData?,
     @Json(name = "SMSRASSILKA")
-    val requestPhone: String?,
+    val requestUrl: String?,
     @Json(name = "COMMENTFILES")
     val showComments: Boolean?
 )
