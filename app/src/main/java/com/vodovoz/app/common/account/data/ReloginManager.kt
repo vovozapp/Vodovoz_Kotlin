@@ -1,0 +1,59 @@
+package com.vodovoz.app.common.account.data
+
+import com.vodovoz.app.data.MainRepository
+import com.vodovoz.app.data.local.LocalDataSource
+import com.vodovoz.app.data.model.common.UserReloginEntity
+import com.vodovoz.app.util.extensions.debugLog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class ReloginManager @Inject constructor(
+    private val repository: MainRepository,
+    private val accountManager: AccountManager,
+    private val localDataSource: LocalDataSource,
+) {
+
+    private val _userReloginEnded = MutableStateFlow(false)
+    val userReloginEnded = _userReloginEnded.asStateFlow()
+
+    fun reloginUser() {
+        val userId = accountManager.fetchAccountId()
+        val userToken = accountManager.fetchUserToken()
+        if (userId != null && !userToken.isNullOrEmpty()) {
+            CoroutineScope(Dispatchers.Main.immediate).launch {
+                flow {
+                    emit(repository.relogin(userId, userToken))
+                }.collect {
+                    if (it.isSuccessful) {
+
+                        val userRelogin = it.body() ?: UserReloginEntity(false)
+                        debugLog { userRelogin.toString() }
+                        if (userRelogin.isAuthorized) {
+                            val newCookie = it.headers()["Set-Cookie"] ?: ""
+                            if (newCookie.isNotEmpty()) {
+                                localDataSource.updateCookieSessionId(newCookie)
+                            }
+                        } else {
+                            accountManager.removeUserId()
+                            accountManager.removeUserToken()
+                            localDataSource.removeCookieSessionId()
+                        }
+                        _userReloginEnded.value = true
+
+                    } else {
+                        debugLog { it.errorBody()?.string() ?: "Unknown error"}
+                    }
+                }
+            }
+        } else {
+            _userReloginEnded.value = true
+        }
+    }
+}

@@ -5,6 +5,7 @@ import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.product.rating.RatingResponse
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.model.common.UserAuthDataEntity
 import com.vodovoz.app.data.parser.response.banner.AdvertisingBannersSliderResponseJsonParser.parseAdvertisingBannersSliderResponse
 import com.vodovoz.app.data.parser.response.banner.CategoryBannersSliderResponseJsonParser.parseCategoryBannersSliderResponse
 import com.vodovoz.app.data.parser.response.banner.ProductsByBannerResponseJsonParser.parseProductsByBannerResponse
@@ -845,7 +846,7 @@ class MainRepository @Inject constructor(
         phone: String?,
         url: String,
         code: String?,
-    ): ResponseEntity<Long> {
+    ): ResponseEntity<UserAuthDataEntity> {
 
         val uri = ApiConfig.VODOVOZ_URL
             .toUri()
@@ -859,6 +860,14 @@ class MainRepository @Inject constructor(
 
         return api.fetchAuthByPhoneResponse(uri).parseAuthByPhoneResponse()
     }
+
+    suspend fun relogin(
+        userId: Long,
+        token: String,
+    ) = api.fetchReloginResponse(
+        userId = userId,
+        token = token
+    )
 
     suspend fun requestCode(
         phone: String?,

@@ -9,7 +9,6 @@ import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
-import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.mapper.PastPurchasesHeaderBundleMapper.mapToUI
@@ -27,7 +26,6 @@ import javax.inject.Inject
 @HiltViewModel
 class PastPurchasesFlowViewModel @Inject constructor(
     private val repository: MainRepository,
-    private val localDataSource: LocalDataSource,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
@@ -64,7 +62,7 @@ class PastPurchasesFlowViewModel @Inject constructor(
     }
 
     private fun fetchPastPurchasesHeader() {
-        val userId = localDataSource.fetchUserId()
+        val userId = accountManager.fetchAccountId()
 
         viewModelScope.launch {
             flow { emit(repository.fetchPastPurchasesHeader(userId = userId)) }
@@ -141,7 +139,7 @@ class PastPurchasesFlowViewModel @Inject constructor(
     }
 
     private fun fetchPastPurchasesSorted() {
-        val userId = localDataSource.fetchUserId()
+        val userId = accountManager.fetchAccountId()
 
         viewModelScope.launch {
             flow {
@@ -279,19 +277,19 @@ class PastPurchasesFlowViewModel @Inject constructor(
         fetchPastPurchasesSorted()
     }
 
-    fun updateByCategory(categoryId: Long?) {
-        if (state.data.selectedCategoryId == categoryId) return
-        uiStateListener.value = state.copy(
-            data = state.data.copy(
-                selectedCategoryId = categoryId ?: -1,
-                sortType = SortTypeUI(),
-            ),
-            page = 1,
-            loadMore = false,
-            loadingPage = true
-        )
-        fetchPastPurchasesSorted()
-    }
+//    fun updateByCategory(categoryId: Long?) {
+//        if (state.data.selectedCategoryId == categoryId) return
+//        uiStateListener.value = state.copy(
+//            data = state.data.copy(
+//                selectedCategoryId = categoryId ?: -1,
+//                sortType = SortTypeUI(),
+//            ),
+//            page = 1,
+//            loadMore = false,
+//            loadingPage = true
+//        )
+//        fetchPastPurchasesSorted()
+//    }
 
     fun updateBySortType(sortType: SortTypeUI) {
         if (state.data.sortType == sortType) return

@@ -9,7 +9,6 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.MainRepository
-import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.cart.MessageTextBasket
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.CartAvailableProducts
@@ -32,7 +31,6 @@ import javax.inject.Inject
 @HiltViewModel
 class CartFlowViewModel @Inject constructor(
     private val repository: MainRepository,
-    private val localDataSource: LocalDataSource,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
@@ -76,7 +74,7 @@ class CartFlowViewModel @Inject constructor(
                 emit(
                     repository.fetchCartResponse(
                         action = "getbasket",
-                        userId = localDataSource.fetchUserId(),
+                        userId = accountManager.fetchAccountId(),
                         coupon = coupon,
                         appVersion = BuildConfig.VERSION_NAME
                     )

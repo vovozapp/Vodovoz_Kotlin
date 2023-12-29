@@ -27,9 +27,10 @@ class VodovozInterceptor @Inject constructor(
             chain.proceed(chain.request())
         }
 
-        if (!localDataSource.isAvailableCookieSessionId() ||
-            (localDataSource.isOldCookie())
-        ) {
+        val cookieAvail = localDataSource.isAvailableCookieSessionId()
+        val cookieIsOld = localDataSource.isOldCookie()
+        debugLog { "cookieAvail: $cookieAvail, cookieIsOld: $cookieIsOld" }
+        if (!cookieAvail || cookieIsOld) {
             val setCookie = originalResponse.headers.values("Set-Cookie")
             if (setCookie.isNotEmpty()) {
                 localDataSource.updateCookieSessionId(

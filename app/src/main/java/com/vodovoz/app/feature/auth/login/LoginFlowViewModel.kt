@@ -106,9 +106,11 @@ class LoginFlowViewModel @Inject constructor(
                                     password = password
                                 )
                             )
-                            accountManager.updateUserId(response.data)
-                            likeManager.updateLikesAfterLogin(response.data)
-                            localDataSource.updateUserId(response.data)
+                            accountManager.updateUserId(response.data.id)
+                            accountManager.updateUserToken(response.data.token)
+
+                            likeManager.updateLikesAfterLogin(response.data.id)
+                            localDataSource.updateUserId(response.data.id)
 
                             uiStateListener.value =
                                 state.copy(error = null, loadingPage = false)
@@ -148,10 +150,11 @@ class LoginFlowViewModel @Inject constructor(
                             eventListener.emit(LoginEvents.AuthError("Неверный код"))
                         }
                         is ResponseEntity.Success -> {
-                            accountManager.updateUserId(response.data)
-                            likeManager.updateLikesAfterLogin(response.data)
+                            accountManager.updateUserId(response.data.id)
+                            accountManager.updateUserToken(response.data.token)
+                            likeManager.updateLikesAfterLogin(response.data.id)
                             loginManager.updateLastAuthPhone(phone)
-                            localDataSource.updateUserId(response.data)
+                            localDataSource.updateUserId(response.data.id)
 
                             uiStateListener.value =
                                 state.copy(error = null, loadingPage = false)

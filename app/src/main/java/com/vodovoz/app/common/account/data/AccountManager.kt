@@ -36,6 +36,20 @@ class AccountManager @Inject constructor(
         accountIdListener.value = null
     }
 
+    fun fetchUserToken() = if (sharedPrefs.contains(USER_TOKEN)) {
+        sharedPrefs.getString(USER_TOKEN, "")
+    } else {
+        ""
+    }
+
+    fun updateUserToken(userToken: String) {
+        sharedPrefs.edit().putString(USER_TOKEN, userToken).apply()
+    }
+
+    fun removeUserToken() {
+        sharedPrefs.edit().remove(USER_TOKEN).apply()
+    }
+
 //    fun removeUserSettings() {
 //        sharedPrefs.edit().remove(EMAIL).apply()
 //        sharedPrefs.edit().remove(PASSWORD).apply()
@@ -77,6 +91,7 @@ class AccountManager @Inject constructor(
 
     companion object {
         private const val USER_ID = "USER_ID"
+        private const val USER_TOKEN = "USER_TOKEN"
         private const val EMAIL = "EMAIL"
         private const val PASSWORD = "PASSWORD"
         private const val USE_BIO = "USE_BIO"

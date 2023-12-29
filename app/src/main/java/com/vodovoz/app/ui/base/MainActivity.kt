@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.firebase.messaging.RemoteMessage
+import com.vodovoz.app.common.account.data.ReloginManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.ActivityMainBinding
 import com.vodovoz.app.feature.sitestate.SiteStateManager
@@ -34,6 +35,9 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var siteStateManager: SiteStateManager
 
+    @Inject
+    lateinit var reloginManager: ReloginManager
+
     private val viewModel: SplashFileViewModel by viewModels()
 
 
@@ -48,10 +52,10 @@ class MainActivity : AppCompatActivity() {
         MapKitFactory.initialize(this)
         binding = ActivityMainBinding.inflate(layoutInflater).apply { setContentView(root) }
 
+        reloginManager.reloginUser()
+
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                siteStateManager.requestSiteState()
-            }
+            siteStateManager.requestSiteState()
         }
 
         observeRatingSnackbar()

@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
+import com.vodovoz.app.common.account.data.ReloginManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.databinding.FragmentSplashBinding
@@ -53,6 +54,9 @@ class SplashFragment : BaseFragment() {
     @Inject
     lateinit var siteStateManager: SiteStateManager
 
+    @Inject
+    lateinit var reloginManager: ReloginManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         firstLoad()
@@ -64,14 +68,19 @@ class SplashFragment : BaseFragment() {
                 siteStateManager.requestSiteState()
             }
         }
-        viewModel.sendFirebaseToken()
-        homeViewModel.firstLoad()
-        catalogViewModel.firstLoad()
-        cartFlowViewModel.firstLoad()
-        favoriteViewModel.firstLoad()
-        favoriteViewModel.firstLoadSorted()
-        profileViewModel.fetchFirstUserData()
-        accountManager.fetchAccountId()
+        lifecycleScope.launch {
+            reloginManager.userReloginEnded.collect {
+                if (it) {
+                    cartFlowViewModel.firstLoad()
+                    profileViewModel.fetchFirstUserData()
+                    viewModel.sendFirebaseToken()
+                    homeViewModel.firstLoad()
+                    catalogViewModel.firstLoad()
+                    favoriteViewModel.firstLoad()
+                    favoriteViewModel.firstLoadSorted()
+                }
+            }
+        }
     }
 
     private fun refreshLoad() {

@@ -388,6 +388,7 @@ class ProfileFlowViewModel @Inject constructor(
             tabManager.clearBottomNavProfileState()
             cartManager.clearCart()
             accountManager.removeUserId()
+            accountManager.removeUserToken()
             eventListener.emit(ProfileEvents.Logout)
             localDataSource.removeCookieSessionId()
             waterAppHelper.clearData()
