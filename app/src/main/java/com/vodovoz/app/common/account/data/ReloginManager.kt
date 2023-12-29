@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,7 +21,7 @@ class ReloginManager @Inject constructor(
     private val localDataSource: LocalDataSource,
 ) {
 
-    private val _userReloginEnded = MutableStateFlow(false)
+    private val _userReloginEnded = MutableStateFlow<ReloginState>(ReloginState.ReloginInitial)
     val userReloginEnded = _userReloginEnded.asStateFlow()
 
     fun reloginUser() {
@@ -30,9 +31,11 @@ class ReloginManager @Inject constructor(
             CoroutineScope(Dispatchers.Main.immediate).launch {
                 flow {
                     emit(repository.relogin(userId, userToken))
-                }.collect {
+                }.catch {
+                    _userReloginEnded.value = ReloginState.ReloginError(it.message.toString())
+                }
+                    .collect {
                     if (it.isSuccessful) {
-
                         val userRelogin = it.body() ?: UserReloginEntity(false)
                         debugLog { userRelogin.toString() }
                         if (userRelogin.isAuthorized) {
@@ -45,15 +48,22 @@ class ReloginManager @Inject constructor(
                             accountManager.removeUserToken()
                             localDataSource.removeCookieSessionId()
                         }
-                        _userReloginEnded.value = true
+                        _userReloginEnded.value = ReloginState.ReloginSuccess
 
                     } else {
-                        debugLog { it.errorBody()?.string() ?: "Unknown error"}
+                        _userReloginEnded.value = ReloginState.ReloginError( it.errorBody()?.string() ?: "Unknown error" )
                     }
                 }
             }
         } else {
-            _userReloginEnded.value = true
+            _userReloginEnded.value = ReloginState.ReloginSuccess
         }
+    }
+
+    sealed class ReloginState {
+
+        object ReloginInitial: ReloginState()
+        data class ReloginError(val error: String): ReloginState()
+        object ReloginSuccess: ReloginState()
     }
 }

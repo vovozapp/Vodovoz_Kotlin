@@ -1,6 +1,7 @@
 package com.vodovoz.app.util
 
 import android.content.Context
+import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -17,16 +18,17 @@ object SplashFileConfig {
     }
 
     suspend fun downloadSplashFile(context: Context, link: String = DAFAULT_LINK) {
-        withContext(Dispatchers.IO) {
-            URL(link).openStream()
-        }.use { input ->
-            val file = getSplashFile(context)
-            if (!file.exists()) {
-                file.createNewFile()
+
+            withContext(Dispatchers.IO) {
+                URL(link).openStream()
+            }.use { input ->
+                val file = getSplashFile(context)
+                if (!file.exists()) {
+                    file.createNewFile()
+                }
+                FileOutputStream(file).use { output ->
+                    input.copyTo(output)
+                }
             }
-            FileOutputStream(file).use { output ->
-                input.copyTo(output)
-            }
-        }
     }
 }

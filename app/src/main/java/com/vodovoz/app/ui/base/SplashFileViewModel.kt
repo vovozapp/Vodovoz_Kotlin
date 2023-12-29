@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.util.SplashFileConfig
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +23,12 @@ class SplashFileViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            SplashFileConfig.downloadSplashFile(appContext)
+            kotlin.runCatching {
+                SplashFileConfig.downloadSplashFile(appContext)
+            }.onFailure {
+                debugLog { it.message.toString() }
+            }
+
             _isLoading.value = false
         }
     }

@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.FileInputStream
 import java.io.InputStream
+import java.net.InetAddress
 import javax.inject.Inject
 
 
@@ -62,22 +63,39 @@ class SplashFragment : BaseFragment() {
         firstLoad()
     }
 
+    fun isInternetAvailable(): Boolean {
+        return try {
+            val ipAddr = InetAddress.getByName("vodovoz.ru")
+            //You can replace it with your name
+            !ipAddr.equals("")
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     private fun firstLoad() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 siteStateManager.requestSiteState()
             }
         }
+
         lifecycleScope.launch {
             reloginManager.userReloginEnded.collect {
-                if (it) {
-                    cartFlowViewModel.firstLoad()
-                    profileViewModel.fetchFirstUserData()
-                    viewModel.sendFirebaseToken()
-                    homeViewModel.firstLoad()
-                    catalogViewModel.firstLoad()
-                    favoriteViewModel.firstLoad()
-                    favoriteViewModel.firstLoadSorted()
+                when (it) {
+                    is ReloginManager.ReloginState.ReloginSuccess -> {
+                        cartFlowViewModel.firstLoad()
+                        profileViewModel.fetchFirstUserData()
+                        viewModel.sendFirebaseToken()
+                        homeViewModel.firstLoad()
+                        catalogViewModel.firstLoad()
+                        favoriteViewModel.firstLoad()
+                        favoriteViewModel.firstLoadSorted()
+                    }
+                    is ReloginManager.ReloginState.ReloginError -> {
+                        showError(ErrorState.NetworkError())
+                    }
+                    else -> {}
                 }
             }
         }
