@@ -53,7 +53,7 @@ class HomeFlowViewModel @Inject constructor(
         if (!state.isFirstLoad) {
             uiStateListener.value = state.copy(loadingPage = true)
 
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 updatePopupNews()
                 val tasks = firstLoadTasks()
                 val start = System.currentTimeMillis()
@@ -80,7 +80,7 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     fun secondLoad() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val userId = accountManager.fetchAccountId()
             val tasks = secondLoadTasks(userId)
             val start = System.currentTimeMillis()
