@@ -118,6 +118,17 @@
     <string name="do_pay" translatable="false">Оплатить</string>
     <string name="info_about_order" translatable="false">Информация о заказе</string>
     <string name="recipient" translatable="false">Получатель</string>
+    <string name="load_photo" translatable="false">Загрузить фото</string>
+    <string name="personal_data" translatable="false">Личные данные</string>
+    <string name="name_hint" translatable="false">Имя</string>
+    <string name="family_hint" translatable="false">Фамилия</string>
+    <string name="sex_hint" translatable="false">Пол</string>
+    <string name="sex_male" translatable="false">Мужской</string>
+    <string name="bithday_hint" translatable="false">Дата рождения</string>
+    <string name="phone_hint" translatable="false">Телефон</string>
+    <string name="change_password" translatable="false">Изменение пароля</string>
+    <string name="new_password_hint" translatable="false">Новый пароль</string>
+    <string name="save" translatable="false">Сохранить</string>
 
 
 </resources>
