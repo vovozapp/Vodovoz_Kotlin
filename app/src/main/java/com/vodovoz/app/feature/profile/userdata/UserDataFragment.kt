@@ -81,17 +81,16 @@ class UserDataFragment : BaseFragment() {
             viewModel.navigateToGenderChoose()
         }
 
-        binding.vEmail.setOnClickListener {
-            requireActivity().snack("Это поле нельзя изменить!")
-        }
+//        binding.vEmail.setOnClickListener {
+//            //requireActivity().snack("Это поле нельзя изменить!")
+//        }
 
         binding.btnSave.setOnClickListener {
 
             val firstName = binding.tilFirstName.textOrErrorWithEmpty(2) ?: return@setOnClickListener
             val secondName = binding.tilSecondName.textOrErrorWithEmpty(2) ?: return@setOnClickListener
 
-            val validateEmail = validateEmail()
-            if (validateEmail.not()) {
+            if (validateEmail().not()) {
                 return@setOnClickListener
             }
 
@@ -176,6 +175,7 @@ class UserDataFragment : BaseFragment() {
                         is UserDataFlowViewModel.UserDataEvents.UpdateUserDataEvent -> {
                             profileViewModel.refresh()
                             requireActivity().snack(it.message)
+                            findNavController().popBackStack()
                         }
                         is UserDataFlowViewModel.UserDataEvents.ShowDatePicker -> {
                             val datePickerDialog = MaterialDatePicker.Builder.datePicker()

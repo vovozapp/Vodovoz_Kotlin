@@ -7,7 +7,6 @@ import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.*
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
-import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.cart.MessageTextBasket
@@ -35,7 +34,6 @@ class CartFlowViewModel @Inject constructor(
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
     private val accountManager: AccountManager,
-    private val tabManager: TabManager,
 ) : PagingContractViewModel<CartFlowViewModel.CartState, CartFlowViewModel.CartEvents>(CartState()) {
 
     init {
@@ -101,12 +99,15 @@ class CartFlowViewModel @Inject constructor(
 //                        }
                         val mappedData = response.data.mapUoUI()
                         val availableProducts = mappedData.availableProductUIList.reversed()
-                        if (availableProducts.isEmpty()) tabManager.clearBottomNavCartState()
                         val calculatedPrices = calculatePrice(availableProducts)
-                        cartManager.syncCart(
-                            availableProducts,
-                            calculatedPrices.total
-                        )
+                        if (availableProducts.isEmpty() && !cartManager.isCartEmpty()) {
+                            cartManager.clearCart()
+                        } else {
+                            cartManager.syncCart(
+                                availableProducts,
+                                calculatedPrices.total
+                            )
+                        }
                         state.copy(
                             data = state.data.copy(
                                 coupon = coupon ?: "",

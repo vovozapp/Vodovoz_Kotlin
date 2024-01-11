@@ -60,6 +60,8 @@ class CartManager @Inject constructor(
         tabManager.clearBottomNavCartState()
     }
 
+    fun isCartEmpty() = carts.isEmpty()
+
     suspend fun syncCart(list: List<ProductUI>, total: Int) {
         list.forEach {
             carts[it.id] = it.cartQuantity

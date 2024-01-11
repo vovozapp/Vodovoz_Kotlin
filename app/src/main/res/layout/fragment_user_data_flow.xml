@@ -57,7 +57,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/space_16"
-                        android:text="Загрузить фото"
+                        android:text="@string/load_photo"
                         app:layout_constraintBottom_toBottomOf="@+id/cwAvatar"
                         app:layout_constraintStart_toEndOf="@+id/cwAvatar"
                         app:layout_constraintTop_toTopOf="@+id/cwAvatar" />
@@ -71,7 +71,7 @@
                     android:gravity="center_vertical"
                     android:paddingHorizontal="@dimen/space_16"
                     android:background="@color/dark_white"
-                    android:text="Личные данные"/>
+                    android:text="@string/personal_data"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/TextInputLayout"
@@ -88,7 +88,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         tools:text="Дмитрий"
-                        android:hint="Имя" />
+                        android:hint="@string/name_hint" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -107,7 +107,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         tools:text="Слухинский"
-                        android:hint="Фамилия" />
+                        android:hint="@string/family_hint" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -131,8 +131,8 @@
                             style="@style/TextField"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Пол"
-                            android:text="Мужской" />
+                            android:hint="@string/sex_hint"
+                            android:text="@string/sex_male" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -169,7 +169,7 @@
                             style="@style/TextField"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Дата рождения"
+                            android:hint="@string/bithday_hint"
                             tools:text="31.08.1999" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -209,23 +209,22 @@
                             style="@style/TextField"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:enabled="false"
-                            android:hint="Почта(нельзя поменять)"
+                            android:hint="@string/email_hint_text"
                             tools:text="sluhdimaa@gmail.com" />
 
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <View
-                        android:id="@+id/vEmail"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+<!--                    <View-->
+<!--                        android:id="@+id/vEmail"-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="0dp"-->
+<!--                        android:clickable="true"-->
+<!--                        android:focusable="true"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="parent" />-->
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -245,7 +244,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         tools:text="+7-952-247-38-26"
-                        android:hint="Телефон" />
+                        android:hint="@string/phone_hint" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -258,7 +257,7 @@
                     android:paddingHorizontal="@dimen/space_16"
                     android:background="@color/dark_white"
                     android:layout_marginTop="@dimen/space_12"
-                    android:text="Изменение пароля"/>
+                    android:text="@string/change_password"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/TextInputLayout"
@@ -277,7 +276,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
-                        android:hint="Новый пароль" />
+                        android:hint="@string/new_password_hint" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -290,7 +289,7 @@
             style="@style/BlueButton"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_normal_height"
-            android:text="Сохранить"
+            android:text="@string/save"
             android:layout_margin="@dimen/space_16"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
