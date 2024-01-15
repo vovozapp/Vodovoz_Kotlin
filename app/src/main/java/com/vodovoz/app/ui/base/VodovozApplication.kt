@@ -10,15 +10,11 @@ import com.yandex.mapkit.MapKitFactory
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
 import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import timber.log.Timber
 
 @HiltAndroidApp
 class VodovozApplication : Application() {
 
-    private val coroutineScope = CoroutineScope(Dispatchers.IO)
     override fun onCreate() {
         super.onCreate()
         //initYandexMetrica() //todo релиз
@@ -33,11 +29,6 @@ class VodovozApplication : Application() {
 //                downloadSplashFile(this@VodovozApplication)
 //            }
 //        }
-    }
-
-    override fun onTerminate() {
-        coroutineScope.cancel()
-        super.onTerminate()
     }
 
     private fun initYandexMetrica() {

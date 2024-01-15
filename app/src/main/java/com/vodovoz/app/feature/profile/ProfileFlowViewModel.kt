@@ -380,7 +380,8 @@ class ProfileFlowViewModel @Inject constructor(
     fun logout() {
 
         viewModelScope.launch {
-            flow { emit(repository.logout()) }
+            val userId = accountManager.fetchAccountId() ?: return@launch
+            flow { emit(repository.logout(userId)) }
                 .onEach {
                     localDataSource.removeUserId()
                     localDataSource.removeCookieSessionId()

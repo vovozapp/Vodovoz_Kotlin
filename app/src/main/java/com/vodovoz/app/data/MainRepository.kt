@@ -1190,7 +1190,7 @@ class MainRepository @Inject constructor(
         email = email
     ).parseUpdateUserDataResponse()
 
-    suspend fun logout() = api.logout()
+    suspend fun logout(userId: Long) = api.logout(userId = userId)
 
     suspend fun addAvatar(id: Long, image: File): Response<Void> {
         val requestBody = image.asRequestBody(image.extension.toMediaTypeOrNull())

@@ -424,7 +424,7 @@ interface MainApi {
     ): ResponseBody
 
     @GET("newmobile/user.php?action=logout")
-    suspend fun logout(): Response<ResponseBody>
+    suspend fun logout(@Query("userid") userId: Long? = null): Response<ResponseBody>
 
     //Профиль категории
     @GET("/newmobile/profile/index.php")

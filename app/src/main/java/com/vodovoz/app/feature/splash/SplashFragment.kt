@@ -122,6 +122,8 @@ class SplashFragment : BaseFragment() {
                 binding.lottieSplashView.visibility = View.GONE
                 binding.logoLayout.visibility = View.VISIBLE
             } else {
+                binding.lottieSplashView.visibility = View.VISIBLE
+                binding.logoLayout.visibility = View.GONE
                 initAnimation()
             }
         }
