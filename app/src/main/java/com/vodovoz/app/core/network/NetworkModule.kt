@@ -52,12 +52,11 @@ abstract class NetworkModule {
             interceptors: Set<@JvmSuppressWildcards Interceptor>,
         ): OkHttpClient {
             val okHttpClient = OkHttpClient.Builder()
-            interceptors.forEach {
-                if(BuildConfig.DEBUG) {
-                    okHttpClient.addInterceptor(it)
-                } else if(it !is HttpLoggingInterceptor) {
-                    okHttpClient.addInterceptor(it)
+            for (inter in interceptors) {
+                if(!BuildConfig.DEBUG && inter is HttpLoggingInterceptor) {
+                    continue
                 }
+                okHttpClient.addInterceptor(inter)
             }
             return okHttpClient
                 .connectTimeout(20, TimeUnit.SECONDS)
