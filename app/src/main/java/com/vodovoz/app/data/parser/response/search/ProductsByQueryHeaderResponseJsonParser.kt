@@ -2,8 +2,10 @@ package com.vodovoz.app.data.parser.response.search
 
 import com.vodovoz.app.data.model.common.CategoryEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.model.common.SearchQueryHeaderResponse
 import com.vodovoz.app.data.parser.common.SortTypeListJsonParser.parseSortTypeList
 import com.vodovoz.app.data.parser.common.safeString
+import com.vodovoz.app.data.parser.response.search.ProductsByQueryHeaderResponseJsonParser.parseCategoryEntity
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
 import org.json.JSONArray
@@ -12,12 +14,25 @@ import org.json.JSONObject
 object ProductsByQueryHeaderResponseJsonParser {
 
 
-    fun ResponseBody.parseProductsByQueryHeaderResponse(): ResponseEntity<CategoryEntity> {
+    fun ResponseBody.parseProductsByQueryHeaderResponse(): ResponseEntity<SearchQueryHeaderResponse> {
         val responseJson = JSONObject(string())
         return when (responseJson.getString("status")) {
-            ResponseStatus.SUCCESS -> ResponseEntity.Success(responseJson.parseCategoryEntity())
+            ResponseStatus.SUCCESS -> ResponseEntity.Success(
+                responseJson.parseSearchQueryHeaderResponse()
+            )
             else -> ResponseEntity.Error("Неправильный запрос")
         }
+    }
+
+    private fun JSONObject.parseSearchQueryHeaderResponse() = if(!isNull("perexod")) {
+        SearchQueryHeaderResponse(
+            deepLink = safeString("perexod"),
+            id = safeString("id")
+        )
+    } else {
+        SearchQueryHeaderResponse(
+            category = parseCategoryEntity()
+        )
     }
 
     private fun JSONObject.parseCategoryEntity() = CategoryEntity(

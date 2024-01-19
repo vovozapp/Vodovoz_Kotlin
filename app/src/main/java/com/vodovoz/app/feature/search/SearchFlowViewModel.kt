@@ -3,14 +3,21 @@ package com.vodovoz.app.feature.search
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.common.content.*
+import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.common.content.Event
+import com.vodovoz.app.common.content.PagingContractViewModel
+import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
+import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.search.SearchManager
+import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.model.common.SearchQueryHeaderResponse
+import com.vodovoz.app.data.model.common.SearchQueryResponse
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.DefaultSearchDataBundleMapper.mapToUI
@@ -22,7 +29,15 @@ import com.vodovoz.app.ui.model.SortTypeUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -125,16 +140,60 @@ class SearchFlowViewModel @Inject constructor(
                 .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        uiStateListener.value = state.copy(
-                            data = state.data.copy(
-                                categoryHeader = checkSelectedFilter(data),
-                                sortType = data.sortTypeList?.sortTypeList?.firstOrNull { it.value == "default" }
-                                    ?: SortTypeUI(sortName = "По популярности")
-                            ),
-                            loadingPage = false,
-                            error = null
-                        )
+                        val searchResponse: SearchQueryHeaderResponse = response.data as SearchQueryHeaderResponse
+                        val deepLink = searchResponse.deepLink
+                        if (deepLink.isNotEmpty()) {
+                            uiStateListener.value = state.copy(
+                                loadingPage = false,
+                                error = null
+                            )
+                            when (deepLink) {
+                                "dostavka" -> {
+                                    eventListener.emit(SearchEvents.GoToWebView(
+                                        url = ApiConfig.ABOUT_DELIVERY_URL,
+                                        title = "О доставке"
+                                    ))
+                                }
+                                "oplata" -> {
+                                    eventListener.emit(SearchEvents.GoToWebView(
+                                        url = ApiConfig.ABOUT_PAY_URL,
+                                        title = "Об оплате"
+                                    ))
+                                }
+                                in listOf("remontkyler", "arendakyler", "obrabotkakyler") -> {
+                                    eventListener.emit(SearchEvents.GoToService(
+                                        id = searchResponse.id
+                                    ))
+                                }
+                                "akcii" -> {
+                                    eventListener.emit(SearchEvents.GoToPromotions)
+                                }
+                                "kontakty" -> {
+                                    eventListener.emit(SearchEvents.GoToContacts)
+                                }
+                                else -> {
+                                    uiStateListener.value =
+                                        state.copy(
+                                            loadingPage = false,
+                                            error = ErrorState.Error(),
+                                            page = 1,
+                                            loadMore = false
+                                        )
+                                }
+                            }
+
+                        } else {
+                            val data = searchResponse.category.mapToUI()
+                            uiStateListener.value = state.copy(
+                                data = state.data.copy(
+                                    categoryHeader = checkSelectedFilter(data),
+                                    sortType = data.sortTypeList?.sortTypeList?.firstOrNull { it.value == "default" }
+                                        ?: SortTypeUI(sortName = "По популярности")
+                                ),
+                                loadingPage = false,
+                                error = null
+                            )
+                        }
                     } else {
                         uiStateListener.value =
                             state.copy(loadingPage = false, error = ErrorState.Error())
@@ -169,7 +228,7 @@ class SearchFlowViewModel @Inject constructor(
     fun loadMoreSorted() {
         if (state.bottomItem == null && state.page != null) {
             uiStateListener.value = state.copy(loadMore = true, bottomItem = BottomProgressItem())
-            fetchProductsByQuery()
+            fetchProductsByQuery(true)
         }
     }
 
@@ -186,7 +245,7 @@ class SearchFlowViewModel @Inject constructor(
         changeLayoutManager.value = manager
     }
 
-    private fun fetchProductsByQuery() {
+    private fun fetchProductsByQuery(checkDeepLink: Boolean = false) {
 
         viewModelScope.launch {
             flow {
@@ -206,38 +265,94 @@ class SearchFlowViewModel @Inject constructor(
                 .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        val mappedFeed = FavoritesMapper.mapFavoritesListByManager(
-                            state.data.layoutManager,
-                            data
-                        )
+                        val searchResponse: SearchQueryResponse = response.data
+                        val deepLink = searchResponse.deepLink
+                        if (deepLink.isNotEmpty()) {
+                            if(checkDeepLink) {
+                                uiStateListener.value = state.copy(
+                                    loadingPage = false,
+                                    error = null
+                                )
+                                when (deepLink) {
+                                    "dostavka" -> {
+                                        eventListener.emit(
+                                            SearchEvents.GoToWebView(
+                                                url = ApiConfig.ABOUT_DELIVERY_URL,
+                                                title = "О доставке"
+                                            )
+                                        )
+                                    }
 
-                        uiStateListener.value = if (data.isEmpty() && !state.loadMore) {
-                            state.copy(
-                                error = ErrorState.Empty(),
-                                loadingPage = false,
-                                loadMore = false,
-                                bottomItem = null,
-                                page = 1
-                            )
-                        } else {
+                                    "oplata" -> {
+                                        eventListener.emit(
+                                            SearchEvents.GoToWebView(
+                                                url = ApiConfig.ABOUT_PAY_URL,
+                                                title = "Об оплате"
+                                            )
+                                        )
+                                    }
 
-                            val itemsList = if (state.loadMore) {
-                                state.data.itemsList + mappedFeed
-                            } else {
-                                mappedFeed
+                                    in listOf("remontkyler", "arendakyler", "obrabotkakyler") -> {
+                                        eventListener.emit(
+                                            SearchEvents.GoToService(
+                                                id = searchResponse.id
+                                            )
+                                        )
+                                    }
+
+                                    "akcii" -> {
+                                        eventListener.emit(SearchEvents.GoToPromotions)
+                                    }
+
+                                    "kontakty" -> {
+                                        eventListener.emit(SearchEvents.GoToContacts)
+                                    }
+
+                                    else -> {
+                                        uiStateListener.value =
+                                            state.copy(
+                                                loadingPage = false,
+                                                error = ErrorState.Error(),
+                                                page = 1,
+                                                loadMore = false
+                                            )
+                                    }
+                                }
                             }
 
-                            state.copy(
-                                page = if (mappedFeed.isEmpty()) null else state.page?.plus(1),
-                                loadingPage = false,
-                                data = state.data.copy(itemsList = itemsList),
-                                error = null,
-                                loadMore = false,
-                                bottomItem = null
+                        } else {
+                            val data = searchResponse.productList.mapToUI()
+                            val mappedFeed = FavoritesMapper.mapFavoritesListByManager(
+                                state.data.layoutManager,
+                                data
                             )
-                        }
 
+                            uiStateListener.value = if (data.isEmpty() && !state.loadMore) {
+                                state.copy(
+                                    error = ErrorState.Empty(),
+                                    loadingPage = false,
+                                    loadMore = false,
+                                    bottomItem = null,
+                                    page = 1
+                                )
+                            } else {
+
+                                val itemsList = if (state.loadMore) {
+                                    state.data.itemsList + mappedFeed
+                                } else {
+                                    mappedFeed
+                                }
+
+                                state.copy(
+                                    page = if (mappedFeed.isEmpty()) null else state.page?.plus(1),
+                                    loadingPage = false,
+                                    data = state.data.copy(itemsList = itemsList),
+                                    error = null,
+                                    loadMore = false,
+                                    bottomItem = null
+                                )
+                            }
+                        }
                     } else {
                         uiStateListener.value =
                             state.copy(
@@ -353,7 +468,7 @@ class SearchFlowViewModel @Inject constructor(
             loadMore = false,
             loadingPage = true
         )
-        fetchProductsByQuery()
+        fetchProductsByQuery(true)
     }
 
     fun updateBySortType(sortType: SortTypeUI) {
@@ -391,6 +506,14 @@ class SearchFlowViewModel @Inject constructor(
             SearchEvents()
 
         object GoToProfile : SearchEvents()
+
+        data class GoToWebView(val url: String, val title: String) : SearchEvents()
+
+        data class GoToService(val id: String) : SearchEvents()
+
+        data object GoToContacts : SearchEvents()
+
+        data object GoToPromotions : SearchEvents()
     }
 
     data class SearchState(

@@ -25,10 +25,12 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentSearchFlowBinding
 import com.vodovoz.app.databinding.ViewSimpleTextChipBinding
+import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
+import com.vodovoz.app.feature.home.HomeFragmentDirections
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
@@ -38,6 +40,7 @@ import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.SortTypeListUI
 import com.vodovoz.app.ui.model.SortTypeUI
+import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -109,7 +112,7 @@ class SearchFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        debugLog { "onViewCreated" }
         if (args.query.isNotEmpty()) {
             binding.incAppBar.incSearch.etSearch.setText(args.query)
             viewModel.fetchMatchesQueries(args.query)
@@ -149,10 +152,34 @@ class SearchFragment : BaseFragment() {
                                     )
                                 )
                             }
+
                             is SearchFlowViewModel.SearchEvents.GoToProfile -> {
                                 tabManager.setAuthRedirect(findNavController().graph.id)
                                 tabManager.selectTab(R.id.graph_profile)
                             }
+
+                            SearchFlowViewModel.SearchEvents.GoToContacts -> {
+                                findNavController().navigate(SearchFragmentDirections.actionToContactsFragment())
+                            }
+
+                            SearchFlowViewModel.SearchEvents.GoToPromotions -> {
+                                findNavController().navigate(
+                                    SearchFragmentDirections.actionToAllPromotionsFragment(
+                                        AllPromotionsFragment.DataSource.All()
+                                    )
+                                )
+                            }
+
+                            is SearchFlowViewModel.SearchEvents.GoToService -> {
+                                findNavController().navigate(
+                                    SearchFragmentDirections.actionToServiceDetailNewFragment(it.id))
+                            }
+
+                            is SearchFlowViewModel.SearchEvents.GoToWebView -> {
+                                findNavController().navigate(
+                                    SearchFragmentDirections.actionToWebViewFragment(it.url, it.title))
+                            }
+
                         }
                     }
             }
@@ -190,20 +217,20 @@ class SearchFragment : BaseFragment() {
         }
 
 
-        val mutableStateFlow = MutableStateFlow("")
+//        val mutableStateFlow = MutableStateFlow("")
 
         binding.incAppBar.incSearch.etSearch.doAfterTextChanged { query ->
             when (query?.trim().toString().isNotEmpty()) {
                 true -> binding.incAppBar.incSearch.imgClear.visibility = View.VISIBLE
                 false -> binding.incAppBar.incSearch.imgClear.visibility = View.INVISIBLE
             }
-            mutableStateFlow.value = query.toString()
+//            mutableStateFlow.value = query.toString()
         }
-        lifecycleScope.launch {
-            mutableStateFlow.debounce(300).filter { it.isNotEmpty() }.collect {
-                viewModel.fetchMatchesQueries(it)
-            }
-        }
+//        lifecycleScope.launch {
+//            mutableStateFlow.debounce(300).filter { it.isNotEmpty() }.collect {
+//                viewModel.fetchMatchesQueries(it)
+//            }
+//        }
 
         binding.incAppBar.incSearch.imgClear.setOnClickListener {
             binding.incAppBar.incSearch.etSearch.setText("")
