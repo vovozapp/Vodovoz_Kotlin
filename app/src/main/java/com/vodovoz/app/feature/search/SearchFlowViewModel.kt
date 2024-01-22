@@ -505,7 +505,7 @@ class SearchFlowViewModel @Inject constructor(
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
             SearchEvents()
 
-        object GoToProfile : SearchEvents()
+        data object GoToProfile : SearchEvents()
 
         data class GoToWebView(val url: String, val title: String) : SearchEvents()
 

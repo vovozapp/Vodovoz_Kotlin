@@ -30,7 +30,6 @@ import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
-import com.vodovoz.app.feature.home.HomeFragmentDirections
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
@@ -43,9 +42,7 @@ import com.vodovoz.app.ui.model.SortTypeUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -103,6 +100,8 @@ class SearchFragment : BaseFragment() {
         )
     }
 
+    private var eventsJob: Job? = null
+
     private val args: SearchFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -135,7 +134,8 @@ class SearchFragment : BaseFragment() {
     }
 
     private fun observeEvents() {
-        lifecycleScope.launch {
+        if (eventsJob != null) eventsJob?.cancel()
+        eventsJob = lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.observeEvent()
                     .collect {
@@ -172,12 +172,17 @@ class SearchFragment : BaseFragment() {
 
                             is SearchFlowViewModel.SearchEvents.GoToService -> {
                                 findNavController().navigate(
-                                    SearchFragmentDirections.actionToServiceDetailNewFragment(it.id))
+                                    SearchFragmentDirections.actionToServiceDetailNewFragment(it.id)
+                                )
                             }
 
                             is SearchFlowViewModel.SearchEvents.GoToWebView -> {
                                 findNavController().navigate(
-                                    SearchFragmentDirections.actionToWebViewFragment(it.url, it.title))
+                                    SearchFragmentDirections.actionToWebViewFragment(
+                                        it.url,
+                                        it.title
+                                    )
+                                )
                             }
 
                         }
@@ -324,7 +329,7 @@ class SearchFragment : BaseFragment() {
         binding.imgViewMode.setOnClickListener { viewModel.changeLayoutManager() }
 
         binding.tvSort.visibility = View.INVISIBLE
-        state.categoryHeader?.sortTypeList?.let {sortTypeList->
+        state.categoryHeader?.sortTypeList?.let { sortTypeList ->
             binding.tvSort.setOnClickListener {
                 showBottomSortSettings(
                     state.sortType,
@@ -453,6 +458,7 @@ class SearchFragment : BaseFragment() {
                 binding.categoriesRecycler.visibility = View.VISIBLE
                 binding.imgCategories.visibility = View.VISIBLE
             }
+
             else -> {
                 binding.imgCategories.visibility = View.GONE
                 binding.categoriesRecycler.visibility = View.GONE

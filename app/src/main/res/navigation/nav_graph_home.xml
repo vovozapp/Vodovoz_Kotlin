@@ -675,20 +675,16 @@
             app:destination="@id/profileFragment" />
         <action
             android:id="@+id/action_to_contactsFragment"
-            app:destination="@id/contactsFragment"
-            app:popUpTo="@id/searchFragment" />
+            app:destination="@id/contactsFragment" />
         <action
             android:id="@+id/action_to_allPromotionsFragment"
-            app:destination="@id/allPromotionsFragment"
-            app:popUpTo="@id/searchFragment" />
+            app:destination="@id/allPromotionsFragment" />
         <action
             android:id="@+id/action_to_serviceDetailNewFragment"
-            app:destination="@id/serviceDetailNewFragment"
-            app:popUpTo="@id/searchFragment" />
+            app:destination="@id/serviceDetailNewFragment" />
         <action
             android:id="@+id/action_to_webViewFragment"
-            app:destination="@id/webViewFragment"
-            app:popUpTo="@id/searchFragment" />
+            app:destination="@id/webViewFragment" />
     </fragment>
     <fragment
         android:id="@+id/pastPurchasesFragment"
