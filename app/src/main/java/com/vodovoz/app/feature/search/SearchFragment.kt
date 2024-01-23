@@ -39,10 +39,8 @@ import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.SortTypeListUI
 import com.vodovoz.app.ui.model.SortTypeUI
-import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -100,18 +98,19 @@ class SearchFragment : BaseFragment() {
         )
     }
 
-    private var eventsJob: Job? = null
-
     private val args: SearchFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        observeUiState()
+        observeEvents()
+        observeChangeLayoutManager()
+        observeNoMatchesToast()
         viewModel.firstLoad()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        debugLog { "onViewCreated" }
         if (args.query.isNotEmpty()) {
             binding.incAppBar.incSearch.etSearch.setText(args.query)
             viewModel.fetchMatchesQueries(args.query)
@@ -121,21 +120,17 @@ class SearchFragment : BaseFragment() {
         bestForYouController.bind(binding.bestForYouRv)
         productsController.bind(binding.productRecycler)
 
-        observeUiState()
         observeResultLiveData()
-        observeChangeLayoutManager()
         initBackButton()
         initSearch()
-        observeNoMatchesToast()
         bindErrorRefresh {
             viewModel.refreshSorted()
         }
-        observeEvents()
+
     }
 
     private fun observeEvents() {
-        if (eventsJob != null) eventsJob?.cancel()
-        eventsJob = lifecycleScope.launch {
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.observeEvent()
                     .collect {
@@ -293,7 +288,6 @@ class SearchFragment : BaseFragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.observeUiState()
                     .collect { state ->
-
                         bindHeader(state.data)
 
                         if (state.loadingPage) {
@@ -551,5 +545,4 @@ class SearchFragment : BaseFragment() {
             override fun showAllBottomProducts(id: Long) {}
         }
     }
-
 }

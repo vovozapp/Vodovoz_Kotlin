@@ -139,8 +139,18 @@ class SplashFragment : BaseFragment() {
         val localFile = SplashFileConfig.getSplashFile(requireContext())
         val inputStream: InputStream = FileInputStream(localFile)
         if (localFile.exists()) {
-            binding.lottieSplashView.setAnimation(inputStream, null)
-            binding.lottieSplashView.playAnimation()
+            try {
+                binding.lottieSplashView.setFailureListener {
+                    debugLog { it.message.toString() }
+                    binding.logoLayout.visibility = View.VISIBLE
+                    binding.lottieSplashView.visibility = View.GONE
+                    binding.lottieSplashView.clearAnimation()
+                }
+                binding.lottieSplashView.setAnimation(inputStream, null)
+                binding.lottieSplashView.playAnimation()
+            } catch (e: Exception) {
+                debugLog { e.message.toString() }
+            }
         } else {
             debugLog { "setAnimationFromLocal but file not exist" }
         }

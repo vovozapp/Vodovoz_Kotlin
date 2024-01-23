@@ -18,16 +18,19 @@ object SplashFileConfig {
     }
 
     suspend fun downloadSplashFile(context: Context, link: String = DAFAULT_LINK) {
-
             withContext(Dispatchers.IO) {
                 URL(link).openStream()
             }.use { input ->
-                val file = getSplashFile(context)
-                if (!file.exists()) {
-                    file.createNewFile()
-                }
-                FileOutputStream(file).use { output ->
-                    input.copyTo(output)
+                try {
+                    val file = getSplashFile(context)
+                    if (!file.exists()) {
+                        file.createNewFile()
+                    }
+                    FileOutputStream(file).use { output ->
+                        input.copyTo(output)
+                    }
+                } catch (e: Exception) {
+                    debugLog { e.message.toString() }
                 }
             }
     }
