@@ -12,7 +12,11 @@ object MatchesQueriesResponseJsonParser {
         val responseJson = JSONObject(string())
         return when (responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
-                responseJson.getJSONArray("data").parseQueryList()
+                if(responseJson.has("data") && !responseJson.isNull("data")) {
+                    responseJson.getJSONArray("data").parseQueryList()
+                } else {
+                    listOf()
+                }
             )
             else -> ResponseEntity.Error("Неправильный запрос")
         }

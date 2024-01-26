@@ -29,12 +29,16 @@ import com.vodovoz.app.ui.model.SortTypeUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
@@ -140,7 +144,7 @@ class SearchFlowViewModel @Inject constructor(
                 .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
-                        val searchResponse: SearchQueryHeaderResponse = response.data as SearchQueryHeaderResponse
+                        val searchResponse: SearchQueryHeaderResponse = response.data
                         val deepLink = searchResponse.deepLink
                         if (deepLink.isNotEmpty()) {
                             uiStateListener.value = state.copy(
@@ -387,7 +391,9 @@ class SearchFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
-                                matchesQuery = response.data
+                                matchesQuery = response.data.ifEmpty {
+                                    state.data.matchesQuery
+                                }
                             ),
                             loadingPage = false,
                             error = null
@@ -450,6 +456,19 @@ class SearchFlowViewModel @Inject constructor(
     fun changeRating(productId: Long, rating: Float, oldRating: Float) {
         viewModelScope.launch {
             ratingProductManager.rate(productId, rating = rating, oldRating = oldRating)
+        }
+    }
+
+    @OptIn(FlowPreview::class)
+    fun changeQuery(query: String){
+        viewModelScope.launch {
+            flow {
+                emit(query)
+            }.debounce(500)
+                .filter { it.isNotEmpty() }
+                .collectLatest{
+                    fetchMatchesQueries(it)
+                }
         }
     }
 

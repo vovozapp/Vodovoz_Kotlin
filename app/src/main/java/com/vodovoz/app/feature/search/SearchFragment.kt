@@ -219,15 +219,20 @@ class SearchFragment : BaseFragment() {
 
 //        val mutableStateFlow = MutableStateFlow("")
 
+//        binding.incAppBar.incSearch.etSearch.textChanges().debounce { 500 }.onEach {
+//            viewModel.fetchMatchesQueries(it.toString())
+//        }.launchIn(lifecycleScope)
+
         binding.incAppBar.incSearch.etSearch.doAfterTextChanged { query ->
             when (query?.trim().toString().isNotEmpty()) {
                 true -> binding.incAppBar.incSearch.imgClear.visibility = View.VISIBLE
                 false -> binding.incAppBar.incSearch.imgClear.visibility = View.INVISIBLE
             }
+            viewModel.changeQuery(query.toString())
 //            mutableStateFlow.value = query.toString()
         }
 //        lifecycleScope.launch {
-//            mutableStateFlow.debounce(300).filter { it.isNotEmpty() }.collect {
+//            mutableStateFlow.debounce(500).filter { it.isNotEmpty() }.collect {
 //                viewModel.fetchMatchesQueries(it)
 //            }
 //        }
