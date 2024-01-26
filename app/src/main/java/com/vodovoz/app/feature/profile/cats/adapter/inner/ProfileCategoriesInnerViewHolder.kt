@@ -56,6 +56,8 @@ class ProfileCategoriesInnerViewHolder(
 
         if(item.id == "newprilvoda"){
             binding.insideCategoryIv.setImageResource(R.drawable.wt_water_logo)
+        } else if(item.id.isNullOrEmpty()){
+            binding.insideCategoryIv.visibility = View.INVISIBLE
         }
 
         if(item.amount != null) {

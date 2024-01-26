@@ -44,7 +44,6 @@ class DiscountCardFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initToolbar("Активация скидочной карты")
         initDiscountCardPropertiesRecycler()
         initButtons()
         observeUiState()
