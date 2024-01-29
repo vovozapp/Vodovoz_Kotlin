@@ -7,6 +7,7 @@ import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ItemProfileCategoryUiBinding
 import com.vodovoz.app.feature.profile.adapter.ProfileFlowClickListener
 import com.vodovoz.app.feature.profile.cats.ProfileCategoryUI
+import com.vodovoz.app.feature.profile.cats.ProfileInsideCategoryUI
 import com.vodovoz.app.feature.profile.cats.adapter.inner.ProfileCategoriesInnerAdapter
 
 class ProfileCategoriesViewHolder(
@@ -28,15 +29,27 @@ class ProfileCategoriesViewHolder(
     override fun bind(item: ProfileCategoryUI) {
         super.bind(item)
 
-        val list = item.insideCategories
-        if (list != null) {
+
+        if (item.insideCategories != null) {
+            val list = item.insideCategories.toMutableList()
             if (item.title.isNullOrEmpty().not()) {
                 binding.categoryTitleTv.text = item.title
                 binding.categoryTitleTv.isVisible = true
             } else {
                 binding.categoryTitleTv.isVisible = false
             }
-            innerAdapter.submitList(item.insideCategories)
+            if(item.title == "Личный счет") {
+                list.add(
+                    ProfileInsideCategoryUI(
+                        id = "certificate",
+                        name = "Активация сертификата",
+                        url = null,
+                        amount = null,
+                        chatUiList = null
+                    )
+                )
+            }
+            innerAdapter.submitList(list)
             binding.root.isVisible = true
         } else {
             binding.root.isVisible = false

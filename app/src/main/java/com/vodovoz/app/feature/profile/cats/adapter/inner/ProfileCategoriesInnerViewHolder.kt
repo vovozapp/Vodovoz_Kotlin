@@ -42,6 +42,7 @@ class ProfileCategoriesInnerViewHolder(
                 "oprile" -> { clickListener.onAboutAppClick() }
                 "newprilvoda" -> { clickListener.onNewWaterApp() }
                 "polychskidka" -> { clickListener.onFetchDiscount() }
+                "certificate" -> { clickListener.onActiveCertificate() }
             }
         }
     }

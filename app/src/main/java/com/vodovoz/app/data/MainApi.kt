@@ -644,6 +644,13 @@ interface MainApi {
         @Query("filtervalue") value: String? = null,
     ): ResponseBody
 
+    @GET("/newmobile/osnova/sertificat/activaciya.php")
+    suspend fun fetchCertificateBaseRequest(
+        @Query("action") action: String? = null,
+        @Query("userid") userId: Long? = null,
+        @Query("code") code: String? = null,
+    ): ResponseBody
+
     @GET("/newmobile/glavnaya/otzivtovari.php")
     suspend fun fetchRateBottomData(
         @Query("action") action: String? = null,

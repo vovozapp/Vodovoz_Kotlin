@@ -19,6 +19,8 @@ import com.vodovoz.app.data.parser.response.catalog.CatalogResponseJsonParser.pa
 import com.vodovoz.app.data.parser.response.category.AllFiltersByCategoryResponseJsonParser.parseAllFiltersByCategoryResponse
 import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
 import com.vodovoz.app.data.parser.response.category.ConcreteFilterResponseJsonParser.parseConcreteFilterResponse
+import com.vodovoz.app.data.parser.response.certificate.ActivateCertificateInfoJsonParser.parseActivateCertificateInfoResponse
+import com.vodovoz.app.data.parser.response.certificate.ActivateCertificateJsonParser.parseActivateCertificateResponse
 import com.vodovoz.app.data.parser.response.comment.AllCommentsByProductResponseJsonParser.parseAllCommentsByProductResponse
 import com.vodovoz.app.data.parser.response.comment.CommentsSliderResponseJsonParser.parseCommentsSliderResponse
 import com.vodovoz.app.data.parser.response.comment.SendCommentAboutProductResponseJsonParser.parseSendCommentAboutProductResponse
@@ -1213,6 +1215,19 @@ class MainRepository @Inject constructor(
         userId = userId,
         value = value
     ).parseActivateDiscountCardResponse()
+
+    suspend fun fetchActivateCertificateInfo() = api.fetchCertificateBaseRequest(
+        action = "glav"
+    ).parseActivateCertificateInfoResponse()
+
+    suspend fun activateCertificate(
+        userId: Long?,
+        code: String,
+    ) = api.fetchCertificateBaseRequest(
+        action = "detail",
+        userId = userId,
+        code = code
+    ).parseActivateCertificateResponse()
 
     suspend fun fetchRateBottomData(
         userId: Long?,
