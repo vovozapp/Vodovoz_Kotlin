@@ -278,7 +278,7 @@ class ProfileFlowViewModel @Inject constructor(
                 val result = awaitAll(*tasks).flatten()
                 debugLog { "profile first load task ${System.currentTimeMillis() - start} result size ${result.size}" }
                 val positionItemsSorted =
-                    (state.data.positionItems + result).sortedBy { it.position }
+                    (/*state.data.positionItems + */result).sortedBy { it.position }
                 uiStateListener.value = state.copy(
                     loadingPage = false,
                     data = state.data.copy(
@@ -485,8 +485,8 @@ class ProfileFlowViewModel @Inject constructor(
     }
 
     sealed class ProfileEvents : Event {
-        object Logout : ProfileEvents()
-        object GoToCart : ProfileEvents()
+        data object Logout : ProfileEvents()
+        data object GoToCart : ProfileEvents()
     }
 
     data class PositionItem(
