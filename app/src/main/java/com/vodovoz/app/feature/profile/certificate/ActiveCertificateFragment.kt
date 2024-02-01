@@ -57,13 +57,15 @@ class ActiveCertificateFragment : BaseFragment() {
                         val bundle = state.data.activateCertificateBundleUI
                         if (bundle != null) {
                             initToolbar(bundle.title)
-                            binding.info.text = bundle.details.fromHtml()
-                            binding.name.text = bundle.certificatePropertyUIList[0].title
-                            binding.value.hint = bundle.certificatePropertyUIList[0].textToField
-                            binding.submit.text = bundle.certificatePropertyUIList[0].buttonText
-                            binding.submit.backgroundTintList = ColorStateList.valueOf(
-                                Color.parseColor(bundle.certificatePropertyUIList[0].buttonColor)
-                            )
+                            with(binding) {
+                                info.text = bundle.details.fromHtml()
+                                name.text = bundle.certificatePropertyUIList[0].title
+                                value.hint = bundle.certificatePropertyUIList[0].textToField
+                                submit.text = bundle.certificatePropertyUIList[0].buttonText
+                                submit.backgroundTintList = ColorStateList.valueOf(
+                                    Color.parseColor(bundle.certificatePropertyUIList[0].buttonColor)
+                                )
+                            }
                         }
 
                         showError(state.error)
@@ -80,7 +82,9 @@ class ActiveCertificateFragment : BaseFragment() {
                     .collect {
                         when (it) {
                             is CertificateFlowViewModel.CertificateEvents.ActivateResult -> {
-                                binding.value.setText("")
+                                if (it.title != "Ошибка") {
+                                    binding.value.setText("")
+                                }
                                 AlertDialog.Builder(requireContext())
                                     .setTitle(it.title)
                                     .setMessage(it.message)
@@ -102,7 +106,7 @@ class ActiveCertificateFragment : BaseFragment() {
                     requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(binding.value.windowToken, 0)
                 binding.value.clearFocus()
-                viewModel.activateDiscountCard(binding.value.text.toString())
+                viewModel.activateCertificate(binding.value.text.toString())
             }
         }
     }

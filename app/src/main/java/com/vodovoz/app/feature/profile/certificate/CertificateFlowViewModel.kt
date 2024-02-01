@@ -75,7 +75,7 @@ class CertificateFlowViewModel @Inject constructor(
         }
     }
 
-    fun activateDiscountCard(code: String) {
+    fun activateCertificate(code: String) {
 
         val userId = accountManager.fetchAccountId() ?: return
 

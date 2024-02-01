@@ -11,17 +11,13 @@
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <ScrollView
-            android:id="@+id/scrollableContentContainer"
-            android:layout_width="match_parent"
-            android:paddingBottom="@dimen/space_8"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/buttonContainer"
-            app:layout_constraintTop_toTopOf="parent">
-
             <RelativeLayout
+                android:id="@+id/rlValue"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/space_8"
+                app:layout_constraintBottom_toTopOf="@+id/buttonContainer"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/info"
@@ -68,15 +64,13 @@
 
             </RelativeLayout>
 
-        </ScrollView>
-
         <RelativeLayout
             android:id="@+id/buttonContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:translationZ="5dp"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/rlValue">
 
             <TextView
                 android:id="@+id/submit"
