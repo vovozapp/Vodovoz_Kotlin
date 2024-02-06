@@ -231,11 +231,7 @@ class SearchFragment : BaseFragment() {
             viewModel.changeQuery(query.toString())
 //            mutableStateFlow.value = query.toString()
         }
-//        lifecycleScope.launch {
-//            mutableStateFlow.debounce(500).filter { it.isNotEmpty() }.collect {
-//                viewModel.fetchMatchesQueries(it)
-//            }
-//        }
+
 
         binding.incAppBar.incSearch.imgClear.setOnClickListener {
             binding.incAppBar.incSearch.etSearch.setText("")

@@ -36,15 +36,15 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class SearchFlowViewModel @Inject constructor(
     private val repository: MainRepository,
@@ -64,6 +64,18 @@ class SearchFlowViewModel @Inject constructor(
 
     private val noMatchesToastListener = MutableSharedFlow<Boolean>()
     fun observeNoMatchesToast() = noMatchesToastListener.asSharedFlow()
+
+    private val changeQueryState = MutableStateFlow("")
+
+    init {
+        viewModelScope.launch {
+            changeQueryState.debounce(500).distinctUntilChanged()
+                .collect {
+                    debugLog { "Search query: $it" }
+                    fetchMatchesQueries(it)
+                }
+        }
+    }
 
     fun firstLoad() {
         if (!state.isFirstLoad) {
@@ -153,28 +165,39 @@ class SearchFlowViewModel @Inject constructor(
                             )
                             when (deepLink) {
                                 "dostavka" -> {
-                                    eventListener.emit(SearchEvents.GoToWebView(
-                                        url = ApiConfig.ABOUT_DELIVERY_URL,
-                                        title = "О доставке"
-                                    ))
+                                    eventListener.emit(
+                                        SearchEvents.GoToWebView(
+                                            url = ApiConfig.ABOUT_DELIVERY_URL,
+                                            title = "О доставке"
+                                        )
+                                    )
                                 }
+
                                 "oplata" -> {
-                                    eventListener.emit(SearchEvents.GoToWebView(
-                                        url = ApiConfig.ABOUT_PAY_URL,
-                                        title = "Об оплате"
-                                    ))
+                                    eventListener.emit(
+                                        SearchEvents.GoToWebView(
+                                            url = ApiConfig.ABOUT_PAY_URL,
+                                            title = "Об оплате"
+                                        )
+                                    )
                                 }
+
                                 in listOf("remontkyler", "arendakyler", "obrabotkakyler") -> {
-                                    eventListener.emit(SearchEvents.GoToService(
-                                        id = searchResponse.id
-                                    ))
+                                    eventListener.emit(
+                                        SearchEvents.GoToService(
+                                            id = searchResponse.id
+                                        )
+                                    )
                                 }
+
                                 "akcii" -> {
                                     eventListener.emit(SearchEvents.GoToPromotions)
                                 }
+
                                 "kontakty" -> {
                                     eventListener.emit(SearchEvents.GoToContacts)
                                 }
+
                                 else -> {
                                     uiStateListener.value =
                                         state.copy(
@@ -272,7 +295,7 @@ class SearchFlowViewModel @Inject constructor(
                         val searchResponse: SearchQueryResponse = response.data
                         val deepLink = searchResponse.deepLink
                         if (deepLink.isNotEmpty()) {
-                            if(checkDeepLink) {
+                            if (checkDeepLink) {
                                 uiStateListener.value = state.copy(
                                     loadingPage = false,
                                     error = null
@@ -459,17 +482,8 @@ class SearchFlowViewModel @Inject constructor(
         }
     }
 
-    @OptIn(FlowPreview::class)
-    fun changeQuery(query: String){
-        viewModelScope.launch {
-            flow {
-                emit(query)
-            }.debounce(500)
-                .filter { it.isNotEmpty() }
-                .collectLatest{
-                    fetchMatchesQueries(it)
-                }
-        }
+    fun changeQuery(query: String) {
+        changeQueryState.value = query
     }
 
     fun onTabClick(id: Long) {
