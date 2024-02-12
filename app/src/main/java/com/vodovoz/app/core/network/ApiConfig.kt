@@ -1,7 +1,7 @@
 package com.vodovoz.app.core.network
 
 object ApiConfig {
-    private const val VODOVOZ_PROTOCOL = "http://"
+    private const val VODOVOZ_PROTOCOL = "https://"
     private const val VODOVOZ_IP = "m.vodovoz.ru/"
 
 //    var VODOVOZ_URL = "$VODOVOZ_PROTOCOL$VODOVOZ_IP"

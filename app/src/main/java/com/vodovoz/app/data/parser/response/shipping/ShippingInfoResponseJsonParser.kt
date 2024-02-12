@@ -51,21 +51,20 @@ object ShippingInfoResponseJsonParser {
 
                         true -> false
                     },
-                    innerPersonalScore = if (responseJson.has("lichschet")
-                        && !responseJson.getJSONObject("lichschet").isNull("VNYTRENNIY")
-                        && !responseJson.getJSONObject("lichschet").getJSONObject("VNYTRENNIY")
-                            .isNull("TEXT")
-                        && !responseJson.getJSONObject("lichschet").getJSONObject("VNYTRENNIY")
-                            .isNull("VALUE")
-                        && !responseJson.getJSONObject("lichschet").isNull("BONUS")
-                    ) {
+                    innerPersonalScore = if (responseJson.has("lichschet") && !responseJson.isNull("lichschet")) {
                         InnerPersonalScore(
-                            personalScore = PersonalScore(
-                                text = responseJson.getJSONObject("lichschet")
-                                    .getJSONObject("VNYTRENNIY").safeString("TEXT"),
-                                value = responseJson.getJSONObject("lichschet")
-                                    .getJSONObject("VNYTRENNIY").safeString("VALUE")
-                            ),
+                            personalScore = if (!responseJson.getJSONObject("lichschet")
+                                    .isNull("VNYTRENNIY")
+                            ) {
+                                PersonalScore(
+                                    text = responseJson.getJSONObject("lichschet")
+                                        .getJSONObject("VNYTRENNIY").safeString("TEXT"),
+                                    value = responseJson.getJSONObject("lichschet")
+                                        .getJSONObject("VNYTRENNIY").safeString("VALUE")
+                                )
+                            } else {
+                                PersonalScore()
+                            },
                             bonus = responseJson.getJSONObject("lichschet").safeString("BONUS")
                         )
                     } else {
