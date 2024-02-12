@@ -146,7 +146,10 @@ class OrderingFragment : BaseFragment() {
                         )
                     }
                     val innerPersonalScore = state.data.shippingInfoBundleUI?.innerPersonalScore
-                    if (innerPersonalScore != null) {
+                    if (innerPersonalScore != null
+                        && innerPersonalScore.personalScore.text.isNotEmpty()
+                        && innerPersonalScore.personalScore.value.isNotEmpty()
+                    ) {
                         binding.clPersonalScore.visibility = View.VISIBLE
                         binding.tvPersonalScore.text =
                             "${innerPersonalScore.personalScore.text} ${innerPersonalScore.personalScore.value}"
