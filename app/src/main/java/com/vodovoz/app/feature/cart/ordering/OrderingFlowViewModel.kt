@@ -6,7 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.common.content.*
+import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.common.content.Event
+import com.vodovoz.app.common.content.PagingContractViewModel
+import com.vodovoz.app.common.content.State
+import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.config.ShippingAlertConfig
 import com.vodovoz.app.data.model.common.ResponseEntity
@@ -14,16 +18,27 @@ import com.vodovoz.app.mapper.FreeShippingDaysInfoBundleMapper.mapToUI
 import com.vodovoz.app.mapper.OrderingCompletedInfoBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ShippingInfoBundleMapper.mapToUI
 import com.vodovoz.app.ui.extensions.ContextExtensions.getDeviceInfo
-import com.vodovoz.app.ui.model.*
+import com.vodovoz.app.ui.model.AddressUI
+import com.vodovoz.app.ui.model.FreeShippingDaysInfoBundleUI
+import com.vodovoz.app.ui.model.PayMethodUI
+import com.vodovoz.app.ui.model.ShippingAlertUI
+import com.vodovoz.app.ui.model.ShippingInfoBundleUI
+import com.vodovoz.app.ui.model.ShippingIntervalUI
 import com.vodovoz.app.ui.model.custom.OrderingCompletedInfoBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -103,6 +118,10 @@ class OrderingFlowViewModel @Inject constructor(
                 true -> "Y"
                 false -> "N"
             }
+            val useScore = when (state.data.usePersonalScore) {
+                true -> "Y"
+                false -> "N"
+            }
 
             val totalPrice = state.data.total ?: return@launch
             val depositPrice = state.data.deposit ?: return@launch
@@ -140,7 +159,8 @@ class OrderingFlowViewModel @Inject constructor(
                         parking = state.data.parkingPrice,
                         userId = userId,
                         appVersion = BuildConfig.VERSION_NAME,
-                        checkDeliveryValue = state.data.checkDeliveryValue
+                        checkDeliveryValue = state.data.checkDeliveryValue,
+                        useScore = useScore
                     )
                 )
             }
@@ -161,6 +181,7 @@ class OrderingFlowViewModel @Inject constructor(
                             accountManager.reportYandexMetrica("Заказ оформлен")
                             eventListener.emit(OrderingEvents.OrderSuccess(data))
                         }
+
                         is ResponseEntity.Error -> {
                             uiStateListener.value =
                                 state.copy(
@@ -168,6 +189,7 @@ class OrderingFlowViewModel @Inject constructor(
                                     error = ErrorState.Error(response.errorMessage)
                                 )
                         }
+
                         else -> {}
                     }
                 }
@@ -237,6 +259,14 @@ class OrderingFlowViewModel @Inject constructor(
         )
     }
 
+    fun setUsePersonalScore(bool: Boolean) {
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                usePersonalScore = bool
+            )
+        )
+    }
+
     fun setSelectedAddress(item: AddressUI) {
         uiStateListener.value = state.copy(
             data = state.data.copy(
@@ -299,7 +329,7 @@ class OrderingFlowViewModel @Inject constructor(
                     repository.fetchShippingInfo(
                         addressId = address.id,
                         userId = userId,
-                        date = if(selectedDate != null) dateFormatter.format(selectedDate) else null,
+                        date = if (selectedDate != null) dateFormatter.format(selectedDate) else null,
                         appVersion = BuildConfig.VERSION_NAME
                     )
                 )
@@ -317,7 +347,7 @@ class OrderingFlowViewModel @Inject constructor(
                         } else {
                             state.data.total
                         }
-                        if(diposit != null && newTotal != null) {
+                        if (diposit != null && newTotal != null) {
                             newTotal += diposit
                         }
                         uiStateListener.value = state.copy(
@@ -475,7 +505,7 @@ class OrderingFlowViewModel @Inject constructor(
         val selectedShippingIntervalUI: ShippingIntervalUI? = null,
         val selectedShippingAlertUI: ShippingAlertUI? = null,
         val needOperatorCall: Boolean = false,
-
+        val usePersonalScore: Boolean = false,
         val shippingPrice: Int? = null,
         val parkingPrice: Int? = null,
         val payMethodList: List<PayMethodUI>? = null,

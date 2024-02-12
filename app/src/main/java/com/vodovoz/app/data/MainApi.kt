@@ -628,6 +628,7 @@ interface MainApi {
         @Query("parkovka") parking: Int?, // числовое значение,
         @Query("versiyaan") appVersion: String?,
         @Query("nettovar") checkDeliveryValue: Int?,
+        @Query("schet") useScore: String = "N",
     ): ResponseBody
 
     @Multipart

@@ -12,6 +12,7 @@ class ShippingInfoBundleEntity(
     val shippingPrice: Int = 0,
     val todayShippingPrice: Int = 0,
     val todayShippingInfo: String = "",
+    val innerPersonalScore: InnerPersonalScore? = null,
     val shippingIntervalEntityList: List<ShippingIntervalEntity>,
     val payMethodEntityList: List<PayMethodEntity> = listOf(),
     val isNewUser: Boolean = false

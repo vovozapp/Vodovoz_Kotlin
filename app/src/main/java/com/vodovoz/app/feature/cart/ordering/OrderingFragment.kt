@@ -40,7 +40,8 @@ import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -144,6 +145,14 @@ class OrderingFragment : BaseFragment() {
                             )
                         )
                     }
+                    val innerPersonalScore = state.data.shippingInfoBundleUI?.innerPersonalScore
+                    if (innerPersonalScore != null) {
+                        binding.clPersonalScore.visibility = View.VISIBLE
+                        binding.tvPersonalScore.text =
+                            "${innerPersonalScore.personalScore.text} ${innerPersonalScore.personalScore.value}"
+                    } else {
+                        binding.clPersonalScore.visibility = View.GONE
+                    }
 
                     binding.llShippingPriceCOntainer.isVisible = state.data.shippingPrice != null
                     binding.llParkingPriceCOntainer.isVisible = state.data.parkingPrice != null
@@ -210,6 +219,7 @@ class OrderingFragment : BaseFragment() {
                     )
                 }
             }
+
             false -> binding.btnGoToPayment.visibility = View.INVISIBLE
         }
         initToolbar("Спасибо за заказ")
@@ -225,11 +235,13 @@ class OrderingFragment : BaseFragment() {
                             binding.nsvContent.scrollViewToTop()
                             requireActivity().snack(it.message)
                         }
+
                         is OrderingFlowViewModel.OrderingEvents.OrderSuccess -> {
                             if (it.item.orderId != 0L) {
                                 orderingCompleted(it.item)
                             }
                         }
+
                         is OrderingFlowViewModel.OrderingEvents.OnAddressBtnClick -> {
                             if (findNavController().currentDestination?.id == R.id.orderingFragment) {
                                 findNavController().navigate(
@@ -240,6 +252,7 @@ class OrderingFragment : BaseFragment() {
                                 )
                             }
                         }
+
                         is OrderingFlowViewModel.OrderingEvents.OnFreeShippingClick -> {
                             if (findNavController().currentDestination?.id == R.id.orderingFragment) {
                                 findNavController().navigate(
@@ -250,9 +263,11 @@ class OrderingFragment : BaseFragment() {
                                 )
                             }
                         }
+
                         is OrderingFlowViewModel.OrderingEvents.ShowDatePicker -> {
                             showDatePickerDialog()
                         }
+
                         is OrderingFlowViewModel.OrderingEvents.OnShippingAlertClick -> {
                             if (findNavController().currentDestination?.id == R.id.orderingFragment) {
                                 findNavController().navigate(
@@ -262,18 +277,22 @@ class OrderingFragment : BaseFragment() {
                                 )
                             }
                         }
+
                         is OrderingFlowViewModel.OrderingEvents.ShowFreeShippingDaysInfo -> {
                             showFreeShippingDaysInfoPopup(it.item)
                         }
+
                         is OrderingFlowViewModel.OrderingEvents.ShowPaymentMethod -> {
                             showPayMethodPopup(
                                 payMethodUIList = it.list,
                                 selectedPayMethodId = it.selectedPayMethodId ?: it.list.first().id
                             )
                         }
+
                         is OrderingFlowViewModel.OrderingEvents.ShowShippingIntervals -> {
                             showShippingIntervalSelectionPopup(it.list, it.selectedDate)
                         }
+
                         is OrderingFlowViewModel.OrderingEvents.TodayShippingMessage -> {
                             MaterialAlertDialogBuilder(requireContext())
                                 .setMessage(it.message)
@@ -282,6 +301,7 @@ class OrderingFragment : BaseFragment() {
                                 }
                                 .show()
                         }
+
                         is OrderingFlowViewModel.OrderingEvents.ChooseAddressError -> {
                             binding.nsvContent.scrollViewToTop()
                             binding.tvNameAddress.setTextColor(
@@ -291,6 +311,7 @@ class OrderingFragment : BaseFragment() {
                                 )
                             )
                         }
+
                         is OrderingFlowViewModel.OrderingEvents.ChoosePayMethodError -> {
                             binding.nsvContent.scrollViewToTop()
                             binding.tvNamePayMethod.setTextColor(
@@ -300,6 +321,7 @@ class OrderingFragment : BaseFragment() {
                                 )
                             )
                         }
+
                         is OrderingFlowViewModel.OrderingEvents.ChooseIntervalError -> {
                             binding.nsvContent.scrollViewToTop()
                             binding.tvNameDate.setTextColor(
@@ -309,6 +331,7 @@ class OrderingFragment : BaseFragment() {
                                 )
                             )
                         }
+
                         is OrderingFlowViewModel.OrderingEvents.ChooseDateError -> {
                             binding.nsvContent.scrollViewToTop()
                             binding.tvNameDate.setTextColor(
@@ -318,6 +341,7 @@ class OrderingFragment : BaseFragment() {
                                 )
                             )
                         }
+
                         is OrderingFlowViewModel.OrderingEvents.ChooseCheckDeliveryError -> {
                             binding.tvNameCheckDelivery.setTextColor(
                                 ContextCompat.getColor(
@@ -326,9 +350,11 @@ class OrderingFragment : BaseFragment() {
                                 )
                             )
                         }
+
                         is OrderingFlowViewModel.OrderingEvents.ClearFields -> {
                             clearFields()
                         }
+
                         is OrderingFlowViewModel.OrderingEvents.ShowCheckDeliveryBs -> {
                             if (!it.isNewUser) {
                                 if (findNavController().currentDestination?.id == R.id.orderingFragment) {
@@ -444,6 +470,10 @@ class OrderingFragment : BaseFragment() {
 
         binding.scOperatorCall.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setNeedOperatorCall(isChecked)
+        }
+
+        binding.scUsePersonalScore.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.setUsePersonalScore(isChecked)
         }
 
         binding.tvCheckDelivery.setOnClickListener {
@@ -735,6 +765,7 @@ class OrderingFragment : BaseFragment() {
             name.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
             false
         }
+
         true -> {
             name.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
             true
@@ -747,6 +778,7 @@ class OrderingFragment : BaseFragment() {
                 name.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
                 false
             }
+
             true -> {
                 name.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
                 true
@@ -759,6 +791,7 @@ class OrderingFragment : BaseFragment() {
                 name.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
                 false
             }
+
             true -> {
                 name.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
                 true

@@ -1139,6 +1139,7 @@ class MainRepository @Inject constructor(
         parking: Int?, // числовое значение
         appVersion: String?,
         checkDeliveryValue: Int?,
+        useScore: String = "N"
     ) = api.fetchRegOrderResponse(
         orderType = orderType,
         device = device,
@@ -1166,7 +1167,8 @@ class MainRepository @Inject constructor(
         overMoney = overMoney,
         parking = parking,
         appVersion = appVersion,
-        checkDeliveryValue = checkDeliveryValue
+        checkDeliveryValue = checkDeliveryValue,
+        useScore = useScore
     ).parseRegOrderResponse()
 
 //    fun fetchShippingAlertEntityList() = ShippingAlertConfig.shippingAlertEntityList
