@@ -7,6 +7,7 @@ import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat.getColor
 import androidx.navigation.NavDeepLinkBuilder
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -22,14 +23,22 @@ class WaterAppWorker(
     override fun doWork(): Result {
         val pendingIntent = NavDeepLinkBuilder(applicationContext)
             .setGraph(R.navigation.nav_graph)
-            .setDestination(R.id.splashFragment)
+            .setDestination(R.id.waterAppFragment)
             .createPendingIntent()
+
+        val iconColor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            applicationContext.getColor(R.color.bluePrimary)
+        } else {
+            getColor(applicationContext, R.color.bluePrimary)
+        }
 
         val notification =
             NotificationCompat.Builder(applicationContext, NotificationChannels.NOTIFICATION_CHANNEL_ID)
                 .setContentTitle("Пора пить воду")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setSmallIcon(R.drawable.png_logo)
+                .setColor(iconColor)
+                .setColorized(true)
+                .setSmallIcon(R.mipmap.notification_icon)
                 .setAutoCancel(false)
                 .setContentIntent(pendingIntent)
                 .build()
