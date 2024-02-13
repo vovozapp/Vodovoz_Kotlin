@@ -39,7 +39,7 @@ class WaterAppWorker(
                 .setColor(iconColor)
                 .setColorized(true)
                 .setSmallIcon(R.mipmap.notification_icon)
-                .setAutoCancel(false)
+                .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .build()
 
