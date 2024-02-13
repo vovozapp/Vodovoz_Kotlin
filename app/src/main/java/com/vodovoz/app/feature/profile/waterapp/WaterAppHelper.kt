@@ -250,13 +250,12 @@ class WaterAppHelper @Inject constructor(
             WorkManager.getInstance(applicationContext).cancelAllWorkByTag("water")
             val work = PeriodicWorkRequest.Builder(
                 WaterAppWorker::class.java,
-                15,
-//                data.time.toLong(),
+                data.time.toLong(),
                 TimeUnit.MINUTES
             )
                 .setConstraints(Constraints.NONE)
-//                .setInitialDelay(data.time.toLong(), TimeUnit.MINUTES)
-                .setInitialDelay(30L, TimeUnit.SECONDS)
+                .setInitialDelay(data.time.toLong(), TimeUnit.MINUTES)
+//                .setInitialDelay(30L, TimeUnit.SECONDS)
                 .addTag("water")
                 .build()
             WorkManager
