@@ -136,13 +136,13 @@ class WaterAppHelper @Inject constructor(
                     waterAppRateDataListener.value = data.copy(
                         lastSavedDate = currentDate
                     )
+                } else if (data.lastSavedDate != currentDate) {
+                    waterAppRateDataListener.value = data.copy(
+                        lastSavedDate = currentDate,
+                        currentLevel = 0
+                    )
                 } else {
-                    if (data.lastSavedDate != currentDate) {
-                        waterAppRateDataListener.value = data.copy(
-                            lastSavedDate = currentDate,
-                            currentLevel = 0
-                        )
-                    }
+                    waterAppRateDataListener.value = data
                 }
             } else {
                 waterAppRateDataListener.value = WaterAppRateData(lastSavedDate = currentDate)
