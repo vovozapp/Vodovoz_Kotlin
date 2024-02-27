@@ -11,19 +11,21 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.token.FirebaseTokenManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.config.AuthConfig
-import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RegFlowViewModel @Inject constructor(
     private val repository: MainRepository,
-    private val localDataSource: LocalDataSource,
     private val accountManager: AccountManager,
     private val firebaseTokenManager: FirebaseTokenManager,
     private val likeManager: LikeManager,
@@ -45,7 +47,6 @@ class RegFlowViewModel @Inject constructor(
                         is ResponseEntity.Success -> {
                             accountManager.updateUserId(response.data)
                             likeManager.updateLikesAfterLogin(response.data)
-                            localDataSource.updateUserId(response.data)
                             accountManager.updateLastLoginSetting(
                                 AccountManager.UserSettings(
                                     email,
@@ -58,6 +59,7 @@ class RegFlowViewModel @Inject constructor(
                             eventListener.emit(RegEvents.RegSuccess)
                             firebaseTokenManager.sendFirebaseToken()
                         }
+
                         is ResponseEntity.Error -> {
                             uiStateListener.value =
                                 state.copy(loadingPage = false)
@@ -67,6 +69,7 @@ class RegFlowViewModel @Inject constructor(
                                 eventListener.emit(RegEvents.RegError("Ошибка. Попробуйте снова."))
                             }
                         }
+
                         else -> {}
                     }
                 }

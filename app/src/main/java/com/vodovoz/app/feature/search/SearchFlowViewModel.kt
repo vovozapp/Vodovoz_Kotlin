@@ -48,8 +48,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchFlowViewModel @Inject constructor(
     private val repository: MainRepository,
-//    private val localDataSource: LocalDataSource,
-//    private val dataRepository: DataRepository,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,

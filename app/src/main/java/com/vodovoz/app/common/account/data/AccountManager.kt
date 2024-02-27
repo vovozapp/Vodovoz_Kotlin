@@ -1,6 +1,7 @@
 package com.vodovoz.app.common.account.data
 
-import android.content.SharedPreferences
+import com.vodovoz.app.common.datastore.DataStoreRepository
+import com.yandex.metrica.YandexMetrica
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
@@ -8,7 +9,8 @@ import javax.inject.Singleton
 
 @Singleton
 class AccountManager @Inject constructor(
-    private val sharedPrefs: SharedPreferences,
+//    private val sharedPrefs: SharedPreferences,
+    private val dataStoreRepository: DataStoreRepository,
 ) {
 
     private val accountIdListener = MutableStateFlow<Long?>(null)
@@ -20,68 +22,56 @@ class AccountManager @Inject constructor(
         return id
     }
 
-    private fun fetchUserId() = if (sharedPrefs.contains(USER_ID)) {
-        sharedPrefs.getLong(USER_ID, 0)
-    } else {
-        null
-    }
+    private fun fetchUserId() = dataStoreRepository.getLong(USER_ID)
 
     fun updateUserId(userId: Long) {
-        sharedPrefs.edit().putLong(USER_ID, userId).apply()
+        dataStoreRepository.putLong(USER_ID, userId)
         accountIdListener.value = userId
     }
 
     fun removeUserId() {
-        sharedPrefs.edit().remove(USER_ID).apply()
+        dataStoreRepository.remove(USER_ID)
         accountIdListener.value = null
     }
 
-    fun fetchUserToken() = if (sharedPrefs.contains(USER_TOKEN)) {
-        sharedPrefs.getString(USER_TOKEN, "")
-    } else {
-        ""
-    }
+    fun fetchUserToken() =
+        dataStoreRepository.getString(USER_TOKEN)
 
     fun updateUserToken(userToken: String) {
-        sharedPrefs.edit().putString(USER_TOKEN, userToken).apply()
+        dataStoreRepository.putString(USER_TOKEN, userToken)
     }
 
     fun removeUserToken() {
-        sharedPrefs.edit().remove(USER_TOKEN).apply()
+        dataStoreRepository.remove(USER_TOKEN)
     }
 
-//    fun removeUserSettings() {
-//        sharedPrefs.edit().remove(EMAIL).apply()
-//        sharedPrefs.edit().remove(PASSWORD).apply()
-//    }
-
     fun fetchUserSettings(): UserSettings {
-        val email = sharedPrefs.getString(EMAIL, "") ?: ""
-        val password = sharedPrefs.getString(PASSWORD, "") ?: ""
+        val email = dataStoreRepository.getString(EMAIL) ?: ""
+        val password = dataStoreRepository.getString(PASSWORD) ?: ""
         return UserSettings(email, password)
     }
 
     fun updateLastLoginSetting(settings: UserSettings) {
-        with(sharedPrefs.edit()) {
-            putString(EMAIL, settings.email).apply()
-            putString(PASSWORD, settings.password).apply()
+        with(dataStoreRepository) {
+            putString(EMAIL, settings.email)
+            putString(PASSWORD, settings.password)
         }
     }
 
     fun saveUseBio(use: Boolean) {
-        sharedPrefs.edit().putBoolean(USE_BIO, use).apply()
+        dataStoreRepository.putBoolean(USE_BIO, use)
     }
 
     fun fetchUseBio(): Boolean {
-        return sharedPrefs.getBoolean(USE_BIO, false)
+        return dataStoreRepository.getBoolean(USE_BIO) ?: false
     }
 
     fun isAlreadyLogin() = fetchUserId() != null
 
     fun reportYandexMetrica(text: String, eventParam: String? = null) {
         val eventParameters = "{\"UserID\":\"${accountIdListener.value ?: "0"}\"" +
-                if(eventParam != null) ",$eventParam}" else "}"
-        //YandexMetrica.reportEvent(text, eventParameters) //todo релиз
+                if (eventParam != null) ",$eventParam}" else "}"
+        YandexMetrica.reportEvent(text, eventParameters)
     }
 
     data class UserSettings(

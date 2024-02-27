@@ -1,40 +1,41 @@
 package com.vodovoz.app.common.account.data
 
-import android.content.SharedPreferences
+import com.vodovoz.app.common.datastore.DataStoreRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class LoginManager @Inject constructor(
-    private val sharedPrefs: SharedPreferences,
+    private val dataStoreRepository: DataStoreRepository,
 ) {
 
     fun updateLastAuthPhone(phone: String) {
-        sharedPrefs.edit().putString(PHONE, phone).apply()
+        dataStoreRepository.putString(PHONE, phone)
     }
 
-    fun fetchLastAuthPhone() = when (sharedPrefs.contains(PHONE)) {
-        true -> sharedPrefs.getString(PHONE, "") ?: ""
+    fun fetchLastAuthPhone() = when (dataStoreRepository.contains(PHONE)) {
+        true -> dataStoreRepository.getString(PHONE) ?: ""
         false -> ""
     }
 
     fun updateLastRequestCodeDate(time: Long) {
-        sharedPrefs.edit().putLong(LAST_REQUEST_CODE_DATE, time).apply()
+        dataStoreRepository.putLong(LAST_REQUEST_CODE_DATE, time)
     }
 
-    fun fetchLastRequestCodeDate() = when (sharedPrefs.contains(LAST_REQUEST_CODE_DATE)) {
-        true -> sharedPrefs.getLong(LAST_REQUEST_CODE_DATE, 0)
+    fun fetchLastRequestCodeDate() = when (dataStoreRepository.contains(LAST_REQUEST_CODE_DATE)) {
+        true -> dataStoreRepository.getLong(LAST_REQUEST_CODE_DATE) ?: 0L
         false -> 0L
     }
 
     fun updateLastRequestCodeTimeOut(time: Int) {
-        sharedPrefs.edit().putInt(LAST_REQUEST_CODE_TIME_OUT, time).apply()
+        dataStoreRepository.putInt(LAST_REQUEST_CODE_TIME_OUT, time)
     }
 
-    fun fetchLastRequestCodeTimeOut() = when (sharedPrefs.contains(LAST_REQUEST_CODE_TIME_OUT)) {
-        true -> sharedPrefs.getInt(LAST_REQUEST_CODE_TIME_OUT, 0)
-        false -> 0
-    }
+    fun fetchLastRequestCodeTimeOut() =
+        when (dataStoreRepository.contains(LAST_REQUEST_CODE_TIME_OUT)) {
+            true -> dataStoreRepository.getInt(LAST_REQUEST_CODE_TIME_OUT) ?: 0
+            false -> 0
+        }
 
     companion object {
         private const val PHONE = "PHONE"

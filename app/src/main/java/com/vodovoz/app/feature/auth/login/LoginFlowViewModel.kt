@@ -11,22 +11,24 @@ import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.token.FirebaseTokenManager
 import com.vodovoz.app.data.MainRepository
-import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.ui.model.enum.AuthType
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginFlowViewModel @Inject constructor(
     private val repository: MainRepository,
-    private val localDataSource: LocalDataSource,
     private val accountManager: AccountManager,
     private val firebaseTokenManager: FirebaseTokenManager,
     private val loginManager: LoginManager,
@@ -77,6 +79,7 @@ class LoginFlowViewModel @Inject constructor(
                 AuthType.EMAIL -> {
                     eventListener.emit(LoginEvents.AuthByEmail)
                 }
+
                 AuthType.PHONE -> {
                     eventListener.emit(LoginEvents.AuthByPhone)
                 }
@@ -110,7 +113,6 @@ class LoginFlowViewModel @Inject constructor(
                             accountManager.updateUserToken(response.data.token)
 
                             likeManager.updateLikesAfterLogin(response.data.id)
-                            localDataSource.updateUserId(response.data.id)
 
                             uiStateListener.value =
                                 state.copy(error = null, loadingPage = false)
@@ -118,6 +120,7 @@ class LoginFlowViewModel @Inject constructor(
                             eventListener.emit(LoginEvents.AuthSuccess)
                             firebaseTokenManager.sendFirebaseToken()
                         }
+
                         is ResponseEntity.Error -> {
                             uiStateListener.value =
                                 state.copy(loadingPage = false)
@@ -149,12 +152,12 @@ class LoginFlowViewModel @Inject constructor(
                                 state.copy(loadingPage = false)
                             eventListener.emit(LoginEvents.AuthError("Неверный код"))
                         }
+
                         is ResponseEntity.Success -> {
                             accountManager.updateUserId(response.data.id)
                             accountManager.updateUserToken(response.data.token)
                             likeManager.updateLikesAfterLogin(response.data.id)
                             loginManager.updateLastAuthPhone(phone)
-                            localDataSource.updateUserId(response.data.id)
 
                             uiStateListener.value =
                                 state.copy(error = null, loadingPage = false)
@@ -162,6 +165,7 @@ class LoginFlowViewModel @Inject constructor(
                             eventListener.emit(LoginEvents.AuthSuccess)
                             firebaseTokenManager.sendFirebaseToken()
                         }
+
                         is ResponseEntity.Error -> {
                             uiStateListener.value =
                                 state.copy(loadingPage = false)
@@ -192,10 +196,8 @@ class LoginFlowViewModel @Inject constructor(
                                 state.copy(loadingPage = false)
                             eventListener.emit(LoginEvents.AuthError("Неверный код"))
                         }
+
                         is ResponseEntity.Success -> {
-                            localDataSource.updateLastRequestCodeDate(Date().time)
-                            localDataSource.updateLastAuthPhone(phone)
-                            localDataSource.updateLastRequestCodeTimeOut(response.data)
 
                             loginManager.updateLastRequestCodeDate(Date().time)
                             loginManager.updateLastAuthPhone(phone)
@@ -207,6 +209,7 @@ class LoginFlowViewModel @Inject constructor(
 
                             startCountDownTimer(response.data)
                         }
+
                         is ResponseEntity.Error -> {
                             uiStateListener.value =
                                 state.copy(loadingPage = false)
@@ -306,9 +309,6 @@ class LoginFlowViewModel @Inject constructor(
     }
 
     private fun clearData() {
-        localDataSource.updateLastRequestCodeDate(0)
-        localDataSource.updateLastRequestCodeTimeOut(0)
-
         loginManager.updateLastRequestCodeDate(0)
         loginManager.updateLastRequestCodeTimeOut(0)
     }

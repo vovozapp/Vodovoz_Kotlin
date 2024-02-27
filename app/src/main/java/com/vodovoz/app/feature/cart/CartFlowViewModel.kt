@@ -81,22 +81,6 @@ class CartFlowViewModel @Inject constructor(
                 .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     uiStateListener.value = if (response is ResponseEntity.Success) {
-//                        response.data.let { cartBundleEntity ->
-//                            localDataSource.clearCart()
-//                            cartBundleEntity.availableProductEntityList.forEach { productUI ->
-//                                localDataSource.changeProductQuantityInCart(
-//                                    productId = productUI.id,
-//                                    quantity = productUI.cartQuantity
-//                                )
-//                            }
-//                            cartBundleEntity.availableProductEntityList.syncFavoriteProducts(
-//                                localDataSource
-//                            )
-//                            cartBundleEntity.notAvailableProductEntityList.syncFavoriteProducts(
-//                                localDataSource
-//                            )
-//                            localDataSource.fetchCart()
-//                        }
                         val mappedData = response.data.mapUoUI()
                         val availableProducts = mappedData.availableProductUIList.reversed()
                         val calculatedPrices = calculatePrice(availableProducts)

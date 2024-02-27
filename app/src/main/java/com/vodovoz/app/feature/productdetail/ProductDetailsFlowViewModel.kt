@@ -38,7 +38,16 @@ import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -88,17 +97,6 @@ class ProductDetailsFlowViewModel @Inject constructor(
                     uiStateListener.value = if (response is ResponseEntity.Success) {
 
                         fetchMaybeLikeProducts()
-
-//                        response.data.let { entity ->
-//                            entity.productDetailEntity.syncCartQuantity(localDataSource)
-//                            entity.productDetailEntity.syncFavoriteStatus(localDataSource)
-//                            entity.buyWithProductEntityList.syncCartQuantity(localDataSource)
-//                            entity.buyWithProductEntityList.syncFavoriteProducts(localDataSource)
-//                            entity.maybeLikeProductEntityList.syncCartQuantity(localDataSource)
-//                            entity.maybeLikeProductEntityList.syncFavoriteProducts(localDataSource)
-//                            entity.recommendProductEntityList.syncCartQuantity(localDataSource)
-//                            entity.recommendProductEntityList.syncFavoriteProducts(localDataSource)
-//                        }
 
                         val mappedData = response.data.mapToUI()
 
@@ -341,6 +339,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
             cartManager.add(id = productId, oldCount = oldQuan, newCount = quantity)
         }
     }
+
     fun changeCart(productId: String, giftId: String) {
         viewModelScope.launch {
             val (id, count) = productId.trim().split("-")

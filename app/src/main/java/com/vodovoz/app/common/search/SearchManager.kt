@@ -1,22 +1,21 @@
 package com.vodovoz.app.common.search
 
-import android.content.SharedPreferences
+import com.vodovoz.app.common.datastore.DataStoreRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class SearchManager @Inject constructor(
-    private val sharedPrefs: SharedPreferences,
+    private val dataStoreRepository: DataStoreRepository,
 ) {
 
     companion object {
-        private const val SEARCH_SETTINGS = "search_settings"
         private const val SEARCH_HISTORY = "SEARCH_HISTORY"
     }
 
 
     fun clearSearchHistory() {
-        sharedPrefs.edit().remove(SEARCH_HISTORY).apply()
+        dataStoreRepository.remove(SEARCH_HISTORY)
     }
 
     fun addQueryToHistory(query: String) {
@@ -25,14 +24,13 @@ class SearchManager @Inject constructor(
             val cont = queryList.find { it == query }
             if (cont == null) {
                 queryList.add(query)
-                sharedPrefs.edit().putString(SEARCH_HISTORY, buildSearchHistoryStr(queryList))
-                    .apply()
+                dataStoreRepository.putString(SEARCH_HISTORY, buildSearchHistoryStr(queryList))
             }
         }
     }
 
     fun fetchSearchHistory() =
-        parseSearchHistoryStr(sharedPrefs.getString(SEARCH_HISTORY, "") ?: "")
+        parseSearchHistoryStr(dataStoreRepository.getString(SEARCH_HISTORY) ?: "")
 
     private fun parseSearchHistoryStr(searchHistoryStr: String): List<String> {
         val queryList = searchHistoryStr.split(",").toMutableList()

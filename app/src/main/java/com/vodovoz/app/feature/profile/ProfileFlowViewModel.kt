@@ -4,20 +4,29 @@ import android.app.Application
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.common.content.*
+import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.common.content.Event
+import com.vodovoz.app.common.content.PagingContractViewModel
+import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.common.cookie.CookieManager
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.MainRepository
-import com.vodovoz.app.data.local.LocalDataSource
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel.ProfileState.Companion.fetchStaticItems
 import com.vodovoz.app.feature.profile.cats.mapToUi
-import com.vodovoz.app.feature.profile.viewholders.models.*
+import com.vodovoz.app.feature.profile.viewholders.models.ProfileBestForYou
+import com.vodovoz.app.feature.profile.viewholders.models.ProfileBlock
+import com.vodovoz.app.feature.profile.viewholders.models.ProfileHeader
+import com.vodovoz.app.feature.profile.viewholders.models.ProfileLogout
+import com.vodovoz.app.feature.profile.viewholders.models.ProfileMain
+import com.vodovoz.app.feature.profile.viewholders.models.ProfileOrders
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
@@ -25,14 +34,23 @@ import com.vodovoz.app.mapper.UserDataMapper.mapToUI
 import com.vodovoz.app.ui.extensions.ContextExtensions.isTablet
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileFlowViewModel @Inject constructor(
     private val repository: MainRepository,
-    private val localDataSource: LocalDataSource,
+    private val cookieManager: CookieManager,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
@@ -383,15 +401,13 @@ class ProfileFlowViewModel @Inject constructor(
             val userId = accountManager.fetchAccountId() ?: return@launch
             flow { emit(repository.logout(userId)) }
                 .onEach {
-                    localDataSource.removeUserId()
-                    localDataSource.removeCookieSessionId()
+                    cookieManager.removeCookieSessionId()
                 }.collect()
             accountManager.removeUserId()
             accountManager.removeUserToken()
             tabManager.clearBottomNavProfileState()
             cartManager.clearCart()
             eventListener.emit(ProfileEvents.Logout)
-            localDataSource.removeCookieSessionId()
             waterAppHelper.clearData()
         }
     }

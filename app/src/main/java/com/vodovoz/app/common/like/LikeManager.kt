@@ -1,8 +1,8 @@
 package com.vodovoz.app.common.like
 
-import android.content.SharedPreferences
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.common.account.data.AccountManager
+import com.vodovoz.app.common.datastore.DataStoreRepository
 import com.vodovoz.app.ui.model.ProductUI
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class LikeManager @Inject constructor(
     private val repository: LikeRepository,
-    private val sharedPrefs: SharedPreferences,
+    private val dataStoreRepository: DataStoreRepository,
     private val accountManager: AccountManager,
 ) {
 
@@ -66,7 +66,7 @@ class LikeManager @Inject constructor(
     }
 
     private suspend fun saveLikeLocal(productId: Long, isFavorite: Boolean) {
-        val localLikesListString = sharedPrefs.getString(FAV_IDS, "")
+        val localLikesListString = dataStoreRepository.getString(FAV_IDS)
         val localLikesList = if (localLikesListString.isNullOrEmpty()) {
             listOf(productId)
         } else {
@@ -76,13 +76,13 @@ class LikeManager @Inject constructor(
                 parseFavoriteStr(localLikesListString) + listOf(productId)
             }
         }
-        sharedPrefs.edit().putString(FAV_IDS, buildFavoriteStr(localLikesList)).apply()
+        dataStoreRepository.putString(FAV_IDS, buildFavoriteStr(localLikesList))
         delay(1000)
         updateLikes(productId, !isFavorite)
     }
 
     fun fetchLikeLocalStr(): String? {
-        return sharedPrefs.getString(FAV_IDS, "")?.dropLast(1)
+        return dataStoreRepository.getString(FAV_IDS)?.dropLast(1)
     }
 
     private fun buildFavoriteStr(favoriteList: List<Long>): String {
@@ -114,7 +114,7 @@ class LikeManager @Inject constructor(
     }
 
     suspend fun updateStateFromLikesLocal() {
-        val localLikesListString = sharedPrefs.getString(FAV_IDS, "")
+        val localLikesListString = dataStoreRepository.getString(FAV_IDS)
         val localLikesList = if (localLikesListString.isNullOrEmpty()) {
             listOf()
         } else {
@@ -127,11 +127,11 @@ class LikeManager @Inject constructor(
 
     suspend fun updateLikesAfterLogin(userId: Long) {
 
-        val localLikesListString = sharedPrefs.getString(FAV_IDS, "")?.dropLast(1) ?: ""
+        val localLikesListString = dataStoreRepository.getString(FAV_IDS)?.dropLast(1) ?: ""
 
         runCatching {
             repository.like(productIdListStr = localLikesListString, userId = userId)
-            sharedPrefs.edit().remove(FAV_IDS).apply()
+            dataStoreRepository.remove(FAV_IDS)
         }
     }
 

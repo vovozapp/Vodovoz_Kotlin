@@ -1,13 +1,13 @@
 package com.vodovoz.app.core.network.interceptor
 
-import com.vodovoz.app.data.local.LocalDataSource
+import com.vodovoz.app.common.cookie.CookieManager
 import com.vodovoz.app.util.extensions.debugLog
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
 
 class VodovozInterceptor @Inject constructor(
-    private val localDataSource: LocalDataSource,
+    private val cookieManager: CookieManager,
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -16,7 +16,7 @@ class VodovozInterceptor @Inject constructor(
         debugLog { "LogSettings.NETWORK_LOG: ${chain.request()}" }
 
         val builder = chain.request().newBuilder()
-        localDataSource.fetchCookieSessionId()?.let { cookieSessionId ->
+        cookieManager.fetchCookieSessionId()?.let { cookieSessionId ->
             debugLog { "Cookie added: $cookieSessionId" }
             builder.addHeader("Cookie", cookieSessionId)
         }
@@ -27,13 +27,13 @@ class VodovozInterceptor @Inject constructor(
             chain.proceed(chain.request())
         }
 
-        val cookieAvail = localDataSource.isAvailableCookieSessionId()
-        val cookieIsOld = localDataSource.isOldCookie()
+        val cookieAvail = cookieManager.isAvailableCookieSessionId()
+        val cookieIsOld = cookieManager.isOldCookie()
         debugLog { "cookieAvail: $cookieAvail, cookieIsOld: $cookieIsOld" }
         if (!cookieAvail || cookieIsOld) {
             val setCookie = originalResponse.headers.values("Set-Cookie")
             if (setCookie.isNotEmpty()) {
-                localDataSource.updateCookieSessionId(
+                cookieManager.updateCookieSessionId(
                     originalResponse.headers.values("Set-Cookie")
                         .firstOrNull { it.contains("PHPSESSID") }
                 )
