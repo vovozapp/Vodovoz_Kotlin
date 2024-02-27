@@ -427,6 +427,9 @@
         <action
             android:id="@+id/action_to_preOrderBS"
             app:destination="@id/preOrderBS" />
+        <action
+            android:id="@+id/action_to_activeCertificateFragment"
+            app:destination="@id/activeCertificateFragment" />
     </fragment>
     <dialog
         android:id="@+id/popupNewsBottomFragment"
@@ -1016,6 +1019,10 @@
         android:id="@+id/biometricSettingsFragment"
         android:name="com.vodovoz.app.feature.profile.biometric.BiometricSettingsFragment"
         android:label="BiometricSettingsFragment" />
+    <fragment
+        android:id="@+id/activeCertificateFragment"
+        android:name="com.vodovoz.app.feature.profile.certificate.ActiveCertificateFragment"
+        android:label="ActiveCertificateFragment" />
 
 
 </navigation>
