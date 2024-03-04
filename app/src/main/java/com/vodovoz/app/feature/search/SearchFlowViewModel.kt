@@ -22,6 +22,7 @@ import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.DefaultSearchDataBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
+import com.vodovoz.app.mapper.QuickSearchDataBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.ProductUI
@@ -70,6 +71,9 @@ class SearchFlowViewModel @Inject constructor(
             changeQueryState.debounce(500).distinctUntilChanged()
                 .collect {
                     debugLog { "Search query: $it" }
+                    if(it.isEmpty()){
+                        fetchDefaultSearchData()
+                    }
                     fetchMatchesQueries(it)
                 }
         }
@@ -399,7 +403,16 @@ class SearchFlowViewModel @Inject constructor(
     }
 
     fun fetchMatchesQueries(query: String) {
-        if (query.isEmpty()) return
+        if (query.isEmpty()) {
+            uiStateListener.value = state.copy(
+                data = state.data.copy(
+                    matchesQuery = listOf()
+                ),
+                loadingPage = false,
+                error = null
+            )
+            return
+        }
         viewModelScope.launch {
             flow { emit(repository.fetchMatchesQueries(query)) }
                 .catch {
@@ -410,11 +423,11 @@ class SearchFlowViewModel @Inject constructor(
                 .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
-                                matchesQuery = response.data.ifEmpty {
-                                    state.data.matchesQuery
-                                }
+                                matchesQuery = data.quickQueryList,
+                                popularCategoryDetail = data.quickProductsCategoryDetailUI
                             ),
                             loadingPage = false,
                             error = null

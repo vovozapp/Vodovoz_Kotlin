@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.home.viewholders.homeproducts
 
 import android.view.View
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
@@ -10,6 +11,7 @@ import com.vodovoz.app.databinding.FragmentSliderProductBinding
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.HomeCategoriesInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.inneradapterproducts.HomeProductsInnerAdapter
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
+import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.ui.decoration.ProductSliderMarginDecoration
 
 class HomeProductsSliderViewHolder(
@@ -17,7 +19,8 @@ class HomeProductsSliderViewHolder(
     private val productsShowAllListener: ProductsShowAllListener,
     productsClickListener: ProductsClickListener,
     cartManager: CartManager,
-    likeManager: LikeManager
+    likeManager: LikeManager,
+    linear: Boolean = true
 ) : ItemViewHolder<HomeProducts>(view) {
 
     private val binding: FragmentSliderProductBinding = FragmentSliderProductBinding.bind(view)
@@ -26,9 +29,21 @@ class HomeProductsSliderViewHolder(
 
     private var isAddItemDecoration = false
 
+    private val space: Int by lazy { itemView.context.resources.getDimension(R.dimen.space_16).toInt() }
+
+    private val gridMarginDecoration: GridMarginDecoration by lazy {
+        GridMarginDecoration(space)
+    }
+
     init {
-        binding.rvCategories.layoutManager =
+        binding.rvCategories.layoutManager = if(linear) {
             LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+        } else {
+            GridLayoutManager(itemView.context, 2)
+        }
+        if(!linear){
+            binding.rvCategories.addItemDecoration(gridMarginDecoration)
+        }
 
         binding.rvCategories.adapter = homeProductsAdapter
         binding.rvCategories.setRecycledViewPool(likeManager.fetchViewPool())

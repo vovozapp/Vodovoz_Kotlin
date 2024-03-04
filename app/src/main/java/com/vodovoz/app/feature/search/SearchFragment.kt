@@ -391,7 +391,12 @@ class SearchFragment : BaseFragment() {
 
         if (state.matchesQuery.isEmpty()) {
             binding.matchesQueriesContainer.visibility = View.GONE
+            binding.historyQueryContainer.visibility = View.VISIBLE
+            binding.popularQueryContainer.visibility = View.VISIBLE
+
         } else {
+            binding.historyQueryContainer.visibility = View.GONE
+            binding.popularQueryContainer.visibility = View.GONE
             binding.matchesQueriesContainer.visibility = View.VISIBLE
             binding.emptyResultContainer.isVisible = false
             binding.matchesQueriesChipGroup.removeAllViews()
@@ -424,6 +429,7 @@ class SearchFragment : BaseFragment() {
             val imm =
                 requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
             imm!!.hideSoftInputFromWindow(view.windowToken, 0)
+            view.clearFocus()
         }
     }
 

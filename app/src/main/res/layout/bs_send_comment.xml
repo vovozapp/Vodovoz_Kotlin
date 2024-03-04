@@ -59,7 +59,7 @@
             android:id="@+id/etComment"
             style="@style/EditTextViewNormalGray"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="200dp"
             android:layout_margin="@dimen/space_16"
             android:layout_weight="1"
             android:background="@drawable/bkg_stroke_field"
@@ -109,7 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="550dp" />
+            app:layout_constraintGuide_begin="350dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
