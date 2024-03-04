@@ -26,7 +26,7 @@ data class ProfileCategoriesModel(
                 dannieLambda.RAZDEL,
                 dannieLambda.PODRAZDEL?.map {
                     if (it.ZNACHENI != null && it.ID == "moyzakaz") {
-                        amount = it.ZNACHENI
+                        amount = it.ZNACHENI.toInt()
                     }
                     ProfileInsideCategoryUI(
                         it.ID,
@@ -89,7 +89,7 @@ data class PODRAZDEL(
     val ID: String?,
     val NAME: String?,
     val URL: String?,
-    val ZNACHENI: Int?,
+    val ZNACHENI: String?,
     val DANNYECHAT: List<DANNYECHAT>?,
 ) : Parcelable
 

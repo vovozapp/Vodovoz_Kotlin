@@ -24,7 +24,7 @@ data class ProfileInsideCategoryUI(
     val id: String?,
     val name: String?,
     val url: String?,
-    val amount: Int?,
+    val amount: String?,
     val chatUiList: List<DANNYECHAT>?
 ) : Item {
 
