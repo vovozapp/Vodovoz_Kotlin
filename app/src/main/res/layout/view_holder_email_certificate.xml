@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/space_16"
+        android:textColor="@color/blackTextDark"
+        android:fontFamily="@font/rotonda_normal"
+        android:textSize="16sp"
+        android:background="@color/light_gray"
+        tools:text="Вопрос какой-то"/>
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/space_16"
+        android:inputType="textEmailAddress"
+        android:background="@color/white"
+        android:textColor="@color/blackTextDark"
+        android:fontFamily="@font/rotonda_normal"
+        android:textSize="16sp"
+        android:hint="@string/example_mail_com" />
+
+    <TextView
+        android:id="@+id/txtViewText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:textAllCaps="false"
+        android:paddingBottom="16dp"
+        android:textColor="@color/blackTextPrimary"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        app:fontFamily="@font/rotondac"
+        android:paddingTop="4dp"
+        android:background="@color/light_gray"
+        tools:text="Доставка возможна только одному получателю. Если хотите поздравить несколько человек‚ оформите отдельные заказы." />
+
+</LinearLayout>

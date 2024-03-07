@@ -652,6 +652,11 @@ interface MainApi {
         @Query("code") code: String? = null,
     ): ResponseBody
 
+    @GET("ewmobile/osnova/sertificat/index.php")
+    suspend fun fetchBuyCertificateData(
+        @Query("action") action: String = "glav",
+    ): ResponseBody
+
     @GET("/newmobile/glavnaya/otzivtovari.php")
     suspend fun fetchRateBottomData(
         @Query("action") action: String? = null,
