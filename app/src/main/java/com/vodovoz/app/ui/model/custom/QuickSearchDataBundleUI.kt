@@ -4,5 +4,5 @@ import com.vodovoz.app.ui.model.CategoryDetailUI
 
 class QuickSearchDataBundleUI(
     val quickProductsCategoryDetailUI: CategoryDetailUI?,
-    val quickQueryList: List<String>
+    val quickQueryBundleUI: QuickQueryBundleUI?
 )

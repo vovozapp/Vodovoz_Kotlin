@@ -39,6 +39,7 @@ import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.SortTypeListUI
 import com.vodovoz.app.ui.model.SortTypeUI
+import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
@@ -346,64 +347,115 @@ class SearchFragment : BaseFragment() {
             showContainer(true)
         }
 
+        val matches = state.matchesQuery
+
         if (state.popularCategoryDetail != null) {
-            val homeProducts = HomeProducts(
-                1,
-                listOf(state.popularCategoryDetail),
-                ProductsSliderConfig(
-                    containShowAllButton = false,
-                    largeTitle = true
-                ),
-                HomeProducts.DISCOUNT,
-                prodList = state.popularCategoryDetail.productUIList
-            )
-            val homeTitle = HomeTitle(
-                id = 1,
-                type = HomeTitle.VIEWED_TITLE,
-                name = "Популярные товары",
-                showAll = false,
-                showAllName = "СМ.ВСЕ",
-                categoryProductsName = state.popularCategoryDetail.name
-            )
+            binding.bestForYouRv.visibility = View.VISIBLE
+            val homeProducts = if (state.mayBeSearchDetail != null && state.mayBeSearchDetail.productUIList.isNotEmpty()) {
+                HomeProducts(
+                    1,
+                    listOf(state.mayBeSearchDetail),
+                    ProductsSliderConfig(
+                        containShowAllButton = false,
+                        largeTitle = true
+                    ),
+                    HomeProducts.DISCOUNT,
+                    prodList = state.mayBeSearchDetail.productUIList
+                )
+            } else {
+                HomeProducts(
+                    1,
+                    listOf(state.popularCategoryDetail),
+                    ProductsSliderConfig(
+                        containShowAllButton = false,
+                        largeTitle = true
+                    ),
+                    HomeProducts.DISCOUNT,
+                    prodList = state.popularCategoryDetail.productUIList
+                )
+            }
+            val homeTitle = if (state.mayBeSearchDetail != null && state.mayBeSearchDetail.productUIList.isNotEmpty()) {
+                HomeTitle(
+                    id = 1,
+                    type = HomeTitle.VIEWED_TITLE,
+                    name = "Популярные товары",
+                    showAll = false,
+                    showAllName = "СМ.ВСЕ",
+                    categoryProductsName = state.mayBeSearchDetail.name
+                )
+            } else {
+                HomeTitle(
+                    id = 1,
+                    type = HomeTitle.VIEWED_TITLE,
+                    name = "Популярные товары",
+                    showAll = false,
+                    showAllName = "СМ.ВСЕ",
+                    categoryProductsName = state.popularCategoryDetail.name
+                )
+            }
+            if(matches != null && (state.mayBeSearchDetail == null || state.mayBeSearchDetail.productUIList.isEmpty())){
+                binding.bestForYouRv.visibility = View.GONE
+            }
             bestForYouController.submitList(listOf(homeTitle, homeProducts))
             showContainer(false)
-        }
-
-        if (state.historyQuery.isEmpty()) {
-            binding.historyQueryContainer.visibility = View.GONE
         } else {
-            binding.historyQueryContainer.visibility = View.VISIBLE
-            binding.historyQueryChipGroup.removeAllViews()
-            state.historyQuery.forEach { query ->
-                binding.historyQueryChipGroup.addView(buildQueryChip(query))
-            }
+            binding.bestForYouRv.visibility = View.GONE
         }
 
-        if (state.popularQuery.isEmpty()) {
-            binding.popularQueryContainer.visibility = View.GONE
-        } else {
-            binding.popularQueryContainer.visibility = View.VISIBLE
-            binding.popularQueryChipGroup.removeAllViews()
-            state.popularQuery.forEach { query ->
-                binding.popularQueryChipGroup.addView(buildQueryChip(query))
-            }
-        }
 
-        if (state.matchesQuery.isEmpty()) {
+        if (matches == null) {
             binding.matchesQueriesContainer.visibility = View.GONE
-            binding.historyQueryContainer.visibility = View.VISIBLE
-            binding.popularQueryContainer.visibility = View.VISIBLE
+            if (state.historyQuery.isEmpty()) {
+                binding.historyQueryContainer.visibility = View.GONE
+            } else {
+                binding.historyQueryContainer.visibility = View.VISIBLE
+                binding.historyQueryChipGroup.removeAllViews()
+                state.historyQuery.forEach { query ->
+                    binding.historyQueryChipGroup.addView(buildQueryChip(query))
+                }
+            }
 
+            if (state.popularQuery.isEmpty()) {
+                binding.popularQueryContainer.visibility = View.GONE
+            } else {
+                binding.popularQueryContainer.visibility = View.VISIBLE
+                binding.popularQueryChipGroup.removeAllViews()
+                state.popularQuery.forEach { query ->
+                    binding.popularQueryChipGroup.addView(buildQueryChip(query))
+                }
+            }
         } else {
             binding.historyQueryContainer.visibility = View.GONE
             binding.popularQueryContainer.visibility = View.GONE
             binding.matchesQueriesContainer.visibility = View.VISIBLE
             binding.emptyResultContainer.isVisible = false
-            binding.matchesQueriesChipGroup.removeAllViews()
-            state.matchesQuery.forEach { query ->
-                binding.matchesQueriesChipGroup.addView(buildQueryChip(query))
+
+            if(matches.name.isNotEmpty()){
+                binding.matchesQueriesTitle.visibility = View.VISIBLE
+                binding.matchesQueriesTitle.text = matches.name
+            } else {
+                binding.matchesQueriesTitle.visibility = View.GONE
             }
+
+            if (matches.quickQueryList.isNotEmpty()) {
+                binding.matchesQueriesChipGroup.visibility = View.VISIBLE
+                binding.matchesQueriesChipGroup.removeAllViews()
+                matches.quickQueryList.forEach { query ->
+                    binding.matchesQueriesChipGroup.addView(buildQueryChip(query))
+                }
+            } else {
+                binding.matchesQueriesChipGroup.visibility = View.GONE
+            }
+
+            if(matches.errorText.isNotEmpty()){
+                binding.matchesQueriesError.visibility = View.VISIBLE
+                binding.matchesQueriesError.text = matches.errorText.fromHtml()
+            } else {
+                binding.matchesQueriesError.visibility = View.GONE
+            }
+
         }
+
 
     }
 

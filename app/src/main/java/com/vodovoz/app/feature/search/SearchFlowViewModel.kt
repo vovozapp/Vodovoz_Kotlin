@@ -27,6 +27,7 @@ import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.SortTypeUI
+import com.vodovoz.app.ui.model.custom.QuickQueryBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -72,7 +73,11 @@ class SearchFlowViewModel @Inject constructor(
                 .collect {
                     debugLog { "Search query: $it" }
                     if(it.isEmpty()){
-                        fetchDefaultSearchData()
+                        uiStateListener.value = state.copy(
+                            data = state.data.copy(
+                                matchesQuery = null,
+                                mayBeSearchDetail = null
+                            ))
                     }
                     fetchMatchesQueries(it)
                 }
@@ -109,7 +114,8 @@ class SearchFlowViewModel @Inject constructor(
                 query = "",
                 categoryHeader = null,
                 itemsList = emptyList(),
-                matchesQuery = emptyList()
+                matchesQuery = null,
+                mayBeSearchDetail = null
             )
         )
     }
@@ -406,7 +412,8 @@ class SearchFlowViewModel @Inject constructor(
         if (query.isEmpty()) {
             uiStateListener.value = state.copy(
                 data = state.data.copy(
-                    matchesQuery = listOf()
+                    matchesQuery = null,
+                    mayBeSearchDetail = null
                 ),
                 loadingPage = false,
                 error = null
@@ -426,8 +433,8 @@ class SearchFlowViewModel @Inject constructor(
                         val data = response.data.mapToUI()
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
-                                matchesQuery = data.quickQueryList,
-                                popularCategoryDetail = data.quickProductsCategoryDetailUI
+                                matchesQuery = data.quickQueryBundleUI,
+                                mayBeSearchDetail = data.quickProductsCategoryDetailUI
                             ),
                             loadingPage = false,
                             error = null
@@ -440,7 +447,8 @@ class SearchFlowViewModel @Inject constructor(
                 .catch {
                     uiStateListener.value = state.copy(
                         data = state.data.copy(
-                            matchesQuery = emptyList()
+                            matchesQuery = null,
+                            mayBeSearchDetail = null
                         ),
                         loadingPage = false
                     )
@@ -564,9 +572,10 @@ class SearchFlowViewModel @Inject constructor(
         val query: String = "",
         val categoryHeader: CategoryUI? = null,
         val popularCategoryDetail: CategoryDetailUI? = null,
+        val mayBeSearchDetail: CategoryDetailUI? = null,
         val popularQuery: List<String> = emptyList(),
         val historyQuery: List<String> = emptyList(),
-        val matchesQuery: List<String> = emptyList(),
+        val matchesQuery: QuickQueryBundleUI? = null,
         val sortType: SortTypeUI = SortTypeUI(),
         val selectedCategoryId: Long = -1,
         val isFirstLoadSorted: Boolean = false,

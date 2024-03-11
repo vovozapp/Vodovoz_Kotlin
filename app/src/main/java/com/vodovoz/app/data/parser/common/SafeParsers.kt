@@ -49,3 +49,19 @@ fun JSONObject.safeLong(name: String) = when(has(name)) {
     }
     false -> 0L
 }
+
+fun JSONObject.safeObject(name: String) = when(has(name)) {
+    true -> when(isNull(name)) {
+        true -> null
+        false -> getJSONObject(name)
+    }
+    false -> null
+}
+
+fun JSONObject.safeArray(name: String) = when(has(name)) {
+    true -> when(isNull(name)) {
+        true -> null
+        false -> getJSONArray(name)
+    }
+    false -> null
+}

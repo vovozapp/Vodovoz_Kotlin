@@ -1,6 +1,7 @@
 package com.vodovoz.app.data.parser.response.search
 
 import com.vodovoz.app.data.model.common.CategoryDetailEntity
+import com.vodovoz.app.data.model.common.QuickQueryBundle
 import com.vodovoz.app.data.model.common.QuickSearchDataBundleEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
@@ -17,10 +18,10 @@ object MatchesQueriesResponseJsonParser {
         return when (responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 QuickSearchDataBundleEntity(
-                    quickQueryList = if (responseJson.has("data") && !responseJson.isNull("data")) {
-                        responseJson.getJSONArray("data").parseQueryList()
+                    quickQueryBundle = if (responseJson.has("data") && !responseJson.isNull("data")) {
+                        responseJson.getJSONObject("data").parseQueryBundle()
                     } else {
-                        listOf()
+                        null
                     },
                     quickProductsCategoryDetailEntity = if(responseJson.has("tovary") && !responseJson.isNull("tovary")) {
                         responseJson.getJSONObject("tovary").parseCategoryDetailEntity()
@@ -43,6 +44,19 @@ object MatchesQueriesResponseJsonParser {
     private fun JSONObject.parseCategoryDetailEntity() = CategoryDetailEntity(
         id = 0,
         name = safeString("NAME"),
-        productEntityList = getJSONArray("TOVARY").parseProductEntityList()
+        productEntityList = if(has("TOVARY") && !isNull("TOVARY")){
+            getJSONArray("TOVARY").parseProductEntityList()
+        } else {
+            emptyList()
+        }
+    )
+    private fun JSONObject.parseQueryBundle() = QuickQueryBundle(
+        name = safeString("NAME"),
+        errorText = safeString("TEXTOSHIBKI"),
+        quickQueryList = if(has("SLOVA") && !isNull("SLOVA")) {
+            getJSONArray("SLOVA").parseQueryList()
+        } else {
+            emptyList()
+        }
     )
 }

@@ -183,6 +183,7 @@
                 android:visibility="gone">
 
                 <TextView
+                    android:id = "@+id/matchesQueriesTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/rotonda_normal"
@@ -201,6 +202,21 @@
                     android:layout_height="wrap_content"
                     android:paddingStart="@dimen/space_16"
                     android:paddingEnd="@dimen/space_16"/>
+
+                <TextView
+                    android:id = "@+id/matchesQueriesError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rotonda_normal"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="14sp"
+                    android:layout_marginHorizontal="16dp"
+                    android:background="@drawable/bkg_rectangle_rounded_gray"
+                    android:text="Ничего не найдено"
+                    android:textColor="@color/blackTextDark"
+                    android:padding="16dp"/>
 
             </LinearLayout>
 
