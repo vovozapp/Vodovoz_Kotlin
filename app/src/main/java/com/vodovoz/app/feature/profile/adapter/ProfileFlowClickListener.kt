@@ -28,6 +28,7 @@ interface ProfileFlowClickListener {
     fun onNewWaterApp()
     fun onFetchDiscount()
     fun onActiveCertificate()
+    fun onBuyCertificate()
 
     fun onWhatsUpClick(phone: String?)
     fun onViberClick(phone: String?)

@@ -1234,6 +1234,16 @@ class MainRepository @Inject constructor(
 
     suspend fun fetchBuyCertificateInfo() = api.fetchBuyCertificateData().parseBuyCertificateResponse()
 
+    suspend fun buyCertificate(
+        userId: Long,
+        buyCertificateMap: HashMap<String, String>,
+        action: String = "oformlenie",
+    ) = api.fetchBuyCertificateResponse(
+        action = action,
+        userId = userId,
+        buyCertificateMap = buyCertificateMap
+    ).parseRegOrderResponse()
+
     suspend fun fetchRateBottomData(
         userId: Long?,
     ) = api.fetchRateBottomData(

@@ -294,6 +294,10 @@ class ProfileFragment : BaseFragment() {
                 findNavController().navigate(ProfileFragmentDirections.actionToActiveCertificateFragment())
             }
 
+            override fun onBuyCertificate() {
+                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToBuyCertificateFragment())
+            }
+
             override fun onTelegramClick(phone: String?) {
                 if (phone != null) {
                     requireActivity().startTelegram(phone)

@@ -653,7 +653,7 @@ interface MainApi {
         @Query("code") code: String? = null,
     ): ResponseBody
 
-    @GET("ewmobile/osnova/sertificat/index.php")
+    @GET("newmobile/osnova/sertificat/index.php")
     suspend fun fetchBuyCertificateData(
         @Query("action") action: String = "glav",
     ): ResponseBody
@@ -679,5 +679,12 @@ interface MainApi {
     @GET("newmobile/el.php")
     suspend fun fetchBottles(
         @Query("iblock_id") iBlockId: Int? = 90,
+    ): ResponseBody
+
+    @GET("newmobile/osnova/sertificat/index.php")
+    suspend fun fetchBuyCertificateResponse(
+        @Query("action") action: String = "oformlenie",
+        @Query("userid") userId: Long? = null,
+        @QueryMap buyCertificateMap: HashMap<String, String> = hashMapOf(),
     ): ResponseBody
 }

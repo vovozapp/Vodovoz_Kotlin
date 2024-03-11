@@ -426,6 +426,9 @@
         <action
             android:id="@+id/action_to_activeCertificateFragment"
             app:destination="@id/activeCertificateFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_buyCertificateFragment"
+            app:destination="@id/buyCertificateFragment" />
     </fragment>
     <dialog
         android:id="@+id/popupNewsBottomFragment"
@@ -1008,4 +1011,14 @@
         android:id="@+id/activeCertificateFragment"
         android:name="com.vodovoz.app.feature.profile.certificate.ActiveCertificateFragment"
         android:label="ActiveCertificateFragment" />
+    <fragment
+        android:id="@+id/buyCertificateFragment"
+        android:name="com.vodovoz.app.feature.buy_certificate.BuyCertificateFragment"
+        android:label="fragment_buy_certificate">
+
+        <action
+            android:id="@+id/action_to_payMethodSelectionBS"
+            app:destination="@id/payMethodSelectionBS" />
+
+    </fragment>
 </navigation>

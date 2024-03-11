@@ -1016,7 +1016,12 @@
     <fragment
         android:id="@+id/buyCertificateFragment"
         android:name="com.vodovoz.app.feature.buy_certificate.BuyCertificateFragment"
-        android:label="fragment_buy_certificate"
-        tools:layout="@layout/fragment_buy_certificate" />
+        android:label="fragment_buy_certificate">
+
+        <action
+            android:id="@+id/action_to_payMethodSelectionBS"
+            app:destination="@id/payMethodSelectionBS" />
+
+    </fragment>
 
 </navigation>

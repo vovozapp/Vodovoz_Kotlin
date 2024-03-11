@@ -6,5 +6,6 @@ data class BuyCertificatePaymentUI(
     val code: String,
     val payMethods: List<PayMethodUI>,
     val name: String,
-    val required: Boolean
+    val required: Boolean,
+    val error: Boolean = false
 )

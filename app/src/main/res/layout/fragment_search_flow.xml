@@ -208,7 +208,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/rotonda_normal"
-                    android:textStyle="bold"
                     android:textSize="14sp"
                     android:gravity="center"
                     android:lineSpacingExtra="14sp"

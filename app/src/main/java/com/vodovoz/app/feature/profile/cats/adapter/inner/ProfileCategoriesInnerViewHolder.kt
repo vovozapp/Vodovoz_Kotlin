@@ -43,6 +43,7 @@ class ProfileCategoriesInnerViewHolder(
                 "newprilvoda" -> { clickListener.onNewWaterApp() }
                 "polychskidka" -> { clickListener.onFetchDiscount() }
                 "activsertivicat" -> { clickListener.onActiveCertificate() }
+                "pokypkasertificat" -> { clickListener.onBuyCertificate() }
             }
         }
     }
