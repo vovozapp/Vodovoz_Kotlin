@@ -15,6 +15,7 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllList
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleViewHolder
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.profile.viewholders.*
+import com.vodovoz.app.util.extensions.debugLog
 
 class ProfileFlowAdapter(
     private val clickListener: ProfileFlowClickListener,
@@ -29,6 +30,8 @@ class ProfileFlowAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
 
+        debugLog { "OnCreateViewHolder viewType: $viewType" }
+
         return when (viewType) {
             R.layout.fragment_slider_product -> {
                 HomeProductsSliderViewHolder(getViewFromInflater(viewType, parent), productsShowAllListener, productsClickListener, cartManager, likeManager)
@@ -42,9 +45,9 @@ class ProfileFlowAdapter(
             R.layout.item_profile_logout -> {
                 ProfileLogoutViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
-            R.layout.item_profile_best_for_you -> {
-                ProfileBestForYouViewHolder(getViewFromInflater(viewType, parent), cartManager, likeManager, ratingProductManager, productsClickListener)
-            }
+//            R.layout.item_profile_best_for_you -> {
+//                ProfileBestForYouViewHolder(getViewFromInflater(viewType, parent), cartManager, likeManager, ratingProductManager, productsClickListener)
+//            }
             R.layout.item_profile_main_rv -> {
                 ProfileMainViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }

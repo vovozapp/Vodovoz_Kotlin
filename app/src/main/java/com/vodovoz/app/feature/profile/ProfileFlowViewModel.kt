@@ -104,7 +104,7 @@ class ProfileFlowViewModel @Inject constructor(
                 POSITION_4,
                 userId
             )
-        }
+        },
     )
 
     private fun CoroutineScope.secondLoadTasks(userId: Long) = arrayOf(
@@ -330,20 +330,43 @@ class ProfileFlowViewModel @Inject constructor(
             debugLog { "profile second load task ${System.currentTimeMillis() - start} result size ${mappedResult.size}" }
             val positionItemsSorted =
                 (state.data.positionItems + mappedResult).sortedBy { it.position }
-            uiStateListener.value = state.copy(
-                loadingPage = false,
-                data = state.data.copy(
-                    positionItems = positionItemsSorted,
-                    items = positionItemsSorted.map { it.item },
-                    isSecondLoad = true,
-                    isLogin = true
-                ),
-                error = if (mappedResult.isNotEmpty()) {
-                    null
-                } else {
-                    state.error
-                }
-            )
+            if (positionItemsSorted.last().item is ProfileBestForYou) {
+                uiStateListener.value = state.copy(
+                    loadingPage = false,
+                    data = state.data.copy(
+                        positionItems = positionItemsSorted,
+                        items = positionItemsSorted.filterNot { it.item is ProfileBestForYou }
+                            .map { it.item },
+                        isSecondLoad = true,
+                        isLogin = true,
+                        bestForYou = if ((positionItemsSorted.last().item as ProfileBestForYou).data.productUIList.isNotEmpty()) {
+                            (positionItemsSorted.last().item as ProfileBestForYou)
+                        } else {
+                            null
+                        }
+                    ),
+                    error = if (mappedResult.isNotEmpty()) {
+                        null
+                    } else {
+                        state.error
+                    }
+                )
+            } else {
+                uiStateListener.value = state.copy(
+                    loadingPage = false,
+                    data = state.data.copy(
+                        positionItems = positionItemsSorted,
+                        items = positionItemsSorted.map { it.item },
+                        isSecondLoad = true,
+                        isLogin = true
+                    ),
+                    error = if (mappedResult.isNotEmpty()) {
+                        null
+                    } else {
+                        state.error
+                    }
+                )
+            }
         }
     }
 
@@ -377,20 +400,45 @@ class ProfileFlowViewModel @Inject constructor(
                 }
                 val positionItemsSorted =
                     (state.data.positionItems + mappedResult).sortedBy { it.position }
-                uiStateListener.value = state.copy(
-                    loadingPage = false,
-                    data = state.data.copy(
-                        positionItems = positionItemsSorted,
-                        items = positionItemsSorted.map { it.item },
-                        isSecondLoad = true
-                    ),
-                    error = if (mappedResult.isNotEmpty()) {
-                        null
-                    } else {
-                        state.error
-                    },
-                    isFirstLoad = true
-                )
+                if (positionItemsSorted.last().item is ProfileBestForYou) {
+                    uiStateListener.value = state.copy(
+                        loadingPage = false,
+                        data = state.data.copy(
+                            positionItems = positionItemsSorted,
+                            items = positionItemsSorted.filterNot { it.item is ProfileBestForYou }
+                                .map { it.item },
+                            isSecondLoad = true,
+                            isLogin = true,
+                            bestForYou = if ((positionItemsSorted.last().item as ProfileBestForYou).data.productUIList.isNotEmpty()) {
+                                (positionItemsSorted.last().item as ProfileBestForYou)
+                            } else {
+                                null
+                            }
+                        ),
+                        error = if (mappedResult.isNotEmpty()) {
+                            null
+                        } else {
+                            state.error
+                        },
+                        isFirstLoad = true
+                    )
+                } else {
+                    uiStateListener.value = state.copy(
+                        loadingPage = false,
+                        data = state.data.copy(
+                            positionItems = positionItemsSorted,
+                            items = positionItemsSorted.map { it.item },
+                            isSecondLoad = true,
+                            isLogin = true
+                        ),
+                        error = if (mappedResult.isNotEmpty()) {
+                            null
+                        } else {
+                            state.error
+                        },
+                        isFirstLoad = true
+                    )
+                }
             }
         }
     }
@@ -480,6 +528,7 @@ class ProfileFlowViewModel @Inject constructor(
         val items: List<Item>,
         val isLogin: Boolean = true,
         val isSecondLoad: Boolean = false,
+        val bestForYou: ProfileBestForYou? = null,
     ) : State {
         companion object {
             fun idle(): ProfileState {

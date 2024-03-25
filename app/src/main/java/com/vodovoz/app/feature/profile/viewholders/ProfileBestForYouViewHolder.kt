@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.profile.viewholders
 
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
@@ -12,18 +13,22 @@ import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.Avai
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.profile.viewholders.models.ProfileBestForYou
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
+import com.vodovoz.app.ui.model.ProductUI
+
 
 class ProfileBestForYouViewHolder(
     view: View,
     cartManager: CartManager,
     likeManager: LikeManager,
     ratingProductManager: RatingProductManager,
-    productsClickListener: ProductsClickListener
+    productsClickListener: ProductsClickListener,
 ) : ItemViewHolder<ProfileBestForYou>(view) {
 
     private val binding: ItemProfileBestForYouBinding = ItemProfileBestForYouBinding.bind(view)
 
-    private val space: Int by lazy { itemView.context.resources.getDimension(R.dimen.space_16).toInt() }
+    private val space: Int by lazy {
+        itemView.context.resources.getDimension(R.dimen.space_16).toInt()
+    }
 
     private val gridMarginDecoration: GridMarginDecoration by lazy {
         GridMarginDecoration(space)
@@ -42,6 +47,18 @@ class ProfileBestForYouViewHolder(
             adapter = availableProductsAdapter
             layoutManager = GridLayoutManager(context, 2)
             addItemDecoration(gridMarginDecoration)
+
+            val recycledViewPool = RecycledViewPool()
+            recycledViewPool.setMaxRecycledViews(ProductUI.PRODUCT_VIEW_TYPE_GRID, 50)
+            repeat(5) {
+                recycledViewPool.putRecycledView(
+                    availableProductsAdapter.createViewHolder(
+                        this,
+                        ProductUI.PRODUCT_VIEW_TYPE_GRID
+                    )
+                )
+            }
+            setRecycledViewPool(recycledViewPool)
         }
     }
 

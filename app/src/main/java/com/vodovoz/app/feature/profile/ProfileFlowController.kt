@@ -43,7 +43,7 @@ class ProfileFlowController(
         }
     }
 
-     override fun bindRefresh(refresh: SwipeRefreshLayout) {
+    override fun bindRefresh(refresh: SwipeRefreshLayout) {
         refresh.setOnRefreshListener {
             viewModel.refresh()
             refresh.isRefreshing = false

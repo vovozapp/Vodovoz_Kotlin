@@ -64,8 +64,8 @@ class ReloginManager @Inject constructor(
 
     sealed class ReloginState {
 
-        object ReloginInitial : ReloginState()
+        data object ReloginInitial : ReloginState()
         data class ReloginError(val error: String) : ReloginState()
-        object ReloginSuccess : ReloginState()
+        data object ReloginSuccess : ReloginState()
     }
 }
