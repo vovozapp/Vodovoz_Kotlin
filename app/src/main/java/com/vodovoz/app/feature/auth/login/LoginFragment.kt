@@ -190,10 +190,10 @@ class LoginFragment : BaseFragment() {
                             }
                             LoginFlowViewModel.LoginEvents.AuthSuccess -> {
                                 debugLog { "AuthSuccess" }
+                                profileViewModel.refresh()
                                 flowViewModel.refresh()
                                 cartFlowViewModel.refreshIdle()
                                 favoriteViewModel.refreshIdle()
-                                profileViewModel.refresh()
                                 val redirect = tabManager.fetchAuthRedirect()
                                 if (redirect == TabManager.DEFAULT_AUTH_REDIRECT) {
                                     findNavController().popBackStack()

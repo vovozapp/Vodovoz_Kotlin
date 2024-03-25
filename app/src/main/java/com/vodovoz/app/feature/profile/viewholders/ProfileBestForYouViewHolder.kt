@@ -1,8 +1,8 @@
 package com.vodovoz.app.feature.profile.viewholders
 
 import android.view.View
+import android.view.ViewTreeObserver
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
@@ -13,7 +13,6 @@ import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.Avai
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.profile.viewholders.models.ProfileBestForYou
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
-import com.vodovoz.app.ui.model.ProductUI
 
 
 class ProfileBestForYouViewHolder(
@@ -22,6 +21,7 @@ class ProfileBestForYouViewHolder(
     likeManager: LikeManager,
     ratingProductManager: RatingProductManager,
     productsClickListener: ProductsClickListener,
+    private val onRecyclerReady: () -> Unit,
 ) : ItemViewHolder<ProfileBestForYou>(view) {
 
     private val binding: ItemProfileBestForYouBinding = ItemProfileBestForYouBinding.bind(view)
@@ -46,19 +46,17 @@ class ProfileBestForYouViewHolder(
         with(binding.bestForYouProductsRecycler) {
             adapter = availableProductsAdapter
             layoutManager = GridLayoutManager(context, 2)
+//            layoutManager = object : GridLayoutManager(context, 2){
+//                override fun onLayoutCompleted(state: RecyclerView.State?) {
+//                    super.onLayoutCompleted(state)
+//                    if(height > 0) {
+//                        onRecyclerReady()
+//                    }
+//                }
+//
+//            }
             addItemDecoration(gridMarginDecoration)
 
-            val recycledViewPool = RecycledViewPool()
-            recycledViewPool.setMaxRecycledViews(ProductUI.PRODUCT_VIEW_TYPE_GRID, 50)
-            repeat(5) {
-                recycledViewPool.putRecycledView(
-                    availableProductsAdapter.createViewHolder(
-                        this,
-                        ProductUI.PRODUCT_VIEW_TYPE_GRID
-                    )
-                )
-            }
-            setRecycledViewPool(recycledViewPool)
         }
     }
 
@@ -66,8 +64,35 @@ class ProfileBestForYouViewHolder(
         super.bind(item)
 
         binding.tvTitleBestForYou.text = item.data.name
-
         availableProductsAdapter.submitList(item.data.productUIList)
+
+        binding.bestForYouProductsRecycler.preDraw {
+            onRecyclerReady()
+        }
+    }
+
+    inline fun <T : View> T.preDraw(crossinline callBack: () -> Unit) {
+
+        viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+
+            override fun onPreDraw(): Boolean {
+                if (measuredWidth > 0 && measuredHeight > 0) {
+                    viewTreeObserver.removeOnPreDrawListener(this)
+                    callBack()
+                }
+                return true
+            }
+        })
+
+//        viewTreeObserver.addOnGlobalLayoutListener(object :
+//            ViewTreeObserver.OnGlobalLayoutListener {
+//            override fun onGlobalLayout() {
+//                if (measuredWidth > 0 && measuredHeight > 0) {
+//                    viewTreeObserver.removeOnGlobalLayoutListener(this)
+//                    callBack()
+//                }
+//            }
+//        })
     }
 
 }

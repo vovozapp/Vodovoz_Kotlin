@@ -10,7 +10,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
@@ -24,14 +23,12 @@ import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.databinding.FragmentProfileFlowBinding
 import com.vodovoz.app.feature.cart.CartFlowViewModel
-import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.AvailableProductsAdapter
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.home.viewholders.homeorders.inneradapter.HomeOrdersSliderClickListener
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.profile.adapter.ProfileFlowClickListener
-import com.vodovoz.app.ui.decoration.GridMarginDecoration
 import com.vodovoz.app.util.extensions.startTelegram
 import com.vodovoz.app.util.extensions.startViber
 import com.vodovoz.app.util.extensions.startWhatsUp
@@ -70,22 +67,6 @@ class ProfileFragment : BaseFragment() {
     @Inject
     lateinit var ratingProductManager: RatingProductManager
 
-    private val bestForYouProductsAdapter by lazy {
-        AvailableProductsAdapter(
-            productsClickListener = getProductsClickListener(),
-            likeManager = likeManager,
-            cartManager = cartManager,
-            ratingProductManager = ratingProductManager
-        )
-    }
-    private val space: Int by lazy {
-        requireContext().resources.getDimension(R.dimen.space_16).toInt()
-    }
-    private val gridMarginDecoration: GridMarginDecoration by lazy {
-        GridMarginDecoration(space)
-    }
-
-
     private val profileController by lazy {
         ProfileFlowController(
             viewModel = viewModel,
@@ -95,10 +76,10 @@ class ProfileFragment : BaseFragment() {
             listener = getProfileFlowClickListener(),
             productsShowAllListener = getProductsShowClickListener(),
             productsClickListener = getProductsClickListener(),
-            homeOrdersSliderClickListener = getHomeOrdersSliderClickListener()
-        ) {
-            viewModel.repeatOrder(it)
-        }
+            homeOrdersSliderClickListener = getHomeOrdersSliderClickListener(),
+            repeatOrderClickListener = { viewModel.repeatOrder(it) },
+            onRecyclerReady = { viewModel.recyclerReady() }
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,19 +94,19 @@ class ProfileFragment : BaseFragment() {
 
         profileController.bind(binding.profileFlowRv, binding.refreshContainer)
 
-        setupBestForYouRecycler()
+//        setupBestForYouRecycler()
 
         bindErrorRefresh { viewModel.refresh() }
         bindRegOrLoginBtn()
     }
 
-    private fun setupBestForYouRecycler() {
-        with(binding.bestForYou.bestForYouProductsRecycler) {
-            adapter = bestForYouProductsAdapter
-            layoutManager = GridLayoutManager(context, 2)
-            addItemDecoration(gridMarginDecoration)
-        }
-    }
+//    private fun setupBestForYouRecycler() {
+//        with(binding.bestForYou.bestForYouProductsRecycler) {
+//            adapter = bestForYouProductsAdapter
+//            layoutManager = GridLayoutManager(context, 2)
+//            addItemDecoration(gridMarginDecoration)
+//        }
+//    }
 
     override fun onResume() {
         super.onResume()
@@ -176,8 +157,6 @@ class ProfileFragment : BaseFragment() {
 
                         if (profileState.loadingPage) {
                             showLoaderWithBg(true)
-                        } else {
-                            showLoaderWithBg(false)
                         }
 
                         if (profileState.data.isLogin) {
@@ -188,31 +167,28 @@ class ProfileFragment : BaseFragment() {
                             binding.noLoginContainer.isVisible = true
                         }
 
-                        val list = profileState.data.items
+                        val list = profileState.data.items.toMutableList()
                         if (list.isNotEmpty()) {
                             val progressList = if (!profileState.data.isSecondLoad) {
-                                list + BottomProgressItem()
+                                val item =
+                                    list.firstOrNull { it.getItemViewType() == R.layout.item_profile_best_for_you }
+                                if (item != null) {
+                                    val index = list.indexOf(item)
+                                    list.apply { add(index, BottomProgressItem()) }
+                                } else {
+                                    list + BottomProgressItem()
+                                }
                             } else {
                                 list
                             }
                             profileController.submitList(progressList)
+                        }
 
-                            val bestForYou = profileState.data.bestForYou
-                            if (bestForYou != null) {
-                                binding.bestForYou.bestForYouProductsContainer.visibility =
-                                    View.VISIBLE
-                                binding.bestForYou.tvTitleBestForYou.text =
-                                    bestForYou.data.name
-                                bestForYouProductsAdapter.submitList(bestForYou.data.productUIList)
-                            } else {
-                                binding.bestForYou.bestForYouProductsContainer.visibility =
-                                    View.GONE
-                            }
-
+                        if (!profileState.loadingPage) {
+                            showLoaderWithBg(false)
                         }
 
                         showError(profileState.error)
-
                     }
             }
         }
