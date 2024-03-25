@@ -17,6 +17,7 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.feature.all.orders.detail.model.DriverPointsEntity
 import com.vodovoz.app.util.extensions.debugLog
 import com.yandex.mapkit.geometry.Point
+import com.yandex.metrica.YandexMetrica
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -159,6 +160,9 @@ class TraceOrderViewModel @Inject constructor(
 
                     }
                 })
+            }.onFailure { 
+                debugLog { "fetchDriverData error $it" }
+                YandexMetrica.reportError("fetchDriverData error", it)
             }
         }
     }

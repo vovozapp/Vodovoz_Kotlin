@@ -20,6 +20,7 @@ import com.vodovoz.app.feature.all.orders.detail.model.DriverPointsEntity
 import com.vodovoz.app.mapper.mapToUI
 import com.vodovoz.app.ui.model.OrderDetailsUI
 import com.vodovoz.app.util.extensions.debugLog
+import com.yandex.metrica.YandexMetrica
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -203,6 +204,9 @@ class OrderDetailsFlowViewModel @Inject constructor(
 
                         }
                     })
+            }.onFailure {
+                debugLog { "checkIfDriverExists error $it" }
+                YandexMetrica.reportError("checkIfDriverExists error", it)
             }
         }
     }
