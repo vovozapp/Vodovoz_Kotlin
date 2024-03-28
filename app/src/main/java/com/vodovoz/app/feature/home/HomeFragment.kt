@@ -62,6 +62,7 @@ import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.ui.model.CommentUI
 import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.extensions.addOnBackPressedCallback
+import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -167,6 +168,7 @@ class HomeFragment : BaseFragment() {
                 siteStateManager
                     .observePush()
                     .collect {
+                        debugLog { "push ${it?.path} $siteStateManager" }
                         when (it?.path) {
                             "AKCII" -> {
                                 val promotionId = it.id
@@ -325,6 +327,10 @@ class HomeFragment : BaseFragment() {
                             "profil" -> {
                                 flowViewModel.goToProfile()
                             }
+                            "pokypkasertificat" -> {
+                                debugLog {"pokypkasertificat push" }
+                                findNavController().navigate(HomeFragmentDirections.actionToBuyCertificateFragment())
+                            }
                             null -> {}
                         }
                         it?.action?.let { action ->
@@ -336,6 +342,8 @@ class HomeFragment : BaseFragment() {
                                 )
                             }
                         }
+                        debugLog {"clear push" }
+                        siteStateManager.clearPushListener()
                     }
             }
         }
@@ -400,20 +408,17 @@ class HomeFragment : BaseFragment() {
                         }*/
                             "mobile_app/" -> {
                                 findNavController().navigate(HomeFragmentDirections.actionToAboutAppDialogFragment())
-                                siteStateManager.clearDeepLinkListener()
                             }
                             "gl/" -> {
-                                siteStateManager.clearDeepLinkListener()
                             }
                             "kalkulyator_vody/" -> {
                                 val eventName = "trekervodi_ssilka"
                                 accountManager.reportYandexMetrica(eventName)
                                 findNavController().navigate(HomeFragmentDirections.actionToWaterAppFragment())
                             }
-                            null -> {
-                                siteStateManager.clearDeepLinkListener()
-                            }
                         }
+
+                        siteStateManager.clearDeepLinkListener()
                     }
             }
         }
@@ -850,6 +855,9 @@ class HomeFragment : BaseFragment() {
             is ActionEntity.Profile -> {
                 flowViewModel.goToProfile()
                 null
+            }
+            is ActionEntity.BuyCertificate -> {
+                HomeFragmentDirections.actionToBuyCertificateFragment()
             }
         }
         navDirect?.let { navController.navigate(navDirect) }

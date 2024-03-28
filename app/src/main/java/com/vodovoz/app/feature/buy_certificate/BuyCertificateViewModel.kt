@@ -36,6 +36,9 @@ class BuyCertificateViewModel @Inject constructor(
 
     private val result: HashMap<String, String> = hashMapOf()
 
+    private var resultFlow: BuyCertificateState =
+        BuyCertificateState()
+
     fun getBuyCertificateBundle() {
         viewModelScope.launch {
             uiStateListener.value = state.copy(
@@ -69,6 +72,7 @@ class BuyCertificateViewModel @Inject constructor(
                                 loadingPage = false,
                                 error = null
                             )
+                            resultFlow = state.data.copy()
 
                             certificateBundle.buyCertificatePropertyUIList.forEach {
                                 result[it.code] = ""
@@ -93,38 +97,81 @@ class BuyCertificateViewModel @Inject constructor(
 
     fun addResult(key: String, value: String) {
         result[key] = value
+        if (key == "buyMoney") {
+            result[key] = buildString {
+                append("$value@")
+                append(resultFlow.buyCertificateBundleUI
+                    ?.buyCertificatePropertyUIList?.firstOrNull { it.code == key }
+                    ?.buyCertificateFieldUIList?.firstOrNull { it.id == value }
+                    ?.name
+                )
+            }
+        }
         if (key != "quanity") {
-            uiStateListener.value = state.copy(
-                data = state.data.copy(
-                    buyCertificateBundleUI = state.data.buyCertificateBundleUI?.copy(
-                        buyCertificatePropertyUIList = state.data.buyCertificateBundleUI?.buyCertificatePropertyUIList?.map {
-                            if (key == it.code) {
-                                it.copy(error = false, currentValue = value)
+            resultFlow = resultFlow.copy(
+                buyCertificateBundleUI = resultFlow.buyCertificateBundleUI?.copy(
+                    buyCertificatePropertyUIList = resultFlow.buyCertificateBundleUI?.buyCertificatePropertyUIList?.map { property ->
+                        if (key == property.code) {
+                            if (key == "buyMoney") {
+                                property.copy(
+                                    buyCertificateFieldUIList = property.buyCertificateFieldUIList?.map {
+                                        if (value == it.id) {
+                                            it.copy(
+                                                isSelected = true
+                                            )
+                                        } else {
+                                            it.copy(
+                                                isSelected = false
+                                            )
+                                        }
+                                    },
+                                    error = false,
+                                    currentValue = value
+                                )
                             } else {
-                                it
+                                property.copy(error = false, currentValue = value)
                             }
-                        } ?: return
-                    )
+                        } else {
+                            property
+                        }
+                    } ?: return
                 )
             )
         }
     }
+
+//    fun changeCertificate(currentCert: BuyCertificateFieldUI) {
+//        uiStateListener.value = state.copy(
+//            data = state.data.copy(
+//                buyCertificateBundleUI = state.data.buyCertificateBundleUI?.copy(
+//                    buyCertificatePropertyUIList = state.data.buyCertificateBundleUI?.buyCertificatePropertyUIList?.map {
+//                        if ("" == it.code) {
+//                            it.copy(error = false, currentValue = value)
+//                        } else {
+//                            it
+//                        }
+//                    } ?: return
+//                )
+//            )
+//        )
+//    }
 
 
     fun setSelectedPaymentMethod(itemId: Long) {
         val oldList =
             state.data.buyCertificateBundleUI?.payment?.payMethods ?: return
         addResult(state.data.buyCertificateBundleUI?.payment?.code ?: "", itemId.toString())
-        uiStateListener.value = state.copy(
-            data = state.data.copy(
-                buyCertificateBundleUI = state.data.buyCertificateBundleUI?.copy(
-                    payment = state.data.buyCertificateBundleUI?.payment?.copy(
-                        payMethods = oldList.map {
-                            it.copy(isSelected = itemId == it.id)
-                        }
-                    ) ?: return
-                )
+        resultFlow = resultFlow.copy(
+            buyCertificateBundleUI = resultFlow.buyCertificateBundleUI?.copy(
+                payment = resultFlow.buyCertificateBundleUI?.payment?.copy(
+                    payMethods = oldList.map {
+                        it.copy(isSelected = itemId == it.id)
+                    }
+                ) ?: return
             )
+        )
+        uiStateListener.value = state.copy(
+            data = resultFlow
         )
     }
 
@@ -152,18 +199,19 @@ class BuyCertificateViewModel @Inject constructor(
                             resultItem.value
                         )
                     ) {
-                        uiStateListener.value = state.copy(
-                            data = state.data.copy(
-                                buyCertificateBundleUI = state.data.buyCertificateBundleUI?.copy(
-                                    buyCertificatePropertyUIList = state.data.buyCertificateBundleUI?.buyCertificatePropertyUIList?.map {
-                                        if (property.code == it.code) {
-                                            it.copy(error = true)
-                                        } else {
-                                            it
-                                        }
-                                    } ?: return@launch
-                                )
+                        resultFlow = resultFlow.copy(
+                            buyCertificateBundleUI = resultFlow.buyCertificateBundleUI?.copy(
+                                buyCertificatePropertyUIList = resultFlow.buyCertificateBundleUI?.buyCertificatePropertyUIList?.map {
+                                    if (property.code == it.code) {
+                                        it.copy(error = true)
+                                    } else {
+                                        it
+                                    }
+                                } ?: return@launch
                             )
+                        )
+                        uiStateListener.value = state.copy(
+                            data = resultFlow
                         )
                         return@launch
                     }
@@ -173,14 +221,16 @@ class BuyCertificateViewModel @Inject constructor(
             if (paymentCode.isNotEmpty()) {
                 val res = result[paymentCode]
                 if (res.isNullOrEmpty()) {
-                    uiStateListener.value = state.copy(
-                        data = state.data.copy(
-                            buyCertificateBundleUI = state.data.buyCertificateBundleUI?.copy(
-                                payment = state.data.buyCertificateBundleUI?.payment?.copy(
-                                    error = true
-                                ) ?: return@launch
-                            )
+                    resultFlow = resultFlow.copy(
+                        buyCertificateBundleUI = resultFlow.buyCertificateBundleUI?.copy(
+                            payment = resultFlow.buyCertificateBundleUI?.payment?.copy(
+                                error = true
+                            ) ?: return@launch
                         )
+                    )
+
+                    uiStateListener.value = state.copy(
+                        data = resultFlow
                     )
                 }
             }

@@ -32,6 +32,7 @@ import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.catalog.adapter.CatalogFlowAdapter
 import com.vodovoz.app.feature.catalog.adapter.CatalogFlowClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
+import com.vodovoz.app.ui.model.CategoryUI
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -197,21 +198,31 @@ class CatalogFragment : BaseFragment() {
                 viewModel.goToProfile()
                 null
             }
+            is ActionEntity.BuyCertificate -> {
+                CatalogFragmentDirections.actionToBuyCertificateFragment()
+            }
             else -> {
                 null
             }
+
         }
         navDirect?.let { navController.navigate(navDirect) }
     }
 
     private fun getCatalogFlowClickListener(): CatalogFlowClickListener {
         return object : CatalogFlowClickListener {
-            override fun onCategoryClick(categoryId: Long) {
-                findNavController().navigate(
-                    CatalogFragmentDirections.actionToPaginatedProductsCatalogFragment(
-                        categoryId
-                    )
-                )
+            override fun onCategoryClick(category: CategoryUI) {
+                if(category.actionEntity == null) {
+                    if (category.id != null) {
+                        findNavController().navigate(
+                            CatalogFragmentDirections.actionToPaginatedProductsCatalogFragment(
+                                category.id
+                            )
+                        )
+                    }
+                } else {
+                    category.actionEntity.invoke()
+                }
             }
         }
     }

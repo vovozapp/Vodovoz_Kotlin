@@ -8,7 +8,6 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ViewHolderEmailCertificateBinding
 import com.vodovoz.app.ui.model.custom.BuyCertificatePropertyUI
-import com.vodovoz.app.util.extensions.debugLog
 
 class EmailCertificateViewHolder(
     private val binding: ViewHolderEmailCertificateBinding,
@@ -16,47 +15,66 @@ class EmailCertificateViewHolder(
 ) : ItemViewHolder<BuyCertificatePropertyUI>(binding.root) {
 
 
-    init{
+    init {
         binding.email.doAfterTextChanged {
             val itemId = item?.code ?: return@doAfterTextChanged
-            debugLog { "doAfterTextChanged $it" }
-            onEditText(itemId , it.toString())
+            onEditText(itemId, it.toString())
+            buyCertificatePropertyUI?.let { property ->
+                val color = if (property.error) {
+                    R.color.red
+                } else {
+                    R.color.blackTextDark
+                }
+                binding.name.setTextColor(
+                    ColorStateList.valueOf(ContextCompat.getColor(binding.root.context, color))
+                )
+            }
+            buyCertificatePropertyUI = buyCertificatePropertyUI?.copy(
+                error = false,
+                currentValue = it.toString()
+            )
         }
     }
+
+    private var buyCertificatePropertyUI: BuyCertificatePropertyUI? = null
 
     override fun bind(
-        item: BuyCertificatePropertyUI
+        item: BuyCertificatePropertyUI,
     ) {
         super.bind(item)
-        debugLog { "EmailCertificateViewHolder onBind" }
-        var addStar = ""
-        if (item.required) {
-            addStar = "*"
-        }
-        binding.name.text = buildString {
-            append(item.name)
-            append(addStar)
-        }
-        val color = if (item.error) {
-            R.color.red
-        } else {
-            R.color.blackTextDark
-        }
-        binding.name.setTextColor(
-            ColorStateList.valueOf(ContextCompat.getColor(binding.root.context, color))
-        )
+        buyCertificatePropertyUI = item
+        buyCertificatePropertyUI?.let { property ->
+            var addStar = ""
+            if (property.required) {
+                addStar = "*"
+            }
+            binding.name.text = buildString {
+                append(property.name)
+                append(addStar)
+            }
 
-        if(binding.email.text.toString() != item.currentValue) {
-            binding.email.setText(item.currentValue)
-            binding.email.setSelection(item.currentValue.length)
-        }
+            val color = if (property.error) {
+                R.color.red
+            } else {
+                R.color.blackTextDark
+            }
+            binding.name.setTextColor(
+                ColorStateList.valueOf(ContextCompat.getColor(binding.root.context, color))
+            )
 
-        binding.email.hint = item.value
+            if (binding.email.text.toString() != property.currentValue) {
+                binding.email.setText(property.currentValue)
+                binding.email.setSelection(property.currentValue.length)
+            }
 
-        if (item.text.isNotEmpty()) {
-            binding.txtViewText.text = item.text
-        } else {
-            binding.txtViewText.visibility = View.GONE
+            binding.email.hint = property.value
+
+            if (property.text.isNotEmpty()) {
+                binding.txtViewText.text = property.text
+            } else {
+                binding.txtViewText.visibility = View.GONE
+            }
         }
     }
+
 }

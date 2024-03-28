@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Parcelable
-import android.os.StrictMode
 import android.provider.Settings
 import android.text.Html
 import android.text.SpannableString
@@ -35,13 +34,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.viewbinding.BuildConfig
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import java.io.File
 import java.io.FileInputStream
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 import kotlin.properties.ReadOnlyProperty
 
 
@@ -141,17 +140,6 @@ inline fun Activity.snackTop(
 fun Snackbar.action(action: String, color: Int? = null, listener: (View) -> Unit) {
     setAction(action, listener)
     color?.let { setActionTextColor(color) }
-}
-
-fun startStrictMode() {
-    if (BuildConfig.DEBUG) {
-        StrictMode.setThreadPolicy(
-            StrictMode.ThreadPolicy.Builder()
-                .detectAll()
-                .penaltyLog()
-                .build()
-        )
-    }
 }
 
 fun View.hideKeyboard() {
@@ -259,6 +247,7 @@ fun openNotificationSettingsForApp(context: Context) {
                 action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
                 putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
             }
+
             else -> {
                 action = "android.settings.APP_NOTIFICATION_SETTINGS"
                 putExtra("app_package", context.packageName)
@@ -295,6 +284,7 @@ inline fun Lifecycle.whenAtLeast(state: Lifecycle.State, crossinline block: () -
                         block.invoke()
                         removeObserver(this)
                     }
+
                     source.lifecycle.currentState == Lifecycle.State.DESTROYED -> {
                         removeObserver(this)
                     }

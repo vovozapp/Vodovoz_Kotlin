@@ -57,6 +57,7 @@ class BuyCertificateFragment : BaseFragment() {
         }
 
         binding.submit.setOnClickListener {
+            hideSoftKeyboard()
             viewModel.buyCertificate()
         }
 
@@ -94,6 +95,7 @@ class BuyCertificateFragment : BaseFragment() {
     private fun observeEvents() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.observeEvent().collect {
+                hideSoftKeyboard()
                 when (it) {
                     is BuyCertificateViewModel.BuyCertificateEvents.ShowPaymentMethod -> {
                         showPayMethodPopup(

@@ -10,5 +10,6 @@ class CategoryEntity(
     val sortTypeList: SortTypeList? = null,
     val primaryFilterValueList: List<FilterValueEntity> = listOf(),
     val subCategoryEntityList: List<CategoryEntity> = listOf(),
-    val filterCode: String = ""
+    val filterCode: String = "",
+    val actionEntity: ActionEntity? = null,
 )

@@ -104,6 +104,10 @@ object BannerJsonParser {
             action = parseAction(),
             actionColor = parseActionColor()
         )
+        "pokypkasertificat" -> ActionEntity.BuyCertificate(
+            action = parseAction(),
+            actionColor = parseActionColor()
+        )
         else -> null
     }
 

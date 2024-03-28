@@ -2,6 +2,7 @@ package com.vodovoz.app.ui.model
 
 import android.os.Parcelable
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.data.model.common.ActionEntity
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -18,6 +19,7 @@ data class CategoryUI(
     var isSelected: Boolean = false,
     val filterCode: String = "",
     val sortTypeList: SortTypeListUI? = null,
+    val actionEntity: ActionEntity? = null,
 ) : Parcelable, Item {
 
     companion object {

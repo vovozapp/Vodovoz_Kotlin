@@ -19,6 +19,7 @@ object PopupNewsResponseJsonParser {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 responseJson.getJSONObject("data").parsePopupNewsEntity()
             )
+
             else -> ResponseEntity.Error("Ошибка парсинга вспылвающая новость")
         }
     }
@@ -72,26 +73,37 @@ object PopupNewsResponseJsonParser {
                 action = parseAction(),
                 actionColor = parseActionColor()
             )
+
             "vsenovinki" -> ActionEntity.Novelties(
                 action = parseAction(),
                 actionColor = parseActionColor()
             )
+
             "vseakcii" -> ActionEntity.AllPromotions(
                 action = parseAction(),
                 actionColor = parseActionColor()
             )
+
             "trekervodi" -> ActionEntity.WaterApp(
                 action = parseAction(),
                 actionColor = parseActionColor()
             )
+
             "dostavka" -> ActionEntity.Delivery(
                 action = parseAction(),
                 actionColor = parseActionColor()
             )
+
             "profil" -> ActionEntity.Profile(
                 action = parseAction(),
                 actionColor = parseActionColor()
             )
+
+            "pokypkasertificat" -> ActionEntity.BuyCertificate(
+                action = parseAction(),
+                actionColor = parseActionColor()
+            )
+
             else -> null
         }
 

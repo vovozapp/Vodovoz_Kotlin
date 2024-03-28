@@ -17,8 +17,8 @@ android {
         applicationId "com.vodovoz.app"
         minSdk 21
         targetSdk 33
-        versionCode 151
-        versionName "1.5.42"
+        versionCode 152
+        versionName "1.5.43"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -72,19 +72,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-database-ktx'
 
-    //RxJava
-//    implementation 'io.reactivex.rxjava3:rxjava:3.0.6'
-//    implementation 'io.reactivex.rxjava3:rxkotlin:3.0.1'
-//    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
-//    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-rx3:1.6.2'
-
-    //Gson
-//    implementation 'com.google.code.gson:gson:2.9.0'
-//    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-//    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
     implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
 

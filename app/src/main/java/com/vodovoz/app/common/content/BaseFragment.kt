@@ -1,10 +1,12 @@
 package com.vodovoz.app.common.content
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
@@ -269,4 +271,13 @@ abstract class BaseFragment : Fragment() {
         findNavController().navigate(resId, args, navOptions)
 
     protected fun navigateUp() = findNavController().navigateUp()
+
+    protected fun hideSoftKeyboard() {
+        val view = requireActivity().currentFocus
+        if (view != null) {
+            val imm =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+            imm!!.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
 }

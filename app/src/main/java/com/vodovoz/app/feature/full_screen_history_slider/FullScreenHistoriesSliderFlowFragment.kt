@@ -187,6 +187,9 @@ class FullScreenHistoriesSliderFlowFragment : BaseFragment(),
                 viewModel.goToProfile()
                 null
             }
+            is ActionEntity.BuyCertificate -> {
+                FullScreenHistoriesSliderFlowFragmentDirections.actionToBuyCertificateFragment()
+            }
         }
         navDirect?.let { navController.navigate(navDirect) }
     }

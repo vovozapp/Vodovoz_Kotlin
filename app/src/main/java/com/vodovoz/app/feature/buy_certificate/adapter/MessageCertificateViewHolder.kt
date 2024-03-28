@@ -27,7 +27,6 @@ class MessageCertificateViewHolder(
         item: BuyCertificatePropertyUI
     ) {
         super.bind(item)
-        debugLog { "MessageCertificateViewHolder onBind" }
         var addStar = ""
         if (item.required) {
             addStar = "*"

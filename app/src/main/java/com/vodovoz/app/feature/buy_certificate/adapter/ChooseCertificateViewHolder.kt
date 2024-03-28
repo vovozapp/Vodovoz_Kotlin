@@ -1,24 +1,53 @@
 package com.vodovoz.app.feature.buy_certificate.adapter
 
 import android.content.res.ColorStateList
-import android.view.LayoutInflater
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
-import com.google.android.material.chip.Chip
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ViewHolderChooseCertificateBinding
-import com.vodovoz.app.databinding.ViewSimpleTextChipBigBinding
+import com.vodovoz.app.feature.buy_certificate.adapter.inner.CertificateAdapter
 import com.vodovoz.app.ui.model.custom.BuyCertificateFieldUI
 import com.vodovoz.app.ui.model.custom.BuyCertificatePropertyUI
-import com.vodovoz.app.util.extensions.debugLog
 
 class ChooseCertificateViewHolder(
     private val binding: ViewHolderChooseCertificateBinding,
     private val onChangeAmount: (String) -> Unit,
     private val onChange: (String, BuyCertificateFieldUI) -> Unit,
 ) : ItemViewHolder<BuyCertificatePropertyUI>(binding.root) {
+
+    private val certAdapter: CertificateAdapter by lazy {
+        CertificateAdapter(
+            buyCertificatePropertyUI?.buyCertificateFieldUIList ?: emptyList()
+        ) { field ->
+            item?.code?.let { code ->
+                onChange(code, field)
+                buyCertificatePropertyUI = buyCertificatePropertyUI?.copy(
+                    buyCertificateFieldUIList = buyCertificatePropertyUI?.buyCertificateFieldUIList?.map {
+                        it.copy(
+                            isSelected = it.id == field.id
+                        )
+                    },
+                    error = false
+                )
+                buyCertificatePropertyUI?.let { property ->
+                    val color = if (property.error) {
+                        R.color.red
+                    } else {
+                        R.color.blackTextDark
+                    }
+                    binding.name.setTextColor(
+                        ColorStateList.valueOf(ContextCompat.getColor(binding.root.context, color))
+                    )
+                }
+                certAdapter.list =
+                    buyCertificatePropertyUI?.buyCertificateFieldUIList ?: emptyList()
+                certAdapter.notifyDataSetChanged()
+            }
+        }
+    }
 
     init {
         binding.amount.doAfterTextChanged {
@@ -37,71 +66,51 @@ class ChooseCertificateViewHolder(
         }
     }
 
+    private var buyCertificatePropertyUI: BuyCertificatePropertyUI? = null
+
+
     override fun bind(item: BuyCertificatePropertyUI) {
         super.bind(item)
-        debugLog { "ChooseCertificateViewHolder onBind" }
-        var addStar = ""
-        if (item.required) {
-            addStar = "*"
-        }
-        binding.name.text = buildString {
-            append(item.name)
-            append(addStar)
-        }
-        val color = if (item.error) {
-            R.color.red
-        } else {
-            R.color.blackTextDark
-        }
-        binding.name.setTextColor(
-            ColorStateList.valueOf(ContextCompat.getColor(binding.root.context, color))
-        )
-
-        binding.chipGroupCertificate.removeAllViews()
-        item.buyCertificateFieldUIList?.forEach {
-            binding.chipGroupCertificate.addView(
-                buildQueryChip(item.code, it, item.currentValue)
-            )
-        }
-
-        if (item.showAmount) {
-            binding.amountControllerDeployed.visibility = View.VISIBLE
-        }
-
-        if (item.text.isNotEmpty()) {
-            binding.txtViewText.text = item.text
-        } else {
-            binding.txtViewText.visibility = View.GONE
-        }
-    }
-
-
-    private fun buildQueryChip(
-        itemCode: String,
-        certificateField: BuyCertificateFieldUI,
-        currentValue: String,
-    ): Chip {
-        val chip =
-            ViewSimpleTextChipBigBinding.inflate(LayoutInflater.from(binding.root.context)).root
-        chip.text = certificateField.name
-        chip.chipBackgroundColor = if (certificateField.id == currentValue) {
-            ColorStateList.valueOf(ContextCompat.getColor(chip.context, R.color.bluePrimary))
-        } else {
-            ColorStateList.valueOf(ContextCompat.getColor(chip.context, R.color.gray))
-        }
-        chip.setTextColor(
-            if (certificateField.id == currentValue) {
-                ColorStateList.valueOf(ContextCompat.getColor(chip.context, R.color.white))
+        buyCertificatePropertyUI = item
+        buyCertificatePropertyUI?.let { property ->
+            var addStar = ""
+            if (property.required) {
+                addStar = "*"
+            }
+            binding.name.text = buildString {
+                append(property.name)
+                append(addStar)
+            }
+            val color = if (property.error) {
+                R.color.red
             } else {
-                ColorStateList.valueOf(ContextCompat.getColor(chip.context, R.color.blackTextDark))
+                R.color.blackTextDark
             }
-        )
+            binding.name.setTextColor(
+                ColorStateList.valueOf(ContextCompat.getColor(binding.root.context, color))
+            )
 
-        chip.setOnClickListener {
-            if (certificateField.id != currentValue) {
-                onChange(itemCode, certificateField)
+            binding.certificateRecyclerView.adapter = certAdapter
+            val divider =
+                DividerItemDecoration(binding.root.context, DividerItemDecoration.HORIZONTAL)
+            ContextCompat.getDrawable(binding.root.context, R.drawable.horizontal_divider_8)
+                ?.let { divider.setDrawable(it) }
+            if (binding.certificateRecyclerView.itemDecorationCount != 0) {
+                binding.certificateRecyclerView.removeItemDecorationAt(0)
+            }
+            binding.certificateRecyclerView.addItemDecoration(divider)
+            certAdapter.list = property.buyCertificateFieldUIList ?: emptyList()
+            certAdapter.notifyDataSetChanged()
+
+            if (property.showAmount) {
+                binding.amountControllerDeployed.visibility = View.VISIBLE
+            }
+
+            if (property.text.isNotEmpty()) {
+                binding.txtViewText.text = property.text
+            } else {
+                binding.txtViewText.visibility = View.GONE
             }
         }
-        return chip
     }
 }

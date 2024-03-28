@@ -79,6 +79,7 @@ object BuyCertificateJsonParser {
     private fun JSONObject.parseBuyCertificateField() = BuyCertificateField(
         id = safeString("ID"),
         name = safeString("NAME"),
+        imageUrl = safeString("PICTURE"),
     )
 
 

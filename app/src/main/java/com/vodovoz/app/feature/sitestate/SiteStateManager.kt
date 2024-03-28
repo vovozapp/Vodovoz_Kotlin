@@ -53,7 +53,7 @@ class SiteStateManager @Inject constructor(
     }
     
     fun savePushData(json: JSONObject) {
-        debugLog { "save push data $json" }
+        debugLog { "save push data $json $this" }
         val path = json.safeString("Secreen")
         val id = json.safeString("ID")
         val subsections = json.safeString("SUBSECTIONS")

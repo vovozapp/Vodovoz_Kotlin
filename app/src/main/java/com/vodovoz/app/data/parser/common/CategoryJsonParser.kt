@@ -21,7 +21,11 @@ object CategoryJsonParser {
         id = getLong("ID"),
         name = getString("NAME"),
         detailPicture = this.parseDetailImage(),
-        subCategoryEntityList = this.parseSubCategoryEntityList()
+        subCategoryEntityList = this.parseSubCategoryEntityList(),
+        actionEntity = when (safeString("UF_SILKAPEREXOD")) {
+            "pokypkasertificat" -> ActionEntity.BuyCertificate()
+            else -> null
+        }
     )
 
     private fun JSONObject.parseDetailImage() = when (has("PICTURE")) {
@@ -29,6 +33,7 @@ object CategoryJsonParser {
             true -> null
             else -> getString("PICTURE").parseImagePath()
         }
+
         false -> null
     }
 
@@ -50,6 +55,7 @@ object CategoryJsonParser {
             true -> null
             else -> getString("IKONKA")
         }
+
         false -> null
     }
 
@@ -66,6 +72,7 @@ object CategoryJsonParser {
                 "trekervodi" -> ActionEntity.WaterApp()
                 "dostavka" -> ActionEntity.Delivery()
                 "profil" -> ActionEntity.Profile()
+                "pokypkasertificat" -> ActionEntity.BuyCertificate()
                 else -> null
             }
         }

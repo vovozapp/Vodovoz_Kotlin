@@ -26,8 +26,8 @@ class CatalogFlowViewHolder(
         binding.subcategoryRecycler.adapter = adapter
 
         binding.root.setOnClickListener {
-            val itemId = item?.id ?: return@setOnClickListener
-            clickListener.onCategoryClick(itemId)
+            val item = item ?: return@setOnClickListener
+            clickListener.onCategoryClick(item)
         }
 
         binding.detailController.setOnClickListener {

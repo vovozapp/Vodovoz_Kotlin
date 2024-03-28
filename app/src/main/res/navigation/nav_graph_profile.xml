@@ -82,6 +82,9 @@
             app:destination="@id/sendCommentAboutProductFragment" />
         <action android:id="@+id/action_to_waterAppFragment"
             app:destination="@+id/waterAppFragment"/>
+        <action
+            android:id="@+id/action_to_buyCertificateFragment"
+            app:destination="@id/buyCertificateFragment"/>
     </fragment>
     <fragment
         android:id="@+id/catalogFragment"
@@ -108,6 +111,9 @@
         <action
             android:id="@+id/action_to_webViewFragment"
             app:destination="@id/webViewFragment" />
+        <action
+            android:id="@+id/action_to_buyCertificateFragment"
+            app:destination="@id/buyCertificateFragment" />
     </fragment>
     <fragment
         android:id="@+id/cartFragment"
@@ -473,6 +479,9 @@
         <action
             android:id="@+id/action_to_webViewFragment"
             app:destination="@id/webViewFragment" />
+        <action
+            android:id="@+id/action_to_buyCertificateFragment"
+            app:destination="@+id/buyCertificateFragment"/>
     </fragment>
     <fragment
         android:id="@+id/concreteFilterFragment"
@@ -544,7 +553,7 @@
             app:destination="@id/imagePickerFragment"
             />
     </dialog>
-    <dialog
+    <fragment
         android:id="@+id/aboutServicesDialogFragment"
         android:name="com.vodovoz.app.feature.bottom.services.AboutServicesDialogFragment"
         android:label="AboutServicesDialogFragment" >
@@ -554,7 +563,7 @@
         <action
             android:id="@+id/action_to_serviceDetailNewFragment"
             app:destination="@id/serviceDetailNewFragment" />
-    </dialog>
+    </fragment>
     <fragment
         android:id="@+id/mapDialogFragment"
         android:name="com.vodovoz.app.feature.map.MapDialogFragment"

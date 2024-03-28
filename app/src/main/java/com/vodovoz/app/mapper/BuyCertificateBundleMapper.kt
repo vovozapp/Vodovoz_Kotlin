@@ -34,7 +34,8 @@ object BuyCertificateBundleMapper {
             buyCertificateFieldUIList = it.buyCertificateFields?.map { field ->
                 BuyCertificateFieldUI(
                     id = field.id,
-                    name = field.name
+                    name = field.name,
+                    imageUrl = field.imageUrl,
                 )
             },
             showAmount = it.showAmount

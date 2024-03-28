@@ -23,18 +23,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupCertificate"
-            android:layout_width="match_parent"
+        <!--        <com.google.android.material.chip.ChipGroup-->
+        <!--            android:id="@+id/chipGroupCertificate"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginLeft="16dp"-->
+        <!--            android:layout_marginRight="16dp"-->
+        <!--            android:paddingVertical="8dp"-->
+        <!--            app:chipSpacingHorizontal="7dp"-->
+        <!--            app:chipSpacingVertical="7dp"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            app:singleLine="false" />-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/certificateRecyclerView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:paddingVertical="8dp"
-            app:chipSpacingHorizontal="7dp"
-            app:chipSpacingVertical="7dp"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:singleLine="false" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/amountControllerDeployed"
@@ -46,7 +56,7 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chipGroupCertificate"
+            app:layout_constraintTop_toBottomOf="@+id/certificateRecyclerView"
             tools:visibility="visible">
 
             <ImageView
