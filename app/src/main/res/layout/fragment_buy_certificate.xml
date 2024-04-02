@@ -3,8 +3,8 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nsvBuyCertificate"
@@ -20,11 +20,91 @@
             android:background="@color/light_gray"
             android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/buyCertificateRecycler"
+            <TextView
+                android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:background="@color/light_gray"
+                android:fontFamily="@font/rotonda_normal"
+                android:padding="@dimen/space_16"
+                android:textColor="@color/blackTextDark"
+                android:textSize="16sp"
+                tools:text="Вопрос какой-то" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/certificateRecyclerView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+/>
+
+            <LinearLayout
+                android:id="@+id/amountControllerDeployed"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_6"
+                android:orientation="horizontal"
+                android:src="@drawable/png_cart"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/reduceAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bkg_number_controller_part_reduce"
+                    android:padding="@dimen/space_6"
+                    android:src="@drawable/ic_minus"
+                    app:tint="@color/bluePrimary"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/amount"
+                    style="@style/TextViewNormalBlackBold"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bkg_number_controller_part_number"
+                    android:gravity="center"
+                    tools:ignore="SelectableText"
+                    tools:text="1" />
+
+                <ImageView
+                    android:id="@+id/increaseAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bkg_number_controller_part_increase_blue"
+                    android:padding="@dimen/space_6"
+                    android:src="@drawable/ic_plus"
+                    app:tint="@color/white"
+                    tools:ignore="ContentDescription" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtViewText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_gray"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="16dp"
+                android:textAllCaps="false"
+                android:textColor="@color/blackTextPrimary"
+                android:textSize="12sp"
+                android:textStyle="normal"
+                app:fontFamily="@font/rotondac"
+                tools:text="Доставка возможна только одному получателю. Если хотите поздравить несколько человек‚ оформите отдельные заказы." />
+
+            <!--            <androidx.recyclerview.widget.RecyclerView-->
+            <!--                android:id="@+id/buyCertificateRecycler"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:orientation="vertical" />-->
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvNamePayMethod"

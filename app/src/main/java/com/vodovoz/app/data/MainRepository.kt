@@ -92,7 +92,6 @@ import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.pars
 import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
 import com.vodovoz.app.feature.bottom.services.detail.model.ServicesDetailParser.parseServiceDetail
 import com.vodovoz.app.feature.map.api.MapKitFlowApi
-import com.vodovoz.app.feature.profile.viewholders.models.*
 import kotlinx.coroutines.coroutineScope
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -1140,7 +1139,7 @@ class MainRepository @Inject constructor(
         parking: Int?, // числовое значение
         appVersion: String?,
         checkDeliveryValue: Int?,
-        useScore: String = "N"
+        useScore: String = "N",
     ) = api.fetchRegOrderResponse(
         orderType = orderType,
         device = device,
@@ -1232,7 +1231,8 @@ class MainRepository @Inject constructor(
         code = code
     ).parseActivateCertificateResponse()
 
-    suspend fun fetchBuyCertificateInfo() = api.fetchBuyCertificateData().parseBuyCertificateResponse()
+    suspend fun fetchBuyCertificateInfo(userId: Long?) =
+        api.fetchBuyCertificateData(userId = userId).parseBuyCertificateResponse()
 
     suspend fun buyCertificate(
         userId: Long,

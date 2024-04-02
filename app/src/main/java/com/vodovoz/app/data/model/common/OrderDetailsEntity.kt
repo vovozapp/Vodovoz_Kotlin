@@ -20,5 +20,6 @@ class OrderDetailsEntity(
     val productEntityList: List<ProductEntity> = listOf(),
     val driverId: String? = null,
     val driverName: String? = null,
-    val orderPricesEntityList: List<OrderPricesEntity> = listOf()
+    val orderPricesEntityList: List<OrderPricesEntity> = listOf(),
+    val repeatOrder: Boolean = true,
 )

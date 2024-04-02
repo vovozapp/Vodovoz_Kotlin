@@ -1,6 +1,11 @@
 package com.vodovoz.app.data.parser.response.order
 
-import com.vodovoz.app.data.model.common.*
+import com.vodovoz.app.data.model.common.OrderDetailsEntity
+import com.vodovoz.app.data.model.common.OrderPricesEntity
+import com.vodovoz.app.data.model.common.OrderStatusEntity
+import com.vodovoz.app.data.model.common.PriceEntity
+import com.vodovoz.app.data.model.common.ProductEntity
+import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.common.safeInt
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.parser.common.safeStringConvertToBoolean
@@ -18,6 +23,7 @@ object OrderDetailsResponseJsonParser {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 responseJson.getJSONArray("data").getJSONObject(0).parseOrderDetailsEntity()
             )
+
             else -> ResponseEntity.Error("Неправильный запрос")
         }
     }
@@ -58,9 +64,12 @@ object OrderDetailsResponseJsonParser {
         driverName = if (has("VODILA") && !isNull("VODILA")) {
             getJSONObject("VODILA").safeString("NAME")
         } else null,
-        orderPricesEntityList = if(has("ITOG_DANNYE")){
+        orderPricesEntityList = if (has("ITOG_DANNYE")) {
             getJSONArray("ITOG_DANNYE").parseOrderPricesList()
-        } else listOf()
+        } else listOf(),
+        repeatOrder = if (has("POVTOR_ZAKAZA")) {
+            safeString("POVTOR_ZAKAZA")  == "Y"
+        } else true
     )
 
     private fun JSONArray.parseProductEntityList(): List<ProductEntity> =
@@ -121,6 +130,7 @@ object OrderDetailsResponseJsonParser {
                     90L -> true
                     else -> false
                 }
+
                 false -> {
                     if (has("IBLOCK_ID")) {
                         val idBlock = getLong("IBLOCK_ID")
@@ -135,6 +145,7 @@ object OrderDetailsResponseJsonParser {
                     26L -> true
                     else -> false
                 }
+
                 false -> {
                     if (has("IBLOCK_ID")) {
                         val idBlock = getLong("IBLOCK_ID")

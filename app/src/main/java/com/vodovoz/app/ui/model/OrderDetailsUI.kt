@@ -21,4 +21,5 @@ class OrderDetailsUI(
     val driverId: String? = null,
     val driverName: String? = null,
     val orderPricesUIList: List<OrderPricesUI> = listOf(),
+    val repeatOrder: Boolean = true,
 )

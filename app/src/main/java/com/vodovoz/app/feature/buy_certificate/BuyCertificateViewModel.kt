@@ -13,8 +13,8 @@ import com.vodovoz.app.mapper.BuyCertificateBundleMapper.mapToUI
 import com.vodovoz.app.mapper.OrderingCompletedInfoBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.PayMethodUI
 import com.vodovoz.app.ui.model.custom.BuyCertificateBundleUI
+import com.vodovoz.app.ui.model.custom.BuyCertificateTypeUI
 import com.vodovoz.app.ui.model.custom.OrderingCompletedInfoBundleUI
-import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -36,16 +36,22 @@ class BuyCertificateViewModel @Inject constructor(
 
     private val result: HashMap<String, String> = hashMapOf()
 
-    private var resultFlow: BuyCertificateState =
-        BuyCertificateState()
+    init {
+        getBuyCertificateBundle()
+    }
 
-    fun getBuyCertificateBundle() {
+    private fun getBuyCertificateBundle() {
         viewModelScope.launch {
             uiStateListener.value = state.copy(
                 loadingPage = true
             )
+            val userId = accountManager.fetchAccountId()
+            if (userId == null) {
+                eventListener.emit(BuyCertificateEvents.AuthError)
+                return@launch
+            }
             flow {
-                emit(repository.fetchBuyCertificateInfo())
+                emit(repository.fetchBuyCertificateInfo(userId))
             }
                 .flowOn(Dispatchers.IO)
                 .onEach { response ->
@@ -64,6 +70,20 @@ class BuyCertificateViewModel @Inject constructor(
                             uiStateListener.value = state.copy(
                                 data = state.data.copy(
                                     buyCertificateBundleUI = certificateBundle.copy(
+                                        typeList = certificateBundle.typeList?.mapIndexed { index, type ->
+                                            type.copy(
+                                                isSelected = index == 0,
+                                                buyCertificatePropertyList = type.buyCertificatePropertyList?.map { property ->
+                                                    if (property.code.contains("email")) {
+                                                        property.copy(
+                                                            currentValue = property.value,
+                                                        )
+                                                    } else {
+                                                        property.copy()
+                                                    }
+                                                }
+                                            )
+                                        },
                                         payment = certificateBundle.payment.copy(
                                             payMethods = payMethods
                                         )
@@ -72,12 +92,6 @@ class BuyCertificateViewModel @Inject constructor(
                                 loadingPage = false,
                                 error = null
                             )
-                            resultFlow = state.data.copy()
-
-                            certificateBundle.buyCertificatePropertyUIList.forEach {
-                                result[it.code] = ""
-                            }
-
                         }
                     } else {
                         uiStateListener.value =
@@ -95,83 +109,72 @@ class BuyCertificateViewModel @Inject constructor(
         }
     }
 
-    fun addResult(key: String, value: String) {
-        result[key] = value
-        if (key == "buyMoney") {
-            result[key] = buildString {
-                append("$value@")
-                append(resultFlow.buyCertificateBundleUI
-                    ?.buyCertificatePropertyUIList?.firstOrNull { it.code == key }
-                    ?.buyCertificateFieldUIList?.firstOrNull { it.id == value }
-                    ?.name
-                )
-            }
-        }
-        if (key != "quanity") {
-            resultFlow = resultFlow.copy(
-                buyCertificateBundleUI = resultFlow.buyCertificateBundleUI?.copy(
-                    buyCertificatePropertyUIList = resultFlow.buyCertificateBundleUI?.buyCertificatePropertyUIList?.map { property ->
-                        if (key == property.code) {
-                            if (key == "buyMoney") {
-                                property.copy(
-                                    buyCertificateFieldUIList = property.buyCertificateFieldUIList?.map {
-                                        if (value == it.id) {
-                                            it.copy(
-                                                isSelected = true
-                                            )
-                                        } else {
-                                            it.copy(
-                                                isSelected = false
-                                            )
-                                        }
-                                    },
-                                    error = false,
-                                    currentValue = value
-                                )
+    fun selectCertificate(id: String) {
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                buyCertificateBundleUI = state.data.buyCertificateBundleUI?.copy(
+                    certificateInfo = state.data.buyCertificateBundleUI?.certificateInfo?.copy(
+                        buyCertificateFieldUIList = state.data.buyCertificateBundleUI?.certificateInfo?.buyCertificateFieldUIList?.map {
+                            if (id == it.id) {
+                                it.copy(isSelected = true)
                             } else {
-                                property.copy(error = false, currentValue = value)
+                                it.copy(isSelected = false)
                             }
-                        } else {
-                            property
-                        }
-                    } ?: return
+                        },
+                        error = false
+                    )
                 )
             )
-        }
+        )
     }
 
-//    fun changeCertificate(currentCert: BuyCertificateFieldUI) {
-//        uiStateListener.value = state.copy(
-//            data = state.data.copy(
-//                buyCertificateBundleUI = state.data.buyCertificateBundleUI?.copy(
-//                    buyCertificatePropertyUIList = state.data.buyCertificateBundleUI?.buyCertificatePropertyUIList?.map {
-//                        if ("" == it.code) {
-//                            it.copy(error = false, currentValue = value)
-//                        } else {
-//                            it
-//                        }
-//                    } ?: return
-//                )
-//            )
-//        )
-//    }
-
+    fun addResult(key: String, value: String) {
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                buyCertificateBundleUI = state.data.buyCertificateBundleUI?.copy(
+                    typeList = state.data.buyCertificateBundleUI?.typeList?.map { type ->
+                        type.copy(
+                            buyCertificatePropertyList = type.buyCertificatePropertyList?.map { property ->
+                                if (key == property.code) {
+                                    property.copy(error = false, currentValue = value)
+                                } else {
+                                    property
+                                }
+                            } ?: return
+                        )
+                    }
+                )
+            )
+        )
+    }
 
     fun setSelectedPaymentMethod(itemId: Long) {
         val oldList =
             state.data.buyCertificateBundleUI?.payment?.payMethods ?: return
-        addResult(state.data.buyCertificateBundleUI?.payment?.code ?: "", itemId.toString())
-        resultFlow = resultFlow.copy(
-            buyCertificateBundleUI = resultFlow.buyCertificateBundleUI?.copy(
-                payment = resultFlow.buyCertificateBundleUI?.payment?.copy(
-                    payMethods = oldList.map {
-                        it.copy(isSelected = itemId == it.id)
-                    }
-                ) ?: return
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                buyCertificateBundleUI = state.data.buyCertificateBundleUI?.copy(
+                    payment = state.data.buyCertificateBundleUI?.payment?.copy(
+                        payMethods = oldList.map {
+                            it.copy(isSelected = itemId == it.id)
+                        }
+                    ) ?: return
+                )
             )
         )
+    }
+
+    fun selectType(selectedType: BuyCertificateTypeUI) {
         uiStateListener.value = state.copy(
-            data = resultFlow
+            data = state.data.copy(
+                buyCertificateBundleUI = state.data.buyCertificateBundleUI?.copy(
+                    typeList = state.data.buyCertificateBundleUI?.typeList?.map { type ->
+                        type.copy(
+                            isSelected = selectedType.type == type.type
+                        )
+                    }
+                )
+            )
         )
     }
 
@@ -188,50 +191,80 @@ class BuyCertificateViewModel @Inject constructor(
 
     fun buyCertificate() {
         viewModelScope.launch {
-            result.forEach { resultItem ->
-                val property =
-                    state.data.buyCertificateBundleUI?.buyCertificatePropertyUIList?.firstOrNull {
-                        it.code == resultItem.key
+            result.clear()
+            state.data.buyCertificateBundleUI?.let { bundle ->
+                result[bundle.certificateInfo?.code ?: "buyMoney"] = ""
+                bundle.certificateInfo?.buyCertificateFieldUIList?.firstOrNull { it.isSelected }
+                    ?.let {
+                        result[bundle.certificateInfo.code] = buildString {
+                            append("${it.id}@")
+                            append(it.name)
+                        }
                     }
-                if (property != null) {
-                    if (property.required && resultItem.value.isEmpty() ||
-                        resultItem.key == "email" && !FieldValidationsSettings.EMAIL_REGEX.matches(
-                            resultItem.value
-                        )
-                    ) {
-                        resultFlow = resultFlow.copy(
-                            buyCertificateBundleUI = resultFlow.buyCertificateBundleUI?.copy(
-                                buyCertificatePropertyUIList = resultFlow.buyCertificateBundleUI?.buyCertificatePropertyUIList?.map {
-                                    if (property.code == it.code) {
-                                        it.copy(error = true)
-                                    } else {
-                                        it
-                                    }
-                                } ?: return@launch
+
+                if (bundle.certificateInfo?.required == true
+                    && result[bundle.certificateInfo.code].isNullOrEmpty()
+                ) {
+                    uiStateListener.value = state.copy(
+                        data = state.data.copy(
+                            buyCertificateBundleUI = state.data.buyCertificateBundleUI?.copy(
+                                certificateInfo = state.data.buyCertificateBundleUI?.certificateInfo?.copy(
+                                    error = true
+                                )
                             )
                         )
-                        uiStateListener.value = state.copy(
-                            data = resultFlow
-                        )
-                        return@launch
-                    }
+                    )
+                    return@launch
                 }
-            }
-            val paymentCode = state.data.buyCertificateBundleUI?.payment?.code ?: ""
-            if (paymentCode.isNotEmpty()) {
-                val res = result[paymentCode]
-                if (res.isNullOrEmpty()) {
-                    resultFlow = resultFlow.copy(
-                        buyCertificateBundleUI = resultFlow.buyCertificateBundleUI?.copy(
-                            payment = resultFlow.buyCertificateBundleUI?.payment?.copy(
-                                error = true
-                            ) ?: return@launch
+
+                if (bundle.certificateInfo?.showAmount == true) {
+                    result["QUANITY"] = bundle.certificateInfo.count.toString()
+                }
+
+                bundle.typeList
+                    ?.firstOrNull { it.isSelected }?.let { type ->
+                        result[type.code] = type.type.toString()
+                        type.buyCertificatePropertyList?.forEach { property ->
+                            if (property.required && property.currentValue.isEmpty()) {
+                                uiStateListener.value = state.copy(
+                                    data = state.data.copy(
+                                        buyCertificateBundleUI = state.data.buyCertificateBundleUI?.copy(
+                                            typeList = state.data.buyCertificateBundleUI?.typeList?.map { type ->
+                                                if (type.isSelected) {
+                                                    type.copy(
+                                                        buyCertificatePropertyList = type.buyCertificatePropertyList?.map {
+                                                            if (it.code == property.code) {
+                                                                it.copy(error = true)
+                                                            } else {
+                                                                it
+                                                            }
+                                                        }
+                                                    )
+                                                } else {
+                                                    type.copy()
+                                                }
+                                            }
+                                        )
+                                    )
+                                )
+                            }
+                            result[property.code] = property.currentValue
+                        }
+                    }
+
+                result[bundle.payment.code] =
+                    bundle.payment.payMethods.firstOrNull { it.isSelected }?.id?.toString() ?: ""
+                if (result[bundle.payment.code].isNullOrEmpty()) {
+                    uiStateListener.value = state.copy(
+                        data = state.data.copy(
+                            buyCertificateBundleUI = state.data.buyCertificateBundleUI?.copy(
+                                payment = state.data.buyCertificateBundleUI?.payment?.copy(
+                                    error = true
+                                ) ?: return@launch
+                            )
                         )
                     )
-
-                    uiStateListener.value = state.copy(
-                        data = resultFlow
-                    )
+                    return@launch
                 }
             }
 
@@ -250,13 +283,6 @@ class BuyCertificateViewModel @Inject constructor(
                     when (response) {
                         is ResponseEntity.Success -> {
                             val data = response.data.mapToUI()
-                            uiStateListener.value = state.copy(
-                                data = state.data.copy(
-                                    orderingCompletedInfoBundleUI = data
-                                ),
-                                loadingPage = false,
-                                error = null
-                            )
                             eventListener.emit(BuyCertificateEvents.OrderSuccess(data))
                         }
 
@@ -281,9 +307,42 @@ class BuyCertificateViewModel @Inject constructor(
         }
     }
 
+    fun increaseCount() {
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                buyCertificateBundleUI = state.data.buyCertificateBundleUI?.copy(
+                    certificateInfo = state.data.buyCertificateBundleUI?.certificateInfo?.copy(
+                        count = state.data.buyCertificateBundleUI?.certificateInfo?.count?.plus(1)
+                            ?: 1
+                    )
+                )
+            )
+        )
+    }
+
+    fun decreaseCount() {
+        val oldCount = state.data.buyCertificateBundleUI?.certificateInfo?.count ?: 1
+        if (oldCount > 1) {
+            uiStateListener.value = state.copy(
+                data = state.data.copy(
+                    buyCertificateBundleUI = state.data.buyCertificateBundleUI?.copy(
+                        certificateInfo = state.data.buyCertificateBundleUI?.certificateInfo?.copy(
+                            count = oldCount.minus(1)
+                        )
+                    )
+                )
+            )
+        }
+    }
+
+    fun openLink(url: String) {
+        viewModelScope.launch {
+            eventListener.emit(BuyCertificateEvents.OpenLink(url))
+        }
+    }
+
     data class BuyCertificateState(
         val buyCertificateBundleUI: BuyCertificateBundleUI? = null,
-        val orderingCompletedInfoBundleUI: OrderingCompletedInfoBundleUI? = null,
     ) : State
 
     sealed interface BuyCertificateEvents : Event {
@@ -296,5 +355,9 @@ class BuyCertificateViewModel @Inject constructor(
         data class OrderSuccess(
             val data: OrderingCompletedInfoBundleUI,
         ) : BuyCertificateEvents
+
+        data object AuthError : BuyCertificateEvents
+
+        data class OpenLink(val url: String) : BuyCertificateEvents
     }
 }

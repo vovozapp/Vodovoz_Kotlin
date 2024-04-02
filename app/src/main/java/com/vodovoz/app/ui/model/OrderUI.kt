@@ -8,7 +8,8 @@ data class OrderUI(
     val orderStatusUI: OrderStatusUI?,
     val address: String?,
     val date: String,
-    val productUIList: List<ProductUI>
+    val productUIList: List<ProductUI>,
+    val repeatOrder: Boolean = true,
 ) : Item {
 
     override fun getItemViewType(): Int {

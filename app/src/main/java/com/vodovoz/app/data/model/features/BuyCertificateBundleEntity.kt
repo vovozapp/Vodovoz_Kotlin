@@ -5,6 +5,7 @@ import com.vodovoz.app.data.model.common.BuyCertificatePropertyEntity
 
 data class BuyCertificateBundleEntity(
     val title: String = "",
-    val buyCertificatePropertyEntityList: List<BuyCertificatePropertyEntity>,
-    val payment: BuyCertificatePayment
+    val certificateInfo: BuyCertificatePropertyEntity? = null,
+    val typeList: List<BuyCertificateTypeEntity>? = null,
+    val payment: BuyCertificatePayment,
 )

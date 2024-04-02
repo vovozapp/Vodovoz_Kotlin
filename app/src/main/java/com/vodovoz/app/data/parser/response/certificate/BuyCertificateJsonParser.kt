@@ -6,6 +6,8 @@ import com.vodovoz.app.data.model.common.BuyCertificatePropertyEntity
 import com.vodovoz.app.data.model.common.PayMethodEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.features.BuyCertificateBundleEntity
+import com.vodovoz.app.data.model.features.BuyCertificateTypeEntity
+import com.vodovoz.app.data.parser.common.safeInt
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
@@ -21,11 +23,11 @@ object BuyCertificateJsonParser {
                 BuyCertificateBundleEntity(
                     title = responseJson.getString("title"),
                     payment = responseJson.getJSONObject("oplata").parseBuyCertificatePayment(),
-                    buyCertificatePropertyEntityList = responseJson.getJSONArray("data")
-                        .parseBuyCertificatePropertyEntityList()
+                    certificateInfo = responseJson.getJSONObject("sertificat")
+                        .parseBuyCertificateProperty(),
+                    typeList = responseJson.getJSONArray("data").parseBuyCertificateTypeEntityList()
                 )
             )
-
             else -> ResponseEntity.Error(responseJson.getString("message"))
         }
     }
@@ -45,6 +47,22 @@ object BuyCertificateJsonParser {
     private fun JSONObject.parsePayMethodEntity() = PayMethodEntity(
         id = getString("VALUE").toLong(),
         name = getString("TEXT")
+    )
+
+    private fun JSONArray.parseBuyCertificateTypeEntityList(): List<BuyCertificateTypeEntity> =
+        mutableListOf<BuyCertificateTypeEntity>().also { list ->
+            for (index in 0 until length()) list.add(getJSONObject(index).parseBuyCertificateType())
+        }
+
+    private fun JSONObject.parseBuyCertificateType() = BuyCertificateTypeEntity(
+        type = safeInt("TIP"),
+        name = safeString("NAME"),
+        code = safeString("CODE"),
+        buyCertificatePropertyEntityList = if (has("DATA") && !isNull("DATA")) {
+            getJSONArray("DATA").parseBuyCertificatePropertyEntityList()
+        } else {
+            null
+        }
     )
 
     private fun JSONArray.parseBuyCertificatePropertyEntityList(): List<BuyCertificatePropertyEntity> =

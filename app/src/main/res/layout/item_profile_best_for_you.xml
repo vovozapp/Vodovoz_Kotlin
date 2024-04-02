@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="@dimen/space_8"
+    android:background="@color/dark_white"
+    android:paddingTop="16dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -13,15 +14,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/title_text_size_cat"
-        android:paddingTop="@dimen/space_8"
+        android:paddingTop="@dimen/space_16"
         android:paddingBottom="@dimen/space_8"
         android:paddingStart="@dimen/space_16"
         android:paddingEnd="@dimen/space_16"
+        android:background="@color/white"
         tools:text="Лучшее для вас"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bestForYouProductsRecycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="@color/white"/>
 
 </LinearLayout>

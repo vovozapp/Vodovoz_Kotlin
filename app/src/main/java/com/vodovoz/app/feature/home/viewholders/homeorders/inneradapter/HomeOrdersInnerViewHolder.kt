@@ -22,7 +22,7 @@ class HomeOrdersInnerViewHolder(
         }
         binding.tvAction.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            if (item.orderStatusUI != null && item.orderStatusUI.id == "F") {
+            if (item.orderStatusUI != null && item.orderStatusUI.id == "F" && item.repeatOrder) {
                 repeatOrderClickListener(item.id ?: throw RuntimeException("Order's id is null"))
             } else {
                 clickListener.onOrderClick(item.id)
@@ -35,7 +35,7 @@ class HomeOrdersInnerViewHolder(
 
         binding.tvStatus.text = item.orderStatusUI?.statusName
 
-        binding.tvAction.text = if (item.orderStatusUI?.id == "F") {
+        binding.tvAction.text = if (item.orderStatusUI?.id == "F" && item.repeatOrder) {
             "Повторить"
         } else {
             "Подробнее"
@@ -44,7 +44,7 @@ class HomeOrdersInnerViewHolder(
         binding.tvAddress.text = StringBuilder()
             .append("№")
             .append(item.id)
-            .append(" на ")
+            .append(" от ")
             .append(item.date)
             .append("\n")
             .append(item.address)
