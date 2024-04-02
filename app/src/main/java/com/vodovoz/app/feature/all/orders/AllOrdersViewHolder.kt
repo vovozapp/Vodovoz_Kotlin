@@ -33,13 +33,19 @@ class AllOrdersViewHolder(
         binding.root.setOnClickListener {
             val itemId = item?.id ?: return@setOnClickListener
             val item = item ?: return@setOnClickListener
-            allClickListener.onMoreDetailClick(itemId, item.orderStatusUI?.statusName == "Передан в службу доставки")
+            allClickListener.onMoreDetailClick(
+                itemId,
+                item.orderStatusUI?.statusName == "Передан в службу доставки"
+            )
         }
 
         binding.tvMoreDetails.setOnClickListener {
             val itemId = item?.id ?: return@setOnClickListener
             val item = item ?: return@setOnClickListener
-            allClickListener.onMoreDetailClick(itemId, item.orderStatusUI?.statusName == "Передан в службу доставки")
+            allClickListener.onMoreDetailClick(
+                itemId,
+                item.orderStatusUI?.statusName == "Передан в службу доставки"
+            )
         }
         binding.tvRepeatOrder.setOnClickListener {
             val itemId = item?.id ?: return@setOnClickListener
@@ -56,17 +62,51 @@ class AllOrdersViewHolder(
 
         binding.tvStatus.text = item.orderStatusUI?.statusName
         binding.tvAddress.text = item.address
-        binding.tvDate.text = "N° ${item.id} от ${item.date}"
+        binding.tvDate.text = buildString {
+            append("N° ")
+            append(item.id)
+            append(" от ")
+            append(item.date)
+        }
         binding.tvPrice.setPriceText(item.price)
-        binding.tvStatus.setTextColor(itemView.context.color(item.orderStatusUI?.color?: R.color.color_transparent))
-        binding.imgStatus.setImageDrawable(item.orderStatusUI?.image?.let { ContextCompat.getDrawable(itemView.context, it) })
-        binding.imgStatus.setColorFilter(itemView.context.color(item.orderStatusUI?.color?: R.color.color_transparent))
+        binding.tvStatus.setTextColor(
+            itemView.context.color(
+                item.orderStatusUI?.color ?: R.color.color_transparent
+            )
+        )
+        binding.imgStatus.setImageDrawable(item.orderStatusUI?.image?.let {
+            ContextCompat.getDrawable(
+                itemView.context,
+                it
+            )
+        })
+        binding.imgStatus.setColorFilter(
+            itemView.context.color(
+                item.orderStatusUI?.color ?: R.color.color_transparent
+            )
+        )
 
         val newDetailPictureList = mutableListOf<DetailPictureSlider>().apply {
-            item.productUIList.forEach { add(DetailPictureSlider(it.id, it.detailPicture, it.isAvailable)) }
+            item.productUIList.forEach {
+                add(
+                    DetailPictureSlider(
+                        it.id,
+                        it.detailPicture,
+                        it.isAvailable
+                    )
+                )
+            }
         }.toList()
 
         detailPictureFlowPagerAdapter.submitList(newDetailPictureList)
+
+        if (!item.repeatOrder) {
+            binding.tvRepeatOrder.visibility = View.GONE
+            binding.mdBetweenActions.visibility = View.GONE
+        } else {
+            binding.tvRepeatOrder.visibility = View.VISIBLE
+            binding.mdBetweenActions.visibility = View.VISIBLE
+        }
 
     }
 }

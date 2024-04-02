@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
@@ -28,6 +29,9 @@ abstract class BaseFragment : Fragment() {
 
     protected val contentView: View
         get() = requireView().findViewById(R.id.container_base)
+
+    protected val composeView: ComposeView
+        get() = requireView().findViewById(R.id.composeView)
 
     private val loader: View
         get() = viewBinding.containerProgress

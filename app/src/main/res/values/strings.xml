@@ -133,6 +133,9 @@
     <string name="fill_value" translatable="false">Заполнить</string>
     <string name="send" translatable="false">Отправить</string>
     <string name="buy" translatable="false">Купить</string>
+    <string name="logout" translatable="false">Выйти из аккаунта</string>
+    <string name="repeat" translatable="false">Повторить</string>
+    <string name="details" translatable="false">Подробнее</string>
 
 
 </resources>

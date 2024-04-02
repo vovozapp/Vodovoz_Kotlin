@@ -1,6 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
+    ext {
+        compose_ui_version = '1.5.2'
+    }
     dependencies {
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.5.3"
     }

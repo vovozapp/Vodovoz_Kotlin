@@ -6,5 +6,6 @@ class OrderEntity(
     val status: OrderStatusEntity? = null,
     val address: String? = null,
     val date: String = "",
-    val productEntityList: List<ProductEntity> = listOf()
+    val productEntityList: List<ProductEntity> = listOf(),
+    val repeatOrder: Boolean = true,
 )

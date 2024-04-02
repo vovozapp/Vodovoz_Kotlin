@@ -65,22 +65,29 @@ data class Zakaz(
     val PRICE: Int?,
     val STATUS_NAME: String?,
     val STATUS_NAME_ID: String?,
+    val POVTOR_ZAKAZA: String?,
 ) : Parcelable {
 
-    fun mapToUi() = OrderUI (
+    fun mapToUi() = OrderUI(
         id = ID?.toLong(),
         price = PRICE,
-        date = (DATE_OUT ?: "") + ", " + (INTERVAL ?: ""),
+        date = buildString {
+            append(DATE_OUT ?: "")
+            if (!INTERVAL.isNullOrEmpty()) {
+                append(", ")
+                append(INTERVAL)
+            }
+        },
         orderStatusUI = OrderStatusEntity.fromId(STATUS_NAME_ID ?: "").mapToUI(),
         address = ADRESSDOSTAVKI,
-        productUIList = listOf()
+        productUIList = listOf(),
+        repeatOrder = POVTOR_ZAKAZA.isNullOrEmpty() || POVTOR_ZAKAZA == "Y"
     )
 }
 
 fun List<Zakaz>.mapToUi(): List<OrderUI> {
     return this.map { it.mapToUi() }
 }
-
 
 
 @Parcelize

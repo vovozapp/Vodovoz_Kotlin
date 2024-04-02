@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@color/white"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <ViewStub
         android:id="@+id/container_base"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-        />
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/composeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbarLayout"
@@ -24,75 +30,77 @@
         <LinearLayout
             android:id="@+id/searchAppBar"
             android:layout_width="match_parent"
-            android:background="@color/white"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:visibility="gone"
-            tools:visibility="visible"
             android:paddingHorizontal="@dimen/space_16"
             android:paddingVertical="@dimen/space_8"
-            >
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imgBack"
-                android:visibility="gone"
                 android:layout_width="@dimen/_35sdp"
                 android:layout_height="@dimen/_33sdp"
                 android:layout_marginStart="-8dp"
                 android:paddingStart="@dimen/space_8"
                 android:paddingEnd="@dimen/space_8"
                 android:src="@drawable/ic_arrow_left"
-                app:tint="@color/text_black"/>
+                android:visibility="gone"
+                app:tint="@color/text_black" />
 
             <include
                 android:id="@+id/searchContainer"
-                layout="@layout/view_search"/>
+                layout="@layout/view_search" />
 
         </LinearLayout>
 
         <include
-            android:visibility="gone"
-            tools:visibility="visible"
             android:id="@+id/appBarDropDown"
-            layout="@layout/app_bar_drop_down" />
+            layout="@layout/app_bar_drop_down"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <include
-            android:visibility="gone"
-            tools:visibility="visible"
             android:id="@+id/appBarDef"
-            layout="@layout/app_bar_search" />
+            layout="@layout/app_bar_search"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <include
-            android:visibility="gone"
-            tools:visibility="visible"
+            android:id="@+id/appBarFilter"
             layout="@layout/app_bar_default_history"
-            android:id="@+id/appBarFilter"/>
+            android:visibility="gone"
+            tools:visibility="visible" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/fragment_base_error_flow" android:id="@+id/error"/>
+    <include
+        android:id="@+id/error"
+        layout="@layout/fragment_base_error_flow" />
 
     <View
         android:id="@+id/progressBg"
-        android:background="@color/white"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone" />
 
     <ProgressBar
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        style="@style/Widget.Material3.CircularProgressIndicator.Medium"
         android:id="@+id/container_progress"
-        app:indicatorSize="45dp"
-        app:trackThickness="4dp"
-        android:indeterminate="true"
+        style="@style/Widget.Material3.CircularProgressIndicator.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:indeterminate="true"
         android:visibility="gone"
+        app:indicatorSize="45dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:trackThickness="4dp"
         tools:visibility="visible" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

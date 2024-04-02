@@ -28,7 +28,8 @@ fun OrderDetailsEntity.mapToUI() = OrderDetailsUI(
     productUIList = productEntityList.mapToUI(),
     driverId = driverId,
     driverName = driverName,
-    orderPricesUIList = orderPricesEntityList.mapToUI()
+    orderPricesUIList = orderPricesEntityList.mapToUI(),
+    repeatOrder = repeatOrder,
 )
 
 fun List<OrderPricesEntity>.mapToUI() = this.map { it.mapToUI() }

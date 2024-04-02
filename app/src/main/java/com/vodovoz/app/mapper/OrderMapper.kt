@@ -16,7 +16,8 @@ object OrderMapper {
         orderStatusUI = status?.mapToUI(),
         address = address,
         date = date,
-        productUIList = productEntityList.mapToUI()
+        productUIList = productEntityList.mapToUI(),
+        repeatOrder = repeatOrder
     )
 
 }

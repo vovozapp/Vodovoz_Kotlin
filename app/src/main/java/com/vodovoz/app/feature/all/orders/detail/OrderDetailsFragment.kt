@@ -278,6 +278,10 @@ class OrderDetailsFragment : BaseFragment() {
                 submitList(orderDetailsUI.orderPricesUIList)
             }
 
+            if(!orderDetailsUI.repeatOrder){
+                binding.llRepeatOrder.visibility = View.GONE
+            }
+
 //            tvProductsPrice.setPriceText(orderDetailsUI.productsPrice)
 //            tvDepositPrice.setPriceText(orderDetailsUI.depositPrice)
 //            tvShippingPrice.setPriceText(orderDetailsUI.deliveryPrice)

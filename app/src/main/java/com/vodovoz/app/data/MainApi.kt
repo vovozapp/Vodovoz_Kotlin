@@ -656,6 +656,7 @@ interface MainApi {
     @GET("newmobile/osnova/sertificat/index.php")
     suspend fun fetchBuyCertificateData(
         @Query("action") action: String = "glav",
+        @Query("userid") userId: Long? = null,
     ): ResponseBody
 
     @GET("/newmobile/glavnaya/otzivtovari.php")

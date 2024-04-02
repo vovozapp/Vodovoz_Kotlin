@@ -4,6 +4,7 @@ import com.vodovoz.app.data.model.common.OrderEntity
 import com.vodovoz.app.data.model.common.OrderStatusEntity
 import com.vodovoz.app.data.model.common.ProductEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.parser.common.safeStringConvertToBoolean
 import com.vodovoz.app.data.remote.ResponseStatus
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
@@ -39,7 +40,10 @@ object AllOrdersResponseJsonParser {
         status = OrderStatusEntity.fromId(getString("STATUS_ID")),
         address = getString("ADDRESS"),
         date = getString("DATE_INSERT"),
-        productEntityList = getJSONArray("ITEMS").parseProductEntityList()
+        productEntityList = getJSONArray("ITEMS").parseProductEntityList(),
+        repeatOrder = if (has("POVTOR_ZAKAZA")) {
+            safeString("POVTOR_ZAKAZA")  == "Y"
+        } else true
     )
 
     private fun JSONArray.parseProductEntityList(): List<ProductEntity> =
