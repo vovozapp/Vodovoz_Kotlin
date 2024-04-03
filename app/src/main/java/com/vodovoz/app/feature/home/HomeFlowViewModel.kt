@@ -204,17 +204,19 @@ class HomeFlowViewModel @Inject constructor(
                 withContext(Dispatchers.Default) {
 //                    val response = responseBody.parsePopularSliderResponse()
                     if (response is ResponseEntity.Success) {
+                        val mappedData = response.data.mapToUI()
                         listOf(
                             PositionItem(
                                 POSITION_5,
-                                HomePopulars(POSITION_5, response.data.mapToUI())
+                                HomePopulars(POSITION_5, mappedData.categoryList)
                             ),
                             PositionItem(
                                 POSITION_4_TITLE,
                                 HomeTitle(
                                     id = POSITION_4_TITLE,
                                     type = HomeTitle.POPULARS_TITLE,
-                                    name = "Популярные разделы"
+                                    name = "Популярные разделы",
+                                    categoryProductsName = mappedData.name,
                                 )
                             )
                         )
@@ -477,10 +479,11 @@ class HomeFlowViewModel @Inject constructor(
                 withContext(Dispatchers.Default) {
 //                    val response = responseBody.parseBrandsSliderResponse()
                     if (response is ResponseEntity.Success) {
+                        val mappedData = response.data.mapToUI()
                         listOf(
                             PositionItem(
                                 POSITION_21,
-                                HomeBrands(POSITION_21, response.data.mapToUI())
+                                HomeBrands(POSITION_21, mappedData.brandsList)
                             ),
                             PositionItem(
                                 POSITION_20_TITLE,
@@ -489,7 +492,8 @@ class HomeFlowViewModel @Inject constructor(
                                     type = HomeTitle.BRANDS_TITLE,
                                     name = "Бренды",
                                     showAll = true,
-                                    showAllName = "СМ.ВСЕ"
+                                    showAllName = "СМ.ВСЕ",
+                                    categoryProductsName = mappedData.name
                                 )
                             )
                         )

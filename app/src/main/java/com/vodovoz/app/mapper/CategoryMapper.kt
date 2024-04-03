@@ -3,8 +3,10 @@ package com.vodovoz.app.mapper
 import com.vodovoz.app.data.model.common.CatalogBanner
 import com.vodovoz.app.data.model.common.CatalogEntity
 import com.vodovoz.app.data.model.common.CategoryEntity
+import com.vodovoz.app.data.model.common.CategoryMainEntity
 import com.vodovoz.app.ui.model.CatalogBannerUI
 import com.vodovoz.app.ui.model.CatalogUI
+import com.vodovoz.app.ui.model.CategoryMainUI
 import com.vodovoz.app.ui.model.CategoryUI
 
 object CategoryMapper {
@@ -22,6 +24,11 @@ object CategoryMapper {
         backgroundColor = backgroundColor,
         iconUrl = iconUrl,
         actionEntity = actionEntity
+    )
+
+    fun CategoryMainEntity.mapToUI() = CategoryMainUI(
+        name = name,
+        categoryList = categoryList.mapToUI()
     )
 
     fun List<CategoryEntity>.mapToUI(): List<CategoryUI> =
