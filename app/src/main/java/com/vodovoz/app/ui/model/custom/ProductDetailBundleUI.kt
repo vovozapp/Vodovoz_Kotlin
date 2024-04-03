@@ -11,7 +11,7 @@ class ProductDetailBundleUI(
     val commentImages: List<CommentImage> = listOf(),
     val searchWordList: List<String> = listOf(),
     val maybeLikeProductUIList: List<ProductUI> = listOf(),
-    val promotionUIList: List<PromotionUI> = listOf(),
+    val promotionsAction: PromotionsActionUI? = null,
     val recommendProductUIList: List<ProductUI> = listOf(),
     val buyWithProductUIList: List<ProductUI> = listOf(),
     val replacementProductsCategoryDetail: CategoryDetailUI?

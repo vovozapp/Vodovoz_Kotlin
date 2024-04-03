@@ -146,12 +146,19 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                 productsType = DISCOUNT,
                                 prodList = mappedData.recommendProductUIList
                             ),
+                            detailPromotionsTitle = HomeTitle(
+                                141,
+                                showAll = (mappedData.promotionsAction?.promotionUIList ?: emptyList()).size > 1,
+                                name = mappedData.promotionsAction?.name ?: "",
+                                type = VIEWED,
+                                lightBg = false,
+                            ),
                             detailPromotions = HomePromotions(
                                 8,
                                 PromotionsSliderBundleUI(
-                                    "Товар учавствующий в акции",
+                                    title = mappedData.promotionsAction?.name ?: "",
                                     containShowAllButton = false,
-                                    promotionUIList = mappedData.promotionUIList
+                                    promotionUIList = mappedData.promotionsAction?.promotionUIList ?: emptyList(),
                                 )
                             ),
                             detailSearchWord = DetailSearchWord(
@@ -409,6 +416,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val detailMaybeLikeProducts: DetailMaybeLike = DetailMaybeLike(9),
         val detailRecommendsProductsTitle: HomeTitle? = null,
         val detailRecommendsProducts: HomeProducts? = null,
+        val detailPromotionsTitle: HomeTitle? = null,
         val detailPromotions: HomePromotions? = null,
         val detailSearchWord: DetailSearchWord? = null,
         val detailBuyWithTitle: HomeTitle? = null,

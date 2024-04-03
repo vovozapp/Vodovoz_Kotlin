@@ -130,14 +130,9 @@ class PromotionDetailsFragment : BaseFragment() {
                 viewModel.observeUiState()
                     .collect { state ->
 
-                        if (state.loadingPage) {
-                            showLoader()
-                        } else {
-                            hideLoader()
-                            binding.timeLeftContainer.isVisible = true
-                            binding.customerCategoryCard.isVisible = true
-
-                        }
+                        showLoaderWithBg(state.loadingPage)
+                        binding.timeLeftContainer.isVisible = !state.loadingPage
+                        binding.customerCategoryCard.isVisible = !state.loadingPage
 
                         bindHeader(state.data.items)
                         bindErrorHeader(state.data.errorItem)

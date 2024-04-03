@@ -22,7 +22,7 @@ object ProductDetailBundleMapper {
         commentUIList = commentEntityList.mapToUI(),
         searchWordList = searchWordList,
         maybeLikeProductUIList = maybeLikeProductEntityList.mapToUI(),
-        promotionUIList = promotionEntityList.mapToUI(),
+        promotionsAction = promotionsActionEntity?.mapToUI(),
         recommendProductUIList = recommendProductEntityList.mapToUI(),
         buyWithProductUIList = buyWithProductEntityList.mapToUI(),
         replacementProductsCategoryDetail = replacementProductsCategoryDetail?.mapToUI()

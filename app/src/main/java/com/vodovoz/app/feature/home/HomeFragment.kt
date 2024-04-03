@@ -186,6 +186,7 @@ class HomeFragment : BaseFragment() {
                                     )
                                 }
                             }
+
                             "TOVAR" -> {
                                 val productId = it.id
                                 if (!productId.isNullOrEmpty()) {
@@ -202,6 +203,7 @@ class HomeFragment : BaseFragment() {
                                     )
                                 }
                             }
+
                             "RAZDEL" -> {
                                 val sectionId = it.id
                                 if (!sectionId.isNullOrEmpty()) {
@@ -218,6 +220,7 @@ class HomeFragment : BaseFragment() {
                                     )
                                 }
                             }
+
                             "Karta" -> {
                                 val orderId = it.orderId
                                 if (!orderId.isNullOrEmpty()) {
@@ -234,6 +237,7 @@ class HomeFragment : BaseFragment() {
                                     )
                                 }
                             }
+
                             "vsenovinki" -> {
                                 findNavController().navigate(
                                     HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
@@ -241,6 +245,7 @@ class HomeFragment : BaseFragment() {
                                     )
                                 )
                             }
+
                             "vseskidki" -> {
                                 findNavController().navigate(
                                     HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
@@ -248,6 +253,7 @@ class HomeFragment : BaseFragment() {
                                     )
                                 )
                             }
+
                             "BRAND" -> {
                                 val brandId = it.id
                                 if (!brandId.isNullOrEmpty()) {
@@ -262,10 +268,12 @@ class HomeFragment : BaseFragment() {
                                     findNavController().navigate(HomeFragmentDirections.actionToAllBrandsFragment())
                                 }
                             }
+
                             "BRANDY" -> {
                                 findNavController().navigate(HomeFragmentDirections.actionToAllBrandsFragment())
                                 siteStateManager.clearPushListener()
                             }
+
                             "about" -> {
                                 val section = it.section ?: return@collect
                                 if (section == "О магазине") {
@@ -280,6 +288,7 @@ class HomeFragment : BaseFragment() {
                                     findNavController().navigate(HomeFragmentDirections.actionToContactsFragment())
                                 }
                             }
+
                             "dostavka" -> {
                                 findNavController().navigate(
                                     HomeFragmentDirections.actionToWebViewFragment(
@@ -288,21 +297,27 @@ class HomeFragment : BaseFragment() {
                                     )
                                 )
                             }
+
                             "service" -> {
                                 findNavController().navigate(HomeFragmentDirections.actionToAboutServicesDialogFragment())
                             }
+
                             "remont_kulerov" -> {
                                 findNavController().navigate(HomeFragmentDirections.actionToAboutServicesDialogFragment())
                             }
+
                             "feedback" -> {
                                 findNavController().navigate(HomeFragmentDirections.actionToContactsFragment())
                             }
+
                             "TOVARY" -> {
 
                             }
+
                             "ACTIONS" -> {
 
                             }
+
                             "vseakcii" -> {
                                 findNavController().navigate(
                                     HomeFragmentDirections.actionToAllPromotionsFragment(
@@ -310,6 +325,7 @@ class HomeFragment : BaseFragment() {
                                     )
                                 )
                             }
+
                             "URL" -> {
                                 val url = it.id ?: return@collect
                                 findNavController().navigate(
@@ -319,18 +335,22 @@ class HomeFragment : BaseFragment() {
                                     )
                                 )
                             }
+
                             "trekervodi" -> {
                                 val eventName = "trekervodi_push"
                                 accountManager.reportYandexMetrica(eventName)
                                 findNavController().navigate(HomeFragmentDirections.actionToWaterAppFragment())
                             }
+
                             "profil" -> {
                                 flowViewModel.goToProfile()
                             }
+
                             "pokypkasertificat" -> {
-                                debugLog {"pokypkasertificat push" }
+                                debugLog { "pokypkasertificat push" }
                                 findNavController().navigate(HomeFragmentDirections.actionToBuyCertificateFragment())
                             }
+
                             null -> {}
                         }
                         it?.action?.let { action ->
@@ -342,7 +362,7 @@ class HomeFragment : BaseFragment() {
                                 )
                             }
                         }
-                        debugLog {"clear push" }
+                        debugLog { "clear push" }
                         siteStateManager.clearPushListener()
                     }
             }
@@ -409,8 +429,10 @@ class HomeFragment : BaseFragment() {
                             "mobile_app/" -> {
                                 findNavController().navigate(HomeFragmentDirections.actionToAboutAppDialogFragment())
                             }
+
                             "gl/" -> {
                             }
+
                             "kalkulyator_vody/" -> {
                                 val eventName = "trekervodi_ssilka"
                                 accountManager.reportYandexMetrica(eventName)
@@ -442,16 +464,19 @@ class HomeFragment : BaseFragment() {
                                     )
                                 )
                             }
+
                             is HomeFlowViewModel.HomeEvents.GoToProfile -> {
                                 tabManager.setAuthRedirect(findNavController().graph.id)
                                 tabManager.selectTab(R.id.graph_profile)
                             }
+
                             is HomeFlowViewModel.HomeEvents.SendComment -> {
                                 if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutShopBottomDialog) {
                                     findNavController().popBackStack()
                                 }
                                 findNavController().navigate(HomeFragmentDirections.actionToSendCommentAboutShopBottomDialog())
                             }
+
                             is HomeFlowViewModel.HomeEvents.GoToCart -> {
                                 MaterialAlertDialogBuilder(requireContext())
                                     .setTitle("Товары добавлены в корзину")
@@ -609,9 +634,11 @@ class HomeFragment : BaseFragment() {
                             )
                         )
                     }
+
                     ORDERS_TITLE -> {
                         findNavController().navigate(HomeFragmentDirections.actionToAllOrdersFragment())
                     }
+
                     NOVELTIES_TITLE -> {
                         findNavController().navigate(
                             HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
@@ -619,6 +646,7 @@ class HomeFragment : BaseFragment() {
                             )
                         )
                     }
+
                     PROMOTIONS_TITLE -> {
                         findNavController().navigate(
                             HomeFragmentDirections.actionToAllPromotionsFragment(
@@ -626,12 +654,15 @@ class HomeFragment : BaseFragment() {
                             )
                         )
                     }
+
                     BRANDS_TITLE -> {
                         findNavController().navigate(HomeFragmentDirections.actionToAllBrandsFragment())
                     }
+
                     VIEWED_TITLE -> {
 
                     }
+
                     COMMENTS_TITLE -> {
                         flowViewModel.onSendCommentClick()
                     }
@@ -815,47 +846,61 @@ class HomeFragment : BaseFragment() {
                 HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Brand(brandId = this.brandId)
                 )
+
             is ActionEntity.Brands -> {
                 HomeFragmentDirections.actionToAllBrandsFragment(this.brandIdList.toLongArray())
             }
+
             is ActionEntity.Product ->
                 HomeFragmentDirections.actionToProductDetailFragment(this.productId)
+
             is ActionEntity.Products ->
                 HomeFragmentDirections.actionToProductsCatalogFragment(
                     ProductsCatalogFragment.DataSource.BannerProducts(categoryId = this.categoryId)
                 )
+
             is ActionEntity.Promotion ->
                 HomeFragmentDirections.actionToPromotionDetailFragment(this.promotionId)
+
             is ActionEntity.Promotions -> HomeFragmentDirections.actionToAllPromotionsFragment(
                 AllPromotionsFragment.DataSource.ByBanner(this.categoryId)
             )
+
             is ActionEntity.AllPromotions -> HomeFragmentDirections.actionToAllPromotionsFragment(
                 AllPromotionsFragment.DataSource.All()
             )
+
             is ActionEntity.Link -> {
                 val openLinkIntent = Intent(Intent.ACTION_VIEW, Uri.parse(this.url))
                 activity.startActivity(openLinkIntent)
                 null
             }
+
             is ActionEntity.Category ->
                 HomeFragmentDirections.actionToPaginatedProductsCatalogFragment(this.categoryId)
+
             is ActionEntity.Discount -> HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                 PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
             )
+
             is ActionEntity.Novelties -> HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                 PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
             )
+
             is ActionEntity.WaterApp -> {
                 HomeFragmentDirections.actionToWaterAppFragment()
             }
+
             is ActionEntity.Delivery -> HomeFragmentDirections.actionToWebViewFragment(
                 ApiConfig.ABOUT_DELIVERY_URL,
                 "О доставке"
             )
+
             is ActionEntity.Profile -> {
                 flowViewModel.goToProfile()
                 null
             }
+
             is ActionEntity.BuyCertificate -> {
                 HomeFragmentDirections.actionToBuyCertificateFragment()
             }

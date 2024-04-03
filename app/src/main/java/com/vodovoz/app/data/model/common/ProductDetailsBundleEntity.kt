@@ -10,7 +10,7 @@ class ProductDetailsBundleEntity(
     val commentEntityList: List<CommentEntity> = listOf(),
     val searchWordList: List<String> = listOf(),
     val maybeLikeProductEntityList: List<ProductEntity> = listOf(),
-    val promotionEntityList: List<PromotionEntity> = listOf(),
+    val promotionsActionEntity: PromotionsActionEntity? = null,
     val recommendProductEntityList: List<ProductEntity> = listOf(),
     val buyWithProductEntityList: List<ProductEntity> = listOf(),
     val replacementProductsCategoryDetail: CategoryDetailEntity? = null

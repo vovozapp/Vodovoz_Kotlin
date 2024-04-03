@@ -200,6 +200,7 @@ class ProductDetailsFragment : BaseFragment() {
                                 detailState.detailBrandList.takeIf { it.productUiList.isNotEmpty() },
                                 detailState.detailRecommendsProductsTitle.takeIf { detailState.detailRecommendsProducts?.items?.first()?.productUIList?.size != 0 },
                                 detailState.detailRecommendsProducts.takeIf { it?.items?.first()?.productUIList?.size != 0 },
+                                detailState.detailPromotionsTitle.takeIf { detailState.detailPromotions?.items?.promotionUIList?.size != 0 },
                                 detailState.detailPromotions.takeIf { it?.items?.promotionUIList?.size != 0 },
                                 detailState.detailMaybeLikeProducts.takeIf { it.productUiList.isNotEmpty() },
                                 detailState.detailSearchWord.takeIf { it?.searchWordList?.size != 0 },

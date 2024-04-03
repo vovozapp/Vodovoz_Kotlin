@@ -60,8 +60,8 @@ object ProductDetailsResponseJsonParser {
                         .getJSONArray("REKOMEND").parseProductEntityList(),
                     searchWordList = responseJson.getJSONObject("klyshslova")
                         .getJSONArray("USHYTZAPROS").parseSearchWordList(),
-                    promotionEntityList = responseJson.getJSONObject("action")
-                        .getJSONArray("REKOMEND").parsePromotionEntityList(),
+                    promotionsActionEntity = if(responseJson.has("action")) { responseJson.getJSONObject("action").parsePromotionsActionEntity()}
+                        else { null },
                     serviceEntityList = when (responseJson.isNull("yslugi")) {
                         true -> listOf()
                         false -> responseJson.getJSONObject("yslugi")
@@ -313,5 +313,12 @@ object ProductDetailsResponseJsonParser {
         textColor = safeString("COLORTEXT")
     )
 
+    private fun JSONObject.parsePromotionsActionEntity() = PromotionsActionEntity (
+        name = safeString("NAME"),
+        promotionEntityList = getJSONArray("REKOMEND").parsePromotionEntityList(),
+    )
 
 }
+
+
+

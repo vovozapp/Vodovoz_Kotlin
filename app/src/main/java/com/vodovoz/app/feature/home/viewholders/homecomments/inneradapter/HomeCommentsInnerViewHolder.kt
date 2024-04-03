@@ -7,7 +7,7 @@ import com.vodovoz.app.ui.model.CommentUI
 
 class HomeCommentsInnerViewHolder(
     view: View,
-    private val clickListener: HomeCommentsSliderClickListener
+    private val clickListener: HomeCommentsSliderClickListener,
 ) : ItemViewHolder<CommentUI>(view) {
 
     private val binding: ViewHolderSliderCommentBinding = ViewHolderSliderCommentBinding.bind(view)
