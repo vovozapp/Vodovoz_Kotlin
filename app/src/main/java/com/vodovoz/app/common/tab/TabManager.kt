@@ -112,7 +112,8 @@ class TabManager @Inject constructor() {
 
     companion object {
         const val DEFAULT_STATE = -1
-        const val DEFAULT_AUTH_REDIRECT = R.id.graph_profile
+        @JvmField
+        val DEFAULT_AUTH_REDIRECT = R.id.graph_profile
         const val ADDRESSES_DEFAULT_STATE = false
     }
 }

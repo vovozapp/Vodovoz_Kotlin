@@ -4,9 +4,12 @@ import com.vodovoz.app.R
 
 object FieldValidationsSettings {
 
-    const val VALID_COLOR_ID: Int = R.color.text_gray
-    const val INVALID_COLOR_ID: Int = R.color.red
-    const val ACTIVATED_COLOR_ID: Int = R.color.bluePrimary
+    @JvmField
+    val VALID_COLOR_ID: Int = R.color.text_gray
+    @JvmField
+    val INVALID_COLOR_ID: Int = R.color.red
+    @JvmField
+    val ACTIVATED_COLOR_ID: Int = R.color.bluePrimary
 
     const val MIN_COMMENT_LENGTH = 30
 
