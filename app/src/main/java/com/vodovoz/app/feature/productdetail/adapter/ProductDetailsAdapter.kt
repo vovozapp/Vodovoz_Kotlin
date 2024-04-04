@@ -10,6 +10,7 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProductsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
+import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.HomeCategoriesInnerViewHolder
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotionsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleViewHolder
@@ -95,6 +96,11 @@ class ProductDetailsAdapter(
             //Comments
             R.layout.fragment_product_details_comments -> {
                 DetailCommentsViewHolder(getViewFromInflater(viewType, parent), clickListener)
+            }
+
+            //Viewed
+            R.layout.view_holder_slider_product_category -> {
+                HomeCategoriesInnerViewHolder(getViewFromInflater(viewType, parent), productsClickListener, cartManager, likeManager)
             }
 
             //Products sliders title

@@ -142,10 +142,12 @@ class ProductDetailsFragment : BaseFragment() {
                                     )
                                 )
                             }
+
                             is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProfile -> {
                                 tabManager.setAuthRedirect(findNavController().graph.id)
                                 tabManager.selectTab(R.id.graph_profile)
                             }
+
                             is ProductDetailsFlowViewModel.ProductDetailsEvents.SendComment -> {
                                 if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutProductFragment) {
                                     findNavController().popBackStack()
@@ -197,15 +199,39 @@ class ProductDetailsFragment : BaseFragment() {
                                 detailState.detailServices.takeIf { it?.items?.size != 0 },
                                 detailState.detailTabs,
                                 detailState.detailCatAndBrand,
-                                detailState.detailBrandList.takeIf { it.productUiList.isNotEmpty() },
-                                detailState.detailRecommendsProductsTitle.takeIf { detailState.detailRecommendsProducts?.items?.first()?.productUIList?.size != 0 },
-                                detailState.detailRecommendsProducts.takeIf { it?.items?.first()?.productUIList?.size != 0 },
-                                detailState.detailPromotionsTitle.takeIf { detailState.detailPromotions?.items?.promotionUIList?.size != 0 },
-                                detailState.detailPromotions.takeIf { it?.items?.promotionUIList?.size != 0 },
-                                detailState.detailMaybeLikeProducts.takeIf { it.productUiList.isNotEmpty() },
-                                detailState.detailSearchWord.takeIf { it?.searchWordList?.size != 0 },
-                                detailState.detailBuyWithTitle.takeIf { detailState.detailBuyWith?.items?.first()?.productUIList?.size != 0 },
-                                detailState.detailBuyWith.takeIf { it?.items?.first()?.productUIList?.size != 0 },
+                                detailState.detailBrandList.takeIf {
+                                    it.productUiList.isNotEmpty()
+                                },
+                                detailState.detailRecommendsProductsTitle.takeIf {
+                                    detailState.detailRecommendsProducts?.items?.first()?.productUIList?.size != 0
+                                },
+                                detailState.detailRecommendsProducts.takeIf {
+                                    it?.items?.first()?.productUIList?.size != 0
+                                },
+                                detailState.detailPromotionsTitle.takeIf {
+                                    detailState.detailPromotions?.items?.promotionUIList?.size != 0
+                                },
+                                detailState.detailPromotions.takeIf {
+                                    it?.items?.promotionUIList?.size != 0
+                                },
+                                detailState.detailMaybeLikeProducts.takeIf {
+                                    it.productUiList.isNotEmpty()
+                                },
+                                detailState.detailSearchWord.takeIf {
+                                    it?.searchWordList?.size != 0
+                                },
+                                detailState.detailBuyWithTitle.takeIf {
+                                    detailState.detailBuyWith?.items?.first()?.productUIList?.size != 0
+                                },
+                                detailState.detailBuyWith.takeIf {
+                                    it?.items?.first()?.productUIList?.size != 0
+                                },
+                                detailState.viewedProductsTitle.takeIf {
+                                    detailState.viewedProducts?.productUIList?.size != 0
+                                },
+                                detailState.viewedProducts.takeIf {
+                                    it?.productUIList?.isNotEmpty() ?: false
+                                },
                                 detailState.detailComments
                             )
                         )
@@ -245,7 +271,7 @@ class ProductDetailsFragment : BaseFragment() {
                 products: Array<ProductUI>,
                 id: Long,
                 name: String,
-                categoryId: Long?
+                categoryId: Long?,
             ) {
                 findNavController().navigate(
                     ProductDetailsFragmentDirections.actionToReplacementProductsSelectionBS(

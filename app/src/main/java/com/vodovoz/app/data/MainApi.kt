@@ -181,10 +181,11 @@ interface MainApi {
      */
 
     //Продукт
-    @GET("/newmobile/details/index_new.php")
+    @GET("/newmobile/details/index_new.php?userid=515")
     suspend fun fetchProductResponse(
         @Query("iblock_id") blockId: Int,
         @Query("detail") productId: Long,
+        @Query("userid") userId: Long? = null,
     ): ResponseBody
 
     //Продукты выбранного бренда

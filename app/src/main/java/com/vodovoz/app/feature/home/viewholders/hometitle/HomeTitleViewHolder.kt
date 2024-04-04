@@ -31,6 +31,8 @@ class HomeTitleViewHolder(
             binding.root.setBackgroundColor(itemView.context.color(R.color.light_bg))
         }
 
+        binding.dividerTop.isVisible = item.showTopDivider
+
         if (item.categoryProductsName.isNotEmpty()) {
             binding.tvName.text = item.categoryProductsName
         } else {

@@ -319,9 +319,10 @@ class MainRepository @Inject constructor(
 
     //Продукт
     suspend fun fetchProductResponse(
-        blockId: Int = 1,
+        blockId: Int = 12,
         productId: Long,
-    ) = api.fetchProductResponse(blockId, productId).parseProductDetailsResponse()
+        userId: Long? = null,
+    ) = api.fetchProductResponse(blockId, productId, userId).parseProductDetailsResponse()
 
     //Продукты выбранного бренда
     suspend fun fetchProductsByBrandResponse(

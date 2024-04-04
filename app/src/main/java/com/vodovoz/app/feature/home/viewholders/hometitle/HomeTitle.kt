@@ -10,7 +10,8 @@ data class HomeTitle(
     val showAllName: String = "",
     val type: Int,
     val lightBg: Boolean = true,
-    val categoryProductsName: String = ""
+    val categoryProductsName: String = "",
+    val showTopDivider: Boolean = false,
 ) : Item {
 
     companion object {

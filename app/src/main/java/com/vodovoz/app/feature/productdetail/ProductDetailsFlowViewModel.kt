@@ -30,6 +30,7 @@ import com.vodovoz.app.feature.productdetail.viewholders.detailsearchword.inner.
 import com.vodovoz.app.feature.productdetail.viewholders.detailservices.DetailServices
 import com.vodovoz.app.feature.productdetail.viewholders.detailtabs.DetailTabs
 import com.vodovoz.app.feature.products_slider.ProductsSliderConfig
+import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
 import com.vodovoz.app.mapper.PaginatedProductListMapper.mapToUI
 import com.vodovoz.app.mapper.ProductDetailBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryDetailUI
@@ -87,7 +88,46 @@ class ProductDetailsFlowViewModel @Inject constructor(
         }
     }
 
-    fun fetchProductDetail() {
+    private fun fetchViewedProducts() {
+        viewModelScope.launch {
+            val userId = accountManager.fetchAccountId() ?: return@launch
+            uiStateListener.value = state.copy(loadingPage = true)
+            flow {
+                emit(mainRepository.fetchViewedProductsSlider(userId = userId))
+            }
+                .flowOn(Dispatchers.IO)
+                .onEach { response ->
+                    uiStateListener.value = if (response is ResponseEntity.Success) {
+                        val mappedData: CategoryDetailUI = response.data.mapToUI()
+                        state.copy(
+                            viewedProducts = mappedData,
+                            viewedProductsTitle = HomeTitle(
+                                141,
+                                showAll = false,
+                                name = "Вы смотрели",
+                                type = VIEWED,
+                                categoryProductsName =  mappedData.name,
+                                showTopDivider = state.detailSearchWord?.searchWordList?.size == 0
+                            ),
+                            error = null,
+                            loadingPage = false
+                        )
+                    } else {
+                        state.copy(loadingPage = false, error = ErrorState.Error())
+                    }
+                }
+                .flowOn(Dispatchers.Default)
+                .catch {
+                    debugLog { "fetch viewed products error ${it.localizedMessage}" }
+                    uiStateListener.value =
+                        state.copy(error = it.toErrorState(), loadingPage = false)
+                }
+                .collect()
+        }
+
+    }
+
+     fun fetchProductDetail() {
         viewModelScope.launch {
             val productId = productId ?: return@launch
             uiStateListener.value = state.copy(loadingPage = true)
@@ -106,6 +146,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                 mappedData.productDetailUI.brandUI.id
                             )
                         }
+
+                        fetchViewedProducts()
 
                         state.copy(
                             productDetailUI = mappedData.productDetailUI,
@@ -148,7 +190,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
                             ),
                             detailPromotionsTitle = HomeTitle(
                                 141,
-                                showAll = (mappedData.promotionsAction?.promotionUIList ?: emptyList()).size > 1,
+                                showAll = (mappedData.promotionsAction?.promotionUIList
+                                    ?: emptyList()).size > 1,
                                 name = mappedData.promotionsAction?.name ?: "",
                                 type = VIEWED,
                                 lightBg = false,
@@ -158,7 +201,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                 PromotionsSliderBundleUI(
                                     title = mappedData.promotionsAction?.name ?: "",
                                     containShowAllButton = false,
-                                    promotionUIList = mappedData.promotionsAction?.promotionUIList ?: emptyList(),
+                                    promotionUIList = mappedData.promotionsAction?.promotionUIList
+                                        ?: emptyList(),
                                 )
                             ),
                             detailSearchWord = DetailSearchWord(
@@ -422,6 +466,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val detailBuyWithTitle: HomeTitle? = null,
         val detailBuyWith: HomeProducts? = null,
         val detailComments: DetailComments? = null,
+        val viewedProductsTitle: HomeTitle? = null,
+        val viewedProducts: CategoryDetailUI? = null,
         val error: ErrorState? = null,
         val loadingPage: Boolean = false,
     ) : State

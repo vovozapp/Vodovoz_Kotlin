@@ -207,7 +207,7 @@ class ProfileFlowViewModel @Inject constructor(
             withContext(Dispatchers.Default) {
 //                val response = responseBody.parseViewedProductsSliderResponse()
                 if (response is ResponseEntity.Success) {
-                    val data = response.data.mapToUI()
+                    val data = listOf(response.data.mapToUI())
                     listOf(
                         PositionItem(
                             position,
