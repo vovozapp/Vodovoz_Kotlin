@@ -35,6 +35,14 @@ object FavoriteHeaderResponseJsonParser {
                 notAvailableTitle = when(responseJson.has("nalichie") && !responseJson.isNull("nalichie")) {
                     true -> responseJson.getJSONObject("nalichie").getString("NAMENETNALICHIE")
                     false -> null
+                },
+                title = when(responseJson.has("title")) {
+                    true -> responseJson.getString("title")
+                    false -> null
+                },
+               message = when(responseJson.has("message")) {
+                    true -> responseJson.getString("message")
+                    false -> null
                 }
             )
         )

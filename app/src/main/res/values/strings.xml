@@ -136,6 +136,7 @@
     <string name="logout" translatable="false">Выйти из аккаунта</string>
     <string name="repeat" translatable="false">Повторить</string>
     <string name="details" translatable="false">Подробнее</string>
+    <string name="choose_sort" translatable="false">Выбрать сортировку</string>
 
 
 </resources>

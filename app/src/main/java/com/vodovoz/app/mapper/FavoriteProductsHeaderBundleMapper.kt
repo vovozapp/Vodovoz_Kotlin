@@ -11,7 +11,9 @@ object FavoriteProductsHeaderBundleMapper {
         availableTitle = availableTitle,
         notAvailableTitle = notAvailableTitle,
         favoriteCategoryUI = favoriteCategoryEntity?.mapToUI(),
-        bestForYouCategoryDetailUI = bestForYouCategoryDetailEntity?.mapToUI()
+        bestForYouCategoryDetailUI = bestForYouCategoryDetailEntity?.mapToUI(),
+        title = title,
+        message = message,
     )
 
 }

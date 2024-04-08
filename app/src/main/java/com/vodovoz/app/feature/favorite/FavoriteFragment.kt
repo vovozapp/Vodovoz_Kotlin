@@ -228,6 +228,9 @@ class FavoriteFragment : BaseFragment() {
 
         categoryTabsController.submitList(categoryUiList, "")
 
+        binding.tvEmptyTitle.text = state.emptyTitle
+        binding.tvEmptyMessage.text = state.emptyMessage
+
         binding.tvCategoryName.text = state.favoriteCategory?.name
         binding.tvProductAmount.text = state.favoriteCategory?.productAmount.toString()
         binding.availableTitle.text = state.availableTitle

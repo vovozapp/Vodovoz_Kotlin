@@ -7,5 +7,7 @@ class FavoriteProductsHeaderBundleEntity(
     val availableTitle: String? = null,
     val notAvailableTitle: String? = null,
     val favoriteCategoryEntity: CategoryEntity? = null,
-    val bestForYouCategoryDetailEntity: CategoryDetailEntity? = null
+    val bestForYouCategoryDetailEntity: CategoryDetailEntity? = null,
+    val title: String? = null,
+    val message: String? = null,
 )

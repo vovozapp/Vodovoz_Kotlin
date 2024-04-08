@@ -23,7 +23,7 @@ class BestForYouAdapter(
 
         return when (viewType) {
             R.layout.fragment_slider_product -> {
-                HomeProductsSliderViewHolder(getViewFromInflater(viewType, parent), productsShowAllListener, productsClickListener, cartManager, likeManager, false)
+                HomeProductsSliderViewHolder(getViewFromInflater(viewType, parent), productsShowAllListener, productsClickListener, cartManager, likeManager, true)
             }
             R.layout.view_holder_flow_title -> {
                 HomeTitleViewHolder(getViewFromInflater(viewType, parent))

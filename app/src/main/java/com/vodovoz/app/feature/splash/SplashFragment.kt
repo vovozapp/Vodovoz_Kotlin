@@ -77,9 +77,11 @@ class SplashFragment : BaseFragment() {
                         profileViewModel.fetchFirstUserData()
                         viewModel.sendFirebaseToken()
                     }
+
                     is ReloginManager.ReloginState.ReloginError -> {
                         showError(ErrorState.NetworkError())
                     }
+
                     else -> {}
                 }
             }
@@ -137,22 +139,26 @@ class SplashFragment : BaseFragment() {
 
     private fun initAnimation() {
         val localFile = SplashFileConfig.getSplashFile(requireContext())
-        val inputStream: InputStream = FileInputStream(localFile)
-        if (localFile.exists()) {
-            try {
-                binding.lottieSplashView.setFailureListener {
-                    debugLog { it.message.toString() }
-                    binding.logoLayout.visibility = View.VISIBLE
-                    binding.lottieSplashView.visibility = View.GONE
-                    binding.lottieSplashView.clearAnimation()
+        with(binding) {
+            if (localFile.exists()) {
+                try {
+                    val inputStream: InputStream = FileInputStream(localFile)
+                    lottieSplashView.setFailureListener {
+                        debugLog { it.message.toString() }
+                        logoLayout.visibility = View.VISIBLE
+                        lottieSplashView.visibility = View.GONE
+                        lottieSplashView.clearAnimation()
+                    }
+                    lottieSplashView.setAnimation(inputStream, null)
+                    lottieSplashView.playAnimation()
+                } catch (e: Exception) {
+                    debugLog { e.message.toString() }
                 }
-                binding.lottieSplashView.setAnimation(inputStream, null)
-                binding.lottieSplashView.playAnimation()
-            } catch (e: Exception) {
-                debugLog { e.message.toString() }
+            } else {
+                debugLog { "file is not exist" }
+                lottieSplashView.visibility = View.GONE
+                logoLayout.visibility = View.VISIBLE
             }
-        } else {
-            debugLog { "setAnimationFromLocal but file not exist" }
         }
     }
 

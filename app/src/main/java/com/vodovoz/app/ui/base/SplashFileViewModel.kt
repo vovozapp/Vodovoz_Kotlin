@@ -26,11 +26,11 @@ class SplashFileViewModel @Inject constructor(
         downloadSplashFile()
     }
 
-    fun downloadSplashFile() {
+    private fun downloadSplashFile() {
         var delayInMillis = 0L
         if (SplashFileConfig.getSplashFile(appContext).exists()) {
             _isLoading.value = false
-            delayInMillis = 3_000L
+            delayInMillis = 5_000L
         }
         viewModelScope.launch(Dispatchers.IO) {
             delay(delayInMillis)

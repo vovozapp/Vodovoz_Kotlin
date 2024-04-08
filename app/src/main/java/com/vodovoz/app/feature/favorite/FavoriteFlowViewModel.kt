@@ -100,7 +100,9 @@ class FavoriteFlowViewModel @Inject constructor(
                                 availableTitle = data.availableTitle,
                                 notAvailableTitle = data.notAvailableTitle,
                                 sortType = data.favoriteCategoryUI?.sortTypeList?.sortTypeList?.firstOrNull { it.value == "default" }
-                                    ?: SortTypeUI(sortName = "По популярности")
+                                    ?: SortTypeUI(sortName = "По популярности"),
+                                emptyTitle = data.title,
+                                emptyMessage = data.message,
                             ),
                             loadingPage = false,
                             error = null
@@ -302,19 +304,19 @@ class FavoriteFlowViewModel @Inject constructor(
         fetchFavoriteProductsSorted()
     }
 
-    fun updateByCategory(categoryId: Long?) {
-        if (state.data.selectedCategoryId == categoryId) return
-        uiStateListener.value = state.copy(
-            data = state.data.copy(
-                selectedCategoryId = categoryId ?: -1,
-                sortType = SortTypeUI(),
-            ),
-            page = 1,
-            loadMore = false,
-            loadingPage = true
-        )
-        fetchFavoriteProductsSorted()
-    }
+//    fun updateByCategory(categoryId: Long?) {
+//        if (state.data.selectedCategoryId == categoryId) return
+//        uiStateListener.value = state.copy(
+//            data = state.data.copy(
+//                selectedCategoryId = categoryId ?: -1,
+//                sortType = SortTypeUI(),
+//            ),
+//            page = 1,
+//            loadMore = false,
+//            loadingPage = true
+//        )
+//        fetchFavoriteProductsSorted()
+//    }
 
     fun updateBySortType(sortType: SortTypeUI) {
         if (state.data.sortType == sortType) return
@@ -364,6 +366,8 @@ class FavoriteFlowViewModel @Inject constructor(
         val isFirstLoadSorted: Boolean = false,
         val itemsList: List<Item> = emptyList(),
         val layoutManager: String = LINEAR,
+        val emptyTitle: String? = null,
+        val emptyMessage: String? = null,
     ) : State
 
     companion object {

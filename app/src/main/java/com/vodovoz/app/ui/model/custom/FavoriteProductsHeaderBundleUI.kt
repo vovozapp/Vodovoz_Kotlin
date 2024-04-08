@@ -7,5 +7,7 @@ class FavoriteProductsHeaderBundleUI(
     val availableTitle: String? = null,
     val notAvailableTitle: String? = null,
     val favoriteCategoryUI: CategoryUI? = null,
-    val bestForYouCategoryDetailUI: CategoryDetailUI? = null
+    val bestForYouCategoryDetailUI: CategoryDetailUI? = null,
+    val title: String? = null,
+    val message: String? = null,
 )
