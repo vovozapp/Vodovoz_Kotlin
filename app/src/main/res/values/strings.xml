@@ -35,7 +35,7 @@
     <string name="about_app" translatable="false">О приложении</string>
     <string name="show_all" translatable="false">СМ.ВСЕ</string>
     <string name="last_purchases" translatable="false">Прошлые покупки</string>
-    <string name="additional_navigation_favorite" translatable="false">Избранное \n</string>
+    <string name="additional_navigation_favorite" translatable="false">Избранное</string>
     <string name="additional_navigation_order_history" translatable="false">История заказов</string>
     <string name="brands" translatable="false">Бренды</string>
     <string name="novelty" translatable="false">Новинка</string>

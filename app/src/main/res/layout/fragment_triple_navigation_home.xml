@@ -13,8 +13,8 @@
         android:id="@+id/lastPurchases"
         android:layout_width="0dp"
         android:layout_height="100dp"
-        android:layout_marginStart="@dimen/space_8"
         android:layout_marginVertical="@dimen/space_8"
+        android:layout_marginStart="@dimen/space_8"
         app:cardCornerRadius="@dimen/corner_5"
         app:cardElevation="@dimen/elevation_3"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -36,7 +36,6 @@
                 android:layout_centerHorizontal="true"
                 android:padding="6dp"
                 android:src="@drawable/png_past_purchases"
-                app:layout_constraintBottom_toTopOf="@+id/appCompatTextView2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -50,9 +49,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:fontFamily="@font/rotondac"
-                android:textSize="14sp"
                 android:gravity="center"
                 android:text="@string/last_purchases"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -65,55 +64,54 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/favorite"
-        android:layout_height="100dp"
-
-        android:layout_marginVertical="@dimen/space_8"
         android:layout_width="0dp"
+
+        android:layout_height="100dp"
+        android:layout_marginVertical="@dimen/space_8"
+        android:layout_marginStart="@dimen/space_8"
         app:cardCornerRadius="@dimen/corner_5"
         app:cardElevation="@dimen/elevation_3"
-        android:layout_marginStart="@dimen/space_8"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ordersHistory"
         app:layout_constraintStart_toEndOf="@id/lastPurchases"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="8dp"
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
-                app:layout_constraintBottom_toTopOf="@+id/appCompatTextView3"
+                android:id="@+id/appCompatImageView3"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:padding="6dp"
+                android:src="@drawable/hearticon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/appCompatImageView3"
-                android:layout_height="40dp"
-                android:layout_width="40dp"
-                android:padding="6dp"
-                android:src="@drawable/hearticon"
                 app:tint="@color/bluePrimary"
                 tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/appCompatTextView3"
                 style="@style/TextViewNormalGray"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:fontFamily="@font/rotondac"
                 android:gravity="center"
+                android:text="@string/additional_navigation_favorite"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatImageView3"
-                android:layout_centerHorizontal="true"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:text="@string/additional_navigation_favorite" />
+                app:layout_constraintTop_toBottomOf="@+id/appCompatImageView3" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -121,54 +119,53 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/ordersHistory"
-        android:layout_height="100dp"
-        android:layout_marginEnd="@dimen/space_8"
-        android:layout_marginVertical="@dimen/space_8"
         android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginVertical="@dimen/space_8"
+        android:layout_marginStart="@dimen/space_8"
+        android:layout_marginEnd="@dimen/space_8"
         app:cardCornerRadius="@dimen/corner_5"
         app:cardElevation="@dimen/elevation_3"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginStart="@dimen/space_8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/favorite"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="8dp"
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
-                app:layout_constraintBottom_toTopOf="@+id/appCompatTextView4"
+                android:id="@+id/appCompatImageView4"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:padding="6dp"
+                android:src="@drawable/png_order_history"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:id="@+id/appCompatImageView4"
-                android:layout_centerHorizontal="true"
-                android:layout_height="40dp"
-                android:layout_width="40dp"
-                android:padding="6dp"
-                android:src="@drawable/png_order_history"
                 tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/appCompatTextView4"
+                style="@style/TextViewNormalGray"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/rotondac"
+                android:gravity="center"
+                android:text="@string/additional_navigation_order_history"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatImageView4"
-                style="@style/TextViewNormalGray"
-                android:textSize="14sp"
-                android:fontFamily="@font/rotondac"
-                android:gravity="center"
-                android:layout_centerHorizontal="true"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:text="@string/additional_navigation_order_history" />
+                app:layout_constraintTop_toBottomOf="@+id/appCompatImageView4" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
