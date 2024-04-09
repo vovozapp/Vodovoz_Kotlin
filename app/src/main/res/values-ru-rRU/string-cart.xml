@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     //Gifts
-    <string name="gift_selection_title">Ваши подарки</string>
-    <string name="take_gift_btn_text">Взять подарок</string>
+    <string name="gift_selection_title">Забрать подарок</string>
+    <string name="take_gift_btn_text">Забрать подарок</string>
 
     //Replacement Products
     <string name="not_available_product_title">Нет в наличии</string>

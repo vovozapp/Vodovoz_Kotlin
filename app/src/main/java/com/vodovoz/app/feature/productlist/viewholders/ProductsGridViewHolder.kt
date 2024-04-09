@@ -98,6 +98,7 @@ class ProductsGridViewHolder(
                 .filter { it.containsKey(item.id) }
                 .onEach {
                     item.cartQuantity = it[item.id] ?: item.cartQuantity
+                    item.oldQuantity = item.cartQuantity
                     updateCartQuantity(item)
                 }
                 .collect()
@@ -138,7 +139,6 @@ class ProductsGridViewHolder(
                 return@setOnClickListener
             }
 
-            item.oldQuantity = item.cartQuantity
             if(item.cartQuantity == 0) {
                 item.cartQuantity++
             }
@@ -148,7 +148,6 @@ class ProductsGridViewHolder(
 
         binding.amountController.reduceAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            item.oldQuantity = item.cartQuantity
             item.cartQuantity--
             if (item.cartQuantity < 0) item.cartQuantity = 0
             amountControllerTimer.cancel()
@@ -158,7 +157,6 @@ class ProductsGridViewHolder(
 
         binding.amountController.increaseAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            item.oldQuantity = item.cartQuantity
             item.cartQuantity++
             amountControllerTimer.cancel()
             amountControllerTimer.start()

@@ -16,6 +16,7 @@ import com.vodovoz.app.core.network.ApiConfig.AMOUNT_CONTROLLER_TIMER
 import com.vodovoz.app.databinding.ViewHolderSliderProductBinding
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
@@ -34,6 +35,10 @@ class HomeProductsInnerViewHolder(
         object : CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
             override fun onTick(millisUntilFinished: Long) {}
             override fun onFinish() {
+
+                val item = item ?: return
+                debugLog{"onChangeProductQuantity ${item.cartQuantity}, ${item.oldQuantity}"}
+                clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
                 hideAmountController()
             }
         }
@@ -48,6 +53,7 @@ class HomeProductsInnerViewHolder(
                 .filter { it.containsKey(item.id) }
                 .onEach {
                     item.cartQuantity = it[item.id] ?: item.cartQuantity
+                    item.oldQuantity = item.cartQuantity
                     updateCartQuantity(item)
                 }
                 .collect()
@@ -79,33 +85,30 @@ class HomeProductsInnerViewHolder(
                 clickListener.onNotifyWhenBeAvailable(item.id, item.name, item.detailPicture)
                 return@setOnClickListener
             }
+//            item.oldQuantity = item.cartQuantity
             if (item.cartQuantity == 0) {
-                item.oldQuantity = item.cartQuantity
                 item.cartQuantity++
-                clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
-                updateCartQuantity(item)
             }
+            updateCartQuantity(item)
             showAmountController()
         }
 
         binding.reduceAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            item.oldQuantity = item.cartQuantity
+//            item.oldQuantity = item.cartQuantity
             item.cartQuantity--
             if (item.cartQuantity < 0) item.cartQuantity = 0
             amountControllerTimer.cancel()
             amountControllerTimer.start()
-            clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
             updateCartQuantity(item)
         }
 
         binding.increaseAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            item.oldQuantity = item.cartQuantity
+//            item.oldQuantity = item.cartQuantity
             item.cartQuantity++
             amountControllerTimer.cancel()
             amountControllerTimer.start()
-            clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
             updateCartQuantity(item)
         }
 

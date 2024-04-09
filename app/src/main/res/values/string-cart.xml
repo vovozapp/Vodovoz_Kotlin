@@ -3,7 +3,7 @@
     <string name="cart_title" translatable="false">Корзина</string>
 
     //Gifts
-    <string name="gift_selection_title">Ваши подарки</string>
+    <string name="gift_selection_title">Забрать подарок</string>
     <string name="take_gift_btn_text">Забрать подарок</string>
 
     //Replacement Products

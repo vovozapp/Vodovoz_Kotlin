@@ -10,6 +10,7 @@ class CartBundleEntity(
     val infoMessage: MessageTextBasket? = null,
     val availableProductEntityList: List<ProductEntity> = listOf(),
     val notAvailableProductEntityList: List<ProductEntity> = listOf(),
-    val giftProductEntityList: List<ProductEntity> = listOf(),
-    val bestForYouCategoryDetailEntity: CategoryDetailEntity? = null
+    val giftProductEntity: GiftProductEntity? = null,
+    val bestForYouCategoryDetailEntity: CategoryDetailEntity? = null,
+    val giftTitleBottom: String? = null,
 )

@@ -100,6 +100,7 @@ class ServiceDetailProdViewHolder(
                 .filter { it.containsKey(item.id) }
                 .onEach {
                     item.cartQuantity = it[item.id] ?: item.cartQuantity
+                    item.oldQuantity = item.cartQuantity
                     updateCartQuantity(item)
                 }
                 .collect()
@@ -140,8 +141,7 @@ class ServiceDetailProdViewHolder(
             }
 
             if (item.cartQuantity == 0) {
-                item.oldQuantity = item.cartQuantity
-                item.cartQuantity = item.cartQuantity + coef
+                item.cartQuantity += coef
                 updateCartQuantity(item)
             }
             showAmountController()
@@ -150,8 +150,7 @@ class ServiceDetailProdViewHolder(
         binding.amountController.reduceAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
             val coef = item.serviceDetailCoef ?: return@setOnClickListener
-            item.oldQuantity = item.cartQuantity
-            item.cartQuantity = item.cartQuantity - coef
+            item.cartQuantity -= coef
             if (item.cartQuantity < 0) item.cartQuantity = 0
             amountControllerTimer.cancel()
             amountControllerTimer.start()
@@ -161,8 +160,7 @@ class ServiceDetailProdViewHolder(
         binding.amountController.increaseAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
             val coef = item.serviceDetailCoef ?: return@setOnClickListener
-            item.oldQuantity = item.cartQuantity
-            item.cartQuantity = item.cartQuantity + coef
+            item.cartQuantity += coef
             amountControllerTimer.cancel()
             amountControllerTimer.start()
             updateCartQuantity(item)

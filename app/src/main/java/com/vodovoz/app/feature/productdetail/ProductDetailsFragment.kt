@@ -76,7 +76,8 @@ class ProductDetailsFragment : BaseFragment() {
         ProductDetailFabController(
             context = requireContext(),
             viewModel = viewModel,
-            navController = findNavController()
+            navController = findNavController(),
+            cartManager = cartManager,
         )
     }
 

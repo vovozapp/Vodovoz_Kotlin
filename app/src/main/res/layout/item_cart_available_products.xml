@@ -12,11 +12,12 @@
         style="@style/TextViewNormalBlack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:paddingHorizontal="@dimen/space_16"
         android:paddingVertical="@dimen/space_8"
         android:visibility="gone"
-        android:background="@color/white"
-        tools:text="Для получения более интересного подарка осталось 984 Р" />
+        tools:text="Для получения более интересного подарка осталось 984 Р"
+        tools:visibility="visible" />
 
     <TextView
         style="@style/TextViewNormalBlackBold"

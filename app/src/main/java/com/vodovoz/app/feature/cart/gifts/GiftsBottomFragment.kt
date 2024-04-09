@@ -61,12 +61,15 @@ class GiftsBottomFragment : BaseBottomSheetFragment() {
 
         binding.rvGifts.adapter = giftsAdapter
 
-        giftsAdapter.submitList(args.giftList.toList())
 
         binding.incHeader.imgClose.setOnClickListener {
             requireDialog().cancel()
         }
-        binding.incHeader.tvTitle.text = getString(R.string.gift_selection_title)
+        val bundle = args.giftBundle
+        if(bundle!= null) {
+            giftsAdapter.submitList(bundle.productsList)
+            binding.incHeader.tvTitle.text = bundle.title
+        }
     }
 
 

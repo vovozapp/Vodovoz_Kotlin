@@ -34,6 +34,8 @@ class HomePromotionsProductInnerViewHolder(
     private val amountControllerTimer = object: CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
         override fun onTick(millisUntilFinished: Long) {}
         override fun onFinish() {
+            val item = item?: return
+            clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
             hideAmountController()
         }
     }
@@ -48,6 +50,7 @@ class HomePromotionsProductInnerViewHolder(
                 .filter{ it.containsKey(item.id) }
                 .onEach {
                     item.cartQuantity = it[item.id] ?: item.cartQuantity
+                    item.oldQuantity = item.cartQuantity
                     updateCartQuantity(item)
                 }
                 .collect()
@@ -80,9 +83,7 @@ class HomePromotionsProductInnerViewHolder(
                 return@setOnClickListener
             }
             if (item.cartQuantity == 0) {
-                item.oldQuantity = item.cartQuantity
                 item.cartQuantity++
-                clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
                 updateCartQuantity(item)
             }
             showAmountController()
@@ -90,22 +91,18 @@ class HomePromotionsProductInnerViewHolder(
 
         binding.reduceAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            item.oldQuantity = item.cartQuantity
             item.cartQuantity--
             if (item.cartQuantity < 0) item.cartQuantity = 0
             amountControllerTimer.cancel()
             amountControllerTimer.start()
-            clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
             updateCartQuantity(item)
         }
 
         binding.increaseAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            item.oldQuantity = item.cartQuantity
             item.cartQuantity++
             amountControllerTimer.cancel()
             amountControllerTimer.start()
-            clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
             updateCartQuantity(item)
         }
 

@@ -46,13 +46,11 @@ class AvailableProductsViewHolder(
             override fun onTick(millisUntilFinished: Long) {}
             override fun onFinish() {
                 val item = item ?: return
-                if (item.cartQuantity != item.oldQuantity) {
-                    productsClickListener.onChangeProductQuantity(
-                        item.id,
-                        item.cartQuantity,
-                        item.oldQuantity
-                    )
-                }
+                productsClickListener.onChangeProductQuantity(
+                    item.id,
+                    item.cartQuantity,
+                    item.oldQuantity
+                )
                 hideAmountController(item)
             }
         }
@@ -108,6 +106,7 @@ class AvailableProductsViewHolder(
                 .filter { it.containsKey(item.id) }
                 .onEach {
                     item.cartQuantity = it[item.id] ?: item.cartQuantity
+                    item.oldQuantity = item.cartQuantity
                     updateCartQuantity(item)
                 }
                 .collect()
@@ -141,7 +140,6 @@ class AvailableProductsViewHolder(
             debugLog { "isgift ${item.isGift} isBottle ${item.isBottle}" }
             if (item.isGift || item.chipsBan == 2 || item.chipsBan == 3 || item.chipsBan == 5) return@setOnClickListener
 
-            item.oldQuantity = item.cartQuantity
             if (item.cartQuantity == 0) {
                 item.cartQuantity++
             }
@@ -151,7 +149,6 @@ class AvailableProductsViewHolder(
 
         binding.amountController.reduceAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            item.oldQuantity = item.cartQuantity
             item.cartQuantity--
             if (item.cartQuantity < 0) item.cartQuantity = 0
             amountControllerTimer.cancel()
@@ -161,7 +158,6 @@ class AvailableProductsViewHolder(
 
         binding.amountController.increaseAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            item.oldQuantity = item.cartQuantity
             item.cartQuantity++
             amountControllerTimer.cancel()
             amountControllerTimer.start()
@@ -175,6 +171,7 @@ class AvailableProductsViewHolder(
                     item.isFavorite = false
                     binding.imgFavoriteStatus.isSelected = false
                 }
+
                 false -> {
                     item.isFavorite = true
                     binding.imgFavoriteStatus.isSelected = true
@@ -238,6 +235,7 @@ class AvailableProductsViewHolder(
                 binding.tvDepositPrice.visibility = View.VISIBLE
                 binding.tvDepositPrice.setDepositPriceText(item.depositPrice)
             }
+
             false -> binding.tvDepositPrice.visibility = View.GONE
         }
 
@@ -290,6 +288,7 @@ class AvailableProductsViewHolder(
                     R.drawable.ic_favorite_black
                 )
             )
+
             true -> binding.imgFavoriteStatus.setImageDrawable(
                 ContextCompat.getDrawable(
                     itemView.context,
@@ -318,8 +317,12 @@ class AvailableProductsViewHolder(
         if (item.cartQuantity < 0) {
             item.cartQuantity = 0
         }
+        if (item.oldQuantity == 0) {
+            item.oldQuantity = 1
+        }
         binding.amountController.amount.text = item.cartQuantity.toString()
         binding.amountController.circleAmount.text = item.cartQuantity.toString()
+        debugLog { "updateCartQuantity: ${item.oldQuantity} -> ${item.cartQuantity}" }
     }
 
     private fun bindDiscountAndStatuses(item: ProductUI) {
@@ -341,6 +344,7 @@ class AvailableProductsViewHolder(
                     item.priceList.first().oldPrice
                 )
             }
+
             else -> {
                 val sortedPriceList = item.priceList.sortedByDescending { it.requiredAmount }
 

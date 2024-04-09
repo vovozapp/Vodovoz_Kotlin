@@ -10,6 +10,7 @@ class CartBundleUI(
     val infoMessage: MessageTextBasket? = null,
     val availableProductUIList: List<ProductUI> = listOf(),
     val notAvailableProductUIList: List<ProductUI> = listOf(),
-    val giftProductUIList: List<ProductUI> = listOf(),
-    val bestForYouCategoryDetailUI: CategoryDetailUI? = null
+    val giftProductUI: GiftProductUI? = null,
+    val bestForYouCategoryDetailUI: CategoryDetailUI? = null,
+    val giftTitleBottom: String? = null,
 )

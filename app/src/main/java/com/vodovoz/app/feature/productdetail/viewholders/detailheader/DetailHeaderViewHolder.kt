@@ -109,6 +109,7 @@ class DetailHeaderViewHolder(
                 .filter { it.containsKey(item.id) }
                 .onEach {
                     item.cartQuantity = it[item.id] ?: item.cartQuantity
+                    item.oldQuantity = item.cartQuantity
                     updateCartQuantity(item)
                 }
                 .collect()
@@ -190,6 +191,19 @@ class DetailHeaderViewHolder(
     @SuppressLint("Range")
     override fun bind(item: DetailHeader) {
         super.bind(item)
+
+        launch {
+            val product = item.productDetailUI
+            cartManager
+                .observeCarts()
+                .filter { it.containsKey(product.id) }
+                .onEach {
+                    product.cartQuantity = it[product.id] ?: product.cartQuantity
+                    product.oldQuantity = product.cartQuantity
+                    updateCartQuantity(product)
+                }
+                .collect()
+        }
 
         binding.dotsIndicator.isVisible = item.productDetailUI.detailPictureList.size != 1
 
@@ -398,7 +412,6 @@ class DetailHeaderViewHolder(
 
     private fun reduceAmount(item: DetailHeader) {
         with(item.productDetailUI) {
-            item.productDetailUI.oldQuantity = item.productDetailUI.cartQuantity
             cartQuantity--
             if (cartQuantity < 0) cartQuantity = 0
             amountControllerTimer.cancel()
@@ -408,7 +421,6 @@ class DetailHeaderViewHolder(
     }
 
     private fun increaseAmount(item: DetailHeader) {
-        item.productDetailUI.oldQuantity = item.productDetailUI.cartQuantity
         item.productDetailUI.cartQuantity++
         amountControllerTimer.cancel()
         amountControllerTimer.start()
@@ -441,7 +453,6 @@ class DetailHeaderViewHolder(
 
         } else {
             if (item.productDetailUI.cartQuantity == 0) {
-                item.productDetailUI.oldQuantity = item.productDetailUI.cartQuantity
                 item.productDetailUI.cartQuantity++
                 updateCartQuantity(item.productDetailUI)
             }

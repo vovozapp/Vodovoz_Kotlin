@@ -12,15 +12,23 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
+import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.feature.productdetail.viewholders.detailheader.DetailHeader
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class ProductDetailFabController(
     private val context: Context,
     private val viewModel: ProductDetailsFlowViewModel,
     private val navController: NavController,
+    private val cartManager: CartManager,
 ) {
 
     private var timer: CountDownTimer? = null
@@ -30,8 +38,6 @@ class ProductDetailFabController(
         oldQuantity: Int,
         circleAmountTv: TextView,
         addIv: ImageView,
-        reduceIv: ImageView,
-        increaseIv: ImageView,
         amountDeployed: LinearLayout,
     ) {
         timer?.cancel()
@@ -68,14 +74,25 @@ class ProductDetailFabController(
     ) {
         if (header == null) return
 
+        CoroutineScope(Dispatchers.Main).launch {
+            cartManager
+                .observeCarts()
+                .filter { it.containsKey(header.productDetailUI.id) }
+                .onEach {
+                    header.productDetailUI.cartQuantity =
+                        it[header.productDetailUI.id] ?: header.productDetailUI.cartQuantity
+                    header.productDetailUI.oldQuantity = header.productDetailUI.cartQuantity
+                    updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, circleAmountTv)
+                }
+                .collect()
+        }
+
         addIv.setOnClickListener {
             add(
                 header,
                 amountTv,
                 circleAmountTv,
                 addIv,
-                reduceIv,
-                increaseIv,
                 amountDeployed
             )
         }
@@ -85,8 +102,6 @@ class ProductDetailFabController(
                 amountTv,
                 circleAmountTv,
                 addIv,
-                reduceIv,
-                increaseIv,
                 amountDeployed
             )
         }
@@ -96,8 +111,6 @@ class ProductDetailFabController(
                 amountTv,
                 circleAmountTv,
                 addIv,
-                reduceIv,
-                increaseIv,
                 amountDeployed
             )
         }
@@ -109,6 +122,7 @@ class ProductDetailFabController(
                     true -> {
                         addIv.isSelected = true
                     }
+
                     false -> {
                         addIv.setBackgroundResource(R.drawable.bkg_button_orange_circle_normal)
                         addIv.setImageDrawable(
@@ -118,9 +132,11 @@ class ProductDetailFabController(
                             )
                         )
                     }
+
                     else -> {}
                 }
             }
+
             false -> {
                 addIv.isSelected = false
             }
@@ -142,6 +158,7 @@ class ProductDetailFabController(
                     header.productDetailUI.priceUIList.first().oldPrice
                 ) haveDiscount = true
             }
+
             else -> {
                 val minimalPrice =
                     header.productDetailUI.priceUIList.maxByOrNull { it.requiredAmount }!!
@@ -155,6 +172,7 @@ class ProductDetailFabController(
                 currentPriceTv.setTextColor(ContextCompat.getColor(context, R.color.red))
                 oldPriceTv.visibility = View.VISIBLE
             }
+
             false -> {
                 currentPriceTv.setTextColor(ContextCompat.getColor(context, R.color.text_black))
                 oldPriceTv.visibility = View.GONE
@@ -177,6 +195,7 @@ class ProductDetailFabController(
             true -> {
                 circleAmountTv.visibility = View.VISIBLE
             }
+
             false -> {
                 circleAmountTv.visibility = View.GONE
             }
@@ -188,11 +207,9 @@ class ProductDetailFabController(
         amountTv: TextView,
         circleAmountTv: TextView,
         addIv: ImageView,
-        reduceIv: ImageView,
-        increaseIv: ImageView,
         amountDeployed: LinearLayout,
     ) {
-        val oldQ = header.productDetailUI.cartQuantity
+        val oldQ = header.productDetailUI.oldQuantity
         if (header.productDetailUI.leftItems == 0) {
             header.replacementProductsCategoryDetail?.let {
                 if (it.productUIList.isNotEmpty()) {
@@ -216,8 +233,6 @@ class ProductDetailFabController(
                 oldQ,
                 circleAmountTv,
                 addIv,
-                reduceIv,
-                increaseIv,
                 amountDeployed
             )
         }
@@ -228,13 +243,11 @@ class ProductDetailFabController(
         amountTv: TextView,
         circleAmountTv: TextView,
         addIv: ImageView,
-        reduceIv: ImageView,
-        increaseIv: ImageView,
         amountDeployed: LinearLayout,
     ) {
-        val oldQ = header.productDetailUI.cartQuantity
+        val oldQ = header.productDetailUI.oldQuantity
         header.productDetailUI.cartQuantity++
-        startTimer(header, oldQ, circleAmountTv, addIv, reduceIv, increaseIv, amountDeployed)
+        startTimer(header, oldQ, circleAmountTv, addIv, amountDeployed)
         updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, circleAmountTv)
     }
 
@@ -243,15 +256,13 @@ class ProductDetailFabController(
         amountTv: TextView,
         circleAmountTv: TextView,
         addIv: ImageView,
-        reduceIv: ImageView,
-        increaseIv: ImageView,
         amountDeployed: LinearLayout,
     ) {
         with(header) {
-            val oldQ = productDetailUI.cartQuantity
+            val oldQ = productDetailUI.oldQuantity
             productDetailUI.cartQuantity--
             if (productDetailUI.cartQuantity < 0) productDetailUI.cartQuantity = 0
-            startTimer(header, oldQ, circleAmountTv, addIv, reduceIv, increaseIv, amountDeployed)
+            startTimer(header, oldQ, circleAmountTv, addIv, amountDeployed)
             updateFabQuantity(productDetailUI.cartQuantity, amountTv, circleAmountTv)
         }
     }
@@ -261,14 +272,12 @@ class ProductDetailFabController(
         oldQ: Int,
         circleAmountTv: TextView,
         addIv: ImageView,
-        reduceIv: ImageView,
-        increaseIv: ImageView,
         amountDeployed: LinearLayout,
     ) {
         circleAmountTv.visibility = View.GONE
         addIv.visibility = View.GONE
         amountDeployed.visibility = View.VISIBLE
-        startTimer(header, oldQ, circleAmountTv, addIv, reduceIv, increaseIv, amountDeployed)
+        startTimer(header, oldQ, circleAmountTv, addIv, amountDeployed)
     }
 
     internal fun hideAmountController(

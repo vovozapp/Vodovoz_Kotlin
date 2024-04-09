@@ -375,8 +375,10 @@
         android:name="com.vodovoz.app.feature.cart.gifts.GiftsBottomFragment"
         android:label="GiftsBottomFragment" >
         <argument
-            android:name="giftList"
-            app:argType="com.vodovoz.app.ui.model.ProductUI[]" />
+            android:name="giftBundle"
+            app:argType="com.vodovoz.app.ui.model.custom.GiftProductUI"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </dialog>
     <dialog
         android:id="@+id/singleRootCatalogBottomFragment"

@@ -18,6 +18,7 @@ import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.mapper.CartBundleMapper.mapUoUI
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.ui.model.custom.GiftProductUI
 import com.vodovoz.app.util.CalculatedPrices
 import com.vodovoz.app.util.calculatePrice
 import com.vodovoz.app.util.extensions.debugLog
@@ -96,8 +97,10 @@ class CartFlowViewModel @Inject constructor(
                             data = state.data.copy(
                                 coupon = coupon ?: "",
                                 infoMessage = mappedData.infoMessage,
-                                giftMessageBottom = mappedData.giftMessageBottom,
-                                giftProductUIList = mappedData.giftProductUIList,
+                                giftMessageBottom = mappedData.giftMessageBottom?.copy(
+                                    title = mappedData.giftTitleBottom
+                                ),
+                                giftProductUI = mappedData.giftProductUI,
                                 availableProducts = CartAvailableProducts(
                                     CART_AVAILABLE_PRODUCTS_ID,
                                     availableProducts,
@@ -229,7 +232,7 @@ class CartFlowViewModel @Inject constructor(
             if (id == null) {
                 eventListener.emit(CartEvents.NavigateToProfile)
             } else {
-                eventListener.emit(CartEvents.NavigateToGifts(state.data.giftProductUIList))
+                eventListener.emit(CartEvents.NavigateToGifts(state.data.giftProductUI))
             }
         }
     }
@@ -265,7 +268,7 @@ class CartFlowViewModel @Inject constructor(
         val coupon: String = "",
         val infoMessage: MessageTextBasket? = null,
         val giftMessageBottom: MessageTextBasket? = null,
-        val giftProductUIList: List<ProductUI> = emptyList(),
+        val giftProductUI: GiftProductUI? = null,
         val availableProducts: CartAvailableProducts? = null,
         val notAvailableProducts: CartNotAvailableProducts? = null,
         val total: CartTotal? = null,
@@ -283,7 +286,7 @@ class CartFlowViewModel @Inject constructor(
             val coupon: String,
         ) : CartEvents()
 
-        data class NavigateToGifts(val list: List<ProductUI>) : CartEvents()
+        data class NavigateToGifts(val giftProducts: GiftProductUI?) : CartEvents()
         object NavigateToProfile : CartEvents()
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
             CartEvents()

@@ -5,6 +5,7 @@ import com.vodovoz.app.data.model.common.PriceEntity
 import com.vodovoz.app.data.model.common.ProductEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.features.CartBundleEntity
+import com.vodovoz.app.data.model.features.GiftProductEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
 import com.vodovoz.app.data.parser.common.safeDouble
 import com.vodovoz.app.data.parser.common.safeInt
@@ -19,27 +20,43 @@ object CartResponseJsonParser {
 
     fun ResponseBody.parseCartResponse(): ResponseEntity<CartBundleEntity> {
         val responseJson = JSONObject(this.string())
-     //   Log.d(LogSettings.RESPONSE_BODY_LOG, "--------------------------------------------------------CART")
-     //   Log.d(LogSettings.RESPONSE_BODY_LOG, responseJson.toString(2))
+        //   Log.d(LogSettings.RESPONSE_BODY_LOG, "--------------------------------------------------------CART")
+        //   Log.d(LogSettings.RESPONSE_BODY_LOG, responseJson.toString(2))
         return ResponseEntity.Success(
             CartBundleEntity(
-                giftMessageBottom = responseJson.getJSONArray("textkorzina").getMessageTextBasketOrNull("text_niz"),
-                infoMessage = responseJson.getJSONArray("textkorzina").getMessageTextBasketOrNull("okno"),
-                giftMessage = responseJson.getJSONArray("textkorzina").getMessageTextBasketOrNull("text"),
-                availableProductEntityList = responseJson.getJSONArray("data").parseProductEntityList(),
-                notAvailableProductEntityList = when(responseJson.has("netvnalichii")) {
-                    true -> responseJson.getJSONObject("netvnalichii").parseNotAvailableProductEntityList()
+                giftTitleBottom = when (responseJson.isNull("osnovapodarki")) {
+                    true -> null
+                    false -> responseJson.getJSONObject("osnovapodarki").safeString("NAME")
+                },
+                giftMessageBottom = responseJson.getJSONArray("textkorzina")
+                    .getMessageTextBasketOrNull("text_niz"),
+                infoMessage = responseJson.getJSONArray("textkorzina")
+                    .getMessageTextBasketOrNull("okno"),
+                giftMessage = responseJson.getJSONArray("textkorzina")
+                    .getMessageTextBasketOrNull("text"),
+                availableProductEntityList = responseJson.getJSONArray("data")
+                    .parseProductEntityList(),
+                notAvailableProductEntityList = when (responseJson.has("netvnalichii")) {
+                    true -> responseJson.getJSONObject("netvnalichii")
+                        .parseNotAvailableProductEntityList()
+
                     false -> listOf()
                 },
-                giftProductEntityList = when(responseJson.isNull("osnovapodarki")) {
+                giftProductEntity = when (responseJson.isNull("osnovapodarki")) {
                     false -> try {
-                        responseJson.getJSONObject("osnovapodarki").getJSONArray("PODARKI").parseGiftProductEntityList()
+                        GiftProductEntity(
+                            title = responseJson.getJSONObject("osnovapodarki").safeString("NAME"),
+                            productsList = responseJson.getJSONObject("osnovapodarki")
+                                .getJSONArray("PODARKI").parseGiftProductEntityList()
+                        )
+
                     } catch (t: Throwable) {
-                        listOf()
+                        GiftProductEntity()
                     }
-                    true -> listOf()
+
+                    true -> GiftProductEntity()
                 },
-                bestForYouCategoryDetailEntity = when(responseJson.has("tovary")) {
+                bestForYouCategoryDetailEntity = when (responseJson.has("tovary")) {
                     true -> responseJson.parseBestForYouCategoryDetailEntity()
                     false -> null
                 }
@@ -47,7 +64,7 @@ object CartResponseJsonParser {
         )
     }
 
-    private fun JSONArray.getMessageTextBasketOrNull(id: String) : MessageTextBasket? {
+    private fun JSONArray.getMessageTextBasketOrNull(id: String): MessageTextBasket? {
         var messageTextBasket: MessageTextBasket? = null
         for (index in 0 until length()) {
             if (getJSONObject(index).has("ID")) {
@@ -63,7 +80,8 @@ object CartResponseJsonParser {
         }
         return messageTextBasket
     }
-    private fun JSONObject.parseNotAvailableProductEntityList() = when(isNull("data")) {
+
+    private fun JSONObject.parseNotAvailableProductEntityList() = when (isNull("data")) {
         true -> listOf()
         false -> getJSONArray("data").parseProductEntityList()
     }
@@ -73,17 +91,18 @@ object CartResponseJsonParser {
         productEntityList = getJSONArray("tovary").parseProductEntityList()
     )
 
-    private fun JSONArray.parseGiftProductEntityList(): List<ProductEntity> = mutableListOf<ProductEntity>().apply {
-        for (index in 0 until length()) {
-            add(getJSONObject(index).parseGiftProductEntity())
+    private fun JSONArray.parseGiftProductEntityList(): List<ProductEntity> =
+        mutableListOf<ProductEntity>().apply {
+            for (index in 0 until length()) {
+                add(getJSONObject(index).parseGiftProductEntity())
+            }
         }
-    }
 
     private fun JSONObject.parseGiftProductEntity() = ProductEntity(
         id = getString("ID").toLong(),
         name = getString("NAME"),
         detailPicture = getString("DETAIL_PICTURE").parseImagePath(),
-        priceList = when(has("EXTENDED_PRICE")){
+        priceList = when (has("EXTENDED_PRICE")) {
             true -> getJSONArray("EXTENDED_PRICE").parsePriceList()
             false -> listOf()
         },
@@ -98,9 +117,10 @@ object CartResponseJsonParser {
         detailPictureList = listOf(getString("DETAIL_PICTURE"))
     )
 
-    private fun JSONArray.parsePriceList(): List<PriceEntity> = mutableListOf<PriceEntity>().also { list ->
-        for (index in 0 until length()) list.add(getJSONObject(index).parsePriceEntity())
-    }
+    private fun JSONArray.parsePriceList(): List<PriceEntity> =
+        mutableListOf<PriceEntity>().also { list ->
+            for (index in 0 until length()) list.add(getJSONObject(index).parsePriceEntity())
+        }
 
     private fun JSONObject.parsePriceEntity() = PriceEntity(
         price = safeDouble("PRICE").roundToInt(),
@@ -112,8 +132,9 @@ object CartResponseJsonParser {
 }
 
 data class MessageTextBasket(
-    val id : String? = null,
-    val message : String? = null,
-    val color : String? = null,
-    val session : String? = null,
+    val id: String? = null,
+    val message: String? = null,
+    val color: String? = null,
+    val session: String? = null,
+    val title: String? = null,
 )

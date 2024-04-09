@@ -100,6 +100,7 @@ class ProdListViewHolder(
                 .filter { it.containsKey(item.id) }
                 .onEach {
                     item.cartQuantity = it[item.id] ?: item.cartQuantity
+                    item.oldQuantity = item.cartQuantity
                     updateCartQuantity(item)
                     hideAmountController(item)
                 }
@@ -140,7 +141,6 @@ class ProdListViewHolder(
                 return@setOnClickListener
             }
 
-            item.oldQuantity = item.cartQuantity
             if (item.cartQuantity == 0) {
                 item.cartQuantity++
             }
@@ -150,7 +150,6 @@ class ProdListViewHolder(
 
         binding.amountController.reduceAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            item.oldQuantity = item.cartQuantity
             item.cartQuantity--
             if (item.cartQuantity < 0) item.cartQuantity = 0
             amountControllerTimer.cancel()
@@ -160,7 +159,6 @@ class ProdListViewHolder(
 
         binding.amountController.increaseAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            item.oldQuantity = item.cartQuantity
             item.cartQuantity++
             amountControllerTimer.cancel()
             amountControllerTimer.start()
@@ -174,6 +172,7 @@ class ProdListViewHolder(
                     item.isFavorite = false
                     binding.imgFavoriteStatus.isSelected = false
                 }
+
                 false -> {
                     item.isFavorite = true
                     binding.imgFavoriteStatus.isSelected = true
@@ -228,6 +227,7 @@ class ProdListViewHolder(
                 if (item.priceList.first().currentPrice < item.priceList.first().oldPrice || item.isGift) haveDiscount =
                     true
             }
+
             else -> {
                 val minimalPrice = item.priceList.sortedBy { it.requiredAmount }
                     .find { it.requiredAmount >= item.cartQuantity }
@@ -284,6 +284,7 @@ class ProdListViewHolder(
                 binding.tvDepositPrice.visibility = View.VISIBLE
                 binding.tvDepositPrice.setDepositPriceText(item.depositPrice)
             }
+
             false -> binding.tvDepositPrice.visibility = View.GONE
         }
 
@@ -297,6 +298,7 @@ class ProdListViewHolder(
                     oldPrice = item.priceList.first().oldPrice
                 )
             }
+
             false -> binding.cwDiscountContainer.visibility = View.GONE
         }
 

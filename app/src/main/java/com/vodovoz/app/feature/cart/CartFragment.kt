@@ -219,12 +219,13 @@ class CartFragment : BaseFragment() {
                             binding.bottom.tvGiftMessage.visibility = View.GONE
                         } else {
                             binding.bottom.tvGiftMessage.visibility = View.VISIBLE
+                            binding.bottom.yourGiftsTv.text =  cartState.data.giftMessageBottom?.title
                             binding.bottom.tvGiftMessage.text =
                                 cartState.data.giftMessageBottom?.message?.fromHtml()
                         }
 
                         binding.bottom.llShowGifts.visibility =
-                            if (cartState.data.giftProductUIList.isEmpty()) {
+                            if (cartState.data.giftProductUI?.productsList?.isEmpty() == true) {
                                 View.GONE
                             } else {
                                 View.VISIBLE
@@ -306,7 +307,7 @@ class CartFragment : BaseFragment() {
 
                                 findNavController().navigate(
                                     CartFragmentDirections.actionToGiftsBottomFragment(
-                                        it.list.toTypedArray()
+                                        it.giftProducts
                                     )
                                 )
                             }

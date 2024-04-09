@@ -33,13 +33,9 @@ class CartManager @Inject constructor(
         oldCount: Int,
         newCount: Int,
         withUpdate: Boolean = true,
-        repeat: Boolean = false,
     ) {
-        val isInCart = if (repeat) {
-            true
-        } else {
-            oldCount == 0
-        }
+        val isInCart =  oldCount != 0
+
         //val plus = newCount >= oldCount
 
         updateCarts(id, newCount)
@@ -74,15 +70,14 @@ class CartManager @Inject constructor(
     }
 
     private suspend fun action(id: Long, count: Int, isInCart: Boolean/*, plus: Boolean*/) {
-        return if (!isInCart) {
+        if (!isInCart) {
             //tabManager.loadingAddToCart(true, plus = plus)
-            repository.changeProductsQuantityInCart(id, count)
-            updateCarts(id, count)
-        } else {
-            //tabManager.loadingAddToCart(true, plus = true)
             repository.addProductToCart(id, count)
-            updateCarts(id, count)
+       } else {
+            repository.changeProductsQuantityInCart(id, count)
+            //tabManager.loadingAddToCart(true, plus = true)
         }
+        updateCarts(id, count)
     }
 
     private suspend fun updateCarts(id: Long, count: Int) {
