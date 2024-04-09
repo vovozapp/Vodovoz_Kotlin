@@ -22,7 +22,6 @@
             android:paddingBottom="@dimen/space_8"
             android:paddingStart="13dp"
             android:paddingEnd="13dp"
-            app:tint="@color/bluePrimary"
             tools:ignore="ContentDescription" />
 
         <TextView
