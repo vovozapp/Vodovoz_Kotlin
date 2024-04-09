@@ -311,9 +311,8 @@ class ProfileFlowViewModel @Inject constructor(
                         state.error
                     }
                 )
+                secondLoad(userId)
             }
-
-            secondLoad(userId)
         }
     }
 
