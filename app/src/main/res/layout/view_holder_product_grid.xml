@@ -110,14 +110,24 @@
 
     </LinearLayout>
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verticalGuideline"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/_32sdp"/>
+
     <include
         android:id="@+id/llPricesContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="bottom"
         layout="@layout/view_holder_slider_product_prices"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="bottom"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/llRatingContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/verticalGuideline"
         tools:ignore="RtlSymmetry" />
 
     <include
@@ -126,7 +136,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:translationZ="@dimen/space_16"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintBottom_toBottomOf="@+id/llPricesContainer"
+        app:layout_constraintTop_toTopOf="@id/llPricesContainer"
         app:layout_constraintEnd_toEndOf="parent" />
 
 

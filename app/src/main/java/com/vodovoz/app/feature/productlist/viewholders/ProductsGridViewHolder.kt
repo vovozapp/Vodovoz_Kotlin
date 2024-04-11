@@ -139,7 +139,7 @@ class ProductsGridViewHolder(
                 return@setOnClickListener
             }
 
-            if(item.cartQuantity == 0) {
+            if (item.cartQuantity == 0) {
                 item.cartQuantity++
             }
             updateCartQuantity(item)
@@ -170,6 +170,7 @@ class ProductsGridViewHolder(
                     item.isFavorite = false
                     binding.imgFavoriteStatus.isSelected = false
                 }
+
                 false -> {
                     item.isFavorite = true
                     binding.imgFavoriteStatus.isSelected = true
@@ -202,7 +203,8 @@ class ProductsGridViewHolder(
                 binding.llPricesContainer.tvPricePerUnit.visibility = View.VISIBLE
                 binding.llPricesContainer.tvPricePerUnit.text = item.pricePerUnit
             }
-            false -> binding.llPricesContainer.tvPricePerUnit.visibility = View.INVISIBLE
+
+            false -> binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
         }
 
         //Price
@@ -212,11 +214,24 @@ class ProductsGridViewHolder(
                 binding.llPricesContainer.tvOldPrice.text = item.oldPriceStringBuilder
                 binding.llPricesContainer.tvPriceCondition.visibility = View.GONE
             }
+
             else -> {
-                binding.llPricesContainer.tvCurrentPrice.text = item.minimalPriceStringBuilder
-                binding.llPricesContainer.tvPriceCondition.text = item.priceConditionStringBuilder
-                binding.llPricesContainer.tvPriceCondition.visibility = View.VISIBLE
-                binding.llPricesContainer.tvPricePerUnit.visibility = View.INVISIBLE
+                if (item.conditionPrice.isNotEmpty()) {
+                    binding.llPricesContainer.tvCurrentPrice.text = item.conditionPrice
+                    if (item.condition.isNotEmpty()) {
+                        binding.llPricesContainer.tvPriceCondition.text = item.condition
+                        binding.llPricesContainer.tvPriceCondition.visibility = View.VISIBLE
+                    } else {
+                        binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
+                    }
+                } else {
+                    binding.llPricesContainer.tvCurrentPrice.text = item.minimalPriceStringBuilder
+                    binding.llPricesContainer.tvPriceCondition.text =
+                        item.priceConditionStringBuilder
+                    binding.llPricesContainer.tvPriceCondition.visibility = View.VISIBLE
+                    binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
+                }
+
             }
         }
 
@@ -273,6 +288,7 @@ class ProductsGridViewHolder(
                 binding.cgStatuses.cwDiscountContainer.visibility = View.VISIBLE
                 binding.cgStatuses.tvDiscountPercent.text = item.discountPercentStringBuilder
             }
+
             false -> binding.cgStatuses.cwDiscountContainer.visibility = View.GONE
         }
 

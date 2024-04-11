@@ -81,12 +81,12 @@ class ProductDetailsFragment : BaseFragment() {
         )
     }
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        if (savedInstanceState == null) {
-//            viewModel.fetchProductDetail()
-//        }
-//    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) {
+            viewModel.fetchProductDetail()
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -97,7 +97,6 @@ class ProductDetailsFragment : BaseFragment() {
         bindErrorRefresh { viewModel.fetchProductDetail() }
         observeEvents()
         observeMediaManager()
-        viewModel.fetchProductDetail()
 
         productDetailsController.bind(binding.mainRv, binding.floatingAmountControllerContainer)
     }

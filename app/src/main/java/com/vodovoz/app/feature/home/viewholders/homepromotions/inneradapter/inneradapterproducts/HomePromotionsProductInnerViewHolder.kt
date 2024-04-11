@@ -145,8 +145,12 @@ class HomePromotionsProductInnerViewHolder(
                 binding.tvOldPrice.text = item.oldPriceStringBuilder
             }
             else -> {
-                binding.tvCurrentPrice.text = item.minimalPriceStringBuilder
-                binding.tvPricePerUnit.visibility = View.GONE
+                if(item.conditionPrice.isNotEmpty()){
+                    binding.tvCurrentPrice.text = item.conditionPrice
+                } else {
+                    binding.tvCurrentPrice.text = item.minimalPriceStringBuilder
+                    binding.tvPricePerUnit.visibility = View.GONE
+                }
             }
         }
         when(item.haveDiscount) {

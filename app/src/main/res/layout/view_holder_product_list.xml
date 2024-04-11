@@ -13,7 +13,7 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.36"
+        app:layout_constraintWidth_percent="0.30"
         tools:ignore="ContentDescription" />
 
     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
@@ -166,86 +166,14 @@
         android:id="@+id/llPricesContainer"
         layout="@layout/view_holder_slider_product_prices"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_8"
-        android:gravity="bottom"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/amountController"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/vpPictures"
         app:layout_constraintTop_toTopOf="@+id/amountController"
         tools:ignore="RtlSymmetry" />
-
-    <!--    <LinearLayout-->
-    <!--        android:id="@+id/clPricesContainer"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        android:gravity="bottom"-->
-    <!--        android:orientation="vertical"-->
-    <!--        android:layout_marginStart="@dimen/space_8"-->
-    <!--        app:layout_constraintBottom_toBottomOf="@+id/amountController"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toEndOf="@+id/vpPictures"-->
-    <!--        app:layout_constraintTop_toTopOf="@+id/amountController">-->
-
-    <!--        <androidx.appcompat.widget.AppCompatTextView-->
-    <!--            android:id="@+id/tvPricePerUnit"-->
-    <!--            style="@style/TextViewSmallLightGray"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="0dp"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:gravity="start|bottom"-->
-    <!--            app:layout_constraintBottom_toTopOf="@+id/price"-->
-    <!--            app:layout_constraintStart_toEndOf="@+id/vpPictures"-->
-    <!--            tools:text="510/кг" />-->
-
-    <!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-    <!--            android:id="@+id/bottomPrContainer"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content">-->
-
-    <!--            <androidx.appcompat.widget.AppCompatTextView-->
-    <!--                android:id="@+id/tvPrice"-->
-    <!--                style="@style/TextViewMediumBlackBold"-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--                app:layout_constraintStart_toStartOf="parent"-->
-    <!--                app:layout_constraintTop_toTopOf="parent"-->
-    <!--                android:textColor="@color/text_new_black"-->
-    <!--                android:textSize="18sp"-->
-    <!--                tools:text="88888 Р" />-->
-
-    <!--            <androidx.appcompat.widget.AppCompatTextView-->
-    <!--                android:id="@+id/tvOldPrice"-->
-    <!--                style="@style/TextViewSmallLightGrayBold"-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="0dp"-->
-    <!--                android:textSize="18sp"-->
-    <!--                android:gravity="bottom"-->
-    <!--                android:paddingStart="@dimen/space_4"-->
-    <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--                app:layout_constraintStart_toEndOf="@+id/tvPrice"-->
-    <!--                app:layout_constraintTop_toTopOf="parent"-->
-    <!--                tools:ignore="RtlSymmetry"-->
-    <!--                tools:text="88888 Р" />-->
-
-    <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-    <!--        <androidx.appcompat.widget.AppCompatTextView-->
-    <!--            android:id="@+id/tvPriceCondition"-->
-    <!--            style="@style/TextViewSmallGray"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:gravity="center_vertical"-->
-    <!--            android:textSize="11sp"-->
-    <!--            android:paddingTop="@dimen/space_2"-->
-    <!--            android:visibility="gone"-->
-    <!--            app:layout_constraintBottom_toTopOf="@+id/price"-->
-    <!--            app:layout_constraintStart_toEndOf="@+id/vpPictures"-->
-    <!--            tools:text="При услови покупки от 10 шт" />-->
-
-    <!--    </LinearLayout>-->
 
     <include
         android:id="@+id/amountController"

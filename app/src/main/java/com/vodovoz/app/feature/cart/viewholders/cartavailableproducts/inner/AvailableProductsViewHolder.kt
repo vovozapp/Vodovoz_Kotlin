@@ -20,7 +20,6 @@ import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.Det
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPicturePager
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDepositPriceText
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setOrderQuantity
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
@@ -29,7 +28,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 class AvailableProductsViewHolder(
     view: View,
@@ -346,36 +344,51 @@ class AvailableProductsViewHolder(
             }
 
             else -> {
-                val sortedPriceList = item.priceList.sortedByDescending { it.requiredAmount }
 
-                val minimalPrice =
-                    if (sortedPriceList.first().requiredAmountTo == 0 && item.cartQuantity >= sortedPriceList.first().requiredAmount) {
-                        sortedPriceList.find { it.requiredAmountTo == 0 && item.cartQuantity >= it.requiredAmount }
+                if (item.conditionPrice.isNotEmpty()) {
+                    binding.llPricesContainer.tvCurrentPrice.text = item.conditionPrice
+                    if (item.condition.isNotEmpty()) {
+                        binding.llPricesContainer.tvPriceCondition.text = item.condition
+                        binding.llPricesContainer.tvPriceCondition.visibility = View.VISIBLE
                     } else {
-                        sortedPriceList.find { item.cartQuantity in it.requiredAmount..it.requiredAmountTo }
-                    } ?: sortedPriceList.first()
+                        binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
+                    }
+                } else {
+                    val sortedPriceList = item.priceList.sortedByDescending { it.requiredAmount }
 
-                binding.llPricesContainer.tvPriceCondition.visibility = View.VISIBLE
-                binding.llPricesContainer.tvPriceCondition.text =
-                    itemView.context.getString(
-                        R.string.price_condition,
-                        minimalPrice.requiredAmount
-                    )
-//                    "При условии покупки от ${minimalPrice.requiredAmount} шт"
+                    val minimalPrice =
+                        if (sortedPriceList.first().requiredAmountTo == 0 && item.cartQuantity >= sortedPriceList.first().requiredAmount) {
+                            sortedPriceList.find { it.requiredAmountTo == 0 && item.cartQuantity >= it.requiredAmount }
+                        } else {
+                            sortedPriceList.find { item.cartQuantity in it.requiredAmount..it.requiredAmountTo }
+                        } ?: sortedPriceList.first()
 
-                bindDiscountPrice(item, minimalPrice.currentPrice, minimalPrice.oldPrice)
-                binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
+                    binding.llPricesContainer.tvPriceCondition.visibility = View.VISIBLE
+                    binding.llPricesContainer.tvPriceCondition.text =
+                        itemView.context.getString(
+                            R.string.price_condition,
+                            minimalPrice.requiredAmount
+                        )
+
+                    bindDiscountPrice(item, minimalPrice.currentPrice, minimalPrice.oldPrice)
+                    binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
+                }
+
+                binding.cwDiscountContainer.visibility = View.GONE
             }
         }
+    }
 
-        if (item.totalDisc > 0 || item.isGift) {
+    private fun bindDiscountPrice(item: ProductUI, currentPrice: Int, oldPrice: Int = 0) {
+//        if (item.totalDisc > 0) {
+
+        if (oldPrice != 0 || item.isGift) {
             binding.llPricesContainer.tvCurrentPrice.setTextColor(
                 ContextCompat.getColor(
                     itemView.context,
                     R.color.red
                 )
             )
-            binding.llPricesContainer.tvOldPrice.visibility = View.VISIBLE
         } else {
             binding.llPricesContainer.tvCurrentPrice.setTextColor(
                 ContextCompat.getColor(
@@ -383,47 +396,32 @@ class AvailableProductsViewHolder(
                     R.color.text_black
                 )
             )
-            binding.llPricesContainer.tvOldPrice.visibility = View.GONE
         }
-    }
 
-    private fun bindDiscountPrice(item: ProductUI, currentPrice: Int, oldPrice: Int = 0) {
-        if (item.totalDisc > 0) {
+        binding.llPricesContainer.tvCurrentPrice.setPriceText(
+            currentPrice,
+            itCanBeGift = true
+        )
 
-            if (oldPrice == 0) {
-                val priceWithDesc = (currentPrice.toDouble() - item.totalDisc).roundToInt()
-                binding.llPricesContainer.tvCurrentPrice.setPriceText(
-                    priceWithDesc,
-                    itCanBeGift = true
-                )
-                binding.llPricesContainer.tvOldPrice.setPriceText(currentPrice, itCanBeGift = true)
-                binding.tvDiscountPercent.setDiscountPercent(
-                    newPrice = priceWithDesc,
-                    oldPrice = currentPrice
-                )
-            } else {
-                binding.llPricesContainer.tvCurrentPrice.setPriceText(
-                    currentPrice,
-                    itCanBeGift = true
-                )
-                binding.llPricesContainer.tvOldPrice.setPriceText(oldPrice, itCanBeGift = true)
-                binding.tvDiscountPercent.setDiscountPercent(
-                    newPrice = currentPrice,
-                    oldPrice = oldPrice
-                )
-            }
+        binding.llPricesContainer.tvOldPrice.isVisible = oldPrice != 0
+        binding.llPricesContainer.tvOldPrice.setPriceText(oldPrice, itCanBeGift = true)
 
+        if (item.discountPercentStringBuilder.isNotEmpty()) {
+            binding.tvDiscountPercent.text = item.discountPercentStringBuilder
             binding.cwDiscountContainer.visibility = View.VISIBLE
-
         } else {
-            binding.llPricesContainer.tvCurrentPrice.setPriceText(currentPrice, itCanBeGift = true)
-            binding.llPricesContainer.tvOldPrice.isVisible = false
-
-            if (item.status.isNotEmpty()) {
-                binding.cwDiscountContainer.visibility = View.GONE
-            } else {
-                binding.cgStatuses.visibility = View.GONE
-            }
+            binding.cwDiscountContainer.visibility = View.GONE
         }
+
+
+//        } else {
+
+
+        if (item.status.isNotEmpty()) {
+            binding.cwStatusContainer.visibility = View.VISIBLE
+        } else {
+            binding.cwStatusContainer.visibility = View.GONE
+        }
+//        }
     }
 }

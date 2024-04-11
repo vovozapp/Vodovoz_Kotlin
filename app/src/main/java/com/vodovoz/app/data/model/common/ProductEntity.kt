@@ -21,5 +21,7 @@ class ProductEntity(
     val detailPictureList: List<String> = listOf(),
     val replacementProductEntityList: List<ProductEntity> = listOf(),
     val chipsBan: Int? = null,
-    val totalDisc: Double = 0.0
+    val totalDisc: Double = 0.0,
+    val conditionalPrice: String = "",
+    val condition: String = "",
 )

@@ -128,7 +128,15 @@ object ProductJsonParser {
                 true -> safeInt("ZAPRET_FISHKAM")
                 false -> null
             },
-            totalDisc = safeDouble("TOTAL_SKIDKA")
+            totalDisc = safeDouble("TOTAL_SKIDKA"),
+            conditionalPrice = when (has("NewPrice")) {
+                true -> getJSONObject("NewPrice").safeString("Price")
+                false -> ""
+            },
+            condition = when (has("NewPrice")) {
+                true -> getJSONObject("NewPrice").safeString("DescPrice")
+                false -> ""
+            },
         )
     }
 

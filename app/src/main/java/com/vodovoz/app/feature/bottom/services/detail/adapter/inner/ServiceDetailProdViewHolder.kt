@@ -173,6 +173,7 @@ class ServiceDetailProdViewHolder(
                     item.isFavorite = false
                     binding.imgFavoriteStatus.isSelected = false
                 }
+
                 false -> {
                     item.isFavorite = true
                     binding.imgFavoriteStatus.isSelected = true
@@ -238,24 +239,36 @@ class ServiceDetailProdViewHolder(
 //                    haveDiscount = true
 //                }
             }
+
             else -> {
-                val minimalPrice = item.priceList.sortedBy { it.requiredAmount }
-                    .find { it.requiredAmount >= item.cartQuantity }
-                minimalPrice?.let {
-                    binding.tvPrice.setPriceText(minimalPrice.currentPrice)
-                    if (item.serviceDetailCoef != null) {
-                        binding.tvOldPrice.text =
-                            buildString {
-                                append("x ")
-                                append(item.serviceDetailCoef)
-                                append(" = ")
-                                append(item.priceList.first().currentPrice * item.serviceDetailCoef)
-                                append(" ₽")
-                            }
+
+                if (item.conditionPrice.isNotEmpty()) {
+                    binding.tvPrice.text = item.conditionPrice
+                    if (item.condition.isNotEmpty()) {
+                        binding.tvPriceCondition.text = item.condition
+                        binding.tvPriceCondition.visibility = View.VISIBLE
+                    } else {
+                        binding.tvPricePerUnit.visibility = View.GONE
                     }
-                    binding.tvPriceCondition.visibility = View.GONE
+                } else {
+                    val minimalPrice = item.priceList.sortedBy { it.requiredAmount }
+                        .find { it.requiredAmount >= item.cartQuantity }
+                    minimalPrice?.let {
+                        binding.tvPrice.setPriceText(minimalPrice.currentPrice)
+                        if (item.serviceDetailCoef != null) {
+                            binding.tvOldPrice.text =
+                                buildString {
+                                    append("x ")
+                                    append(item.serviceDetailCoef)
+                                    append(" = ")
+                                    append(item.priceList.first().currentPrice * item.serviceDetailCoef)
+                                    append(" ₽")
+                                }
+                        }
+                        binding.tvPriceCondition.visibility = View.GONE
+                    }
+                    binding.tvPricePerUnit.visibility = View.GONE
                 }
-                binding.tvPricePerUnit.visibility = View.GONE
             }
         }
 
@@ -305,6 +318,7 @@ class ServiceDetailProdViewHolder(
                 binding.tvDepositPrice.visibility = View.VISIBLE
                 binding.tvDepositPrice.setDepositPriceText(item.depositPrice)
             }
+
             false -> binding.tvDepositPrice.visibility = View.GONE
         }
 
@@ -318,6 +332,7 @@ class ServiceDetailProdViewHolder(
                     oldPrice = item.priceList.first().oldPrice
                 )
             }
+
             false -> binding.cwDiscountContainer.visibility = View.GONE
         }
 

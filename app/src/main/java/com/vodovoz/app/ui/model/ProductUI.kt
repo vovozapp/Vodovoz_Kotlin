@@ -38,7 +38,9 @@ data class ProductUI(
     val serviceDetailCoef: Int? = null,
     val serviceGiftId: String? = null,
     val chipsBan: Int? = null,
-    val totalDisc: Double = 0.0
+    val totalDisc: Double = 0.0,
+    val conditionPrice: String = "",
+    val condition: String = "",
 ) : Parcelable, Item {
 
     companion object {

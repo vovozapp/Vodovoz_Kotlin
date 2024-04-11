@@ -37,7 +37,7 @@ class HomeProductsInnerViewHolder(
             override fun onFinish() {
 
                 val item = item ?: return
-                debugLog{"onChangeProductQuantity ${item.cartQuantity}, ${item.oldQuantity}"}
+                debugLog { "onChangeProductQuantity ${item.cartQuantity}, ${item.oldQuantity}" }
                 clickListener.onChangeProductQuantity(item.id, item.cartQuantity, item.oldQuantity)
                 hideAmountController()
             }
@@ -119,6 +119,7 @@ class HomeProductsInnerViewHolder(
                     item.isFavorite = false
                     binding.imgFavoriteStatus.isSelected = false
                 }
+
                 false -> {
                     item.isFavorite = true
                     binding.imgFavoriteStatus.isSelected = true
@@ -143,9 +144,14 @@ class HomeProductsInnerViewHolder(
                 binding.tvCurrentPrice.text = item.currentPriceStringBuilder
                 binding.tvOldPrice.text = item.oldPriceStringBuilder
             }
+
             else -> {
-                binding.tvCurrentPrice.text = item.minimalPriceStringBuilder
-                binding.tvPricePerUnit.visibility = View.GONE
+                if (item.conditionPrice.isNotEmpty()) {
+                    binding.tvCurrentPrice.text = item.conditionPrice
+                } else {
+                    binding.tvCurrentPrice.text = item.minimalPriceStringBuilder
+                    binding.tvPricePerUnit.visibility = View.GONE
+                }
             }
         }
         when (item.haveDiscount) {
@@ -158,6 +164,7 @@ class HomeProductsInnerViewHolder(
                 )
                 binding.tvOldPrice.visibility = View.VISIBLE
             }
+
             false -> {
                 binding.tvCurrentPrice.setTextColor(
                     ContextCompat.getColor(

@@ -229,13 +229,24 @@ class ProdListViewHolder(
             }
 
             else -> {
-                val minimalPrice = item.priceList.sortedBy { it.requiredAmount }
-                    .find { it.requiredAmount >= item.cartQuantity }
-                minimalPrice?.let {
-                    binding.llPricesContainer.tvCurrentPrice.setPriceText(minimalPrice.currentPrice)
-                    binding.llPricesContainer.tvPriceCondition.visibility = View.GONE
+                if(item.conditionPrice.isNotEmpty()){
+                    binding.llPricesContainer.tvCurrentPrice.text = item.conditionPrice
+                    if(item.condition.isNotEmpty()){
+                        binding.llPricesContainer.tvPriceCondition.text = item.condition
+                        binding.llPricesContainer.tvPriceCondition.visibility = View.VISIBLE
+                    } else {
+                        binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
+                    }
+                } else {
+                    val minimalPrice = item.priceList.sortedBy { it.requiredAmount }
+                        .find { it.requiredAmount >= item.cartQuantity }
+                    minimalPrice?.let {
+                        binding.llPricesContainer.tvCurrentPrice.setPriceText(minimalPrice.currentPrice)
+                        binding.llPricesContainer.tvPriceCondition.visibility = View.GONE
+                    }
+                    binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
                 }
-                binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
+
             }
         }
 
