@@ -222,7 +222,6 @@ class SplashFragment : BaseFragment() {
         val active = siteStateManager.fetchSiteStateActive()
         debugLog { "site state active $active" }
         if (active) {
-            homeViewModel.secondLoad()
             findNavController().navigate(R.id.mainFragment)
         } else {
             findNavController().navigate(R.id.blockAppFragment)

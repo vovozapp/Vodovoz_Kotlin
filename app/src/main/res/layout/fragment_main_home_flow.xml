@@ -1,16 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/refreshContainer"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/homeRv"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-      />
+        android:layout_height="match_parent">
 
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/homeRv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rateBottom"
+        android:padding="16dp"
+        app:behavior_hideable="false"
+        android:elevation="20dp"
+        android:background="@color/white"
+
+        android:clipToPadding="false"
+        android:clipChildren="false"
+
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:visibility="gone">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="2dp"
+                    android:background="@drawable/bg_border_gray"
+                    android:layout_gravity="center"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/collapsedLL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_16"
+                    android:layout_marginBottom="@dimen/_30sdp"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/collapsedHeaderTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_16"
+                        android:gravity="center"
+                        android:textAllCaps="false"
+                        android:textColor="#434343"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/rotondac" />
+
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/collapsedBodyTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:gravity="center"
+                        android:textAllCaps="false"
+                        android:textColor="#60000000"
+                        android:textSize="14sp"
+                        android:textStyle="normal"
+                        app:fontFamily="@font/rotondac" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/collapsedRv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:itemCount="1"
+                        tools:listitem="@layout/item_collapsed_rate_image" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/expandedLL"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/space_16"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/expandedHeaderTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_16"
+                        android:gravity="center"
+                        android:textAllCaps="false"
+                        android:textColor="#434343"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/rotondac" />
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/rateViewPager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="20"
+                        android:background="@color/white" />
+
+                    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                        android:id="@+id/dots_indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="@dimen/_30sdp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        app:dotsColor="#BDBDBD"
+                        app:dotsCornerRadius="16dp"
+                        app:dotsSize="7.5dp"
+                        app:dotsSpacing="4dp"
+                        app:dotsWidthFactor="1"
+                        app:selectedDotColor="@color/bluePrimary" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

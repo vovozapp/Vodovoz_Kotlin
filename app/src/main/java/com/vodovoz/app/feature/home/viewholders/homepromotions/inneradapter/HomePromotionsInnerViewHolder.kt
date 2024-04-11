@@ -52,7 +52,6 @@ class HomePromotionsInnerViewHolder(
                         left = space / 2
                         top = space / 2
                         right = space / 2
-                        bottom = space / 2
                     }
                 }
             }

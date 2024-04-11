@@ -6,7 +6,9 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -14,7 +16,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.R
@@ -25,6 +30,7 @@ import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.media.MediaManager
 import com.vodovoz.app.common.permissions.PermissionsController
+import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
@@ -36,8 +42,10 @@ import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.banneradvinfo.BannerAdvInfoBottomSheetFragment
 import com.vodovoz.app.feature.home.popup.NewsClickListener
 import com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment
-import com.vodovoz.app.feature.home.ratebottom.RateBottomFragment
 import com.vodovoz.app.feature.home.ratebottom.RateBottomViewModel
+import com.vodovoz.app.feature.home.ratebottom.adapter.RateBottomClickListener
+import com.vodovoz.app.feature.home.ratebottom.adapter.RateBottomImageAdapter
+import com.vodovoz.app.feature.home.ratebottom.adapter.RateBottomViewPagerAdapter
 import com.vodovoz.app.feature.home.viewholders.homebanners.BottomBannerManager
 import com.vodovoz.app.feature.home.viewholders.homebanners.TopBannerManager
 import com.vodovoz.app.feature.home.viewholders.homebanners.model.BannerAdvEntity
@@ -56,6 +64,7 @@ import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.PR
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.VIEWED_TITLE
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
+import com.vodovoz.app.feature.productdetail.sendcomment.SendCommentAboutProductBottomDialog
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.feature.sitestate.SiteStateManager
@@ -65,6 +74,7 @@ import com.vodovoz.app.util.extensions.addOnBackPressedCallback
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -84,6 +94,26 @@ class HomeFragment : BaseFragment() {
 
     internal val flowViewModel: HomeFlowViewModel by activityViewModels()
     private val rateBottomViewModel: RateBottomViewModel by activityViewModels()
+
+    @Inject
+    lateinit var ratingProductManager: RatingProductManager
+
+    private val collapsedImagesAdapter = RateBottomImageAdapter()
+    private val rateBottomViewPagerAdapter =
+        RateBottomViewPagerAdapter(object : RateBottomClickListener {
+
+            override fun dontCommentProduct(id: Long) {
+                ratingProductManager.dontCommentProduct(id)
+                binding.rateBottom.visibility = View.GONE
+//            dialog?.dismiss()
+            }
+
+            override fun rateProduct(id: Long, ratingCount: Int) {
+                SendCommentAboutProductBottomDialog.newInstance(id, ratingCount)
+                    .show(childFragmentManager, "TAG")
+            }
+
+        })
 
     @Inject
     lateinit var cartManager: CartManager
@@ -126,7 +156,9 @@ class HomeFragment : BaseFragment() {
                 if (siteStateManager.showRateBottom != null) {
                     if (!siteStateManager.showRateBottom!!) {
                         siteStateManager.showRateBottom = true
-                        RateBottomFragment().show(childFragmentManager, "TAG")
+                        binding.rateBottom.visibility = View.VISIBLE
+//                        val rateBottomSheet =  RateBottomFragment()
+//                        rateBottomSheet.show(childFragmentManager, "TAG")
                     }
                 }
             }
@@ -144,6 +176,7 @@ class HomeFragment : BaseFragment() {
         observeDeepLinkFromSiteState()
         observeMediaManager()
         observePushFromSiteState()
+        observeRateBottom()
 
     }
 
@@ -151,6 +184,9 @@ class HomeFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         homeController.bind(binding.homeRv, binding.refreshContainer)
+        initViewPager()
+        initImageRv()
+        initBottomSheetCallback()
 
         initSearchToolbar(
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
@@ -160,6 +196,88 @@ class HomeFragment : BaseFragment() {
         )
         bindErrorRefresh { flowViewModel.refresh() }
         bindBackPressed()
+    }
+
+    private fun initViewPager() {
+        binding.rateViewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.rateViewPager.adapter = rateBottomViewPagerAdapter
+        binding.dotsIndicator.attachTo(binding.rateViewPager)
+    }
+
+    private fun initImageRv() {
+        with(binding.collapsedRv) {
+            adapter = collapsedImagesAdapter
+            layoutManager = LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+        }
+    }
+
+    private fun initBottomSheetCallback() {
+        val behavior = BottomSheetBehavior.from(binding.rateBottom)
+        val density = requireContext().resources.displayMetrics.density
+        behavior.peekHeight = (100 * density).toInt()
+//        behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+        behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {}
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                if (slideOffset > 0) {
+                    binding.collapsedLL.alpha = 1 - 2 * slideOffset
+                    binding.expandedLL.alpha = slideOffset * slideOffset
+
+                    if (slideOffset > 0.5) {
+                        binding.collapsedLL.visibility = View.GONE
+                        binding.expandedLL.visibility = View.VISIBLE
+                        bottomSheet.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+                    }
+
+                    if (slideOffset < 0.5 && binding.expandedLL.visibility == View.VISIBLE) {
+                        binding.collapsedLL.visibility = View.VISIBLE
+                        binding.expandedLL.visibility = View.INVISIBLE
+                    }
+                } else {
+                    binding.rateBottom.visibility = View.GONE
+                }
+            }
+        })
+    }
+
+    private fun observeRateBottom() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                rateBottomViewModel
+                    .observeUiState()
+                    .collect { state ->
+
+                        if (state.data.item != null) {
+                            binding.expandedHeaderTv.text =
+                                state.data.item.rateBottomData?.titleProduct
+                            val prList = state.data.item.rateBottomData?.productsList
+                            if (!prList.isNullOrEmpty()) {
+                                rateBottomViewPagerAdapter.submitList(prList)
+                                binding.dotsIndicator.isVisible = prList.size > 1
+                            }
+                        }
+
+                        if (state.data.collapsedData != null) {
+                            binding.collapsedBodyTv.text = state.data.collapsedData.body
+                            binding.collapsedHeaderTv.text = state.data.collapsedData.title
+                            if (!state.data.collapsedData.imageList.isNullOrEmpty()) {
+                                collapsedImagesAdapter.submitList(state.data.collapsedData.imageList)
+                            }
+                        }
+
+                        showError(state.error)
+
+                        delay(2000)
+                    }
+            }
+        }
     }
 
     private fun observePushFromSiteState() {

@@ -60,7 +60,7 @@ class HomeFlowViewModel @Inject constructor(
                 val result = awaitAll(*tasks).flatten()
                 debugLog { "first load task ${System.currentTimeMillis() - start} result size ${result.size}" }
                 val positionItemsSorted =
-                    (state.data.positionItems + result).sortedBy { it.position }
+                    (state.data.positionItems + result).toSet().sortedBy { it.position }
                 uiStateListener.value = state.copy(
                     loadingPage = false,
                     data = state.data.copy(
@@ -73,9 +73,8 @@ class HomeFlowViewModel @Inject constructor(
                         state.error
                     }
                 )
+                secondLoad()
             }
-
-
         }
     }
 
@@ -92,7 +91,7 @@ class HomeFlowViewModel @Inject constructor(
             }
             debugLog { "second load task ${System.currentTimeMillis() - start} result size ${mappedResult.size}" }
             val positionItemsSorted =
-                (state.data.positionItems + mappedResult).sortedBy { it.position }
+                (state.data.positionItems + mappedResult).toSet().sortedBy { it.position }
             uiStateListener.value = state.copy(
                 loadingPage = false,
                 data = state.data.copy(
@@ -133,7 +132,7 @@ class HomeFlowViewModel @Inject constructor(
                     result
                 }
                 val positionItemsSorted =
-                    (state.data.positionItems + mappedResult).sortedBy { it.position }
+                    (state.data.positionItems + mappedResult).toSet().sortedBy { it.position }
                 uiStateListener.value = state.copy(
                     loadingPage = false,
                     data = state.data.copy(
