@@ -16,6 +16,7 @@ import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.viewholders.homebanners.inneradapter.HomeBannersInnerAdapter
 import com.vodovoz.app.feature.home.viewholders.homebanners.inneradapter.HomeBannersSliderClickListener
 import com.vodovoz.app.feature.home.viewholders.homebanners.model.BannerAdvEntity
+import com.vodovoz.app.util.extensions.dip
 import kotlinx.coroutines.*
 import java.util.*
 
@@ -45,31 +46,31 @@ class HomeBannersSliderViewHolder(
         binding.dotsIndicator.attachTo(binding.vpBanners)
 
 // increase this offset to show more of left/right
-        val offsetPx = space
+        val offsetPx = itemView.context.dip(16)
         binding.vpBanners.setPadding(offsetPx, 0, offsetPx, 0)
 
 // increase this offset to increase distance between 2 items
-        val pageMarginPx = space / 2
+        val pageMarginPx = itemView.context.dip(6)
         val marginTransformer = MarginPageTransformer(pageMarginPx)
         binding.vpBanners.setPageTransformer(marginTransformer)
 
-        binding.vpBanners.addItemDecoration(
-            object : RecyclerView.ItemDecoration() {
-                override fun getItemOffsets(
-                    outRect: Rect,
-                    view: View,
-                    parent: RecyclerView,
-                    state: RecyclerView.State,
-                ) {
-                    with(outRect) {
-                        top = space / 2
-                        bottom = space / 2
-                        //left = space
-                        //right = space
-                    }
-                }
-            }
-        )
+//        binding.vpBanners.addItemDecoration(
+//            object : RecyclerView.ItemDecoration() {
+//                override fun getItemOffsets(
+//                    outRect: Rect,
+//                    view: View,
+//                    parent: RecyclerView,
+//                    state: RecyclerView.State,
+//                ) {
+//                    with(outRect) {
+//                        top = space / 2
+//                        bottom = space / 2
+//                        //left = space
+//                        //right = space
+//                    }
+//                }
+//            }
+//        )
 
         binding.vpBanners.layoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,

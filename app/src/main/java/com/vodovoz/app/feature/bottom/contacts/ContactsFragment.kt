@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.core.network.ApiConfig.PERSONAL_DATA_URL
 import com.vodovoz.app.data.model.common.*
 import com.vodovoz.app.databinding.FragmentContactsFlowBinding
 import com.vodovoz.app.feature.bottom.contacts.adapter.ContactsClickListener
@@ -56,8 +57,18 @@ class ContactsFragment : BaseFragment() {
 
         initToolbar("Связаться с нами")
         initWriteUsButton()
+        initPersonalData()
         observeUiState()
         observeEvents()
+    }
+
+    private fun initPersonalData() {
+        binding.writeUsContainer.personalData.setOnClickListener {
+            findNavController().navigate(ContactsFragmentDirections.actionToWebViewFragment(
+                url = PERSONAL_DATA_URL,
+                title = "Персональные данные"
+            ))
+        }
     }
 
     private fun observeEvents() {

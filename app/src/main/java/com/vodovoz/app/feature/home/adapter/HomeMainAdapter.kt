@@ -53,7 +53,7 @@ class HomeMainAdapter(
                     getViewFromInflater(
                         R.layout.fragment_slider_banner,
                         parent
-                    ), clickListener, parent.width, 0.48, topBannerManager
+                    ), clickListener, parent.width, 0.42, topBannerManager
                 )
             }
             BANNER_LARGE -> {
@@ -61,7 +61,7 @@ class HomeMainAdapter(
                     getViewFromInflater(
                         R.layout.fragment_slider_banner,
                         parent
-                    ), clickListener, parent.width, 0.52, bottomBannerManager
+                    ), clickListener, parent.width, 0.49, bottomBannerManager
                 )
             }
             R.layout.fragment_section_additional_info -> {

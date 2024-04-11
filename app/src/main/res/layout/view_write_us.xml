@@ -1,108 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@color/light_gray">
+    android:background="@color/light_gray"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="45dp"
+        android:fontFamily="@font/rotonda_normal"
         android:gravity="center_vertical"
         android:paddingHorizontal="@dimen/space_16"
-        android:fontFamily="@font/rotonda_normal"
-        android:textStyle="bold"
+        android:text="Написать нам"
         android:textColor="@color/blackTextDark"
         android:textSize="16sp"
-        android:text="Написать нам"/>
+        android:textStyle="bold" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/white"
-        android:paddingHorizontal="@dimen/space_16"
-        android:gravity="center_vertical"
         android:fontFamily="@font/rotonda_normal"
-        android:textSize="14sp"
-        android:textColor="@color/blackTextPrimary"
+        android:gravity="center_vertical"
+        android:hint="Имя*"
+        android:paddingHorizontal="@dimen/space_16"
         android:singleLine="true"
-        android:hint="Имя*"/>
+        android:textColor="@color/blackTextPrimary"
+        android:textSize="14sp" />
 
 
     <com.google.android.material.divider.MaterialDivider
-        app:dividerColor="@color/light_gray"
         android:layout_width="match_parent"
-        android:layout_height="1dp" />
+        android:layout_height="1dp"
+        app:dividerColor="@color/light_gray" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/phone"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/white"
-        android:paddingHorizontal="@dimen/space_16"
-        android:gravity="center_vertical"
         android:fontFamily="@font/rotonda_normal"
-        android:textSize="14sp"
-        android:textColor="@color/blackTextPrimary"
+        android:gravity="center_vertical"
+        android:hint="Телефон*"
+        android:paddingHorizontal="@dimen/space_16"
         android:singleLine="true"
-        android:hint="Телефон*"/>
+        android:textColor="@color/blackTextPrimary"
+        android:textSize="14sp" />
 
 
     <com.google.android.material.divider.MaterialDivider
-        app:dividerColor="@color/light_gray"
         android:layout_width="match_parent"
-        android:layout_height="1dp" />
+        android:layout_height="1dp"
+        app:dividerColor="@color/light_gray" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/white"
-        android:paddingHorizontal="@dimen/space_16"
-        android:gravity="center_vertical"
         android:fontFamily="@font/rotonda_normal"
-        android:textSize="14sp"
-        android:textColor="@color/blackTextPrimary"
+        android:gravity="center_vertical"
+        android:hint="Email*"
+        android:paddingHorizontal="@dimen/space_16"
         android:singleLine="true"
-        android:hint="Email*"/>
+        android:textColor="@color/blackTextPrimary"
+        android:textSize="14sp" />
 
     <com.google.android.material.divider.MaterialDivider
-        app:dividerColor="@color/light_gray"
         android:layout_width="match_parent"
-        android:layout_height="1dp" />
+        android:layout_height="1dp"
+        app:dividerColor="@color/light_gray" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:background="@color/white"
-        android:paddingHorizontal="@dimen/space_16"
-        android:gravity="top"
-        android:padding="@dimen/space_16"
         android:fontFamily="@font/rotonda_normal"
-        android:textSize="14sp"
+        android:gravity="top"
+        android:hint="Что вас интересует?*"
+        android:padding="@dimen/space_16"
+        android:paddingHorizontal="@dimen/space_16"
         android:textColor="@color/blackTextPrimary"
-        android:hint="Что вас интересует?*"/>
+        android:textSize="14sp" />
 
     <com.google.android.material.divider.MaterialDivider
-        app:dividerColor="@color/light_gray"
         android:layout_width="match_parent"
-        android:layout_height="1dp" />
+        android:layout_height="1dp"
+        app:dividerColor="@color/light_gray" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/space_16"
+        android:layout_weight="1"
         android:background="@color/white"
-        android:paddingVertical="@dimen/space_16"
         android:fontFamily="@font/rotonda_normal"
-        android:textSize="12sp"
+        android:paddingHorizontal="@dimen/space_16"
+        android:paddingVertical="@dimen/space_16"
+        android:text="*-обязательно для заполнения "
         android:textAlignment="textEnd"
         android:textColor="@color/blackTextDark"
-        android:text="*-обязательно для заполнения "/>
+        android:textSize="12sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -111,36 +111,37 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/personalData"
-            android:visibility="gone"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:padding="@dimen/space_16"
+            android:layout_weight="1"
             android:fontFamily="@font/rotonda_normal"
-            android:textSize="14sp"
+            android:padding="@dimen/space_16"
+            android:text="@string/confirm_personal_data"
             android:textColor="@color/blackTextDark"
-            android:text="Я подтверждаю согласие на на обработку  персональных данных"/>
+            android:textSize="14sp" />
 
         <androidx.appcompat.widget.SwitchCompat
-            android:checked="true"
-            android:padding="@dimen/space_16"
-            android:textSize="14sp"
-            android:fontFamily="@font/rotonda_normal"
-            android:text="Я подтверждаю согласие на обработку  персональных данных"
             android:id="@+id/personalDataSwitch"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:padding="@dimen/space_16" />
 
     </LinearLayout>
 
     <Button
-        android:layout_marginTop="@dimen/space_16"
         android:id="@+id/submit"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@drawable/bkg_button_blue_rect_disabled"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="@dimen/space_16"
         android:layout_marginBottom="@dimen/space_24"
-        android:layout_marginHorizontal="40dp"
-        android:text="Отправить"/>
+        android:background="@drawable/bkg_button_blue_rect_disabled"
+        android:text="@string/send"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:fontFamily="@font/rotonda_normal" />
 
 </LinearLayout>

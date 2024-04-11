@@ -120,8 +120,6 @@ class CatalogFragment : BaseFragment() {
 
                         if (catalogState.loadingPage) {
                             showLoader()
-                        } else {
-                            hideLoader()
                         }
 
                         adapter.submitList(catalogState.data.itemsList)
@@ -156,6 +154,10 @@ class CatalogFragment : BaseFragment() {
                             } else {
                                 cvCatalogBanner.visibility = View.GONE
                             }
+                        }
+
+                        if (!catalogState.loadingPage) {
+                            hideLoader()
                         }
 
                         showError(catalogState.error)

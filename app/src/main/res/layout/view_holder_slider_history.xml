@@ -4,9 +4,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/corner_5"
+    android:layout_width="95dp"
+    android:layout_height="150dp"
+    app:cardCornerRadius="6dp"
+    android:layout_marginBottom="4dp"
     app:cardElevation="@dimen/elevation_3"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
@@ -15,8 +16,8 @@
 
     <ImageView
         android:id="@+id/imgPicture"
-        android:layout_width="@dimen/history_slider_card_width"
-        android:layout_height="@dimen/history_slider_card_height"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:scaleType="centerCrop"
         tools:ignore="ContentDescription" />
 

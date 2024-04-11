@@ -29,7 +29,7 @@ class HomeHistoriesSliderViewHolder(
         binding.rvHistories.addMarginDecoration { rect, viewDecor, parent, state ->
             if (parent.getChildAdapterPosition(viewDecor) == 0) rect.left = space
             if (parent.getChildAdapterPosition(viewDecor) == state.itemCount - 1) rect.right = space
-            else rect.right = space/2
+            else rect.right = space / 2
             rect.top = space / 2
             rect.bottom = space / 2
         }
