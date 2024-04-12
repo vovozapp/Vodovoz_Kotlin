@@ -28,6 +28,7 @@ fun OrderDetailsEntity.mapToUI() = OrderDetailsUI(
     productUIList = productEntityList.mapToUI(),
     driverId = driverId,
     driverName = driverName,
+    driverUrl = driverUrl,
     orderPricesUIList = orderPricesEntityList.mapToUI(),
     repeatOrder = repeatOrder,
 )

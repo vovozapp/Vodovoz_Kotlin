@@ -689,4 +689,7 @@ interface MainApi {
         @Query("userid") userId: Long? = null,
         @QueryMap buyCertificateMap: HashMap<String, String> = hashMapOf(),
     ): ResponseBody
+
+    @POST
+    suspend fun postUrl(url: String)
 }

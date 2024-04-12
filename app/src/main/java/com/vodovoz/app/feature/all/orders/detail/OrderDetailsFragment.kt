@@ -213,6 +213,8 @@ class OrderDetailsFragment : BaseFragment() {
                             val eventParameters = "\"ZakazNumber\":\"${orderDetailsUI.id}\""
                             accountManager.reportYandexMetrica("Где мой заказ", eventParameters)
 
+                            viewModel.postUrl(orderDetailsUI.driverUrl)
+
                             debugLog { "driverId ${orderDetailsUI.driverId}" }
 
                             findNavController().navigate(

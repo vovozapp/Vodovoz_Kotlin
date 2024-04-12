@@ -20,6 +20,7 @@ class OrderDetailsUI(
     val productUIList: List<ProductUI> = listOf(),
     val driverId: String? = null,
     val driverName: String? = null,
+    val driverUrl: String? = null,
     val orderPricesUIList: List<OrderPricesUI> = listOf(),
     val repeatOrder: Boolean = true,
 )

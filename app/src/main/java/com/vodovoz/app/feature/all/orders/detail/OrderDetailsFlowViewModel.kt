@@ -219,6 +219,15 @@ class OrderDetailsFlowViewModel @Inject constructor(
         )
     }
 
+    fun postUrl(url: String?){
+        if(url.isNullOrEmpty()) {
+          return
+        }
+        viewModelScope.launch{
+            repository.postUrl(url)
+        }
+    }
+
     data class OrderDetailsState(
         val orderDetailsUI: OrderDetailsUI? = null,
         val ifDriverExists: Boolean = false,

@@ -64,6 +64,9 @@ object OrderDetailsResponseJsonParser {
         driverName = if (has("VODILA") && !isNull("VODILA")) {
             getJSONObject("VODILA").safeString("NAME")
         } else null,
+        driverUrl = if (has("VODILA") &&!isNull("VODILA")) {
+            getJSONObject("VODILA").safeString("SSILKAPEREDACH")
+        } else null,
         orderPricesEntityList = if (has("ITOG_DANNYE")) {
             getJSONArray("ITOG_DANNYE").parseOrderPricesList()
         } else listOf(),

@@ -1271,4 +1271,8 @@ class MainRepository @Inject constructor(
     }
 
     suspend fun fetchBottles() = api.fetchBottles().parseBottlesResponse()
+
+    suspend fun postUrl(url: String) {
+        api.postUrl(url)
+    }
 }
