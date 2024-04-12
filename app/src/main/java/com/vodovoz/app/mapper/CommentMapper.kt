@@ -3,7 +3,6 @@ package com.vodovoz.app.mapper
 import com.vodovoz.app.data.model.common.CommentEntity
 import com.vodovoz.app.feature.all.comments.model.CommentImage
 import com.vodovoz.app.ui.model.CommentUI
-import com.vodovoz.app.util.extensions.fromHtml
 
 object CommentMapper {
 
@@ -13,7 +12,7 @@ object CommentMapper {
 
     fun CommentEntity.mapToUI() = CommentUI(
         id = id,
-        text = text?.fromHtml().toString(),
+        text = text,
         date = date,
         author = author,
         rating = rating,

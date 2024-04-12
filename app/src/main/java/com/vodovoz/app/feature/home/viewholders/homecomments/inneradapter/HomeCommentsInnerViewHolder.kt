@@ -4,6 +4,7 @@ import android.view.View
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ViewHolderSliderCommentBinding
 import com.vodovoz.app.ui.model.CommentUI
+import com.vodovoz.app.util.extensions.fromHtml
 
 class HomeCommentsInnerViewHolder(
     view: View,
@@ -23,7 +24,7 @@ class HomeCommentsInnerViewHolder(
         super.bind(item)
         binding.rbRating.rating = item.rating?.toFloat() ?: 0f
         binding.tvAuthor.text = if (item.author == "null") "" else item.author
-        binding.tvComment.text = item.text ?: ""
+        binding.tvComment.text = item.text?.fromHtml() ?: ""
         binding.tvDate.text = item.date ?: ""
     }
 

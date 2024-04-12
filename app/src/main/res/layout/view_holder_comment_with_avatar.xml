@@ -43,7 +43,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageContainer"
             app:layout_constraintTop_toTopOf="parent"
@@ -51,11 +50,10 @@
 
         <TextView
             android:id="@+id/date"
-            style="@style/TextViewNormalGray"
+            style="@style/TextViewSmallGray"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="top"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageContainer"
             app:layout_constraintTop_toTopOf="parent"
@@ -80,7 +78,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvComment"
-        style="@style/TextViewNormalGray"
+        style="@style/TextViewSmallLightGray"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="top"

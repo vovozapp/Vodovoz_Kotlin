@@ -20,6 +20,7 @@ object AllCommentsByProductResponseJsonParser {
                     else -> responseJson.getJSONArray("data").parseCommentEntityList()
                 }
             )
+
             else -> ResponseEntity.Error("Неправильный запрос")
         }
     }
