@@ -9,7 +9,6 @@ object OrderMapper {
 
     fun List<OrderEntity>.mapToUI() = map { it.mapToUI() }
 
-
     fun OrderEntity.mapToUI() = OrderUI(
         id = id,
         price = price,

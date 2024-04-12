@@ -23,7 +23,6 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
 import com.vodovoz.app.ui.model.OrderDetailsUI
-import com.vodovoz.app.ui.model.OrderStatusUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -96,19 +95,19 @@ class OrderDetailsFragment : BaseFragment() {
                         binding.llStatusContainer.setBackgroundColor(
                             ContextCompat.getColor(
                                 requireContext(),
-                                OrderStatusUI.CANCELED.color
+                                R.color.color_status_canceled
                             )
                         )
                         binding.llActionsContainer.setBackgroundColor(
                             ContextCompat.getColor(
                                 requireContext(),
-                                OrderStatusUI.CANCELED.color
+                                R.color.color_status_canceled
                             )
                         )
                         binding.imgStatus.setImageDrawable(
                             ContextCompat.getDrawable(
                                 requireContext(),
-                                OrderStatusUI.CANCELED.image
+                                R.drawable.ic_order_canceled
                             )
                         )
                         binding.tvStatus.text = "Отменен"
@@ -177,11 +176,12 @@ class OrderDetailsFragment : BaseFragment() {
                 .append("№")
                 .append(orderDetailsUI.id)
                 .toString()
-            when (orderDetailsUI.status) {
-                OrderStatusUI.COMPLETED,
-                OrderStatusUI.DELIVERED,
-                OrderStatusUI.CANCELED,
+            when (orderDetailsUI.status?.id) {
+                "F",
+                "S",
+                "R",
                 -> binding.tvCancelOrder.visibility = View.INVISIBLE
+
                 else -> binding.tvCancelOrder.visibility = View.VISIBLE
             }
 
@@ -192,6 +192,7 @@ class OrderDetailsFragment : BaseFragment() {
                     binding.llPayOrder.visibility = View.GONE
                     binding.payedStatus.isVisible = false
                 }
+
                 false -> {
                     when (orderDetailsUI.payUri.isEmpty()) {
                         true -> binding.llPayOrder.visibility = View.GONE
@@ -231,6 +232,7 @@ class OrderDetailsFragment : BaseFragment() {
                     }
 
                 }
+
                 "R" -> binding.payedStatus.isVisible = false
             } //todo
 
@@ -280,7 +282,7 @@ class OrderDetailsFragment : BaseFragment() {
                 submitList(orderDetailsUI.orderPricesUIList)
             }
 
-            if(!orderDetailsUI.repeatOrder){
+            if (!orderDetailsUI.repeatOrder) {
                 binding.llRepeatOrder.visibility = View.GONE
             }
 

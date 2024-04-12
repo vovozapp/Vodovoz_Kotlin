@@ -29,10 +29,10 @@ class HomeProductsSliderViewHolder(
 
     private var isAddItemDecoration = false
 
-    private val space: Int by lazy { itemView.context.resources.getDimension(R.dimen.space_16).toInt() }
+//    private val space: Int by lazy { itemView.context.resources.getDimension(R.dimen.space_16).toInt() }
 
     private val gridMarginDecoration: GridMarginDecoration by lazy {
-        GridMarginDecoration(space)
+        GridMarginDecoration(16)
     }
 
     init {
@@ -41,9 +41,9 @@ class HomeProductsSliderViewHolder(
         } else {
             GridLayoutManager(itemView.context, 2)
         }
-        if(!linear){
-            binding.rvCategories.addItemDecoration(gridMarginDecoration)
-        }
+//        if(!linear){
+//            binding.rvCategories.addItemDecoration(gridMarginDecoration)
+//        }
 
         binding.rvCategories.adapter = homeProductsAdapter
         binding.rvCategories.setRecycledViewPool(likeManager.fetchViewPool())

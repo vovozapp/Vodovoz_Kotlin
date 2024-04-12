@@ -35,7 +35,10 @@ object OrderSliderResponseJsonParser {
         id = getLong("ID"),
         price = getInt("PRICE"),
         date = safeString("DATE_OUT"),
-        status = OrderStatusEntity.fromId(getString("STATUS_NAME_ID")),
+        status = OrderStatusEntity(
+            id = safeString("STATUS_NAME_ID"),
+            statusName = safeString("STATUS_NAME")
+        ),
         address = getString("ADRESSDOSTAVKI"),
         repeatOrder = if (has("POVTOR_ZAKAZA")) {
             safeString("POVTOR_ZAKAZA")  == "Y"

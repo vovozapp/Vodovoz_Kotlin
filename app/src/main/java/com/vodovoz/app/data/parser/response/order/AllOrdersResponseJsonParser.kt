@@ -1,6 +1,8 @@
 package com.vodovoz.app.data.parser.response.order
 
 import com.vodovoz.app.data.model.common.OrderEntity
+import com.vodovoz.app.data.model.common.OrderFilterEntity
+import com.vodovoz.app.data.model.common.OrderListEntity
 import com.vodovoz.app.data.model.common.OrderStatusEntity
 import com.vodovoz.app.data.model.common.ProductEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
@@ -16,14 +18,18 @@ import org.json.JSONObject
 
 object AllOrdersResponseJsonParser {
 
-    fun ResponseBody.parseAllOrdersSliderResponse(): ResponseEntity<List<OrderEntity>> {
+    fun ResponseBody.parseAllOrdersSliderResponse(): ResponseEntity<OrderListEntity> {
         val responseJson = JSONObject(this.string())
         debugLog { LogSettings.RESPONSE_BODY_LOG + " ${responseJson.toString(2)}" }
         return when (responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
-                responseJson.getJSONArray("data").parseOrderEntityList()
+                OrderListEntity(
+                    orderFilters = responseJson.getJSONArray("filterstatus").parseOrderFilters(),
+                    orders = responseJson.getJSONArray("data").parseOrderEntityList()
+                )
             )
-            else -> ResponseEntity.Success(listOf())
+
+            else -> ResponseEntity.Success(OrderListEntity())
         }
     }
 
@@ -37,12 +43,15 @@ object AllOrdersResponseJsonParser {
     private fun JSONObject.parseOrderEntity() = OrderEntity(
         id = getLong("ID"),
         price = getInt("PRICE"),
-        status = OrderStatusEntity.fromId(getString("STATUS_ID")),
+        status = OrderStatusEntity(
+            id = safeString("STATUS_ID"),
+            statusName = safeString("STATUS_NAME")
+        ),
         address = getString("ADDRESS"),
         date = getString("DATE_INSERT"),
         productEntityList = getJSONArray("ITEMS").parseProductEntityList(),
         repeatOrder = if (has("POVTOR_ZAKAZA")) {
-            safeString("POVTOR_ZAKAZA")  == "Y"
+            safeString("POVTOR_ZAKAZA") == "Y"
         } else true
     )
 
@@ -60,3 +69,18 @@ object AllOrdersResponseJsonParser {
     )
 
 }
+
+private fun JSONArray.parseOrderFilters(): List<OrderFilterEntity> {
+
+    return mutableListOf<OrderFilterEntity>().also { list ->
+        for (index in 0 until length()) {
+            list.add(getJSONObject(index).parseOrderFilter())
+        }
+    }
+}
+
+private fun JSONObject.parseOrderFilter() = OrderFilterEntity(
+    id = getString("ID"),
+    name = getString("NAME"),
+
+    )

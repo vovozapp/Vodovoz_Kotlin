@@ -41,8 +41,8 @@
     //Card size
     <dimen name="history_slider_card_width">@dimen/_80sdp</dimen>
     <dimen name="history_slider_card_height">@dimen/_125sdp</dimen>
-    <dimen name="product_slider_card_width">@dimen/_125sdp</dimen>
-    <dimen name="product_slider_card_height">@dimen/_130sdp</dimen>
+    <dimen name="product_slider_card_width">160dp</dimen>
+    <dimen name="product_slider_card_height">170dp</dimen>
     <dimen name="brand_slider_card_width">@dimen/_94sdp</dimen>
     <dimen name="brand_slider_card_height">@dimen/_50sdp</dimen>
     <dimen name="comment_slider_text_height">@dimen/_45sdp</dimen>

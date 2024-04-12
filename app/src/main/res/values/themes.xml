@@ -128,7 +128,7 @@
 
     //Small
     <style name="TextViewSmallBlack" parent="@style/Theme.AppCompat">
-        <item name="android:textSize">@dimen/small_text_size</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/text_black</item>
         <item name="fontFamily">@font/rotonda_normal</item>
     </style>

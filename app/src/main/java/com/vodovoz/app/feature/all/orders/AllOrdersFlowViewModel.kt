@@ -4,17 +4,25 @@ import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.common.content.*
+import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.common.content.Event
+import com.vodovoz.app.common.content.PagingContractViewModel
+import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
+import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
-import com.vodovoz.app.mapper.OrderMapper.mapToUI
+import com.vodovoz.app.mapper.OrderListMapper.mapToUI
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,10 +54,12 @@ class AllOrdersFlowViewModel @Inject constructor(
                         appVersion = BuildConfig.VERSION_NAME,
                         orderId = state.data.ordersFiltersBundleUI.orderId,
                         status = StringBuilder().apply {
-                            state.data.ordersFiltersBundleUI.orderStatusUIList.forEach {
-                                append(it.id).append(
-                                    ","
-                                )
+                            state.data.ordersFiltersBundleUI.orderFilterUIList.forEach {
+                                if(it.isChecked) {
+                                    append(it.id).append(
+                                        ","
+                                    )
+                                }
                             }
                         }.toString()
                     )
@@ -59,7 +69,7 @@ class AllOrdersFlowViewModel @Inject constructor(
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
-                        uiStateListener.value = if (data.isEmpty() && !state.loadMore) {
+                        uiStateListener.value = if (data.orders.isEmpty() && !state.loadMore) {
                             state.copy(
                                 error = ErrorState.Empty(),
                                 loadingPage = false,
@@ -70,15 +80,24 @@ class AllOrdersFlowViewModel @Inject constructor(
                         } else {
 
                             val itemsList = if (state.loadMore) {
-                                state.data.itemsList + data
+                                state.data.itemsList + data.orders
                             } else {
-                                data
+                                data.orders
                             }
 
                             state.copy(
-                                page = if (data.isEmpty()) null else state.page?.plus(1),
+                                page = if (data.orders.isEmpty()) null else state.page?.plus(1),
                                 loadingPage = false,
-                                data = state.data.copy(itemsList = itemsList),
+                                data = state.data.copy(
+                                    itemsList = itemsList,
+                                    ordersFiltersBundleUI = if (state.data.ordersFiltersBundleUI.orderFilterUIList.isEmpty()) {
+                                        OrdersFiltersBundleUI().apply {
+                                            orderFilterUIList.addAll(data.filters)
+                                        }
+                                    } else {
+                                        state.data.ordersFiltersBundleUI
+                                    }
+                                ),
                                 error = null,
                                 loadMore = false,
                                 bottomItem = null

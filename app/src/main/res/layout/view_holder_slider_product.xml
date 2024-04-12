@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/product_slider_card_width"
-    android:layout_height="@dimen/product_slider_card_height">
+    android:layout_width="160dp"
+    android:layout_height="165dp">
 
     <ImageView
         android:id="@+id/imgFavoriteStatus"
@@ -16,105 +16,129 @@
 
     <ImageView
         android:id="@+id/imgPicture"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgFavoriteStatus"
-        app:layout_constraintVertical_bias="0.0"
         tools:ignore="ContentDescription" />
 
-    <TextView
-        android:id="@+id/tvStatus"
-        style="@style/TextViewSmallWhite"
-        android:maxWidth="85dp"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_round_statuses"
-        android:backgroundTint="@color/bluePrimary"
-        android:paddingHorizontal="@dimen/space_8"
-        android:paddingVertical="@dimen/space_2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_goneMarginEnd="5dp"
-        tools:text="Новинк4324224а"
-        tools:ignore="SelectableText" />
-
-    <TextView
-        android:id="@+id/tvDiscountPercent"
-        android:maxWidth="55dp"
-        android:maxLines="1"
-        android:ellipsize="end"
-        style="@style/TextViewSmallWhite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_round_statuses"
-        android:layout_marginTop="4dp"
-        android:backgroundTint="@color/orange"
-        android:paddingHorizontal="@dimen/space_8"
-        android:paddingVertical="@dimen/space_2"
-        app:layout_constraintStart_toStartOf="@+id/tvStatus"
-        app:layout_constraintTop_toBottomOf="@+id/tvStatus"
-        tools:text="12%"
-        tools:ignore="SelectableText" />
-
-    <TextView
-        android:id="@+id/tvPricePerUnit"
-        style="@style/TextViewSmallLightGray"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/tvCurrentPrice"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="510/кг"
-        tools:ignore="SelectableText" />
-
-    <TextView
-        android:id="@+id/tvCurrentPrice"
-        style="@style/TextViewMediumBlackBold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@id/tvPriceCondition"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="280 Р"
-        tools:ignore="SelectableText" />
-
-    <TextView
-        android:id="@+id/tvOldPrice"
-        style="@style/TextViewSmallLightGray"
+    <include
+        layout="@layout/view_holder_slider_product_statuses"
+        android:id="@+id/cgStatuses"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/space_4"
-        app:layout_constraintBottom_toBottomOf="@+id/tvCurrentPrice"
-        app:layout_constraintTop_toTopOf="@+id/tvCurrentPrice"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvCurrentPrice"
-        tools:ignore="RtlSymmetry,SelectableText"
-        tools:text="300 Р" />
-
-    <TextView
-        android:id="@+id/tvPriceCondition"
-        style="@style/TextViewSmallGray"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="start|bottom"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingEnd="@dimen/space_16"
+        app:chipSpacingVertical="0dp"
+        app:layout_constraintEnd_toStartOf="@+id/imgFavoriteStatus"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="При условии покупки от 10 шт" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry" />
+
+<!--    <TextView-->
+<!--        android:id="@+id/tvStatus"-->
+<!--        style="@style/TextViewSmallWhite"-->
+<!--        android:maxWidth="85dp"-->
+<!--        android:maxLines="1"-->
+<!--        android:ellipsize="end"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@drawable/bg_round_statuses"-->
+<!--        android:backgroundTint="@color/bluePrimary"-->
+<!--        android:paddingHorizontal="@dimen/space_8"-->
+<!--        android:paddingVertical="@dimen/space_2"-->
+<!--        android:layout_marginBottom="4dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/tvDiscountPercent"-->
+<!--        tools:text="Новинк4324224а"-->
+<!--        tools:ignore="SelectableText" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tvDiscountPercent"-->
+<!--        android:maxWidth="55dp"-->
+<!--        android:maxLines="1"-->
+<!--        android:ellipsize="end"-->
+<!--        style="@style/TextViewSmallWhite"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@drawable/bg_round_statuses"-->
+<!--        android:backgroundTint="@color/orange"-->
+<!--        android:paddingHorizontal="@dimen/space_8"-->
+<!--        android:paddingVertical="@dimen/space_2"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/tvStatus"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tvStatus"-->
+<!--        tools:text="12%"-->
+<!--        tools:ignore="SelectableText" />-->
+
+    <include
+        android:id="@+id/priceContainer"
+        layout="@layout/view_holder_slider_product_prices"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="@+id/add"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/verticalGuideline"
+        app:layout_constraintBottom_toBottomOf="@+id/add"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verticalGuideline"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.76" />
+<!--    <TextView-->
+<!--        android:id="@+id/tvPricePerUnit"-->
+<!--        style="@style/TextViewSmallLightGray"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/tvCurrentPrice"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        tools:text="510/кг"-->
+<!--        tools:ignore="SelectableText" -->
+<!--        tools:visibility="gone"/>-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tvCurrentPrice"-->
+<!--        style="@style/TextViewMediumBlackBold"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textSize="16sp"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/tvPriceCondition"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        tools:text="280 Р"-->
+<!--        tools:ignore="SelectableText" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tvOldPrice"-->
+<!--        style="@style/TextViewSmallLightGray"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:paddingStart="@dimen/space_4"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/tvCurrentPrice"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/tvCurrentPrice"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/tvCurrentPrice"-->
+<!--        tools:ignore="RtlSymmetry,SelectableText"-->
+<!--        tools:text="300 Р" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tvPriceCondition"-->
+<!--        style="@style/TextViewSmallGray"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:gravity="start|bottom"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        tools:text="При условии покупки от 10 шт" />-->
 
     <ImageView
         android:id="@+id/add"
         android:layout_width="@dimen/_24sdp"
         android:layout_height="@dimen/_24sdp"
-        android:layout_marginTop="3dp"
         android:layout_marginEnd="@dimen/space_6"
         android:background="@drawable/amount_selector"
         android:padding="@dimen/space_8"
@@ -197,6 +221,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.8" />
+        app:layout_constraintGuide_begin="125dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

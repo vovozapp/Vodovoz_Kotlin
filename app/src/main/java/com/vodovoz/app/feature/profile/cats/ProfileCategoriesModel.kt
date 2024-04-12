@@ -78,7 +78,10 @@ data class Zakaz(
                 append(INTERVAL)
             }
         },
-        orderStatusUI = OrderStatusEntity.fromId(STATUS_NAME_ID ?: "").mapToUI(),
+        orderStatusUI = OrderStatusEntity(
+            id = STATUS_NAME_ID ?: "",
+            statusName = STATUS_NAME?: "",
+        ).mapToUI(),
         address = ADRESSDOSTAVKI,
         productUIList = listOf(),
         repeatOrder = POVTOR_ZAKAZA.isNullOrEmpty() || POVTOR_ZAKAZA == "Y"

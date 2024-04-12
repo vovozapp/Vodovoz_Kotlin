@@ -31,7 +31,6 @@ class HomeHistoriesSliderViewHolder(
             if (parent.getChildAdapterPosition(viewDecor) == state.itemCount - 1) rect.right = space
             else rect.right = space / 2
             rect.top = space / 2
-            rect.bottom = space / 2
         }
     }
 

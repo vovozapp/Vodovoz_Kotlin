@@ -5,27 +5,29 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
-import com.vodovoz.app.ui.model.OrderStatusUI
+import com.vodovoz.app.ui.model.OrderFilterUI
 
 
-class OrderStatusesFlowAdapter : ItemAdapter() {
+class OrderFiltersFlowAdapter(
+    private val onCheckItem: (String, Boolean) -> Unit,
+    ) : ItemAdapter() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): ItemViewHolder<out Item> {
         return when (viewType) {
-            OrderStatusUI.ORDER_STATUS_VIEW_TYPE ->
-                OrderStatusFlowViewHolder(
+            OrderFilterUI.ORDER_STATUS_FILTER_VIEW_TYPE ->
+                OrderFiltersFlowViewHolder(
                     getViewFromInflater(
                         R.layout.view_holder_order_status,
                         parent
-                    )
+                    ),
+                    onCheckItem
                 )
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")
             }
-
         }
     }
 

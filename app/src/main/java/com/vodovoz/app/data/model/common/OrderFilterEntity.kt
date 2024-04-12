@@ -1,6 +1,6 @@
 package com.vodovoz.app.data.model.common
 
-class OrderStatusEntity(
+class OrderFilterEntity(
     val id: String,
-    val statusName: String,
+    val name: String
 )

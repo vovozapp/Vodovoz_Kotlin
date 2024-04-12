@@ -17,7 +17,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="510/кг"
-        tools:ignore="SelectableText" />
+        tools:ignore="SelectableText"
+        tools:visibility="gone"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,10 +52,11 @@
         android:id="@+id/tvPriceCondition"
         style="@style/TextViewSmallGray"
         android:textSize="12sp"
+        android:maxLines="2"
         android:textColor="@color/text_gray_light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start|bottom"
-        tools:text="При условии покупки от 10 шт" />
+        tools:text="При условии покупки от 10 шт"
+        tools:visibility="gone"/>
 
 </LinearLayout>

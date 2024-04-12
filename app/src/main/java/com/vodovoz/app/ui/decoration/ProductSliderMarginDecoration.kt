@@ -17,12 +17,18 @@ class ProductSliderMarginDecoration(
         state: RecyclerView.State
     ) {
         with(outRect) {
-            left = space
-            if (parent.getChildAdapterPosition(view) == itemCount - 1) {
-                right = space
+            left = if (parent.getChildAdapterPosition(view) == 0) {
+                space
+            } else {
+                space / 4
             }
-            top = space/2
-            bottom = space/2
+            right = if (parent.getChildAdapterPosition(view) == itemCount - 1) {
+                space
+            } else {
+                space / 4
+            }
+            top = space/4
+            bottom = space/4
         }
     }
 

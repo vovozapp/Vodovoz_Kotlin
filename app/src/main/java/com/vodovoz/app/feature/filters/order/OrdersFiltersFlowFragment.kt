@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
 import com.vodovoz.app.databinding.FragmentOrdersFiltersBinding
 import com.vodovoz.app.feature.all.orders.OrdersHistoryFragment
-import com.vodovoz.app.feature.filters.order.adapter.OrderStatusesFlowAdapter
-import com.vodovoz.app.ui.model.OrderStatusUI
+import com.vodovoz.app.feature.filters.order.adapter.OrderFiltersFlowAdapter
+import com.vodovoz.app.ui.model.OrderFilterUI
+import com.vodovoz.app.ui.model.OrderFilterUI.Companion.ALL_ID
+import com.vodovoz.app.ui.model.OrderFilterUI.Companion.ALL_NAME
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
 
 class OrdersFiltersFlowFragment : Fragment() {
@@ -18,16 +20,7 @@ class OrdersFiltersFlowFragment : Fragment() {
     private lateinit var ordersFiltersBundleUI: OrdersFiltersBundleUI
     private lateinit var binding: FragmentOrdersFiltersBinding
 
-    private val orderStatusUIList = listOf(
-        OrderStatusUI.IN_PROCESSING,
-        OrderStatusUI.IN_DELIVERY,
-        OrderStatusUI.COMPLETED,
-        OrderStatusUI.ACCEPTED,
-        OrderStatusUI.CANCELED,
-        OrderStatusUI.DELIVERED,
-    )
-
-    private lateinit var orderStatusesAdapter: OrderStatusesFlowAdapter
+    private lateinit var orderStatusesAdapter: OrderFiltersFlowAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,13 +28,14 @@ class OrdersFiltersFlowFragment : Fragment() {
     }
 
     private fun getArgs() {
-        ordersFiltersBundleUI = OrdersFiltersFlowFragmentArgs.fromBundle(requireArguments()).ordersFiltersBundleUI
+        ordersFiltersBundleUI =
+            OrdersFiltersFlowFragmentArgs.fromBundle(requireArguments()).ordersFiltersBundleUI
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ) = FragmentOrdersFiltersBinding.inflate(
         inflater,
         container,
@@ -64,12 +58,36 @@ class OrdersFiltersFlowFragment : Fragment() {
     }
 
     private fun initOrderStatusesRecycler() {
-        ordersFiltersBundleUI.orderStatusUIList.forEach { orderStatusUI ->
-            orderStatusUIList.find { it == orderStatusUI }?.let { it.isChecked = true }
+        val anyFilter = ordersFiltersBundleUI.orderFilterUIList.firstOrNull { it.isChecked }
+        ordersFiltersBundleUI.orderFilterUIList.add(
+            0,
+            OrderFilterUI(
+                id = ALL_ID,
+                name = ALL_NAME,
+                isChecked = anyFilter == null
+            )
+        )
+        orderStatusesAdapter = OrderFiltersFlowAdapter { id, checked ->
+            if (id == ALL_ID ) {
+                ordersFiltersBundleUI.orderFilterUIList.forEach {
+                    if(id != it.id) {
+                        it.isChecked = false
+                    }
+                }
+                ordersFiltersBundleUI.orderFilterUIList.first().isChecked = true
+            } else if(!checked) {
+                ordersFiltersBundleUI.orderFilterUIList.first().isChecked = false
+                ordersFiltersBundleUI.orderFilterUIList.firstOrNull { it.id == id }?.isChecked = true
+            } else {
+                ordersFiltersBundleUI.orderFilterUIList.firstOrNull { it.id == id }?.isChecked = false
+                if(ordersFiltersBundleUI.orderFilterUIList.firstOrNull { it.isChecked} == null) {
+                    ordersFiltersBundleUI.orderFilterUIList.first().isChecked = true
+                }
+            }
+            orderStatusesAdapter.submitList(ordersFiltersBundleUI.orderFilterUIList)
         }
-        orderStatusesAdapter = OrderStatusesFlowAdapter().also {
-            it.submitList(orderStatusUIList)
-        }
+        orderStatusesAdapter.submitList(ordersFiltersBundleUI.orderFilterUIList)
+
 
         binding.rvOrderStatuses.layoutManager = LinearLayoutManager(requireContext())
         binding.rvOrderStatuses.adapter = orderStatusesAdapter
@@ -77,12 +95,7 @@ class OrdersFiltersFlowFragment : Fragment() {
 
     private fun initButtons() {
         binding.tvApply.setOnClickListener {
-            ordersFiltersBundleUI = OrdersFiltersBundleUI()
-            orderStatusUIList.forEach { orderStatusUI ->
-                if (orderStatusUI.isChecked) {
-                    ordersFiltersBundleUI.orderStatusUIList.add(orderStatusUI)
-                }
-            }
+            ordersFiltersBundleUI.orderFilterUIList.removeAt(0)
             ordersFiltersBundleUI.orderId = binding.etOrderId.text.toString().toLongOrNull()
             sentOrderFiltersBundleUIBack(ordersFiltersBundleUI)
         }

@@ -115,7 +115,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintGuide_end="@dimen/_32sdp"/>
+        app:layout_constraintGuide_percent="0.89312977" />
 
     <include
         android:id="@+id/llPricesContainer"

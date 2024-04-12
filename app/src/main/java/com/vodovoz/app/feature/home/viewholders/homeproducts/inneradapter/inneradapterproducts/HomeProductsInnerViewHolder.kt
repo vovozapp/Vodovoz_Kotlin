@@ -73,7 +73,7 @@ class HomeProductsInnerViewHolder(
     }
 
     init {
-        binding.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        binding.priceContainer.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.root.setOnClickListener {
             val item = item ?: return@setOnClickListener
             clickListener.onProductClick(item.id)
@@ -131,48 +131,49 @@ class HomeProductsInnerViewHolder(
 
     override fun bind(item: ProductUI) {
         super.bind(item)
+        binding.priceContainer.tvPriceCondition.visibility = View.GONE
 
         binding.add.isSelected = item.leftItems == 0
 
         //Price per unit / or order quantity
-        binding.tvPricePerUnit.isVisible = item.pricePerUnit.isNotEmpty()
-        binding.tvPricePerUnit.text = item.pricePerUnit
+        binding.priceContainer.tvPricePerUnit.isVisible = item.pricePerUnit.isNotEmpty()
+        binding.priceContainer.tvPricePerUnit.text = item.pricePerUnit
 
         //Price
         when (item.priceList.size) {
             1 -> {
-                binding.tvCurrentPrice.text = item.currentPriceStringBuilder
-                binding.tvOldPrice.text = item.oldPriceStringBuilder
+                binding.priceContainer.tvCurrentPrice.text = item.currentPriceStringBuilder
+                binding.priceContainer.tvOldPrice.text = item.oldPriceStringBuilder
             }
 
             else -> {
                 if (item.conditionPrice.isNotEmpty()) {
-                    binding.tvCurrentPrice.text = item.conditionPrice
+                    binding.priceContainer.tvCurrentPrice.text = item.conditionPrice
                 } else {
-                    binding.tvCurrentPrice.text = item.minimalPriceStringBuilder
-                    binding.tvPricePerUnit.visibility = View.GONE
+                    binding.priceContainer.tvCurrentPrice.text = item.minimalPriceStringBuilder
+                    binding.priceContainer.tvPricePerUnit.visibility = View.GONE
                 }
             }
         }
         when (item.haveDiscount) {
             true -> {
-                binding.tvCurrentPrice.setTextColor(
+                binding.priceContainer.tvCurrentPrice.setTextColor(
                     ContextCompat.getColor(
                         itemView.context,
                         R.color.red
                     )
                 )
-                binding.tvOldPrice.visibility = View.VISIBLE
+                binding.priceContainer.tvOldPrice.visibility = View.VISIBLE
             }
 
             false -> {
-                binding.tvCurrentPrice.setTextColor(
+                binding.priceContainer.tvCurrentPrice.setTextColor(
                     ContextCompat.getColor(
                         itemView.context,
                         R.color.text_black
                     )
                 )
-                binding.tvOldPrice.visibility = View.GONE
+                binding.priceContainer.tvOldPrice.visibility = View.GONE
             }
         }
 
@@ -184,11 +185,11 @@ class HomeProductsInnerViewHolder(
 
         //Status
         when (item.status.isEmpty()) {
-            true -> binding.tvStatus.visibility = View.GONE
+            true -> binding.cgStatuses.cwStatusContainer.visibility = View.GONE
             false -> {
-                binding.tvStatus.visibility = View.VISIBLE
-                binding.tvStatus.text = item.status
-                binding.tvStatus.background.setTint(Color.parseColor(item.statusColor))
+                binding.cgStatuses.cwStatusContainer.visibility = View.VISIBLE
+                binding.cgStatuses.tvStatus.text = item.status
+                binding.cgStatuses.cwStatusContainer.setCardBackgroundColor(Color.parseColor(item.statusColor))
             }
         }
 
@@ -196,10 +197,10 @@ class HomeProductsInnerViewHolder(
         if (item.priceList.size == 1 &&
             item.priceList.first().currentPrice < item.priceList.first().oldPrice
         ) {
-            binding.tvDiscountPercent.visibility = View.VISIBLE
-            binding.tvDiscountPercent.text = item.discountPercentStringBuilder
+            binding.cgStatuses.tvDiscountPercent.visibility = View.VISIBLE
+            binding.cgStatuses.tvDiscountPercent.text = item.discountPercentStringBuilder
         } else {
-            binding.tvDiscountPercent.visibility = View.GONE
+            binding.cgStatuses.tvDiscountPercent.visibility = View.GONE
         }
 
         //UpdatePictures
@@ -249,10 +250,10 @@ class HomeProductsInnerViewHolder(
     }
 
     private fun changePricesContainerVisibility(visible: Boolean) {
-        binding.tvPricePerUnit.changeVisibilityIfNotEmpty(visible)
-        binding.tvCurrentPrice.changeVisibilityIfNotEmpty(visible)
-        binding.tvOldPrice.changeVisibilityIfNotEmpty(visible)
-        binding.tvPriceCondition.changeVisibilityIfNotEmpty(visible)
+        binding.priceContainer.tvPricePerUnit.changeVisibilityIfNotEmpty(visible)
+        binding.priceContainer.tvCurrentPrice.changeVisibilityIfNotEmpty(visible)
+        binding.priceContainer.tvOldPrice.changeVisibilityIfNotEmpty(visible)
+        binding.priceContainer.tvPriceCondition.changeVisibilityIfNotEmpty(visible)
     }
 
     private fun changeAmountControllerDeployedVisibility(visible: Boolean) {
@@ -262,8 +263,8 @@ class HomeProductsInnerViewHolder(
     }
 
     private fun changeStatusesVisibility(visible: Boolean) {
-        binding.tvStatus.isVisible = visible
-        binding.tvDiscountPercent.isVisible = visible
+        binding.cgStatuses.cwStatusContainer.isVisible = visible
+        binding.cgStatuses.cwDiscountContainer.isVisible = visible
     }
 
     fun TextView.changeVisibilityIfNotEmpty(visible: Boolean) {

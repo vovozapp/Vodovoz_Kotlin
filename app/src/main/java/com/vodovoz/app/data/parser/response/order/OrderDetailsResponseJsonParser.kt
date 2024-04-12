@@ -46,7 +46,10 @@ object OrderDetailsResponseJsonParser {
             "Y" -> true
             else -> throw Exception("Unknown payed status")
         },
-        status = OrderStatusEntity.fromId(getString("STATUS_NAME_ID")),
+        status = OrderStatusEntity(
+            id = safeString("STATUS_NAME_ID"),
+            statusName = safeString("STATUS_NAME")
+        ),
         payUri = if (has("PAYSISTEM") && getJSONObject("PAYSISTEM").has("URL")) {
             getJSONObject("PAYSISTEM").getString("URL")
         } else {
