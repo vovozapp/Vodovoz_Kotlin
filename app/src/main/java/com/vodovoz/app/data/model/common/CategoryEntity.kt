@@ -1,5 +1,9 @@
 package com.vodovoz.app.data.model.common
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 class CategoryEntity(
     val id: Long? = null,
     val name: String,
@@ -12,4 +16,4 @@ class CategoryEntity(
     val subCategoryEntityList: List<CategoryEntity> = listOf(),
     val filterCode: String = "",
     val actionEntity: ActionEntity? = null,
-)
+) : Parcelable

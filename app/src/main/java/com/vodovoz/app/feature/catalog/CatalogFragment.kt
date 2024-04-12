@@ -172,7 +172,7 @@ class CatalogFragment : BaseFragment() {
     ) {
         val navDirect = when (this) {
             is ActionEntity.AllPromotions -> CatalogFragmentDirections.actionToAllPromotionsFragment(
-                AllPromotionsFragment.DataSource.All()
+                AllPromotionsFragment.DataSource.All
             )
             is ActionEntity.Link -> {
                 val openLinkIntent = Intent(Intent.ACTION_VIEW, Uri.parse(this.url))
@@ -180,10 +180,10 @@ class CatalogFragment : BaseFragment() {
                 null
             }
             is ActionEntity.Discount -> CatalogFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
+                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount
             )
             is ActionEntity.Novelties -> CatalogFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
+                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties
             )
             is ActionEntity.WaterApp -> {
                 val eventParameters = "\"source\":\"catalog\""

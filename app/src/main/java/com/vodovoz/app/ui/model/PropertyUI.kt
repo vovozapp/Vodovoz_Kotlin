@@ -1,8 +1,10 @@
 package com.vodovoz.app.ui.model
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 class PropertyUI(
     val name: String,
-    val value: String
-) : Serializable
+    val value: String,
+) : Parcelable

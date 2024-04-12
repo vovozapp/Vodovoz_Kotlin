@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
@@ -31,7 +32,7 @@ import com.vodovoz.app.ui.model.SortTypeListUI
 import com.vodovoz.app.ui.model.SortTypeUI
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.io.Serializable
+import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -208,6 +209,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
                 binding.categoriesRecycler.visibility = View.VISIBLE
                 binding.imgCategories.visibility = View.VISIBLE
             }
+
             else -> {
                 binding.imgCategories.visibility = View.GONE
                 binding.categoriesRecycler.visibility = View.GONE
@@ -342,11 +344,20 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
         }
     }
 
-    sealed class DataSource : Serializable {
+    sealed class DataSource : Parcelable {
+        @Parcelize
         class Brand(val brandId: Long) : DataSource()
+
+        @Parcelize
         class Country(val countryId: Long) : DataSource()
-        class Discount : DataSource()
-        class Novelties : DataSource()
+
+        @Parcelize
+        data object Discount : DataSource()
+
+        @Parcelize
+        data object Novelties : DataSource()
+
+        @Parcelize
         class Slider(val categoryId: Long) : DataSource()
     }
 

@@ -157,7 +157,7 @@ class FullScreenHistoriesSliderFlowFragment : BaseFragment(),
                 AllPromotionsFragment.DataSource.ByBanner(this.categoryId)
             )
             is ActionEntity.AllPromotions -> FullScreenHistoriesSliderFlowFragmentDirections.actionToAllPromotionsFragment(
-                AllPromotionsFragment.DataSource.All()
+                AllPromotionsFragment.DataSource.All
             )
             is ActionEntity.Link -> {
                 val openLinkIntent = Intent(Intent.ACTION_VIEW, Uri.parse(this.url))
@@ -169,10 +169,10 @@ class FullScreenHistoriesSliderFlowFragment : BaseFragment(),
                     this.categoryId
                 )
             is ActionEntity.Discount -> FullScreenHistoriesSliderFlowFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
+                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount
             )
             is ActionEntity.Novelties -> FullScreenHistoriesSliderFlowFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
+                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties
             )
             is ActionEntity.WaterApp -> {
                 val eventParameters = "\"source\":\"stories\""

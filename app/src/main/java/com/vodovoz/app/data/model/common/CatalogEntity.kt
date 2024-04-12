@@ -1,8 +1,10 @@
 package com.vodovoz.app.data.model.common
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-class CatalogEntity (
+@Parcelize
+class CatalogEntity(
     val categoryEntityList: List<CategoryEntity>,
-    val topCatalogBanner: CatalogBanner? = null
-): Serializable
+    val topCatalogBanner: CatalogBanner? = null,
+) : Parcelable

@@ -359,7 +359,7 @@ class HomeFragment : BaseFragment() {
                             "vsenovinki" -> {
                                 findNavController().navigate(
                                     HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
+                                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties
                                     )
                                 )
                             }
@@ -367,7 +367,7 @@ class HomeFragment : BaseFragment() {
                             "vseskidki" -> {
                                 findNavController().navigate(
                                     HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
+                                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount
                                     )
                                 )
                             }
@@ -439,7 +439,7 @@ class HomeFragment : BaseFragment() {
                             "vseakcii" -> {
                                 findNavController().navigate(
                                     HomeFragmentDirections.actionToAllPromotionsFragment(
-                                        AllPromotionsFragment.DataSource.All()
+                                        AllPromotionsFragment.DataSource.All
                                     )
                                 )
                             }
@@ -680,7 +680,7 @@ class HomeFragment : BaseFragment() {
             override fun showAllDiscountProducts(id: Long) {
                 findNavController().navigate(
                     HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
+                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount
                     )
                 )
             }
@@ -696,7 +696,7 @@ class HomeFragment : BaseFragment() {
             override fun showAllNoveltiesProducts(id: Long) {
                 findNavController().navigate(
                     HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
+                        PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties
                     )
                 )
             }
@@ -724,7 +724,7 @@ class HomeFragment : BaseFragment() {
             override fun onShowAllPromotionsClick() {
                 findNavController().navigate(
                     HomeFragmentDirections.actionToAllPromotionsFragment(
-                        AllPromotionsFragment.DataSource.All()
+                        AllPromotionsFragment.DataSource.All
                     )
                 )
             }
@@ -748,7 +748,7 @@ class HomeFragment : BaseFragment() {
                     DISCOUNT_TITLE -> {
                         findNavController().navigate(
                             HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
+                                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount
                             )
                         )
                     }
@@ -760,7 +760,7 @@ class HomeFragment : BaseFragment() {
                     NOVELTIES_TITLE -> {
                         findNavController().navigate(
                             HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
+                                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties
                             )
                         )
                     }
@@ -768,7 +768,7 @@ class HomeFragment : BaseFragment() {
                     PROMOTIONS_TITLE -> {
                         findNavController().navigate(
                             HomeFragmentDirections.actionToAllPromotionsFragment(
-                                AllPromotionsFragment.DataSource.All()
+                                AllPromotionsFragment.DataSource.All
                             )
                         )
                     }
@@ -985,7 +985,7 @@ class HomeFragment : BaseFragment() {
             )
 
             is ActionEntity.AllPromotions -> HomeFragmentDirections.actionToAllPromotionsFragment(
-                AllPromotionsFragment.DataSource.All()
+                AllPromotionsFragment.DataSource.All
             )
 
             is ActionEntity.Link -> {
@@ -998,11 +998,11 @@ class HomeFragment : BaseFragment() {
                 HomeFragmentDirections.actionToPaginatedProductsCatalogFragment(this.categoryId)
 
             is ActionEntity.Discount -> HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount()
+                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount
             )
 
             is ActionEntity.Novelties -> HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties()
+                PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties
             )
 
             is ActionEntity.WaterApp -> {

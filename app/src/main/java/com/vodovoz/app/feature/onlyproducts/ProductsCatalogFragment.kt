@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.onlyproducts
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
@@ -24,7 +25,7 @@ import com.vodovoz.app.databinding.FragmentFixAmountProductsBinding
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.io.Serializable
+import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -82,7 +83,7 @@ class ProductsCatalogFragment : BaseFragment() {
             { findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment()) },
             { navigateToQrCodeFragment() },
             { startSpeechRecognizer() },
-           true
+            true
         )
     }
 
@@ -194,7 +195,8 @@ class ProductsCatalogFragment : BaseFragment() {
         }
     }
 
-    sealed class DataSource : Serializable {
+    sealed class DataSource : Parcelable {
+        @Parcelize
         class BannerProducts(val categoryId: Long) : DataSource()
     }
 

@@ -161,7 +161,7 @@ class SearchFragment : BaseFragment() {
                             SearchFlowViewModel.SearchEvents.GoToPromotions -> {
                                 findNavController().navigate(
                                     SearchFragmentDirections.actionToAllPromotionsFragment(
-                                        AllPromotionsFragment.DataSource.All()
+                                        AllPromotionsFragment.DataSource.All
                                     )
                                 )
                             }

@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.all.promotions
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -18,7 +19,7 @@ import com.vodovoz.app.feature.home.viewholders.homepromotions.model.PromotionAd
 import com.vodovoz.app.ui.model.ListOfPromotionFilterUi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.io.Serializable
+import kotlinx.parcelize.Parcelize
 
 @AndroidEntryPoint
 class AllPromotionsFragment : BaseFragment() {
@@ -75,7 +76,8 @@ class AllPromotionsFragment : BaseFragment() {
                 AllPromotionsFragmentDirections.actionToPromotionFiltersBottomFragment(
                     state.selectedFilterUi.id,
                     newList
-                ))
+                )
+            )
         }
     }
 
@@ -114,7 +116,11 @@ class AllPromotionsFragment : BaseFragment() {
 
             override fun onPromotionAdvClick(promotionAdvEntity: PromotionAdvEntity?) {
                 BannerAdvInfoBottomSheetFragment
-                    .newInstance(promotionAdvEntity?.titleAdv ?: "", promotionAdvEntity?.bodyAdv ?: "", promotionAdvEntity?.dataAdv ?: "")
+                    .newInstance(
+                        promotionAdvEntity?.titleAdv ?: "",
+                        promotionAdvEntity?.bodyAdv ?: "",
+                        promotionAdvEntity?.dataAdv ?: ""
+                    )
                     .show(childFragmentManager, "TAG")
             }
 
@@ -131,9 +137,12 @@ class AllPromotionsFragment : BaseFragment() {
         }
     }
 
-    sealed class DataSource : Serializable {
+    sealed class DataSource : Parcelable {
+        @Parcelize
         class ByBanner(val categoryId: Long) : DataSource()
-        class All() : DataSource()
+
+        @Parcelize
+        data object All : DataSource()
     }
 
 }

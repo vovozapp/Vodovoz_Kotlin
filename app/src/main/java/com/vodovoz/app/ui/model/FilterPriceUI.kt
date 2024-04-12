@@ -1,8 +1,10 @@
 package com.vodovoz.app.ui.model
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 class FilterPriceUI(
     var minPrice: Int = Int.MIN_VALUE,
-    var maxPrice: Int = Int.MAX_VALUE
-): Serializable
+    var maxPrice: Int = Int.MAX_VALUE,
+) : Parcelable

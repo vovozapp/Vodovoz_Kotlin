@@ -1,123 +1,152 @@
 package com.vodovoz.app.data.model.common
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 
 sealed class ActionEntity(
-    val action: String?,
-    val actionColor: String?
-) : Serializable {
+    open val action: String?,
+    open val actionColor: String?,
+) : Parcelable {
+
+    @Parcelize
     class Brand(
         val brandId: Long,
-        action: String? = null,
-        actionColor: String? = null
+        override val action: String? = null,
+        override val actionColor: String? = null,
     ) : ActionEntity(
         action = action,
         actionColor = actionColor
     )
+
+    @Parcelize
     class Brands(
         val brandIdList: List<Long>,
-        action: String? = null,
-        actionColor: String? = null
+        override val action: String? = null,
+        override val actionColor: String? = null,
     ) : ActionEntity(
         action = action,
         actionColor = actionColor
     )
+
+    @Parcelize
     class Promotion(
         val promotionId: Long,
-        action: String? = null,
-        actionColor: String? = null
+        override val action: String? = null,
+        override val actionColor: String? = null,
     ) : ActionEntity(
         action = action,
         actionColor = actionColor
     )
+
+    @Parcelize
     class Promotions(
         val categoryId: Long,
-        action: String? = null,
-        actionColor: String? = null
+        override val action: String? = null,
+        override val actionColor: String? = null,
     ) : ActionEntity(
         action = action,
         actionColor = actionColor
     )
+
+    @Parcelize
     class AllPromotions(
-        action: String? = null,
-        actionColor: String? = null
+        override val action: String? = null,
+        override val actionColor: String? = null,
     ) : ActionEntity(
         action = action,
         actionColor = actionColor
     )
+
+    @Parcelize
     class Product(
         val productId: Long,
-        action: String? = null,
-        actionColor: String? = null
+        override val action: String? = null,
+        override val actionColor: String? = null,
     ) : ActionEntity(
         action = action,
         actionColor = actionColor
     )
+
+    @Parcelize
     class Products(
         val categoryId: Long,
-        action: String? = null,
-        actionColor: String? = null
+        override val action: String? = null,
+        override val actionColor: String? = null,
     ) : ActionEntity(
         action = action,
         actionColor = actionColor
     )
+
+    @Parcelize
     class Link(
         val url: String,
-        action: String? = null,
-        actionColor: String? = null
+        override val action: String? = null,
+        override val actionColor: String? = null,
     ) : ActionEntity(
         action = action,
         actionColor = actionColor
     )
+
+    @Parcelize
     class Category(
         val categoryId: Long,
-        action: String? = null,
-        actionColor: String? = null
-    ): ActionEntity(
+        override val action: String? = null,
+        override val actionColor: String? = null,
+    ) : ActionEntity(
         action = action,
         actionColor = actionColor
     )
+
+    @Parcelize
     class Discount(
-        action: String? = null,
-        actionColor: String? = null
+        override val action: String? = null,
+        override val actionColor: String? = null,
     ) : ActionEntity(
         action = action,
         actionColor = actionColor
     )
+
+    @Parcelize
     class Novelties(
-        action: String? = null,
-        actionColor: String? = null
+        override val action: String? = null,
+        override val actionColor: String? = null,
     ) : ActionEntity(
         action = action,
         actionColor = actionColor
     )
+
+    @Parcelize
     class WaterApp(
-        action: String? = null,
-        actionColor: String? = null
+        override val action: String? = null,
+        override val actionColor: String? = null,
     ) : ActionEntity(
         action = action,
         actionColor = actionColor
     )
 
-    class Delivery (
-        action: String? = null,
-        actionColor: String? = null
+    @Parcelize
+    class Delivery(
+        override val action: String? = null,
+        override val actionColor: String? = null,
     ) : ActionEntity(
         action = action,
         actionColor = actionColor
     )
 
-    class Profile (
-        action: String? = null,
-        actionColor: String? = null
+    @Parcelize
+    class Profile(
+        override val action: String? = null,
+        override val actionColor: String? = null,
     ) : ActionEntity(
         action = action,
         actionColor = actionColor
     )
 
+    @Parcelize
     class BuyCertificate(
-        action: String? = null,
-        actionColor: String? = null
+        override val action: String? = null,
+        override val actionColor: String? = null,
     ) : ActionEntity(
         action = action,
         actionColor = actionColor
