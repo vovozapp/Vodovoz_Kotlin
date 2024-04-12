@@ -93,7 +93,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/white"
         android:fontFamily="@font/rotonda_normal"
@@ -136,12 +136,7 @@
         android:layout_marginHorizontal="50dp"
         android:layout_marginTop="@dimen/space_16"
         android:layout_marginBottom="@dimen/space_24"
-        android:background="@drawable/bkg_button_blue_rect_disabled"
         android:text="@string/send"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="16dp"
-        android:textStyle="bold"
-        app:fontFamily="@font/rotonda_normal" />
+        style="@style/BlueButton"/>
 
 </LinearLayout>
