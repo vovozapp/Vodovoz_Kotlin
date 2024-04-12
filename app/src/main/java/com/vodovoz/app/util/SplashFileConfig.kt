@@ -11,7 +11,7 @@ import java.net.URL
 object SplashFileConfig {
 
     private const val FILE_NAME = "splash.json"
-    private const val DAFAULT_LINK = "https://vodovoz.ru/images/zastavka/zastavkamobil.json"
+    const val DAFAULT_LINK = "https://vodovoz.ru/images/zastavka/zastavkamobil.json"
 
     fun getSplashFile(context: Context) : File {
         return File(context.filesDir, FILE_NAME)

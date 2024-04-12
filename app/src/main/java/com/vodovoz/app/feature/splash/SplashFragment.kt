@@ -121,11 +121,13 @@ class SplashFragment : BaseFragment() {
             val file = SplashFileConfig.getSplashFile(requireContext())
             if (!file.exists()) {
                 debugLog { "file is not exist" }
-                binding.lottieSplashView.visibility = View.GONE
-                binding.logoLayout.visibility = View.VISIBLE
+                binding.lottieSplashView.setFailureListener {
+                    debugLog { it.message.toString() }
+                    binding.lottieSplashView.clearAnimation()
+                }
+                binding.lottieSplashView.setAnimationFromUrl(SplashFileConfig.DAFAULT_LINK)
+                binding.lottieSplashView.playAnimation()
             } else {
-                binding.lottieSplashView.visibility = View.VISIBLE
-                binding.logoLayout.visibility = View.GONE
                 initAnimation()
             }
         }
