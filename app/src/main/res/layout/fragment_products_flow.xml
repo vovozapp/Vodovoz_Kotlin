@@ -152,7 +152,7 @@
                                 android:layout_weight="1"
                                 android:textSize="16sp"
                                 android:maxLines="1"
-                                android:text="Категории" />
+                                android:text="@string/categories" />
 
                             <ImageView
                                 android:layout_width="25dp"
@@ -199,7 +199,7 @@
                     android:layout_height="match_parent"
                     android:drawableEnd="@drawable/ic_drop_down"
                     android:gravity="center"
-                    android:text="Выбрать сортировку"
+                    android:text="@string/choose_sort_type"
                     android:drawableTint="@color/text_black"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/imgFilters"
@@ -249,14 +249,38 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/llEmptyContainer"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:visibility="gone"
-        style="@style/TextViewNormalBlackBold"
-        tools:visibility="visible"
-        android:id="@+id/emptyErrorTv"
-        android:text="Ничего не найдено"
-        android:layout_height="match_parent"/>
+        android:orientation="vertical"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvEmptyTitle"
+            style="@style/TextViewMediumBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/rotonda_normal"
+            android:gravity="center"
+            android:paddingHorizontal="16dp"
+            tools:text="@string/empty_history_title"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvEmptySubtitle"
+            style="@style/TextViewNormalGray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:lineSpacingExtra="4dp"
+            android:paddingHorizontal="16dp"
+            tools:text="@string/empty_history_subtitle"
+            android:textColor="@color/color_search"
+            android:textSize="14sp" />
+
+    </LinearLayout>
 
 </RelativeLayout>

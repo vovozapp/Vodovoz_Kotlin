@@ -20,6 +20,11 @@ data class CategoryUI(
     val filterCode: String = "",
     val sortTypeList: SortTypeListUI? = null,
     val actionEntity: ActionEntity? = null,
+    val productList: List<ProductUI> = listOf(),
+    val limit: Int = 20,
+    val totalCount: Int = 0,
+    val title: String = "",
+    val message: String = "",
 ) : Parcelable, Item {
 
     companion object {

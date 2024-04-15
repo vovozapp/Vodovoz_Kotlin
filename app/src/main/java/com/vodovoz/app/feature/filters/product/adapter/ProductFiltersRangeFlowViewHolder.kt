@@ -30,7 +30,7 @@ class ProductFiltersRangeFlowViewHolder(
                     rsRangeFilter.visibility = View.VISIBLE
                     imgExpand.visibility = View.VISIBLE
                     imgExpand.setImageResource(R.drawable.arrow_up)
-                    tvValue.visibility = View.GONE
+                    tvValue.visibility = View.INVISIBLE
                     imgClear.visibility = View.GONE
                 } else {
                     isExpanded = false
@@ -126,7 +126,7 @@ class ProductFiltersRangeFlowViewHolder(
 
             imgClear.setOnClickListener {
                 filterUI.filterValueList.clear()
-                tvValue.visibility = View.GONE
+                tvValue.visibility = View.INVISIBLE
                 imgClear.visibility = View.GONE
                 onFilterClearClickListener.onFilterClearClick(filterUI)
             }
@@ -142,20 +142,20 @@ class ProductFiltersRangeFlowViewHolder(
         setIsRecyclable(false)
         with(binding) {
             tvName.text = filterUI.name
-            tvValue.visibility = View.GONE
+            tvValue.visibility = View.INVISIBLE
             if (isExpanded) {
                 llEditTextRange.visibility = View.VISIBLE
                 rsRangeFilter.visibility = View.VISIBLE
                 imgExpand.visibility = View.VISIBLE
                 imgExpand.setImageResource(R.drawable.arrow_up)
-                tvValue.visibility = View.GONE
+                tvValue.visibility = View.INVISIBLE
                 imgClear.visibility = View.GONE
             } else {
                 llEditTextRange.visibility = View.GONE
                 rsRangeFilter.visibility = View.GONE
                 imgExpand.setImageResource(R.drawable.arrow_down)
                 if (filterUI.filterValueList.isNotEmpty()) {
-                    imgExpand.visibility = View.INVISIBLE
+                    imgExpand.visibility = View.GONE
                     tvValue.visibility = View.VISIBLE
                     imgClear.visibility = View.VISIBLE
                 }

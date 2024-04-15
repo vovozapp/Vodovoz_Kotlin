@@ -14,7 +14,6 @@ import com.vodovoz.app.feature.filters.product.adapter.OnFilterClearClickListene
 import com.vodovoz.app.feature.filters.product.adapter.OnFilterClickListener
 import com.vodovoz.app.feature.filters.product.adapter.ProductFiltersFlowAdapter
 import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragment
-import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.model.FilterPriceUI
 import com.vodovoz.app.ui.model.FilterUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
@@ -81,8 +80,8 @@ class ProductFiltersFlowFragment : BaseFragment() {
     }
 
     private fun initFilterRecycler() {
-        val space16 = resources.getDimension(R.dimen.space_16).toInt()
-        val space12 = resources.getDimension(R.dimen.space_12).toInt()
+//        val space16 = resources.getDimension(R.dimen.space_16).toInt()
+//        val space12 = resources.getDimension(R.dimen.space_10).toInt()
         binding.rvFilters.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFilters.addItemDecoration(
             DividerItemDecoration(
@@ -90,12 +89,12 @@ class ProductFiltersFlowFragment : BaseFragment() {
                 DividerItemDecoration.VERTICAL
             )
         )
-        binding.rvFilters.addMarginDecoration { rect, _, _, _ ->
-            rect.left = space16
-            rect.right = space16
-            rect.top = space12
-            rect.bottom = space12
-        }
+//        binding.rvFilters.addMarginDecoration { rect, _, _, _ ->
+//            rect.left = space16
+//            rect.right = space16
+//            rect.top = space12
+//            rect.bottom = space12
+//        }
         binding.rvFilters.adapter = productFiltersAdapter
     }
 
@@ -160,7 +159,7 @@ class ProductFiltersFlowFragment : BaseFragment() {
                 defaultBundle = state.data.defaultBundle
                 if (defaultBundle != null) {
                     fillFilterPrice(defaultBundle!!.filterPriceUI)
-                    val filterList =  defaultBundle?.filterUIList ?: mutableListOf()
+                    val filterList = defaultBundle?.filterUIList ?: mutableListOf()
                     fillFilterList(filterList)
                 }
 

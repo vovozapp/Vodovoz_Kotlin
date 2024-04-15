@@ -38,7 +38,7 @@ class ProductFiltersFlowViewHolder(
         with(binding) {
             when(filterUI.filterValueList.size) {
                 0 -> {
-                    tvValue.visibility = View.GONE
+                    tvValue.visibility = View.INVISIBLE
                     imgClear.visibility = View.INVISIBLE
                 }
                 else -> {

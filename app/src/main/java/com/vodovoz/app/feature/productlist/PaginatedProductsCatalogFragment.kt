@@ -81,7 +81,6 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.firstLoad()
-        viewModel.firstLoadSorted()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -164,9 +163,11 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
                         }
 
                         if (state.error is ErrorState.Empty) {
-                            binding.emptyErrorTv.isVisible = true
+                            binding.llEmptyContainer.isVisible = true
+                            binding.tvEmptyTitle.text = data.categoryHeader?.title
+                            binding.tvEmptySubtitle.text = data.categoryHeader?.message
                         } else {
-                            binding.emptyErrorTv.isVisible = false
+                            binding.llEmptyContainer.isVisible = false
                             showError(state.error)
                         }
                     }

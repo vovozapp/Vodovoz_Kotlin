@@ -139,6 +139,8 @@
     <string name="choose_sort" translatable="false">Выбрать сортировку</string>
     <string name="confirm_personal_data" translatable="false">Я подтверждаю свое согласие на <a href = "#">обработку персональных данных </a></string>
     <string name="order_history">История заказов</string>
+    <string name="categories">Категории</string>
+    <string name="choose_sort_type">Выбрать сортировку</string>
 
 
 </resources>

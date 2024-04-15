@@ -16,4 +16,9 @@ class CategoryEntity(
     val subCategoryEntityList: List<CategoryEntity> = listOf(),
     val filterCode: String = "",
     val actionEntity: ActionEntity? = null,
+    val productList: List<ProductEntity> = listOf(),
+    val limit: Int = 0,
+    val totalCount: Int = 0,
+    val title: String = "",
+    val message: String = "",
 ) : Parcelable

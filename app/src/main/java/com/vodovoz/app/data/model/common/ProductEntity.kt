@@ -1,5 +1,9 @@
 package com.vodovoz.app.data.model.common
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 class ProductEntity(
     val id: Long = 0,
     var cartQuantity: Int = 0,
@@ -24,4 +28,4 @@ class ProductEntity(
     val totalDisc: Double = 0.0,
     val conditionalPrice: String = "",
     val condition: String = "",
-)
+): Parcelable

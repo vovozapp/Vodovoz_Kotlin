@@ -108,13 +108,21 @@
             app:labelBehavior="gone"
             app:layout_constraintTop_toBottomOf="@+id/llPriceFilterValues"/>
 
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toTopOf="@+id/rvFilters"
+            app:layout_constraintTop_toBottomOf="@id/rsPrice"
+            />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvFilters"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             app:layout_constraintBottom_toTopOf="@+id/llButtonsContainer"
-            app:layout_constraintTop_toBottomOf="@id/rsPrice" />
+            app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <LinearLayout
             android:id="@+id/llButtonsContainer"
