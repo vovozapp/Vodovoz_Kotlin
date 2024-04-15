@@ -233,7 +233,6 @@ class HomePromotionsProductInnerViewHolder(
     }
 
     private fun showAmountController() {
-        changePricesContainerVisibility(false)
         binding.circleAmount.visibility = View.GONE
         binding.add.visibility = View.GONE
         changeAmountControllerDeployedVisibility(true)

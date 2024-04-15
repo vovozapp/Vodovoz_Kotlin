@@ -106,6 +106,9 @@ class AllOrdersViewHolder(
                 )
             }
         }.toList()
+        val value = newDetailPictureList.any { it.isAvailable }
+        binding.tvRepeatOrder.isEnabled = value
+        binding.tvRepeatOrder.isClickable = value
 
         detailPictureFlowPagerAdapter.submitList(newDetailPictureList)
 

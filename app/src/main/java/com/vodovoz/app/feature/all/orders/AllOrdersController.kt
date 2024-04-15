@@ -41,8 +41,8 @@ class AllOrdersController(
                         with(outRect) {
                             if (parent.getChildAdapterPosition(view) == 0) top = space
                             bottom = space
-                            left = space
-                            right = space
+                            left = space / 2
+                            right = space / 2
                         }
                     }
                 }

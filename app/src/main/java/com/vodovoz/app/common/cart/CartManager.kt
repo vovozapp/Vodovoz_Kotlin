@@ -63,7 +63,7 @@ class CartManager @Inject constructor(
             carts[it.id] = it.cartQuantity
         }
         tabManager.saveBottomNavCartState(
-            carts.values.sum(),
+            carts.size,
             total
         )
         cartsStateListener.emit(carts)

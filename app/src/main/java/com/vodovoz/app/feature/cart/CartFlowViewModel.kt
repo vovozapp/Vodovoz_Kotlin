@@ -87,7 +87,8 @@ class CartFlowViewModel @Inject constructor(
                         val calculatedPrices = calculatePrice(availableProducts)
                         if (availableProducts.isEmpty() && !cartManager.isCartEmpty()) {
                             cartManager.clearCart()
-                        } else {
+                        }
+                        else {
                             cartManager.syncCart(
                                 availableProducts,
                                 calculatedPrices.total

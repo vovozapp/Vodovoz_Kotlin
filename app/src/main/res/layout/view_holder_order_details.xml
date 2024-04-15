@@ -1,9 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--new-->
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?><!--new-->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="5dp"
@@ -27,10 +25,10 @@
             android:id="@+id/tvStatus"
             style="@style/TextViewHeaderBlue"
             android:layout_width="wrap_content"
-            android:textSize="14sp"
             android:layout_height="wrap_content"
-            android:drawablePadding="@dimen/space_4"
             android:layout_marginStart="@dimen/space_4"
+            android:drawablePadding="@dimen/space_4"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/imgStatus"
             app:layout_constraintStart_toEndOf="@+id/imgStatus"
             app:layout_constraintTop_toTopOf="@+id/imgStatus"
@@ -39,11 +37,11 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvPrice"
             style="@style/TextViewHeaderBlackBold"
-            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/space_16"
             android:layout_marginTop="@dimen/space_16"
+            android:layout_marginEnd="@dimen/space_16"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="15476 Р" />
@@ -53,10 +51,10 @@
             style="@style/TextViewNormalGray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_8"
             android:layout_marginHorizontal="@dimen/space_16"
-            android:textSize="14sp"
+            android:layout_marginTop="@dimen/space_8"
             android:maxLines="2"
+            android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@+id/imgStatus"
             tools:layout_editor_absoluteX="16dp"
             tools:text="Г Балашиха Проспект Ленина дом 32 д кв 313, нидекс 456342, подъезд 5" />
@@ -67,8 +65,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_16"
-            android:textSize="14sp"
             android:maxLines="2"
+            android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@+id/tvDate"
             tools:layout_editor_absoluteX="16dp"
             tools:text="Г Балашиха Проспект Ленина дом 32 д кв 313, нидекс 456342, подъезд 5" />
@@ -96,11 +94,13 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvRepeatOrder"
-            style="@style/TextViewMediumBlue"
+            android:textColor = "@color/repeat_selector"
+            android:fontFamily="@font/rotonda_normal"
             android:layout_width="0dp"
             android:layout_height="@dimen/field_height"
             android:gravity="center"
             android:text="@string/repeat"
+            android:textSize="14sp"
             app:layout_constraintEnd_toStartOf="@+id/mdBetweenActions"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rvProducts" />
@@ -112,6 +112,7 @@
             android:layout_height="@dimen/field_height"
             android:gravity="center"
             android:text="@string/details"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/mdBetweenActions"
             app:layout_constraintTop_toTopOf="@+id/tvRepeatOrder" />
