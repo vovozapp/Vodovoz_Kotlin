@@ -1,8 +1,10 @@
 package com.vodovoz.app.feature.home.viewholders.homeproducts
 
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
@@ -47,6 +49,20 @@ class HomeProductsSliderViewHolder(
 
         binding.rvCategories.adapter = homeProductsAdapter
         binding.rvCategories.setRecycledViewPool(likeManager.fetchViewPool())
+        binding.rvCategories.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                onScrollInnerRecycler(this@HomeProductsSliderViewHolder)
+            }
+        })
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.rvCategories.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.rvCategories.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: HomeProducts) {

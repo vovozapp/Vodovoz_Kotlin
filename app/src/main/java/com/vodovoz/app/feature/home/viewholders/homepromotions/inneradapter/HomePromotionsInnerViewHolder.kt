@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.home.viewholders.homepromotions.inneradapter
 
 import android.graphics.Color
 import android.graphics.Rect
+import android.os.Parcelable
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -63,6 +64,14 @@ class HomePromotionsInnerViewHolder(
             val item = item ?: return@setOnClickListener
             promotionsClickListener.onPromotionAdvClick(item.promotionAdvEntity)
         }
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.rvProducts.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.rvProducts.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: PromotionUI) {

@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.bottom.services.detail.adapter
 
 import android.graphics.Rect
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -51,6 +52,14 @@ class ServiceDetailViewHolder(
         )
 
         binding.rvProductsBlock.adapter = serviceDetailProductsAdapter
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.rvProductsBlock.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.rvProductsBlock.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: ServiceDetailBlockUI) {

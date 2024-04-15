@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.cart.viewholders.cartnotavailableproducts
 
+import android.os.Parcelable
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,8 +17,8 @@ import com.vodovoz.app.ui.view.Divider
 class CartNotAvailableProductsViewHolder(
     view: View,
     val clickListener: CartMainClickListener,
-    private val productsClickListener: ProductsClickListener,
-    private val likeManager: LikeManager
+    productsClickListener: ProductsClickListener,
+    likeManager: LikeManager
 ) : ItemViewHolder<CartNotAvailableProducts>(view) {
 
     private val binding: ItemCartNotAvailableProductsBinding = ItemCartNotAvailableProductsBinding.bind(view)
@@ -42,6 +43,14 @@ class CartNotAvailableProductsViewHolder(
             rect.left = space/2
         }
     }
+    override fun getState(): Parcelable? {
+        return binding.rvNotAvailableProductRecycler.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.rvNotAvailableProductRecycler.layoutManager?.onRestoreInstanceState(state)
+    }
+
 
     override fun bind(item: CartNotAvailableProducts) {
         super.bind(item)

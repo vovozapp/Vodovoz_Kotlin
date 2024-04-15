@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.profile.viewholders
 
+import android.os.Parcelable
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.recyclerview.widget.GridLayoutManager
@@ -58,6 +59,14 @@ class ProfileBestForYouViewHolder(
             addItemDecoration(gridMarginDecoration)
 
         }
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.bestForYouProductsRecycler.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.bestForYouProductsRecycler.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: ProfileBestForYou) {

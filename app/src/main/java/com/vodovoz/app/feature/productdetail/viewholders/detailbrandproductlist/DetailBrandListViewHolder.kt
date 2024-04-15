@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.productdetail.viewholders.detailbrandproductlist
 
 import android.graphics.Rect
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -51,6 +52,14 @@ class DetailBrandListViewHolder(
                 }
             }
         )
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.brandProductRecycler.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.brandProductRecycler.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: DetailBrandList) {

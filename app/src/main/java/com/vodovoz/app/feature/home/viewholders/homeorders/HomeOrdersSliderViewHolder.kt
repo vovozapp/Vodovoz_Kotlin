@@ -47,6 +47,7 @@ class HomeOrdersSliderViewHolder(
         )
     }
 
+
     override fun bind(item: HomeOrders) {
         super.bind(item)
 

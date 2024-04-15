@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.productdetail.viewholders.detailservices
 
 import android.graphics.Rect
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,6 +47,15 @@ class DetailServicesViewHolder(
                 }
             }
         )
+    }
+
+
+    override fun getState(): Parcelable? {
+        return binding.rvServices.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.rvServices.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: DetailServices) {

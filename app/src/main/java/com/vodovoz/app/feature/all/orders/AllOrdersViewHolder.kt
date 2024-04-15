@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.all.orders
 
+import android.os.Parcelable
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,6 +56,14 @@ class AllOrdersViewHolder(
         binding.rvProducts.layoutManager =
             LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvProducts.adapter = detailPictureFlowPagerAdapter
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.rvProducts.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.rvProducts.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: OrderUI) {

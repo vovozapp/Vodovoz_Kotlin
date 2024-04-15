@@ -1,7 +1,9 @@
 package com.vodovoz.app.feature.home.viewholders.homebrands
 
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.FragmentSliderBrandBinding
@@ -33,6 +35,21 @@ class HomeBrandsSliderViewHolder(
             rect.top = space / 2
             rect.bottom = space / 2
         }
+
+        binding.rvBrands.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                onScrollInnerRecycler(this@HomeBrandsSliderViewHolder)
+            }
+        })
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.rvBrands.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.rvBrands.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: HomeBrands) {

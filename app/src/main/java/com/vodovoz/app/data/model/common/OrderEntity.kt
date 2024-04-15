@@ -8,4 +8,5 @@ class OrderEntity(
     val date: String = "",
     val productEntityList: List<ProductEntity> = listOf(),
     val repeatOrder: Boolean = true,
+    val interval: String = "",
 )

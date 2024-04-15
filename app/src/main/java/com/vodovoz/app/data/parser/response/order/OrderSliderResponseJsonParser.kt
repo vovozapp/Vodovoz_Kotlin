@@ -42,7 +42,8 @@ object OrderSliderResponseJsonParser {
         address = getString("ADRESSDOSTAVKI"),
         repeatOrder = if (has("POVTOR_ZAKAZA")) {
             safeString("POVTOR_ZAKAZA")  == "Y"
-        } else true
+        } else true,
+        interval = safeString("INTERVAL"),
     )
 
 }

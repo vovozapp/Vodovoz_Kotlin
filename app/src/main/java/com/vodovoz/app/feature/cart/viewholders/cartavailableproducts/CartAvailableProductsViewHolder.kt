@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.cart.viewholders.cartavailableproducts
 
+import android.os.Parcelable
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -69,6 +70,14 @@ class CartAvailableProductsViewHolder(
         }
 
         bindSwipeToRemove(binding.rvAvailableProductRecycler)
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.rvAvailableProductRecycler.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.rvAvailableProductRecycler.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: CartAvailableProducts) {

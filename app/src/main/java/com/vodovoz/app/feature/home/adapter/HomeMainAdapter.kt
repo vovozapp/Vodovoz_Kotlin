@@ -45,6 +45,11 @@ class HomeMainAdapter(
     private val repeatOrderClickListener: (Long) -> Unit,
 ) : ItemAdapter() {
 
+    private val onScrollInnerRecycler: (holder: ItemViewHolder<out Item>) -> Unit = {
+        val key = it.getAbsoluteAdapterPosition()
+        scrollStates[key] = it.getState()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
 
         return when (viewType) {
@@ -56,6 +61,7 @@ class HomeMainAdapter(
                     ), clickListener, parent.width, 0.42, topBannerManager
                 )
             }
+
             BANNER_LARGE -> {
                 HomeBannersSliderViewHolder(
                     getViewFromInflater(
@@ -64,25 +70,43 @@ class HomeMainAdapter(
                     ), clickListener, parent.width, 0.49, bottomBannerManager
                 )
             }
+
             R.layout.fragment_section_additional_info -> {
                 HomeBottomInfoViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
+
             R.layout.fragment_slider_brand -> {
-                HomeBrandsSliderViewHolder(getViewFromInflater(viewType, parent), clickListener)
+                HomeBrandsSliderViewHolder(
+                    getViewFromInflater(viewType, parent),
+                    clickListener
+                ).apply {
+                    onScrollInnerRecycler = this@HomeMainAdapter.onScrollInnerRecycler
+                }
             }
+
             R.layout.fragment_slider_comment -> {
                 HomeCommentsSliderViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
+
             R.layout.fragment_slider_country -> {
                 HomeCountriesSliderViewHolder(
                     getViewFromInflater(viewType, parent),
                     clickListener,
                     parent.width
-                )
+                ).apply {
+                    onScrollInnerRecycler = this@HomeMainAdapter.onScrollInnerRecycler
+                }
             }
+
             R.layout.fragment_slider_history -> {
-                HomeHistoriesSliderViewHolder(getViewFromInflater(viewType, parent), clickListener)
+                HomeHistoriesSliderViewHolder(
+                    getViewFromInflater(viewType, parent),
+                    clickListener
+                ).apply {
+                    onScrollInnerRecycler = this@HomeMainAdapter.onScrollInnerRecycler
+                }
             }
+
             R.layout.fragment_slider_order -> {
                 HomeOrdersSliderViewHolder(
                     getViewFromInflater(viewType, parent),
@@ -90,12 +114,16 @@ class HomeMainAdapter(
                     repeatOrderClickListener
                 )
             }
+
             R.layout.fragment_slider_popular -> {
                 HomePopularCategoriesSliderViewHolder(
                     getViewFromInflater(viewType, parent),
                     clickListener
-                )
+                ).apply {
+                    onScrollInnerRecycler = this@HomeMainAdapter.onScrollInnerRecycler
+                }
             }
+
             R.layout.fragment_slider_product -> {
                 HomeProductsSliderViewHolder(
                     getViewFromInflater(viewType, parent),
@@ -103,8 +131,11 @@ class HomeMainAdapter(
                     productsClickListener,
                     cartManager,
                     likeManager
-                )
+                ).apply {
+                    onScrollInnerRecycler = this@HomeMainAdapter.onScrollInnerRecycler
+                }
             }
+
             R.layout.fragment_slider_promotion -> {
                 HomePromotionsSliderViewHolder(
                     getViewFromInflater(viewType, parent),
@@ -114,21 +145,28 @@ class HomeMainAdapter(
                     productsClickListener
                 )
             }
+
             R.layout.fragment_triple_navigation_home -> {
                 HomeTripleNavViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
+
             R.layout.view_holder_flow_title -> {
                 HomeTitleViewHolder(getViewFromInflater(viewType, parent), homeTitleClickListener)
             }
+
             R.layout.view_holder_products_tabs -> {
                 HomeProductsTabsViewHolder(
                     getViewFromInflater(viewType, parent),
                     homeTabsClickListener
-                )
+                ).apply {
+                    onScrollInnerRecycler = this@HomeMainAdapter.onScrollInnerRecycler
+                }
             }
+
             R.layout.item_progress -> {
                 BottomProgressViewHolder(getViewFromInflater(viewType, parent))
             }
+
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")
             }

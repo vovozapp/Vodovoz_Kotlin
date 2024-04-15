@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.productdetail.viewholders.detailcomments
 
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,6 +52,14 @@ class DetailCommentsViewHolder(
             val item = item ?: return@setOnClickListener
             clickListener.onSendComment(item.productId)
         }
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.commentRecycler.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.commentRecycler.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: DetailComments) {

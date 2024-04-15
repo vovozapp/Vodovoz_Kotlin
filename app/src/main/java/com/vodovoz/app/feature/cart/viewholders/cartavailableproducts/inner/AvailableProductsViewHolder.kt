@@ -70,6 +70,7 @@ class AvailableProductsViewHolder(
         }
     )
 
+
     override fun attach() {
         super.attach()
 

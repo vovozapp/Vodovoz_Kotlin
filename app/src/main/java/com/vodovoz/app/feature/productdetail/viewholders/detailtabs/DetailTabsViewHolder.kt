@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.productdetail.viewholders.detailtabs
 
+import android.os.Parcelable
 import android.view.View
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
@@ -59,6 +60,14 @@ class DetailTabsViewHolder(
                 override fun onTabReselected(tab: TabLayout.Tab?) {}
             }
         )
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.propertiesGroupRecycler.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.propertiesGroupRecycler.layoutManager?.onRestoreInstanceState(state)
     }
 
 }

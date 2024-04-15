@@ -1,11 +1,13 @@
 package com.vodovoz.app.common.content.itemadapter
 
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AdapterListUpdateCallback
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.vodovoz.app.util.extensions.debugLog
 
 @Suppress("UNCHECKED_CAST")
 abstract class ItemAdapter : RecyclerView.Adapter<ItemViewHolder<out Item>>() {
@@ -14,8 +16,17 @@ abstract class ItemAdapter : RecyclerView.Adapter<ItemViewHolder<out Item>>() {
 
     private val adapterListUpdateCallback by lazy { AdapterListUpdateCallback(this) }
 
+    val scrollStates = mutableMapOf<Int, Parcelable?>()
+
     override fun getItemViewType(position: Int): Int {
         return items[position].getItemViewType()
+    }
+
+    override fun onViewRecycled(holder: ItemViewHolder<out Item>) {
+        super.onViewRecycled(holder)
+        val key = holder.getAbsoluteAdapterPosition()
+        debugLog { "ItemAdapter $key getState()"}
+        scrollStates[key] = holder.getState()
     }
 
     fun submitList(items: List<Item>) {
@@ -36,6 +47,12 @@ abstract class ItemAdapter : RecyclerView.Adapter<ItemViewHolder<out Item>>() {
 
     override fun onBindViewHolder(holder: ItemViewHolder<out Item>, position: Int) {
         holder as ItemViewHolder<in Item>
+        val key = holder.getAbsoluteAdapterPosition()
+        val state = scrollStates[key]
+        if(state != null){
+            debugLog { "ItemAdapter $key setState()"}
+            holder.setState(state)
+        }
         holder.bind(items[position])
     }
 

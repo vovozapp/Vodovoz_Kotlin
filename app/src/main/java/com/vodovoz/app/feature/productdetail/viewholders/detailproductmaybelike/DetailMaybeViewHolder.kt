@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.productdetail.viewholders.detailproductmaybelike
 
 import android.graphics.Rect
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -57,6 +58,14 @@ class DetailMaybeViewHolder(
                 }
             }
         )
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.rvProducts.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.rvProducts.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: DetailMaybeLike) {

@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter
 
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
@@ -35,6 +36,14 @@ class HomeCategoriesInnerViewHolder(
 
         binding.rvProducts.adapter = homeProductsAdapter
         binding.rvProducts.setRecycledViewPool(likeManager.fetchViewPool())
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.rvProducts.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.rvProducts.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: CategoryDetailUI) {

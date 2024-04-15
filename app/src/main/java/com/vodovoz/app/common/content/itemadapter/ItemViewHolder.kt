@@ -1,5 +1,6 @@
 package com.vodovoz.app.common.content.itemadapter
 
+import android.os.Parcelable
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.recyclerview.widget.RecyclerView
@@ -42,4 +43,9 @@ abstract class ItemViewHolder<I : Item>(view: View) : RecyclerView.ViewHolder(vi
         job = Job()
     }
 
+    open fun getState(): Parcelable? = null
+
+    open fun setState(state: Parcelable) {}
+
+    var onScrollInnerRecycler: (ItemViewHolder<out I>) -> Unit = {}
 }

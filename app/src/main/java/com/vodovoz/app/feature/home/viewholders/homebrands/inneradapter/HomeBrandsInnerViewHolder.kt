@@ -8,7 +8,7 @@ import com.vodovoz.app.ui.model.BrandUI
 
 class HomeBrandsInnerViewHolder(
     view: View,
-    private val clickListener: HomeBrandsSliderClickListener
+    private val clickListener: HomeBrandsSliderClickListener,
 ) : ItemViewHolder<BrandUI>(view) {
 
     private val binding: ViewHolderSliderBrandBinding = ViewHolderSliderBrandBinding.bind(view)
@@ -16,7 +16,9 @@ class HomeBrandsInnerViewHolder(
     init {
         binding.root.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
-            clickListener.onBrandClick(item.id)
+            if (item.hasList) {
+                clickListener.onBrandClick(item.id)
+            }
         }
     }
 

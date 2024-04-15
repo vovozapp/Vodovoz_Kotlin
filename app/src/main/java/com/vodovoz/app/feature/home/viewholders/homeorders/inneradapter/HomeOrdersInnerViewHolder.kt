@@ -35,23 +35,28 @@ class HomeOrdersInnerViewHolder(
 
         binding.tvStatus.text = item.orderStatusUI?.statusName
 
-        binding.tvAction.text = if (item.orderStatusUI?.id == "F" && item.repeatOrder) {
+        binding.tvAction.text = if (item.repeatOrder) {
             "Повторить"
         } else {
             "Подробнее"
         }
 
-        binding.tvAddress.text = StringBuilder()
+        val sb = StringBuilder()
             .append("№")
             .append(item.id)
             .append(" от ")
             .append(item.date)
-            .append("\n")
-            .append(item.address)
-            .toString()
-        item.price?.let {
-            binding.tvPrice.setPriceText(item.price)
+        if (item.interval.isNotEmpty()) {
+            sb.append(", ${item.interval}")
         }
+        sb.append("\n")
+            .append(item.address)
+
+        binding.tvAddress.text = sb.toString()
+
+            item.price?.let {
+                binding.tvPrice.setPriceText(item.price)
+            }
         item.orderStatusUI?.let {
             binding.tvAction.setBackgroundColor(
                 ContextCompat.getColor(

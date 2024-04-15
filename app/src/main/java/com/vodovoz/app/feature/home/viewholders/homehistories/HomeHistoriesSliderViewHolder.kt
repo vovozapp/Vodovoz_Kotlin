@@ -1,7 +1,9 @@
 package com.vodovoz.app.feature.home.viewholders.homehistories
 
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.FragmentSliderHistoryBinding
@@ -32,6 +34,21 @@ class HomeHistoriesSliderViewHolder(
             else rect.right = space / 2
             rect.top = space / 2
         }
+
+        binding.rvHistories.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                onScrollInnerRecycler(this@HomeHistoriesSliderViewHolder)
+            }
+        })
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.rvHistories.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.rvHistories.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: HomeHistories) {

@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.catalog.adapter
 
+import android.os.Parcelable
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,6 +36,14 @@ class CatalogFlowViewHolder(
             item.isOpen = !item.isOpen
             updateCategoryRecycler(item)
         }
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.subcategoryRecycler.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.subcategoryRecycler.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: CategoryUI) {

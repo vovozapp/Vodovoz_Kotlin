@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.productdetail.viewholders.detailsearchword
 
 import android.graphics.Rect
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,6 +39,14 @@ class DetailSearchWordViewHolder(
                 }
             }
         })
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.rvSearchWords.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.rvSearchWords.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: DetailSearchWord) {

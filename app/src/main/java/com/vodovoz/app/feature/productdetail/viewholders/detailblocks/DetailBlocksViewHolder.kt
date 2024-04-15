@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.productdetail.viewholders.detailblocks
 
 import android.graphics.Rect
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,6 +39,14 @@ class DetailBlocksViewHolder(
                 }
             }
         )
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.rvBlocks.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.rvBlocks.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: DetailBlocks) {

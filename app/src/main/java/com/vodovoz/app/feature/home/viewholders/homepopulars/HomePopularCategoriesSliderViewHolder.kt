@@ -1,7 +1,9 @@
 package com.vodovoz.app.feature.home.viewholders.homepopulars
 
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.FragmentSliderPopularBinding
@@ -32,7 +34,22 @@ class HomePopularCategoriesSliderViewHolder(
             rect.bottom = space / 2
         }
 
+            binding.rvPopularCategories.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    onScrollInnerRecycler(this@HomePopularCategoriesSliderViewHolder)
+                }
+            })
+
         binding.rvPopularCategories.adapter = homePopularsAdapter
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.rvPopularCategories.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.rvPopularCategories.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: HomePopulars) {

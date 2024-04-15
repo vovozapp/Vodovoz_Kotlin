@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.bottom.contacts.adapter.viewholders
 
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
@@ -23,6 +24,15 @@ class ContactChatBundleFlowViewHolder(
             LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
         binding.chatIconsRecycler.adapter = contactsAdapter
     }
+
+    override fun getState(): Parcelable? {
+        return binding.chatIconsRecycler.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.chatIconsRecycler.layoutManager?.onRestoreInstanceState(state)
+    }
+
 
     override fun bind(item: ChatsBundleUI) {
         super.bind(item)

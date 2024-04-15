@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.productdetail.viewholders.detailprices
 
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.R
@@ -30,6 +31,14 @@ class DetailPricesViewHolder(
             rect.bottom = space/4
             rect.top = space/4
         }
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.rvPrices.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.rvPrices.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: DetailPrices) {

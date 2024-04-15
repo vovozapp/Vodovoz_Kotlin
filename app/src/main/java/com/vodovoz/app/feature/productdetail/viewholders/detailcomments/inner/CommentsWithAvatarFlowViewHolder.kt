@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.productdetail.viewholders.detailcomments.inner
 
+import android.os.Parcelable
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +25,14 @@ class CommentsWithAvatarFlowViewHolder(
         binding.rvImages.layoutManager =
             LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvImages.adapter = imagesAdapter
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.rvImages.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.rvImages.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: CommentUI) {

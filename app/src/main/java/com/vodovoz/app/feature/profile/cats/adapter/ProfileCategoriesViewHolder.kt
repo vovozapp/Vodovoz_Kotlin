@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.profile.cats.adapter
 
+import android.os.Parcelable
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +26,13 @@ class ProfileCategoriesViewHolder(
         }
     }
 
+    override fun getState(): Parcelable? {
+        return binding.insideCategoriesRv.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.insideCategoriesRv.layoutManager?.onRestoreInstanceState(state)
+    }
     override fun bind(item: ProfileCategoryUI) {
         super.bind(item)
 

@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.productlist.singleroot.adapter
 
+import android.os.Parcelable
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,6 +36,15 @@ class SingleRootViewHolder(
         binding.rvSubcategories.layoutManager = LinearLayoutManager(itemView.context)
         binding.rvSubcategories.adapter = singleRootCatalogAdapter
     }
+
+    override fun getState(): Parcelable? {
+        return binding.rvSubcategories.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.rvSubcategories.layoutManager?.onRestoreInstanceState(state)
+    }
+
 
     override fun bind(item: CategoryUI) {
         super.bind(item)

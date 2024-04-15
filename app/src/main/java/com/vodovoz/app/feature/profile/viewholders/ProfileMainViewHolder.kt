@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.profile.viewholders
 
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
@@ -21,6 +22,14 @@ class ProfileMainViewHolder(
             adapter = categoriesAdapter
             layoutManager = LinearLayoutManager(context)
         }
+    }
+
+    override fun getState(): Parcelable? {
+        return binding.profileMainRv.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun setState(state: Parcelable) {
+        binding.profileMainRv.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: ProfileMain) {

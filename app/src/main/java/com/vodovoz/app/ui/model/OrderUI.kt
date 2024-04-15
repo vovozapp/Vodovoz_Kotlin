@@ -10,6 +10,7 @@ data class OrderUI(
     val date: String,
     val productUIList: List<ProductUI>,
     val repeatOrder: Boolean = true,
+    val interval: String = "",
 ) : Item {
 
     override fun getItemViewType(): Int {
