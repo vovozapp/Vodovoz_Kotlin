@@ -10,7 +10,9 @@ object OrderListMapper {
     fun OrderListEntity.mapToUI(): OrderListUI {
         return OrderListUI(
             filters = orderFilters.mapToUI(),
-            orders = orders.mapToUI()
+            orders = orders.mapToUI(),
+            title = title,
+            message = message
         )
     }
 }

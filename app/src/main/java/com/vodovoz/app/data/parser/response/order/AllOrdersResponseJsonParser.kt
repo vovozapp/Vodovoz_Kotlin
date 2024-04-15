@@ -10,8 +10,6 @@ import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.parser.common.safeStringConvertToBoolean
 import com.vodovoz.app.data.remote.ResponseStatus
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
-import com.vodovoz.app.util.LogSettings
-import com.vodovoz.app.util.extensions.debugLog
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
@@ -20,16 +18,20 @@ object AllOrdersResponseJsonParser {
 
     fun ResponseBody.parseAllOrdersSliderResponse(): ResponseEntity<OrderListEntity> {
         val responseJson = JSONObject(this.string())
-        debugLog { LogSettings.RESPONSE_BODY_LOG + " ${responseJson.toString(2)}" }
         return when (responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 OrderListEntity(
                     orderFilters = responseJson.getJSONArray("filterstatus").parseOrderFilters(),
-                    orders = responseJson.getJSONArray("data").parseOrderEntityList()
+                    orders = responseJson.getJSONArray("data").parseOrderEntityList(),
                 )
             )
 
-            else -> ResponseEntity.Success(OrderListEntity())
+            else -> ResponseEntity.Success(
+                OrderListEntity(
+                    title = responseJson.safeString("title"),
+                    message = responseJson.safeString("message"),
+                )
+            )
         }
     }
 

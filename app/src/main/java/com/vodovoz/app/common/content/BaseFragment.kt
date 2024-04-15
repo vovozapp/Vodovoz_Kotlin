@@ -146,14 +146,20 @@ abstract class BaseFragment : Fragment() {
         }
     }
 
-    protected fun initFilterToolbar(showBackBtn: Boolean = true, onFilterBtnClick: () -> Unit) {
+    protected fun initFilterToolbar(showBackBtn: Boolean = true, filterCount: Int = 0, onFilterBtnClick: () -> Unit) {
         viewBinding.appbarLayout.isVisible = true
         viewBinding.appBarFilter.root.isVisible = true
         viewBinding.appBarFilter.imgBack.setOnClickListener { findNavController().popBackStack() }
         viewBinding.appBarFilter.imgBack.isVisible = showBackBtn
 
-        viewBinding.appBarFilter.filter.setOnClickListener {
+        viewBinding.appBarFilter.clFilter.setOnClickListener {
             onFilterBtnClick.invoke()
+        }
+        if(filterCount > 0) {
+            viewBinding.appBarFilter.tvFiltersAmount.text = filterCount.toString()
+            viewBinding.appBarFilter.tvFiltersAmount.visibility = View.VISIBLE
+        } else {
+            viewBinding.appBarFilter.tvFiltersAmount.visibility = View.INVISIBLE
         }
     }
 

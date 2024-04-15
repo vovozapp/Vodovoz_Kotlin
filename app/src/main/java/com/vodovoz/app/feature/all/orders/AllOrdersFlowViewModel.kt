@@ -75,7 +75,12 @@ class AllOrdersFlowViewModel @Inject constructor(
                                 loadingPage = false,
                                 loadMore = false,
                                 bottomItem = null,
-                                page = 1
+                                page = 1,
+                                data = state.data.copy(
+                                    errorTitle = data.title,
+                                    errorMessage = data.message,
+                                    itemsList = listOf()
+                                )
                             )
                         } else {
 
@@ -145,9 +150,16 @@ class AllOrdersFlowViewModel @Inject constructor(
     }
 
     fun updateFilterBundle(filterBundle: OrdersFiltersBundleUI) {
+        var filterCount = if(filterBundle.orderId != null) 1 else 0
+        filterBundle.orderFilterUIList.forEach {
+            if (it.isChecked) {
+                filterCount++
+            }
+        }
         uiStateListener.value = state.copy(
             data = state.data.copy(
-                ordersFiltersBundleUI = filterBundle
+                ordersFiltersBundleUI = filterBundle,
+                filterCount = filterCount
             ),
             page = 1,
             loadMore = false,
@@ -198,6 +210,9 @@ class AllOrdersFlowViewModel @Inject constructor(
     data class AllOrdersState(
         val itemsList: List<Item> = emptyList(),
         val ordersFiltersBundleUI: OrdersFiltersBundleUI = OrdersFiltersBundleUI(),
+        val filterCount: Int = 0,
+        val errorTitle: String = "",
+        val errorMessage: String = "",
     ) : State
 
     sealed class AllOrdersEvent : Event {

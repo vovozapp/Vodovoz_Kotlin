@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.filters.order
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +15,7 @@ import com.vodovoz.app.ui.model.OrderFilterUI
 import com.vodovoz.app.ui.model.OrderFilterUI.Companion.ALL_ID
 import com.vodovoz.app.ui.model.OrderFilterUI.Companion.ALL_NAME
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
+import com.vodovoz.app.util.extensions.debugLog
 
 class OrdersFiltersFlowFragment : Fragment() {
 
@@ -54,43 +56,49 @@ class OrdersFiltersFlowFragment : Fragment() {
     }
 
     private fun initSearchOrderId() {
-        ordersFiltersBundleUI.orderId?.let { binding.etOrderId.setText(ordersFiltersBundleUI.orderId.toString()) }
+        ordersFiltersBundleUI.orderId?.let {
+            binding.etOrderId.setText(ordersFiltersBundleUI.orderId.toString())
+        }
     }
 
     private fun initOrderStatusesRecycler() {
-        val anyFilter = ordersFiltersBundleUI.orderFilterUIList.firstOrNull { it.isChecked }
-        ordersFiltersBundleUI.orderFilterUIList.add(
-            0,
-            OrderFilterUI(
-                id = ALL_ID,
-                name = ALL_NAME,
-                isChecked = anyFilter == null
-            )
-        )
-        orderStatusesAdapter = OrderFiltersFlowAdapter { id, checked ->
-            if (id == ALL_ID ) {
-                ordersFiltersBundleUI.orderFilterUIList.forEach {
-                    if(id != it.id) {
-                        it.isChecked = false
+        with(ordersFiltersBundleUI.orderFilterUIList) {
+            val anyFilter = firstOrNull { it.isChecked }
+            if (first().id != ALL_ID) {
+                add(
+                    0,
+                    OrderFilterUI(
+                        id = ALL_ID,
+                        name = ALL_NAME,
+                        isChecked = anyFilter == null
+                    )
+                )
+            }
+            orderStatusesAdapter = OrderFiltersFlowAdapter { id, checked ->
+                if (id == ALL_ID) {
+                    forEach {
+                        if (id != it.id) {
+                            it.isChecked = false
+                        }
+                    }
+                    first().isChecked = true
+                } else if (!checked) {
+                    first().isChecked = false
+                    firstOrNull { it.id == id }?.isChecked =
+                        true
+                } else {
+                    firstOrNull { it.id == id }?.isChecked =
+                        false
+                    if (firstOrNull { it.isChecked } == null) {
+                        first().isChecked = true
                     }
                 }
-                ordersFiltersBundleUI.orderFilterUIList.first().isChecked = true
-            } else if(!checked) {
-                ordersFiltersBundleUI.orderFilterUIList.first().isChecked = false
-                ordersFiltersBundleUI.orderFilterUIList.firstOrNull { it.id == id }?.isChecked = true
-            } else {
-                ordersFiltersBundleUI.orderFilterUIList.firstOrNull { it.id == id }?.isChecked = false
-                if(ordersFiltersBundleUI.orderFilterUIList.firstOrNull { it.isChecked} == null) {
-                    ordersFiltersBundleUI.orderFilterUIList.first().isChecked = true
-                }
+                orderStatusesAdapter.items = (this)
             }
-            orderStatusesAdapter.submitList(ordersFiltersBundleUI.orderFilterUIList)
+            binding.rvOrderStatuses.layoutManager = LinearLayoutManager(requireContext())
+            binding.rvOrderStatuses.adapter = orderStatusesAdapter
+            orderStatusesAdapter.items = (this)
         }
-        orderStatusesAdapter.submitList(ordersFiltersBundleUI.orderFilterUIList)
-
-
-        binding.rvOrderStatuses.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvOrderStatuses.adapter = orderStatusesAdapter
     }
 
     private fun initButtons() {
@@ -103,6 +111,10 @@ class OrdersFiltersFlowFragment : Fragment() {
             ordersFiltersBundleUI = OrdersFiltersBundleUI()
             sentOrderFiltersBundleUIBack(ordersFiltersBundleUI)
         }
+        binding.etOrderId.doAfterTextChanged {
+            debugLog { it.toString() + " " +  it.isNullOrEmpty() }
+            disableEnableControls(it.isNullOrEmpty(), binding.rvOrderStatuses)
+        }
     }
 
     private fun sentOrderFiltersBundleUIBack(ordersFiltersBundleUI: OrdersFiltersBundleUI) {
@@ -111,6 +123,16 @@ class OrdersFiltersFlowFragment : Fragment() {
             ordersFiltersBundleUI
         )
         findNavController().popBackStack()
+    }
+
+    private fun disableEnableControls(enable: Boolean, vg: ViewGroup) {
+        for (i in 0 until vg.childCount) {
+            val child = vg.getChildAt(i)
+            child.setEnabled(enable)
+            if (child is ViewGroup) {
+                disableEnableControls(enable, child as ViewGroup)
+            }
+        }
     }
 
 }

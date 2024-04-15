@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--new -->
-<com.google.android.material.appbar.AppBarLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--new -->
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -21,21 +19,21 @@
             android:paddingStart="@dimen/space_16"
             android:paddingEnd="@dimen/space_16"
             android:src="@drawable/ic_arrow_left"
-            app:tint="@color/text_black"/>
+            app:tint="@color/text_black" />
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center_vertical">
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvTitle"
                 style="@style/ToolbarTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="История заказов"/>
+                android:text="@string/order_history" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvSubtitle"
@@ -43,21 +41,45 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                tools:text="@string/plug"/>
+                tools:text="@string/plug" />
 
         </LinearLayout>
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/filter"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="?attr/actionBarSize"
-            android:paddingTop="@dimen/space_16"
-            android:paddingBottom="@dimen/space_16"
-            android:paddingStart="@dimen/space_16"
-            android:paddingEnd="@dimen/space_16"
-            android:src="@drawable/filtericon"
-            app:tint="@color/text_black"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/filter"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="?attr/actionBarSize"
+                android:paddingStart="@dimen/space_16"
+                android:paddingTop="@dimen/space_16"
+                android:paddingEnd="@dimen/space_16"
+                android:paddingBottom="@dimen/space_16"
+                android:src="@drawable/filtericon"
+                app:tint="@color/text_black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvFiltersAmount"
+                style="@style/TextViewSmallWhite"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:background="@drawable/bkg_button_green_circle_normal"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/space_8"
+                android:layout_marginEnd="@dimen/space_8"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="@+id/filter"
+                app:layout_constraintTop_toTopOf="@+id/filter"
+                tools:text="3" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
 </com.google.android.material.appbar.AppBarLayout>

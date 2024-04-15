@@ -27,7 +27,7 @@
             android:id="@+id/tvStatus"
             style="@style/TextViewHeaderBlue"
             android:layout_width="wrap_content"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:layout_height="wrap_content"
             android:drawablePadding="@dimen/space_4"
             android:layout_marginStart="@dimen/space_4"
@@ -55,6 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_8"
             android:layout_marginHorizontal="@dimen/space_16"
+            android:textSize="14sp"
             android:maxLines="2"
             app:layout_constraintTop_toBottomOf="@+id/imgStatus"
             tools:layout_editor_absoluteX="16dp"
@@ -66,6 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_16"
+            android:textSize="14sp"
             android:maxLines="2"
             app:layout_constraintTop_toBottomOf="@+id/tvDate"
             tools:layout_editor_absoluteX="16dp"
@@ -75,8 +77,8 @@
             android:id="@+id/rvProducts"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/space_16"
             android:layout_marginHorizontal="@dimen/space_16"
+            android:layout_marginVertical="8dp"
             app:layout_constraintDimensionRatio="w,1:4.5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -87,7 +89,7 @@
             android:layout_width="1dp"
             android:layout_height="@dimen/_15sdp"
             app:dividerColor="@color/divider_gray_color"
-            app:layout_constraintBottom_toBottomOf="@+id/tvMoreDetails"
+            app:layout_constraintBottom_toBottomOf="@+id/tvRepeatOrder"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvRepeatOrder" />
@@ -97,7 +99,6 @@
             style="@style/TextViewMediumBlue"
             android:layout_width="0dp"
             android:layout_height="@dimen/field_height"
-            android:layout_marginTop="@dimen/space_16"
             android:gravity="center"
             android:text="@string/repeat"
             app:layout_constraintEnd_toStartOf="@+id/mdBetweenActions"
@@ -111,10 +112,9 @@
             android:layout_height="@dimen/field_height"
             android:gravity="center"
             android:text="@string/details"
-            android:layout_marginTop="@dimen/space_16"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/mdBetweenActions"
-            app:layout_constraintTop_toBottomOf="@+id/rvProducts" />
+            app:layout_constraintTop_toTopOf="@+id/tvRepeatOrder" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

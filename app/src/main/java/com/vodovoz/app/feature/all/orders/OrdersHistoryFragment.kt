@@ -61,7 +61,7 @@ class OrdersHistoryFragment : BaseFragment() {
 
         bindErrorRefresh { viewModel.refreshSorted() }
 
-        initFilterToolbar(true) { viewModel.goToFilter() }
+//        initFilterToolbar(true) { viewModel.goToFilter() }
         observeResultLiveData()
         bindSwipeRefresh()
     }
@@ -107,9 +107,14 @@ class OrdersHistoryFragment : BaseFragment() {
                         }
                         if (state.error is ErrorState.Empty) {
                             binding.llEmptyHistoryContainer.visibility = View.VISIBLE
+                            binding.tvEmptyHistoryTitle.text  = data.errorTitle
+                            binding.tvEmptyHistorySubtitle.text = data.errorMessage
                             binding.refreshContainer.visibility = View.GONE
                         } else {
                             showError(state.error)
+                        }
+                        initFilterToolbar(true, filterCount = data.filterCount) {
+                            viewModel.goToFilter()
                         }
 
                     }
@@ -132,6 +137,7 @@ class OrdersHistoryFragment : BaseFragment() {
                                     )
                                 }
                             }
+
                             is AllOrdersFlowViewModel.AllOrdersEvent.GoToCart -> {
                                 MaterialAlertDialogBuilder(requireContext())
                                     .setTitle("Товары добавлены в корзину")
