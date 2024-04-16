@@ -12,6 +12,7 @@ class CookieManager @Inject constructor(
     private val dataStoreRepository: DataStoreRepository,
     private val accountManager: AccountManager,
 ) {
+
     fun fetchCookieSessionId() = runBlocking { dataStoreRepository.getString(COOKIE_SESSION_ID) }
     fun updateCookieSessionId(cookieSessionId: String?) {
         cookieSessionId?.let {

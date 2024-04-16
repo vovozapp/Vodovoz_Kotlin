@@ -3,7 +3,9 @@ package com.vodovoz.app.data
 import androidx.core.net.toUri
 import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.product.rating.RatingResponse
+import com.vodovoz.app.common.tracking.TrackingManager
 import com.vodovoz.app.core.network.ApiConfig
+import com.vodovoz.app.data.model.common.ProductDetailsBundleEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.UserAuthDataEntity
 import com.vodovoz.app.data.parser.response.banner.AdvertisingBannersSliderResponseJsonParser.parseAdvertisingBannersSliderResponse
@@ -81,6 +83,7 @@ import com.vodovoz.app.data.parser.response.service.OrderServiceResponseJsonPars
 import com.vodovoz.app.data.parser.response.service.ServiceOrderFormResponseJsonParser.parseServiceOrderFormResponse
 import com.vodovoz.app.data.parser.response.shipping.FreeShippingDaysResponseJsonParser.parseFreeShippingDaysResponse
 import com.vodovoz.app.data.parser.response.shipping.ShippingInfoResponseJsonParser.parseShippingInfoResponse
+import com.vodovoz.app.data.parser.response.site_state.SiteStateResponseParser.parseResponseSiteState
 import com.vodovoz.app.data.parser.response.user.AuthByPhoneJsonParser.parseAuthByPhoneResponse
 import com.vodovoz.app.data.parser.response.user.LoginResponseJsonParser.parseLoginResponse
 import com.vodovoz.app.data.parser.response.user.PersonalProductsJsonParser.parsePersonalProductsResponse
@@ -92,6 +95,7 @@ import com.vodovoz.app.data.parser.response.user.UserDataResponseJsonParser.pars
 import com.vodovoz.app.data.parser.response.viewed.ViewedProductSliderResponseJsonParser.parseViewedProductsSliderResponse
 import com.vodovoz.app.feature.bottom.services.detail.model.ServicesDetailParser.parseServiceDetail
 import com.vodovoz.app.feature.map.api.MapKitFlowApi
+import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
 import kotlinx.coroutines.coroutineScope
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -105,6 +109,7 @@ import javax.inject.Inject
 class MainRepository @Inject constructor(
     private val api: MainApi,
     private val mapKitApi: MapKitFlowApi,
+    private val trackingManager: TrackingManager,
 ) {
 
     //Слайдер рекламных баннеров на главной странице
@@ -324,7 +329,14 @@ class MainRepository @Inject constructor(
         blockId: Int = 12,
         productId: Long,
         userId: Long? = null,
-    ) = api.fetchProductResponse(blockId, productId, userId).parseProductDetailsResponse()
+    ): ResponseEntity<ProductDetailsBundleEntity> {
+        return api.fetchProductResponse(
+            blockId,
+            productId,
+            userId,
+            tracking = trackingManager.getTracking()
+        ).parseProductDetailsResponse()
+    }
 
     //Продукты выбранного бренда
     suspend fun fetchProductsByBrandResponse(
@@ -386,7 +398,8 @@ class MainRepository @Inject constructor(
         action = "search",
         query = query,
         limit = 10,
-        page = 1
+        page = 1,
+        tracking = trackingManager.getTracking()
     ).parseProductsByQueryHeaderResponse()
 
     suspend fun fetchProductsByQuery(
@@ -402,7 +415,8 @@ class MainRepository @Inject constructor(
         categoryId = categoryId,
         sort = sort,
         orientation = orientation,
-        page = page
+        page = page,
+        tracking = trackingManager.getTracking()
     ).parseProductsByQueryResponse()
 
     suspend fun fetchMatchesQueries(query: String) = api.fetchMatchesQueries(
@@ -908,9 +922,13 @@ class MainRepository @Inject constructor(
     /**
      * site state
      */
-    suspend fun fetchSiteState() = coroutineScope {
-        api.fetchSiteState(action = "saitosnova")
+    suspend fun fetchSiteState(): SiteStateResponse {
+        val siteState = api.fetchSiteState(action = "saitosnova").parseResponseSiteState()
+        trackingManager.setEnableTracking(siteState.generation?.enabled ?: false)
+        trackingManager.setSessionIdTime(siteState.generation?.time?.toInt() ?: 0)
+        return siteState
     }
+
 
     /**
      * registration
@@ -1281,5 +1299,8 @@ class MainRepository @Inject constructor(
         api.postUrl(url)
     }
 }
+
+
+
 
 

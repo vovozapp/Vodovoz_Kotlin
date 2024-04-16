@@ -8,11 +8,16 @@ import com.vodovoz.app.feature.home.ratebottom.model.RateBottomModel
 import com.vodovoz.app.feature.profile.cats.ProfileCategoriesModel
 import com.vodovoz.app.feature.profile.notificationsettings.model.NotificationSettingsModel
 import com.vodovoz.app.feature.search.qrcode.model.QrCodeModel
-import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.GET
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.Part
+import retrofit2.http.Query
+import retrofit2.http.QueryMap
+import retrofit2.http.Url
 
 interface MainApi {
 
@@ -186,11 +191,12 @@ interface MainApi {
      */
 
     //Продукт
-    @GET("/newmobile/details/index_new.php?userid=515")
+    @GET("/newmobile/details/index_new.php")
     suspend fun fetchProductResponse(
         @Query("iblock_id") blockId: Int,
         @Query("detail") productId: Long,
         @Query("userid") userId: Long? = null,
+        @QueryMap tracking: Map<String, String> = mapOf(),
     ): ResponseBody
 
     //Продукты выбранного бренда
@@ -215,6 +221,7 @@ interface MainApi {
         @Query("ascdesc") orientation: String? = null,
         @Query("nav") page: Int? = null,
         @Query("sect") categoryId: Long? = null,
+        @QueryMap tracking: Map<String, String> = mapOf(),
     ): ResponseBody
 
     @GET("/newmobile/searching/minipoisk.php")
@@ -253,7 +260,7 @@ interface MainApi {
         @Query("sect") categoryId: Long? = null,
     ): ResponseBody
 
-     /**
+    /**
      * only products
      */
 
@@ -466,7 +473,7 @@ interface MainApi {
         @Query("pass") password: String,
     ): ResponseBody
 
-   // https://szorin.vodovoz.ru/newmobile/config/openuserid.php?userid=515&token=a6af096d-7aee-0694-b7d6-431f-b073-6258c34be4bb
+    // https://szorin.vodovoz.ru/newmobile/config/openuserid.php?userid=515&token=a6af096d-7aee-0694-b7d6-431f-b073-6258c34be4bb
     @GET("/newmobile/config/openuserid.php")
     suspend fun fetchReloginResponse(
         @Query("userid") userId: Long,
@@ -495,7 +502,7 @@ interface MainApi {
     @GET("newmobile/config/closesait.php")
     suspend fun fetchSiteState(
         @Query("action") action: String? = null,
-    ): SiteStateResponse
+    ): ResponseBody
 
     /**
      * registration
