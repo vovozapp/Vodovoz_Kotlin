@@ -1,6 +1,10 @@
 package com.vodovoz.app.common.tab
 
 import com.vodovoz.app.R
+import com.vodovoz.app.data.MainRepository
+import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.mapper.BottomCartMapper.mapToUI
+import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -8,12 +12,18 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TabManager @Inject constructor() {
+class TabManager @Inject constructor(
+    private val repository: MainRepository,
+) {
 
     private val tabStateListener = MutableSharedFlow<Int>()
     fun observeTabState() = tabStateListener.asSharedFlow()
@@ -30,7 +40,9 @@ class TabManager @Inject constructor() {
 
     private val tabReselectListener = MutableStateFlow(DEFAULT_STATE)
     fun observeTabReselect() = tabReselectListener.asStateFlow()
-    fun setDefaultState() { tabReselectListener.value = DEFAULT_STATE }
+    fun setDefaultState() {
+        tabReselectListener.value = DEFAULT_STATE
+    }
 
     private val tabAuthRedirectListener = MutableStateFlow<Int>(DEFAULT_AUTH_REDIRECT)
     fun fetchAuthRedirect() = tabAuthRedirectListener.value
@@ -63,8 +75,24 @@ class TabManager @Inject constructor() {
         tabReselectListener.value = id
     }
 
-    fun saveBottomNavCartState(count: Int, total: Int) {
-        bottomNavCartStateListener.value = BottomNavCartState(count, total)
+    fun saveBottomNavCartState() {
+        scope.launch {
+            flow {
+                emit(repository.fetchBottomCart())
+            }.onEach { response ->
+                if (response is ResponseEntity.Success) {
+                    val bottomCartUI = response.data.mapToUI()
+                    bottomNavCartStateListener.value = BottomNavCartState(
+                        count = bottomCartUI.productCount,
+                        total = bottomCartUI.totalSum.toInt()
+                    )
+                } else if (response is ResponseEntity.Error) {
+                    debugLog { "Error while fetching bottom cart state: ${response.errorMessage}" }
+                }
+            }.catch {
+                debugLog { "Error while fetching bottom cart state: $it" }
+            }.collect()
+        }
     }
 
     fun saveBottomNavProfileState(amount: Int?) {
@@ -74,28 +102,6 @@ class TabManager @Inject constructor() {
     fun changeTabVisibility(vis: Boolean) {
         tabVisibilityListener.value = vis
     }
-
-//    fun loadingAddToCart(load: Boolean, plus: Boolean) {
-//        scope.launch {
-//            bottomNavCartStateListener.emit(
-//                if (load) {
-//                    if (plus) {
-//                        BottomNavCartState(
-//                            bottomNavCartStateListener.value?.count?.plus(1) ?: 0,
-//                            -1
-//                        )
-//                    } else {
-//                        BottomNavCartState(
-//                            bottomNavCartStateListener.value?.count?.minus(1) ?: 0,
-//                            -1
-//                        )
-//                    }
-//                } else {
-//                    BottomNavCartState(bottomNavCartStateListener.value?.count ?:0, -2)
-//                }
-//            )
-//        }
-//    }
 
     fun clearBottomNavCartState() {
         bottomNavCartStateListener.value = null
@@ -107,11 +113,12 @@ class TabManager @Inject constructor() {
 
     data class BottomNavCartState(
         val count: Int,
-        val total: Int
+        val total: Int,
     )
 
     companion object {
         const val DEFAULT_STATE = -1
+
         @JvmField
         val DEFAULT_AUTH_REDIRECT = R.id.graph_profile
         const val ADDRESSES_DEFAULT_STATE = false

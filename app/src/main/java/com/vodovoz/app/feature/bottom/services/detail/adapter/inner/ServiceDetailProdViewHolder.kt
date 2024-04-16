@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class ServiceDetailProdViewHolder(
     view: View,
@@ -220,7 +221,7 @@ class ServiceDetailProdViewHolder(
         when (item.priceList.size) {
             1 -> {
                 binding.tvPrice.setPriceText(
-                    item.priceList.first().currentPrice,
+                    item.priceList.first().currentPrice.roundToInt(),
                     itCanBeGift = true
                 )
                 if (item.serviceDetailCoef != null) {
@@ -229,7 +230,7 @@ class ServiceDetailProdViewHolder(
                             append("x ")
                             append(item.serviceDetailCoef)
                             append(" = ")
-                            append(item.priceList.first().currentPrice * item.serviceDetailCoef)
+                            append(item.priceList.first().currentPrice.roundToInt() * item.serviceDetailCoef)
                             append(" ₽")
                         }
                 }
@@ -254,14 +255,14 @@ class ServiceDetailProdViewHolder(
                     val minimalPrice = item.priceList.sortedBy { it.requiredAmount }
                         .find { it.requiredAmount >= item.cartQuantity }
                     minimalPrice?.let {
-                        binding.tvPrice.setPriceText(minimalPrice.currentPrice)
+                        binding.tvPrice.setPriceText(minimalPrice.currentPrice.roundToInt())
                         if (item.serviceDetailCoef != null) {
                             binding.tvOldPrice.text =
                                 buildString {
                                     append("x ")
                                     append(item.serviceDetailCoef)
                                     append(" = ")
-                                    append(item.priceList.first().currentPrice * item.serviceDetailCoef)
+                                    append(item.priceList.first().currentPrice.roundToInt() * item.serviceDetailCoef)
                                     append(" ₽")
                                 }
                         }

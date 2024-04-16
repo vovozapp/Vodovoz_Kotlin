@@ -14,14 +14,11 @@ import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
-import kotlin.math.roundToInt
 
 object CartResponseJsonParser {
 
     fun ResponseBody.parseCartResponse(): ResponseEntity<CartBundleEntity> {
         val responseJson = JSONObject(this.string())
-        //   Log.d(LogSettings.RESPONSE_BODY_LOG, "--------------------------------------------------------CART")
-        //   Log.d(LogSettings.RESPONSE_BODY_LOG, responseJson.toString(2))
         return ResponseEntity.Success(
             CartBundleEntity(
                 giftTitleBottom = when (responseJson.isNull("osnovapodarki")) {
@@ -123,8 +120,8 @@ object CartResponseJsonParser {
         }
 
     private fun JSONObject.parsePriceEntity() = PriceEntity(
-        price = safeDouble("PRICE").roundToInt(),
-        oldPrice = safeDouble("OLD_PRICE").roundToInt(),
+        price = safeDouble("PRICE"),
+        oldPrice = safeDouble("OLD_PRICE"),
         requiredAmount = safeInt("QUANTITY_FROM"),
         requiredAmountTo = safeInt("QUANTITY_TO")
     )

@@ -5,7 +5,6 @@ import com.vodovoz.app.data.model.common.ProductEntity
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import org.json.JSONArray
 import org.json.JSONObject
-import kotlin.math.roundToInt
 
 object ProductJsonParser {
 
@@ -80,6 +79,7 @@ object ProductJsonParser {
                     90L -> true
                     else -> false
                 }
+
                 false -> {
                     if (has("IBLOCK_ID")) {
                         val idBlock = getLong("IBLOCK_ID")
@@ -94,6 +94,7 @@ object ProductJsonParser {
                     26L -> true
                     else -> false
                 }
+
                 false -> {
                     if (has("IBLOCK_ID")) {
                         val idBlock = getLong("IBLOCK_ID")
@@ -136,7 +137,7 @@ object ProductJsonParser {
             condition = when (has("NewPrice")) {
                 true -> getJSONObject("NewPrice").safeString("DescPrice")
                 false -> ""
-            },
+            }
         )
     }
 
@@ -146,8 +147,8 @@ object ProductJsonParser {
         }
 
     private fun JSONObject.parsePriceEntity() = PriceEntity(
-        price = safeDouble("PRICE").roundToInt(),
-        oldPrice = safeDouble("OLD_PRICE").roundToInt(),
+        price = safeDouble("PRICE"),
+        oldPrice = safeDouble("OLD_PRICE"),
         requiredAmount = safeInt("QUANTITY_FROM"),
         requiredAmountTo = safeInt("QUANTITY_TO")
     )

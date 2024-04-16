@@ -90,8 +90,7 @@ class CartFlowViewModel @Inject constructor(
                         }
                         else {
                             cartManager.syncCart(
-                                availableProducts,
-                                calculatedPrices.total
+                                availableProducts
                             )
                         }
                         state.copy(

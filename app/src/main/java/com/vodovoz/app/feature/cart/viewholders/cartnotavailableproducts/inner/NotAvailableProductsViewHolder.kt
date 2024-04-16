@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class NotAvailableProductsViewHolder(
     view: View,
@@ -87,17 +88,17 @@ class NotAvailableProductsViewHolder(
         when (item.priceList.size) {
             1 -> {
                 binding.tvPrice.setPriceText(
-                    item.priceList.first().currentPrice,
+                    item.priceList.first().currentPrice.roundToInt(),
                     itCanBeGift = true
                 )
-                binding.tvOldPrice.setPriceText(item.priceList.first().oldPrice)
+                binding.tvOldPrice.setPriceText(item.priceList.first().oldPrice.roundToInt())
                 binding.tvPriceCondition.visibility = View.GONE
                 if (item.priceList.first().currentPrice < item.priceList.first().oldPrice || item.isGift) haveDiscount =
                     true
             }
             else -> {
                 val minimalPrice = item.priceList.maxByOrNull { it.requiredAmount }!!
-                binding.tvPrice.setMinimalPriceText(minimalPrice.currentPrice)
+                binding.tvPrice.setMinimalPriceText(minimalPrice.currentPrice.roundToInt())
                 binding.tvPriceCondition.setPriceCondition(minimalPrice.requiredAmount)
                 binding.tvPriceCondition.visibility = View.VISIBLE
                 binding.tvPricePerUnit.visibility = View.GONE

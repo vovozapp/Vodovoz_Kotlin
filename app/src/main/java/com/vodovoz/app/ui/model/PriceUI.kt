@@ -7,8 +7,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PriceUI(
-    val currentPrice: Int,
-    val oldPrice: Int,
+    val currentPrice: Double,
+    val oldPrice: Double,
     val requiredAmount: Int,
     val requiredAmountTo: Int,
 ): Parcelable, Item {

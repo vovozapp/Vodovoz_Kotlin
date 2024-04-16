@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class ProductDetailFabController(
     private val context: Context,
@@ -151,8 +152,8 @@ class ProductDetailFabController(
         var haveDiscount = false
         when (header.productDetailUI.priceUIList.size) {
             1 -> {
-                currentPriceTv.setPriceText(header.productDetailUI.priceUIList.first().currentPrice)
-                oldPriceTv.setPriceText(header.productDetailUI.priceUIList.first().oldPrice)
+                currentPriceTv.setPriceText(header.productDetailUI.priceUIList.first().currentPrice.roundToInt())
+                oldPriceTv.setPriceText(header.productDetailUI.priceUIList.first().oldPrice.roundToInt())
                 conditionTv.visibility = View.GONE
                 if (header.productDetailUI.priceUIList.first().currentPrice <
                     header.productDetailUI.priceUIList.first().oldPrice
@@ -162,7 +163,7 @@ class ProductDetailFabController(
             else -> {
                 val minimalPrice =
                     header.productDetailUI.priceUIList.maxByOrNull { it.requiredAmount }!!
-                currentPriceTv.setMinimalPriceText(minimalPrice.currentPrice)
+                currentPriceTv.setMinimalPriceText(minimalPrice.currentPrice.roundToInt())
                 conditionTv.setPriceCondition(minimalPrice.requiredAmount)
                 conditionTv.visibility = View.VISIBLE
             }

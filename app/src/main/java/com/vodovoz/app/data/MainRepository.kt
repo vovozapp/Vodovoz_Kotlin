@@ -13,11 +13,11 @@ import com.vodovoz.app.data.parser.response.brand.AllBrandsResponseJsonParser.pa
 import com.vodovoz.app.data.parser.response.brand.BrandHeaderResponseJsonParser.parseBrandHeaderResponse
 import com.vodovoz.app.data.parser.response.brand.BrandsSliderResponseJsonParser.parseBrandsSliderResponse
 import com.vodovoz.app.data.parser.response.cart.BottlesResponseJsonParser.parseBottlesResponse
+import com.vodovoz.app.data.parser.response.cart.BottomCartResponseJsonParser.parseBottomCartResponse
 import com.vodovoz.app.data.parser.response.cart.CartResponseJsonParser.parseCartResponse
 import com.vodovoz.app.data.parser.response.cart.ClearCartResponseJsonParser.parseClearCartResponse
 import com.vodovoz.app.data.parser.response.catalog.CatalogResponseJsonParser.parseCatalogResponse
 import com.vodovoz.app.data.parser.response.category.AllFiltersByCategoryResponseJsonParser.parseAllFiltersByCategoryResponse
-import com.vodovoz.app.data.parser.response.category.CategoryHeaderResponseJsonParser.parseCategoryHeaderResponse
 import com.vodovoz.app.data.parser.response.category.ConcreteFilterResponseJsonParser.parseConcreteFilterResponse
 import com.vodovoz.app.data.parser.response.certificate.ActivateCertificateInfoJsonParser.parseActivateCertificateInfoResponse
 import com.vodovoz.app.data.parser.response.certificate.ActivateCertificateJsonParser.parseActivateCertificateResponse
@@ -313,6 +313,8 @@ class MainRepository @Inject constructor(
         action: String? = null,
     ) = api.fetchClearCartResponse(action).parseClearCartResponse()
 
+    suspend fun fetchBottomCart() = api.fetchBottomCartResponse().parseBottomCartResponse()
+
     /**
      * Продукт
      */
@@ -336,15 +338,18 @@ class MainRepository @Inject constructor(
     //Продукты могут понравиться
     suspend fun fetchMaybeLikeProductsResponse(
         page: Int,
-    ) = api.fetchNovelties(action = "details", page = page).parseMaybeLikeProductsResponse()
+    ) = api.fetchNovelties(
+        action = "details",
+        page = page
+    ).parseMaybeLikeProductsResponse()
 
     //Главная информация о категории
-    suspend fun fetchCategoryHeader(
-        categoryId: Long,
-    ) = api.fetchCategoryResponse(
-        blockId = 1,
-        categoryId = categoryId
-    ).parseCategoryHeaderResponse()
+//    suspend fun fetchCategoryHeader(
+//        categoryId: Long,
+//    ) = api.fetchCategoryResponse(
+//        blockId = 1,
+//        categoryId = categoryId
+//    ).parseCategoryHeaderResponse()
 
     //Постраничная загрузка продуктов для выбранной категории
     suspend fun fetchProductsByCategory(
@@ -1276,3 +1281,5 @@ class MainRepository @Inject constructor(
         api.postUrl(url)
     }
 }
+
+

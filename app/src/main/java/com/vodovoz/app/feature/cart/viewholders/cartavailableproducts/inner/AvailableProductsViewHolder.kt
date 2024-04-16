@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class AvailableProductsViewHolder(
     view: View,
@@ -251,7 +252,7 @@ class AvailableProductsViewHolder(
             binding.cgStatuses.visibility = View.GONE
             binding.llPricesContainer.root.visibility = View.GONE
             binding.tvDepositPrice.visibility = View.VISIBLE
-            binding.tvDepositPrice.setDepositPriceText(item.priceList.first().currentPrice)
+            binding.tvDepositPrice.setDepositPriceText(item.priceList.first().currentPrice.roundToInt())
             binding.rbRating.isVisible = false
             /*if (item.priceList.first().currentPrice > 0) {
                 binding.clPricesContainer.visibility = View.VISIBLE
@@ -339,8 +340,8 @@ class AvailableProductsViewHolder(
                 binding.llPricesContainer.tvPriceCondition.visibility = View.GONE
                 bindDiscountPrice(
                     item,
-                    item.priceList.first().currentPrice,
-                    item.priceList.first().oldPrice
+                    item.priceList.first().currentPrice.roundToInt(),
+                    item.priceList.first().oldPrice.roundToInt()
                 )
             }
 
@@ -371,7 +372,7 @@ class AvailableProductsViewHolder(
                             minimalPrice.requiredAmount
                         )
 
-                    bindDiscountPrice(item, minimalPrice.currentPrice, minimalPrice.oldPrice)
+                    bindDiscountPrice(item, minimalPrice.currentPrice.roundToInt(), minimalPrice.oldPrice.roundToInt())
                     binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
                 }
 

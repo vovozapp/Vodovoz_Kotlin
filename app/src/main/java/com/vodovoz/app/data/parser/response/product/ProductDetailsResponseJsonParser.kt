@@ -1,6 +1,20 @@
 package com.vodovoz.app.data.parser.response.product
 
-import com.vodovoz.app.data.model.common.*
+import com.vodovoz.app.data.model.common.BlockEntity
+import com.vodovoz.app.data.model.common.BrandEntity
+import com.vodovoz.app.data.model.common.ButtonEntity
+import com.vodovoz.app.data.model.common.CategoryDetailEntity
+import com.vodovoz.app.data.model.common.CategoryEntity
+import com.vodovoz.app.data.model.common.CommentEntity
+import com.vodovoz.app.data.model.common.PriceEntity
+import com.vodovoz.app.data.model.common.ProductDetailEntity
+import com.vodovoz.app.data.model.common.ProductDetailsBundleEntity
+import com.vodovoz.app.data.model.common.PromotionEntity
+import com.vodovoz.app.data.model.common.PromotionsActionEntity
+import com.vodovoz.app.data.model.common.PropertiesGroupEntity
+import com.vodovoz.app.data.model.common.PropertyEntity
+import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.model.common.ServiceEntity
 import com.vodovoz.app.data.parser.common.BrandJsonParser.parserBrandEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
 import com.vodovoz.app.data.parser.common.safeDouble
@@ -12,7 +26,6 @@ import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
-import kotlin.math.roundToInt
 
 object ProductDetailsResponseJsonParser {
 
@@ -60,8 +73,11 @@ object ProductDetailsResponseJsonParser {
                         .getJSONArray("REKOMEND").parseProductEntityList(),
                     searchWordList = responseJson.getJSONObject("klyshslova")
                         .getJSONArray("USHYTZAPROS").parseSearchWordList(),
-                    promotionsActionEntity = if(responseJson.has("action")) { responseJson.getJSONObject("action").parsePromotionsActionEntity()}
-                        else { null },
+                    promotionsActionEntity = if (responseJson.has("action")) {
+                        responseJson.getJSONObject("action").parsePromotionsActionEntity()
+                    } else {
+                        null
+                    },
                     serviceEntityList = when (responseJson.isNull("yslugi")) {
                         true -> listOf()
                         false -> responseJson.getJSONObject("yslugi")
@@ -74,6 +90,7 @@ object ProductDetailsResponseJsonParser {
                     }
                 )
             )
+
             else -> ResponseEntity.Error("Неправильный запрос")
         }
     }
@@ -199,8 +216,8 @@ object ProductDetailsResponseJsonParser {
         }
 
     private fun JSONObject.parsePriceEntity() = PriceEntity(
-        price = safeDouble("PRICE").roundToInt(),
-        oldPrice = safeDouble("OLD_PRICE").roundToInt(),
+        price = safeDouble("PRICE"),
+        oldPrice = safeDouble("OLD_PRICE"),
         requiredAmount = safeInt("QUANTITY_FROM"),
         requiredAmountTo = safeInt("QUANTITY_TO")
     )
@@ -313,7 +330,7 @@ object ProductDetailsResponseJsonParser {
         textColor = safeString("COLORTEXT")
     )
 
-    private fun JSONObject.parsePromotionsActionEntity() = PromotionsActionEntity (
+    private fun JSONObject.parsePromotionsActionEntity() = PromotionsActionEntity(
         name = safeString("NAME"),
         promotionEntityList = getJSONArray("REKOMEND").parsePromotionEntityList(),
     )

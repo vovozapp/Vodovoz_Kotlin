@@ -58,14 +58,11 @@ class CartManager @Inject constructor(
 
     fun isCartEmpty() = carts.isEmpty()
 
-    suspend fun syncCart(list: List<ProductUI>, total: Int) {
+    suspend fun syncCart(list: List<ProductUI>) {
         list.forEach {
             carts[it.id] = it.cartQuantity
         }
-        tabManager.saveBottomNavCartState(
-            carts.size,
-            total
-        )
+        tabManager.saveBottomNavCartState()
         cartsStateListener.emit(carts)
     }
 

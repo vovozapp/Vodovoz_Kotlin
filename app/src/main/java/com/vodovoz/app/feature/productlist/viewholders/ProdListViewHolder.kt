@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class ProdListViewHolder(
     view: View,
@@ -219,10 +220,10 @@ class ProdListViewHolder(
         when (item.priceList.size) {
             1 -> {
                 binding.llPricesContainer.tvCurrentPrice.setPriceText(
-                    item.priceList.first().currentPrice,
+                    item.priceList.first().currentPrice.roundToInt(),
                     itCanBeGift = true
                 )
-                binding.llPricesContainer.tvOldPrice.setPriceText(item.priceList.first().oldPrice)
+                binding.llPricesContainer.tvOldPrice.setPriceText(item.priceList.first().oldPrice.roundToInt())
                 binding.llPricesContainer.tvPriceCondition.visibility = View.GONE
                 if (item.priceList.first().currentPrice < item.priceList.first().oldPrice || item.isGift) haveDiscount =
                     true
@@ -241,7 +242,7 @@ class ProdListViewHolder(
                     val minimalPrice = item.priceList.sortedBy { it.requiredAmount }
                         .find { it.requiredAmount >= item.cartQuantity }
                     minimalPrice?.let {
-                        binding.llPricesContainer.tvCurrentPrice.setPriceText(minimalPrice.currentPrice)
+                        binding.llPricesContainer.tvCurrentPrice.setPriceText(minimalPrice.currentPrice.roundToInt())
                         binding.llPricesContainer.tvPriceCondition.visibility = View.GONE
                     }
                     binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE

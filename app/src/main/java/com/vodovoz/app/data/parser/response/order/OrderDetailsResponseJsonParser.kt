@@ -6,6 +6,7 @@ import com.vodovoz.app.data.model.common.OrderStatusEntity
 import com.vodovoz.app.data.model.common.PriceEntity
 import com.vodovoz.app.data.model.common.ProductEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.common.safeDouble
 import com.vodovoz.app.data.parser.common.safeInt
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.parser.common.safeStringConvertToBoolean
@@ -67,14 +68,14 @@ object OrderDetailsResponseJsonParser {
         driverName = if (has("VODILA") && !isNull("VODILA")) {
             getJSONObject("VODILA").safeString("NAME")
         } else null,
-        driverUrl = if (has("VODILA") &&!isNull("VODILA")) {
+        driverUrl = if (has("VODILA") && !isNull("VODILA")) {
             getJSONObject("VODILA").safeString("SSILKAPEREDACH")
         } else null,
         orderPricesEntityList = if (has("ITOG_DANNYE")) {
             getJSONArray("ITOG_DANNYE").parseOrderPricesList()
         } else listOf(),
         repeatOrder = if (has("POVTOR_ZAKAZA")) {
-            safeString("POVTOR_ZAKAZA")  == "Y"
+            safeString("POVTOR_ZAKAZA") == "Y"
         } else true
     )
 
@@ -108,8 +109,8 @@ object OrderDetailsResponseJsonParser {
             detailPicture = detailPicture.parseImagePath(),
             priceList = listOf(
                 PriceEntity(
-                    price = safeInt("PRICE"),
-                    oldPrice = 0,
+                    price = safeDouble("PRICE"),
+                    oldPrice = 0.0,
                     requiredAmount = 0,
                     0
                 )
@@ -166,7 +167,7 @@ object OrderDetailsResponseJsonParser {
                 false -> null
             },
             leftItems = safeInt("CATALOG_QUANTITY"),
-            isAvailable = safeStringConvertToBoolean("ACTIVE"),
+            isAvailable = safeStringConvertToBoolean("ACTIVE")
         )
     }
 

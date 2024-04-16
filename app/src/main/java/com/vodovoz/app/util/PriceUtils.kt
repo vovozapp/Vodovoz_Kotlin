@@ -2,20 +2,19 @@ package com.vodovoz.app.util
 
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
-import kotlin.math.abs
 import kotlin.math.roundToInt
 
 fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
     var fullPrice = 0
-    var discountPrice = 0
+    var discountPrice = 0.0
     var deposit = 0
     var bottlesPrice = 0
     productUIList.forEach { productUI ->
         if (productUI.isBottle) {
-            if (productUI.depositPrice != 0) {
-                bottlesPrice += productUI.depositPrice * productUI.cartQuantity
+            bottlesPrice += if (productUI.depositPrice != 0) {
+                productUI.depositPrice * productUI.cartQuantity
             } else {
-                bottlesPrice += productUI.priceList.first().currentPrice * productUI.cartQuantity
+                productUI.priceList.first().currentPrice.roundToInt() * productUI.cartQuantity
             }
         } else {
             if (productUI.depositPrice != 0) {
@@ -37,22 +36,13 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
                 }
             }
             price?.let {
-                if (price.oldPrice == 0) {
-                    fullPrice += price.currentPrice * productUI.cartQuantity
+                fullPrice += if (price.oldPrice.roundToInt() == 0) {
+                    price.currentPrice.roundToInt() * productUI.cartQuantity
                 } else {
-                    fullPrice += price.oldPrice * productUI.cartQuantity
+                    price.oldPrice.roundToInt() * productUI.cartQuantity
                 }
 
-                val totalDisc = if (abs(
-                        productUI.totalDisc.roundToInt().toDouble() - productUI.totalDisc
-                    ) == 0.5
-                ) {
-                    productUI.totalDisc.toInt()
-                } else {
-                    productUI.totalDisc.roundToInt()
-                }
-
-                discountPrice += totalDisc * productUI.cartQuantity
+                discountPrice += (productUI.totalDisc * productUI.cartQuantity)
             }
         }
     }
@@ -66,8 +56,8 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
 
     deposit -= bottlesPrice
     if (deposit < 0) deposit = 0
-    val total = fullPrice + deposit - discountPrice
-    return CalculatedPrices(fullPrice, discountPrice, deposit, total)
+    val total = fullPrice + deposit - discountPrice.toInt()
+    return CalculatedPrices(fullPrice, discountPrice.toInt(), deposit, total)
 }
 
 data class CalculatedPrices(

@@ -108,6 +108,11 @@ interface MainApi {
         @Query("quantity") quantity: Int? = null,
     ): ResponseBody
 
+    @GET("/newmobile/korzina.php")
+    suspend fun fetchBottomCartResponse(
+        @Query("action") action: String = "getbasketuser",
+    ): ResponseBody
+
     /**
      * Избранное
      */

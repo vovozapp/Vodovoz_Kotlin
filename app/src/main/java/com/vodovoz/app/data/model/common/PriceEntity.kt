@@ -5,8 +5,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class PriceEntity(
-    val price: Int,
-    val oldPrice: Int,
+    val price: Double,
+    val oldPrice: Double,
     val requiredAmount: Int,
     val requiredAmountTo: Int,
 ) : Parcelable

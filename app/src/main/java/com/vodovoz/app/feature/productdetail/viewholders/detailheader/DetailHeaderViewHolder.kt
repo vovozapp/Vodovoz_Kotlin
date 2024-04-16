@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class DetailHeaderViewHolder(
     view: View,
@@ -264,8 +265,8 @@ class DetailHeaderViewHolder(
         var haveDiscount = false
         when (item.productDetailUI.priceUIList.size) {
             1 -> {
-                binding.tvCurrentPrice.setPriceText(item.productDetailUI.priceUIList.first().currentPrice)
-                binding.tvOldPrice.setPriceText(item.productDetailUI.priceUIList.first().oldPrice)
+                binding.tvCurrentPrice.setPriceText(item.productDetailUI.priceUIList.first().currentPrice.roundToInt())
+                binding.tvOldPrice.setPriceText(item.productDetailUI.priceUIList.first().oldPrice.roundToInt())
                 binding.tvPriceCondition.visibility = View.GONE
                 if (item.productDetailUI.priceUIList.first().currentPrice <
                     item.productDetailUI.priceUIList.first().oldPrice
@@ -274,7 +275,7 @@ class DetailHeaderViewHolder(
             else -> {
                 val minimalPrice =
                     item.productDetailUI.priceUIList.maxByOrNull { it.requiredAmount }!!
-                binding.tvCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice)
+                binding.tvCurrentPrice.setMinimalPriceText(minimalPrice.currentPrice.roundToInt())
                 binding.tvPriceCondition.setPriceCondition(minimalPrice.requiredAmount)
                 binding.tvPriceCondition.visibility = View.VISIBLE
                 binding.tvPricePerUnit.visibility = View.GONE

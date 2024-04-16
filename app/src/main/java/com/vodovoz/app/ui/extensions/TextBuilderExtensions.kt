@@ -82,9 +82,9 @@ object TextBuilderExtensions {
             .toString()
     }
 
-    fun TextView.setDiscountPercent(oldPrice: Int, newPrice: Int) {
+    fun TextView.setDiscountPercent(oldPrice: Double, newPrice: Double) {
         this.text = StringBuilder()
-            .append((100.0 - ((newPrice.toDouble()/oldPrice.toDouble()) * 100)).roundToInt())
+            .append((100.0 - ((newPrice/oldPrice) * 100)).roundToInt())
             .append("%")
             .toString()
     }

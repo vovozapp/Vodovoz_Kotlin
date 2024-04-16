@@ -60,15 +60,15 @@ object ProductMapper {
     private fun getCurrentPrice(list: List<PriceUI>, isGift: Boolean, isNegative: Boolean = false) : String {
         if (list.isEmpty()) return ""
         val price = list.first().currentPrice
-        if (price  == 0 && isGift) {
+        if (price  == 0.0 && isGift) {
             return "Подарок"
         }
         return StringBuilder()
-            .append(when(isNegative && price != 0) {
+            .append(when(isNegative && price != 0.0) {
                 true -> "-"
                 false -> ""
             })
-            .append(price)
+            .append(price.roundToInt())
             .append(" ₽")
             .toString()
     }
@@ -76,15 +76,15 @@ object ProductMapper {
     private fun getOldPrice(list: List<PriceUI>, isGift: Boolean, isNegative: Boolean = false) : String {
         if (list.isEmpty()) return ""
         val price = list.first().oldPrice
-        if (price  == 0 && isGift) {
+        if (price  == 0.0 && isGift) {
             return "Подарок"
         }
         return StringBuilder()
-            .append(when(isNegative && price != 0) {
+            .append(when(isNegative && price != 0.0) {
                 true -> "-"
                 false -> ""
             })
-            .append(price)
+            .append(price.roundToInt())
             .append(" ₽")
             .toString()
     }
@@ -94,7 +94,7 @@ object ProductMapper {
         val minimalPrice = list.maxByOrNull { it.requiredAmount }?.currentPrice!!
         return StringBuilder()
             .append("от ")
-            .append(minimalPrice)
+            .append(minimalPrice.roundToInt())
             .append(" ₽")
             .toString()
     }
@@ -109,14 +109,14 @@ object ProductMapper {
             .toString()
     }
 
-    private fun getDiscountPercent(list: List<PriceUI>) : String {
+    private fun getDiscountPercent(list: List<PriceUI>): String {
         if (list.isEmpty()) return ""
         val newPrice = list.first().currentPrice
         val oldPrice = list.first().oldPrice
-        if (oldPrice == 0) return ""
+        if (oldPrice == 0.0) return ""
 
         return StringBuilder()
-            .append((100.0 - ((newPrice.toDouble()/oldPrice.toDouble()) * 100)).roundToInt())
+            .append((100.0 - ((newPrice / oldPrice) * 100)).roundToInt())
             .append("%")
             .toString()
     }
