@@ -61,8 +61,9 @@ object TextBuilderExtensions {
 
     fun TextView.setOrderQuantity(quantity: Int) {
         this.text = StringBuilder()
-            .append("x")
+            .append("X ")
             .append(quantity)
+            .append(" шт")
             .toString()
     }
 

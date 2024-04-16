@@ -167,7 +167,8 @@ object OrderDetailsResponseJsonParser {
                 false -> null
             },
             leftItems = safeInt("CATALOG_QUANTITY"),
-            isAvailable = safeStringConvertToBoolean("ACTIVE")
+            isAvailable = safeStringConvertToBoolean("ACTIVE"),
+            canBuy = safeStringConvertToBoolean("POKYPKA"),
         )
     }
 

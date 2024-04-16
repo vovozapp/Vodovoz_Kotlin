@@ -169,10 +169,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_8"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/amountController"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/vpPictures"
-        app:layout_constraintTop_toTopOf="@+id/amountController"
         tools:ignore="RtlSymmetry" />
 
     <include

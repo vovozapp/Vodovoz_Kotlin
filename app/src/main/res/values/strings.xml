@@ -141,6 +141,7 @@
     <string name="order_history">История заказов</string>
     <string name="categories">Категории</string>
     <string name="choose_sort_type">Выбрать сортировку</string>
+    <string name="no_products_available">Товары в заказе отсутствуют</string>
 
 
 </resources>

@@ -44,6 +44,7 @@ object ProductMapper {
         totalDisc = totalDisc,
         conditionPrice = conditionalPrice,
         condition = condition,
+        canBuy = canBuy,
     )
 
 //    private fun getPricePerUnitStringBuilder(pricePerUnit: Int): String {
@@ -57,39 +58,51 @@ object ProductMapper {
 //        }
 //    }
 
-    private fun getCurrentPrice(list: List<PriceUI>, isGift: Boolean, isNegative: Boolean = false) : String {
+    private fun getCurrentPrice(
+        list: List<PriceUI>,
+        isGift: Boolean,
+        isNegative: Boolean = false,
+    ): String {
         if (list.isEmpty()) return ""
         val price = list.first().currentPrice
-        if (price  == 0.0 && isGift) {
+        if (price == 0.0 && isGift) {
             return "Подарок"
         }
         return StringBuilder()
-            .append(when(isNegative && price != 0.0) {
-                true -> "-"
-                false -> ""
-            })
+            .append(
+                when (isNegative && price != 0.0) {
+                    true -> "-"
+                    false -> ""
+                }
+            )
             .append(price.roundToInt())
             .append(" ₽")
             .toString()
     }
 
-    private fun getOldPrice(list: List<PriceUI>, isGift: Boolean, isNegative: Boolean = false) : String {
+    private fun getOldPrice(
+        list: List<PriceUI>,
+        isGift: Boolean,
+        isNegative: Boolean = false,
+    ): String {
         if (list.isEmpty()) return ""
         val price = list.first().oldPrice
-        if (price  == 0.0 && isGift) {
+        if (price == 0.0 && isGift) {
             return "Подарок"
         }
         return StringBuilder()
-            .append(when(isNegative && price != 0.0) {
-                true -> "-"
-                false -> ""
-            })
+            .append(
+                when (isNegative && price != 0.0) {
+                    true -> "-"
+                    false -> ""
+                }
+            )
             .append(price.roundToInt())
             .append(" ₽")
             .toString()
     }
 
-    private fun getMinimalPrice(list: List<PriceUI>) : String {
+    private fun getMinimalPrice(list: List<PriceUI>): String {
         if (list.isEmpty()) return ""
         val minimalPrice = list.maxByOrNull { it.requiredAmount }?.currentPrice!!
         return StringBuilder()
@@ -99,7 +112,7 @@ object ProductMapper {
             .toString()
     }
 
-    private fun getPriceCondition(list: List<PriceUI>) : String {
+    private fun getPriceCondition(list: List<PriceUI>): String {
         if (list.isEmpty()) return ""
         val minimalPrice = list.maxByOrNull { it.requiredAmount }?.requiredAmount!!
         return StringBuilder()
@@ -121,7 +134,7 @@ object ProductMapper {
             .toString()
     }
 
-    private fun checkHaveDiscount(list: List<PriceUI>, isGift: Boolean) : Boolean {
+    private fun checkHaveDiscount(list: List<PriceUI>, isGift: Boolean): Boolean {
         if (list.isEmpty()) return false
         return list.first().currentPrice < list.first().oldPrice || isGift
     }

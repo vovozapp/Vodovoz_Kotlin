@@ -188,7 +188,11 @@ class AvailableProductsViewHolder(
         binding.cgStatuses.visibility = View.VISIBLE
         binding.llPricesContainer.root.visibility = View.VISIBLE
         binding.llPricesContainer.tvOldPrice.visibility = View.VISIBLE
-        binding.amountController.root.visibility = View.VISIBLE
+        if(item.canBuy) {
+            binding.amountController.root.visibility = View.VISIBLE
+        } else {
+            binding.amountController.root.visibility = View.GONE
+        }
 
         binding.tvName.text = item.name
         binding.rbRating.rating = item.rating
@@ -206,7 +210,7 @@ class AvailableProductsViewHolder(
         if (item.pricePerUnit.isNotEmpty()) {
             binding.llPricesContainer.tvPricePerUnit.visibility = View.VISIBLE
             binding.llPricesContainer.tvPricePerUnit.text = item.pricePerUnit
-        } else if (item.orderQuantity != 0) {
+        } else if (item.orderQuantity != 0 && item.priceList.first().currentPrice > 0) {
             binding.llPricesContainer.tvPricePerUnit.visibility = View.VISIBLE
             binding.llPricesContainer.tvPricePerUnit.setOrderQuantity(item.orderQuantity)
         } else {

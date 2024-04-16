@@ -45,6 +45,7 @@
                     style="@style/TextViewSmallGray"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/text_gray_light"
                     tools:text="Номер заказа" />
 
             </LinearLayout>
@@ -148,6 +149,19 @@
 
                 </LinearLayout>
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvNoProductsAvailable"
+                    style="@style/TextViewNormalWhite"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="22sp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_8"
+                    android:text="@string/no_products_available"
+                    android:visibility="gone"/>
+
                 <LinearLayout
                     android:id="@+id/llPayOrder"
                     android:layout_width="0dp"
@@ -197,6 +211,7 @@
                     android:layout_marginStart="@dimen/space_16"
                     android:layout_marginTop="@dimen/space_16"
                     android:text="@string/info_about_order"
+                    android:textColor="@color/text_gray_light"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -282,16 +297,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_16"
                     android:layout_marginTop="@dimen/space_16"
-                    android:text="@string/info_about_order"
+                    android:textColor="@color/text_gray_light"
+                    android:text="Адрес"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/mdDividerAfterMainInfo" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvAddress"
                     style="@style/TextViewNormalBlackBold"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/space_16"
+                    android:layout_marginHorizontal="@dimen/space_16"
                     android:layout_marginTop="@dimen/space_4"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvAddressTitle"
@@ -310,6 +326,7 @@
                     style="@style/TextViewNormalGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/text_gray_light"
                     android:layout_marginStart="@dimen/space_16"
                     android:layout_marginTop="@dimen/space_16"
                     android:text="@string/recipient"
