@@ -17,8 +17,8 @@ android {
         applicationId "com.vodovoz.app"
         minSdk 21
         targetSdk 34
-        versionCode 153
-        versionName "1.5.44"
+        versionCode 155
+        versionName "1.5.46"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
