@@ -230,10 +230,16 @@ class OrderDetailsFragment : BaseFragment() {
                     } else {
                         binding.btnTraceOrder.isVisible = false
                     }
-
                 }
 
-                "R" -> binding.payedStatus.isVisible = false
+                "R" -> {
+                    binding.payedStatus.isVisible = false
+                    binding.llPayOrder.visibility = View.GONE
+                }
+                "D" -> {
+                    binding.llPayOrder.visibility = View.GONE
+                }
+
             } //todo
 
             llStatusContainer.setBackgroundColor(
@@ -286,6 +292,17 @@ class OrderDetailsFragment : BaseFragment() {
                 binding.llRepeatOrder.visibility = View.GONE
             }
 
+            val any = orderDetailsUI.productUIList.any { it.isAvailable && it.canBuy }
+            if (!any) {
+                binding.llRepeatOrder.visibility = View.GONE
+                if (binding.llPayOrder.visibility == View.VISIBLE) {
+                    binding.tvNoProductsAvailable.visibility = View.GONE
+                } else {
+                    binding.tvNoProductsAvailable.visibility = View.VISIBLE
+                }
+            } else {
+                binding.llRepeatOrder.visibility = View.VISIBLE
+            }
 //            tvProductsPrice.setPriceText(orderDetailsUI.productsPrice)
 //            tvDepositPrice.setPriceText(orderDetailsUI.depositPrice)
 //            tvShippingPrice.setPriceText(orderDetailsUI.deliveryPrice)

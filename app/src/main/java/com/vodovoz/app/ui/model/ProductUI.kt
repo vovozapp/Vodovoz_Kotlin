@@ -20,6 +20,7 @@ data class ProductUI(
     val isBottle: Boolean,
     val isGift: Boolean,
     var isAvailable: Boolean,
+    var canBuy: Boolean,
     val commentAmount: String,
     var cartQuantity: Int = 0,
     var orderQuantity: Int = 0,
