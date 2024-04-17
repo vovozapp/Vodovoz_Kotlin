@@ -10,62 +10,69 @@ class TrackingManager @Inject constructor(
     private val dataStoreRepository: DataStoreRepository,
 ) {
 
-    private var sessionId: String? = null
-    private var userGUID: String? = null
+    private var sessionId: String = ""
+    private var userGUID: String = ""
 
-    private var viewGUID: String? = null
+    private var viewGUID: String = ""
 
     private var sessionIdTime = 0
 
     private var enableTracking = false
-    private fun GenerateUIDs() {
+    private fun generateUIDs(updateViewGUID: Boolean) {
 
-        //sessionId - 30 минут
+        /**
+         * sessionId
+         * генерируется на 30 минут
+         * **/
         val timeInMillis: Long = sessionIdTime.toLong() * 60 * 1000
         val currentTime = System.currentTimeMillis()
-        val last: Long = dataStoreRepository.getLong("LastSessionIDTime") ?: 0L
-        if (currentTime - last > timeInMillis) {
-            val uuid = UUID.randomUUID()
-            dataStoreRepository.putString("sessionId", uuid.toString())
-            sessionId = uuid.toString()
+        val lastSessionIDTime: Long = dataStoreRepository.getLong("LastSessionIDTime") ?: 0L
+        if (currentTime - lastSessionIDTime > timeInMillis) {
+            sessionId = UUID.randomUUID().toString()
+            dataStoreRepository.putString("sessionId", sessionId)
             dataStoreRepository.putLong("LastSessionIDTime", currentTime)
         } else {
             sessionId = dataStoreRepository.getString("sessionId") ?: UUID.randomUUID().toString()
         }
 
-        //userGUID - 0:<TIMESTAMP>:<UUID>
+        /**
+         * userGUID
+         * генерируется на год,
+         * формат: 0:&lt;TIMESTAMP>:&lt;UUID>, где TIMESTAMP - время создания в формате base36
+         * **/
         val yearInMillis = 365L * 24 * 60 * 60 * 1000
         val lastUserGUIDTime = dataStoreRepository.getLong("LastUserGUIDTime") ?: 0L
         if (currentTime - lastUserGUIDTime > yearInMillis) {
-            val uuid = UUID.randomUUID()
-            val userGUIDBuilder = createGuidUUID(uuid.toString(), currentTime)
-            dataStoreRepository.putString("userGUID", userGUIDBuilder)
-            userGUID = userGUIDBuilder
+            userGUID = createGuidUUID(currentTime)
+            dataStoreRepository.putString("userGUID", userGUID)
             dataStoreRepository.putLong("LastUserGUIDTime", currentTime)
         } else {
             userGUID = dataStoreRepository.getString(
                 "userGUID"
-            ) ?: createGuidUUID(UUID.randomUUID().toString(), currentTime)
+            ) ?: createGuidUUID(currentTime)
 
         }
-
-        //viewGUID - Генерируется на каждой странице и сквозной для всех трекинг запросов со страницы при ее посещении в данный момент времени.
-        val uuid = UUID.randomUUID()
-        viewGUID = uuid.toString()
+        /**
+         * viewGUID
+         * Генерируется на каждом экране и сквозной для всех трекинг запросов с экрана при его посещении в данный момент времени.
+         * **/
+        if(updateViewGUID) {
+            viewGUID = UUID.randomUUID().toString()
+        }
     }
 
-    private fun createGuidUUID(uuid: String, currentTime: Long): String {
+    private fun createGuidUUID(currentTime: Long): String {
         val timestampInBase36 = currentTime.toString(36)
-        return "0:$timestampInBase36:$uuid"
+        return "0:$timestampInBase36:${UUID.randomUUID()}"
     }
 
-    fun getTracking(): Map<String, String> {
+    fun getTracking(updateViewGUID: Boolean = true): Map<String, String> {
         if (!enableTracking) return emptyMap()
-        GenerateUIDs()
+        generateUIDs(updateViewGUID)
         val trackingMap = HashMap<String, String>()
-        trackingMap["sessionId"] = sessionId ?: ""
-        trackingMap["userGUID"] = userGUID ?: ""
-        trackingMap["viewGUID"] = viewGUID ?: ""
+        trackingMap["sessionId"] = sessionId
+        trackingMap["userGUID"] = userGUID
+        trackingMap["viewGUID"] = viewGUID
         return trackingMap
     }
 
