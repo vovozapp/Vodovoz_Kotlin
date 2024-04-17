@@ -269,7 +269,6 @@ class AvailableProductsViewHolder(
         if (item.isGift) {
             binding.imgFavoriteStatus.visibility = View.INVISIBLE
             binding.cgStatuses.visibility = View.GONE
-            binding.llPricesContainer.tvOldPrice.visibility = View.GONE
             binding.rbRating.isVisible = false
         }
 

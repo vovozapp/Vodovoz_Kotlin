@@ -343,9 +343,9 @@ class SearchFragment : BaseFragment() {
         }
         binding.incAppBar.imgBack.setOnClickListener { findNavController().popBackStack() }
 
-        if (state.categoryHeader != null) {
-            showContainer(true)
-        }
+//        if (state.categoryHeader != null) {
+//            showContainer(true)
+//        }
 
         val matches = state.matchesQuery
 
@@ -397,7 +397,7 @@ class SearchFragment : BaseFragment() {
                 binding.bestForYouRv.visibility = View.GONE
             }
             bestForYouController.submitList(listOf(homeTitle, homeProducts))
-            showContainer(false)
+//            showContainer(false)
         } else {
             binding.bestForYouRv.visibility = View.GONE
         }
@@ -519,10 +519,10 @@ class SearchFragment : BaseFragment() {
         }
     }
 
-    private fun showContainer(bool: Boolean) {
-        /*binding.emptyFavoriteContainer.isVisible = !bool
-        binding.favoriteContainer.isVisible = bool*/
-    }
+//    private fun showContainer(bool: Boolean) {
+//        /*binding.emptyFavoriteContainer.isVisible = !bool
+//        binding.favoriteContainer.isVisible = bool*/
+//    }
 
     private fun categoryTabsClickListener(): CategoryTabsFlowClickListener {
         return object : CategoryTabsFlowClickListener {

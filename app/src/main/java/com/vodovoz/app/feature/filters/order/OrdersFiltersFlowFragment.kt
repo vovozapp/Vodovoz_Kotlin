@@ -130,7 +130,7 @@ class OrdersFiltersFlowFragment : Fragment() {
             val child = vg.getChildAt(i)
             child.setEnabled(enable)
             if (child is ViewGroup) {
-                disableEnableControls(enable, child as ViewGroup)
+                disableEnableControls(enable, child)
             }
         }
     }

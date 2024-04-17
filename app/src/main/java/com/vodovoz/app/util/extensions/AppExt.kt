@@ -56,13 +56,13 @@ inline fun Fragment.addOnBackPressedCallback(crossinline callback: () -> Unit) {
     )
 }
 
-fun Context.sp(value: Float) = (value * resources.displayMetrics.scaledDensity)
+//fun Context.sp(value: Float) = (value * resources.displayMetrics.scaledDensity)
 
 fun Context.dipF(value: Int): Float = (value * resources.displayMetrics.density)
 fun Context.dipF(value: Float): Float = (value * resources.displayMetrics.density)
 fun Context.dip(value: Int): Int = dipF(value).toInt()
 fun Context.dip(value: Float): Int = dipF(value).toInt()
-fun Context.sp(value: Int): Int = (value * resources.displayMetrics.scaledDensity).toInt()
+//fun Context.sp(value: Int): Int = (value * resources.displayMetrics.scaledDensity).toInt()
 fun Context.dimen(@DimenRes resource: Int): Int = resources.getDimensionPixelSize(resource)
 
 fun Context.color(@ColorRes colorRes: Int) = ContextCompat.getColor(this, colorRes)

@@ -41,8 +41,11 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
                 } else {
                     price.oldPrice.roundToInt() * productUI.cartQuantity
                 }
-
-                discountPrice += (productUI.totalDisc * productUI.cartQuantity)
+                if(productUI.totalDisc > 0) {
+                    discountPrice += (productUI.totalDisc * productUI.cartQuantity)
+                } else if(price.oldPrice  > 0) {
+                    discountPrice += (price.oldPrice - price.currentPrice) * productUI.cartQuantity
+                }
             }
         }
     }

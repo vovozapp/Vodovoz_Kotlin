@@ -1,14 +1,16 @@
 package com.vodovoz.app.feature.home.viewholders.homebanners
 
 import android.annotation.SuppressLint
-import android.graphics.Rect
 import android.view.View
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
-import androidx.viewpager2.widget.ViewPager2.*
-import com.vodovoz.app.R
+import androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_DRAGGING
+import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
+import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_SETTLING
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.databinding.FragmentSliderBannerBinding
@@ -17,8 +19,14 @@ import com.vodovoz.app.feature.home.viewholders.homebanners.inneradapter.HomeBan
 import com.vodovoz.app.feature.home.viewholders.homebanners.inneradapter.HomeBannersSliderClickListener
 import com.vodovoz.app.feature.home.viewholders.homebanners.model.BannerAdvEntity
 import com.vodovoz.app.util.extensions.dip
-import kotlinx.coroutines.*
-import java.util.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.util.Timer
+import java.util.TimerTask
 
 class HomeBannersSliderViewHolder(
     view: View,
@@ -34,7 +42,7 @@ class HomeBannersSliderViewHolder(
     private var autoTimerTask: Timer? = Timer()
 
     init {
-        val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
+//        val space = itemView.resources.getDimension(R.dimen.space_16).toInt()
         binding.vpBanners.orientation = ORIENTATION_HORIZONTAL
         binding.vpBanners.adapter = homeBannersAdapter
         binding.vpBanners.apply {

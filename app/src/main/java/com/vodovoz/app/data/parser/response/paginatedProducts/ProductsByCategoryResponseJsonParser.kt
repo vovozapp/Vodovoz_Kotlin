@@ -35,10 +35,10 @@ object ProductsByCategoryResponseJsonParser {
                     }
                 } else listOf()
 
-                val filterCode = when (responseJson.has("brand")) {
-                    true -> responseJson.getJSONObject("brand").safeString("SIMVOL_CODE")
-                    else -> ""
-                }
+//                val filterCode = when (responseJson.has("brand")) {
+//                    true -> responseJson.getJSONObject("brand").safeString("SIMVOL_CODE")
+//                    else -> ""
+//                }
 
                 val productsList = when (responseJson.isNull("data")) {
                     true -> listOf()

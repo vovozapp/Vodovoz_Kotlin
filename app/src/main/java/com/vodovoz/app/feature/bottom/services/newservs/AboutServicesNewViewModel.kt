@@ -104,11 +104,10 @@ class AboutServicesNewViewModel @Inject constructor(
 
     fun isLoginAlready() = accountManager.isAlreadyLogin()
 
-    fun changeCart(productId: Long, quantity: Int, oldQuan: Int, giftId: String) {
+    fun changeCart(productId: Long, quantity: Int, giftId: String) {
         viewModelScope.launch {
             cartManager.addWithGift(
                 id = productId,
-                oldCount = oldQuan,
                 newCount = quantity,
                 giftId = giftId
             )

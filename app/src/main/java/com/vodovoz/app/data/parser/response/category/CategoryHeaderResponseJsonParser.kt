@@ -5,7 +5,6 @@ import com.vodovoz.app.data.model.common.FilterValueEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.common.ProductJsonParser.parseProductEntityList
 import com.vodovoz.app.data.parser.common.SortTypeListJsonParser.parseSortTypeList
-import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
 import org.json.JSONArray
@@ -34,10 +33,10 @@ object CategoryHeaderResponseJsonParser {
                     }
                 } else listOf()
 
-                val filterCode = when (responseJson.has("brand")) {
-                    true -> responseJson.getJSONObject("brand").safeString("SIMVOL_CODE")
-                    else -> ""
-                }
+//                val filterCode = when (responseJson.has("brand")) {
+//                    true -> responseJson.getJSONObject("brand").safeString("SIMVOL_CODE")
+//                    else -> ""
+//                }
 
                 val productsList = when (responseJson.isNull("data")) {
                     true -> listOf()

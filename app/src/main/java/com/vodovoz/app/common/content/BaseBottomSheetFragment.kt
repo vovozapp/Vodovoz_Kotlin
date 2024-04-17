@@ -8,8 +8,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.navigation.NavOptions
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -39,10 +37,17 @@ abstract class BaseBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
 
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.color_transparent)))
+        dialog?.window?.setBackgroundDrawable(
+            ColorDrawable(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.color_transparent
+                )
+            )
+        )
 
         _viewBinding = FragmentBottomSheetBaseBinding.inflate(inflater, container, false)
 
@@ -83,7 +88,12 @@ abstract class BaseBottomSheetFragment : BottomSheetDialogFragment() {
                 root.isVisible = true
                 messageTv.text = error.message
                 descTv.text = error.description
-                icon.setImageDrawable(androidx.core.content.ContextCompat.getDrawable(requireContext(), error.iconDrawable))
+                icon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        error.iconDrawable
+                    )
+                )
             }
         } else {
             viewBinding.error.root.isVisible = false
@@ -95,16 +105,16 @@ abstract class BaseBottomSheetFragment : BottomSheetDialogFragment() {
         _viewBinding = null
     }
 
-    protected fun navigateTo(resId: Int, args: Bundle?, navOptions: NavOptions?) =
-        findNavController().navigate(resId, args, navOptions)
-
-    protected fun navigateTo(resId: Int, args: Bundle?) {
-
-    }
-
-    protected fun navigateTo(resId: Int) {
-
-    }
-
-    protected fun navigateUp() = findNavController().navigateUp()
+//    protected fun navigateTo(resId: Int, args: Bundle?, navOptions: NavOptions?) =
+//        findNavController().navigate(resId, args, navOptions)
+//
+//    protected fun navigateTo(resId: Int, args: Bundle?) {
+//
+//    }
+//
+//    protected fun navigateTo(resId: Int) {
+//
+//    }
+//
+//    protected fun navigateUp() = findNavController().navigateUp()
 }

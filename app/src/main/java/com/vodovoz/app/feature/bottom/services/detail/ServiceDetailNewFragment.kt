@@ -168,7 +168,7 @@ class ServiceDetailNewFragment : BaseFragment() {
                 oldQuantity: Int,
                 giftId: String
             ) {
-                viewModel.changeCart(id, cartQuantity, oldQuantity, giftId)
+                viewModel.changeCart(id, cartQuantity, giftId)
             }
         }
     }

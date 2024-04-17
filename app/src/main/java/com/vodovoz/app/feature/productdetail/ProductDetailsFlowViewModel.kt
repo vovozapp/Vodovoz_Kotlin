@@ -396,7 +396,6 @@ class ProductDetailsFlowViewModel @Inject constructor(
             val (id, count) = productId.trim().split("-")
             cartManager.addWithGift(
                 id = id.toLong(),
-                oldCount = 0,
                 newCount = count.toInt(),
                 giftId = giftId
             )

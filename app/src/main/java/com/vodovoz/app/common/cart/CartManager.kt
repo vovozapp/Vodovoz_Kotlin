@@ -85,10 +85,8 @@ class CartManager @Inject constructor(
     //Service Details Products
     suspend fun addWithGift(
         id: Long,
-        oldCount: Int,
         newCount: Int,
         withUpdate: Boolean = true,
-        repeat: Boolean = false,
         giftId: String,
     ) {
         //val plus = newCount >= oldCount
