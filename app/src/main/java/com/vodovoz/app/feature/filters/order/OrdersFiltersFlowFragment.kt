@@ -15,7 +15,6 @@ import com.vodovoz.app.ui.model.OrderFilterUI
 import com.vodovoz.app.ui.model.OrderFilterUI.Companion.ALL_ID
 import com.vodovoz.app.ui.model.OrderFilterUI.Companion.ALL_NAME
 import com.vodovoz.app.ui.model.custom.OrdersFiltersBundleUI
-import com.vodovoz.app.util.extensions.debugLog
 
 class OrdersFiltersFlowFragment : Fragment() {
 
@@ -112,7 +111,6 @@ class OrdersFiltersFlowFragment : Fragment() {
             sentOrderFiltersBundleUIBack(ordersFiltersBundleUI)
         }
         binding.etOrderId.doAfterTextChanged {
-            debugLog { it.toString() + " " +  it.isNullOrEmpty() }
             disableEnableControls(it.isNullOrEmpty(), binding.rvOrderStatuses)
         }
     }
