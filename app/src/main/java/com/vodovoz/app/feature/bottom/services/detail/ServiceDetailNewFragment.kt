@@ -124,10 +124,14 @@ class ServiceDetailNewFragment : BaseFragment() {
         }
 
         try {
-            binding.serviceDetailWebView.loadDataWithBaseURL(null, url, "text/html", "utf-8", null)
+            binding.serviceDetailWebView.loadDataWithBaseURL(null, url.prepareServiceHtml(), "text/html", "utf-8", null)
         } catch (e: Throwable) {
             showError(e.toErrorState())
         }
+    }
+
+    private fun String.prepareServiceHtml() : String {
+        return "<style>img{display: inline;height: auto;max-width: 100%;}</style>$this"
     }
 
     private fun getProductsClickListener(): ProductsClickListener {
