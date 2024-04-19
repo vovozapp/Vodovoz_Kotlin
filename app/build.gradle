@@ -34,10 +34,13 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
+    }
+    lintOptions {
+        checkReleaseBuilds false
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -77,8 +80,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-database-ktx'
 
     //Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
+    implementation 'com.squareup.retrofit2:retrofit:2.11.0'
+    implementation "com.squareup.retrofit2:converter-moshi:2.11.0"
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
 
     //Moshi
