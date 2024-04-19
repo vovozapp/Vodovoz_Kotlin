@@ -952,7 +952,7 @@ class MainRepository @Inject constructor(
     //Firebase Token
     suspend fun sendFirebaseToken(
         action: String = "token",
-        userId: Long? = null,
+        userId: Long,
         token: String,
     ) = coroutineScope {
         api.sendFirebaseToken(

@@ -19,7 +19,7 @@ class FirebaseTokenManager @Inject constructor(
         val token = fetchFirebaseToken()
         val userId = accountManager.fetchAccountId()
         debugLog { "firebase token $token" }
-        if (token != null) {
+        if (token != null && userId != null) {
             repository.sendFirebaseToken(userId = userId, token = token)
         }
     }

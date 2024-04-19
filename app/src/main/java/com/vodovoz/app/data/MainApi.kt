@@ -521,9 +521,9 @@ interface MainApi {
     //Firebase Token
     @GET("newmobile/osnova/userpushapi.php")
     suspend fun sendFirebaseToken(
-        @Query("action") action: String? = null,
-        @Query("userid") userId: Long? = null,
-        @Query("token") token: String? = null,
+        @Query("action") action: String,
+        @Query("userid") userId: Long,
+        @Query("token") token: String,
     ): ResponseBody
 
     /**
