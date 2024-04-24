@@ -26,7 +26,7 @@ import com.vodovoz.app.ui.model.custom.BuyCertificateBundleUI
 @Composable
 fun BuyCertificateScreen(
     state: BuyCertificateBundleUI,
-    viewModel: BuyCertificateViewModel,
+    onAction: OnAction,
 ) {
 
     val listLastItemBottomArrangement = object : Arrangement.Vertical {
@@ -62,13 +62,13 @@ fun BuyCertificateScreen(
                 ChooseCertificateProperty(
                     certificatesInfo = state.certificateInfo,
                     onCertificateSelected = { id ->
-                        viewModel.selectCertificate(id)
+                        onAction(BuyCertificateViewModel.UiAction.OnSelectCertificate(id))
                     },
                     onIncreaseCount = {
-                        viewModel.increaseCount()
+                        onAction(BuyCertificateViewModel.UiAction.OnIncreaseCount)
                     },
                     onDecreaseCount = {
-                        viewModel.decreaseCount()
+                        onAction(BuyCertificateViewModel.UiAction.OnDecreaseCount)
                     }
                 )
             }
@@ -78,7 +78,8 @@ fun BuyCertificateScreen(
             item {
                 TypeTabs(typeList = state.typeList,
                     onTabSelected = {
-                        viewModel.selectType(it)
+                        onAction(BuyCertificateViewModel.UiAction.OnSelectType(it))
+//                        viewModel.selectType(it)
                     }
                 )
             }
@@ -92,14 +93,25 @@ fun BuyCertificateScreen(
                     PropertyEmail(
                         properties[it],
                         onValueChange = { value ->
-                            viewModel.addResult(properties[it].code, value)
+                            onAction(
+                                BuyCertificateViewModel.UiAction.AddResult(
+                                    properties[it].code,
+                                    value
+                                )
+                            )
+//                            viewModel.addResult(properties[it].code, value)
                         }
                     )
                 }
                 if (properties[it].code.contains("opisanie")) {
                     PropertyMessage(property = properties[it],
                         onValueChange = { value ->
-                            viewModel.addResult(properties[it].code, value)
+                            onAction(
+                                BuyCertificateViewModel.UiAction.AddResult(
+                                    properties[it].code,
+                                    value
+                                )
+                            )
                         }
                     )
                 }
@@ -110,7 +122,7 @@ fun BuyCertificateScreen(
             PropertyPayment(
                 paymentUI = state.payment,
                 onClick = {
-                    viewModel.showPaymentMethods()
+                    onAction(BuyCertificateViewModel.UiAction.ShowPaymentMethods)
                 }
             )
         }
@@ -127,7 +139,7 @@ fun BuyCertificateScreen(
             ) {
                 Button(
                     onClick = {
-                        viewModel.buyCertificate()
+                        onAction(BuyCertificateViewModel.UiAction.BuyCertificate)
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors().copy(

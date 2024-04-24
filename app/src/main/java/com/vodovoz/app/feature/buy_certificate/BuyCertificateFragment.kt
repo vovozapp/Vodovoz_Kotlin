@@ -2,10 +2,10 @@ package com.vodovoz.app.feature.buy_certificate
 
 import android.os.Bundle
 import android.view.View
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
@@ -15,9 +15,9 @@ import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
 import com.vodovoz.app.ui.model.PayMethodUI
 import com.vodovoz.app.ui.model.custom.OrderingCompletedInfoBundleUI
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class BuyCertificateFragment : BaseFragment() {
@@ -29,8 +29,6 @@ class BuyCertificateFragment : BaseFragment() {
 
     @Inject
     lateinit var tabManager: TabManager
-
-    private var job: Job? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -101,23 +99,20 @@ class BuyCertificateFragment : BaseFragment() {
     }
 
     private fun observeUiState() {
-        job?.cancel()
-        job = lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.observeUiState().collect { state ->
-                    showLoaderWithBg(state.loadingPage)
-                    val data = state.data.buyCertificateBundleUI
-                    if (data != null) {
-                        initToolbar(data.title)
 
-                        composeView.setContent {
-                            BuyCertificateScreen(
-                                state = data,
-                                viewModel = viewModel
-                            )
-                        }
-                    }
-                }
+        composeView.setContent {
+            val state by viewModel.observeUiState().collectAsState()
+            val data = state.data.buyCertificateBundleUI
+            if (data != null) {
+                initToolbar(data.title)
+
+                BuyCertificateScreen(
+                    state = data,
+                    onAction = viewModel::onAction
+                )
+            }
+            if(state.error!= null) {
+                showError(state.error)
             }
         }
     }

@@ -53,7 +53,6 @@ class BuyCertificateViewModel @Inject constructor(
             flow {
                 emit(repository.fetchBuyCertificateInfo(userId))
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         response.data.mapToUI().let { certificateBundle ->
@@ -335,6 +334,18 @@ class BuyCertificateViewModel @Inject constructor(
         }
     }
 
+    fun onAction(action: UiAction) {
+        when (action) {
+            is UiAction.AddResult -> addResult(action.code, action.value)
+            UiAction.BuyCertificate -> buyCertificate()
+            UiAction.OnDecreaseCount -> decreaseCount()
+            UiAction.OnIncreaseCount -> increaseCount()
+            is UiAction.OnSelectCertificate -> selectCertificate(action.id)
+            is UiAction.OnSelectType -> selectType(action.type)
+            UiAction.ShowPaymentMethods -> showPaymentMethods()
+        }
+    }
+
     fun openLink(url: String) {
         viewModelScope.launch {
             eventListener.emit(BuyCertificateEvents.OpenLink(url))
@@ -360,4 +371,24 @@ class BuyCertificateViewModel @Inject constructor(
 
         data class OpenLink(val url: String) : BuyCertificateEvents
     }
+
+    sealed interface UiAction {
+
+        data class OnSelectCertificate(val id: String): UiAction
+
+        object OnIncreaseCount: UiAction
+
+        object OnDecreaseCount: UiAction
+
+        data class OnSelectType(val type: BuyCertificateTypeUI): UiAction
+
+        data class AddResult(val code: String, val value: String): UiAction
+
+        object ShowPaymentMethods: UiAction
+
+        object BuyCertificate: UiAction
+
+    }
 }
+
+typealias OnAction = (BuyCertificateViewModel.UiAction) -> Unit
