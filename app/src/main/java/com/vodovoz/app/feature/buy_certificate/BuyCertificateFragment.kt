@@ -5,7 +5,9 @@ import android.view.View
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
@@ -100,20 +102,25 @@ class BuyCertificateFragment : BaseFragment() {
 
     private fun observeUiState() {
 
-        composeView.setContent {
-            val state by viewModel.observeUiState().collectAsState()
-            val data = state.data.buyCertificateBundleUI
-            if (data != null) {
-                initToolbar(data.title)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                composeView.setContent {
+                    val state by viewModel.observeUiState().collectAsState()
+                    val data = state.data.buyCertificateBundleUI
+                    if (data != null) {
+                        initToolbar(data.title)
 
-                BuyCertificateScreen(
-                    state = data,
-                    onAction = viewModel::onAction
-                )
-            }
-            if(state.error!= null) {
-                showError(state.error)
+                        BuyCertificateScreen(
+                            state = data,
+                            onAction = viewModel::onAction
+                        )
+                    }
+                    if (state.error != null) {
+                        showError(state.error)
+                    }
+                }
             }
         }
+
     }
 }
