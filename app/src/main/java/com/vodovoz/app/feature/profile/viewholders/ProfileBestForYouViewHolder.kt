@@ -2,7 +2,6 @@ package com.vodovoz.app.feature.profile.viewholders
 
 import android.os.Parcelable
 import android.view.View
-import android.view.ViewTreeObserver
 import androidx.recyclerview.widget.GridLayoutManager
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
@@ -14,6 +13,7 @@ import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.inner.Avai
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.profile.viewholders.models.ProfileBestForYou
 import com.vodovoz.app.ui.decoration.GridMarginDecoration
+import com.vodovoz.app.util.extensions.preDraw
 
 
 class ProfileBestForYouViewHolder(
@@ -22,7 +22,7 @@ class ProfileBestForYouViewHolder(
     likeManager: LikeManager,
     ratingProductManager: RatingProductManager,
     productsClickListener: ProductsClickListener,
-    private val onRecyclerReady: () -> Unit,
+    private val onRecyclerReady: (Boolean) -> Unit,
 ) : ItemViewHolder<ProfileBestForYou>(view) {
 
     private val binding: ItemProfileBestForYouBinding = ItemProfileBestForYouBinding.bind(view)
@@ -45,17 +45,9 @@ class ProfileBestForYouViewHolder(
 
     init {
         with(binding.bestForYouProductsRecycler) {
+            visibility = View.GONE
             adapter = availableProductsAdapter
             layoutManager = GridLayoutManager(context, 2)
-//            layoutManager = object : GridLayoutManager(context, 2){
-//                override fun onLayoutCompleted(state: RecyclerView.State?) {
-//                    super.onLayoutCompleted(state)
-//                    if(height > 0) {
-//                        onRecyclerReady()
-//                    }
-//                }
-//
-//            }
             addItemDecoration(gridMarginDecoration)
 
         }
@@ -76,32 +68,8 @@ class ProfileBestForYouViewHolder(
         availableProductsAdapter.submitList(item.data.productUIList)
 
         binding.bestForYouProductsRecycler.preDraw {
-            onRecyclerReady()
+            onRecyclerReady(it)
         }
+        binding.bestForYouProductsRecycler.visibility = View.VISIBLE
     }
-
-    inline fun <T : View> T.preDraw(crossinline callBack: () -> Unit) {
-
-        viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-
-            override fun onPreDraw(): Boolean {
-                if (measuredWidth > 0 && measuredHeight > 0) {
-                    viewTreeObserver.removeOnPreDrawListener(this)
-                    callBack()
-                }
-                return true
-            }
-        })
-
-//        viewTreeObserver.addOnGlobalLayoutListener(object :
-//            ViewTreeObserver.OnGlobalLayoutListener {
-//            override fun onGlobalLayout() {
-//                if (measuredWidth > 0 && measuredHeight > 0) {
-//                    viewTreeObserver.removeOnGlobalLayoutListener(this)
-//                    callBack()
-//                }
-//            }
-//        })
-    }
-
 }

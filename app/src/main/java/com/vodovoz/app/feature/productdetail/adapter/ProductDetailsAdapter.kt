@@ -13,7 +13,6 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllList
 import com.vodovoz.app.feature.home.viewholders.homeproducts.inneradapter.HomeCategoriesInnerViewHolder
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotionsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailblocks.DetailBlocksViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailbrandproductlist.DetailBrandListViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailcatandbrand.DetailCatAndBrandViewHolder
@@ -23,8 +22,10 @@ import com.vodovoz.app.feature.productdetail.viewholders.detailprices.DetailPric
 import com.vodovoz.app.feature.productdetail.viewholders.detailproductmaybelike.DetailMaybeViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailsearchword.DetailSearchWordViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailservices.DetailServicesViewHolder
+import com.vodovoz.app.feature.productdetail.viewholders.detailslisttitles.DetailsTitleViewHolder
 import com.vodovoz.app.feature.productdetail.viewholders.detailtabs.DetailTabsViewHolder
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
+import com.vodovoz.app.util.extensions.debugLog
 
 class ProductDetailsAdapter(
     private val clickListener: ProductDetailsClickListener,
@@ -33,7 +34,7 @@ class ProductDetailsAdapter(
     private val promotionsClickListener: PromotionsClickListener,
     private val cartManager: CartManager,
     private val likeManager: LikeManager,
-    private val ratingProductManager: RatingProductManager
+    private val ratingProductManager: RatingProductManager,
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
@@ -41,7 +42,14 @@ class ProductDetailsAdapter(
 
             //Header
             R.layout.fragment_product_details_header -> {
-                DetailHeaderViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager, ratingProductManager)
+                DetailHeaderViewHolder(
+                    getViewFromInflater(viewType, parent),
+                    clickListener,
+                    productsClickListener,
+                    likeManager,
+                    cartManager,
+                    ratingProductManager
+                )
             }
 
             //Prices
@@ -70,22 +78,48 @@ class ProductDetailsAdapter(
 
             //Brand Products List
             R.layout.fragment_product_details_brand_product_list -> {
-                DetailBrandListViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager, ratingProductManager)
+                DetailBrandListViewHolder(
+                    getViewFromInflater(viewType, parent),
+                    clickListener,
+                    productsClickListener,
+                    likeManager,
+                    cartManager,
+                    ratingProductManager
+                )
             }
 
             //Products - recommendProductSliderFragment, byWithProductsSliderFragment
             R.layout.fragment_slider_product -> {
-                HomeProductsSliderViewHolder(getViewFromInflater(viewType, parent), productsShowAllListener, productsClickListener, cartManager, likeManager)
+                HomeProductsSliderViewHolder(
+                    getViewFromInflater(viewType, parent),
+                    productsShowAllListener,
+                    productsClickListener,
+                    cartManager,
+                    likeManager
+                )
             }
 
             //Promotions - promotionsSliderFragment
             R.layout.fragment_slider_promotion -> {
-                HomePromotionsSliderViewHolder(getViewFromInflater(viewType, parent), cartManager, likeManager, promotionsClickListener, productsClickListener)
+                HomePromotionsSliderViewHolder(
+                    getViewFromInflater(viewType, parent),
+                    cartManager,
+                    likeManager,
+                    promotionsClickListener,
+                    productsClickListener
+                )
             }
 
             //Maybe Like
             R.layout.fragment_product_details_maybe_like_product_list -> {
-                DetailMaybeViewHolder(getViewFromInflater(viewType, parent), clickListener, productsClickListener, likeManager, cartManager, ratingProductManager)
+                DetailMaybeViewHolder(
+                    getViewFromInflater(viewType, parent),
+                    clickListener,
+                    productsClickListener,
+                    likeManager,
+                    cartManager,
+                    ratingProductManager
+                )
             }
 
             //Search Word
@@ -100,12 +134,18 @@ class ProductDetailsAdapter(
 
             //Viewed
             R.layout.view_holder_slider_product_category -> {
-                HomeCategoriesInnerViewHolder(getViewFromInflater(viewType, parent), productsClickListener, cartManager, likeManager)
+                HomeCategoriesInnerViewHolder(
+                    getViewFromInflater(viewType, parent),
+                    productsClickListener,
+                    cartManager,
+                    likeManager
+                )
             }
 
             //Products sliders title
-            R.layout.view_holder_flow_title -> {
-                HomeTitleViewHolder(getViewFromInflater(viewType, parent))
+            R.layout.view_holder_flow_details_title -> {
+                debugLog { "view_holder_flow_title" }
+                DetailsTitleViewHolder(getViewFromInflater(viewType, parent))
             }
 
             else -> {

@@ -16,6 +16,7 @@ import android.util.Base64
 import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
@@ -337,4 +338,20 @@ fun Activity.disableFullScreen() {
     val insetsController = WindowCompat.getInsetsController(window, window.decorView)
     insetsController.show(WindowInsetsCompat.Type.statusBars())
     insetsController.show(WindowInsetsCompat.Type.navigationBars())
+}
+
+inline fun <T : View> T.preDraw(crossinline callBack: (isReady: Boolean) -> Unit) {
+
+    viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+
+        override fun onPreDraw(): Boolean {
+            if (measuredWidth > 0 && measuredHeight > 0) {
+                viewTreeObserver.removeOnPreDrawListener(this)
+                callBack(true)
+            } else {
+                callBack(false)
+            }
+            return true
+        }
+    })
 }

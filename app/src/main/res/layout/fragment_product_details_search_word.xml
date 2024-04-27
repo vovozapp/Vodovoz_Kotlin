@@ -10,7 +10,7 @@
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/mdBetweenCategoryAndBrand2"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/space_8"
+        android:layout_height="20dp"
         app:dividerColor="@color/divider_gray_color" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -28,11 +28,5 @@
         android:layout_marginHorizontal="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/mdBetweenCategoryAndBrand3"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/space_8"
-        app:dividerColor="@color/divider_gray_color" />
 
 </LinearLayout>

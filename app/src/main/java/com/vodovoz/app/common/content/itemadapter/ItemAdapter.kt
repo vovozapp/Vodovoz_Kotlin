@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AdapterListUpdateCallback
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.vodovoz.app.util.extensions.debugLog
 
 @Suppress("UNCHECKED_CAST")
 abstract class ItemAdapter : RecyclerView.Adapter<ItemViewHolder<out Item>>() {
@@ -25,7 +24,6 @@ abstract class ItemAdapter : RecyclerView.Adapter<ItemViewHolder<out Item>>() {
     override fun onViewRecycled(holder: ItemViewHolder<out Item>) {
         super.onViewRecycled(holder)
         val key = holder.getAbsoluteAdapterPosition()
-        debugLog { "ItemAdapter $key getState()"}
         scrollStates[key] = holder.getState()
     }
 
@@ -43,14 +41,16 @@ abstract class ItemAdapter : RecyclerView.Adapter<ItemViewHolder<out Item>>() {
         notifyDataSetChanged()
     }
 
-    abstract override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item>
+    abstract override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ItemViewHolder<out Item>
 
     override fun onBindViewHolder(holder: ItemViewHolder<out Item>, position: Int) {
         holder as ItemViewHolder<in Item>
         val key = holder.getAbsoluteAdapterPosition()
         val state = scrollStates[key]
-        if(state != null){
-            debugLog { "ItemAdapter $key setState()"}
+        if (state != null) {
             holder.setState(state)
         }
         holder.bind(items[position])
@@ -59,7 +59,7 @@ abstract class ItemAdapter : RecyclerView.Adapter<ItemViewHolder<out Item>>() {
     override fun onBindViewHolder(
         holder: ItemViewHolder<out Item>,
         position: Int,
-        payloads: MutableList<Any>
+        payloads: MutableList<Any>,
     ) {
         if (payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads)

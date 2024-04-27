@@ -23,7 +23,7 @@ class ProfileFlowController(
     productsClickListener: ProductsClickListener,
     homeOrdersSliderClickListener: HomeOrdersSliderClickListener,
     repeatOrderClickListener: (Long) -> Unit,
-    onRecyclerReady: () -> Unit
+    onRecyclerReady: (Boolean) -> Unit,
 ) : ItemController(
     ProfileFlowAdapter(
         listener,
@@ -34,7 +34,7 @@ class ProfileFlowController(
         productsClickListener,
         homeOrdersSliderClickListener,
         repeatOrderClickListener,
-        onRecyclerReady
+        onRecyclerReady,
     )
 ) {
 

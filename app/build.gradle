@@ -59,7 +59,7 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.core:core-ktx:1.13.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -82,7 +82,7 @@ dependencies {
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.11.0'
     implementation "com.squareup.retrofit2:converter-moshi:2.11.0"
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
 
     //Moshi
     def moshiVersion = '1.15.0'
@@ -165,15 +165,16 @@ dependencies {
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
     implementation 'androidx.core:core-splashscreen:1.0.1'
 
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation "androidx.datastore:datastore-preferences:1.1.0"
 
     //compose
-    implementation 'androidx.activity:activity-compose:1.8.2'
+    implementation 'androidx.activity:activity-compose:1.9.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0'
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     implementation 'androidx.compose.material3:material3:1.2.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.7.0'
 
     implementation "io.coil-kt:coil:2.6.0"
     implementation "io.coil-kt:coil-svg:2.6.0"

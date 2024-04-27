@@ -18,8 +18,10 @@ import com.vodovoz.app.common.media.MediaManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentProductDetailsFlowBinding
+import com.vodovoz.app.feature.home.banneradvinfo.BannerAdvInfoBottomSheetFragment
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
+import com.vodovoz.app.feature.home.viewholders.homepromotions.model.PromotionAdvEntity
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
@@ -173,6 +175,7 @@ class ProductDetailsFragment : BaseFragment() {
                         productDetailFabController.updateFabQuantity(
                             cartQuantity = it,
                             amountTv = binding.floatingAmountController.amount,
+                            amountDeployed = binding.floatingAmountController.amountControllerDeployed,
                             circleAmountTv = binding.floatingAmountController.circleAmount,
                         )
                     }
@@ -202,10 +205,10 @@ class ProductDetailsFragment : BaseFragment() {
                                 detailState.detailBrandList.takeIf {
                                     it.productUiList.isNotEmpty()
                                 },
-                                detailState.detailRecommendsProductsTitle.takeIf {
-                                    detailState.detailRecommendsProducts?.items?.first()?.productUIList?.size != 0
+                                detailState.detailBuyWithTitle.takeIf {
+                                    detailState.detailBuyWith?.items?.first()?.productUIList?.size != 0
                                 },
-                                detailState.detailRecommendsProducts.takeIf {
+                                detailState.detailBuyWith.takeIf {
                                     it?.items?.first()?.productUIList?.size != 0
                                 },
                                 detailState.detailPromotionsTitle.takeIf {
@@ -214,17 +217,17 @@ class ProductDetailsFragment : BaseFragment() {
                                 detailState.detailPromotions.takeIf {
                                     it?.items?.promotionUIList?.size != 0
                                 },
+                                detailState.detailRecommendsProductsTitle.takeIf {
+                                    detailState.detailRecommendsProducts?.items?.first()?.productUIList?.size != 0
+                                },
+                                detailState.detailRecommendsProducts.takeIf {
+                                    it?.items?.first()?.productUIList?.size != 0
+                                },
                                 detailState.detailMaybeLikeProducts.takeIf {
                                     it.productUiList.isNotEmpty()
                                 },
                                 detailState.detailSearchWord.takeIf {
                                     it?.searchWordList?.size != 0
-                                },
-                                detailState.detailBuyWithTitle.takeIf {
-                                    detailState.detailBuyWith?.items?.first()?.productUIList?.size != 0
-                                },
-                                detailState.detailBuyWith.takeIf {
-                                    it?.items?.first()?.productUIList?.size != 0
                                 },
                                 detailState.viewedProductsTitle.takeIf {
                                     detailState.viewedProducts?.productUIList?.size != 0
@@ -320,12 +323,12 @@ class ProductDetailsFragment : BaseFragment() {
             }
 
             override fun onNextPageBrandProductsClick(position: Int) {
-                binding.mainRv.scrollToPosition(position - 1)
+                binding.mainRv.scrollToPosition(position-1)
                 viewModel.nextPageBrandProducts()
             }
 
             override fun onNextPageMaybeLikeClick(position: Int) {
-                binding.mainRv.scrollToPosition(position - 1)
+                binding.mainRv.scrollToPosition(position)
                 viewModel.nextPageMaybeLikeProducts()
             }
 
@@ -399,6 +402,16 @@ class ProductDetailsFragment : BaseFragment() {
             }
 
             override fun onShowAllPromotionsClick() {}
+
+            override fun onPromotionAdvClick(promotionAdvEntity: PromotionAdvEntity?) {
+                BannerAdvInfoBottomSheetFragment
+                    .newInstance(
+                        promotionAdvEntity?.titleAdv ?: "",
+                        promotionAdvEntity?.bodyAdv ?: "",
+                        promotionAdvEntity?.dataAdv ?: ""
+                    )
+                    .show(childFragmentManager, "TAG")
+            }
         }
     }
 

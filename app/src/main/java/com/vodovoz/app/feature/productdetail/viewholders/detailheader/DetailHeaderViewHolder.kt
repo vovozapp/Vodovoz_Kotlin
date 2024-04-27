@@ -147,6 +147,7 @@ class DetailHeaderViewHolder(
                         )
                     )
                 }
+
                 false -> {
                     item.isFavorite = true
                     binding.imgFavorite.setImageDrawable(
@@ -235,6 +236,7 @@ class DetailHeaderViewHolder(
                     true -> {
                         binding.amountController.add.isSelected = true
                     }
+
                     false -> {
                         binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_orange_circle_normal)
                         binding.amountController.add.setImageDrawable(
@@ -244,9 +246,11 @@ class DetailHeaderViewHolder(
                             )
                         )
                     }
+
                     else -> {}
                 }
             }
+
             false -> {
                 binding.amountController.add.isSelected = false
             }
@@ -258,6 +262,7 @@ class DetailHeaderViewHolder(
                 binding.tvPricePerUnit.visibility = View.VISIBLE
                 binding.tvPricePerUnit.text = item.productDetailUI.pricePerUnit
             }
+
             false -> binding.tvPricePerUnit.visibility = View.GONE
         }
 
@@ -272,6 +277,7 @@ class DetailHeaderViewHolder(
                     item.productDetailUI.priceUIList.first().oldPrice
                 ) haveDiscount = true
             }
+
             else -> {
                 val minimalPrice =
                     item.productDetailUI.priceUIList.maxByOrNull { it.requiredAmount }!!
@@ -291,6 +297,7 @@ class DetailHeaderViewHolder(
                 )
                 binding.tvOldPrice.visibility = View.VISIBLE
             }
+
             false -> {
                 binding.tvCurrentPrice.setTextColor(
                     ContextCompat.getColor(
@@ -310,6 +317,7 @@ class DetailHeaderViewHolder(
             true -> {
                 binding.amountController.circleAmount.visibility = View.VISIBLE
             }
+
             false -> {
                 binding.amountController.circleAmount.visibility = View.GONE
             }
@@ -326,6 +334,7 @@ class DetailHeaderViewHolder(
                     )
                 )
             }
+
             else -> {
                 binding.tvCommentAmount.setCommentQuantity(item.productDetailUI.commentsAmount)
                 binding.tvCommentAmount.setTextColor(
@@ -363,6 +372,7 @@ class DetailHeaderViewHolder(
                     oldPrice = item.productDetailUI.priceUIList.first().oldPrice
                 )
             }
+
             false -> binding.cwDiscountContainer.visibility = View.GONE
         }
 
@@ -387,6 +397,7 @@ class DetailHeaderViewHolder(
                     R.drawable.ic_favorite_black
                 )
             )
+
             true -> binding.imgFavorite.setImageDrawable(
                 ContextCompat.getDrawable(
                     itemView.context,
@@ -438,6 +449,7 @@ class DetailHeaderViewHolder(
                         item.productDetailUI.detailPictureList.first()
                     )
                 }
+
                 false -> {
                     clickListener.navigateToReplacement(
                         item.productDetailUI.detailPictureList.first(),
@@ -447,6 +459,7 @@ class DetailHeaderViewHolder(
                         item.categoryId
                     )
                 }
+
                 else -> {
 
                 }
@@ -469,13 +482,15 @@ class DetailHeaderViewHolder(
             }
             binding.amountController.amount.text = cartQuantity.toString()
             binding.amountController.circleAmount.text = cartQuantity.toString()
+            if (!binding.amountController.amountControllerDeployed.isVisible) {
+                when (cartQuantity > 0) {
+                    true -> {
+                        binding.amountController.circleAmount.visibility = View.VISIBLE
+                    }
 
-            when (cartQuantity > 0) {
-                true -> {
-                    binding.amountController.circleAmount.visibility = View.VISIBLE
-                }
-                false -> {
-                    binding.amountController.circleAmount.visibility = View.GONE
+                    false -> {
+                        binding.amountController.circleAmount.visibility = View.GONE
+                    }
                 }
             }
         }

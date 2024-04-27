@@ -14,9 +14,11 @@
         android:layout_marginEnd="@dimen/space_6"
         android:background="@drawable/amount_selector"
         android:visibility="visible"
+        android:layout_marginVertical="4dp"
         android:padding="@dimen/space_8"
-        app:layout_constraintEnd_toEndOf="@+id/circleAmount"
-        app:layout_constraintTop_toTopOf="@+id/circleAmount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:tint="@color/white"
         tools:ignore="ContentDescription" />
 
@@ -26,6 +28,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:src="@drawable/png_cart"
+        android:layout_marginVertical="4dp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -72,12 +75,13 @@
         android:layout_height="@dimen/_16sdp"
         android:background="@drawable/bkg_number"
         android:fontFamily="@font/rotonda_normal"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:visibility="gone"
         android:textColor="@color/white"
+        android:gravity="center"
         android:textSize="13sp"
+        android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

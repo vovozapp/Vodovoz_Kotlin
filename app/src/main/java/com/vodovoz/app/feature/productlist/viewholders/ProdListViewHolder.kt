@@ -369,7 +369,7 @@ class ProdListViewHolder(
         if (item.cartQuantity < 0) {
             item.cartQuantity = 0
         }
-        binding.amountController.circleAmount.visibility = if (item.cartQuantity > 0) {
+        binding.amountController.circleAmount.visibility = if (item.cartQuantity > 0 && !binding.amountController.amountControllerDeployed.isVisible) {
             View.VISIBLE
         } else {
             View.GONE

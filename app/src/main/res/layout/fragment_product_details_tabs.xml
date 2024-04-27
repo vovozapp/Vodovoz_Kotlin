@@ -11,7 +11,7 @@
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
         app:dividerColor="@color/light_gray"
-        android:layout_height="@dimen/space_8"/>
+        android:layout_height="20dp"/>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/aboutTabs"

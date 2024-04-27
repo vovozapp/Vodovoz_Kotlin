@@ -20,7 +20,6 @@ import com.vodovoz.app.feature.profile.viewholders.ProfileHeaderViewHolder
 import com.vodovoz.app.feature.profile.viewholders.ProfileLogoutViewHolder
 import com.vodovoz.app.feature.profile.viewholders.ProfileMainViewHolder
 import com.vodovoz.app.feature.profile.viewholders.ProfileOrderSliderViewHolder
-import com.vodovoz.app.util.extensions.debugLog
 
 class ProfileFlowAdapter(
     private val clickListener: ProfileFlowClickListener,
@@ -31,12 +30,10 @@ class ProfileFlowAdapter(
     private val productsClickListener: ProductsClickListener,
     private val homeOrdersSliderClickListener: HomeOrdersSliderClickListener,
     private val repeatOrderClickListener: (Long) -> Unit,
-    private val onRecyclerReady: () -> Unit
+    private val onRecyclerReady: (Boolean) -> Unit,
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
-
-        debugLog { "OnCreateViewHolder viewType: $viewType" }
 
         return when (viewType) {
             R.layout.fragment_slider_product -> {
@@ -72,7 +69,7 @@ class ProfileFlowAdapter(
                     likeManager,
                     ratingProductManager,
                     productsClickListener,
-                            onRecyclerReady
+                    onRecyclerReady,
                 )
             }
 

@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import com.bumptech.glide.Glide
 import com.vodovoz.app.R
@@ -83,7 +84,7 @@ class ProductDetailFabController(
                     header.productDetailUI.cartQuantity =
                         it[header.productDetailUI.id] ?: header.productDetailUI.cartQuantity
                     header.productDetailUI.oldQuantity = header.productDetailUI.cartQuantity
-                    updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, circleAmountTv)
+                    updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, amountDeployed, circleAmountTv)
                 }
                 .collect()
         }
@@ -180,27 +181,21 @@ class ProductDetailFabController(
             }
         }
 
-        updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, circleAmountTv)
+        updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, amountDeployed,circleAmountTv)
     }
 
     fun updateFabQuantity(
         cartQuantity: Int?,
         amountTv: TextView,
+        amountDeployed: LinearLayout,
         circleAmountTv: TextView,
     ) {
         if (cartQuantity == null) return
 
         amountTv.text = cartQuantity.toString()
         circleAmountTv.text = cartQuantity.toString()
-        when (cartQuantity > 0) {
-            true -> {
-                circleAmountTv.visibility = View.VISIBLE
-            }
-
-            false -> {
-                circleAmountTv.visibility = View.GONE
-            }
-        }
+        circleAmountTv.visibility =
+            if (cartQuantity > 0 && !amountDeployed.isVisible) View.VISIBLE else View.GONE
     }
 
     private fun add(
@@ -227,7 +222,7 @@ class ProductDetailFabController(
         } else {
             if (header.productDetailUI.cartQuantity == 0) {
                 header.productDetailUI.cartQuantity++
-                updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, circleAmountTv)
+                updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, amountDeployed,circleAmountTv)
             }
             showAmountController(
                 header,
@@ -249,7 +244,7 @@ class ProductDetailFabController(
         val oldQ = header.productDetailUI.oldQuantity
         header.productDetailUI.cartQuantity++
         startTimer(header, oldQ, circleAmountTv, addIv, amountDeployed)
-        updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, circleAmountTv)
+        updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, amountDeployed,circleAmountTv)
     }
 
     private fun reduce(
@@ -264,7 +259,7 @@ class ProductDetailFabController(
             productDetailUI.cartQuantity--
             if (productDetailUI.cartQuantity < 0) productDetailUI.cartQuantity = 0
             startTimer(header, oldQ, circleAmountTv, addIv, amountDeployed)
-            updateFabQuantity(productDetailUI.cartQuantity, amountTv, circleAmountTv)
+            updateFabQuantity(productDetailUI.cartQuantity, amountTv, amountDeployed,circleAmountTv)
         }
     }
 

@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
@@ -78,7 +79,7 @@ class ProfileFragment : BaseFragment() {
             productsClickListener = getProductsClickListener(),
             homeOrdersSliderClickListener = getHomeOrdersSliderClickListener(),
             repeatOrderClickListener = { viewModel.repeatOrder(it) },
-            onRecyclerReady = { viewModel.recyclerReady() }
+            onRecyclerReady = { viewModel.recyclerReady(it) },
         )
     }
 
@@ -94,19 +95,21 @@ class ProfileFragment : BaseFragment() {
 
         profileController.bind(binding.profileFlowRv, binding.refreshContainer)
 
-//        setupBestForYouRecycler()
+        with(binding.profileFlowRv) {
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (!recyclerView.canScrollVertically(1)) {
+                        viewModel.loadMore()
+                    }
+                }
+            })
+
+        }
 
         bindErrorRefresh { viewModel.refresh() }
         bindRegOrLoginBtn()
     }
-
-//    private fun setupBestForYouRecycler() {
-//        with(binding.bestForYou.bestForYouProductsRecycler) {
-//            adapter = bestForYouProductsAdapter
-//            layoutManager = GridLayoutManager(context, 2)
-//            addItemDecoration(gridMarginDecoration)
-//        }
-//    }
 
     override fun onResume() {
         super.onResume()
@@ -169,19 +172,24 @@ class ProfileFragment : BaseFragment() {
 
                         val list = profileState.data.items.toMutableList()
                         if (list.isNotEmpty()) {
-                            val progressList = if (!profileState.data.isSecondLoad) {
-                                val item =
-                                    list.firstOrNull { it.getItemViewType() == R.layout.item_profile_best_for_you }
-                                if (item != null) {
-                                    val index = list.indexOf(item)
-                                    list.apply { add(index, BottomProgressItem()) }
+                            val progressList =
+                                if (!profileState.data.isSecondLoad || profileState.loadMore) {
+                                    val item =
+                                        list.firstOrNull { it.getItemViewType() == R.layout.item_profile_best_for_you }
+                                    if (item != null && !profileState.loadMore) {
+                                        val index = list.indexOf(item)
+                                        list.apply { add(index, BottomProgressItem()) }
+                                    } else {
+                                        list + BottomProgressItem()
+                                    }
                                 } else {
-                                    list + BottomProgressItem()
+                                    list
                                 }
-                            } else {
-                                list
-                            }
                             profileController.submitList(progressList)
+                            if (profileState.loadMore) {
+                                binding.profileFlowRv.scrollToPosition(progressList.lastIndex)
+                            }
+
                         }
 
                         if (!profileState.loadingPage) {

@@ -9,9 +9,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mainRv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:background="@color/white"
-        android:paddingBottom="10dp"
         app:layout_constraintBottom_toTopOf="@id/floatingAmountControllerContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,17 +21,14 @@
         android:id="@+id/floatingAmountControllerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/space_8"
+        android:paddingVertical="@dimen/space_4"
         android:background="@color/dark_white"
-        android:paddingStart="@dimen/space_8"
-        android:paddingTop="@dimen/space_8"
-        android:paddingEnd="@dimen/space_8"
-        android:paddingBottom="@dimen/space_8"
-        android:translationZ="@dimen/elevation_10"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mainRv">
+        tools:visibility="visible">
 
         <ImageView
             android:id="@+id/miniDetailImage"

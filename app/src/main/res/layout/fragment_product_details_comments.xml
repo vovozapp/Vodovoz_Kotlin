@@ -10,7 +10,7 @@
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/mdBetweenCategoryAndBrand2"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/space_8"
+        android:layout_height="20dp"
         app:dividerColor="@color/divider_gray_color" />
 
     <LinearLayout

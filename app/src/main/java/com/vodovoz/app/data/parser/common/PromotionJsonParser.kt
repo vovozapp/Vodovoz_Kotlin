@@ -35,7 +35,7 @@ object PromotionJsonParser {
         promotionAdvEntity = parseAdvEntity()
     )
 
-    private fun JSONObject.parseAdvEntity() = when(has("OREKLAME")) {
+    fun JSONObject.parseAdvEntity() = when(has("OREKLAME")) {
         true -> {
             when(isNull("OREKLAME")) {
                 true -> null

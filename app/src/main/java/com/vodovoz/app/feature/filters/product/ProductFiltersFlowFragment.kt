@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.filters.product
 
 import android.annotation.SuppressLint
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,6 +18,7 @@ import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragment
 import com.vodovoz.app.ui.model.FilterPriceUI
 import com.vodovoz.app.ui.model.FilterUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
+import com.vodovoz.app.util.extensions.preDraw
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -96,6 +98,10 @@ class ProductFiltersFlowFragment : BaseFragment() {
 //            rect.bottom = space12
 //        }
         binding.rvFilters.adapter = productFiltersAdapter
+
+        binding.rvFilters.preDraw {
+            viewModel.recyclerReady(it)
+        }
     }
 
     private fun initFilterPrice() {
@@ -149,14 +155,12 @@ class ProductFiltersFlowFragment : BaseFragment() {
     private fun observeViewModel() {
         lifecycleScope.launch {
             viewModel.observeUiState().collect { state ->
-                if (state.loadingPage) {
-                    showLoader()
-                } else {
-                    hideLoader()
-                }
+                showLoaderWithBg(state.loadingPage)
 
                 filterBundle = state.data.filterBundle
                 defaultBundle = state.data.defaultBundle
+
+                binding.rvFilters.isVisible = defaultBundle != null
                 if (defaultBundle != null) {
                     fillFilterPrice(defaultBundle!!.filterPriceUI)
                     val filterList = defaultBundle?.filterUIList ?: mutableListOf()

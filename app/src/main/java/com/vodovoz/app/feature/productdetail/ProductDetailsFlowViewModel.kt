@@ -15,9 +15,7 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.DISCOUNT
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.VIEWED
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.productdetail.viewholders.detailblocks.DetailBlocks
 import com.vodovoz.app.feature.productdetail.viewholders.detailbrandproductlist.DetailBrandList
 import com.vodovoz.app.feature.productdetail.viewholders.detailcatandbrand.DetailCatAndBrand
@@ -28,6 +26,7 @@ import com.vodovoz.app.feature.productdetail.viewholders.detailproductmaybelike.
 import com.vodovoz.app.feature.productdetail.viewholders.detailsearchword.DetailSearchWord
 import com.vodovoz.app.feature.productdetail.viewholders.detailsearchword.inner.SearchWordItem
 import com.vodovoz.app.feature.productdetail.viewholders.detailservices.DetailServices
+import com.vodovoz.app.feature.productdetail.viewholders.detailslisttitles.DetailsTitle
 import com.vodovoz.app.feature.productdetail.viewholders.detailtabs.DetailTabs
 import com.vodovoz.app.feature.products_slider.ProductsSliderConfig
 import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
@@ -101,13 +100,10 @@ class ProductDetailsFlowViewModel @Inject constructor(
                         val mappedData: CategoryDetailUI = response.data.mapToUI()
                         state.copy(
                             viewedProducts = mappedData,
-                            viewedProductsTitle = HomeTitle(
+                            viewedProductsTitle = DetailsTitle(
                                 141,
-                                showAll = false,
                                 name = "Вы смотрели",
-                                type = VIEWED,
-                                categoryProductsName =  mappedData.name,
-                                showTopDivider = state.detailSearchWord?.searchWordList?.size == 0
+                                categoryProductsName = mappedData.name,
                             ),
                             error = null,
                             loadingPage = false
@@ -127,7 +123,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
     }
 
-     fun fetchProductDetail() {
+    fun fetchProductDetail() {
         viewModelScope.launch {
             val productId = productId ?: return@launch
             uiStateListener.value = state.copy(loadingPage = true)
@@ -166,11 +162,9 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                 mappedData.categoryUI,
                                 mappedData.productDetailUI.brandUI
                             ),
-                            detailRecommendsProductsTitle = HomeTitle(
+                            detailRecommendsProductsTitle = DetailsTitle(
                                 141,
-                                showAll = false,
                                 name = "Рекомендуем также",
-                                type = VIEWED
                             ),
                             detailRecommendsProducts = HomeProducts(
                                 7,
@@ -188,13 +182,9 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                 productsType = DISCOUNT,
                                 prodList = mappedData.recommendProductUIList
                             ),
-                            detailPromotionsTitle = HomeTitle(
+                            detailPromotionsTitle = DetailsTitle(
                                 141,
-                                showAll = (mappedData.promotionsAction?.promotionUIList
-                                    ?: emptyList()).size > 1,
                                 name = mappedData.promotionsAction?.name ?: "",
-                                type = VIEWED,
-                                lightBg = false,
                             ),
                             detailPromotions = HomePromotions(
                                 8,
@@ -203,7 +193,8 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                     containShowAllButton = false,
                                     promotionUIList = mappedData.promotionsAction?.promotionUIList
                                         ?: emptyList(),
-                                )
+                                ),
+                                whiteBg = true
                             ),
                             detailSearchWord = DetailSearchWord(
                                 10,
@@ -211,11 +202,9 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                     SearchWordItem(it)
                                 }
                             ),
-                            detailBuyWithTitle = HomeTitle(
+                            detailBuyWithTitle = DetailsTitle(
                                 141,
-                                showAll = false,
                                 name = "С этим товаром покупают",
-                                type = VIEWED
                             ),
                             detailBuyWith = HomeProducts(
                                 11,
@@ -457,15 +446,15 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val detailCatAndBrand: DetailCatAndBrand? = null,
         val detailBrandList: DetailBrandList = DetailBrandList(6),
         val detailMaybeLikeProducts: DetailMaybeLike = DetailMaybeLike(9),
-        val detailRecommendsProductsTitle: HomeTitle? = null,
+        val detailRecommendsProductsTitle: DetailsTitle? = null,
         val detailRecommendsProducts: HomeProducts? = null,
-        val detailPromotionsTitle: HomeTitle? = null,
+        val detailPromotionsTitle: DetailsTitle? = null,
         val detailPromotions: HomePromotions? = null,
         val detailSearchWord: DetailSearchWord? = null,
-        val detailBuyWithTitle: HomeTitle? = null,
+        val detailBuyWithTitle: DetailsTitle? = null,
         val detailBuyWith: HomeProducts? = null,
         val detailComments: DetailComments? = null,
-        val viewedProductsTitle: HomeTitle? = null,
+        val viewedProductsTitle: DetailsTitle? = null,
         val viewedProducts: CategoryDetailUI? = null,
         val error: ErrorState? = null,
         val loadingPage: Boolean = false,

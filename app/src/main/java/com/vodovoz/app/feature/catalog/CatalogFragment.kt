@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
-import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
@@ -60,10 +59,10 @@ class CatalogFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_main_catalog_flow
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.firstLoad()
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        viewModel.firstLoad()
+//    }
 
     override fun initView() {
         initCategoryRecycler()
@@ -174,35 +173,43 @@ class CatalogFragment : BaseFragment() {
             is ActionEntity.AllPromotions -> CatalogFragmentDirections.actionToAllPromotionsFragment(
                 AllPromotionsFragment.DataSource.All
             )
+
             is ActionEntity.Link -> {
                 val openLinkIntent = Intent(Intent.ACTION_VIEW, Uri.parse(this.url))
                 activity.startActivity(openLinkIntent)
                 null
             }
+
             is ActionEntity.Discount -> CatalogFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                 PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount
             )
+
             is ActionEntity.Novelties -> CatalogFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                 PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties
             )
+
             is ActionEntity.WaterApp -> {
                 val eventParameters = "\"source\":\"catalog\""
                 accountManager.reportYandexMetrica("trekervodi_zapysk", eventParameters)
                 CatalogFragmentDirections.actionToWaterAppFragment()
             }
+
             is ActionEntity.Delivery -> {
                 CatalogFragmentDirections.actionToWebViewFragment(
                     ApiConfig.ABOUT_DELIVERY_URL,
                     "О доставке"
                 )
             }
+
             is ActionEntity.Profile -> {
                 viewModel.goToProfile()
                 null
             }
+
             is ActionEntity.BuyCertificate -> {
                 CatalogFragmentDirections.actionToBuyCertificateFragment()
             }
+
             else -> {
                 null
             }
@@ -214,7 +221,7 @@ class CatalogFragment : BaseFragment() {
     private fun getCatalogFlowClickListener(): CatalogFlowClickListener {
         return object : CatalogFlowClickListener {
             override fun onCategoryClick(category: CategoryUI) {
-                if(category.actionEntity == null) {
+                if (category.actionEntity == null) {
                     if (category.id != null) {
                         findNavController().navigate(
                             CatalogFragmentDirections.actionToPaginatedProductsCatalogFragment(

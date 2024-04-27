@@ -30,6 +30,10 @@ class ProductFiltersFlowViewModel @Inject constructor(
     fun fetchAllFiltersByCategory() {
         val id = categoryId ?: return
         viewModelScope.launch {
+            uiStateListener.value = state.copy(
+                loadingPage = true,
+                error = null
+            )
             flow { emit(repository.fetchAllFiltersByCategory(id)) }
                 .flowOn(Dispatchers.IO)
                 .onEach { response ->
@@ -42,13 +46,13 @@ class ProductFiltersFlowViewModel @Inject constructor(
                                 defaultBundle = defaultBundle,
                                 filterBundle = filterBundle
                             ),
-                            loadingPage = false,
+//                            loadingPage = false,
                             error = null
                         )
                     } else {
                         uiStateListener.value =
                             state.copy(
-                                loadingPage = false,
+//                                loadingPage = false,
                                 error = ErrorState.Error()
                             )
                     }
@@ -57,7 +61,7 @@ class ProductFiltersFlowViewModel @Inject constructor(
                 .catch {
                     debugLog { "fetch all filters by category error ${it.localizedMessage}" }
                     uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
+                        state.copy(error = it.toErrorState()/*, loadingPage = false*/)
                 }
                 .collect()
         }
@@ -101,10 +105,14 @@ class ProductFiltersFlowViewModel @Inject constructor(
                     defaultBundle = defaultBundle,
                     filterBundle = customFilterBundle
                 ),
-                loadingPage = false,
+//                loadingPage = false,
                 error = null
             )
         }
+    }
+
+    fun recyclerReady(isReady: Boolean) {
+        uiStateListener.value = state.copy(loadingPage = !isReady)
     }
 
     data class ProductFiltersState(

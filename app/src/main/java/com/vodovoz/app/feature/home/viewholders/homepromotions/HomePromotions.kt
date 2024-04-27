@@ -5,8 +5,9 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 
 data class HomePromotions(
-    val id : Int,
-    val items: PromotionsSliderBundleUI
+    val id: Int,
+    val items: PromotionsSliderBundleUI,
+    val whiteBg: Boolean = false,
 ) : Item {
 
     override fun getItemViewType(): Int {

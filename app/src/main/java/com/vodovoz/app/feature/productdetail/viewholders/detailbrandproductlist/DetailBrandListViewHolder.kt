@@ -67,7 +67,7 @@ class DetailBrandListViewHolder(
 
         productsAdapter.submitList(item.productUiList, "")
 
-        if (item.pageAmount == 1) {
+        if (item.pageAmount <= 1) {
             binding.nextPage.visibility = View.GONE
         } else {
             binding.nextPage.visibility = View.VISIBLE

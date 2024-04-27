@@ -337,6 +337,7 @@ class ProfileFlowViewModel @Inject constructor(
 //                    isSecondLoad = true,
                     isLogin = true
                 ),
+                page = 1,
                 error = if (mappedResult.isNotEmpty()) {
                     null
                 } else {
@@ -384,6 +385,7 @@ class ProfileFlowViewModel @Inject constructor(
 //                        isSecondLoad = true,
                         isLogin = true
                     ),
+                    page = 1,
                     error = if (mappedResult.isNotEmpty()) {
                         null
                     } else {
@@ -475,8 +477,58 @@ class ProfileFlowViewModel @Inject constructor(
         }
     }
 
-    fun recyclerReady() {
-        uiStateListener.value = state.copy(state.data.copy(isSecondLoad = true))
+    fun recyclerReady(isReady: Boolean = true) {
+        uiStateListener.value = state.copy(state.data.copy(isSecondLoad = isReady))
+    }
+
+    fun loadMore() {
+        val curPage = state.page
+        if (curPage != null && state.data.isSecondLoad && !state.loadMore) {
+            uiStateListener.value = state.copy(loadMore = true, page = curPage + 1)
+            loadMoreProducts()
+        }
+    }
+
+    private fun loadMoreProducts() {
+        val userId =
+            accountManager.fetchAccountId() ?: return
+        viewModelScope.launch {
+
+            flow {
+                emit(
+                    repository.fetchPersonalProducts(
+                        userId = userId,
+                        page = state.page
+                    )
+                )
+            }
+                .onEach { response ->
+                    if (response is ResponseEntity.Success) {
+                        val data = response.data.mapToUI()
+                        val bestForYou = ProfileBestForYou(
+                            data = data.copy(
+                                productUIList = (state.data.items.last() as ProfileBestForYou).data.productUIList + FavoritesMapper.mapFavoritesListByManager(
+                                    "grid",
+                                    data.productUIList
+                                )
+                            )
+                        )
+                        uiStateListener.value = state.copy(
+                            data = state.data.copy(
+                                items = state.data.items.mapIndexed { index, item ->
+                                    if (index == state.data.items.size - 1) {
+                                        bestForYou
+                                    } else {
+                                        item
+                                    }
+                                }
+                            ),
+                            loadMore = false,
+                        )
+                    }
+
+                }.collect()
+        }
     }
 
     data class ProfileState(
