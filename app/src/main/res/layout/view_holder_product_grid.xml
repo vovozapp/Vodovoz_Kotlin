@@ -21,21 +21,22 @@
         app:layout_constraintTop_toBottomOf="@+id/imgFavoriteStatus"
         tools:ignore="ContentDescription" />
 
-    <com.google.android.material.tabs.TabLayout
+    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
         android:id="@+id/tlIndicators"
-        android:layout_width="0dp"
-        android:layout_height="10dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/pvPictures"
+        android:layout_width="wrap_content"
+        android:layout_height="7dp"
+        android:layout_gravity="center"
+        android:paddingHorizontal="16dp"
+        app:dotsColor="#BDBDBD"
+        app:dotsCornerRadius="16dp"
+        app:dotsSize="4.5dp"
+        app:dotsSpacing="2dp"
+        app:dotsWidthFactor="1"
+        app:layout_constraintTop_toBottomOf="@id/pvPictures"
         app:layout_constraintEnd_toEndOf="@+id/pvPictures"
         app:layout_constraintStart_toStartOf="@+id/pvPictures"
-        app:tabBackground="@drawable/selector_pager_indicator"
-        app:tabGravity="center"
-        app:tabIndicatorHeight="0dp"
-        app:tabMode="fixed"
-        app:tabPadding="0dp"
-        app:tabPaddingEnd="3dp"
-        app:tabPaddingStart="3dp" />
+        app:layout_constraintWidth_percent="0.26"
+        app:selectedDotColor="@color/bluePrimary" />
 
     <include
         layout="@layout/view_holder_slider_product_statuses"

@@ -12,6 +12,6 @@
         android:gravity="center"
         android:width="@dimen/_10sdp"
         android:height="@dimen/_10sdp"
-        android:drawable="@drawable/png_alert"/>
+        android:drawable="@drawable/bascket"/>
 
 </layer-list>

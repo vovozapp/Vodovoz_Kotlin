@@ -103,8 +103,11 @@ class HomeFragment : BaseFragment() {
         RateBottomViewPagerAdapter(object : RateBottomClickListener {
 
             override fun dontCommentProduct(id: Long) {
-                ratingProductManager.dontCommentProduct(id)
-                binding.rateBottom.visibility = View.GONE
+                ratingProductManager.dontCommentProduct(id){
+                    rateBottomViewModel.refresh()
+                }
+//                rateBottomViewModel.refresh()
+//                binding.rateBottom.visibility = View.GONE
 //            dialog?.dismiss()
             }
 
@@ -262,6 +265,8 @@ class HomeFragment : BaseFragment() {
                                 rateBottomViewPagerAdapter.submitList(prList)
                                 binding.dotsIndicator.isVisible = prList.size > 1
                             }
+                        } else {
+                            binding.rateBottom.visibility = View.GONE
                         }
 
                         if (state.data.collapsedData != null) {

@@ -76,6 +76,7 @@ import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJso
 import com.vodovoz.app.data.parser.response.promotion.PromotionSliderResponseJsonParser.parsePromotionSliderResponse
 import com.vodovoz.app.data.parser.response.promotion.PromotionsByBannerResponseJsonParser.parsePromotionsByBannerResponse
 import com.vodovoz.app.data.parser.response.questionnaires.QuestionnaireResponseJsonParser.parseQuestionnaireResponse
+import com.vodovoz.app.data.parser.response.rate.RateBottomModelJsonParser.parseRateBottomModel
 import com.vodovoz.app.data.parser.response.search.DefaultSearchDataResponseJsonParser.parseDefaultSearchDataResponse
 import com.vodovoz.app.data.parser.response.search.MatchesQueriesResponseJsonParser.parseMatchesQueriesResponse
 import com.vodovoz.app.data.parser.response.search.ProductsByQueryHeaderResponseJsonParser.parseProductsByQueryHeaderResponse
@@ -1273,7 +1274,7 @@ class MainRepository @Inject constructor(
     ) = api.fetchRateBottomData(
         action = "tovarglav",
         userId = userId
-    )
+    ).parseRateBottomModel()
 
     suspend fun addProductFromServiceDetails(
         idWithGift: String,
@@ -1299,6 +1300,7 @@ class MainRepository @Inject constructor(
         api.postUrl(url)
     }
 }
+
 
 
 

@@ -8,7 +8,6 @@ import android.widget.RatingBar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayoutMediator
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
@@ -113,7 +112,7 @@ class ProductsGridViewHolder(
         binding.pvPictures.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.pvPictures.adapter = detailPictureFlowPagerAdapter
 
-        TabLayoutMediator(binding.tlIndicators, binding.pvPictures) { _, _ -> }.attach()
+        binding.tlIndicators.attachTo(binding.pvPictures)
 
         binding.llPricesContainer.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 

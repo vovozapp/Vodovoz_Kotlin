@@ -16,7 +16,6 @@ import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsAdapter
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 
-
 class ProductDetailsController(
     listener: ProductDetailsClickListener,
     productsClickListener: ProductsClickListener,

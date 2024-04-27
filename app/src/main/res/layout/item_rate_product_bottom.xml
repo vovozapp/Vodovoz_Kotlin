@@ -36,18 +36,18 @@
         app:layout_constraintTop_toBottomOf="@id/productIv" />
 
     <LinearLayout
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleTv"
+        android:id="@+id/starsLL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:id="@+id/starsLL"
         android:layout_marginTop="32dp"
         android:layout_marginRight="16dp"
         android:background="@drawable/bg_rate_product_stars"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleTv">
 
         <TextView
             android:layout_width="match_parent"
@@ -67,22 +67,18 @@
             style="@style/TextAppearance.AppCompat.Small"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
-            android:progressTint="@color/accentPrimary"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="16dp"
+            android:progressTint="@color/accentPrimary"
             android:stepSize="1" />
     </LinearLayout>
 
     <TextView
-        app:layout_constraintTop_toBottomOf="@id/starsLL"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="@dimen/space_16"
         android:id="@+id/dontRateBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:layout_margin="@dimen/space_16"
         android:gravity="center"
         android:paddingBottom="8dp"
         android:text="Не оценивать этот товар"
@@ -90,7 +86,11 @@
         android:textColor="#60000000"
         android:textSize="14sp"
         android:textStyle="normal"
-        app:fontFamily="@font/rotondac" />
+        app:fontFamily="@font/rotondac"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/starsLL" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

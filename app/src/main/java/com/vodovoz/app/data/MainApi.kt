@@ -4,7 +4,6 @@ import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.product.rating.RatingResponse
 import com.vodovoz.app.data.model.common.UserReloginEntity
 import com.vodovoz.app.feature.bottom.services.newservs.model.AboutServicesNew
-import com.vodovoz.app.feature.home.ratebottom.model.RateBottomModel
 import com.vodovoz.app.feature.profile.cats.ProfileCategoriesModel
 import com.vodovoz.app.feature.profile.notificationsettings.model.NotificationSettingsModel
 import com.vodovoz.app.feature.search.qrcode.model.QrCodeModel
@@ -677,7 +676,7 @@ interface MainApi {
         @Query("action") action: String? = null,
         @Query("id") productId: Long? = null,
         @Query("userid") userId: Long? = null,
-    ): RateBottomModel
+    ): ResponseBody
 
     @GET("newmobile/el.php")
     suspend fun fetchSearchDataByQrCode(

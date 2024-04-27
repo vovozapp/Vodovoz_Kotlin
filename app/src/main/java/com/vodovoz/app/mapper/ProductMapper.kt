@@ -90,16 +90,19 @@ object ProductMapper {
         if (price == 0.0 && isGift) {
             return "Подарок"
         }
-        return StringBuilder()
-            .append(
-                when (isNegative && price != 0.0) {
-                    true -> "-"
-                    false -> ""
-                }
-            )
-            .append(price.roundToInt())
-            .append(" ₽")
-            .toString()
+        val intPrice = price.roundToInt()
+        return if(intPrice != 0) {
+            StringBuilder()
+                .append(
+                    when (isNegative) {
+                        true -> "-"
+                        false -> ""
+                    }
+                )
+                .append(intPrice)
+                .append(" ₽")
+                .toString()
+        } else { "" }
     }
 
     private fun getMinimalPrice(list: List<PriceUI>): String {

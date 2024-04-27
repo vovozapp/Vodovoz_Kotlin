@@ -5,7 +5,7 @@ import com.vodovoz.app.util.extensions.debugLog
 import kotlin.math.roundToInt
 
 fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
-    var fullPrice = 0
+    var fullPrice = 0.0
     var discountPrice = 0.0
     var deposit = 0
     var bottlesPrice = 0
@@ -37,9 +37,9 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
             }
             price?.let {
                 fullPrice += if (price.oldPrice.roundToInt() == 0) {
-                    price.currentPrice.roundToInt() * productUI.cartQuantity
+                    price.currentPrice * productUI.cartQuantity
                 } else {
-                    price.oldPrice.roundToInt() * productUI.cartQuantity
+                    price.oldPrice * productUI.cartQuantity
                 }
                 if(productUI.totalDisc > 0) {
                     discountPrice += (productUI.totalDisc * productUI.cartQuantity)
@@ -59,8 +59,9 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
 
     deposit -= bottlesPrice
     if (deposit < 0) deposit = 0
-    val total = fullPrice + deposit - discountPrice.toInt()
-    return CalculatedPrices(fullPrice, discountPrice.toInt(), deposit, total)
+    val total = fullPrice + deposit - discountPrice
+    if(discountPrice - discountPrice.toInt() > 0) discountPrice ++
+    return CalculatedPrices(fullPrice.toInt(), discountPrice.toInt(), deposit, total.toInt())
 }
 
 data class CalculatedPrices(

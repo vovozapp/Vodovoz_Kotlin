@@ -1,7 +1,9 @@
 package com.vodovoz.app.feature.cart
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
@@ -130,9 +132,18 @@ class CartFragment : BaseFragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.firstLoad()
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        viewModel.firstLoad()
+//    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        viewModel.refresh()
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -231,11 +242,12 @@ class CartFragment : BaseFragment() {
                                 View.VISIBLE
                             }
 
-                        if (cartState.loadingPage) {
-                            showLoader()
-                        } else {
-                            hideLoader()
-                        }
+                        showLoaderWithBg(cartState.loadingPage)
+//                        if (cartState.loadingPage) {
+//                            showLoader()
+//                        } else {
+//                            hideLoader()
+//                        }
 
                         val availableItems = cartState.data.availableProducts?.items
                         val notAvailableItems = cartState.data.notAvailableProducts?.items

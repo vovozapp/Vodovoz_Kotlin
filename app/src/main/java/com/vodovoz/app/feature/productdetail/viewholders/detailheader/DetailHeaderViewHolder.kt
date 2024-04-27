@@ -207,7 +207,7 @@ class DetailHeaderViewHolder(
                 .collect()
         }
 
-        binding.dotsIndicator.isVisible = item.productDetailUI.detailPictureList.size != 1
+        binding.dotsIndicator.visibility = if(item.productDetailUI.detailPictureList.size != 1) View.VISIBLE else View.INVISIBLE
 
         item.productDetailUI.brandUI?.let { binding.tvBrand.text = it.name }
 

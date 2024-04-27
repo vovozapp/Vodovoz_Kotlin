@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @Singleton
 class RatingProductManager @Inject constructor(
     private val repository: MainRepository,
-    private val accountManager: AccountManager
+    private val accountManager: AccountManager,
 ) {
 
     private val ratings = ConcurrentHashMap<Long, Float>()
@@ -51,11 +51,12 @@ class RatingProductManager @Inject constructor(
         ratingsStateListener.emit(ratings)
     }
 
-    fun dontCommentProduct(id: Long) {
+    fun dontCommentProduct(id: Long, afterCallback: () -> Unit) {
         val userId = accountManager.fetchAccountId() ?: return
         runCatching {
             scope.launch {
                 repository.dontCommentProduct(productId = id, userId = userId)
+                afterCallback()
             }
         }
     }
@@ -66,5 +67,5 @@ class RatingProductManager @Inject constructor(
 data class RatingResponse(
     val status: String?,
     val message: String?,
-    val data: Float?
+    val data: Float?,
 )
