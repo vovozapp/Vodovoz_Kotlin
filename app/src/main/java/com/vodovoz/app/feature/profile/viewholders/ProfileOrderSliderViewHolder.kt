@@ -37,9 +37,7 @@ class ProfileOrderSliderViewHolder(
                 ) {
                     with(outRect) {
                         left = space
-                        top = space / 2
                         right = space
-                        bottom = space / 2
                     }
                 }
             }

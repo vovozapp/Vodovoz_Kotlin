@@ -1,31 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/field_height"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingVertical="@dimen/space_8"
     android:paddingHorizontal="@dimen/space_16"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
-
-
-<!--    <androidx.appcompat.widget.AppCompatTextView-->
-<!--        android:id="@+id/insideCategoryTv"-->
-<!--        style="@style/TextViewNormalGray"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:drawableEnd="@drawable/ic_pointer_right"-->
-<!--        android:drawableTint="@color/text_gray"-->
-<!--        android:gravity="center_vertical"-->
-<!--        android:paddingStart="@dimen/space_16"-->
-<!--        android:paddingEnd="@dimen/space_16"-->
-<!--        android:textSize="16sp"-->
-<!--        app:drawableTint="#C2CBCE"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        tools:ignore="UseCompatTextViewDrawableXml"-->
-<!--        tools:text="История заказов" />-->
 
     <TextView
         android:id="@+id/insideCategoryTv"
@@ -58,7 +39,6 @@
         android:id="@+id/amountTv"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_16sdp"
-        android:background="@drawable/bkg_number_gray"
         android:paddingHorizontal="4dp"
         android:fontFamily="@font/rotonda_normal"
         android:textStyle="bold"

@@ -2,5 +2,4 @@
 <androidx.recyclerview.widget.RecyclerView android:id="@+id/profileMainRv"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="@dimen/space_8"
     xmlns:android="http://schemas.android.com/apk/res/android" />

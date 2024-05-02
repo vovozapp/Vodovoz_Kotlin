@@ -10,7 +10,7 @@
         style="@style/TextViewNormalBlackBold"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
-        android:background="@color/dark_white"
+        android:background="@color/light_bg"
         android:gravity="center_vertical"
         android:paddingStart="@dimen/space_16"
         android:paddingEnd="@dimen/space_16"
