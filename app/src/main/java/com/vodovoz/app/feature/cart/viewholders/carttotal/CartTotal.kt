@@ -6,6 +6,7 @@ import com.vodovoz.app.util.CalculatedPrices
 
 data class CartTotal(
     val id: Int,
+    val coupon: String,
     val prices: CalculatedPrices
 ) : Item {
 

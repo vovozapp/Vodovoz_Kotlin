@@ -29,4 +29,5 @@ class ProductEntity(
     val totalDisc: Double = 0.0,
     val conditionalPrice: String = "",
     val condition: String = "",
+    val forCart: Boolean = false,
 ): Parcelable

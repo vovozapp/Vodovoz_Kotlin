@@ -271,6 +271,9 @@ class AvailableProductsViewHolder(
             binding.cgStatuses.visibility = View.GONE
             binding.rbRating.isVisible = false
         }
+        if(item.forCart) {
+            binding.llRatingContainer.visibility = View.GONE
+        }
 
         binding.imgFavoriteStatus.isVisible =
             !(item.chipsBan == 1 || item.chipsBan == 3 || item.chipsBan == 5)
@@ -387,7 +390,7 @@ class AvailableProductsViewHolder(
     private fun bindDiscountPrice(item: ProductUI, currentPrice: Int, oldPrice: Int = 0) {
 //        if (item.totalDisc > 0) {
 
-        if (oldPrice != 0 || item.isGift) {
+        if (oldPrice != 0 || (item.isGift && currentPrice != 1)) {
             binding.llPricesContainer.tvCurrentPrice.setTextColor(
                 ContextCompat.getColor(
                     itemView.context,

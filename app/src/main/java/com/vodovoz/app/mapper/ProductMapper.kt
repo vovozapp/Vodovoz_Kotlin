@@ -45,6 +45,7 @@ object ProductMapper {
         conditionPrice = conditionalPrice,
         condition = condition,
         canBuy = canBuy,
+        forCart = forCart
     )
 
 //    private fun getPricePerUnitStringBuilder(pricePerUnit: Int): String {

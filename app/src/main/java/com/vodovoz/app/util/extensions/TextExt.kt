@@ -150,8 +150,9 @@ fun Fragment.shareText(text: String) {
     startActivity(shareIntent)
 }
 
-fun String.toUnderline() : SpannableString {
+fun String.toUnderline(): SpannableString {
     val s = SpannableString(this)
     s.setSpan(UnderlineSpan(), 0, this.length, 0)
     return s
 }
+

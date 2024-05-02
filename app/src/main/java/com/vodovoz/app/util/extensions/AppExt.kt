@@ -107,7 +107,7 @@ fun String.makeLink(context: Context, @ColorRes colorRes: Int, foo: () -> Unit):
 
 fun Activity.snack(
     message: String,
-    length: Int = Snackbar.LENGTH_LONG,
+    length: Int = Snackbar.LENGTH_SHORT,
 ) {
     /*val snack = Snackbar.make(findViewById(android.R.id.content), message, length)
     val view = snack.view
@@ -124,16 +124,16 @@ fun Activity.snack(
 
 inline fun Activity.snackTop(
     message: String,
-    length: Int = Snackbar.LENGTH_LONG,
+    length: Int = Snackbar.LENGTH_SHORT,
     f: Snackbar.() -> Unit = {},
 ) {
-    val snack = Snackbar.make(findViewById(android.R.id.content), message, length)
+    val snack = Snackbar.make(findViewById(android.R.id.content), message.fromHtml(), length)
     val view = snack.view
     view.background = this.drawable(R.drawable.bg_custom_snackbar)
     val params = view.layoutParams as FrameLayout.LayoutParams
     params.gravity = Gravity.TOP
     view.layoutParams = params
-    snack.setTextColor(this.color(R.color.text_black))
+//    snack.setTextColor(this.color(R.color.text_black))
     snack.f()
     snack.show()
 }

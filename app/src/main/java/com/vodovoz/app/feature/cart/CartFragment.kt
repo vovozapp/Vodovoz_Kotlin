@@ -1,6 +1,8 @@
 package com.vodovoz.app.feature.cart
 
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.text.Spanned
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,8 +31,8 @@ import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.fromHtml
+import com.vodovoz.app.util.extensions.getColorWithAlpha
 import com.vodovoz.app.util.extensions.snack
-import com.vodovoz.app.util.extensions.snackTop
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -74,6 +76,8 @@ class CartFragment : BaseFragment() {
             ratingProductManager
         )
     }
+
+    private var topSnackTimer: CountDownTimer? = null
 
     private fun getCartMainClickListener(): CartMainClickListener {
         return object : CartMainClickListener {
@@ -140,7 +144,7 @@ class CartFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         viewModel.refresh()
         return super.onCreateView(inflater, container, savedInstanceState)
@@ -223,14 +227,20 @@ class CartFragment : BaseFragment() {
                         showError(cartState.error)
 
                         if (cartState.data.infoMessage?.message?.isNotEmpty() == true) {
-                            requireActivity().snackTop(cartState.data.infoMessage.message)
+                            showTopSnack(
+                                cartState.data.infoMessage.message.fromHtml(),
+                                cartState.data.infoMessage.color
+                            )
+                            viewModel.clearInfoMessage()
+//                            requireActivity().snackTop(cartState.data.infoMessage.message)
                         }
 
                         if (cartState.data.giftMessageBottom?.message?.isEmpty() == true) {
                             binding.bottom.tvGiftMessage.visibility = View.GONE
                         } else {
                             binding.bottom.tvGiftMessage.visibility = View.VISIBLE
-                            binding.bottom.yourGiftsTv.text =  cartState.data.giftMessageBottom?.title
+                            binding.bottom.yourGiftsTv.text =
+                                cartState.data.giftMessageBottom?.title
                             binding.bottom.tvGiftMessage.text =
                                 cartState.data.giftMessageBottom?.message?.fromHtml()
                         }
@@ -312,6 +322,7 @@ class CartFragment : BaseFragment() {
                                     )
                                 }
                             }
+
                             is CartFlowViewModel.CartEvents.NavigateToGifts -> {
                                 if (findNavController().currentBackStackEntry?.destination?.id == R.id.giftsBottomFragment) {
                                     findNavController().popBackStack()
@@ -323,10 +334,12 @@ class CartFragment : BaseFragment() {
                                     )
                                 )
                             }
+
                             is CartFlowViewModel.CartEvents.NavigateToProfile -> {
                                 tabManager.setAuthRedirect(findNavController().graph.id)
                                 tabManager.selectTab(R.id.graph_profile)
                             }
+
                             is CartFlowViewModel.CartEvents.GoToPreOrder -> {
                                 if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
                                     findNavController().popBackStack()
@@ -407,6 +420,20 @@ class CartFragment : BaseFragment() {
                     }
             }
         }
+    }
+
+    private fun showTopSnack(fromHtml: Spanned, color: String?) {
+        binding.topSnack.visibility = View.VISIBLE
+        binding.txtTopSnack.text = fromHtml
+        binding.topSnack.setBackgroundColor(color?.getColorWithAlpha() ?: 0)
+        topSnackTimer?.cancel()
+        topSnackTimer = object : CountDownTimer(3000, 3000) {
+            override fun onTick(millisUntilFinished: Long) {}
+            override fun onFinish() {
+                binding.topSnack.visibility = View.GONE
+            }
+        }
+        topSnackTimer?.start()
     }
 
 }

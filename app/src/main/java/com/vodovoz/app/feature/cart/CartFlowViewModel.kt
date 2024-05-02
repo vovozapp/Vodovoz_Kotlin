@@ -59,16 +59,18 @@ class CartFlowViewModel @Inject constructor(
 
     fun refresh() {
         uiStateListener.value = state.copy(loadingPage = true)
-        fetchCart()
+        fetchCart(state.data.coupon)
     }
 
     fun refreshIdle() {
         uiStateListener.value = state.copy(loadingPage = true, data = CartState())
-        fetchCart()
+        fetchCart(state.data.coupon)
     }
 
     fun fetchCart(coupon: String? = null) {
+
         viewModelScope.launch {
+            uiStateListener.value = state.copy(loadingPage = true)
             flow {
                 emit(
                     repository.fetchCartResponse(
@@ -97,9 +99,12 @@ class CartFlowViewModel @Inject constructor(
                             data = state.data.copy(
                                 coupon = coupon ?: "",
                                 infoMessage = mappedData.infoMessage,
-                                giftMessageBottom = mappedData.giftMessageBottom?.copy(
+                                giftMessageBottom = if(coupon.isNullOrEmpty()) {mappedData.giftMessageBottom?.copy(
                                     title = mappedData.giftTitleBottom
-                                ),
+                                )
+                                } else {
+                                       state.data.giftMessageBottom
+                                },
                                 giftProductUI = mappedData.giftProductUI,
                                 availableProducts = CartAvailableProducts(
                                     CART_AVAILABLE_PRODUCTS_ID,
@@ -115,7 +120,7 @@ class CartFlowViewModel @Inject constructor(
                                     mappedData.notAvailableProductUIList,
                                     giftMessage = mappedData.giftMessage
                                 ),
-                                total = CartTotal(CART_TOTAL_ID, calculatedPrices),
+                                total = CartTotal(CART_TOTAL_ID, coupon ?: state.data.coupon, calculatedPrices),
                                 bestForYouTitle = HomeTitle(
                                     id = 1,
                                     type = HomeTitle.VIEWED_TITLE,
@@ -262,6 +267,10 @@ class CartFlowViewModel @Inject constructor(
         viewModelScope.launch {
             ratingProductManager.rate(productId, rating = rating, oldRating = oldRating)
         }
+    }
+
+    fun clearInfoMessage() {
+        uiStateListener.value = state.copy(data = state.data.copy(infoMessage = null))
     }
 
     data class CartState(

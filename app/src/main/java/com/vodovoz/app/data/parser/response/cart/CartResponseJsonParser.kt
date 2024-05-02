@@ -32,7 +32,7 @@ object CartResponseJsonParser {
                 giftMessage = responseJson.getJSONArray("textkorzina")
                     .getMessageTextBasketOrNull("text"),
                 availableProductEntityList = responseJson.getJSONArray("data")
-                    .parseProductEntityList(),
+                    .parseProductEntityList(forCart = true),
                 notAvailableProductEntityList = when (responseJson.has("netvnalichii")) {
                     true -> responseJson.getJSONObject("netvnalichii")
                         .parseNotAvailableProductEntityList()

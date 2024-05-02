@@ -42,6 +42,7 @@ data class ProductUI(
     val totalDisc: Double = 0.0,
     val conditionPrice: String = "",
     val condition: String = "",
+    val forCart: Boolean = false,
 ) : Parcelable, Item {
 
     companion object {

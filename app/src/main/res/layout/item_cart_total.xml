@@ -13,7 +13,7 @@
         android:textSize="16sp"
         android:paddingHorizontal="@dimen/space_16"
         android:gravity="center_vertical"
-        android:background="@color/dark_white"
+        android:background="@color/light_bg"
         android:text="Промокод" />
 
     <LinearLayout
@@ -40,6 +40,7 @@
             style="@style/TextViewNormalBlue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/_12sdp"
             android:text="Применить"
             android:background="@null"/>
 
@@ -50,15 +51,16 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/field_height"
         android:paddingHorizontal="@dimen/space_16"
-        android:background="@color/dark_white"
+        android:background="@color/light_bg"
         android:textSize="16sp"
         android:gravity="center_vertical"
         android:text="Стоимость без учета доставки" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/field_height"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingVertical="@dimen/space_8"
         android:paddingHorizontal="@dimen/space_16"
         android:background="@color/white"
         android:gravity="center_vertical">
@@ -84,8 +86,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/field_height"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingVertical="@dimen/space_8"
         android:paddingHorizontal="@dimen/space_16"
         android:background="@color/white"
         android:gravity="center_vertical">
@@ -111,8 +114,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/field_height"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingVertical="@dimen/space_8"
         android:paddingHorizontal="@dimen/space_16"
         android:background="@color/white"
         android:gravity="center_vertical">
@@ -138,8 +142,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/field_height"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingVertical="@dimen/space_8"
         android:paddingHorizontal="@dimen/space_16"
         android:background="@color/white"
         android:gravity="center_vertical">

@@ -23,7 +23,7 @@
         style="@style/TextViewNormalBlackBold"
         android:layout_width="match_parent"
         android:layout_height="@dimen/field_height"
-        android:background="@color/dark_white"
+        android:background="@color/light_bg"
         android:textSize="16sp"
         android:fontFamily="@font/rotonda_normal"
         android:gravity="center_vertical"

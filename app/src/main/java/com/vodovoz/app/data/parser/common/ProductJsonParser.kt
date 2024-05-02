@@ -8,14 +8,14 @@ import org.json.JSONObject
 
 object ProductJsonParser {
 
-    fun JSONArray.parseProductEntityList(): List<ProductEntity> =
+    fun JSONArray.parseProductEntityList(forCart: Boolean = false): List<ProductEntity> =
         mutableListOf<ProductEntity>().apply {
             for (index in 0 until length()) {
-                add(getJSONObject(index).parseProductEntity())
+                add(getJSONObject(index).parseProductEntity(forCart))
             }
         }
 
-    fun JSONObject.parseProductEntity(): ProductEntity {
+    fun JSONObject.parseProductEntity(forCart: Boolean = false): ProductEntity {
         var status = ""
         var statusColor = ""
 
@@ -137,7 +137,8 @@ object ProductJsonParser {
             condition = when (has("NewPrice")) {
                 true -> getJSONObject("NewPrice").safeString("DescPrice")
                 false -> ""
-            }
+            },
+            forCart = forCart
         )
     }
 
