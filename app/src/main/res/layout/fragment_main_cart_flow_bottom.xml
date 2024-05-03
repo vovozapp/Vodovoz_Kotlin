@@ -18,15 +18,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_4"
+            android:layout_marginTop="@dimen/space_8"
             android:gravity="center"
             android:orientation="horizontal"
-            android:paddingHorizontal="65dp">
+            android:paddingHorizontal="100dp">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_margin="12dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:src="@drawable/arrowpadarok"
                 app:tint="@color/bluePrimary"
                 tools:ignore="ContentDescription" />
@@ -39,16 +38,13 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/rotonda_normal"
                 android:gravity="center"
-                android:paddingStart="@dimen/space_16"
-                android:paddingEnd="@dimen/space_16"
                 android:text="Ваши подарки"
                 android:textColor="@color/bluePrimary"
                 android:textSize="16sp" />
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_margin="12dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:src="@drawable/arrowpadarok"
                 app:tint="@color/bluePrimary"
                 tools:ignore="ContentDescription" />
@@ -58,7 +54,7 @@
         <View
             android:id="@+id/shine"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="30dp"
             android:background="@drawable/bg_circ_shine"
             android:rotation="20" />
     </FrameLayout>
@@ -71,7 +67,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:paddingHorizontal="@dimen/space_16"
-        android:paddingVertical="@dimen/space_8"
+        android:paddingBottom="@dimen/space_8"
         android:visibility="gone"
         tools:text="Для получения более интересного подарка осталось 984 Р"
         tools:visibility="visible" />

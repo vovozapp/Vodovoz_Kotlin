@@ -31,6 +31,8 @@
             android:textColor="@color/text_new_black"
             android:textColorHint="@color/color_search"
             android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:inputType="text"
             android:layout_weight="1"
             android:hint="Введите промокод"
             android:background="@null"/>

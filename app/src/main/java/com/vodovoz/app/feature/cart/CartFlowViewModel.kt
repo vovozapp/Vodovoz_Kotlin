@@ -273,6 +273,10 @@ class CartFlowViewModel @Inject constructor(
         uiStateListener.value = state.copy(data = state.data.copy(infoMessage = null))
     }
 
+    fun clearCoupon() {
+        uiStateListener.value = state.copy(data = state.data.copy(coupon = ""))
+    }
+
     data class CartState(
         val coupon: String = "",
         val infoMessage: MessageTextBasket? = null,

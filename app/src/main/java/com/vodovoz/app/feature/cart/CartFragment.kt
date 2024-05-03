@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.cart
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Spanned
@@ -36,6 +37,7 @@ import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class CartFragment : BaseFragment() {
@@ -425,7 +427,12 @@ class CartFragment : BaseFragment() {
     private fun showTopSnack(fromHtml: Spanned, color: String?) {
         binding.topSnack.visibility = View.VISIBLE
         binding.txtTopSnack.text = fromHtml
-        binding.topSnack.setBackgroundColor(color?.getColorWithAlpha() ?: 0)
+        val gd = GradientDrawable(
+            GradientDrawable.Orientation.TOP_BOTTOM,
+            intArrayOf(color?.getColorWithAlpha() ?: 0, 0x00000000, 0x00000000)
+        )
+        gd.setCornerRadius(0f)
+        binding.topSnack.background = gd
         topSnackTimer?.cancel()
         topSnackTimer = object : CountDownTimer(3000, 3000) {
             override fun onTick(millisUntilFinished: Long) {}
@@ -434,6 +441,11 @@ class CartFragment : BaseFragment() {
             }
         }
         topSnackTimer?.start()
+    }
+
+    override fun onDestroyView() {
+        viewModel.clearCoupon()
+        super.onDestroyView()
     }
 
 }

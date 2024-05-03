@@ -39,28 +39,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/red"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone">
+        tools:visibility="visible">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="16dp"
             android:elevation="4dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="8dp"
             app:cardCornerRadius="6dp">
 
             <TextView
                 android:id="@+id/txtTopSnack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingTop="12dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="12dp"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="12dp"
                 android:textAllCaps="false"
                 android:textColor="@color/text_black"
                 android:textSize="16sp"

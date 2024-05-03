@@ -73,7 +73,7 @@ class SplashFragment : BaseFragment() {
             reloginManager.userReloginEnded.collect {
                 when (it) {
                     is ReloginManager.ReloginState.ReloginSuccess -> {
-                        cartFlowViewModel.firstLoad()
+//                        cartFlowViewModel.firstLoad()
                         profileViewModel.fetchFirstUserData()
                         viewModel.sendFirebaseToken()
                     }
