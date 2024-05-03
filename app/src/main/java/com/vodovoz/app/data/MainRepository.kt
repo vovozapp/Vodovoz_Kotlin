@@ -290,11 +290,11 @@ class MainRepository @Inject constructor(
 
     //Корзина
     suspend fun fetchCartResponse(
-        action: String? = null,
+        action: String = "getbasket",
         userId: Long? = null,
         coupon: String? = null,
         amount: Int? = null,
-        appVersion: String? = null,
+        appVersion: String = BuildConfig.VERSION_NAME,
     ) = api.fetchCartResponse(
         action = action,
         userId = userId,

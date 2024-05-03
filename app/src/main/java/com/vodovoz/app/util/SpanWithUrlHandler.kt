@@ -9,7 +9,7 @@ import android.widget.TextView
 import com.vodovoz.app.util.extensions.fromHtml
 
 object SpanWithUrlHandler {
-    fun setUnderButtonText(text: String, textView: TextView, onClick: (url: String?) -> Unit) {
+    fun setUnderButtonText(text: String, textView: TextView, callback: (url: String?) -> Unit) {
         if (text.isNotEmpty()) {
             textView.visibility = View.VISIBLE
             textView.movementMethod = LinkMovementMethod.getInstance()
@@ -31,11 +31,16 @@ object SpanWithUrlHandler {
                 if (Character.isLetterOrDigit(sequence[0])) {
                     val clickSpan: ClickableSpan = object : ClickableSpan() {
                         override fun onClick(widget: View) {
-                            onClick(urlSpan.url)
+                            callback(urlSpan.url)
                         }
                     }
                     spans.setSpan(
                         clickSpan, start, end,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                } else {
+                    spans.setSpan(
+                        urlSpan, start, end,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
                 }

@@ -70,18 +70,21 @@ class CartFlowViewModel @Inject constructor(
     fun fetchCart(coupon: String? = null) {
 
         viewModelScope.launch {
+            val userId = accountManager.fetchAccountId()
             uiStateListener.value = state.copy(loadingPage = true)
+            if(!coupon.isNullOrEmpty()){
+                repository.fetchCartResponse(
+                    userId = userId,
+                )
+            }
             flow {
                 emit(
                     repository.fetchCartResponse(
-                        action = "getbasket",
-                        userId = accountManager.fetchAccountId(),
+                        userId = userId,
                         coupon = coupon,
-                        appVersion = BuildConfig.VERSION_NAME
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val mappedData = response.data.mapUoUI()
