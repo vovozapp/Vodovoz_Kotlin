@@ -320,7 +320,7 @@ fun fetchCurrentDayInTimeMillis(): Long {
 fun String.getColorWithAlpha(): Int {
     return ColorUtils.setAlphaComponent(
         Color.parseColor(this),
-        (35f / 100 * 255).toInt()
+        (50f / 100 * 255).toInt()
     )
 }
 

@@ -5,5 +5,6 @@ data class CertificatePropertyEntity (
     val textToField: String = "",
     val text:String = "",
     val buttonText: String = "",
-    val buttonColor: String = ""
+    val buttonColor: String = "",
+    val underButtonText: String = "",
 )

@@ -11,10 +11,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.databinding.FragmentCertificateBinding
+import com.vodovoz.app.util.SpanWithUrlHandler
 import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -65,6 +67,20 @@ class ActiveCertificateFragment : BaseFragment() {
                                 submit.backgroundTintList = ColorStateList.valueOf(
                                     Color.parseColor(bundle.certificatePropertyUIList[0].buttonColor)
                                 )
+
+                                SpanWithUrlHandler.setUnderButtonText(
+                                    bundle.certificatePropertyUIList[0].underButtonText,
+                                    binding.underButtonText
+                                ) {
+                                    if (it != null) {
+                                        findNavController().navigate(
+                                            ActiveCertificateFragmentDirections.actionToWebViewFragment(
+                                                it,
+                                                ""
+                                            )
+                                        )
+                                    }
+                                }
                             }
                         }
 

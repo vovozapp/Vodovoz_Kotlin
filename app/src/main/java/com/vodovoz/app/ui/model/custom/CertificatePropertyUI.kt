@@ -6,4 +6,5 @@ data class CertificatePropertyUI(
     val text: String = "",
     val buttonText: String = "",
     val buttonColor: String = "",
+    val underButtonText: String = "",
 )

@@ -14,5 +14,6 @@ fun CertificatePropertyEntity.mapToUI() = CertificatePropertyUI(
     textToField = textToField,
     text = text,
     buttonText = buttonText,
-    buttonColor = buttonColor
+    buttonColor = buttonColor,
+    underButtonText = underButtonText,
 )

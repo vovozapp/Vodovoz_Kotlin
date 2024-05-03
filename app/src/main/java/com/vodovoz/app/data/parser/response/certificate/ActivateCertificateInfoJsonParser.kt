@@ -48,7 +48,8 @@ object ActivateCertificateInfoJsonParser {
             getJSONObject("BACKGROUND").safeString("ANDROID")
         } else {
             ""
-        }
+        },
+        underButtonText = safeString("TEXTPODKNOPKOY"),
     )
 
 

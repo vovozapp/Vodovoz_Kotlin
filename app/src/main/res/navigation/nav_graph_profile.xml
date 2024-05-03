@@ -1023,7 +1023,12 @@
     <fragment
         android:id="@+id/activeCertificateFragment"
         android:name="com.vodovoz.app.feature.profile.certificate.ActiveCertificateFragment"
-        android:label="ActiveCertificateFragment" />
+        android:label="ActiveCertificateFragment" >
+
+        <action
+            android:id="@+id/action_to_webViewFragment"
+            app:destination="@+id/webViewFragment"/>
+    </fragment>
     <fragment
         android:id="@+id/buyCertificateFragment"
         android:name="com.vodovoz.app.feature.buy_certificate.BuyCertificateFragment"
