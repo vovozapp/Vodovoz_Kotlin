@@ -18,7 +18,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@color/light_gray">
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnPersonal"
@@ -28,7 +29,7 @@
                     android:layout_marginStart="@dimen/space_16"
                     android:layout_marginTop="@dimen/space_8"
                     android:layout_marginEnd="@dimen/space_8"
-                    android:layout_marginBottom="@dimen/space_16"
+                    android:layout_marginBottom="@dimen/space_8"
                     android:layout_weight="1"
                     android:text="@string/personal_btn_text" />
 
@@ -40,7 +41,7 @@
                     android:layout_marginStart="@dimen/space_8"
                     android:layout_marginTop="@dimen/space_8"
                     android:layout_marginEnd="@dimen/space_16"
-                    android:layout_marginBottom="@dimen/space_16"
+                    android:layout_marginBottom="@dimen/space_8"
                     android:layout_weight="1"
                     android:text="@string/company_btn_text" />
 
@@ -82,7 +83,7 @@
                     android:id="@+id/tvAddress"
                     style="@style/EditTextViewOrderNormal"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/field_height"
+                    android:layout_height="@dimen/field_ex_height"
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:hint="@string/address_text"
@@ -138,7 +139,7 @@
                     android:id="@+id/etName"
                     style="@style/EditTextViewOrderNormal"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/field_height"
+                    android:layout_height="@dimen/field_ex_height"
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:hint="@string/fio_text"
@@ -165,7 +166,7 @@
                     android:id="@+id/etEmail"
                     style="@style/EditTextViewOrderNormal"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/field_height"
+                    android:layout_height="@dimen/field_ex_height"
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:hint="@string/email_text"
@@ -192,7 +193,7 @@
                     android:id="@+id/etPhone"
                     style="@style/EditTextViewOrderNormal"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/field_height"
+                    android:layout_height="@dimen/field_ex_height"
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:hint="@string/telephone_text"
@@ -219,7 +220,7 @@
                     android:id="@+id/tvDate"
                     style="@style/EditTextViewOrderNormal"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/field_height"
+                    android:layout_height="@dimen/field_ex_height"
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:hint="@string/data_text"
@@ -234,7 +235,7 @@
                     android:id="@+id/tvShippingInterval"
                     style="@style/EditTextViewOrderNormal"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/field_height"
+                    android:layout_height="@dimen/field_ex_height"
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:hint="@string/vremya_text"
@@ -289,7 +290,7 @@
                     android:id="@+id/tvPayMethod"
                     style="@style/EditTextViewOrderNormal"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/field_height"
+                    android:layout_height="@dimen/field_ex_height"
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:hint="@string/vyberite_sposob_oplaty"
@@ -330,7 +331,7 @@
                 android:id="@+id/tvCheckDelivery"
                 style="@style/EditTextViewOrderNormal"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/field_height"
+                android:layout_height="@dimen/field_ex_height"
                 android:background="@color/white"
                 android:drawableEnd="@drawable/baseline_arrow_right_24"
                 android:gravity="center_vertical"
@@ -379,7 +380,7 @@
                 android:id="@+id/etPhoneForDriver"
                 style="@style/EditTextViewOrderNormal"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/field_height"
+                android:layout_height="@dimen/field_ex_height"
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:hint="@string/telephone_dlya_voditelya"
@@ -390,7 +391,7 @@
                 android:id="@+id/etComment"
                 style="@style/EditTextViewOrderNormal"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/field_height"
+                android:layout_height="@dimen/field_ex_height"
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:hint="@string/kommentariy_k_zakazu"
@@ -407,11 +408,11 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/field_height"
+                android:layout_height="@dimen/field_ex_height"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/TextViewNormalBlack"
+                    style="@style/TextViewNormalBlackBold"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -434,11 +435,11 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/field_height"
+                android:layout_height="@dimen/field_ex_height"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/TextViewNormalBlack"
+                    style="@style/TextViewNormalBlackBold"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -461,11 +462,11 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/field_height"
+                android:layout_height="@dimen/field_ex_height"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/TextViewNormalBlack"
+                    style="@style/TextViewNormalBlackBold"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -489,11 +490,11 @@
             <LinearLayout
                 android:id="@+id/llShippingPriceCOntainer"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/field_height"
+                android:layout_height="@dimen/field_ex_height"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/TextViewNormalBlack"
+                    style="@style/TextViewNormalBlackBold"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -517,11 +518,11 @@
             <LinearLayout
                 android:id="@+id/llParkingPriceCOntainer"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/field_height"
+                android:layout_height="@dimen/field_ex_height"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/TextViewNormalBlack"
+                    style="@style/TextViewNormalBlackBold"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -544,11 +545,11 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/field_height"
+                android:layout_height="@dimen/field_ex_height"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/TextViewNormalBlack"
+                    style="@style/TextViewNormalBlackBold"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -592,7 +593,9 @@
         android:orientation="vertical"
         android:padding="@dimen/space_16"
         android:visibility="invisible"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        tools:visibility="gone">
+
 
         <View
             android:layout_width="match_parent"

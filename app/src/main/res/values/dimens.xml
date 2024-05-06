@@ -32,7 +32,8 @@
     //Buttons
     <dimen name="button_normal_height">@dimen/_35sdp</dimen>
     <dimen name="button_small_height">@dimen/_30sdp</dimen>
-    <dimen name="field_height">@dimen/_35sdp</dimen>
+    <dimen name="field_height">30dp</dimen>
+    <dimen name="field_ex_height">35dp</dimen>
 
     //Action image
     <dimen name="action_image_size">@dimen/_20sdp</dimen>

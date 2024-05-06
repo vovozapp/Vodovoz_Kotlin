@@ -420,7 +420,7 @@
     </style>
 
     <style name="EditTextViewOrderNormal">
-        <item name="android:textSize">@dimen/normal_text_size</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColorHint">@color/text_gray_light</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_gray_light</item>
