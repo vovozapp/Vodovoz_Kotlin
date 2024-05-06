@@ -27,7 +27,6 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
 import com.vodovoz.app.ui.model.AddressUI
-import com.vodovoz.app.ui.model.FreeShippingDaysInfoBundleUI
 import com.vodovoz.app.ui.model.PayMethodUI
 import com.vodovoz.app.ui.model.ShippingIntervalUI
 import com.vodovoz.app.ui.model.custom.OrderingCompletedInfoBundleUI
@@ -152,9 +151,18 @@ class OrderingFragment : BaseFragment() {
                     ) {
                         binding.clPersonalScore.visibility = View.VISIBLE
                         binding.tvPersonalScore.text =
-                            "${innerPersonalScore.personalScore.text} ${innerPersonalScore.personalScore.value}"
+                            buildString {
+                                append(innerPersonalScore.personalScore.text)
+                                append(" ")
+                                append(innerPersonalScore.personalScore.value)
+                            }
                     } else {
                         binding.clPersonalScore.visibility = View.GONE
+                    }
+
+                    val shippingDaysInfo = state.data.shippingDaysInfoBundleUi
+                    if (shippingDaysInfo != null) {
+                        binding.tvFreeShipping.text = shippingDaysInfo.title
                     }
 
                     binding.llShippingPriceCOntainer.isVisible = state.data.shippingPrice != null
@@ -279,10 +287,6 @@ class OrderingFragment : BaseFragment() {
                                     )
                                 )
                             }
-                        }
-
-                        is OrderingFlowViewModel.OrderingEvents.ShowFreeShippingDaysInfo -> {
-                            showFreeShippingDaysInfoPopup(it.item)
                         }
 
                         is OrderingFlowViewModel.OrderingEvents.ShowPaymentMethod -> {
@@ -718,17 +722,6 @@ class OrderingFragment : BaseFragment() {
                 )
                 checkTitlesColor()
             }
-    }
-
-    private fun showFreeShippingDaysInfoPopup(freeShippingDaysInfoBundleUI: FreeShippingDaysInfoBundleUI) {
-        if (findNavController().currentDestination?.id == R.id.orderingFragment) {
-            findNavController().navigate(
-                OrderingFragmentDirections.actionToFreeShippingSaysBS(
-                    freeShippingDaysInfoBundleUI.title,
-                    freeShippingDaysInfoBundleUI.info
-                )
-            )
-        }
     }
 
     private fun showPayMethodPopup(payMethodUIList: List<PayMethodUI>, selectedPayMethodId: Long) {

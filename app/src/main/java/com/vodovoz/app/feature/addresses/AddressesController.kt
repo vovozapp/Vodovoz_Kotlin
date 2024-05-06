@@ -10,7 +10,6 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.feature.addresses.adapter.AddressesClickListener
 import com.vodovoz.app.feature.addresses.adapter.AddressesFlowAdapter
-import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.model.AddressUI
 import com.vodovoz.app.util.SwipeToRemoveCallback
 
@@ -38,9 +37,6 @@ class AddressesController(
         with(recyclerView) {
             adapter = addressesAdapter
             layoutManager = LinearLayoutManager(context)
-            addMarginDecoration { rect, _, _, _ ->
-                rect.top = space16
-            }
         }
         bindSwipeToRemove(recyclerView)
     }

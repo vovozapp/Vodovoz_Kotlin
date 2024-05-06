@@ -48,8 +48,8 @@ class AddressesFlowViewModel @Inject constructor(
     private fun fetchAddresses() {
         val userId = accountManager.fetchAccountId() ?: return
         val type = when (addressType) {
-            "RERSONAL" -> 1
-            "COMPANY" -> 2
+            OrderType.PERSONAL.name -> 1
+            OrderType.COMPANY.name -> 2
             else -> null
         }
         viewModelScope.launch {
@@ -60,43 +60,58 @@ class AddressesFlowViewModel @Inject constructor(
                         val data = response.data.mapToUI()
 
                         if (data.isNotEmpty()) {
-
-                            val personal = data.filter { it.type == OrderType.PERSONAL.value }
-                            val company = data.filter { it.type == OrderType.COMPANY.value }
-                            val fullList = mutableListOf<Item>()
-                            if (personal.isNotEmpty()) {
-                                fullList.addAll(
-                                    listOf(
-                                        AddressFlowTitle(
-                                            application.resources.getString(
-                                                R.string.personal_addresses_title
+                            if(type == null) {
+                                val personal = data.filter { it.type == OrderType.PERSONAL.value }
+                                val company = data.filter { it.type == OrderType.COMPANY.value }
+                                val fullList = mutableListOf<Item>()
+                                if (personal.isNotEmpty()) {
+                                    fullList.addAll(
+                                        listOf(
+                                            AddressFlowTitle(
+                                                application.resources.getString(
+                                                    R.string.personal_addresses_title
+                                                )
                                             )
-                                        )
-                                    ) + personal
+                                        ) + personal
+                                    )
+                                }
+                                if (company.isNotEmpty()) {
+                                    fullList.addAll(
+                                        listOf(
+                                            AddressFlowTitle(
+                                                application.resources.getString(
+                                                    R.string.company_addresses_title
+                                                )
+                                            )
+                                        ) + company
+                                    )
+                                }
+
+                                uiStateListener.value = state.copy(
+                                    data = state.data.copy(
+                                        items = data,
+                                        companyItems = company,
+                                        personalItems = personal,
+                                        fullList = fullList
+                                    ),
+                                    loadingPage = false,
+                                    error = null
+                                )
+                            } else {
+                                val addresses = if(type == OrderType.PERSONAL.value){
+                                    data.filter { it.type == OrderType.PERSONAL.value }
+                                } else {
+                                    data.filter { it.type == OrderType.COMPANY.value }
+                                }
+                                uiStateListener.value = state.copy(
+                                    data = state.data.copy(
+                                        items = data,
+                                        fullList = addresses
+                                    ),
+                                    loadingPage = false,
+                                    error = null
                                 )
                             }
-                            if (company.isNotEmpty()) {
-                                fullList.addAll(
-                                    listOf(
-                                        AddressFlowTitle(
-                                            application.resources.getString(
-                                                R.string.company_addresses_title
-                                            )
-                                        )
-                                    ) + company
-                                )
-                            }
-
-                            uiStateListener.value = state.copy(
-                                data = state.data.copy(
-                                    items = data,
-                                    companyItems = company,
-                                    personalItems = personal,
-                                    fullList = fullList
-                                ),
-                                loadingPage = false,
-                                error = null
-                            )
                         } else {
                             uiStateListener.value = state.copy(
                                 error = ErrorState.Empty(),

@@ -69,8 +69,8 @@ class OrderingFlowViewModel @Inject constructor(
     private val coupon = savedStateHandle.get<String>("coupon") ?: ""
 
     init {
-
         debugLog { "full ${state.data.full}, discount ${state.data.discount}" }
+        fetchFreeShippingDaysInfo()
     }
 
     fun regOrder(
@@ -400,8 +400,9 @@ class OrderingFlowViewModel @Inject constructor(
         }
     }
 
-    fun fetchFreeShippingDaysInfo() {
+    private fun fetchFreeShippingDaysInfo() {
         viewModelScope.launch {
+            uiStateListener.value = state.copy(loadingPage = true)
             flow { emit(repository.fetchFreeShippingDaysInfoResponse(appVersion = BuildConfig.VERSION_NAME)) }
                 .flowOn(Dispatchers.IO)
                 .onEach { response ->
@@ -414,7 +415,6 @@ class OrderingFlowViewModel @Inject constructor(
                             loadingPage = false,
                             error = null
                         )
-                        eventListener.emit(OrderingEvents.ShowFreeShippingDaysInfo(data))
                     } else {
                         uiStateListener.value =
                             state.copy(
@@ -525,11 +525,8 @@ class OrderingFlowViewModel @Inject constructor(
 
         data class OnAddressBtnClick(val typeName: String) : OrderingEvents()
         data class OnFreeShippingClick(val bundle: FreeShippingDaysInfoBundleUI) : OrderingEvents()
-        object ShowDatePicker : OrderingEvents()
+        data object ShowDatePicker : OrderingEvents()
         data class OnShippingAlertClick(val list: List<ShippingAlertUI>) : OrderingEvents()
-
-        data class ShowFreeShippingDaysInfo(val item: FreeShippingDaysInfoBundleUI) :
-            OrderingEvents()
 
         data class ShowPaymentMethod(val list: List<PayMethodUI>, val selectedPayMethodId: Long?) :
             OrderingEvents()
@@ -545,7 +542,7 @@ class OrderingFlowViewModel @Inject constructor(
         data class ChooseDateError(val message: String) : OrderingEvents()
         data class ChooseIntervalError(val message: String) : OrderingEvents()
         data class ChoosePayMethodError(val message: String) : OrderingEvents()
-        object ChooseCheckDeliveryError : OrderingEvents()
+        data object ChooseCheckDeliveryError : OrderingEvents()
 
         data class ShowCheckDeliveryBs(val value: Int, val isNewUser: Boolean = false) :
             OrderingEvents()
