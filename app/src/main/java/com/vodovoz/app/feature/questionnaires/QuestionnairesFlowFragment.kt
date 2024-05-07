@@ -89,9 +89,9 @@ class QuestionnairesFlowFragment : BaseFragment() {
     private fun setBackDoor() {
         binding.questionnairesContainer.setOnTouchListener { _, event ->
             val handled = true
-            val action = event.action
+            val action = event.action and MotionEvent.ACTION_MASK
             val count = event.pointerCount
-            if (action == MotionEvent.ACTION_CANCEL) {
+            if (action == MotionEvent.ACTION_POINTER_DOWN) {
                 if (3 == count) {
                     threeFingerTouchCount++
                     if (threeFingerTouchCount == 3) {
@@ -100,11 +100,11 @@ class QuestionnairesFlowFragment : BaseFragment() {
                             .setMessage("Выберете текущий путь к серверу")
                             .setNegativeButton("Рабочий") { dialog, _ ->
                                 dialog.dismiss()
-                                loadHomeFragmentWithNewServerURL("http://m.vodovoz.ru/")
+                                loadHomeFragmentWithNewServerURL("https://m.vodovoz.ru/")
                             }
                             .setPositiveButton("Тестовый") { dialog, _ ->
                                 dialog.dismiss()
-                                loadHomeFragmentWithNewServerURL("http://szorin.vodovoz.ru/")
+                                loadHomeFragmentWithNewServerURL("https://szorin.vodovoz.ru/")
                             }
                             .show()
                     }
