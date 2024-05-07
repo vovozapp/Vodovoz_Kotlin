@@ -112,7 +112,7 @@
                     android:id="@+id/etCompanyName"
                     style="@style/EditTextViewOrderNormal"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/field_height"
+                    android:layout_height="@dimen/field_ex_height"
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:hint="@string/vvedite_nazvanie"
