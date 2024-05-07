@@ -1,10 +1,13 @@
 package com.vodovoz.app.feature.cart
 
 import androidx.lifecycle.viewModelScope
-import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.common.content.*
+import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.common.content.Event
+import com.vodovoz.app.common.content.PagingContractViewModel
+import com.vodovoz.app.common.content.State
+import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
@@ -24,7 +27,11 @@ import com.vodovoz.app.util.calculatePrice
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -72,11 +79,6 @@ class CartFlowViewModel @Inject constructor(
         viewModelScope.launch {
             val userId = accountManager.fetchAccountId()
             uiStateListener.value = state.copy(loadingPage = true)
-            if(!coupon.isNullOrEmpty()){
-                repository.fetchCartResponse(
-                    userId = userId,
-                )
-            }
             flow {
                 emit(
                     repository.fetchCartResponse(
@@ -92,8 +94,7 @@ class CartFlowViewModel @Inject constructor(
                         val calculatedPrices = calculatePrice(availableProducts)
                         if (availableProducts.isEmpty() && !cartManager.isCartEmpty()) {
                             cartManager.clearCart()
-                        }
-                        else {
+                        } else {
                             cartManager.syncCart(
                                 availableProducts
                             )
@@ -102,11 +103,12 @@ class CartFlowViewModel @Inject constructor(
                             data = state.data.copy(
                                 coupon = coupon ?: "",
                                 infoMessage = mappedData.infoMessage,
-                                giftMessageBottom = if(coupon.isNullOrEmpty()) {mappedData.giftMessageBottom?.copy(
-                                    title = mappedData.giftTitleBottom
-                                )
+                                giftMessageBottom = if (coupon.isNullOrEmpty()) {
+                                    mappedData.giftMessageBottom?.copy(
+                                        title = mappedData.giftTitleBottom
+                                    )
                                 } else {
-                                       state.data.giftMessageBottom
+                                    state.data.giftMessageBottom
                                 },
                                 giftProductUI = mappedData.giftProductUI,
                                 availableProducts = CartAvailableProducts(
@@ -123,7 +125,11 @@ class CartFlowViewModel @Inject constructor(
                                     mappedData.notAvailableProductUIList,
                                     giftMessage = mappedData.giftMessage
                                 ),
-                                total = CartTotal(CART_TOTAL_ID, coupon ?: state.data.coupon, calculatedPrices),
+                                total = CartTotal(
+                                    CART_TOTAL_ID,
+                                    coupon ?: state.data.coupon,
+                                    calculatedPrices
+                                ),
                                 bestForYouTitle = HomeTitle(
                                     id = 1,
                                     type = HomeTitle.VIEWED_TITLE,
