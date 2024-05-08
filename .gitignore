@@ -9,3 +9,4 @@
 .cxx
 local.properties
 /.idea/
+/app/send_chat_message.sh
