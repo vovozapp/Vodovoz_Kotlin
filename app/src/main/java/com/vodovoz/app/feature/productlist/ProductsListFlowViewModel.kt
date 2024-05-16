@@ -124,7 +124,7 @@ class ProductsListFlowViewModel @Inject constructor(
                                 error = ErrorState.Empty(),
                                 data = state.data.copy(
                                     itemsList = emptyList(),
-                                    categoryHeader = data,
+                                    categoryHeader = if(state.page == 1) data else state.data.categoryHeader,
                                 ),
                                 loadingPage = false,
                                 loadMore = false,
@@ -144,7 +144,7 @@ class ProductsListFlowViewModel @Inject constructor(
                                 loadingPage = false,
                                 data = state.data.copy(
                                     itemsList = itemsList,
-                                    categoryHeader = data,
+                                    categoryHeader = if(state.page == 1) data else state.data.categoryHeader,
                                     categoryId = categoryId,
                                     showCategoryContainer = catalogManager.hasRootItems(categoryId),
                                     filterCode = data.filterCode.ifEmpty {

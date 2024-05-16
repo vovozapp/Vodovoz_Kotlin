@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.RatingBar
-import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
@@ -343,7 +342,11 @@ class ServiceDetailProdViewHolder(
         }
 
         //UpdatePictures
-        binding.tlIndicators.isVisible = item.detailPictureList.size != 1
+        binding.tlIndicators.visibility = if (item.detailPictureList.size != 1) {
+            View.VISIBLE
+        } else {
+            View.INVISIBLE
+        }
 
         detailPictureFlowPagerAdapter.submitList(item.detailPictureList.map { DetailPicturePager(it) })
 

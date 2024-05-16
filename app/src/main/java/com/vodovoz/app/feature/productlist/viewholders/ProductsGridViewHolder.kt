@@ -6,7 +6,6 @@ import android.os.CountDownTimer
 import android.view.View
 import android.widget.RatingBar
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
@@ -297,7 +296,11 @@ class ProductsGridViewHolder(
         }
 
         //UpdatePictures
-        binding.tlIndicators.isVisible = item.detailPictureList.size != 1
+        binding.tlIndicators.visibility = if (item.detailPictureList.size != 1) {
+            View.VISIBLE
+        } else {
+            View.INVISIBLE
+        }
 
         detailPictureFlowPagerAdapter.submitList(item.detailPictureListPager)
 

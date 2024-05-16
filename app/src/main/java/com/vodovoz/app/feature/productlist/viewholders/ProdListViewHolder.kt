@@ -319,8 +319,11 @@ class ProdListViewHolder(
             false -> binding.cgStatuses.visibility = View.VISIBLE
         }
 
-        //UpdatePictures
-        binding.tlIndicators.isVisible = item.detailPictureList.size != 1
+        binding.tlIndicators.visibility = if(item.detailPictureList.size != 1){
+            View.VISIBLE
+        } else {
+            View.INVISIBLE
+        }
 
         detailPictureFlowPagerAdapter.submitList(item.detailPictureList.map { DetailPicturePager(it) })
 
