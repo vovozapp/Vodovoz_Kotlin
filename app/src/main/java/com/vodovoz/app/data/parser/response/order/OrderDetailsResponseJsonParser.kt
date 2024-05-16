@@ -52,9 +52,9 @@ object OrderDetailsResponseJsonParser {
             statusName = safeString("STATUS_NAME")
         ),
         payUri = if (has("PAYSISTEM") && getJSONObject("PAYSISTEM").has("URL")) {
-            getJSONObject("PAYSISTEM").getString("URL")
+            getJSONObject("PAYSISTEM").safeString("URL")
         } else {
-            "Нет данных по оплате"
+            ""
         },
         payMethod = if (has("PAYSISTEM") && getJSONObject("PAYSISTEM").has("NAME")) {
             getJSONObject("PAYSISTEM").getString("NAME")
