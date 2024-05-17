@@ -15,7 +15,11 @@ import com.vodovoz.app.ui.model.custom.AllPromotionBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,7 +32,7 @@ class AllPromotionsFlowViewModel @Inject constructor(
 
     private var dataSource = savedState.get<AllPromotionsFragment.DataSource>("dataSource")
 
-    private fun fetchAllPromotions() {
+    private fun fetchAllPromotions(filterChanged: Boolean = false) {
         viewModelScope.launch {
             val dataSource = dataSource ?: return@launch
             flow {
@@ -38,6 +42,7 @@ class AllPromotionsFlowViewModel @Inject constructor(
                             filterId = state.data.selectedFilterUi.id
                         )
                     )
+
                     is AllPromotionsFragment.DataSource.ByBanner -> emit(
                         repository.fetchPromotionsByBanner(
                             categoryId = dataSource.categoryId
@@ -52,10 +57,17 @@ class AllPromotionsFlowViewModel @Inject constructor(
 
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
-                                promotionFilterUIList = mutableListOf(state.data.selectedFilterUi).apply {
+                                promotionFilterUIList = mutableListOf(
+                                    PromotionFilterUI(
+                                        id = 0,
+                                        name = "Все акции",
+                                        code = ""
+                                    )
+                                ).apply {
                                     addAll(data.promotionFilterUIList.toMutableList())
                                 },
-                                allPromotionBundleUI = data
+                                allPromotionBundleUI = data,
+                                scrollToTop = filterChanged
                             ),
                             loadingPage = false,
                             error = null
@@ -83,8 +95,9 @@ class AllPromotionsFlowViewModel @Inject constructor(
 
     fun updateBySelectedFilter(filterId: Long) {
         val filter = state.data.promotionFilterUIList.find { it.id == filterId } ?: return
+        if(state.data.selectedFilterUi.id == filterId) return
         uiStateListener.value = state.copy(data = state.data.copy(selectedFilterUi = filter))
-        fetchAllPromotions()
+        fetchAllPromotions(true)
     }
 
     fun firstLoadSorted() {
@@ -102,6 +115,11 @@ class AllPromotionsFlowViewModel @Inject constructor(
     }
 
     fun isLoginAlready() = accountManager.isAlreadyLogin()
+    fun updateScrollToTop() {
+        if(state.data.scrollToTop) {
+            uiStateListener.value = state.copy(data = state.data.copy(scrollToTop = false))
+        }
+    }
 
     data class AllPromotionsState(
         val promotionFilterUIList: List<PromotionFilterUI> = emptyList(),
@@ -111,5 +129,6 @@ class AllPromotionsFlowViewModel @Inject constructor(
             name = "Все акции",
             code = ""
         ),
+        val scrollToTop: Boolean = false,
     ) : State
 }

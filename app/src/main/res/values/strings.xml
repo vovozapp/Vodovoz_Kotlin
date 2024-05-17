@@ -142,6 +142,7 @@
     <string name="categories">Категории</string>
     <string name="choose_sort_type">Выбрать сортировку</string>
     <string name="no_products_available">Товары в заказе отсутствуют</string>
+    <string name="goods_of_promotion">Товары участвующие в акции:</string>
 
 
 </resources>
