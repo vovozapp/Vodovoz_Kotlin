@@ -133,6 +133,7 @@ class PromotionDetailsFragment : BaseFragment() {
                         showLoaderWithBg(state.loadingPage)
                         binding.timeLeftContainer.isVisible = !state.loadingPage
                         binding.customerCategoryCard.isVisible = !state.loadingPage
+                        binding.promotionProductsTitle.isVisible =!state.loadingPage
 
                         bindHeader(state.data.items)
                         bindErrorHeader(state.data.errorItem)
