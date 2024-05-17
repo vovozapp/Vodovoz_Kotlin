@@ -54,6 +54,7 @@ class AllPromotionsFragment : BaseFragment() {
         allAdapterController.bind(binding.rvPromotions)
         bindErrorRefresh { viewModel.refreshSorted() }
         bindSwipeRefresh()
+        viewModel.updateScrollToTop()
 
         observeUiState()
 
@@ -64,6 +65,7 @@ class AllPromotionsFragment : BaseFragment() {
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<Long>(PROMOTION_FILTER)?.observe(viewLifecycleOwner) { filterId ->
                 viewModel.updateBySelectedFilter(filterId)
+
             }
     }
 
@@ -98,6 +100,10 @@ class AllPromotionsFragment : BaseFragment() {
                         if (state.data.allPromotionBundleUI != null) {
                             allAdapterController.submitList(state.data.allPromotionBundleUI.promotionUIList)
                         }
+                        if(state.data.scrollToTop){
+                            binding.rvPromotions.scrollToPosition(0)
+                        }
+
 
                         showError(state.error)
 
