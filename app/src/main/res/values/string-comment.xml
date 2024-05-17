@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="new_comment_title">Новый отзыв</string>
-    <string name="comment_hint_text">Ваш отзыв</string>
-    <string name="send_comment_btn_text">Отправить</string>
+    <string name="new_comment_title" translatable="false">Новый отзыв</string>
+    <string name="comment_hint_text" translatable="false">Ваш отзыв</string>
+    <string name="send_comment_btn_text" translatable="false">Отправить</string>
 
     //Products Comments
     <string name="product_comments_title" translatable="false">Отзывы</string>

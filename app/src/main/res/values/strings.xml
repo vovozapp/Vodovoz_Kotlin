@@ -138,11 +138,13 @@
     <string name="details" translatable="false">Подробнее</string>
     <string name="choose_sort" translatable="false">Выбрать сортировку</string>
     <string name="confirm_personal_data" translatable="false">Я подтверждаю свое согласие на <a href = "#">обработку персональных данных </a></string>
-    <string name="order_history">История заказов</string>
-    <string name="categories">Категории</string>
-    <string name="choose_sort_type">Выбрать сортировку</string>
-    <string name="no_products_available">Товары в заказе отсутствуют</string>
-    <string name="goods_of_promotion">Товары участвующие в акции:</string>
+    <string name="order_history" translatable="false">История заказов</string>
+    <string name="categories" translatable="false">Категории</string>
+    <string name="choose_sort_type" translatable="false">Выбрать сортировку</string>
+    <string name="no_products_available" translatable="false">Товары в заказе отсутствуют</string>
+    <string name="goods_of_promotion" translatable="false">Товары участвующие в акции:</string>
+    <string name="search_" translatable="false">Поиск...</string>
+    <string name="clear_search" translatable="false">Clear search</string>
 
 
 </resources>

@@ -83,16 +83,24 @@ class AllBrandsFlowViewModel @Inject constructor(
     }
 
     fun filterByQuery(query: String) {
-        val newList = if (query.isNotBlank()) {
+        val newList = if (query.isNotBlank() ) {
             state.data.items.filter { it.name.contains(query, ignoreCase = true) }
         } else {
             state.data.items
         }
+        if(newList == state.data.filteredItems) return
         uiStateListener.value = state.copy(
             data = state.data.copy(
-                filteredItems = newList
+                filteredItems = newList,
+                scrollToTop = true
             )
         )
+    }
+
+    fun updateScrollToTop() {
+        if (state.data.scrollToTop) {
+            uiStateListener.value = state.copy(data = state.data.copy(scrollToTop = false))
+        }
     }
 
     fun isLoginAlready() = accountManager.isAlreadyLogin()
@@ -100,5 +108,6 @@ class AllBrandsFlowViewModel @Inject constructor(
     data class AllBrandsState(
         val items: List<BrandUI> = emptyList(),
         val filteredItems: List<BrandUI> = emptyList(),
+        val scrollToTop: Boolean = false,
     ) : State
 }

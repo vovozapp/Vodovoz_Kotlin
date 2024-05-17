@@ -2,11 +2,14 @@ package com.vodovoz.app.feature.all.brands
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
@@ -44,17 +47,30 @@ class AllBrandsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         allAdapterController.bind(binding.rvBrands)
+        binding.rvBrands.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         bindErrorRefresh { viewModel.refreshSorted() }
+        viewModel.updateScrollToTop()
         bindSwipeRefresh()
 
         observeUiState()
         initAppBar()
+        initSearchBar()
+    }
+
+    private fun initSearchBar() {
+        with(binding) {
+            clearSearchBrand.setOnClickListener {
+                editSearchBrand.setText("")
+            }
+            editSearchBrand.doAfterTextChanged { query ->
+                clearSearchBrand.isVisible = query.toString().isNotEmpty()
+                viewModel.filterByQuery(query.toString())
+            }
+        }
     }
 
     private fun initAppBar() {
-        initToolbar(resources.getString(R.string.all_brands_title), true) {
-            viewModel.filterByQuery(it)
-        }
+        initToolbar(resources.getString(R.string.all_brands_title))
     }
 
     private fun observeUiState() {
@@ -70,6 +86,9 @@ class AllBrandsFragment : BaseFragment() {
                         }
 
                         allAdapterController.submitList(state.data.filteredItems)
+                        if(state.data.scrollToTop){
+                            binding.rvBrands.scrollToPosition(0)
+                        }
 
                         showError(state.error)
 
