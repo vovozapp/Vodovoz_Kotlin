@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="130dp"
     android:background="@color/white">
 
     <androidx.viewpager2.widget.ViewPager2
@@ -14,6 +15,7 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/llRatingContainer"
         app:layout_constraintWidth_percent="0.30"
         tools:ignore="ContentDescription" />
 
@@ -74,7 +76,6 @@
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/space_8"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/space_8"
         app:layout_constraintBottom_toTopOf="@+id/amountController"
         app:layout_constraintEnd_toStartOf="@+id/imgFavoriteStatus"
         app:layout_constraintStart_toEndOf="@+id/vpPictures"
@@ -83,7 +84,7 @@
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/cgStatuses"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_20sdp"
+            android:layout_height="20dp"
             android:paddingEnd="@dimen/space_16"
             tools:ignore="RtlSymmetry">
 
@@ -146,11 +147,11 @@
             style="@style/TextViewSmallGray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_8"
+            android:layout_marginTop="4dp"
             android:paddingEnd="@dimen/space_8"
             android:textSize="11sp"
             tools:ignore="RtlSymmetry"
-            tools:text="Стоимость залога 400 Р" />
+            tools:text="Стоимость залога 400 Р"/>
 
     </LinearLayout>
 

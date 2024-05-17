@@ -62,6 +62,7 @@ class CartAvailableProductsViewHolder(
         binding.btnChooseBottle.setOnClickListener {
             clickListener.onChooseBtnClick()
         }
+
         binding.rvAvailableProductRecycler.addMarginDecoration { rect, _, _, _ ->
             rect.top = space
             rect.bottom = space

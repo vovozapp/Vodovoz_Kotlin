@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/backrelativelayouthome"
+    android:background="@drawable/back_bottom_home"
     android:paddingTop="8dp"
-    android:paddingBottom="30dp"
+    android:paddingBottom="8dp"
     android:paddingHorizontal="@dimen/space_16">
 
     <TextView

@@ -42,7 +42,7 @@
             android:id="@+id/tvComment"
             style="@style/TextViewSmallGray"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/comment_slider_text_height"
+            android:layout_height="45dp"
             android:maxLines="2"
             android:fontFamily="@font/rotondac"
             android:lineSpacingExtra="4sp"
