@@ -132,7 +132,11 @@ class SearchFlowViewModel @Inject constructor(
                         val data = response.data.mapToUI()
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
-                                popularCategoryDetail = data.popularProductsCategoryDetailUI,
+                                popularCategoryDetail = data.popularProductsCategoryDetailUI.copy(
+                                    productUIList = data.popularProductsCategoryDetailUI.productUIList.map {
+                                        it.copy(linear = false)
+                                    }
+                                ),
                                 popularQuery = data.popularQueryList
                             ),
                             loadingPage = false
@@ -262,7 +266,7 @@ class SearchFlowViewModel @Inject constructor(
 
     fun loadMoreSorted() {
         if (state.bottomItem == null && state.page != null) {
-            uiStateListener.value = state.copy(loadMore = true, bottomItem = BottomProgressItem())
+            uiStateListener.value = state.copy(loadMore = true, bottomItem = BottomProgressItem(), data = state.data.copy(scrollToTop = false))
             fetchProductsByQuery(true)
         }
     }
@@ -381,7 +385,7 @@ class SearchFlowViewModel @Inject constructor(
                                 state.copy(
                                     page = if (mappedFeed.isEmpty()) null else state.page?.plus(1),
                                     loadingPage = false,
-                                    data = state.data.copy(itemsList = itemsList),
+                                    data = state.data.copy(itemsList = itemsList, scrollToTop = state.page == 1),
                                     error = null,
                                     loadMore = false,
                                     bottomItem = null
@@ -406,6 +410,10 @@ class SearchFlowViewModel @Inject constructor(
                 }
                 .collect()
         }
+    }
+
+    fun clearScrollState() {
+        uiStateListener.value = state.copy(data = state.data.copy(scrollToTop = false))
     }
 
     fun fetchMatchesQueries(query: String) {
@@ -434,7 +442,12 @@ class SearchFlowViewModel @Inject constructor(
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
                                 matchesQuery = data.quickQueryBundleUI,
-                                mayBeSearchDetail = data.quickProductsCategoryDetailUI
+                                mayBeSearchDetail = data.quickProductsCategoryDetailUI?.copy(
+                                    productUIList = data.quickProductsCategoryDetailUI.productUIList.map { it.copy(
+                                            linear = false
+                                        )
+                                    }
+                                )
                             ),
                             loadingPage = false,
                             error = null
@@ -538,7 +551,7 @@ class SearchFlowViewModel @Inject constructor(
             loadMore = false,
             loadingPage = true
         )
-        fetchHeader()
+        fetchProductsByQuery()
     }
 
     fun onPreOrderClick(id: Long, name: String, detailPicture: String) {
@@ -581,6 +594,7 @@ class SearchFlowViewModel @Inject constructor(
         val isFirstLoadSorted: Boolean = false,
         val itemsList: List<Item> = emptyList(),
         val layoutManager: String = LINEAR,
+        val scrollToTop: Boolean = false,
     ) : State
 
     companion object {

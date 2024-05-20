@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.search
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -15,6 +16,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.chip.Chip
 import com.vodovoz.app.R
@@ -27,19 +30,18 @@ import com.vodovoz.app.databinding.FragmentSearchFlowBinding
 import com.vodovoz.app.databinding.ViewSimpleTextChipBinding
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
-import com.vodovoz.app.feature.favorite.bestforyouadapter.BestForYouController
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
-import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.feature.products_slider.ProductsSliderConfig
+import com.vodovoz.app.feature.productlist.adapter.SortedAdapter
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.SortTypeListUI
 import com.vodovoz.app.ui.model.SortTypeUI
 import com.vodovoz.app.util.extensions.fromHtml
+import com.vodovoz.app.util.extensions.scrollViewToTop
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
@@ -80,14 +82,13 @@ class SearchFragment : BaseFragment() {
     private val categoryTabsController by lazy {
         CategoryTabsFlowController(categoryTabsClickListener(), space)
     }
-    private val bestForYouController by lazy {
-        BestForYouController(
-            cartManager,
-            likeManager,
-            getProductsShowClickListener(),
-            getProductsClickListener()
+
+    private val bestForYouAdapter by lazy {
+        SortedAdapter(
+            getProductsClickListener(), cartManager, likeManager, ratingProductManager
         )
     }
+
     private val productsController by lazy {
         SearchFlowController(
             viewModel,
@@ -118,8 +119,9 @@ class SearchFragment : BaseFragment() {
         }
 
         categoryTabsController.bind(binding.categoriesRecycler)
-        bestForYouController.bind(binding.bestForYouRv)
         productsController.bind(binding.productRecycler)
+        viewModel.clearScrollState()
+        initBestForYouRecycler()
 
         observeResultLiveData()
         initBackButton()
@@ -128,6 +130,31 @@ class SearchFragment : BaseFragment() {
             viewModel.refreshSorted()
         }
 
+    }
+
+    private fun initBestForYouRecycler() {
+        binding.rvBestForYou.layoutManager =
+//            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            GridLayoutManager(context, 2)
+        binding.rvBestForYou.adapter = bestForYouAdapter
+        binding.rvBestForYou.setRecycledViewPool(likeManager.fetchViewPool())
+        binding.rvBestForYou.addItemDecoration(
+            object : RecyclerView.ItemDecoration() {
+                override fun getItemOffsets(
+                    outRect: Rect,
+                    view: View,
+                    parent: RecyclerView,
+                    state: RecyclerView.State,
+                ) {
+                    with(outRect) {
+                        left = space
+                        top = space
+                        bottom = space
+                        right = space
+                    }
+                }
+            }
+        )
     }
 
     private fun observeEvents() {
@@ -230,6 +257,7 @@ class SearchFragment : BaseFragment() {
                 false -> binding.incAppBar.incSearch.imgClear.visibility = View.INVISIBLE
             }
             viewModel.changeQuery(query.toString())
+            binding.searchDataContainer.scrollViewToTop()
 //            mutableStateFlow.value = query.toString()
         }
 
@@ -306,6 +334,17 @@ class SearchFragment : BaseFragment() {
                         } else {
                             productsController.submitList(data.itemsList)
                         }
+                        if (data.scrollToTop) {
+                            binding.productRecycler.scrollToPosition(0)
+                        }
+
+                        if (state.data.query.isEmpty()) {
+                            binding.incAppBar.incSearch.etSearch.requestFocus()
+                        } else if (data.itemsList.isNotEmpty()) {
+                            binding.incAppBar.incSearch.etSearch.setText(state.data.query)
+                            binding.searchDataContainer.isVisible = false
+                            binding.productsContainer.isVisible = true
+                        }
 
                         showError(state.error)
 
@@ -324,6 +363,8 @@ class SearchFragment : BaseFragment() {
 
         binding.imgViewMode.setOnClickListener { viewModel.changeLayoutManager() }
 
+        binding.sortContainer.visibility = View.GONE
+
         binding.tvSort.visibility = View.INVISIBLE
         state.categoryHeader?.sortTypeList?.let { sortTypeList ->
             binding.tvSort.setOnClickListener {
@@ -334,6 +375,7 @@ class SearchFragment : BaseFragment() {
             }
             binding.tvSort.text = state.sortType.sortName
             binding.tvSort.visibility = View.VISIBLE
+            binding.sortContainer.visibility = View.VISIBLE
         }
 
         binding.imgCategories.setOnClickListener {
@@ -349,59 +391,29 @@ class SearchFragment : BaseFragment() {
 
         val matches = state.matchesQuery
 
+        binding.bestForYouLL.visibility = View.GONE
         if (state.popularCategoryDetail != null) {
-            binding.bestForYouRv.visibility = View.VISIBLE
-            val homeProducts = if (state.mayBeSearchDetail != null && state.mayBeSearchDetail.productUIList.isNotEmpty()) {
-                HomeProducts(
-                    1,
-                    listOf(state.mayBeSearchDetail),
-                    ProductsSliderConfig(
-                        containShowAllButton = false,
-                        largeTitle = true
-                    ),
-                    HomeProducts.DISCOUNT,
-                    prodList = state.mayBeSearchDetail.productUIList
-                )
+            val products =
+                if (state.mayBeSearchDetail != null && state.mayBeSearchDetail.productUIList.isNotEmpty()) {
+                    state.mayBeSearchDetail.productUIList
+                } else {
+                    state.popularCategoryDetail.productUIList
+                }
+            val title =
+                if (state.mayBeSearchDetail != null && state.mayBeSearchDetail.productUIList.isNotEmpty()) {
+                    state.mayBeSearchDetail.name
+                } else {
+                    state.popularCategoryDetail.name
+                }
+            if (matches != null && (state.mayBeSearchDetail == null || state.mayBeSearchDetail.productUIList.isEmpty())) {
+                binding.bestForYouLL.visibility = View.GONE
             } else {
-                HomeProducts(
-                    1,
-                    listOf(state.popularCategoryDetail),
-                    ProductsSliderConfig(
-                        containShowAllButton = false,
-                        largeTitle = true
-                    ),
-                    HomeProducts.DISCOUNT,
-                    prodList = state.popularCategoryDetail.productUIList
-                )
+                binding.bestForYouLL.visibility = View.VISIBLE
             }
-            val homeTitle = if (state.mayBeSearchDetail != null && state.mayBeSearchDetail.productUIList.isNotEmpty()) {
-                HomeTitle(
-                    id = 1,
-                    type = HomeTitle.VIEWED_TITLE,
-                    name = "Популярные товары",
-                    showAll = false,
-                    showAllName = "СМ.ВСЕ",
-                    categoryProductsName = state.mayBeSearchDetail.name
-                )
-            } else {
-                HomeTitle(
-                    id = 1,
-                    type = HomeTitle.VIEWED_TITLE,
-                    name = "Популярные товары",
-                    showAll = false,
-                    showAllName = "СМ.ВСЕ",
-                    categoryProductsName = state.popularCategoryDetail.name
-                )
-            }
-            if(matches != null && (state.mayBeSearchDetail == null || state.mayBeSearchDetail.productUIList.isEmpty())){
-                binding.bestForYouRv.visibility = View.GONE
-            }
-            bestForYouController.submitList(listOf(homeTitle, homeProducts))
+            binding.tvName.text = title
+            bestForYouAdapter.submitList(products)
 //            showContainer(false)
-        } else {
-            binding.bestForYouRv.visibility = View.GONE
         }
-
 
         if (matches == null) {
             binding.matchesQueriesContainer.visibility = View.GONE
@@ -430,7 +442,7 @@ class SearchFragment : BaseFragment() {
             binding.matchesQueriesContainer.visibility = View.VISIBLE
             binding.emptyResultContainer.isVisible = false
 
-            if(matches.name.isNotEmpty()){
+            if (matches.name.isNotEmpty()) {
                 binding.matchesQueriesTitle.visibility = View.VISIBLE
                 binding.matchesQueriesTitle.text = matches.name
             } else {
@@ -447,13 +459,12 @@ class SearchFragment : BaseFragment() {
                 binding.matchesQueriesChipGroup.visibility = View.GONE
             }
 
-            if(matches.errorText.isNotEmpty()){
+            if (matches.errorText.isNotEmpty()) {
                 binding.matchesQueriesError.visibility = View.VISIBLE
                 binding.matchesQueriesError.text = matches.errorText.fromHtml()
             } else {
                 binding.matchesQueriesError.visibility = View.GONE
             }
-
         }
 
 
@@ -588,20 +599,6 @@ class SearchFragment : BaseFragment() {
             override fun onChangeRating(id: Long, rating: Float, oldRating: Float) {
                 viewModel.changeRating(id, rating, oldRating)
             }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        binding.incAppBar.incSearch.etSearch.requestFocus()
-    }
-
-    private fun getProductsShowClickListener(): ProductsShowAllListener {
-        return object : ProductsShowAllListener {
-            override fun showAllDiscountProducts(id: Long) {}
-            override fun showAllTopProducts(id: Long) {}
-            override fun showAllNoveltiesProducts(id: Long) {}
-            override fun showAllBottomProducts(id: Long) {}
         }
     }
 }
