@@ -150,8 +150,9 @@ class ProductsListFlowViewModel @Inject constructor(
                                     filterCode = data.filterCode.ifEmpty {
                                         state.data.filterCode
                                     },
-                                    sortType = data.sortTypeList?.sortTypeList?.firstOrNull { it.value == "default" }
-                                        ?: SortTypeUI(sortName = "По популярности")
+                                    sortType = data.sortTypeList?.sortTypeList?.firstOrNull { it.value == state.data.sortType.value && it.orientation == state.data.sortType.orientation }
+                                        ?: SortTypeUI(sortName = "По популярности", value = "default"),
+                                    scrollToTop = state.page == 1,
                                 ),
                                 error = null,
                                 loadMore = false,
@@ -199,6 +200,10 @@ class ProductsListFlowViewModel @Inject constructor(
 //        }
 //    }
 
+    fun clearScrollState() {
+        uiStateListener.value = state.copy(data = state.data.copy(scrollToTop = false))
+    }
+
     fun refreshSorted() {
         uiStateListener.value =
             state.copy(loadingPage = true, page = 1, loadMore = false, bottomItem = null)
@@ -211,7 +216,7 @@ class ProductsListFlowViewModel @Inject constructor(
             if (it.limit < it.totalCount) {
                 if (state.bottomItem == null && state.page != null) {
                     uiStateListener.value =
-                        state.copy(loadMore = true, bottomItem = BottomProgressItem())
+                        state.copy(loadMore = true, bottomItem = BottomProgressItem(), data = state.data.copy(scrollToTop = false))
                     fetchProductsByCategory()
                 }
             }
@@ -356,6 +361,7 @@ class ProductsListFlowViewModel @Inject constructor(
         val layoutManager: String = LINEAR,
         val showCategoryContainer: Boolean = false,
         val filterCode: String = "BRAND",
+        val scrollToTop: Boolean = false,
     ) : State
 
     companion object {

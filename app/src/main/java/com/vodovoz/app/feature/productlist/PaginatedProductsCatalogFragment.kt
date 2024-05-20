@@ -88,7 +88,7 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
 
         brandController.bind(binding.brandRecycler)
         productsListFlowController.bind(binding.productRecycler)
-
+        viewModel.clearScrollState()
         observeUiState()
         observeResultLiveData()
         observeChangeLayoutManager()
@@ -160,6 +160,9 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
                             productsListFlowController.submitList(data.itemsList + state.bottomItem)
                         } else {
                             productsListFlowController.submitList(data.itemsList)
+                        }
+                        if(data.scrollToTop){
+                            binding.productRecycler.scrollToPosition(0)
                         }
 
                         if (state.error is ErrorState.Empty) {

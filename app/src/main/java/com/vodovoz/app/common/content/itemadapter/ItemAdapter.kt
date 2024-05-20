@@ -53,7 +53,7 @@ abstract class ItemAdapter : RecyclerView.Adapter<ItemViewHolder<out Item>>() {
         if (state != null) {
             holder.setState(state)
         }
-        holder.bind(items[position])
+        holder.bind(items[key])
     }
 
     override fun onBindViewHolder(
