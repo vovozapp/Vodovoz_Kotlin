@@ -254,12 +254,12 @@ class CartFragment : BaseFragment() {
                                 View.VISIBLE
                             }
 
-                        showLoaderWithBg(cartState.loadingPage)
-//                        if (cartState.loadingPage) {
-//                            showLoader()
-//                        } else {
-//                            hideLoader()
-//                        }
+//                        showLoaderWithBg(cartState.loadingPage)
+                        if (cartState.loadingPage) {
+                            showLoader()
+                        } else {
+                            hideLoader()
+                        }
 
                         val availableItems = cartState.data.availableProducts?.items
                         val notAvailableItems = cartState.data.notAvailableProducts?.items

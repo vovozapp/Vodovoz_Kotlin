@@ -32,6 +32,7 @@
         android:fontFamily="@font/rotondac"
         android:background="@null"
         android:hint="@string/search_hint"
+        android:imeOptions="actionSearch"
         android:inputType="text"
         android:padding="5dp"
         android:textColorHint="#889295"
