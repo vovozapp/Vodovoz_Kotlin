@@ -101,7 +101,7 @@ class FavoriteFragment : BaseFragment() {
         categoryTabsController.bind(binding.categoriesRecycler)
         bestForYouController.bind(binding.bestForYouRv)
         favoritesController.bind(binding.productRecycler, binding.refreshEmptyFavoriteContainer)
-
+        viewModel.clearScrollState()
         observeUiState()
         observeEvents()
         observeResultLiveData()
@@ -123,6 +123,7 @@ class FavoriteFragment : BaseFragment() {
                                 tabManager.setAuthRedirect(findNavController().graph.id)
                                 tabManager.selectTab(R.id.graph_profile)
                             }
+
                             is FavoriteFlowViewModel.FavoriteEvents.GoToPreOrder -> {
                                 if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
                                     findNavController().popBackStack()
@@ -176,6 +177,9 @@ class FavoriteFragment : BaseFragment() {
                             favoritesController.submitList(data.itemsList + state.bottomItem)
                         } else {
                             favoritesController.submitList(data.itemsList)
+                        }
+                        if (data.scrollToTop) {
+                            binding.productRecycler.scrollToPosition(0)
                         }
 
                         if (state.error !is ErrorState.Empty) {
@@ -239,7 +243,7 @@ class FavoriteFragment : BaseFragment() {
             state.availableTitle != null || state.notAvailableTitle != null
 
         binding.tvSort.visibility = View.INVISIBLE
-        state.favoriteCategory?.sortTypeList?.let {sortTypeList->
+        state.favoriteCategory?.sortTypeList?.let { sortTypeList ->
             binding.tvSort.setOnClickListener {
                 showBottomSortSettings(
                     state.sortType,
@@ -299,6 +303,7 @@ class FavoriteFragment : BaseFragment() {
                 binding.categoriesRecycler.visibility = View.VISIBLE
                 binding.imgCategories.visibility = View.VISIBLE
             }
+
             else -> {
                 binding.imgCategories.visibility = View.GONE
                 binding.categoriesRecycler.visibility = View.GONE

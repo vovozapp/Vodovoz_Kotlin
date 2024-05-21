@@ -24,7 +24,13 @@ import com.vodovoz.app.ui.model.SortTypeUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -66,8 +72,9 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                             data = state.data.copy(
                                 categoryHeader = checkSelectedFilter(data),
                                 categoryId = data.id ?: -1,
-                                sortType = data.sortTypeList?.sortTypeList?.firstOrNull { it.value == "default" }
-                                ?: SortTypeUI(sortName = "По популярности")
+                                sortType = data.sortTypeList?.sortTypeList?.firstOrNull {
+                                    it.value == state.data.sortType.value && it.orientation == state.data.sortType.orientation
+                                } ?: SortTypeUI(sortName = "По популярности", value = "default")
                             ),
                             loadingPage = false,
                             error = null
@@ -105,6 +112,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                             page = state.page
                         )
                     )
+
                     is DataSource.Country -> emit(
                         repository.fetchProductsByCountry(
                             countryId = dataSource.countryId,
@@ -117,6 +125,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                             page = state.page
                         )
                     )
+
                     is DataSource.Discount -> emit(
                         repository.fetchProductsByDiscount(
                             categoryId = when (state.data.selectedCategoryId) {
@@ -128,6 +137,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                             page = state.page
                         )
                     )
+
                     is DataSource.Novelties -> emit(
                         repository.fetchProductsByNovelties(
                             categoryId = when (state.data.selectedCategoryId) {
@@ -139,6 +149,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                             page = state.page
                         )
                     )
+
                     is DataSource.Slider -> emit(
                         repository.fetchProductsByDoubleSlider(
                             categoryId = when (state.data.selectedCategoryId) {
@@ -181,7 +192,8 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                                 page = if (mappedFeed.isEmpty()) null else state.page?.plus(1),
                                 loadingPage = false,
                                 data = state.data.copy(
-                                    itemsList = itemsList
+                                    itemsList = itemsList,
+                                    scrollToTop = state.page == 1
                                 ),
                                 error = null,
                                 loadMore = false,
@@ -207,6 +219,10 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                 }
                 .collect()
         }
+    }
+
+    fun clearScrollState() {
+        uiStateListener.value = state.copy(data = state.data.copy(scrollToTop = false))
     }
 
     fun firstLoad() {
@@ -238,7 +254,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
 
     fun loadMoreSorted() {
         if (state.bottomItem == null && state.page != null) {
-            uiStateListener.value = state.copy(loadMore = true, bottomItem = BottomProgressItem())
+            uiStateListener.value = state.copy(loadMore = true, bottomItem = BottomProgressItem(), data = state.data.copy(scrollToTop = false))
             fetchProductsByDataSource()
         }
     }
@@ -319,7 +335,8 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                 sortType = sortType,
                 categoryHeader = categoryUI?.copy(
                     categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == -1L) }
-                )
+                ),
+                scrollToTop = true,
             ),
             page = 1,
             loadMore = false,
@@ -353,6 +370,7 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
         val itemsList: List<Item> = emptyList(),
         val layoutManager: String = LINEAR,
         val selectedCategoryId: Long = -1,
+        val scrollToTop: Boolean = false,
     ) : State
 
     companion object {

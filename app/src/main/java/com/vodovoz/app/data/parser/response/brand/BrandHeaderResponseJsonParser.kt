@@ -28,8 +28,8 @@ object BrandHeaderResponseJsonParser {
             false -> getJSONObject("razdel").getJSONArray("LISTRAZDEL").parseSubCategoryEntityList()
         },
         sortTypeList = when(has("sortirovka")){
-            true -> null
-            false -> getJSONObject("sortirovka").parseSortTypeList()
+            true -> getJSONObject("sortirovka").parseSortTypeList()
+            false -> null
         }
     )
 

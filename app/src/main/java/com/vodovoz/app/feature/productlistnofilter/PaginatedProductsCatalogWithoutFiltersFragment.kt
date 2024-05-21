@@ -90,7 +90,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
 
         categoryTabsController.bind(binding.categoriesRecycler)
         productsListNoFilterFlowController.bind(binding.productRecycler)
-
+        viewModel.clearScrollState()
         observeUiState()
         observeResultLiveData()
         observeChangeLayoutManager()
@@ -169,6 +169,9 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
                             productsListNoFilterFlowController.submitList(data.itemsList + state.bottomItem)
                         } else {
                             productsListNoFilterFlowController.submitList(data.itemsList)
+                        }
+                        if(data.scrollToTop){
+                            binding.productRecycler.scrollToPosition(0)
                         }
 
                         showError(state.error)

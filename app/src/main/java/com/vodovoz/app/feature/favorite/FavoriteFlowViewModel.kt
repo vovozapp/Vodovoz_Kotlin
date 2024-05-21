@@ -3,9 +3,13 @@ package com.vodovoz.app.feature.favorite
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.common.content.*
+import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.common.content.Event
+import com.vodovoz.app.common.content.PagingContractViewModel
+import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
+import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
@@ -20,7 +24,13 @@ import com.vodovoz.app.ui.model.SortTypeUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -89,8 +99,8 @@ class FavoriteFlowViewModel @Inject constructor(
                 )
             }
                 .flowOn(Dispatchers.IO)
-                .onEach {
-                    val response = it
+                .onEach { responseEntity ->
+                    val response = responseEntity
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
                         uiStateListener.value = state.copy(
@@ -122,6 +132,10 @@ class FavoriteFlowViewModel @Inject constructor(
         }
     }
 
+    fun clearScrollState() {
+        uiStateListener.value = state.copy(data = state.data.copy(scrollToTop = false))
+    }
+
     fun firstLoadSorted() {
         if (!state.data.isFirstLoadSorted) {
             uiStateListener.value =
@@ -136,7 +150,7 @@ class FavoriteFlowViewModel @Inject constructor(
             page = 1,
             loadMore = false,
             bottomItem = null,
-            data = state.data.copy(selectedCategoryId = -1)
+            data = state.data.copy(selectedCategoryId = -1, scrollToTop = true)
         )
         fetchFavoriteProductsHeader()
         fetchFavoriteProductsSorted()
@@ -144,7 +158,11 @@ class FavoriteFlowViewModel @Inject constructor(
 
     fun loadMoreSorted() {
         if (state.bottomItem == null && state.page != null) {
-            uiStateListener.value = state.copy(loadMore = true, bottomItem = BottomProgressItem())
+            uiStateListener.value = state.copy(
+                loadMore = true,
+                bottomItem = BottomProgressItem(),
+                data = state.data.copy(scrollToTop = false)
+            )
             fetchFavoriteProductsSorted()
         }
     }
@@ -212,7 +230,10 @@ class FavoriteFlowViewModel @Inject constructor(
                             state.copy(
                                 page = if (mappedFeed.isEmpty()) null else state.page?.plus(1),
                                 loadingPage = false,
-                                data = state.data.copy(itemsList = itemsList),
+                                data = state.data.copy(
+                                    itemsList = itemsList,
+                                    scrollToTop = state.page == 1
+                                ),
                                 error = null,
                                 loadMore = false,
                                 bottomItem = null
@@ -327,7 +348,8 @@ class FavoriteFlowViewModel @Inject constructor(
                 selectedCategoryId = -1,
                 favoriteCategory = categoryUI?.copy(
                     categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == -1L) }
-                )
+                ),
+                scrollToTop = true
             ),
             page = 1,
             loadMore = false,
@@ -368,6 +390,7 @@ class FavoriteFlowViewModel @Inject constructor(
         val layoutManager: String = LINEAR,
         val emptyTitle: String? = null,
         val emptyMessage: String? = null,
+        val scrollToTop: Boolean = false,
     ) : State
 
     companion object {
