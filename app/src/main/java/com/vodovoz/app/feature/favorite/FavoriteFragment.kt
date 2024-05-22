@@ -403,12 +403,11 @@ class FavoriteFragment : BaseFragment() {
         )
     }
 
-    private val permissionsController by lazy {
-        PermissionsController(requireContext())
-    }
-
+    @Inject
+    lateinit var permissionsControllerFactory: PermissionsController.Factory
+    private val permissionsController by lazy { permissionsControllerFactory.create(requireActivity()) }
     private fun navigateToQrCodeFragment() {
-        permissionsController.methodRequiresCameraPermission(requireActivity()) {
+        permissionsController.methodRequiresCameraPermission {
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.CAMERA
@@ -423,7 +422,7 @@ class FavoriteFragment : BaseFragment() {
     }
 
     private fun startSpeechRecognizer() {
-        permissionsController.methodRequiresRecordAudioPermission(requireActivity()) {
+        permissionsController.methodRequiresRecordAudioPermission {
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.RECORD_AUDIO

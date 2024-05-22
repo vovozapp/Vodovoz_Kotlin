@@ -29,9 +29,9 @@ class MainFragment : BaseFragment() {
     lateinit var tabManager: TabManager
 
 
-    private val permissionsController by lazy {
-        PermissionsController(requireContext())
-    }
+    @Inject
+    lateinit var permissionsControllerFactory: PermissionsController.Factory
+    private val permissionsController by lazy { permissionsControllerFactory.create(requireActivity()) }
 
     private val viewModel: MainViewModel by viewModels()
 
@@ -158,9 +158,9 @@ class MainFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        permissionsController.methodRequiresLocationsPermission(requireActivity())
+        permissionsController.methodRequiresLocationsPermission()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissionsController.methodRequiresNotificationPermission(requireActivity())
+            permissionsController.methodRequiresNotificationPermission()
         }
     }
 

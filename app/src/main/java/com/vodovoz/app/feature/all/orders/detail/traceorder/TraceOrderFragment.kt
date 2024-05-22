@@ -38,8 +38,13 @@ import com.yandex.mapkit.layers.ObjectEvent
 import com.yandex.mapkit.location.Location
 import com.yandex.mapkit.location.LocationListener
 import com.yandex.mapkit.location.LocationStatus
-import com.yandex.mapkit.map.*
+import com.yandex.mapkit.map.CameraPosition
+import com.yandex.mapkit.map.CompositeIcon
+import com.yandex.mapkit.map.IconStyle
+import com.yandex.mapkit.map.InputListener
 import com.yandex.mapkit.map.Map
+import com.yandex.mapkit.map.PlacemarkMapObject
+import com.yandex.mapkit.map.RotationType
 import com.yandex.mapkit.traffic.TrafficColor
 import com.yandex.mapkit.traffic.TrafficLevel
 import com.yandex.mapkit.traffic.TrafficListener
@@ -49,10 +54,13 @@ import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TraceOrderFragment : BaseFragment(), InputListener,
     UserLocationObjectListener, TrafficListener {
+
+
 
     override fun layout(): Int = R.layout.fragment_trace_order
 
@@ -70,7 +78,10 @@ class TraceOrderFragment : BaseFragment(), InputListener,
         )
     }
     private val mapKit: MapKit by lazy { MapKitFactory.getInstance() }
-    private val permissionsController by lazy { PermissionsController(requireContext()) }
+
+    @Inject
+    lateinit var permissionsControllerFactory: PermissionsController.Factory
+    private val permissionsController by lazy { permissionsControllerFactory.create(requireActivity()) }
     private val fusedLocationClient by lazy {
         LocationServices.getFusedLocationProviderClient(
             requireActivity()
@@ -89,7 +100,7 @@ class TraceOrderFragment : BaseFragment(), InputListener,
         mapKit.onStart()
         binding.mapView.onStart()
         if (detectGps()) {
-            permissionsController.methodRequiresLocationsPermission(requireActivity()) {
+            permissionsController.methodRequiresLocationsPermission {
                 moveToLastLocation()
             }
         } else {
@@ -243,7 +254,7 @@ class TraceOrderFragment : BaseFragment(), InputListener,
                 }
             }
 
-            permissionsController.methodRequiresLocationsPermission(requireActivity()) {
+            permissionsController.methodRequiresLocationsPermission {
                 moveToLastLocation()
             }
         }
@@ -362,6 +373,7 @@ class TraceOrderFragment : BaseFragment(), InputListener,
             TrafficState.LOADING -> {
                 binding.trafficIv.setImageDrawable(requireContext().drawable(R.drawable.icon_traffic_light_grey))
             }
+
             TrafficState.STARTED -> {
                 if (level == null) {
                     binding.trafficIv.setImageDrawable(requireContext().drawable(R.drawable.icon_traffic_light_grey))
@@ -376,6 +388,7 @@ class TraceOrderFragment : BaseFragment(), InputListener,
                     binding.trafficTv.text = level.level.toString()
                 }
             }
+
             TrafficState.EXPIRED -> {
                 binding.trafficIv.setImageDrawable(requireContext().drawable(R.drawable.icon_traffic_light_blue))
             }

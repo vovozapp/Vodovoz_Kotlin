@@ -27,6 +27,7 @@ import com.vodovoz.app.util.extensions.textOrErrorWithEmpty
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
 enum class Gender(
     val genderName: String
@@ -44,9 +45,9 @@ class UserDataFragment : BaseFragment() {
 
     private val profileViewModel: ProfileFlowViewModel by activityViewModels()
 
-    private val permissionsController by lazy {
-        PermissionsController(requireContext())
-    }
+    @Inject
+    lateinit var permissionsControllerFactory: PermissionsController.Factory
+    private val permissionsController by lazy { permissionsControllerFactory.create(requireActivity()) }
 
     private val binding: FragmentUserDataFlowBinding by viewBinding {
         FragmentUserDataFlowBinding.bind(contentView)
@@ -72,7 +73,7 @@ class UserDataFragment : BaseFragment() {
     private fun bindButtons() {
 
         binding.downloadAvatar.setOnClickListener {
-            permissionsController.methodRequiresStoragePermission(requireActivity()) {
+            permissionsController.methodRequiresStoragePermission {
                 findNavController().navigate(R.id.imagePickerFragment, bundleOf(ImagePickerFragment.IMAGE_PICKER_RECEIVER to ImagePickerFragment.AVATAR))
             }
         }

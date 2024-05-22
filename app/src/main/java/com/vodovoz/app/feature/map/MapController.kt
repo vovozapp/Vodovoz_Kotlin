@@ -49,6 +49,7 @@ import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.Error
 import com.yandex.runtime.image.ImageProvider
+import javax.inject.Inject
 
 class MapController(
     private val mapKit: MapKit,
@@ -67,9 +68,9 @@ class MapController(
         context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
     }
 
-    private val permissionsController by lazy {
-        PermissionsController(context)
-    }
+    @Inject
+    lateinit var permissionsControllerFactory: PermissionsController.Factory
+    private val permissionsController by lazy { permissionsControllerFactory.create(activity) }
 
     private val fusedLocationClient by lazy {
         LocationServices.getFusedLocationProviderClient(activity)
@@ -162,7 +163,7 @@ class MapController(
                 }
             }
 
-            permissionsController.methodRequiresLocationsPermission(activity) {
+            permissionsController.methodRequiresLocationsPermission {
                 moveToLastLocation()
             }
         }
@@ -543,7 +544,7 @@ class MapController(
     fun onStart(address: AddressUI?) {
         if (address == null) {
             if (detectGps()) {
-                permissionsController.methodRequiresLocationsPermission(activity) {
+                permissionsController.methodRequiresLocationsPermission {
                     moveToLastLocation()
                 }
             } else {

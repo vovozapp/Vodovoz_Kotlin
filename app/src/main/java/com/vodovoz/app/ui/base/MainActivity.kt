@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.firebase.messaging.RemoteMessage
 import com.vodovoz.app.common.account.data.ReloginManager
+import com.vodovoz.app.common.permissions.PermissionsManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.ActivityMainBinding
 import com.vodovoz.app.feature.sitestate.SiteStateManager
@@ -25,7 +26,7 @@ import pub.devrel.easypermissions.EasyPermissions
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -37,6 +38,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var reloginManager: ReloginManager
+
+    @Inject
+    lateinit var permissionsManager: PermissionsManager
 
     private val viewModel: SplashFileViewModel by viewModels()
 
@@ -121,5 +125,26 @@ class MainActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+
+        debugLog { "Permissions: onPermissionsGranted $requestCode" }
+        permissionsManager.setPermissionChecked(requestCode, true)
+    }
+
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+
+        debugLog { "Permissions: onPermissionsDenied $requestCode" }
+        if(EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            debugLog { "Permissions: somePermissionPermanentlyDenied $requestCode" }
+            permissionsManager.setPermissionChecked(requestCode, true)
+        }
+    }
+
+    override fun onRationaleAccepted(requestCode: Int) { }
+
+    override fun onRationaleDenied(requestCode: Int) {
+        debugLog { "Permissions: onRationaleDenied $requestCode" }
+        permissionsManager.setPermissionChecked(requestCode, true)
     }
 }
