@@ -59,7 +59,9 @@ class SplashFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        firstLoad()
+        if(savedInstanceState == null) {
+            firstLoad()
+        }
     }
 
     private fun firstLoad() {
