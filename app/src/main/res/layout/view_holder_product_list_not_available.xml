@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:alpha="0.8"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:alpha="0.8">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgPicture"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="10dp"
         android:alpha="0.5"
+        android:padding="10dp"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -22,22 +22,22 @@
         android:id="@+id/cwStatusContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/imgPicture"
-        app:layout_constraintStart_toStartOf="@id/imgPicture"
-        app:layout_constraintEnd_toEndOf="@id/imgPicture"
         app:cardBackgroundColor="@color/red"
         app:cardCornerRadius="@dimen/corner_5"
-        app:cardElevation="0dp">
+        app:cardElevation="0dp"
+        app:layout_constraintEnd_toEndOf="@id/imgPicture"
+        app:layout_constraintStart_toStartOf="@id/imgPicture"
+        app:layout_constraintTop_toTopOf="@id/imgPicture">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvStatus"
             style="@style/TextViewSmallWhite"
-            android:textSize="9sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/space_4"
             android:paddingVertical="@dimen/space_2"
             android:text="@string/not_available"
+            android:textSize="9sp"
             tools:ignore="SmallSp" />
 
     </androidx.cardview.widget.CardView>
@@ -57,10 +57,10 @@
             android:id="@+id/tvName"
             style="@style/TextViewNormalBlack"
             android:layout_width="match_parent"
-            android:layout_weight="2"
             android:layout_height="0dp"
-            android:paddingEnd="@dimen/space_8"
             android:layout_marginTop="@dimen/space_2"
+            android:layout_weight="2"
+            android:paddingEnd="@dimen/space_8"
             tools:ignore="RtlSymmetry"
             tools:text="Какое-то интересное не короткое название какой-то" />
 
@@ -69,8 +69,8 @@
             style="@style/TextViewSmallGray"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:layout_marginTop="@dimen/space_2"
+            android:layout_weight="1"
             android:paddingEnd="@dimen/space_8"
             tools:ignore="RtlSymmetry"
             tools:text="Стоимость залога 400 Р" />
@@ -80,8 +80,8 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgFavoriteStatus"
         android:layout_width="@dimen/_16sdp"
-        android:layout_margin="2dp"
         android:layout_height="@dimen/_16sdp"
+        android:layout_margin="2dp"
         android:src="@drawable/ic_favorite_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -113,11 +113,11 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvPricePerUnit"
             style="@style/TextViewSmallGray"
-            android:textSize="12sp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="start|bottom"
+            android:textSize="12sp"
             app:layout_constraintBottom_toTopOf="@+id/price"
             app:layout_constraintStart_toEndOf="@+id/vpPictures"
             tools:text="510/кг" />
@@ -131,10 +131,10 @@
                 style="@style/TextViewMediumBlackBold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:textSize="16sp"
                 tools:text="88888 Р" />
 
             <androidx.appcompat.widget.AppCompatTextView
