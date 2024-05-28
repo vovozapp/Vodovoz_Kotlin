@@ -40,8 +40,8 @@
         android:id="@+id/btnPickUpGift"
         style="@style/GreenButton"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/button_small_height"
-        android:paddingHorizontal="@dimen/space_16"
+        android:layout_height="30dp"
+        android:paddingHorizontal="@dimen/space_8"
         android:text="@string/take_gift_btn_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

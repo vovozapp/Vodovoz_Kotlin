@@ -50,8 +50,8 @@ class GiftsBottomFragment : BaseBottomSheetFragment() {
                     state: RecyclerView.State
                 ) {
                     with(outRect) {
-                        top = space
-                        bottom = space
+                        top = space / 2
+                        bottom = space / 2
                         right = space
                         left = space
                     }
