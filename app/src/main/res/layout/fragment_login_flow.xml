@@ -188,24 +188,56 @@
 
         </LinearLayout>
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/scPersonalInfo"
-            style="@style/TextViewNormalBlack"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:checked="true"
             android:layout_height="wrap_content"
-            android:text="@string/i_confirm_personal_data"
-            android:layout_marginTop="@dimen/space_8"
-            android:layout_marginHorizontal="@dimen/space_16"/>
+            android:gravity="center_vertical">
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/scDistribution"
-            android:checked="true"
-            style="@style/TextViewNormalBlack"
+            <TextView
+                android:id="@+id/tvPersonalData"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/i_confirm_personal_data"
+                style="@style/TextViewNormalBlack"
+                android:layout_marginStart="@dimen/space_16"
+                />
+
+
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/scPersonalInfo"
+                android:layout_width="wrap_content"
+                android:checked="true"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_16"/>
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/subscribe_on_mailing_list"
-            android:layout_marginHorizontal="@dimen/space_16"/>
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/subscribe_on_mailing_list"
+                style="@style/TextViewNormalBlack"
+                android:layout_marginStart="@dimen/space_16"
+                />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/scDistribution"
+                android:checked="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_16"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"

@@ -24,6 +24,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.databinding.FragmentLoginFlowBinding
 import com.vodovoz.app.feature.cart.CartFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
@@ -114,6 +115,7 @@ class LoginFragment : BaseFragment() {
 
         initToolbar(resources.getString(R.string.auth_title))
         initButtons()
+        initPersonalData()
         observeUiState()
         observeEvents()
         viewModel.setupByPhone()
@@ -122,6 +124,17 @@ class LoginFragment : BaseFragment() {
         bindErrorRefresh { showError(null) }
         checkShowFingerPrint()
         bindFingerPrintBtn()
+    }
+
+    private fun initPersonalData() {
+        binding.tvPersonalData.setOnClickListener {
+            findNavController().navigate(
+                LoginFragmentDirections.actionToWebViewFragment(
+                    url = ApiConfig.PERSONAL_DATA_URL,
+                    title = "Персональные данные"
+                )
+            )
+        }
     }
 
     internal fun authByUserSettings() {
@@ -160,12 +173,14 @@ class LoginFragment : BaseFragment() {
                                             binding.etCode.text.toString()
                                         )
                                     }
+
                                     false -> {
                                         when (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString())) {
                                             true -> {
                                                 debugLog { "requestCode" }
                                                 viewModel.requestCode(binding.etPhone.text.toString())
                                             }
+
                                             false -> {
                                                 debugLog { "Неверный формат телефона" }
                                                 binding.tilPhone.error = "Неверный формат телефона"
@@ -174,6 +189,7 @@ class LoginFragment : BaseFragment() {
                                     }
                                 }
                             }
+
                             LoginFlowViewModel.LoginEvents.AuthByEmail -> {
                                 val email = validateEmail()
                                 if (!email) return@collect
@@ -184,10 +200,12 @@ class LoginFragment : BaseFragment() {
                                     password
                                 )
                             }
+
                             is LoginFlowViewModel.LoginEvents.AuthError -> {
                                 debugLog { "AuthError" }
                                 binding.tilPassword.error = it.message
                             }
+
                             LoginFlowViewModel.LoginEvents.AuthSuccess -> {
                                 debugLog { "AuthSuccess" }
                                 profileViewModel.refresh()
@@ -202,14 +220,17 @@ class LoginFragment : BaseFragment() {
                                     tabManager.setDefaultAuthRedirect()
                                 }
                             }
+
                             LoginFlowViewModel.LoginEvents.CodeComplete -> {
                                 debugLog { "CodeComplete" }
                                 binding.tilCode.requestFocus()
                             }
+
                             is LoginFlowViewModel.LoginEvents.PasswordRecoverError -> {
                                 debugLog { "PasswordRecoverError" }
                                 Snackbar.make(binding.root, it.message, Snackbar.LENGTH_LONG).show()
                             }
+
                             is LoginFlowViewModel.LoginEvents.PasswordRecoverSuccess -> {
                                 debugLog { "PasswordRecoverSuccess" }
                                 MaterialAlertDialogBuilder(requireContext())
@@ -219,6 +240,7 @@ class LoginFragment : BaseFragment() {
                                     }
                                     .show()
                             }
+
                             LoginFlowViewModel.LoginEvents.TimerFinished -> {
                                 debugLog { "TimerFinished" }
                                 binding.tvExpired.text = "Отправить код повторно"
@@ -241,6 +263,7 @@ class LoginFragment : BaseFragment() {
                                     }
                                 }
                             }
+
                             is LoginFlowViewModel.LoginEvents.TimerTick -> {
                                 debugLog { "TimerTick" }
                                 binding.tvExpired.setExpiredCodeText(it.tick)
@@ -256,6 +279,7 @@ class LoginFragment : BaseFragment() {
                                 binding.btnSignIn.text = "Войти"
                                 binding.tilCode.visibility = View.VISIBLE
                             }
+
                             is LoginFlowViewModel.LoginEvents.SetupByPhone -> {
                                 debugLog { "SetupByPhone" }
                                 setupAuthByPhone(it.time, it.phone)
@@ -299,6 +323,7 @@ class LoginFragment : BaseFragment() {
                             AuthType.EMAIL -> {
                                 bindEmailBtn()
                             }
+
                             AuthType.PHONE -> {
                                 bindPhoneBtn()
                             }
@@ -392,6 +417,7 @@ class LoginFragment : BaseFragment() {
                 binding.tvExpired.visibility = View.GONE
                 binding.tilCode.visibility = View.GONE
             }
+
             false -> {
                 viewModel.startCountDownTimer(-expiredTime)
                 if (phone.isNotEmpty()) {
@@ -433,14 +459,17 @@ class LoginFragment : BaseFragment() {
                 biometricPrompt.authenticate(promptInfo)
                 accountManager.saveUseBio(true)
             }
+
             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
                 binding.btnFingerPrint.isVisible = false
                 accountManager.saveUseBio(false)
             }
+
             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
                 binding.btnFingerPrint.isVisible = false
                 accountManager.saveUseBio(false)
             }
+
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
                 binding.btnFingerPrint.isVisible = false
                 accountManager.saveUseBio(false)
