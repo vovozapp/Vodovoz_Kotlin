@@ -3,6 +3,8 @@ package com.vodovoz.app.feature.auth.login
 import android.app.Activity
 import android.graphics.Typeface
 import android.os.Bundle
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.biometric.BiometricManager
@@ -321,7 +323,7 @@ class LoginFragment : BaseFragment() {
 
                         when (it.data.authType) {
                             AuthType.EMAIL -> {
-                                bindEmailBtn()
+                                bindEmailBtn(it.data)
                             }
 
                             AuthType.PHONE -> {
@@ -360,46 +362,64 @@ class LoginFragment : BaseFragment() {
         }
     }
 
-    private fun bindEmailBtn() {
-        binding.cwAuthByEmailContainer.setCardBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.white
+    private fun bindEmailBtn(data: LoginFlowViewModel.LoginState) {
+        with(binding) {
+            cwAuthByEmailContainer.setCardBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.white
+                )
             )
-        )
-        binding.cwAuthByEmailContainer.elevation = resources.getDimension(R.dimen.elevation_3)
-        binding.llAutByEmailContainer.visibility = View.VISIBLE
-        binding.cwAuthByPhoneContainer.setCardBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                android.R.color.transparent
+            cwAuthByEmailContainer.elevation = resources.getDimension(R.dimen.elevation_3)
+            llAutByEmailContainer.visibility = View.VISIBLE
+            cwAuthByPhoneContainer.setCardBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    android.R.color.transparent
+                )
             )
-        )
-        binding.cwAuthByPhoneContainer.elevation = 0f
-        binding.llAutByPhoneContainer.visibility = View.GONE
-        binding.btnSignIn.text = "Войти"
+            cwAuthByPhoneContainer.elevation = 0f
+            llAutByPhoneContainer.visibility = View.GONE
+            btnSignIn.text = "Войти"
+
+            llPersonalData.visibility = View.GONE
+            showPassword.setOnClickListener{
+                viewModel.showPassword()
+            }
+            if(data.showPassword) {
+                etPassword.transformationMethod = HideReturnsTransformationMethod()
+                showPassword.setImageResource(R.drawable.showpassword)
+            } else {
+                etPassword.transformationMethod = PasswordTransformationMethod()
+                showPassword.setImageResource(R.drawable.hidepassword)
+            }
+        }
     }
 
     private fun bindPhoneBtn() {
-        binding.cwAuthByPhoneContainer.setCardBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.white
+        with(binding) {
+            cwAuthByPhoneContainer.setCardBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.white
+                )
             )
-        )
-        binding.cwAuthByPhoneContainer.elevation = resources.getDimension(R.dimen.elevation_3)
-        binding.llAutByPhoneContainer.visibility = View.VISIBLE
-        binding.cwAuthByEmailContainer.setCardBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                android.R.color.transparent
+            cwAuthByPhoneContainer.elevation = resources.getDimension(R.dimen.elevation_3)
+            llAutByPhoneContainer.visibility = View.VISIBLE
+            cwAuthByEmailContainer.setCardBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    android.R.color.transparent
+                )
             )
-        )
-        binding.cwAuthByEmailContainer.elevation = 0f
-        binding.llAutByEmailContainer.visibility = View.GONE
-        when (binding.tilCode.visibility == View.VISIBLE) {
-            true -> binding.btnSignIn.text = "Войти"
-            false -> binding.btnSignIn.text = "Выслать код"
+            cwAuthByEmailContainer.elevation = 0f
+            llAutByEmailContainer.visibility = View.GONE
+            when (tilCode.visibility == View.VISIBLE) {
+                true -> btnSignIn.text = "Войти"
+                false -> btnSignIn.text = "Выслать код"
+            }
+
+            llPersonalData.visibility = View.VISIBLE
         }
     }
 

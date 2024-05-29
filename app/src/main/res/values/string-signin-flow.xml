@@ -4,9 +4,9 @@
     <string name="auth_title" translatable="false">Авторизация</string>
     <string name="sign_in_btn_text" translatable="false">Войти</string>
     <string name="forgot_password_text" translatable="false">Забыли пароль?</string>
-    <string name="recover_password_btn_text" translatable="false">Восстановить пароль</string>
+    <string name="recover_password_btn_text" translatable="false">Получить пароль</string>
 
-    <string name="email_hint_text" translatable="false">Почта</string>
+    <string name="email_hint_text" translatable="false">Email</string>
     <string name="password_hint_text" translatable="false">Пароль</string>
 
     <string name="phone_hint_text" translatable="false">Телефон</string>

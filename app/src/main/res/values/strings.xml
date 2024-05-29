@@ -145,6 +145,7 @@
     <string name="goods_of_promotion" translatable="false">Товары участвующие в акции:</string>
     <string name="search_" translatable="false">Поиск...</string>
     <string name="clear_search" translatable="false">Clear search</string>
+    <string name="phone" translatable="false">Телефон</string>
 
 
 </resources>

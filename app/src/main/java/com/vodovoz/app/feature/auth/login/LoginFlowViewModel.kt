@@ -320,6 +320,10 @@ class LoginFlowViewModel @Inject constructor(
         }
     }
 
+    fun showPassword() {
+        uiStateListener.value = state.copy(data = state.data.copy(showPassword = !state.data.showPassword))
+    }
+
     sealed class LoginEvents : Event {
         object AuthSuccess : LoginEvents()
         data class AuthError(val message: String) : LoginEvents()
@@ -340,5 +344,6 @@ class LoginFlowViewModel @Inject constructor(
         val requestUrl: String? = null,
         val settings: AccountManager.UserSettings? = null,
         val lastAuthPhone: String? = null,
+        val showPassword: Boolean  = false,
     ) : State
 }

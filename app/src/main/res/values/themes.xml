@@ -1,4 +1,5 @@
 <resources>
+
     <style name="Theme.Vodovoz" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/bluePrimary</item>
         <item name="colorPrimaryDark">@color/bluePrimary</item>
@@ -39,11 +40,11 @@
         <item name="cornerSizeBottomRight">0dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
-    
+
     <style name="AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="materialAlertDialogBodyTextStyle">@style/TextViewNormalBlack</item>
     </style>
-    
+
     <style name="Tab" parent="@android:style/TextAppearance.Widget.TabWidget">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@drawable/selector_text_menu_tab</item>
@@ -55,12 +56,16 @@
         <item name="colorAccent">@color/yellow</item>
     </style>
 
-    <style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="hintTextColor">@drawable/selector_input_layout_box_stroke_new</item>
-        <item name="boxStrokeColor">@drawable/selector_input_layout_box_stroke_new</item>
-        <item name="startIconTint">@drawable/selector_input_layout_box_stroke_new</item>
-        <item name="boxCornerRadiusTopStart">5dp</item>
-        <item name="boxCornerRadiusTopEnd">5dp</item>
+    <style name="TextInputLayout" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/text_black</item>
+        <item name="android:background">@color/white</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+    </style>
+
+    <style name="TextLabel" parent="@android:style/TextAppearance">
+        <item name="android:textSize">16sp</item>
+        <item name="fontFamily">@font/rotonda_normal</item>
     </style>
 
     <style name="TextInputAddress" parent="TextInputLayout">
@@ -72,8 +77,11 @@
 
     <style name="TextField">
         <item name="fontFamily">@font/rotonda_normal</item>
-        <item name="android:textColor">@color/blackTextPrimary</item>
-        <item name="android:textCursorDrawable">@drawable/bkg_cursor_blue_primary</item>
+        <item name="android:textColor">@color/text_black</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:background">@color/white</item>
     </style>
 
     <style name="FullScreenDialog" parent="Theme.MaterialComponents.Light.Dialog">
@@ -110,7 +118,8 @@
 
     //New style
     //Toolbar
-    <style name="ToolbarTitle" >
+
+    <style name="ToolbarTitle">
         <item name="fontFamily">@font/rotonda_normal</item>
         <item name="android:textColor">@color/text_black</item>
         <item name="android:textStyle">bold</item>
@@ -121,12 +130,13 @@
         <item name="android:textColorSecondary">@color/text_black</item>
     </style>
 
-    <style name="ToolbarSubtitle" >
+    <style name="ToolbarSubtitle">
         <item name="android:textColor">@color/text_gray</item>
         <item name="android:textSize">@dimen/normal_text_size</item>
     </style>
 
     //Small
+
     <style name="TextViewSmallBlack" parent="@style/Theme.AppCompat">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/text_black</item>
@@ -165,6 +175,7 @@
     </style>
 
     //Normal
+
     <style name="TextViewNormalBlack" parent="@style/Theme.AppCompat">
         <item name="android:textSize">@dimen/normal_text_size</item>
         <item name="android:textColor">@color/text_black</item>
@@ -206,7 +217,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TextViewNormalLightGray"  parent="@style/TextViewNormalBlack">
+    <style name="TextViewNormalLightGray" parent="@style/TextViewNormalBlack">
         <item name="android:textColor">@color/text_gray_light</item>
     </style>
 
@@ -220,6 +231,7 @@
     </style>
 
     //Medium
+
     <style name="TextViewMediumBlack" parent="@style/Theme.AppCompat">
         <item name="android:textSize">@dimen/medium_text_size</item>
         <item name="android:textColor">@color/text_black</item>
@@ -271,6 +283,7 @@
     </style>
 
     //Large
+
     <style name="TextViewLargeBlack" parent="@style/Theme.AppCompat">
         <item name="android:textSize">@dimen/large_text_size</item>
         <item name="android:textColor">@color/text_black</item>
@@ -306,6 +319,7 @@
 
 
     //Header
+
     <style name="TextViewHeaderBlack" parent="@style/Theme.AppCompat">
         <item name="android:textSize">@dimen/header_text_size</item>
         <item name="android:textColor">@color/text_black</item>
@@ -326,6 +340,7 @@
     </style>
 
     //Search
+
     <style name="EditTextSearch" parent="@style/Theme.AppCompat">
         <item name="android:textSize">@dimen/normal_text_size</item>
         <item name="android:textColor">@color/text_black</item>
@@ -334,6 +349,7 @@
     </style>
 
     //Button
+
     <style name="BaseButton" parent="@style/Theme.AppCompat">
         <item name="android:fontFamily">@font/rotonda_normal</item>
         <item name="android:textAllCaps">false</item>
@@ -368,6 +384,7 @@
     </style>
 
     //BottomSheet
+
     <style name="BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/ModalStyle</item>
     </style>
@@ -377,6 +394,7 @@
     </style>
 
     //Switch
+
     <style name="SwitchBlue" parent="@style/Theme.AppCompat">
         <item name="android:textSize">@dimen/normal_text_size</item>
         <item name="android:textColor">@color/text_black</item>
@@ -404,6 +422,7 @@
         <item name="android:textStyle">bold</item>
         <item name="fontFamily">@font/rotondac</item>
     </style>
+
     <style name="NormalTextOrder">
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_gray_light</item>
