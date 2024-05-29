@@ -7,7 +7,7 @@ class OrderDetailsEntity(
 //    val productsPrice: Int = 0,
 //    val deliveryPrice: Int = 0,
     val depositPrice: Int = 0,
-    val totalPrice: Int = 0,
+    val totalPrice: Double = 0.0,
     val userFirstName: String = "",
     val userSecondName: String = "",
     val userPhone: String = "",

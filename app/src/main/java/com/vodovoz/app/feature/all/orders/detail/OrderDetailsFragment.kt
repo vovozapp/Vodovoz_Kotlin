@@ -20,7 +20,7 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.databinding.FragmentOrderDetailsFlowBinding
 import com.vodovoz.app.feature.all.orders.detail.prices.OrderPricesAdapter
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
+import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDoublePriceText
 import com.vodovoz.app.ui.extensions.ViewExtensions.openLink
 import com.vodovoz.app.ui.model.OrderDetailsUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -189,8 +189,8 @@ class OrderDetailsFragment : BaseFragment() {
                 true -> {
                     binding.tvPayStatus.text = "Оплачен"
                     binding.payedStatus.isVisible = true
+                    statusSpacer.isVisible = true
                     binding.llPayOrder.visibility = View.GONE
-                    binding.payedStatus.isVisible = false
                 }
 
                 false -> {
@@ -200,6 +200,7 @@ class OrderDetailsFragment : BaseFragment() {
                     }
                     binding.tvPayStatus.text = "Не оплачен"
                     binding.payedStatus.isVisible = false
+                    statusSpacer.isVisible = false
                 }
             }
 
@@ -234,8 +235,10 @@ class OrderDetailsFragment : BaseFragment() {
 
                 "R" -> {
                     binding.payedStatus.isVisible = false
+                    statusSpacer.isVisible = false
                     binding.llPayOrder.visibility = View.GONE
                 }
+
                 "D" -> {
                     binding.llPayOrder.visibility = View.GONE
                 }
@@ -266,7 +269,7 @@ class OrderDetailsFragment : BaseFragment() {
                     orderDetailsUI.status.image
                 )
             )
-            tvTotalPriceHeader.setPriceText(orderDetailsUI.totalPrice)
+            tvTotalPriceHeader.setDoublePriceText(orderDetailsUI.totalPrice)
             tvShippingDate.text = orderDetailsUI.dateDelivery
             tvShippingInterval.text = orderDetailsUI.deliveryTimeInterval
             tvPayMethod.text = orderDetailsUI.payMethod
@@ -277,7 +280,13 @@ class OrderDetailsFragment : BaseFragment() {
                     orderDetailsUI.status.color
                 )
             )
-            tvAddress.text = orderDetailsUI.address
+            if (orderDetailsUI.address.isNotEmpty()) {
+                tvAddress.text = orderDetailsUI.address
+            } else {
+                tvAddress.visibility = View.GONE
+                mdDividerAfterAddress.visibility = View.GONE
+                tvAddressTitle.visibility = View.GONE
+            }
             tvConsumerName.text = StringBuilder()
                 .append(orderDetailsUI.userFirstName)
                 .append(" ")

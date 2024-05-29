@@ -36,10 +36,6 @@ class OrderDetailsController(
         with(recyclerView) {
             layoutManager = LinearLayoutManager(context)
 
-            ContextCompat.getDrawable(context, R.drawable.bkg_gray_divider)?.let {
-                addItemDecoration(Divider(it, space))
-            }
-
             addItemDecoration(
                 object : RecyclerView.ItemDecoration() {
                     override fun getItemOffsets(
@@ -49,13 +45,17 @@ class OrderDetailsController(
                         state: RecyclerView.State,
                     ) {
                         with(outRect) {
-                            top = space
-                            bottom = space
+                            top = space / 2
+                            bottom = space / 2
                             right = space
                         }
                     }
                 }
             )
+
+            ContextCompat.getDrawable(context, R.drawable.bkg_gray_divider)?.let {
+                addItemDecoration(Divider(it, space / 2))
+            }
         }
     }
 }

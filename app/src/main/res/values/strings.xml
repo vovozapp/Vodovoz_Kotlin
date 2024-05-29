@@ -146,6 +146,7 @@
     <string name="search_" translatable="false">Поиск...</string>
     <string name="clear_search" translatable="false">Clear search</string>
     <string name="phone" translatable="false">Телефон</string>
+    <string name="address_title" translatable="false">Адрес</string>
 
 
 </resources>

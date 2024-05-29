@@ -21,8 +21,8 @@
 
             <ImageView
                 android:id="@+id/imgStatus"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_marginStart="@dimen/space_16"
                 android:src="@drawable/ic_check_round"
                 app:layout_constraintBottom_toBottomOf="@+id/tvPrice"

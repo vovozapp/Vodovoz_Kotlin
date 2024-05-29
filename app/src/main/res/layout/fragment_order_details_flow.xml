@@ -80,27 +80,32 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingTop="@dimen/space_16"
-                app:layout_scrollFlags="enterAlways|scroll">
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/payedStatus"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="@dimen/_40sdp"
-                    android:layout_marginEnd="@dimen/space_8"
-                    android:background="@drawable/bkg_order_status_image"
-                    android:padding="@dimen/space_4"
-                    android:src="@drawable/ic_check_round"
-                    android:visibility="visible"
-                    app:tint="@color/white" />
+                app:layout_scrollFlags="enterAlways|scroll">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imgStatus"
                     android:layout_width="@dimen/_40sdp"
                     android:layout_height="@dimen/_40sdp"
                     android:background="@drawable/bkg_order_status_image"
-                    android:padding="@dimen/space_4"
+                    android:padding="@dimen/space_8"
                     android:src="@drawable/ic_order_in_processing"
-                    app:tint="@color/white" />
+                    app:tint="@color/white"/>
+
+                <Space
+                    android:id="@+id/statusSpacer"
+                    android:layout_width="32dp"
+                    android:layout_height="wrap_content"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/payedStatus"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:background="@drawable/bkg_order_status_image"
+                    android:padding="@dimen/space_8"
+                    android:src="@drawable/ic_check_round"
+                    android:visibility="visible"
+                    app:tint="@color/white"/>
 
 
             </LinearLayout>
@@ -133,10 +138,9 @@
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/imgRepeat"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:src="@drawable/ic_repeat"
-                        app:tint="@color/white"
                         tools:ignore="ContentDescription" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -211,7 +215,7 @@
                     android:layout_marginStart="@dimen/space_16"
                     android:layout_marginTop="@dimen/space_16"
                     android:text="@string/info_about_order"
-                    android:textColor="@color/text_gray_light"
+                    android:textColor="@color/blackTextLight"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -246,6 +250,7 @@
                     android:layout_marginEnd="@dimen/space_16"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:textColor="@color/blackTextLight"
                     tools:text="Не оплачен" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -297,8 +302,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_16"
                     android:layout_marginTop="@dimen/space_16"
-                    android:textColor="@color/text_gray_light"
-                    android:text="Адрес"
+                    android:textColor="@color/blackTextLight"
+                    android:text="@string/address_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/mdDividerAfterMainInfo" />
 
@@ -326,7 +331,7 @@
                     style="@style/TextViewNormalGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_gray_light"
+                    android:textColor="@color/blackTextLight"
                     android:layout_marginStart="@dimen/space_16"
                     android:layout_marginTop="@dimen/space_16"
                     android:text="@string/recipient"

@@ -1,6 +1,7 @@
 package com.vodovoz.app.ui.extensions
 
 import android.widget.TextView
+import java.util.Locale
 import kotlin.math.roundToInt
 
 object TextBuilderExtensions {
@@ -40,6 +41,19 @@ object TextBuilderExtensions {
                 false -> ""
             })
             .append(price)
+            .append(" ₽")
+            .toString()
+    }
+
+    fun TextView.setDoublePriceText(
+        price: Double?,
+    ) {
+        if (price == null) return
+        val doublePrice = String.format(locale = Locale.US, "%.2f", price)
+        val intPrice = price.toInt()
+        this.text = StringBuilder()
+            .append( if(price - intPrice > 0)
+                doublePrice else intPrice)
             .append(" ₽")
             .toString()
     }

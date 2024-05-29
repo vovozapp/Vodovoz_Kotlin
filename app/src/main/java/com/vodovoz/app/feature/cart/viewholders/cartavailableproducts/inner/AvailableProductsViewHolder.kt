@@ -258,8 +258,9 @@ class AvailableProductsViewHolder(
         if (item.isBottle) {
             binding.imgFavoriteStatus.visibility = View.INVISIBLE
             binding.cgStatuses.visibility = View.GONE
-            binding.llPricesContainer.root.visibility = View.GONE
             binding.tvDepositPrice.visibility = View.VISIBLE
+            binding.llPricesContainer.tvPricePerUnit.setOrderQuantity(item.orderQuantity)
+            binding.llPricesContainer.tvPricePerUnit.visibility = View.VISIBLE
             binding.tvDepositPrice.setDepositPriceText(item.priceList.first().currentPrice.roundToInt())
             binding.rbRating.isVisible = false
             /*if (item.priceList.first().currentPrice > 0) {

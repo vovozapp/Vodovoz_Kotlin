@@ -35,7 +35,7 @@ object OrderDetailsResponseJsonParser {
         dateDelivery = getString("DATE_OUT"),
         //productsPrice = safeInt("PRICE_GOODS_ITOGO"),//getString("PRICE_GOODS_ITOGO").toDouble().toInt(),
         depositPrice = safeInt("ZALOG_ITOGO"),//getString("ZALOG_ITOGO").toDouble().toInt(),
-        totalPrice = getString("PRICE").toDouble().toInt(),
+        totalPrice = getString("PRICE").toDouble(),
         //deliveryPrice = getString("PRICE_DELIVERY").toDouble().toInt(),
         userFirstName = getString("USER_NAME"),
         userSecondName = getString("USER_LAST_NAME"),
@@ -59,7 +59,7 @@ object OrderDetailsResponseJsonParser {
         payMethod = if (has("PAYSISTEM") && getJSONObject("PAYSISTEM").has("NAME")) {
             getJSONObject("PAYSISTEM").getString("NAME")
         } else {
-            "Нет данных по оплате"
+            ""
         },
         productEntityList = getJSONArray("ITEMS").parseProductEntityList(),
         driverId = if (has("VODILA") && !isNull("VODILA")) {
