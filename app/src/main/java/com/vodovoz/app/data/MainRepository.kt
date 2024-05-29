@@ -521,6 +521,7 @@ class MainRepository @Inject constructor(
 
     suspend fun fetchProductsByDoubleSlider(
         categoryId: Long?,
+        sectionId: Long?,
         page: Int?,
         sort: String?,
         orientation: String?,
@@ -531,6 +532,7 @@ class MainRepository @Inject constructor(
         sort = sort,
         orientation = orientation,
         page = page,
+        sectId = sectionId
     ).parseProductsBySliderResponse()
 
     /**

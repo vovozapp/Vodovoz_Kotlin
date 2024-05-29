@@ -61,6 +61,7 @@ import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.DI
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.NOVELTIES_TITLE
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.ORDERS_TITLE
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.PROMOTIONS_TITLE
+import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.SLIDER_TITLE
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle.Companion.VIEWED_TITLE
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
@@ -788,6 +789,16 @@ class HomeFragment : BaseFragment() {
 
                     COMMENTS_TITLE -> {
                         flowViewModel.onSendCommentClick()
+                    }
+
+                    SLIDER_TITLE -> {
+                        if(item.titleId != null) {
+                            findNavController().navigate(
+                                HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
+                                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(item.titleId)
+                                )
+                            )
+                        }
                     }
                 }
             }

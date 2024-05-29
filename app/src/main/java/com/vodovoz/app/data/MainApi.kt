@@ -62,6 +62,7 @@ interface MainApi {
         @Query("orientation") orientation: String? = null,
         @Query("id") categoryId: Long? = null,
         @Query("nav") page: Int? = null,
+        @Query("sect") sectId: Long? = null,
     ): ResponseBody
 
     //Заказы

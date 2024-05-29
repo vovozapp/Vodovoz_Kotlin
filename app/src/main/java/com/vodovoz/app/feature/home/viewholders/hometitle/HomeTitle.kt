@@ -12,6 +12,7 @@ data class HomeTitle(
     val lightBg: Boolean = true,
     val categoryProductsName: String = "",
     val showTopDivider: Boolean = false,
+    val titleId: Long? = null,
 ) : Item {
 
     companion object {
@@ -24,6 +25,7 @@ data class HomeTitle(
         const val BRANDS_TITLE = 6
         const val VIEWED_TITLE = 7
         const val COMMENTS_TITLE = 8
+        const val SLIDER_TITLE  =  9
     }
 
     override fun getItemViewType(): Int {

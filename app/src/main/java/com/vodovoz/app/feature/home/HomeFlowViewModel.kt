@@ -3,8 +3,12 @@ package com.vodovoz.app.feature.home
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
-import com.vodovoz.app.common.content.*
+import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.common.content.Event
+import com.vodovoz.app.common.content.PagingContractViewModel
+import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
@@ -36,8 +40,19 @@ import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -316,18 +331,39 @@ class HomeFlowViewModel @Inject constructor(
                                     POSITION_10
                                 )
                             ),
-                            PositionItem(
-                                POSITION_9_TAB,
-                                HomeProductsTabs(
-                                    id = POSITION_9_TAB,
-                                    data.mapIndexed { index, cat ->
-                                        if (index == 0) {
-                                            cat.copy(isSelected = true, position = POSITION_9_TAB)
-                                        } else {
-                                            cat.copy(isSelected = false, position = POSITION_9_TAB)
-                                        }
-                                    })
-                            )
+                            if (data.size != 1) {
+                                PositionItem(
+                                    POSITION_9_TAB,
+                                    HomeProductsTabs(
+                                        id = POSITION_9_TAB,
+                                        data.mapIndexed { index, cat ->
+                                            if (index == 0) {
+                                                cat.copy(
+                                                    isSelected = true,
+                                                    position = POSITION_9_TAB
+                                                )
+                                            } else {
+                                                cat.copy(
+                                                    isSelected = false,
+                                                    position = POSITION_9_TAB
+                                                )
+                                            }
+                                        })
+                                )
+                            } else {
+                                PositionItem(
+                                    POSITION_9_TAB,
+                                    HomeTitle(
+                                        id = POSITION_9_TAB,
+                                        type = HomeTitle.SLIDER_TITLE,
+                                        name = "",
+                                        showAll = true,
+                                        showAllName = "СМ.ВСЕ",
+                                        categoryProductsName = data.first().name,
+                                        titleId = data.first().id
+                                    )
+                                )
+                            }
                         )
                     } else {
                         emptyList()
@@ -453,18 +489,39 @@ class HomeFlowViewModel @Inject constructor(
                                     POSITION_19
                                 )
                             ),
-                            PositionItem(
-                                POSITION_18_TAB,
-                                HomeProductsTabs(
-                                    id = POSITION_18_TAB,
-                                    data.mapIndexed { index, cat ->
-                                        if (index == 0) {
-                                            cat.copy(isSelected = true, position = POSITION_18_TAB)
-                                        } else {
-                                            cat.copy(isSelected = false, position = POSITION_18_TAB)
-                                        }
-                                    })
-                            )
+                            if (data.size != 1) {
+                                PositionItem(
+                                    POSITION_18_TAB,
+                                    HomeProductsTabs(
+                                        id = POSITION_18_TAB,
+                                        data.mapIndexed { index, cat ->
+                                            if (index == 0) {
+                                                cat.copy(
+                                                    isSelected = true,
+                                                    position = POSITION_18_TAB
+                                                )
+                                            } else {
+                                                cat.copy(
+                                                    isSelected = false,
+                                                    position = POSITION_18_TAB
+                                                )
+                                            }
+                                        })
+                                )
+                            } else {
+                                PositionItem(
+                                    POSITION_18_TAB,
+                                    HomeTitle(
+                                        id = POSITION_18_TAB,
+                                        type = HomeTitle.SLIDER_TITLE,
+                                        name = "",
+                                        showAll = true,
+                                        showAllName = "СМ.ВСЕ",
+                                        categoryProductsName = data.first().name,
+                                        titleId = data.first().id
+                                    )
+                                )
+                            }
                         )
                     } else {
                         emptyList()
@@ -651,6 +708,7 @@ class HomeFlowViewModel @Inject constructor(
                         )
                     )
                 }
+
                 else -> {
                     it
                 }
@@ -672,6 +730,7 @@ class HomeFlowViewModel @Inject constructor(
                 POSITION_10,
                 categoryId
             )
+
             POSITION_18_TAB -> updateStateByTabAndProductPositions(
                 POSITION_18_TAB,
                 POSITION_19,

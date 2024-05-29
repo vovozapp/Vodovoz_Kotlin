@@ -67,7 +67,6 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
-
                         uiStateListener.value = state.copy(
                             data = state.data.copy(
                                 categoryHeader = checkSelectedFilter(data),
@@ -150,17 +149,20 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                         )
                     )
 
-                    is DataSource.Slider -> emit(
-                        repository.fetchProductsByDoubleSlider(
-                            categoryId = when (state.data.selectedCategoryId) {
-                                -1L -> null
-                                else -> state.data.selectedCategoryId
-                            },
-                            sort = state.data.sortType.value,
-                            orientation = state.data.sortType.orientation,
-                            page = state.page
+                    is DataSource.Slider -> {
+                        emit(
+                            repository.fetchProductsByDoubleSlider(
+                                categoryId = dataSource.categoryId,
+                                sectionId = when (state.data.selectedCategoryId) {
+                                    -1L -> null
+                                    else -> state.data.selectedCategoryId
+                                },
+                                sort = state.data.sortType.value,
+                                orientation = state.data.sortType.orientation,
+                                page = state.page
+                            )
                         )
-                    )
+                    }
                 }
             }
                 .flowOn(Dispatchers.IO)
@@ -319,7 +321,6 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                     categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == id) }
                 ),
                 selectedCategoryId = id,
-                sortType = SortTypeUI()
             ),
             page = 1,
             loadMore = false
