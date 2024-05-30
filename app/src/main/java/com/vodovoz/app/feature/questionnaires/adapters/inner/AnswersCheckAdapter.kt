@@ -1,9 +1,10 @@
-package com.vodovoz.app.feature.questionnaires.adapter
+package com.vodovoz.app.feature.questionnaires.adapters.inner
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderAnswerCheckBinding
+import com.vodovoz.app.feature.questionnaires.viewholders.inner.AnswerCheckViewHolder
 import com.vodovoz.app.ui.model.AnswerUI
 
 class AnswersCheckAdapter(

@@ -8,6 +8,7 @@ import com.vodovoz.app.ui.model.QuestionnaireUI
 object QuestionnaireMapper {
 
     fun QuestionnaireEntity.mapToUI(): QuestionnaireUI = QuestionnaireUI(
+        message = message,
         questionUiTypeList = questionTypeList.mapToUI(),
         questionUiList = questionList.mapToUI()
     )

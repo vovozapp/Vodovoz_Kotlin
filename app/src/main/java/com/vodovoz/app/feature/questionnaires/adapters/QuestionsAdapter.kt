@@ -1,13 +1,19 @@
-package com.vodovoz.app.feature.questionnaires.adapter
+package com.vodovoz.app.feature.questionnaires.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderQuestionBinding
 import com.vodovoz.app.databinding.ViewHolderQusetionInputAnswerBinding
+import com.vodovoz.app.feature.questionnaires.viewholders.QuestionInputAnswerViewHolder
+import com.vodovoz.app.feature.questionnaires.viewholders.QuestionMultiAnswerViewHolder
+import com.vodovoz.app.feature.questionnaires.viewholders.QuestionSingleAnswerViewHolder
+import com.vodovoz.app.ui.model.LinkUI
 import com.vodovoz.app.ui.model.QuestionUI
 
-class QuestionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class QuestionsAdapter(
+    private val onLinkClick: (LinkUI) -> Unit,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val QUESTION_INPUT_ANSWER = 0
@@ -18,8 +24,8 @@ class QuestionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var questionUIList = listOf<QuestionUI>()
 
     override fun getItemViewType(
-        position: Int
-    ) = when(questionUIList[position]) {
+        position: Int,
+    ) = when (questionUIList[position]) {
         is QuestionUI.InputAnswer -> QUESTION_INPUT_ANSWER
         is QuestionUI.SingleAnswer -> QUESTION_SINGLE_ANSWER
         is QuestionUI.MultiAnswer -> QUESTION_MULTI_ANSWER
@@ -27,32 +33,35 @@ class QuestionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
-    ) = when(viewType) {
+        viewType: Int,
+    ) = when (viewType) {
         QUESTION_INPUT_ANSWER -> QuestionInputAnswerViewHolder(
             binding = ViewHolderQusetionInputAnswerBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
+
         QUESTION_MULTI_ANSWER -> QuestionMultiAnswerViewHolder(
             binding = ViewHolderQuestionBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             ),
-            context = parent.context
+            onLinkClick = onLinkClick,
         )
+
         QUESTION_SINGLE_ANSWER -> QuestionSingleAnswerViewHolder(
             binding = ViewHolderQuestionBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             ),
-            context = parent.context
+            onLinkClick = onLinkClick,
         )
+
         else -> throw Exception("Unknown type")
     }
 
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
-        position: Int
-    ) = when(val question = questionUIList[position]) {
+        position: Int,
+    ) = when (val question = questionUIList[position]) {
         is QuestionUI.InputAnswer -> (holder as QuestionInputAnswerViewHolder).onBind(question)
         is QuestionUI.SingleAnswer -> (holder as QuestionSingleAnswerViewHolder).onBind(question)
         is QuestionUI.MultiAnswer -> (holder as QuestionMultiAnswerViewHolder).onBind(question)

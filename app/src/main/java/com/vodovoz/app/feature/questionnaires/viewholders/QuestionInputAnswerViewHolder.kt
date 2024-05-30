@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.questionnaires.adapter
+package com.vodovoz.app.feature.questionnaires.viewholders
 
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +18,13 @@ class QuestionInputAnswerViewHolder(
     fun onBind(questionUI: QuestionUI.InputAnswer) {
         this.questionUI = questionUI
 
-        binding.questions.text = questionUI.name
+        val question = StringBuilder().apply {
+            append(questionUI.name)
+            if(questionUI.isRequired ){
+                append("*")
+            }
+        }.toString()
+        binding.questions.text = question
         binding.answer.setText(questionUI.defaultAnswer)
     }
 

@@ -11,7 +11,8 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:padding="@dimen/space_16"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
         android:textColor="@color/blackTextPrimary"
         android:textSize="16sp"
         android:fontFamily="@font/rotonda_normal"
@@ -19,7 +20,8 @@
 
     <CheckBox
         android:id="@+id/check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:buttonTint="@color/bluePrimary"
+        android:layout_width="42dp"
+        android:layout_height="42dp"/>
 
 </LinearLayout>

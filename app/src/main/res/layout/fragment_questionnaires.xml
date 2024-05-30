@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -10,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        app:elevation="0dp">
+        app:elevation="4dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -21,20 +22,36 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/questionnairesContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:orientation="vertical"
         android:visibility="invisible"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:fontFamily="@font/rotonda_bold"
+            tools:text="Анкета для пользователей"/>
 
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="8dp"/>
+        
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/questionnaireTypesRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/questionsContainer"
@@ -58,12 +75,13 @@
                 android:layout_height="45dp"
                 android:fontFamily="@font/rotonda_normal"
                 android:textSize="16sp"
+                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:gravity="center"
                 android:background="@drawable/bkg_button_blue_rect_disabled"
                 android:layout_marginHorizontal="@dimen/space_16"
                 android:layout_marginVertical="@dimen/space_8"
-                android:text="Отправить"/>
+                android:text="@string/send"/>
 
 
         </LinearLayout>

@@ -23,8 +23,8 @@ import com.vodovoz.app.feature.catalog.CatalogFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel
-import com.vodovoz.app.feature.questionnaires.adapter.QuestionnaireTypesFlowAdapter
-import com.vodovoz.app.feature.questionnaires.adapter.QuestionsAdapter
+import com.vodovoz.app.feature.questionnaires.adapters.QuestionnaireTypesFlowAdapter
+import com.vodovoz.app.feature.questionnaires.adapters.QuestionsAdapter
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,7 +50,16 @@ class QuestionnairesFlowFragment : BaseFragment() {
     private val questionnaireTypesAdapter = QuestionnaireTypesFlowAdapter() {
         viewModel.fetchQuestionnaireByType(it)
     }
-    private val questionsAdapter = QuestionsAdapter()
+    private val questionsAdapter = QuestionsAdapter(
+        onLinkClick = {
+            findNavController().navigate(
+                QuestionnairesFlowFragmentDirections.actionToWebViewFragment(
+                    url = it.link,
+                    title = it.name,
+                )
+            )
+        }
+    )
 
     @Inject
     lateinit var tabManager: TabManager
@@ -137,7 +146,7 @@ class QuestionnairesFlowFragment : BaseFragment() {
             noNullActionBar.setDisplayShowHomeEnabled(true)
         }
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
+            viewModel.clickBack()
         }
     }
 
@@ -174,6 +183,7 @@ class QuestionnairesFlowFragment : BaseFragment() {
                 val questionnaireTypesUIList = state.data.questionnaireTypeUIList
                 if (questionnaireTypesUIList.isNotEmpty()) {
                     binding.questionnairesContainer.visibility = View.VISIBLE
+                    binding.toolbar.title = "Анкета"
                     binding.questionsContainer.visibility = View.INVISIBLE
                     questionnaireTypesAdapter.questionnaireTypeList = questionnaireTypesUIList
                     questionnaireTypesAdapter.notifyDataSetChanged()
@@ -183,8 +193,22 @@ class QuestionnairesFlowFragment : BaseFragment() {
                 if (questionUIList.isNotEmpty()) {
                     binding.questionnairesContainer.visibility = View.INVISIBLE
                     binding.questionsContainer.visibility = View.VISIBLE
+                    binding.toolbar.title = "Вопросы"
                     questionsAdapter.questionUIList = questionUIList
                     questionsAdapter.notifyDataSetChanged()
+                }
+
+                if (state.data.message.isNotEmpty()) {
+                    binding.tvMessage.text = state.data.message
+                    binding.tvMessage.visibility = View.VISIBLE
+                    binding.divider.visibility = View.VISIBLE
+                } else {
+                    binding.tvMessage.visibility = View.GONE
+                    binding.divider.visibility = View.GONE
+                }
+
+                if (state.data.onBack) {
+                    findNavController().popBackStack()
                 }
 
                 showError(state.error)

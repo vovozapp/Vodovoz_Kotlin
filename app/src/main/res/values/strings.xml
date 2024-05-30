@@ -150,6 +150,7 @@
     <string name="address_title" translatable="false">Адрес</string>
     <string name="fio_" translatable="false">ФИО*</string>
     <string name="email_title_" translatable="false">Почта*</string>
+    <string name="fill_field">Заполнить</string>
 
 
 </resources>
