@@ -94,6 +94,7 @@ class PastPurchasesFragment : BaseFragment() {
         categoryTabsController.bind(binding.categoriesRecycler)
         favoritesController.bind(binding.productRecycler, binding.refreshEmptyFavoriteContainer)
 
+        viewModel.clearScrollToTop()
         observeUiState()
         observeResultLiveData()
         initSearch()
@@ -114,12 +115,15 @@ class PastPurchasesFragment : BaseFragment() {
                                 if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
                                     findNavController().popBackStack()
                                 }
-                                PastPurchasesFragmentDirections.actionToPreOrderBS(
-                                    it.id,
-                                    it.name,
-                                    it.detailPicture
+                                findNavController().navigate(
+                                    PastPurchasesFragmentDirections.actionToPreOrderBS(
+                                        it.id,
+                                        it.name,
+                                        it.detailPicture
+                                    )
                                 )
                             }
+
                             is PastPurchasesFlowViewModel.PastPurchasesEvents.GoToProfile -> {
                                 findNavController().popBackStack()
                                 tabManager.setAuthRedirect(findNavController().graph.id)
@@ -187,6 +191,10 @@ class PastPurchasesFragment : BaseFragment() {
                             favoritesController.submitList(data.itemsList)
                         }
 
+                        if (data.scrollToTop) {
+                            binding.productRecycler.scrollToPosition(0)
+                        }
+
                         if (state.error !is ErrorState.Empty) {
                             showError(state.error)
                         }
@@ -211,11 +219,8 @@ class PastPurchasesFragment : BaseFragment() {
 
         val categoryUiList = state.favoriteCategory?.categoryUIList ?: emptyList()
 
-        if (state.isAvailable) {
-            bindTabsVisibility(categoryUiList.isNotEmpty())
-        } else {
-            bindTabsVisibility(false)
-        }
+        bindTabsVisibility(categoryUiList.isNotEmpty())
+
 
         categoryTabsController.submitList(categoryUiList, "")
 
@@ -227,7 +232,7 @@ class PastPurchasesFragment : BaseFragment() {
             state.availableTitle != null || state.notAvailableTitle != null
 
         binding.tvSort.visibility = View.INVISIBLE
-        state.favoriteCategory?.sortTypeList?.let {sortTypeList->
+        state.favoriteCategory?.sortTypeList?.let { sortTypeList ->
             binding.tvSort.setOnClickListener {
                 showBottomSortSettings(
                     state.sortType,
@@ -235,7 +240,9 @@ class PastPurchasesFragment : BaseFragment() {
                 )
             }
             binding.tvSort.text = state.sortType.sortName
-            binding.tvSort.visibility = View.VISIBLE
+            if (state.sortType.sortName.isNotEmpty()) {
+                binding.tvSort.visibility = View.VISIBLE
+            }
         }
         binding.imgCategories.setOnClickListener {
             val category = state.favoriteCategory ?: return@setOnClickListener
@@ -287,6 +294,7 @@ class PastPurchasesFragment : BaseFragment() {
                 binding.categoriesRecycler.visibility = View.VISIBLE
                 binding.imgCategories.visibility = View.VISIBLE
             }
+
             else -> {
                 binding.imgCategories.visibility = View.GONE
                 binding.categoriesRecycler.visibility = View.GONE

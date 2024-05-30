@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--deferred-->
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--deferred-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -40,25 +38,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/rotonda_normal"
+                        android:gravity="center"
+                        android:padding="@dimen/space_8"
+                        android:textColor="@color/blackTextDark"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/blackTextDark"
-                        android:padding="@dimen/space_8"
-                        android:gravity="center"
                         tools:text="В списке нет товаров" />
 
                     <TextView
+                        android:id="@+id/errorSubtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/rotonda_normal"
-                        android:textSize="14sp"
-                        android:textColor="@color/blackTextPrimary"
-                        android:paddingTop="@dimen/space_8"
-                        android:paddingBottom="@dimen/space_8"
-                        android:paddingStart="@dimen/space_16"
-                        android:paddingEnd="@dimen/space_16"
                         android:gravity="center"
-                        android:id="@+id/errorSubtitle"
+                        android:paddingStart="@dimen/space_16"
+                        android:paddingTop="@dimen/space_8"
+                        android:paddingEnd="@dimen/space_16"
+                        android:paddingBottom="@dimen/space_8"
+                        android:textColor="@color/blackTextPrimary"
+                        android:textSize="14sp"
                         tools:text="Добавляйте понравившиейся вам продукты в избранное" />
 
                 </LinearLayout>
@@ -73,14 +71,13 @@
         android:id="@+id/favoriteContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
-            >
+            android:background="@color/white">
 
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/appBar"
@@ -99,8 +96,8 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:orientation="horizontal"
                         android:gravity="center_vertical"
+                        android:orientation="horizontal"
                         android:visibility="visible">
 
                         <LinearLayout
@@ -108,8 +105,8 @@
                             android:layout_height="0dp"
                             android:layout_marginStart="@dimen/space_16"
                             android:gravity="center_vertical"
-                            android:paddingTop="8dp"
                             android:orientation="vertical"
+                            android:paddingTop="8dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/imgShare"
                             app:layout_constraintStart_toStartOf="parent"
@@ -120,20 +117,20 @@
                                 style="@style/TextViewLargeBlackBold"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
-                                android:textSize="20sp"
                                 android:layout_weight="1"
                                 android:gravity="bottom"
                                 android:maxLines="1"
+                                android:textSize="20sp"
                                 tools:text="Прошлые покупки" />
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/tvProductAmount"
                                 style="@style/TextViewNormalGray"
                                 android:layout_width="match_parent"
-                                android:textColor="#889295"
                                 android:layout_height="0dp"
                                 android:layout_weight="1"
                                 android:maxLines="1"
+                                android:textColor="#889295"
                                 android:textSize="14sp"
                                 tools:layout_editor_absoluteX="16dp"
                                 tools:text="452 товара" />
@@ -144,9 +141,9 @@
                             android:id="@+id/imgShare"
                             android:layout_width="@dimen/_18sdp"
                             android:layout_height="@dimen/_18sdp"
-                            android:visibility="gone"
-                            android:src="@drawable/png_share"
                             android:layout_marginEnd="@dimen/space_16"
+                            android:src="@drawable/png_share"
+                            android:visibility="gone"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
@@ -156,41 +153,41 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <RelativeLayout
-                        android:layout_marginTop="-8dp"
                         android:id="@+id/availableContainer"
                         android:layout_width="match_parent"
-                        android:layout_height="60dp">
+                        android:layout_height="60dp"
+                        android:layout_marginTop="-8dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/bkg_rectangle_light_gray"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="@dimen/space_8"
-                            android:layout_marginBottom="@dimen/space_8"
                             android:layout_marginStart="@dimen/space_16"
-                            android:layout_marginEnd="@dimen/space_16">
+                            android:layout_marginTop="@dimen/space_8"
+                            android:layout_marginEnd="@dimen/space_16"
+                            android:layout_marginBottom="@dimen/space_8"
+                            android:background="@drawable/bkg_rectangle_light_gray"
+                            android:orientation="horizontal">
 
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/availableButton"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                app:cardCornerRadius="5dp"
                                 android:layout_marginStart="2dp"
                                 android:layout_marginTop="2dp"
+                                android:layout_marginEnd="1.5dp"
                                 android:layout_marginBottom="2dp"
-                                android:layout_marginEnd="1.5dp">
+                                android:layout_weight="1"
+                                app:cardCornerRadius="5dp">
 
                                 <TextView
                                     android:id="@+id/availableTitle"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:fontFamily="@font/rotonda_normal"
+                                    android:gravity="center"
                                     android:textColor="@color/blackTextDark"
                                     android:textSize="12sp"
-                                    android:gravity="center"
-                                    tools:text="В наличии (3)"/>
+                                    tools:text="В наличии (3)" />
 
                             </androidx.cardview.widget.CardView>
 
@@ -198,24 +195,24 @@
                                 android:id="@+id/notAvailableButton"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                app:cardCornerRadius="5dp"
                                 android:layout_marginStart="1.5dp"
                                 android:layout_marginTop="2dp"
-                                android:layout_marginBottom="2dp"
                                 android:layout_marginEnd="2dp"
-                                app:cardElevation="0dp"
-                                app:cardBackgroundColor="@color/light_gray">
+                                android:layout_marginBottom="2dp"
+                                android:layout_weight="1"
+                                app:cardBackgroundColor="@color/light_gray"
+                                app:cardCornerRadius="5dp"
+                                app:cardElevation="0dp">
 
                                 <TextView
                                     android:id="@+id/notAvailableTitle"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:fontFamily="@font/rotonda_normal"
+                                    android:gravity="center"
                                     android:textColor="#889295"
                                     android:textSize="12sp"
-                                    android:gravity="center"
-                                    tools:text="Нет в наличии (3)"/>
+                                    tools:text="Нет в наличии (3)" />
 
                             </androidx.cardview.widget.CardView>
 
@@ -224,12 +221,12 @@
                     </RelativeLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:layout_marginTop="-2dp"
-                        android:layout_marginHorizontal="10dp"
-                        android:layout_marginVertical="4dp"
                         android:id="@+id/categoriesRecycler"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="4dp"
+                        android:layout_marginTop="-2dp" />
 
                 </LinearLayout>
 
@@ -237,17 +234,17 @@
                     android:id="@+id/sortContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/imgViewMode"
                         android:layout_width="@dimen/action_image_size_with_padding_8"
                         android:layout_height="@dimen/action_image_size_with_padding_8"
+                        android:layout_marginStart="@dimen/space_8"
                         android:paddingHorizontal="@dimen/space_8"
                         android:paddingVertical="@dimen/space_10"
                         android:src="@drawable/png_table"
-                        android:layout_marginStart="@dimen/space_8"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -260,9 +257,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:drawableEnd="@drawable/ic_drop_down"
+                        android:drawableTint="@color/text_black"
                         android:gravity="center"
                         android:text="Выбрать сортировку"
-                        android:drawableTint="@color/text_black"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/imgCategories"
                         app:layout_constraintStart_toEndOf="@+id/imgViewMode"
@@ -273,14 +270,14 @@
                         android:id="@+id/imgCategories"
                         android:layout_width="@dimen/action_image_size_with_padding_8"
                         android:layout_height="@dimen/action_image_size_with_padding_8"
+                        android:layout_marginEnd="@dimen/space_8"
                         android:paddingHorizontal="@dimen/space_8"
                         android:paddingVertical="@dimen/space_10"
                         android:src="@drawable/filtericon"
-                        android:layout_marginEnd="@dimen/space_8"
-                        app:tint="@color/text_black"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/text_black"
                         tools:ignore="ContentDescription" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -289,10 +286,10 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/productRecycler"
-                android:paddingBottom="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+                android:paddingBottom="10dp"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

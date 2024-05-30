@@ -682,10 +682,16 @@ class MainRepository @Inject constructor(
 
     suspend fun fetchPastPurchasesHeader(
         userId: Long?,
+        isAvailable: Boolean?,
     ) = api.fetchPastPurchasesResponse(
         action = "getLastFifty",
         userId = userId,
-        page = 1
+        page = 1,
+        isAvailable = when (isAvailable) {
+            true -> "nalichie"
+            false -> "netnalichi"
+            else -> null
+        }
     ).parsePastPurchasesHeaderResponse()
 
     suspend fun fetchPastPurchasesProducts(

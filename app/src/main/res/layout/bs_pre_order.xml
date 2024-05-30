@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -27,8 +26,8 @@
                 android:id="@+id/imgProduct"
                 android:layout_width="@dimen/_120sdp"
                 android:layout_height="@dimen/_120sdp"
-                android:layout_margin="@dimen/space_16"
                 android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/space_16"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -46,69 +45,85 @@
                 app:layout_constraintEnd_toEndOf="@+id/imgProduct"
                 app:layout_constraintStart_toStartOf="@+id/imgProduct"
                 app:layout_constraintTop_toBottomOf="@+id/imgProduct"
-                tools:text="Название продукта"/>
+                tools:text="Название продукта" />
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/TextInputLayout"
                 android:id="@+id/tilName"
+                style="@style/TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_16"
-                android:layout_marginEnd="@dimen/space_16"
                 android:layout_marginTop="@dimen/space_16"
-                app:errorEnabled="true">
+                android:layout_marginEnd="@dimen/space_16"
+                app:errorEnabled="true"
+                app:hintTextAppearance="@style/TextLabel">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    style="@style/TextField"
                     android:id="@+id/etName"
+                    style="@style/TextField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:hint="ФИО*" />
+                    android:hint="@string/fio_"
+                    android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="16dp" />
+
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/TextInputLayout"
                 android:id="@+id/tilPhone"
+                style="@style/TextInputLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_16"
-                android:layout_marginEnd="@dimen/space_16"
-                android:layout_marginTop="@dimen/space_8"
+                android:layout_height="65dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
                 app:errorEnabled="true"
-                app:startIconDrawable="@drawable/ic_phone">
+                app:hintTextAppearance="@style/TextLabel">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    style="@style/TextField"
                     android:id="@+id/etPhone"
+                    style="@style/TextField"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="phone"
-                    android:hint="Телефон*" />
+                    android:layout_height="60dp"
+                    android:hint="@string/phone"
+                    android:inputType="text"
+                    android:paddingHorizontal="16dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="16dp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/TextInputLayout"
                 android:id="@+id/tilEmail"
+                style="@style/TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_16"
-                android:layout_marginEnd="@dimen/space_16"
                 android:layout_marginTop="@dimen/space_8"
+                android:layout_marginEnd="@dimen/space_16"
                 app:errorEnabled="true"
-                app:startIconDrawable="@drawable/ic_email">
+                app:hintTextAppearance="@style/TextLabel">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    style="@style/TextField"
                     android:id="@+id/etEmail"
+                    style="@style/TextField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:hint="Почта*" />
+                    android:hint="@string/email_title_"
+                    android:inputType="textEmailAddress" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="16dp" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnSend"
@@ -116,9 +131,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_normal_height"
                 android:layout_marginHorizontal="@dimen/space_16"
-                android:layout_marginBottom="@dimen/space_16"
-                android:text="Отправить"
                 android:layout_marginTop="@dimen/space_16"
+                android:layout_marginBottom="@dimen/space_16"
+                android:text="@string/send"
+                android:textStyle="normal"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

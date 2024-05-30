@@ -3,15 +3,17 @@
 
     <item>
         <shape android:shape="oval">
-            <size android:height="@dimen/_24sdp" android:width="@dimen/_24sdp"/>
-            <solid android:color="@color/text_gray" />
+            <size
+                android:width="@dimen/_24sdp"
+                android:height="@dimen/_24sdp" />
+            <solid android:color="@color/gray_unavailable" />
         </shape>
     </item>
 
     <item
-        android:gravity="center"
-        android:width="@dimen/_10sdp"
-        android:height="@dimen/_10sdp"
-        android:drawable="@drawable/bascket"/>
+        android:width="@dimen/_16sdp"
+        android:height="@dimen/_16sdp"
+        android:drawable="@drawable/notification_avail"
+        android:gravity="center" />
 
 </layer-list>

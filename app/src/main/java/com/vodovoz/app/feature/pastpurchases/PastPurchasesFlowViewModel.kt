@@ -65,7 +65,7 @@ class PastPurchasesFlowViewModel @Inject constructor(
         val userId = accountManager.fetchAccountId()
 
         viewModelScope.launch {
-            flow { emit(repository.fetchPastPurchasesHeader(userId = userId)) }
+            flow { emit(repository.fetchPastPurchasesHeader(userId = userId, isAvailable = state.data.isAvailable)) }
                 .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
@@ -78,7 +78,8 @@ class PastPurchasesFlowViewModel @Inject constructor(
                                 emptyTitle = response.data.emptyTitle,
                                 emptySubtitle = response.data.emptySubtitle,
                                 sortType = data.favoriteCategoryUI?.sortTypeList?.sortTypeList?.firstOrNull { it.value == "default" }
-                                    ?: SortTypeUI(sortName = "По популярности")
+                                    ?: SortTypeUI(sortName = "По популярности"),
+                                scrollToTop = true,
                             ),
                             loadingPage = false,
                             error = null
@@ -257,6 +258,7 @@ class PastPurchasesFlowViewModel @Inject constructor(
             loadMore = false,
             loadingPage = true
         )
+        fetchPastPurchasesHeader()
         fetchPastPurchasesSorted()
     }
 
@@ -269,7 +271,7 @@ class PastPurchasesFlowViewModel @Inject constructor(
                     categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == id) }
                 ),
                 selectedCategoryId = id,
-                sortType = SortTypeUI()
+                scrollToTop = true,
             ),
             page = 1,
             loadMore = false
@@ -300,7 +302,8 @@ class PastPurchasesFlowViewModel @Inject constructor(
                 selectedCategoryId = -1,
                 favoriteCategory = categoryUI?.copy(
                     categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == -1L) }
-                )
+                ),
+                scrollToTop = true,
             ),
             page = 1,
             loadMore = false,
@@ -321,11 +324,15 @@ class PastPurchasesFlowViewModel @Inject constructor(
         }
     }
 
+    fun clearScrollToTop()  {
+        uiStateListener.value = state.copy(data = state.data.copy(scrollToTop  = false))
+    }
+
     sealed class PastPurchasesEvents : Event {
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
             PastPurchasesEvents()
 
-        object GoToProfile : PastPurchasesEvents()
+        data object GoToProfile : PastPurchasesEvents()
     }
 
     data class PastPurchasesState(
@@ -340,6 +347,7 @@ class PastPurchasesFlowViewModel @Inject constructor(
         val layoutManager: String = LINEAR,
         val emptyTitle: String = "",
         val emptySubtitle: String = "",
+        val scrollToTop: Boolean = false,
     ) : State
 
     companion object {
