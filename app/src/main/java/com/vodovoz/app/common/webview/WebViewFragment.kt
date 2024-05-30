@@ -3,6 +3,7 @@ package com.vodovoz.app.common.webview
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -38,10 +39,22 @@ class WebViewFragment : BaseFragment() {
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView() {
         binding.wvContent.settings.javaScriptEnabled = true
-        binding.wvContent.webViewClient = WebViewClient()
+        if (args.url.contains("#")) {
+            binding.wvContent.loadDataWithBaseURL(args.url.substringBefore("#"), "", "text/html", "utf-8", null)
+        }
+        binding.wvContent.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                if (url != null && !url.contains("#") && args.url.contains("#")) {
+                    binding.wvContent.loadUrl(args.url)
+                }
+            }
+        }
 
         try {
-            binding.wvContent.loadUrl(args.url)
+            if (!args.url.contains("#")) {
+                binding.wvContent.loadUrl(args.url)
+            }
         } catch (e: Throwable) {
             showError(e.toErrorState())
         }
