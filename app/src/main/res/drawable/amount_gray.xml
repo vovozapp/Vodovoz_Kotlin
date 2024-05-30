@@ -11,8 +11,8 @@
     </item>
 
     <item
-        android:width="@dimen/_16sdp"
-        android:height="@dimen/_16sdp"
+        android:width="@dimen/_10sdp"
+        android:height="@dimen/_10sdp"
         android:drawable="@drawable/notification_avail"
         android:gravity="center" />
 

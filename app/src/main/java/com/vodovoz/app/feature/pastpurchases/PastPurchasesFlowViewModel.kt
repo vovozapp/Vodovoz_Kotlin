@@ -186,7 +186,10 @@ class PastPurchasesFlowViewModel @Inject constructor(
                             state.copy(
                                 page = if (mappedFeed.isEmpty()) null else state.page?.plus(1),
                                 loadingPage = false,
-                                data = state.data.copy(itemsList = itemsList),
+                                data = state.data.copy(
+                                    itemsList = itemsList,
+                                    scrollToTop = state.page == 1
+                                ),
                                 error = null,
                                 loadMore = false,
                                 bottomItem = null

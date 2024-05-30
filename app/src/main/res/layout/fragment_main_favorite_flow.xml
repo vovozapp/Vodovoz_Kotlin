@@ -84,7 +84,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="visible"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
@@ -167,7 +167,7 @@
                     <LinearLayout
                         android:id="@+id/availableContainer"
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
+                        android:layout_height="40dp"
                         android:layout_marginStart="@dimen/space_16"
                         android:layout_marginEnd="@dimen/space_16"
                         android:layout_marginBottom="@dimen/space_8"

@@ -89,11 +89,9 @@ class FavoriteFragment : BaseFragment() {
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.firstLoad()
-        viewModel.firstLoadSorted()
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -110,6 +108,8 @@ class FavoriteFragment : BaseFragment() {
         bindErrorRefresh {
             viewModel.refreshSorted()
         }
+
+        viewModel.refreshIdle()
     }
 
     private fun observeEvents() {
