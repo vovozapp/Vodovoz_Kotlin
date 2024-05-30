@@ -39,6 +39,7 @@ class QuestionnairesFlowViewModel @Inject constructor(
                         response.data.mapToUI().let { questionnaire ->
                             uiStateListener.value = state.copy(
                                 data = state.data.copy(
+                                    message = questionnaire.message,
                                     questionnaireTypeUIList = questionnaire.questionUiTypeList
                                 ),
                                 loadingPage = false,
@@ -102,8 +103,26 @@ class QuestionnairesFlowViewModel @Inject constructor(
         }
     }
 
+    fun clickBack() {
+        if(state.data.questionUIList.isNotEmpty())  {
+            uiStateListener.value = state.copy(
+                data = state.data.copy(
+                    questionUIList = listOf()
+                )
+            )
+        } else {
+            uiStateListener.value = state.copy(
+                data = state.data.copy(
+                    onBack = true
+                )
+            )
+        }
+    }
+
     data class QuestionnaireState(
+        val message: String = "",
         val questionnaireTypeUIList: List<QuestionnaireTypeUI> = listOf(),
         val questionUIList: List<QuestionUI> = listOf(),
+        val onBack: Boolean  = false,
     ) : State
 }

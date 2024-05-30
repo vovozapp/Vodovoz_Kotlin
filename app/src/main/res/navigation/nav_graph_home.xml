@@ -741,7 +741,12 @@
     <fragment
         android:id="@+id/questionnairesFragment2"
         android:name="com.vodovoz.app.feature.questionnaires.QuestionnairesFlowFragment"
-        android:label="QuestionnairesFragment" />
+        android:label="QuestionnairesFragment" >
+
+        <action
+            android:id="@+id/action_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
+    </fragment>
     <fragment
         android:id="@+id/contactsFragment"
         android:name="com.vodovoz.app.feature.bottom.contacts.ContactsFragment"

@@ -21,7 +21,8 @@ object QuestionMapper {
                 answerList.forEach {
                     uiList.add(AnswerUI(it, false))
                 }
-            }.toList()
+            }.toList(),
+            linkList = linkList.mapToUI()
         )
         is QuestionEntity.InputAnswer -> QuestionUI.InputAnswer(
             name = name,

@@ -31,6 +31,7 @@ sealed class QuestionUI(
         name: String,
         code: String,
         isRequired: Boolean,
+        val linkList: List<LinkUI>,
         val answerUIChoicesList: List<AnswerUI>,
         val answerUIList: MutableList<AnswerUI> = mutableListOf()
     ) : QuestionUI(

@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.questionnaires.adapter
+package com.vodovoz.app.feature.questionnaires.viewholders.inner
 
 import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.databinding.ViewHolderAnswerRadioBinding

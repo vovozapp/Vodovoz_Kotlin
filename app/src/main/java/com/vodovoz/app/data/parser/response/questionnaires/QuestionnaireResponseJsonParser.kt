@@ -11,37 +11,42 @@ object QuestionnaireResponseJsonParser {
 
     fun ResponseBody.parseQuestionnaireResponse(): ResponseEntity<QuestionnaireEntity> {
         val responseJson = JSONObject(this.string())
-        return when(responseJson.getString("status")) {
-            ResponseStatus.SUCCESS -> ResponseEntity.Success(responseJson.getJSONArray("data").parseQuestionnaireEntity())
+        return when (responseJson.getString("status")) {
+
+            ResponseStatus.SUCCESS -> ResponseEntity.Success(
+                QuestionnaireEntity(
+                    message = responseJson.safeString("message"),
+                    questionTypeList = responseJson.getJSONArray("data")
+                        .parseQuestionnaireTypeList(),
+                    questionList = responseJson.getJSONArray("data").parseQuestionEntityList(),
+                )
+            )
             else -> ResponseEntity.Error("Неправильный запрос")
         }
     }
 
-    private fun JSONArray.parseQuestionnaireEntity(): QuestionnaireEntity = QuestionnaireEntity(
-        questionTypeList = parseQuestionnaireTypeList(),
-        questionList = parseQuestionEntityList()
-    )
+    private fun JSONArray.parseQuestionEntityList(): List<QuestionEntity> =
+        mutableListOf<QuestionEntity>().also { list ->
+            for (index in 0 until length()) list.add(getJSONObject(index).parseQuestion())
+        }
 
-    private fun JSONArray.parseQuestionEntityList(): List<QuestionEntity> = mutableListOf<QuestionEntity>().also { list ->
-        for (index in 0 until length()) list.add(getJSONObject(index).parseQuestion())
-    }
-
-    private fun JSONObject.parseQuestion() = when(safeString("PROPERTY_TYPE")) {
-        "L" -> when(safeString("MULTIPLE")) {
+    private fun JSONObject.parseQuestion() = when (safeString("PROPERTY_TYPE")) {
+        "L" -> when (safeString("MULTIPLE")) {
             "Y" -> parseMultiAnswerQuestion()
             else -> parseSingleAnswerQuestion()
         }
+
         else -> parseInputAnswerQuestion()
     }
 
     private fun JSONObject.parseInputAnswerQuestion() = QuestionEntity.InputAnswer(
         name = safeString("NAME"),
         code = safeString("CODE"),
-        isRequired = when(safeString("IS_REQUIRED")) {
+        isRequired = when (safeString("IS_REQUIRED")) {
             "Y" -> true
             else -> false
         },
-        defaultAnswer = when(has("VALUE")) {
+        defaultAnswer = when (has("VALUE")) {
             true -> safeString("VALUE")
             false -> ""
         }
@@ -50,30 +55,35 @@ object QuestionnaireResponseJsonParser {
     private fun JSONObject.parseMultiAnswerQuestion() = QuestionEntity.MultiAnswer(
         name = getString("NAME"),
         code = getString("CODE"),
-        isRequired = when(getString("IS_REQUIRED")) {
-            "Y" -> true
-            else -> false
-        },
-        answerList = getJSONArray("RAZDEL").parseAnswerList()
-    )
-
-    private fun JSONObject.parseSingleAnswerQuestion() = QuestionEntity.SingleAnswer(
-        name = getString("NAME"),
-        code = getString("CODE"),
-        isRequired = when(getString("IS_REQUIRED")) {
+        isRequired = when (getString("IS_REQUIRED")) {
             "Y" -> true
             else -> false
         },
         answerList = getJSONArray("RAZDEL").parseAnswerList(),
-        linkList = when(has("USLOVIE")) {
+        linkList = when (has("USLOVIE")) {
             false -> listOf()
             true -> getJSONArray("USLOVIE").parseLinkEntityList()
         }
     )
 
-    private fun JSONArray.parseLinkEntityList(): List<LinkEntity> = mutableListOf<LinkEntity>().also { list ->
-        for (index in 0 until length()) list.add(getJSONObject(index).parseLinkEntity())
-    }
+    private fun JSONObject.parseSingleAnswerQuestion() = QuestionEntity.SingleAnswer(
+        name = getString("NAME"),
+        code = getString("CODE"),
+        isRequired = when (getString("IS_REQUIRED")) {
+            "Y" -> true
+            else -> false
+        },
+        answerList = getJSONArray("RAZDEL").parseAnswerList(),
+        linkList = when (has("USLOVIE")) {
+            false -> listOf()
+            true -> getJSONArray("USLOVIE").parseLinkEntityList()
+        }
+    )
+
+    private fun JSONArray.parseLinkEntityList(): List<LinkEntity> =
+        mutableListOf<LinkEntity>().also { list ->
+            for (index in 0 until length()) list.add(getJSONObject(index).parseLinkEntity())
+        }
 
     private fun JSONObject.parseLinkEntity() = LinkEntity(
         name = getString("TEXT"),
