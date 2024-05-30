@@ -261,6 +261,8 @@ class CartFragment : BaseFragment() {
                             hideLoader()
                         }
 
+                        binding.bottom.root.isVisible = !cartState.isFirstLoad
+
                         val availableItems = cartState.data.availableProducts?.items
                         val notAvailableItems = cartState.data.notAvailableProducts?.items
 

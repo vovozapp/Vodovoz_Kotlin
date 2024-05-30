@@ -32,14 +32,14 @@ class ReplacementController(
             layoutManager = LinearLayoutManager(context)
 
             ContextCompat.getDrawable(context, R.drawable.bkg_gray_divider)?.let {
-                addItemDecoration(Divider(it, space))
+                addItemDecoration(Divider(it, space / 2))
             }
 
             val lastItemBottomSpace = resources.getDimension(R.dimen.last_item_bottom_normal_space).toInt()
 
             addMarginDecoration {  rect, view, parent, state ->
-                rect.top = space
-                rect.right = space
+                rect.top = space / 2
+                rect.right = space / 2
                 rect.bottom =
                     if (parent.getChildAdapterPosition(view) == state.itemCount - 1) lastItemBottomSpace
                     else space

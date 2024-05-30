@@ -243,33 +243,32 @@
 
             </LinearLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:id="@+id/clPersonalScore"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/light_gray">
 
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/scUsePersonalScore"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/field_height"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="@dimen/space_16"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvPersonalScore"
                     style="@style/TextViewNormalBlackBold"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/field_height"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="@dimen/space_16"
-                    tools:text="На счете 123456 руб."
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:paddingVertical="@dimen/space_16"
+                    tools:text="На счете 123456 руб."/>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/scUsePersonalScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -349,32 +348,31 @@
                 android:text="@string/zvonok_operatore_text"
                 android:visibility="gone" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
+                android:orientation="horizontal"
                 android:layout_height="wrap_content"
                 android:background="@color/light_gray">
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/scShippingAlert"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/field_height"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="@dimen/space_16"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvShippingAlert"
                     style="@style/TextViewNormalBlackBold"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/field_height"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="@dimen/space_16"
-                    android:text="@string/predupredit_o_priezde"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:paddingVertical="@dimen/space_16"
+                    android:text="@string/predupredit_o_priezde" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/scShippingAlert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16" />
+
+            </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/etPhoneForDriver"

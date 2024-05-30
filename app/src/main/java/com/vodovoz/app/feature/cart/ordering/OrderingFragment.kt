@@ -578,6 +578,7 @@ class OrderingFragment : BaseFragment() {
         }
         val datePicker = DatePickerDialog(
             requireContext(),
+            R.style.DialogTheme,
             datePickerListener,
             currentYear, currentMonth, currentDay
         )
