@@ -28,9 +28,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/rotonda_normal"
+                    android:lineSpacingMultiplier="1.5"
                     android:textSize="16sp"
-                    android:paddingBottom="@dimen/space_16"
-                    android:paddingHorizontal="@dimen/space_16"
+                    android:background="@color/light_bg"
+                    android:paddingBottom="16dp"
+                    android:paddingHorizontal="16dp"
                     android:textColor="@color/blackTextPrimary"/>
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -47,8 +49,8 @@
             android:id="@+id/buttonContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:translationZ="5dp"
+            android:background="@color/light_bg"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <TextView
@@ -60,7 +62,7 @@
                 android:background="@drawable/bkg_button_blue_rect_disabled"
                 android:fontFamily="@font/rotonda_normal"
                 android:gravity="center"
-                android:text="Отправить"
+                android:text="@string/send"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />

@@ -12,9 +12,9 @@
         android:layout_height="40dp"
         android:textSize="16sp"
         android:fontFamily="@font/rotonda_normal"
-        android:textColor="@color/blackTextPrimary"
+        android:textColor="@color/blackTextDark"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/space_16"
+        android:paddingHorizontal="16dp"
         android:background="@color/light_gray"
         tools:text="Название"/>
 
@@ -23,10 +23,11 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:textSize="16sp"
+        android:hint="@string/fill_field"
         android:fontFamily="@font/rotonda_normal"
         android:textColor="@color/blackTextPrimary"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/space_16"
+        android:paddingHorizontal="16dp"
         android:background="@color/white"
         tools:text="Значение"/>
 

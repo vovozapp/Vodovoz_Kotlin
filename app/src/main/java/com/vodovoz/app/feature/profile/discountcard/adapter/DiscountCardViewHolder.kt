@@ -33,7 +33,7 @@ class DiscountCardViewHolder(
             true -> binding.name.setTextColor(
                 ContextCompat.getColor(
                     itemView.context,
-                    R.color.blackTextPrimary
+                    R.color.blackTextDark
                 )
             )
         }

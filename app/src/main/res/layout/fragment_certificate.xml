@@ -1,75 +1,73 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--deferred-->
+<?xml version="1.0" encoding="utf-8"?><!--deferred-->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="@color/light_bg">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-            <RelativeLayout
-                android:id="@+id/rlValue"
+        <RelativeLayout
+            android:id="@+id/rlValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/space_8"
+            app:layout_constraintBottom_toTopOf="@+id/buttonContainer"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/space_8"
-                app:layout_constraintBottom_toTopOf="@+id/buttonContainer"
-                app:layout_constraintTop_toTopOf="parent">
+                android:fontFamily="@font/rotonda_normal"
+                android:lineSpacingMultiplier="1.5"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp"
+                android:textColor="@color/blackTextPrimary"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/info"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/info"
-                    android:paddingTop="@dimen/space_16"
+                    android:id="@+id/name"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:background="@color/light_gray"
                     android:fontFamily="@font/rotonda_normal"
-                    android:textSize="16sp"
-                    android:paddingBottom="@dimen/space_16"
+                    android:gravity="center_vertical"
                     android:paddingHorizontal="@dimen/space_16"
-                    android:textColor="@color/blackTextPrimary"/>
+                    android:textColor="@color/blackTextDark"
+                    android:textSize="16sp"
+                    tools:text="Название" />
 
-                <LinearLayout
+                <EditText
+                    android:id="@+id/value"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_below="@+id/info">
+                    android:layout_height="40dp"
+                    android:background="@color/white"
+                    android:fontFamily="@font/rotonda_normal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:textColor="@color/blackTextPrimary"
+                    android:textSize="16sp"
+                    tools:text="Значение" />
 
-                    <TextView
-                        android:id="@+id/name"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:textSize="16sp"
-                        android:fontFamily="@font/rotonda_normal"
-                        android:textColor="@color/blackTextPrimary"
-                        android:gravity="center_vertical"
-                        android:paddingHorizontal="@dimen/space_16"
-                        android:background="@color/light_gray"
-                        tools:text="Название"/>
+            </LinearLayout>
 
-                    <EditText
-                        android:id="@+id/value"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:textSize="16sp"
-                        android:fontFamily="@font/rotonda_normal"
-                        android:textColor="@color/blackTextPrimary"
-                        android:gravity="center_vertical"
-                        android:paddingHorizontal="@dimen/space_16"
-                        android:background="@color/white"
-                        tools:text="Значение"/>
-
-                </LinearLayout>
-
-            </RelativeLayout>
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/buttonContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:translationZ="5dp"
             app:layout_constraintTop_toBottomOf="@+id/rlValue">
 
             <TextView
@@ -77,20 +75,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_marginHorizontal="@dimen/space_16"
-                android:layout_marginBottom="@dimen/space_12"
                 android:layout_marginTop="@dimen/space_12"
+                android:layout_marginBottom="@dimen/space_12"
                 android:background="@drawable/bkg_button_blue_rect_disabled"
                 android:fontFamily="@font/rotonda_normal"
                 android:gravity="center"
-                tools:text="Отправить"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="Отправить" />
 
             <TextView
                 android:id="@+id/underButtonText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/submit"
                 android:layout_marginHorizontal="@dimen/space_16"
                 android:layout_marginBottom="@dimen/space_8"
                 android:fontFamily="@font/rotonda_normal"
@@ -99,8 +98,7 @@
                 android:textAllCaps="false"
                 android:textSize="12sp"
                 android:visibility="gone"
-                android:layout_below="@id/submit"
-                tools:text="В течении 10-15 минут после применения кода номинал сертификата начислится на баланс средств. Чтобы воспользоваться этими средствами, при оформлении заказа выберите способ оплаты «С моего баланса средств».\n\nАктивируя код подарочного сертификата Vodovoz, вы соглашаетесь на зачисление номинала сертификата на свой баланс средств и его использование для оплаты покупок на Vodovoz."/>
+                tools:text="В течении 10-15 минут после применения кода номинал сертификата начислится на баланс средств. Чтобы воспользоваться этими средствами, при оформлении заказа выберите способ оплаты «С моего баланса средств».\n\nАктивируя код подарочного сертификата Vodovoz, вы соглашаетесь на зачисление номинала сертификата на свой баланс средств и его использование для оплаты покупок на Vodovoz." />
 
         </RelativeLayout>
 

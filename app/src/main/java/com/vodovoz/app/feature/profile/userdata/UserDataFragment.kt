@@ -1,6 +1,8 @@
 package com.vodovoz.app.feature.profile.userdata
 
 import android.os.Bundle
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -126,6 +128,9 @@ class UserDataFragment : BaseFragment() {
         binding.vBirthday.setOnClickListener {
             viewModel.onBirthdayClick()
         }
+        binding.showPassword.setOnClickListener{
+            viewModel.showPassword()
+        }
     }
 
     private fun observeUiState() {
@@ -150,12 +155,16 @@ class UserDataFragment : BaseFragment() {
                             etSecondName.setText(state.data.item.secondName)
                             etEmail.setText(state.data.item.email)
                             etBirthday.setText(state.data.item.birthday)
-                            when (state.data.item.birthday == "Не указано") {
-                                false -> binding.tilBirthday.hint = "Дата рождения(нельзя менять)"
-                                true ->  binding.tilBirthday.hint = "Дата рождения(можно изменить 1 раз!)"
-                            }
+                            binding.tilBirthday.hint = "Дата рождения"
                             etGender.setText(state.data.item.gender.genderName)
                             etPhone.setText(state.data.item.phone.convertPhoneToBaseFormat().convertPhoneToFullFormat())
+                            if(state.data.showPassword) {
+                                etPassword.transformationMethod = HideReturnsTransformationMethod()
+                                showPassword.setImageResource(R.drawable.showpassword)
+                            } else {
+                                etPassword.transformationMethod = PasswordTransformationMethod()
+                                showPassword.setImageResource(R.drawable.hidepassword)
+                            }
                         }
                     }
 
@@ -176,7 +185,6 @@ class UserDataFragment : BaseFragment() {
                         is UserDataFlowViewModel.UserDataEvents.UpdateUserDataEvent -> {
                             profileViewModel.refresh()
                             requireActivity().snack(it.message)
-                            findNavController().popBackStack()
                         }
                         is UserDataFlowViewModel.UserDataEvents.ShowDatePicker -> {
                             val datePickerDialog = MaterialDatePicker.Builder.datePicker()

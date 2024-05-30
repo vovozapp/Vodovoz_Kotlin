@@ -1,9 +1,12 @@
 package com.vodovoz.app.feature.profile.userdata
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
-import com.vodovoz.app.common.content.*
+import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.common.content.Event
+import com.vodovoz.app.common.content.PagingContractViewModel
+import com.vodovoz.app.common.content.State
+import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.media.MediaManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
@@ -12,7 +15,11 @@ import com.vodovoz.app.ui.model.UserDataUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -218,6 +225,11 @@ class UserDataFlowViewModel @Inject constructor(
         }
     }
 
+    fun showPassword() {
+        uiStateListener.value =
+            state.copy(data = state.data.copy(showPassword = !state.data.showPassword))
+    }
+
 
     sealed class UserDataEvents : Event {
         data class UpdateUserDataEvent(val message: String) : UserDataEvents()
@@ -229,6 +241,7 @@ class UserDataFlowViewModel @Inject constructor(
     data class UserDataState(
         val item: UserDataUI? = null,
         val canChangeBirthDay: Boolean = true,
+        val showPassword: Boolean = false,
     ) : State
 
 }
