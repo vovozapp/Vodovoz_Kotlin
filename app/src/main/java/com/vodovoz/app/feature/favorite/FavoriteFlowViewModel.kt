@@ -305,6 +305,7 @@ class FavoriteFlowViewModel @Inject constructor(
             loadMore = false,
             loadingPage = true
         )
+        fetchFavoriteProductsHeader()
         fetchFavoriteProductsSorted()
     }
 
@@ -316,8 +317,7 @@ class FavoriteFlowViewModel @Inject constructor(
                 favoriteCategory = categoryUI.copy(
                     categoryUIList = categoryUI.categoryUIList.map { it.copy(isSelected = it.id == id) }
                 ),
-                selectedCategoryId = id,
-                sortType = SortTypeUI()
+                selectedCategoryId = id
             ),
             page = 1,
             loadMore = false
@@ -374,7 +374,7 @@ class FavoriteFlowViewModel @Inject constructor(
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
             FavoriteEvents()
 
-        object GoToProfile : FavoriteEvents()
+        data object GoToProfile : FavoriteEvents()
     }
 
     data class FavoriteState(

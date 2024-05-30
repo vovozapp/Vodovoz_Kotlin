@@ -224,11 +224,7 @@ class FavoriteFragment : BaseFragment() {
 
         val categoryUiList = state.favoriteCategory?.categoryUIList ?: emptyList()
 
-        if (state.isAvailable) {
-            bindTabsVisibility(categoryUiList.isNotEmpty())
-        } else {
-            bindTabsVisibility(false)
-        }
+        bindTabsVisibility(categoryUiList.isNotEmpty())
 
         categoryTabsController.submitList(categoryUiList, "")
 
