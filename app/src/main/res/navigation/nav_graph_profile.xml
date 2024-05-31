@@ -225,6 +225,9 @@
         <action
             android:id="@+id/action_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_to_serviceDetailFragment"
+            app:destination="@id/serviceDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/promotionDetailFragment"
@@ -784,6 +787,9 @@
         <argument
             android:name="serviceType"
             app:argType="string" />
+        <action
+            android:id="@+id/action_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
     </fragment>
     <fragment
         android:id="@+id/orderingFragment"

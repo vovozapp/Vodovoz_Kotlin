@@ -85,7 +85,7 @@
             app:destination="@+id/waterAppFragment" />
         <action
             android:id="@+id/action_to_buyCertificateFragment"
-            app:destination="@id/buyCertificateFragment"/>
+            app:destination="@id/buyCertificateFragment" />
     </fragment>
     <fragment
         android:id="@+id/catalogFragment"
@@ -225,6 +225,9 @@
         <action
             android:id="@+id/action_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_to_serviceDetailFragment"
+            app:destination="@id/serviceDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/promotionDetailFragment"
@@ -379,9 +382,9 @@
         android:label="GiftsBottomFragment">
         <argument
             android:name="giftBundle"
+            android:defaultValue="@null"
             app:argType="com.vodovoz.app.ui.model.custom.GiftProductUI"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
     </dialog>
     <dialog
         android:id="@+id/singleRootCatalogBottomFragment"
@@ -487,7 +490,7 @@
             app:destination="@id/webViewFragment" />
         <action
             android:id="@+id/action_to_buyCertificateFragment"
-            app:destination="@+id/buyCertificateFragment"/>
+            app:destination="@+id/buyCertificateFragment" />
     </fragment>
     <fragment
         android:id="@+id/concreteFilterFragment"
@@ -739,7 +742,7 @@
     <fragment
         android:id="@+id/questionnairesFragment2"
         android:name="com.vodovoz.app.feature.questionnaires.QuestionnairesFlowFragment"
-        android:label="QuestionnairesFragment" >
+        android:label="QuestionnairesFragment">
 
         <action
             android:id="@+id/action_to_webViewFragment"
@@ -787,6 +790,9 @@
         <argument
             android:name="serviceType"
             app:argType="string" />
+        <action
+            android:id="@+id/action_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
     </fragment>
     <fragment
         android:id="@+id/orderingFragment"
@@ -1035,11 +1041,11 @@
     <fragment
         android:id="@+id/activeCertificateFragment"
         android:name="com.vodovoz.app.feature.profile.certificate.ActiveCertificateFragment"
-        android:label="ActiveCertificateFragment" >
+        android:label="ActiveCertificateFragment">
 
         <action
             android:id="@+id/action_to_webViewFragment"
-            app:destination="@+id/webViewFragment"/>
+            app:destination="@+id/webViewFragment" />
     </fragment>
     <fragment
         android:id="@+id/buyCertificateFragment"

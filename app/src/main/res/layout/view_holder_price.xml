@@ -19,14 +19,14 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvPriceCondition"
-            style="@style/TextViewNormalGrayExtraBold"
+            style="@style/TextViewNormalGray"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="От 1 шт"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvPrice"
-            style="@style/TextViewNormalGrayExtraBold"
+            style="@style/TextViewNormalGray"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="340 руб"/>

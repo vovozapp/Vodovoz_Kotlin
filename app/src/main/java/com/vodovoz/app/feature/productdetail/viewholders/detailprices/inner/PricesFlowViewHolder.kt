@@ -13,7 +13,7 @@ class PricesFlowViewHolder(view: View) : ItemViewHolder<PriceUI>(view) {
         super.bind(item)
 
         binding.tvPrice.text = StringBuilder()
-            .append(item.currentPrice)
+            .append(item.currentPrice.toInt())
             .append(" руб")
             .toString()
 
