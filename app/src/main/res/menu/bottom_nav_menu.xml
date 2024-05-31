@@ -12,8 +12,13 @@
         android:title="@string/catalog" />
 
     <item
+        android:id="@+id/graph_promotions"
+        android:icon="@drawable/png_ic_promotions"
+        android:title="@string/menu_promotions" />
+
+    <item
         android:id="@+id/graph_cart"
-        android:icon="@drawable/png_cart_old"
+        android:icon="@drawable/png_cart_new"
         android:title="@string/cart" />
 
     <item

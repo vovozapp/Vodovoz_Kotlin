@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.vodovoz.app.ui.view.ExtendedBottomNavigationView
 import java.util.*
 
 /**
@@ -19,7 +20,7 @@ import java.util.*
  *
  * This sample is a workaround until the Navigation Component supports multiple back stacks.
  */
-fun BottomNavigationView.setupWithNavController(
+fun ExtendedBottomNavigationView.setupWithNavController(
     navGraphIds: List<Int>,
     fragmentManager: FragmentManager,
     containerId: Int,
@@ -165,7 +166,7 @@ fun BottomNavigationView.setupWithNavController(
     return selectedNavController
 }
 
-private fun BottomNavigationView.setupDeepLinks(
+private fun ExtendedBottomNavigationView.setupDeepLinks(
     navGraphIds: List<Int>,
     fragmentManager: FragmentManager,
     containerId: Int,
@@ -190,7 +191,7 @@ private fun BottomNavigationView.setupDeepLinks(
     }
 }
 
-private fun BottomNavigationView.setupItemReselected(
+private fun ExtendedBottomNavigationView.setupItemReselected(
     graphIdToTagMap: SparseArray<String>,
     fragmentManager: FragmentManager,
     recyclerViewToTop: (id: Int) -> Unit

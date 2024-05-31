@@ -30,11 +30,11 @@ class AllPromotionsFlowViewModel @Inject constructor(
     private val accountManager: AccountManager,
 ) : PagingStateViewModel<AllPromotionsFlowViewModel.AllPromotionsState>(AllPromotionsState()) {
 
-    private var dataSource = savedState.get<AllPromotionsFragment.DataSource>("dataSource")
+    private var dataSource = savedState.get<AllPromotionsFragment.DataSource>("dataSource") ?: AllPromotionsFragment.DataSource.All
 
     private fun fetchAllPromotions(filterChanged: Boolean = false) {
         viewModelScope.launch {
-            val dataSource = dataSource ?: return@launch
+            val dataSource = dataSource
             flow {
                 when (dataSource) {
                     is AllPromotionsFragment.DataSource.All -> emit(
