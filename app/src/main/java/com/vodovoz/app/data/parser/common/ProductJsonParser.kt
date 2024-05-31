@@ -138,7 +138,8 @@ object ProductJsonParser {
                 true -> getJSONObject("NewPrice").safeString("DescPrice")
                 false -> ""
             },
-            forCart = forCart
+            forCart = forCart,
+            giftText = safeString("PODAROK_KORZINA"),
         )
     }
 

@@ -48,20 +48,6 @@ class ProductsGridViewHolder(
             }
         }
 
-    private val detailPictureFlowPagerAdapter = DetailPictureFlowPagerAdapter(
-        clickListener = object : DetailPictureFlowClickListener {
-            override fun onDetailPictureClick() {
-                val item = item ?: return
-                productsClickListener.onProductClick(item.id)
-            }
-
-            override fun onProductClick(id: Long) {
-                val item = item ?: return
-                productsClickListener.onProductClick(item.id)
-            }
-        }
-    )
-
     override fun attach() {
         super.attach()
 
@@ -109,9 +95,6 @@ class ProductsGridViewHolder(
             productsClickListener.onProductClick(item.id)
         }
         binding.pvPictures.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.pvPictures.adapter = detailPictureFlowPagerAdapter
-
-        binding.tlIndicators.attachTo(binding.pvPictures)
 
         binding.llPricesContainer.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 
@@ -302,7 +285,20 @@ class ProductsGridViewHolder(
             View.INVISIBLE
         }
 
+        val detailPictureFlowPagerAdapter = DetailPictureFlowPagerAdapter(
+            clickListener = object : DetailPictureFlowClickListener {
+                override fun onDetailPictureClick() {
+                    productsClickListener.onProductClick(item.id)
+                }
+
+                override fun onProductClick(id: Long) {
+                    productsClickListener.onProductClick(item.id)
+                }
+            }
+        )
         detailPictureFlowPagerAdapter.submitList(item.detailPictureListPager)
+        binding.pvPictures.adapter = detailPictureFlowPagerAdapter
+        binding.tlIndicators.attachToPager(binding.pvPictures)
 
     }
 

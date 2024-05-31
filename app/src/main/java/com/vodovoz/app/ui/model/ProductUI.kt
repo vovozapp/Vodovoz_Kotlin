@@ -43,6 +43,7 @@ data class ProductUI(
     val conditionPrice: String = "",
     val condition: String = "",
     val forCart: Boolean = false,
+    val giftText: String  = "",
 ) : Parcelable, Item {
 
     companion object {

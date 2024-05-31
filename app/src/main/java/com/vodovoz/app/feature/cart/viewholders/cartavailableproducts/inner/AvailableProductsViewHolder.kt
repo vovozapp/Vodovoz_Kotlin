@@ -54,23 +54,6 @@ class AvailableProductsViewHolder(
             }
         }
 
-    private val detailPictureFlowPagerAdapter = DetailPictureFlowPagerAdapter(
-        clickListener = object : DetailPictureFlowClickListener {
-
-            override fun onDetailPictureClick() {
-                val item = item ?: return
-                if (item.priceList.first().currentPrice <= 1 || item.isGift || item.isBottle) return
-                productsClickListener.onProductClick(item.id)
-            }
-
-            override fun onProductClick(id: Long) {
-                val item = item ?: return
-                if (item.priceList.first().currentPrice <= 1 || item.isGift || item.isBottle) return
-                productsClickListener.onProductClick(item.id)
-            }
-        }
-    )
-
 
     override fun attach() {
         super.attach()
@@ -115,9 +98,7 @@ class AvailableProductsViewHolder(
 
     init {
         binding.vpPictures.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.vpPictures.adapter = detailPictureFlowPagerAdapter
 
-        binding.tlIndicators.attachTo(binding.vpPictures)
 
         binding.llPricesContainer.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 
@@ -188,7 +169,7 @@ class AvailableProductsViewHolder(
         binding.cgStatuses.visibility = View.VISIBLE
         binding.llPricesContainer.root.visibility = View.VISIBLE
         binding.llPricesContainer.tvOldPrice.visibility = View.VISIBLE
-        if(item.canBuy) {
+        if (item.canBuy) {
             binding.amountController.root.visibility = View.VISIBLE
         } else {
             binding.amountController.root.visibility = View.GONE
@@ -242,17 +223,42 @@ class AvailableProductsViewHolder(
 
             false -> binding.tvDepositPrice.visibility = View.GONE
         }
+        if(item.giftText.isNotEmpty())  {
+            binding.tvDepositPrice.visibility = View.VISIBLE
+            binding.tvDepositPrice.setTextColor(
+                ContextCompat.getColor(
+                    itemView.context,
+                    R.color.red
+                )
+            )
+            binding.tvDepositPrice.text = item.giftText
+        }
 
         bindDiscountAndStatuses(item)
 
         //UpdatePictures
-        binding.tlIndicators.visibility = if(item.detailPictureList.size != 1){
+        binding.tlIndicators.visibility = if (item.detailPictureList.size != 1) {
             View.VISIBLE
         } else {
             View.INVISIBLE
         }
+        val detailPictureFlowPagerAdapter = DetailPictureFlowPagerAdapter(
+            clickListener = object : DetailPictureFlowClickListener {
 
+                override fun onDetailPictureClick() {
+                    if (item.priceList.first().currentPrice <= 1 || item.isGift || item.isBottle) return
+                    productsClickListener.onProductClick(item.id)
+                }
+
+                override fun onProductClick(id: Long) {
+                    if (item.priceList.first().currentPrice <= 1 || item.isGift || item.isBottle) return
+                    productsClickListener.onProductClick(item.id)
+                }
+            }
+        )
+        binding.vpPictures.adapter = detailPictureFlowPagerAdapter
         detailPictureFlowPagerAdapter.submitList(item.detailPictureList.map { DetailPicturePager(it) })
+        binding.tlIndicators.attachToPager(binding.vpPictures)
 
         //If is bottle
         if (item.isBottle) {
@@ -276,7 +282,7 @@ class AvailableProductsViewHolder(
             binding.cgStatuses.visibility = View.GONE
             binding.rbRating.isVisible = false
         }
-        if(item.forCart) {
+        if (item.forCart) {
             binding.llRatingContainer.visibility = View.GONE
         }
 
@@ -383,7 +389,11 @@ class AvailableProductsViewHolder(
                             minimalPrice.requiredAmount
                         )
 
-                    bindDiscountPrice(item, minimalPrice.currentPrice.roundToInt(), minimalPrice.oldPrice.roundToInt())
+                    bindDiscountPrice(
+                        item,
+                        minimalPrice.currentPrice.roundToInt(),
+                        minimalPrice.oldPrice.roundToInt()
+                    )
                     binding.llPricesContainer.tvPricePerUnit.visibility = View.GONE
                 }
 
@@ -395,7 +405,7 @@ class AvailableProductsViewHolder(
     private fun bindDiscountPrice(item: ProductUI, currentPrice: Int, oldPrice: Int = 0) {
 //        if (item.totalDisc > 0) {
 
-        if (oldPrice != 0 || (item.isGift && currentPrice != 1)) {
+        if (oldPrice != 0 || (item.isGift && currentPrice == 0)) {
             binding.llPricesContainer.tvCurrentPrice.setTextColor(
                 ContextCompat.getColor(
                     itemView.context,

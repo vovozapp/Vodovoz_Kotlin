@@ -30,4 +30,5 @@ class ProductEntity(
     val conditionalPrice: String = "",
     val condition: String = "",
     val forCart: Boolean = false,
+    val giftText: String  = "",
 ): Parcelable

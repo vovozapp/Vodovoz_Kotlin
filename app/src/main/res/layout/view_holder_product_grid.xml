@@ -21,22 +21,20 @@
         app:layout_constraintTop_toBottomOf="@+id/imgFavoriteStatus"
         tools:ignore="ContentDescription" />
 
-    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+    <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
         android:id="@+id/tlIndicators"
         android:layout_width="wrap_content"
-        android:layout_height="7dp"
-        android:layout_gravity="center"
-        android:paddingHorizontal="16dp"
-        app:dotsColor="#BDBDBD"
-        app:dotsCornerRadius="16dp"
-        app:dotsSize="4.5dp"
-        app:dotsSpacing="2dp"
-        app:dotsWidthFactor="1"
-        app:layout_constraintTop_toBottomOf="@id/pvPictures"
-        app:layout_constraintEnd_toEndOf="@+id/pvPictures"
+        android:layout_height="wrap_content"
+        app:spi_dotColor="#BDBDBD"
+        app:spi_dotSelectedColor="@color/bluePrimary"
+        app:spi_dotSpacing="5dp"
+        app:spi_dotSize="4.5dp"
+        app:spi_dotSelectedSize="4.5dp"
+        app:spi_dotMinimumSize="3dp"
+        app:spi_visibleDotCount="7"
         app:layout_constraintStart_toStartOf="@+id/pvPictures"
-        app:layout_constraintWidth_percent="0.26"
-        app:selectedDotColor="@color/bluePrimary" />
+        app:layout_constraintEnd_toEndOf="@+id/pvPictures"
+        app:layout_constraintTop_toBottomOf="@id/pvPictures" />
 
     <include
         layout="@layout/view_holder_slider_product_statuses"

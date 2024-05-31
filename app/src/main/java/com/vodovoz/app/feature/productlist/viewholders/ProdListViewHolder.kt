@@ -54,19 +54,6 @@ class ProdListViewHolder(
             }
         }
 
-    private val detailPictureFlowPagerAdapter = DetailPictureFlowPagerAdapter(
-        clickListener = object : DetailPictureFlowClickListener {
-            override fun onProductClick(id: Long) {
-                val item = item ?: return
-                productsClickListener.onProductClick(item.id)
-            }
-
-            override fun onDetailPictureClick() {
-
-            }
-        }
-    )
-
     override fun attach() {
         super.attach()
 
@@ -115,8 +102,6 @@ class ProdListViewHolder(
             productsClickListener.onProductClick(item.id)
         }
         binding.vpPictures.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.vpPictures.adapter = detailPictureFlowPagerAdapter
-        binding.tlIndicators.attachTo(binding.vpPictures)
 
         binding.llPricesContainer.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 
@@ -325,7 +310,20 @@ class ProdListViewHolder(
             View.INVISIBLE
         }
 
+        val detailPictureFlowPagerAdapter = DetailPictureFlowPagerAdapter(
+            clickListener = object : DetailPictureFlowClickListener {
+                override fun onProductClick(id: Long) {
+                    productsClickListener.onProductClick(item.id)
+                }
+
+                override fun onDetailPictureClick() {
+
+                }
+            }
+        )
+        binding.vpPictures.adapter = detailPictureFlowPagerAdapter
         detailPictureFlowPagerAdapter.submitList(item.detailPictureList.map { DetailPicturePager(it) })
+        binding.tlIndicators.attachToPager(binding.vpPictures)
 
         //If is bottle
         if (item.isBottle) {
