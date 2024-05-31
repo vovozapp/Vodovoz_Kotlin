@@ -22,7 +22,8 @@ object ServiceByIdResponseJsonParser {
     private fun JSONObject.parseServiceEntity( type: String?) = ServiceEntity(
         name = safeString("TITLE"),
         detail = safeString("NAME"),
-        type = type ?: ""
+        type = type ?: "",
+        buttonText = safeString("KNOPKANAME"),
     )
 
 }

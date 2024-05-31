@@ -156,5 +156,9 @@ fun String.toUnderline(): SpannableString {
     return s
 }
 
+fun String.prepareServiceHtml() : String {
+    return "<style>img{display: inline;height: auto;max-width: 100%;}</style>$this"
+}
+
 
 

@@ -37,7 +37,7 @@
             android:textColor="#434343"
             android:textSize="16sp"
             android:textStyle="normal"
-            app:fontFamily="@font/rotondac"
+            app:fontFamily="@font/rotonda_normal"
             app:layout_constraintBottom_toTopOf="@id/rvServices"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

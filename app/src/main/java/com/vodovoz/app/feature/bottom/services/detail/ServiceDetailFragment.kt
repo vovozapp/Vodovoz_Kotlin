@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.bottom.services.detail
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
@@ -11,9 +12,10 @@ import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.databinding.FragmentServiceDetailsFlowBinding
 import com.vodovoz.app.feature.bottom.services.AboutServicesFlowViewModel
-import com.vodovoz.app.util.extensions.fromHtml
+import com.vodovoz.app.util.extensions.prepareServiceHtml
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -41,10 +43,14 @@ class ServiceDetailFragment : BaseFragment() {
         viewModel.selectService(args.selectedType)
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        bindErrorRefresh {  }
+        bindErrorRefresh { }
+
+        binding.webView.settings.javaScriptEnabled = true
+
         observeResultLiveData()
         observeUiState()
         observeEvents()
@@ -80,6 +86,7 @@ class ServiceDetailFragment : BaseFragment() {
                                     )
                                 )
                             }
+
                             is AboutServicesFlowViewModel.AboutServicesEvents.NavigateToOrder -> {
                                 if (findNavController().currentBackStackEntry?.destination?.id == R.id.serviceOrderFragment) {
                                     findNavController().popBackStack()
@@ -94,6 +101,7 @@ class ServiceDetailFragment : BaseFragment() {
                                     )
                                 )
                             }
+
                             else -> {}
                         }
                     }
@@ -118,8 +126,18 @@ class ServiceDetailFragment : BaseFragment() {
                                 state.data.selectedService.name,
                                 state.data.item?.serviceUIList.isNullOrEmpty().not()
                             )
-                            binding.tvDetails.text = state.data.selectedService.detail?.fromHtml()
+                            binding.webView.loadDataWithBaseURL(ApiConfig.VODOVOZ_URL,
+                                state.data.selectedService.detail?.prepareServiceHtml()
+                                    ?: "Нет данных",
+                                "text/html",
+                                "UTF-8",
+                                null
+                            )
+//                            binding.tvDetails.text = state.data.selectedService.detail?.fromHtml()
+                            binding.btnOrderService.text = state.data.selectedService.buttonText
                         }
+
+
 
                         showError(state.error)
                     }

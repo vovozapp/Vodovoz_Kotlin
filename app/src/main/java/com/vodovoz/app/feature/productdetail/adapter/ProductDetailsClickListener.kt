@@ -26,4 +26,6 @@ interface ProductDetailsClickListener {
 
     fun onBlockButtonClick(productId: String, extProductId: String)
 
+    fun onServiceClick(id: String)
+
 }

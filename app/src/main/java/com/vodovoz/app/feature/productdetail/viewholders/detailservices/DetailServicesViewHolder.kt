@@ -17,7 +17,7 @@ class DetailServicesViewHolder(
 ) : ItemViewHolder<DetailServices>(view) {
 
     private val binding: FragmentProductDetailsServicesBinding = FragmentProductDetailsServicesBinding.bind(view)
-    private val adapter: ServicesFlowAdapter = ServicesFlowAdapter()
+    private val adapter: ServicesFlowAdapter = ServicesFlowAdapter(clickListener)
     internal val space: Int by lazy { itemView.context.resources.getDimension(R.dimen.space_16).toInt() }
 
     init {

@@ -11,7 +11,9 @@
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/space_16"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
         android:textColor="@color/blackTextDark"
         android:fontFamily="@font/rotonda_normal"
         android:textSize="16sp"
@@ -21,11 +23,26 @@
         android:id="@+id/value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/space_16"
+        android:padding="16dp"
         android:background="@color/white"
-        android:textColor="@color/blackTextDark"
+        android:textColor="@color/text_black"
         android:fontFamily="@font/rotonda_normal"
-        android:textSize="16sp"
-        android:hint="Заполнить"/>
+        android:textSize="14sp"
+        android:hint="@string/fill_field"/>
+
+    <EditText
+        android:id="@+id/bigValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:lines="8"
+        android:inputType="textMultiLine"
+        android:gravity="top|start"
+        android:background="@color/white"
+        android:textColor="@color/text_black"
+        android:fontFamily="@font/rotonda_normal"
+        android:textSize="14sp"
+        android:hint="@string/fill_field"
+        android:visibility="gone"/>
 
 </LinearLayout>

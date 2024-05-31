@@ -18,11 +18,13 @@ import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.databinding.FragmentServiceDetailsFlowNewBinding
 import com.vodovoz.app.feature.bottom.services.detail.adapter.ServiceDetailController
 import com.vodovoz.app.feature.bottom.services.detail.model.ServiceDetailBlockUI
 import com.vodovoz.app.feature.bottom.services.newservs.AboutServicesNewViewModel
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
+import com.vodovoz.app.util.extensions.prepareServiceHtml
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -124,14 +126,10 @@ class ServiceDetailNewFragment : BaseFragment() {
         }
 
         try {
-            binding.serviceDetailWebView.loadDataWithBaseURL(null, url.prepareServiceHtml(), "text/html", "utf-8", null)
+            binding.serviceDetailWebView.loadDataWithBaseURL(ApiConfig.VODOVOZ_URL, url.prepareServiceHtml(), "text/html", "utf-8", null)
         } catch (e: Throwable) {
             showError(e.toErrorState())
         }
-    }
-
-    private fun String.prepareServiceHtml() : String {
-        return "<style>img{display: inline;height: auto;max-width: 100%;}</style>$this"
     }
 
     private fun getProductsClickListener(): ProductsClickListener {

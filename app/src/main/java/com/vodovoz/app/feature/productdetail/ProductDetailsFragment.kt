@@ -323,7 +323,7 @@ class ProductDetailsFragment : BaseFragment() {
             }
 
             override fun onNextPageBrandProductsClick(position: Int) {
-                binding.mainRv.scrollToPosition(position-1)
+                binding.mainRv.scrollToPosition(position - 1)
                 viewModel.nextPageBrandProducts()
             }
 
@@ -354,6 +354,15 @@ class ProductDetailsFragment : BaseFragment() {
 
             override fun onBlockButtonClick(productId: String, extProductId: String) {
                 viewModel.changeCart(productId, extProductId)
+            }
+
+            override fun onServiceClick(id: String) {
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToServiceDetailFragment(
+                        emptyArray(),
+                        id
+                    )
+                )
             }
         }
     }

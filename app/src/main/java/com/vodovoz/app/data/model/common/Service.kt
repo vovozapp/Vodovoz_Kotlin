@@ -11,6 +11,7 @@ class ServiceEntity(
     val price: String? = null,
     val detail: String? = null,
     val detailPicture: String? = null,
+    val buttonText: String  = "",
     val type: String
 )
 

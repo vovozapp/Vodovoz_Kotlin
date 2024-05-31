@@ -10,7 +10,8 @@ data class ServiceUI(
     val detail: String? = null,
     val price: String? = null,
     val detailPicture: String? = null,
-    val type: String
+    val type: String,
+    val buttonText: String = "",
 ): Parcelable, Item {
 
     override fun getItemViewType(): Int {

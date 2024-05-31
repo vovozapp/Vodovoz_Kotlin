@@ -9,54 +9,66 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        app:elevation="0dp">
+        app:elevation="4dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:titleTextAppearance="@style/ToolbarTitle"
-            app:title="Название услуги"/>
+            app:title="Название услуги"
+            app:titleTextAppearance="@style/ToolbarTitle" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/light_bg"
+        android:orientation="vertical"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <ScrollView
-            android:id="@+id/scrollableContentContainer"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fieldsRecycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:background="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/llPersonalData"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/llPersonalData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/order"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/tvPersonalData"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_weight="1"
+                android:padding="16dp"
+                android:text="@string/i_confirm_personal_data"
+                android:textColorLink="@color/bluePrimary" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/fieldsRecycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/personalData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:layout_marginEnd="16dp" />
 
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/personalData"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/space_16"
-                    android:layout_marginBottom="77dp"
-                    android:text="Я подтверждаю свое согласие на обработку персональных данные"/>
+        </LinearLayout>
 
-            </LinearLayout>
-
-        </ScrollView>
 
         <TextView
             android:id="@+id/order"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:layout_alignParentBottom="true"
             android:layout_marginStart="@dimen/space_16"
             android:layout_marginTop="@dimen/space_16"
             android:layout_marginEnd="@dimen/space_16"
@@ -64,10 +76,12 @@
             android:background="@drawable/bkg_button_blue_rect_disabled"
             android:fontFamily="@font/rotonda_normal"
             android:gravity="center"
-            android:text="Отправить"
+            android:text="@string/send"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

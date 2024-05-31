@@ -14,7 +14,8 @@ object ServiceMapper {
         price = price,
         detail = detail,
         detailPicture = detailPicture,
-        type = type
+        type = type,
+        buttonText = buttonText,
     )
 
 }

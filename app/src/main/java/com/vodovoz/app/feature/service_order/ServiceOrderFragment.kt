@@ -1,15 +1,19 @@
 package com.vodovoz.app.feature.service_order
 
 import android.annotation.SuppressLint
+import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.core.network.ApiConfig.PERSONAL_DATA_URL
 import com.vodovoz.app.databinding.FragmentServiceOrderBinding
 import com.vodovoz.app.feature.service_order.adapter.ServiceOrderFormFieldsAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,11 +34,15 @@ class ServiceOrderFragment : BaseFragment() {
 
     private val serviceOrderFormFieldsAdapter = ServiceOrderFormFieldsAdapter()
 
-    private val serviceName =
-        findNavController().currentBackStackEntry?.savedStateHandle?.get<String>("serviceName")
-            ?: ""
+    private val args: ServiceOrderFragmentArgs by navArgs()
 
-    override fun initView() {
+//    private val serviceName =
+//        findNavController().currentBackStackEntry?.savedStateHandle?.get<String>("serviceName")
+//            ?: ""
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         initAppBar()
         setupButtons()
         initFieldsRecycler()
@@ -47,7 +55,7 @@ class ServiceOrderFragment : BaseFragment() {
         (requireActivity() as AppCompatActivity).supportActionBar?.let { noNullActionBar ->
             noNullActionBar.setDisplayHomeAsUpEnabled(true)
             noNullActionBar.setDisplayShowHomeEnabled(true)
-            noNullActionBar.title = serviceName
+            noNullActionBar.title = args.serviceName
         }
         binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
@@ -66,6 +74,15 @@ class ServiceOrderFragment : BaseFragment() {
                 value.append(it.id).append("$").append(it.value.trim()).append(";")
             }
             viewModel.orderService(value.toString())
+        }
+
+        binding.tvPersonalData.setOnClickListener {
+            findNavController().navigate(
+                ServiceOrderFragmentDirections.actionToWebViewFragment(
+                    url = PERSONAL_DATA_URL,
+                    title  = "Персональные данные",
+                )
+            )
         }
     }
 
