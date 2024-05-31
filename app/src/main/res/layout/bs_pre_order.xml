@@ -47,78 +47,59 @@
                 app:layout_constraintTop_toBottomOf="@+id/imgProduct"
                 tools:text="Название продукта" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilName"
-                style="@style/TextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_16"
-                android:layout_marginTop="@dimen/space_16"
-                android:layout_marginEnd="@dimen/space_16"
-                app:errorEnabled="true"
-                app:hintTextAppearance="@style/TextLabel">
-
-                <com.google.android.material.textfield.TextInputEditText
+                <EditText
                     android:id="@+id/etName"
-                    style="@style/TextField"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="45dp"
+                    android:background="@color/white"
                     android:hint="@string/fio_"
-                    android:inputType="text" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginHorizontal="16dp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilPhone"
-                style="@style/TextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="8dp"
-                app:errorEnabled="true"
-                app:hintTextAppearance="@style/TextLabel">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPhone"
-                    style="@style/TextField"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:hint="@string/phone_"
                     android:inputType="text"
-                    android:paddingHorizontal="16dp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:textSize="14sp"
+                    android:paddingStart="32dp"
+                    android:textColor="#555555"
+                    app:fontFamily="@font/rotonda_normal"
+                    android:textStyle="normal"
+                    android:textAllCaps="false" />
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginHorizontal="16dp" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilEmail"
-                style="@style/TextInputLayout"
+            <EditText
+                android:id="@+id/etEmail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_16"
-                android:layout_marginTop="@dimen/space_8"
-                android:layout_marginEnd="@dimen/space_16"
-                app:errorEnabled="true"
-                app:hintTextAppearance="@style/TextLabel">
+                android:layout_height="45dp"
+                android:background="@color/white"
+                android:hint="@string/email_"
+                android:inputType="textEmailAddress"
+                android:textSize="14sp"
+                android:paddingStart="32dp"
+                android:textColor="#555555"
+                app:fontFamily="@font/rotonda_normal"
+                android:textStyle="normal"
+                android:textAllCaps="false" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etEmail"
-                    style="@style/TextField"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/email_title_"
-                    android:inputType="textEmailAddress" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="16dp" />
+
+
+            <EditText
+                android:id="@+id/etPhone"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/white"
+                android:hint="@string/phone_"
+                android:inputType="text"
+                android:textSize="14sp"
+                android:paddingStart="32dp"
+                android:textColor="#555555"
+                app:fontFamily="@font/rotonda_normal"
+                android:textStyle="normal"
+                android:textAllCaps="false" />
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"

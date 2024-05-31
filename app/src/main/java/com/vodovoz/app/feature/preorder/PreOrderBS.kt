@@ -132,25 +132,25 @@ class PreOrderBS : BaseBottomSheetFragment() {
 
     private fun validateEmail(): Boolean {
         if (!FieldValidationsSettings.EMAIL_REGEX.matches(binding.etEmail.text.toString())) {
-            binding.tilEmail.error = "Неправильный формат почты"
+            binding.etEmail.background = requireContext().getDrawable(R.drawable.bkg_stroke_red);
             return false
-        } else  binding.tilEmail.error = null
+        } else  binding.etEmail.background = requireContext().getDrawable(R.color.white)
         return true
     }
 
     private fun validateName(): Boolean {
         if (binding.etName.text.toString().length < 2) {
-            binding.tilName.error = "Неверное ФИО"
+            binding.etName.background = requireContext().getDrawable(R.drawable.bkg_stroke_red);
             return false
-        } else  binding.tilName.error = null
+        } else  binding.etName.background = requireContext().getDrawable(R.color.white)
         return true
     }
 
     private fun validatePhone(): Boolean {
         if (!FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString())) {
-            binding.tilPhone.error = "Неверный формат телефона"
+            binding.etPhone.background = requireContext().getDrawable(R.drawable.bkg_stroke_red);
             return false
-        } else binding.tilPhone.error = null
+        } else binding.etPhone.background = requireContext().getDrawable(R.color.white)
         return true
     }
 
