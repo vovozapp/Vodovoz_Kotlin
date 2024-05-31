@@ -49,7 +49,7 @@ class MainFragment : BaseFragment() {
         observeTabState()
         observeCartState()
         observeProfileState()
-      //  observeCartLoading()
+        //  observeCartLoading()
         observeTabVisibility()
     }
 
@@ -103,7 +103,7 @@ class MainFragment : BaseFragment() {
                     .collect { state ->
                         if (state == null || state.count == 0) {
                             binding.circleAmount.isVisible = false
-                            binding.nvNavigation.menu.getItem(2).title = "Корзина"
+                            binding.nvNavigation.menu.getItem(3).title = "Корзина"
                         } else {
                             binding.circleAmount.text = state.count.toString()
                             binding.circleAmount.isVisible = true
@@ -119,7 +119,7 @@ class MainFragment : BaseFragment() {
                                         .scaleY(1f)
                                 }
                                 .start()
-                            binding.nvNavigation.menu.getItem(2).title =
+                            binding.nvNavigation.menu.getItem(3).title =
                                 state.total.toString() + " ₽"
                         }
                     }
@@ -174,6 +174,7 @@ class MainFragment : BaseFragment() {
         val navGraphIds = listOfNotNull(
             R.navigation.nav_graph_home,
             R.navigation.nav_graph_catalog,
+            R.navigation.nav_graph_promotions,
             R.navigation.nav_graph_cart,
             R.navigation.nav_graph_favorite,
             R.navigation.nav_graph_profile
