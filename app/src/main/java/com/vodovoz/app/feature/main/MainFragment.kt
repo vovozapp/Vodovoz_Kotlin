@@ -1,9 +1,15 @@
 package com.vodovoz.app.feature.main
 
+import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateInterpolator
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -11,12 +17,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.tab.TabManager
+import com.vodovoz.app.common.update.AppUpdateController
 import com.vodovoz.app.core.navigation.setupWithNavController
 import com.vodovoz.app.databinding.FragmentMainBinding
+import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.disableFullScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -32,6 +41,32 @@ class MainFragment : BaseFragment() {
     @Inject
     lateinit var permissionsControllerFactory: PermissionsController.Factory
     private val permissionsController by lazy { permissionsControllerFactory.create(requireActivity()) }
+
+    @Inject
+    lateinit var appUpdateFactory: AppUpdateController.Factory
+    private val appUpdateController by lazy {
+        appUpdateFactory.create {
+            popupSnackbarForCompleteUpdate()
+        }
+    }
+
+    private fun popupSnackbarForCompleteUpdate() {
+        val snackbar = Snackbar.make(
+            requireView(),
+            "Обновление скачано",
+            Snackbar.LENGTH_INDEFINITE
+        )
+        snackbar.setAction("Обновить") { _ ->
+            appUpdateController.completeUpdate()
+        }
+        snackbar.setActionTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.bluePrimary
+            )
+        )
+        snackbar.show()
+    }
 
     private val viewModel: MainViewModel by viewModels()
 
@@ -51,6 +86,25 @@ class MainFragment : BaseFragment() {
         observeProfileState()
         //  observeCartLoading()
         observeTabVisibility()
+
+        checkForUpdate()
+    }
+
+    private fun checkForUpdate() {
+        appUpdateController.checkForUpdate(registerForActivityResult<IntentSenderRequest, ActivityResult>(
+            ActivityResultContracts.StartIntentSenderForResult(),
+            object : ActivityResultCallback<ActivityResult?> {
+
+                override fun onActivityResult(result: ActivityResult?) {
+                    if (result == null) return
+                    if (result.resultCode != Activity.RESULT_OK) {
+                        debugLog { "Update flow failed! Result code: " + result.resultCode }
+                    } else {
+                        debugLog { "Success update!" }
+                    }
+                }
+            }
+        ))
     }
 
     override fun onStart() {
@@ -82,6 +136,7 @@ class MainFragment : BaseFragment() {
 //                }
 //        }
 //    }
+
 
     private fun observeTabVisibility() {
         lifecycleScope.launch {
@@ -162,6 +217,8 @@ class MainFragment : BaseFragment() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             permissionsController.methodRequiresNotificationPermission()
         }
+
+        appUpdateController.onResumeAction()
     }
 
     /**

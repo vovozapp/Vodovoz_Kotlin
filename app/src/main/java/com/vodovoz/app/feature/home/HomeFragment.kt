@@ -104,7 +104,7 @@ class HomeFragment : BaseFragment() {
         RateBottomViewPagerAdapter(object : RateBottomClickListener {
 
             override fun dontCommentProduct(id: Long) {
-                ratingProductManager.dontCommentProduct(id){
+                ratingProductManager.dontCommentProduct(id) {
                     rateBottomViewModel.refresh()
                 }
 //                rateBottomViewModel.refresh()
@@ -792,10 +792,12 @@ class HomeFragment : BaseFragment() {
                     }
 
                     SLIDER_TITLE -> {
-                        if(item.titleId != null) {
+                        if (item.titleId != null) {
                             findNavController().navigate(
                                 HomeFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
-                                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(item.titleId)
+                                    PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Slider(
+                                        item.titleId
+                                    )
                                 )
                             )
                         }
@@ -1097,7 +1099,7 @@ class HomeFragment : BaseFragment() {
     private val permissionsController by lazy { permissionsControllerFactory.create(requireActivity()) }
 
     private fun navigateToQrCodeFragment() {
-        permissionsController.methodRequiresCameraPermission{
+        permissionsController.methodRequiresCameraPermission {
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.CAMERA
