@@ -70,7 +70,9 @@ class AllPromotionsFragment : BaseFragment() {
     }
 
     private fun initBackButton(state: AllPromotionsFlowViewModel.AllPromotionsState) {
-        initToolbarDropDown(state.selectedFilterUi.name) {
+        val showBackButton  = findNavController().graph.id != R.id.graph_promotions
+
+        initToolbarDropDown(state.selectedFilterUi.name, showBackBtn = showBackButton) {
             val newList = ListOfPromotionFilterUi().apply {
                 addAll(state.promotionFilterUIList)
             }

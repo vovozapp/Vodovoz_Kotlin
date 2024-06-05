@@ -163,10 +163,11 @@ abstract class BaseFragment : Fragment() {
         }
     }
 
-    protected fun initToolbarDropDown(titleText: String, onTitleClick: () -> Unit) {
+    protected fun initToolbarDropDown(titleText: String, showBackBtn: Boolean = true, onTitleClick: () -> Unit) {
         viewBinding.appbarLayout.isVisible = true
         viewBinding.appBarDropDown.root.isVisible = true
 
+        viewBinding.appBarDropDown.imgBack.isVisible = showBackBtn
         viewBinding.appBarDropDown.imgBack.setOnClickListener { findNavController().popBackStack() }
 
         viewBinding.appBarDropDown.tvDropDownTitle.setOnClickListener {
