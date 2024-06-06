@@ -157,7 +157,9 @@ fun String.toUnderline(): SpannableString {
 }
 
 fun String.prepareServiceHtml() : String {
-    return "<style>img{display: inline;height: auto;max-width: 100%;}</style>$this"
+    return "<style>img{display: inline;height: auto;max-width: 100%;} .ordered-block,.order_sale {\n" +
+            "    display: none;\n" +
+            "}</style>$this"
 }
 
 
