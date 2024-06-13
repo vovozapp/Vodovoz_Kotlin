@@ -12,10 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
+import com.vodovoz.app.common.agreement.AgreementController
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.core.network.ApiConfig.PERSONAL_DATA_URL
 import com.vodovoz.app.databinding.FragmentServiceOrderBinding
 import com.vodovoz.app.feature.service_order.adapter.ServiceOrderFormFieldsAdapter
+import com.vodovoz.app.util.SpanWithUrlHandler
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -76,13 +77,17 @@ class ServiceOrderFragment : BaseFragment() {
             viewModel.orderService(value.toString())
         }
 
-        binding.tvPersonalData.setOnClickListener {
+        SpanWithUrlHandler.setTextWithUrl(
+            text = AgreementController.getText(),
+            textView = binding.tvPersonalData
+        ) { url, index ->
             findNavController().navigate(
                 ServiceOrderFragmentDirections.actionToWebViewFragment(
-                    url = PERSONAL_DATA_URL,
-                    title  = "Персональные данные",
+                    url = url ?: "",
+                    title = AgreementController.getTitle(index) ?: "",
                 )
             )
+
         }
     }
 

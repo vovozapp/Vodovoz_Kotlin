@@ -1,6 +1,7 @@
 package com.vodovoz.app.data.parser.response.site_state
 
 import com.vodovoz.app.data.parser.common.safeString
+import com.vodovoz.app.feature.sitestate.model.Agreement
 import com.vodovoz.app.feature.sitestate.model.Generation
 import com.vodovoz.app.feature.sitestate.model.SiteStateContact
 import com.vodovoz.app.feature.sitestate.model.SiteStateData
@@ -22,6 +23,11 @@ object SiteStateResponseParser {
             requestUrl = responseJson.safeString("SMSRASSILKA"),
             generation = if (responseJson.has("GENERATION") && !responseJson.isNull("GENERATION")) {
                 responseJson.getJSONObject("GENERATION").parrseJsonGeneration()
+            } else {
+                null
+            },
+            agreement = if (responseJson.has("SOGLASHENIE") && !responseJson.isNull("SOGLASHENIE")) {
+                responseJson.getJSONObject("SOGLASHENIE").parseJsonAgreement()
             } else {
                 null
             },
@@ -71,5 +77,16 @@ object SiteStateResponseParser {
         image = safeString("IMAGES"),
     )
 
+    private fun JSONObject.parseJsonAgreement() = Agreement(
+        text = safeString("TEXT"),
+        titles = mutableListOf<String>().apply {
+            val titlesArray = getJSONArray("ZAGOLOVOKi")
+            for (i in 0 until titlesArray.length()) {
+                add(titlesArray.getString(i))
+            }
+        }
+    )
 
 }
+
+

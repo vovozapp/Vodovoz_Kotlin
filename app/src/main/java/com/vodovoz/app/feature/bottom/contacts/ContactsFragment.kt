@@ -11,9 +11,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
+import com.vodovoz.app.common.agreement.AgreementController
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.core.network.ApiConfig.PERSONAL_DATA_URL
-import com.vodovoz.app.data.model.common.*
+import com.vodovoz.app.data.model.common.CHAT_TYPE
+import com.vodovoz.app.data.model.common.PHONE_TYPE
+import com.vodovoz.app.data.model.common.TELEGRAM_TYPE
+import com.vodovoz.app.data.model.common.VIBER_TYPE
+import com.vodovoz.app.data.model.common.WHATSAPP_TYPE
 import com.vodovoz.app.databinding.FragmentContactsFlowBinding
 import com.vodovoz.app.feature.bottom.contacts.adapter.ContactsClickListener
 import com.vodovoz.app.feature.bottom.contacts.adapter.controller.EmailController
@@ -21,6 +25,7 @@ import com.vodovoz.app.feature.bottom.contacts.adapter.controller.PhoneControlle
 import com.vodovoz.app.ui.model.ChatUI
 import com.vodovoz.app.ui.model.EmailUI
 import com.vodovoz.app.ui.model.PhoneUI
+import com.vodovoz.app.util.SpanWithUrlHandler
 import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.startTelegram
 import com.vodovoz.app.util.extensions.startViber
@@ -63,11 +68,17 @@ class ContactsFragment : BaseFragment() {
     }
 
     private fun initPersonalData() {
-        binding.writeUsContainer.personalData.setOnClickListener {
-            findNavController().navigate(ContactsFragmentDirections.actionToWebViewFragment(
-                url = PERSONAL_DATA_URL,
-                title = "Персональные данные"
-            ))
+        SpanWithUrlHandler.setTextWithUrl(
+            text = AgreementController.getText(),
+            textView = binding.writeUsContainer.personalData
+        ) { url, index ->
+            findNavController().navigate(
+                ContactsFragmentDirections.actionToWebViewFragment(
+                    url = url ?: "",
+                    title = AgreementController.getTitle(index) ?: "",
+                )
+            )
+
         }
     }
 
@@ -80,6 +91,7 @@ class ContactsFragment : BaseFragment() {
                             is ContactsFlowViewModel.ContactsEvents.SendEmailSuccess -> {
                                 requireActivity().snack(it.message)
                             }
+
                             is ContactsFlowViewModel.ContactsEvents.SendEmailError -> {
                                 requireActivity().snack(it.message)
                             }
@@ -143,38 +155,45 @@ class ContactsFragment : BaseFragment() {
         viewModel.sendMail(name, phone, email, descriptions)
     }
 
-    private fun getContactsClickListener() : ContactsClickListener {
+    private fun getContactsClickListener(): ContactsClickListener {
         return object : ContactsClickListener {
             override fun onPhoneSelect(item: PhoneUI) {
-                when(item.type) {
+                when (item.type) {
                     WHATSAPP_TYPE -> {
                         val uri = Uri.parse("https://api.whatsapp.com/send?phone=${item.value}")
                         val sendIntent = Intent(Intent.ACTION_VIEW, uri)
                         startActivity(sendIntent)
                     }
+
                     PHONE_TYPE -> {
-                        val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", item.value, null))
+                        val intent =
+                            Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", item.value, null))
                         startActivity(intent)
                     }
                 }
             }
 
             override fun onChatIconSelect(item: ChatUI) {
-                when(item.type) {
+                when (item.type) {
                     WHATSAPP_TYPE -> {
                         requireActivity().startWhatsUp(item.action)
                     }
+
                     VIBER_TYPE -> {
                         requireActivity().startViber(item.action)
                     }
+
                     TELEGRAM_TYPE -> {
                         requireActivity().startTelegram(item.action)
                     }
+
                     CHAT_TYPE -> {
-                        findNavController().navigate(ContactsFragmentDirections.actionToWebViewFragment(
-                            "http://jivo.chat/mk31km1IlP",
-                            "Чат"
-                        ))
+                        findNavController().navigate(
+                            ContactsFragmentDirections.actionToWebViewFragment(
+                                "http://jivo.chat/mk31km1IlP",
+                                "Чат"
+                            )
+                        )
                     }
                 }
             }

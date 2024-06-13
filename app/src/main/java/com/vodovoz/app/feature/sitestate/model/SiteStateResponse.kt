@@ -6,6 +6,12 @@ data class SiteStateResponse(
     val requestUrl: String?,
     val showComments: Boolean?,
     val generation: Generation?,
+    val agreement: Agreement?,
+)
+
+data class Agreement (
+    val text: String,
+    val titles: List<String>?,
 )
 
 data class SiteStateData(

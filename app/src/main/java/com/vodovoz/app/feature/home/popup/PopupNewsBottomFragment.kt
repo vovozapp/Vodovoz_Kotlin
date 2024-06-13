@@ -12,7 +12,6 @@ import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsPopupNewsBinding
 import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.SpanWithUrlHandler
-import com.vodovoz.app.util.extensions.fromHtml
 
 class PopupNewsBottomFragment : BaseBottomSheetFragment() {
 
@@ -47,7 +46,7 @@ class PopupNewsBottomFragment : BaseBottomSheetFragment() {
         binding.incHeader.tvTitle.text = popupNewsUI.name
         val text = popupNewsUI.detailText
         if(text != null) {
-            SpanWithUrlHandler.setUnderButtonText(text, binding.tvDetails){}
+            SpanWithUrlHandler.setTextWithUrl(text, binding.tvDetails){ _, _ ->}
         }
 //        binding.tvDetails.text = popupNewsUI.detailText?.fromHtml()
         binding.tvDetails.isVisible = !popupNewsUI.detailText.isNullOrEmpty()

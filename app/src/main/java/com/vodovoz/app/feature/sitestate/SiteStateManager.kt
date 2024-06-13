@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.sitestate
 
+import com.vodovoz.app.common.agreement.AgreementController
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
@@ -12,10 +13,10 @@ import javax.inject.Singleton
 
 @Singleton
 class SiteStateManager @Inject constructor(
-    private val repository: MainRepository
+    private val repository: MainRepository,
 ) {
 
-    var showRateBottom: Boolean?= null
+    var showRateBottom: Boolean? = null
 
     private var siteStateListener = MutableStateFlow<SiteStateResponse?>(null)
     fun observeSiteState() = siteStateListener.asStateFlow()
@@ -30,14 +31,18 @@ class SiteStateManager @Inject constructor(
         if (siteStateListener.value == null) {
             runCatching {
                 siteStateListener.value = repository.fetchSiteState()
+                AgreementController.setAgreement(
+                    text = siteStateListener.value?.agreement?.text,
+                    titles = siteStateListener.value?.agreement?.titles,
+                )
             }.onFailure {
                 siteStateListener.value = null
             }
         }
     }
 
-    suspend fun fetchSiteStateActive() : Boolean {
-        return when(siteStateListener.value?.active) {
+    suspend fun fetchSiteStateActive(): Boolean {
+        return when (siteStateListener.value?.active) {
             "N" -> true
             else -> {
                 requestSiteState()
@@ -51,7 +56,7 @@ class SiteStateManager @Inject constructor(
             deepLinkPathListener.value = path
         }
     }
-    
+
     fun savePushData(json: JSONObject) {
         debugLog { "save push data $json $this" }
         val path = json.safeString("Secreen")
@@ -81,6 +86,6 @@ class SiteStateManager @Inject constructor(
         val orderId: String? = null,
         val subsections: String? = null,
         val action: String? = null,
-        val path: String
+        val path: String,
     )
 }

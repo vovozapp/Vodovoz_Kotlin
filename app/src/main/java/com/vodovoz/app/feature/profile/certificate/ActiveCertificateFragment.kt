@@ -68,14 +68,14 @@ class ActiveCertificateFragment : BaseFragment() {
                                     Color.parseColor(bundle.certificatePropertyUIList[0].buttonColor)
                                 )
 
-                                SpanWithUrlHandler.setUnderButtonText(
+                                SpanWithUrlHandler.setTextWithUrl(
                                     bundle.certificatePropertyUIList[0].underButtonText,
                                     binding.underButtonText
-                                ) {
-                                    if (it != null) {
+                                ) { url, _ ->
+                                    if (url != null) {
                                         findNavController().navigate(
                                             ActiveCertificateFragmentDirections.actionToWebViewFragment(
-                                                it,
+                                                url,
                                                 ""
                                             )
                                         )

@@ -24,9 +24,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
+import com.vodovoz.app.common.agreement.AgreementController
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.tab.TabManager
-import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.databinding.FragmentLoginFlowBinding
 import com.vodovoz.app.feature.cart.CartFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
@@ -36,6 +36,7 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setExpiredCodeText
 import com.vodovoz.app.ui.extensions.TextViewExtensions.setPhoneValidator
 import com.vodovoz.app.ui.model.enum.AuthType
 import com.vodovoz.app.util.FieldValidationsSettings
+import com.vodovoz.app.util.SpanWithUrlHandler
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.textOrError
@@ -129,14 +130,26 @@ class LoginFragment : BaseFragment() {
     }
 
     private fun initPersonalData() {
-        binding.tvPersonalData.setOnClickListener {
+        SpanWithUrlHandler.setTextWithUrl(
+            text = AgreementController.getText(),
+            textView = binding.tvPersonalData
+        ) { url, index ->
             findNavController().navigate(
                 LoginFragmentDirections.actionToWebViewFragment(
-                    url = ApiConfig.PERSONAL_DATA_URL,
-                    title = "Персональные данные"
+                    url = url ?: "",
+                    title = AgreementController.getTitle(index) ?: "",
                 )
             )
+
         }
+//        binding.tvPersonalData.setOnClickListener {
+//            findNavController().navigate(
+//                LoginFragmentDirections.actionToWebViewFragment(
+//                    url = ApiConfig.PERSONAL_DATA_URL,
+//                    title = "Персональные данные"
+//                )
+//            )
+//        }
     }
 
     internal fun authByUserSettings() {

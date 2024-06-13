@@ -32,7 +32,18 @@ class ServiceOrderViewModel @Inject constructor(
         viewModelScope.launch {
             uiStateListener.value =
                 state.copy(isFirstLoad = true, loadingPage = true, data = ServiceOrderState())
-            val userId = accountManager.fetchAccountId() ?: return@launch
+            val userId = accountManager.fetchAccountId()
+            if(userId == null) {
+                uiStateListener.value =
+                    state.copy(
+                        error = ErrorState.Error(
+                            messageInfo = "Авторизуйтесь, пожалуйста",
+                            desc = ""
+                        ),
+                        loadingPage = false
+                    )
+                return@launch
+            }
             flow {
                 emit(
                     repository.fetchFormForOrderService(
