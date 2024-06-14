@@ -16,7 +16,7 @@ object SpanWithUrlHandler {
             val spanned = text.fromHtml()
             val definition = spanned.toString()
             textView.setText(
-                spanned,
+                definition,
                 TextView.BufferType.SPANNABLE
             )
             val spans = textView.getText() as Spannable

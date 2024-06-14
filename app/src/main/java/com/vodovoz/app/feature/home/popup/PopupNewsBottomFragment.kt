@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.home.popup
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.View
 import androidx.core.view.isVisible
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -11,14 +12,14 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
 import com.vodovoz.app.databinding.BsPopupNewsBinding
 import com.vodovoz.app.ui.model.PopupNewsUI
-import com.vodovoz.app.util.SpanWithUrlHandler
+import com.vodovoz.app.util.extensions.fromHtml
 
 class PopupNewsBottomFragment : BaseBottomSheetFragment() {
 
     companion object {
         fun newInstance(
             popupNewsUI: PopupNewsUI,
-            clickListener: NewsClickListener
+            clickListener: NewsClickListener,
         ) = PopupNewsBottomFragment().apply {
             this.popupNewsUI = popupNewsUI
             this.clickListener = clickListener
@@ -46,7 +47,10 @@ class PopupNewsBottomFragment : BaseBottomSheetFragment() {
         binding.incHeader.tvTitle.text = popupNewsUI.name
         val text = popupNewsUI.detailText
         if(text != null) {
-            SpanWithUrlHandler.setTextWithUrl(text, binding.tvDetails){ _, _ ->}
+
+            binding.tvDetails.movementMethod = LinkMovementMethod.getInstance()
+            binding.tvDetails.text = text.fromHtml()
+//            SpanWithUrlHandler.setTextWithUrl(text, binding.tvDetails){ _, _ ->}
         }
 //        binding.tvDetails.text = popupNewsUI.detailText?.fromHtml()
         binding.tvDetails.isVisible = !popupNewsUI.detailText.isNullOrEmpty()
