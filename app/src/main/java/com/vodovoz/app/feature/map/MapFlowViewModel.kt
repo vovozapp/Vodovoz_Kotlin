@@ -275,7 +275,7 @@ class MapFlowViewModel @Inject constructor(
         }
     }
 
-    fun clear() {
+    fun clearState() {
         amountControllerTimer.cancel()
         uiStateListener.value = state.copy(
             data = state.data.copy(

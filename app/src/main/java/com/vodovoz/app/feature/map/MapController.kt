@@ -318,7 +318,7 @@ class MapController(
     }
 
     fun search(text: String) {
-        viewModel.clear()
+        viewModel.clearState()
         searchManager.submit(
             text,
             VisibleRegionUtils.toPolygon(mapView.map.visibleRegion),
@@ -348,7 +348,7 @@ class MapController(
     }
 
     fun searchForUpdate(address: AddressUI) {
-        viewModel.clear()
+        viewModel.clearState()
         searchManager.submit(
             address.fullAddress,
             VisibleRegionUtils.toPolygon(mapView.map.visibleRegion),
@@ -419,7 +419,7 @@ class MapController(
     }
 
     private fun onMapClick(point: Point) {
-        viewModel.clear()
+        viewModel.clearState()
         moveCamera(point)
         placeMark(point, R.drawable.png_map_marker)
         viewModel.fetchAddressByGeocode(
