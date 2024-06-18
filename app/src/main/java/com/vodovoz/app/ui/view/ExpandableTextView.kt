@@ -5,9 +5,13 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Build
-import android.text.*
+import android.text.DynamicLayout
 import android.text.Layout.Alignment.ALIGN_NORMAL
 import android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.StaticLayout
+import android.text.TextUtils
 import android.text.TextUtils.TruncateAt.END
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet

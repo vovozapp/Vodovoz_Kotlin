@@ -153,6 +153,7 @@
     <string name="fill_field" translatable="false">Заполнить</string>
     <string name="menu_promotions" translatable="false">Акции</string>
     <string name="email_" translatable="false">Почта*</string>
+    <string name="jivo_chat">Чат с поддержкой</string>
 
 
 </resources>

@@ -1,6 +1,10 @@
 package com.vodovoz.app.data.parser.response.questionnaires
 
-import com.vodovoz.app.data.model.common.*
+import com.vodovoz.app.data.model.common.LinkEntity
+import com.vodovoz.app.data.model.common.QuestionEntity
+import com.vodovoz.app.data.model.common.QuestionTypeEntity
+import com.vodovoz.app.data.model.common.QuestionnaireEntity
+import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody

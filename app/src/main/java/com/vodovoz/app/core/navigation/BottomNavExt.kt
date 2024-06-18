@@ -13,7 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vodovoz.app.ui.view.ExtendedBottomNavigationView
-import java.util.*
+import java.util.LinkedList
 
 /**
  * Manages the various graphs needed for a [BottomNavigationView].

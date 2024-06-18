@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.productdetail
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +14,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.jivochat.JivoChatController
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.media.MediaManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
@@ -99,8 +101,22 @@ class ProductDetailsFragment : BaseFragment() {
         bindErrorRefresh { viewModel.fetchProductDetail() }
         observeEvents()
         observeMediaManager()
+        initJivoChatButton()
+
 
         productDetailsController.bind(binding.mainRv, binding.floatingAmountControllerContainer)
+    }
+
+    private fun initJivoChatButton() {
+        binding.fabJivoSite.isVisible = JivoChatController.isActive()
+        binding.fabJivoSite.setOnClickListener {
+            findNavController().navigate(
+                ProductDetailsFragmentDirections.actionToWebViewFragment(
+                    JivoChatController.getLink(),
+                    ""
+                )
+            )
+        }
     }
 
     private fun observeMediaManager() {

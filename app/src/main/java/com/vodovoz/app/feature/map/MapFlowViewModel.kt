@@ -4,7 +4,11 @@ import android.os.CountDownTimer
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
-import com.vodovoz.app.common.content.*
+import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.common.content.Event
+import com.vodovoz.app.common.content.PagingContractViewModel
+import com.vodovoz.app.common.content.State
+import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
@@ -17,7 +21,11 @@ import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.geometry.Polyline
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import javax.inject.Inject

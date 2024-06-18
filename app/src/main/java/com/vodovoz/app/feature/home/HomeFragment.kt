@@ -27,6 +27,7 @@ import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
+import com.vodovoz.app.common.jivochat.JivoChatController
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.media.MediaManager
 import com.vodovoz.app.common.permissions.PermissionsController
@@ -191,6 +192,7 @@ class HomeFragment : BaseFragment() {
         initViewPager()
         initImageRv()
         initBottomSheetCallback()
+        initJivoChatButton()
 
         initSearchToolbar(
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
@@ -200,6 +202,18 @@ class HomeFragment : BaseFragment() {
         )
         bindErrorRefresh { flowViewModel.refresh() }
         bindBackPressed()
+    }
+
+    private fun initJivoChatButton() {
+        binding.fabJivoSite.isVisible = JivoChatController.isActive()
+        binding.fabJivoSite.setOnClickListener  {
+            findNavController().navigate(
+                HomeFragmentDirections.actionToWebViewFragment(
+                    JivoChatController.getLink(),
+                    ""
+                )
+            )
+        }
     }
 
     private fun initViewPager() {

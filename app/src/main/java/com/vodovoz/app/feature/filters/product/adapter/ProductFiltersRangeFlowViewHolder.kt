@@ -10,7 +10,7 @@ import com.vodovoz.app.databinding.ViewHolderFilterRangeBinding
 import com.vodovoz.app.ui.model.FilterUI
 import com.vodovoz.app.ui.model.FilterValueUI
 import com.vodovoz.app.util.extensions.fromHtml
-import java.util.*
+import java.util.Locale
 
 class ProductFiltersRangeFlowViewHolder(
     view: View,

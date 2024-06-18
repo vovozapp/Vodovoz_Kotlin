@@ -19,11 +19,18 @@ import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import com.vodovoz.app.databinding.FragmentBlockAppBinding
 import com.vodovoz.app.feature.sitestate.SiteStateManager
-import com.vodovoz.app.util.extensions.*
+import com.vodovoz.app.util.extensions.addOnBackPressedCallback
+import com.vodovoz.app.util.extensions.disableFullScreen
+import com.vodovoz.app.util.extensions.fromHtml
+import com.vodovoz.app.util.extensions.startJivo
+import com.vodovoz.app.util.extensions.startTelegram
+import com.vodovoz.app.util.extensions.startViber
+import com.vodovoz.app.util.extensions.startWhatsUpWithUri
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint

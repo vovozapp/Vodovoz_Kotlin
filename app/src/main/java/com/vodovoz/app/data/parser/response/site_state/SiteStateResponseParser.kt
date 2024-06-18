@@ -3,6 +3,7 @@ package com.vodovoz.app.data.parser.response.site_state
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.feature.sitestate.model.Agreement
 import com.vodovoz.app.feature.sitestate.model.Generation
+import com.vodovoz.app.feature.sitestate.model.JivoChat
 import com.vodovoz.app.feature.sitestate.model.SiteStateContact
 import com.vodovoz.app.feature.sitestate.model.SiteStateData
 import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
@@ -31,6 +32,11 @@ object SiteStateResponseParser {
             } else {
                 null
             },
+            jivoChat = if (responseJson.has("CHATJIVO") && !responseJson.isNull("CHATJIVO")) {
+                responseJson.getJSONObject("CHATJIVO").parseJivoChat()
+            } else {
+                null
+            }
         )
     }
 
@@ -87,6 +93,12 @@ object SiteStateResponseParser {
         }
     )
 
+    private fun JSONObject.parseJivoChat() = JivoChat(
+        active = safeString("ACTIVE").equals("Y"),
+        url = safeString("SSILKA"),
+    )
 }
+
+
 
 

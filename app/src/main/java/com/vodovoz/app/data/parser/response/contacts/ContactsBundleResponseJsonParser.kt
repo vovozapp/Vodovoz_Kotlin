@@ -1,6 +1,11 @@
 package com.vodovoz.app.data.parser.response.contacts
 
-import com.vodovoz.app.data.model.common.*
+import com.vodovoz.app.data.model.common.ChatEntity
+import com.vodovoz.app.data.model.common.ChatsBundleEntity
+import com.vodovoz.app.data.model.common.ContactsBundleEntity
+import com.vodovoz.app.data.model.common.EmailEntity
+import com.vodovoz.app.data.model.common.PhoneEntity
+import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.remote.ResponseStatus
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import okhttp3.ResponseBody

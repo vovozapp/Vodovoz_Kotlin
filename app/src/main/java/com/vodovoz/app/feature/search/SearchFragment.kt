@@ -32,8 +32,6 @@ import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowClickListener
 import com.vodovoz.app.feature.favorite.categorytabsdadapter.CategoryTabsFlowController
-import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
-import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlist.adapter.SortedAdapter
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation

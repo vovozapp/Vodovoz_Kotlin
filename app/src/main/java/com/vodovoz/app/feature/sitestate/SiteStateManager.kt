@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.sitestate
 
 import com.vodovoz.app.common.agreement.AgreementController
+import com.vodovoz.app.common.jivochat.JivoChatController
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.feature.sitestate.model.SiteStateResponse
@@ -34,6 +35,10 @@ class SiteStateManager @Inject constructor(
                 AgreementController.setAgreement(
                     text = siteStateListener.value?.agreement?.text,
                     titles = siteStateListener.value?.agreement?.titles,
+                )
+                JivoChatController.setParams(
+                    siteStateListener.value?.jivoChat?.active ?: false,
+                    siteStateListener.value?.jivoChat?.url ?: "",
                 )
             }.onFailure {
                 siteStateListener.value = null

@@ -1,6 +1,10 @@
 package com.vodovoz.app.data.parser.response.category
 
-import com.vodovoz.app.data.model.common.*
+import com.vodovoz.app.data.model.common.FilterBundleEntity
+import com.vodovoz.app.data.model.common.FilterEntity
+import com.vodovoz.app.data.model.common.FilterPriceEntity
+import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.model.common.Values
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
 import org.json.JSONArray

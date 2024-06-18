@@ -1,11 +1,19 @@
 package com.vodovoz.app.mapper
 
-import com.vodovoz.app.data.model.common.*
+import com.vodovoz.app.data.model.common.ChatEntity
+import com.vodovoz.app.data.model.common.ChatsBundleEntity
+import com.vodovoz.app.data.model.common.ContactsBundleEntity
+import com.vodovoz.app.data.model.common.EmailEntity
+import com.vodovoz.app.data.model.common.PhoneEntity
 import com.vodovoz.app.mapper.ChatBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ChatMapper.mapToUI
 import com.vodovoz.app.mapper.EmailMapper.mapToUI
 import com.vodovoz.app.mapper.PhoneMapper.mapToUI
-import com.vodovoz.app.ui.model.*
+import com.vodovoz.app.ui.model.ChatUI
+import com.vodovoz.app.ui.model.ChatsBundleUI
+import com.vodovoz.app.ui.model.ContactsBundleUI
+import com.vodovoz.app.ui.model.EmailUI
+import com.vodovoz.app.ui.model.PhoneUI
 
 object ContactsBundleMapper {
 

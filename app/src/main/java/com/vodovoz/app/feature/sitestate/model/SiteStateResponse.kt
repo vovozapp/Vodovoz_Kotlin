@@ -7,6 +7,12 @@ data class SiteStateResponse(
     val showComments: Boolean?,
     val generation: Generation?,
     val agreement: Agreement?,
+    val jivoChat: JivoChat?,
+)
+
+data class JivoChat (
+    val active: Boolean?,
+    val url: String?,
 )
 
 data class Agreement (

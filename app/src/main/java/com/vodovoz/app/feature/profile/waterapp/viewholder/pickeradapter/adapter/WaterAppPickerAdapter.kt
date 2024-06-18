@@ -6,7 +6,11 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
-import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.viewholder.*
+import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.viewholder.DurationViewHolder
+import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.viewholder.HeightViewHolder
+import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.viewholder.SleepTimeViewHolder
+import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.viewholder.WakeTimeViewHolder
+import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.viewholder.WeightViewHolder
 
 class WaterAppPickerAdapter(
     private val waterAppHelper: WaterAppHelper,

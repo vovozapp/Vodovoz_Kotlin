@@ -3,7 +3,6 @@ package com.vodovoz.app.common.permissions
 import android.Manifest
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.assisted.Assisted

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -28,8 +27,8 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:orientation="horizontal"
                     android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:visibility="visible">
 
                     <LinearLayout
@@ -37,8 +36,8 @@
                         android:layout_height="0dp"
                         android:layout_marginStart="@dimen/space_16"
                         android:gravity="center_vertical"
-                        android:paddingTop="8dp"
                         android:orientation="vertical"
+                        android:paddingTop="8dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/imgShare"
                         app:layout_constraintStart_toStartOf="parent"
@@ -50,8 +49,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:gravity="bottom"
                             android:ellipsize="end"
+                            android:gravity="bottom"
                             android:maxLines="1"
                             tools:text="Прошлые покупки" />
 
@@ -59,11 +58,11 @@
                             android:id="@+id/tvProductAmount"
                             style="@style/TextViewNormalGray"
                             android:layout_width="match_parent"
-                            android:maxLines="1"
-                            android:textSize="14sp"
-                            android:textColor="#889295"
                             android:layout_height="0dp"
                             android:layout_weight="1"
+                            android:maxLines="1"
+                            android:textColor="#889295"
+                            android:textSize="14sp"
                             tools:layout_editor_absoluteX="16dp"
                             tools:text="452 товара" />
 
@@ -72,10 +71,10 @@
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/imgShare"
                         android:layout_width="@dimen/_18sdp"
-                        android:visibility="gone"
                         android:layout_height="@dimen/_18sdp"
-                        android:src="@drawable/png_share"
                         android:layout_marginEnd="@dimen/space_16"
+                        android:src="@drawable/png_share"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -88,8 +87,8 @@
                     android:id="@+id/brandTabsContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:gravity="center_vertical"
+                    android:orientation="vertical"
                     android:paddingTop="@dimen/space_8"
                     android:visibility="visible">
 
@@ -99,17 +98,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
-                        android:textSize="16sp"
                         android:paddingStart="@dimen/space_16"
                         android:paddingEnd="@dimen/space_16"
+                        android:textSize="16sp"
                         tools:text="Популярные бренды" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:layout_marginHorizontal="8dp"
-                        android:layout_marginTop="4dp"
                         android:id="@+id/brandRecycler"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="8dp"
+                        android:layout_marginTop="4dp" />
 
                 </LinearLayout>
 
@@ -150,9 +149,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/space_8"
                                 android:layout_weight="1"
-                                android:textSize="16sp"
                                 android:maxLines="1"
-                                android:text="@string/categories" />
+                                android:text="@string/categories"
+                                android:textSize="16sp" />
 
                             <ImageView
                                 android:layout_width="25dp"
@@ -174,18 +173,18 @@
                 android:id="@+id/sortContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:visibility="gone"
-                android:gravity="center_vertical">
+                android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imgViewMode"
                     android:layout_width="@dimen/action_image_size_with_padding_8"
                     android:layout_height="@dimen/action_image_size_with_padding_8"
+                    android:layout_marginStart="@dimen/space_8"
                     android:paddingHorizontal="@dimen/space_8"
                     android:paddingVertical="@dimen/space_10"
                     android:src="@drawable/png_table"
-                    android:layout_marginStart="@dimen/space_8"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -198,9 +197,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:drawableEnd="@drawable/ic_drop_down"
+                    android:drawableTint="@color/text_black"
                     android:gravity="center"
                     android:text="@string/choose_sort_type"
-                    android:drawableTint="@color/text_black"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/imgFilters"
                     app:layout_constraintStart_toEndOf="@+id/imgViewMode"
@@ -211,14 +210,14 @@
                     android:id="@+id/imgFilters"
                     android:layout_width="@dimen/action_image_size_with_padding_8"
                     android:layout_height="@dimen/action_image_size_with_padding_8"
+                    android:layout_marginEnd="@dimen/space_8"
                     android:paddingHorizontal="@dimen/space_8"
                     android:paddingVertical="@dimen/space_10"
                     android:src="@drawable/filtericon"
-                    android:layout_marginEnd="@dimen/space_8"
-                    app:tint="@color/text_black"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/text_black"
                     tools:ignore="ContentDescription" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -226,10 +225,10 @@
                     style="@style/TextViewSmallWhite"
                     android:layout_width="@dimen/_15sdp"
                     android:layout_height="@dimen/_15sdp"
-                    android:background="@drawable/bkg_button_green_circle_normal"
-                    android:gravity="center"
                     android:layout_marginTop="@dimen/space_2"
                     android:layout_marginEnd="@dimen/space_2"
+                    android:background="@drawable/bkg_button_green_circle_normal"
+                    android:gravity="center"
                     android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="@+id/imgFilters"
                     app:layout_constraintTop_toTopOf="@+id/imgFilters"
@@ -240,12 +239,25 @@
         </com.google.android.material.appbar.AppBarLayout>
 
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/productRecycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabJivoSite"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="12dp"
+            android:contentDescription="@string/jivo_chat"
+            android:visibility="gone"
+            app:fabCustomSize="40dp"
+            app:maxImageSize="40dp"
+            app:srcCompat="@drawable/jivosite_floating"
+            app:tint="@null" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
@@ -265,8 +277,8 @@
             android:fontFamily="@font/rotonda_normal"
             android:gravity="center"
             android:paddingHorizontal="16dp"
-            tools:text="@string/empty_history_title"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:text="@string/empty_history_title" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvEmptySubtitle"
@@ -277,9 +289,9 @@
             android:gravity="center"
             android:lineSpacingExtra="4dp"
             android:paddingHorizontal="16dp"
-            tools:text="@string/empty_history_subtitle"
             android:textColor="@color/color_search"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            tools:text="@string/empty_history_subtitle" />
 
     </LinearLayout>
 

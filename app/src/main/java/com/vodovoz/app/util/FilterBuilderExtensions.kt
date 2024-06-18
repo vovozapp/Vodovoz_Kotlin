@@ -2,7 +2,7 @@ package com.vodovoz.app.util
 
 import com.vodovoz.app.ui.model.FilterUI
 import com.vodovoz.app.util.extensions.debugLog
-import java.util.*
+import java.util.Locale
 
 object FilterBuilderExtensions {
 

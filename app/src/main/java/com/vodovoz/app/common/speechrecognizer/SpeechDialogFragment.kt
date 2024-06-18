@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.R
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
+import java.util.Locale
 
 @AndroidEntryPoint
 class SpeechDialogFragment : DialogFragment(R.layout.fragment_speech_dialog) {

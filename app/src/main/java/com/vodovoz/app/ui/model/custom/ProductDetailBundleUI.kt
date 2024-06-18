@@ -1,7 +1,12 @@
 package com.vodovoz.app.ui.model.custom
 
 import com.vodovoz.app.feature.all.comments.model.CommentImage
-import com.vodovoz.app.ui.model.*
+import com.vodovoz.app.ui.model.CategoryDetailUI
+import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.ui.model.CommentUI
+import com.vodovoz.app.ui.model.ProductDetailUI
+import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.ui.model.ServiceUI
 
 class ProductDetailBundleUI(
     val productDetailUI: ProductDetailUI,

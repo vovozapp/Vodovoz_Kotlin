@@ -7,7 +7,7 @@ import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import com.vodovoz.app.util.extensions.debugLog
-import java.util.*
+import java.util.Locale
 
 class SpeechController(
     val context: Context,

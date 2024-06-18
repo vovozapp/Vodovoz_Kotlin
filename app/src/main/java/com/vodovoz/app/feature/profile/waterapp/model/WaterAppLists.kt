@@ -1,7 +1,16 @@
 package com.vodovoz.app.feature.profile.waterapp.model
 
-import com.vodovoz.app.feature.profile.waterapp.model.inner.*
-import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.model.*
+import com.vodovoz.app.feature.profile.waterapp.model.inner.WaterAppModelInnerFive
+import com.vodovoz.app.feature.profile.waterapp.model.inner.WaterAppModelInnerFour
+import com.vodovoz.app.feature.profile.waterapp.model.inner.WaterAppModelInnerOne
+import com.vodovoz.app.feature.profile.waterapp.model.inner.WaterAppModelInnerSix
+import com.vodovoz.app.feature.profile.waterapp.model.inner.WaterAppModelInnerThree
+import com.vodovoz.app.feature.profile.waterapp.model.inner.WaterAppModelInnerTwo
+import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.model.PickerDuration
+import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.model.PickerHeight
+import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.model.PickerSleepTime
+import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.model.PickerWakeTime
+import com.vodovoz.app.feature.profile.waterapp.viewholder.pickeradapter.model.PickerWeight
 
 object WaterAppLists {
 

@@ -1,7 +1,11 @@
 package com.vodovoz.app.feature.bottom.services
 
 import androidx.lifecycle.viewModelScope
-import com.vodovoz.app.common.content.*
+import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.common.content.Event
+import com.vodovoz.app.common.content.PagingContractViewModel
+import com.vodovoz.app.common.content.State
+import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.service.AboutServicesResponseJsonParser.parseAboutServicesResponse
@@ -15,7 +19,13 @@ import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

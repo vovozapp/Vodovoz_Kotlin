@@ -6,8 +6,19 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.feature.profile.waterapp.WaterAppHelper
-import com.vodovoz.app.feature.profile.waterapp.viewholder.*
-import com.vodovoz.app.feature.profile.waterapp.viewholder.inner.*
+import com.vodovoz.app.feature.profile.waterapp.viewholder.WaterAppViewHolderFifth
+import com.vodovoz.app.feature.profile.waterapp.viewholder.WaterAppViewHolderFirst
+import com.vodovoz.app.feature.profile.waterapp.viewholder.WaterAppViewHolderFourth
+import com.vodovoz.app.feature.profile.waterapp.viewholder.WaterAppViewHolderSecond
+import com.vodovoz.app.feature.profile.waterapp.viewholder.WaterAppViewHolderSeventh
+import com.vodovoz.app.feature.profile.waterapp.viewholder.WaterAppViewHolderSixth
+import com.vodovoz.app.feature.profile.waterapp.viewholder.WaterAppViewHolderThird
+import com.vodovoz.app.feature.profile.waterapp.viewholder.inner.WaterAppViewHolderInnerFifth
+import com.vodovoz.app.feature.profile.waterapp.viewholder.inner.WaterAppViewHolderInnerFirst
+import com.vodovoz.app.feature.profile.waterapp.viewholder.inner.WaterAppViewHolderInnerFourth
+import com.vodovoz.app.feature.profile.waterapp.viewholder.inner.WaterAppViewHolderInnerSecond
+import com.vodovoz.app.feature.profile.waterapp.viewholder.inner.WaterAppViewHolderInnerSixth
+import com.vodovoz.app.feature.profile.waterapp.viewholder.inner.WaterAppViewHolderInnerThird
 
 class WaterAppAdapter(
     private val waterAppHelper: WaterAppHelper,

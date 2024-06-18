@@ -28,7 +28,7 @@ import com.vodovoz.app.util.extensions.snack
 import com.vodovoz.app.util.extensions.textOrErrorWithEmpty
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 
 enum class Gender(

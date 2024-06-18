@@ -5,7 +5,6 @@ import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.model.common.SearchQueryHeaderResponse
 import com.vodovoz.app.data.parser.common.SortTypeListJsonParser.parseSortTypeList
 import com.vodovoz.app.data.parser.common.safeString
-import com.vodovoz.app.data.parser.response.search.ProductsByQueryHeaderResponseJsonParser.parseCategoryEntity
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
 import org.json.JSONArray

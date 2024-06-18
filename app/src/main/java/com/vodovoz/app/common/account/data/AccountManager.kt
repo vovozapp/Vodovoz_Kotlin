@@ -1,7 +1,6 @@
 package com.vodovoz.app.common.account.data
 
 import com.vodovoz.app.common.datastore.DataStoreRepository
-import com.yandex.metrica.YandexMetrica
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject

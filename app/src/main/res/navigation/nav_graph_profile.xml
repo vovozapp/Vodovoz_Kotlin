@@ -170,6 +170,9 @@
         <action
             android:id="@+id/action_to_preOrderBS"
             app:destination="@id/preOrderBS" />
+        <action
+            android:id="@+id/action_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
     </fragment>
     <dialog
         android:id="@+id/sortProductsSettingsBottomFragment"
@@ -228,6 +231,9 @@
         <action
             android:id="@+id/action_to_serviceDetailFragment"
             app:destination="@id/serviceDetailFragment" />
+        <action
+            android:id="@+id/action_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
     </fragment>
     <fragment
         android:id="@+id/promotionDetailFragment"

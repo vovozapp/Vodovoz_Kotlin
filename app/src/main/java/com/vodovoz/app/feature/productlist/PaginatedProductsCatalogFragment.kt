@@ -18,6 +18,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.content.ErrorState
+import com.vodovoz.app.common.jivochat.JivoChatController
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
@@ -94,9 +95,22 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
         observeChangeLayoutManager()
         initBackButton()
         initSearch()
+        initJivoChatButton()
 
         bindErrorRefresh {
             viewModel.refreshSorted()
+        }
+    }
+
+    private fun initJivoChatButton() {
+        binding.fabJivoSite.isVisible = JivoChatController.isActive()
+        binding.fabJivoSite.setOnClickListener {
+            findNavController().navigate(
+                PaginatedProductsCatalogFragmentDirections.actionToWebViewFragment(
+                    JivoChatController.getLink(),
+                    ""
+                )
+            )
         }
     }
 
@@ -161,7 +175,7 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
                         } else {
                             productsListFlowController.submitList(data.itemsList)
                         }
-                        if(data.scrollToTop){
+                        if (data.scrollToTop) {
                             binding.productRecycler.scrollToPosition(0)
                         }
 
@@ -248,6 +262,7 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
             true -> {
                 binding.brandTabsContainer.visibility = View.VISIBLE
             }
+
             else -> {
                 binding.brandTabsContainer.visibility = View.GONE
             }

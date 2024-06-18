@@ -1,6 +1,6 @@
 package com.vodovoz.app.ui.extensions
 
-import java.util.*
+import java.util.Calendar
 import java.util.Date
 
 object Date {
