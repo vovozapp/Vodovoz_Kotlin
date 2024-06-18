@@ -24,6 +24,7 @@ import com.vodovoz.app.feature.home.viewholders.homepopulars.HomePopulars
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeProductsTabs
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
+import com.vodovoz.app.feature.home.viewholders.homesections.HomeSections
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.home.viewholders.hometriplenav.HomeTripleNav
 import com.vodovoz.app.mapper.BannerMapper.mapToUI
@@ -36,6 +37,7 @@ import com.vodovoz.app.mapper.HistoryMapper.mapToUI
 import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.mapper.PopupNewsMapper.mapToUI
 import com.vodovoz.app.mapper.PromotionMapper.mapToUI
+import com.vodovoz.app.mapper.TopSectionsMapper.mapToUI
 import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -175,10 +177,116 @@ class HomeFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         listOf(
                             PositionItem(
-                                POSITION_1,
-                                HomeBanners(POSITION_1, response.data.mapToUI(), bannerRatio = 0.41)
+                                POSITION_10,
+                                HomeBanners(
+                                    POSITION_10,
+                                    response.data.mapToUI(),
+                                    bannerRatio = 0.41
+                                )
                             )
                         )
+                    } else {
+                        emptyList()
+                    }
+                }
+            }
+        },
+        homeRequestAsync {
+            coroutineScope {
+                val response = repository.fetchTopSlider()
+                withContext(Dispatchers.Default) {
+//                    val response = responseBody.parseTopSliderResponse()
+                    if (response is ResponseEntity.Success) {
+                        val retList = mutableListOf<PositionItem>()
+                        retList.addAll(
+                            if (response.data.categoryDetailsList != null) {
+                                val data = response.data.categoryDetailsList.mapToUI()
+                                listOf(
+                                    PositionItem(
+                                        POSITION_100,
+                                        HomeProducts.fetchHomeProductsByType(
+                                            data,
+                                            HomeProducts.TOP_PROD,
+                                            POSITION_100
+                                        )
+                                    ),
+                                    if (data.size != 1) {
+                                        PositionItem(
+                                            POSITION_90_TAB,
+                                            HomeProductsTabs(
+                                                id = POSITION_90_TAB,
+                                                data.mapIndexed { index, cat ->
+                                                    if (index == 0) {
+                                                        cat.copy(
+                                                            isSelected = true,
+                                                            position = POSITION_90_TAB
+                                                        )
+                                                    } else {
+                                                        cat.copy(
+                                                            isSelected = false,
+                                                            position = POSITION_90_TAB
+                                                        )
+                                                    }
+                                                })
+                                        )
+                                    } else {
+                                        PositionItem(
+                                            POSITION_90_TAB,
+                                            HomeTitle(
+                                                id = POSITION_90_TAB,
+                                                type = HomeTitle.SLIDER_TITLE,
+                                                name = "",
+                                                showAll = true,
+                                                showAllName = "СМ.ВСЕ",
+                                                categoryProductsName = data.first().name,
+                                                titleId = data.first().id
+                                            )
+                                        )
+                                    }
+                                )
+                            } else {
+                                emptyList()
+                            }
+                        )
+                        retList.addAll(
+                            if (response.data.sectionsEntity != null) {
+                                val data = response.data.sectionsEntity.mapToUI()
+                                listOf(
+                                    PositionItem(
+                                        POSITION_16,
+                                        HomeSections(
+                                            id = POSITION_16,
+                                            items = data,
+                                        )
+                                    )
+                                )
+//                                    if(data.parentSectionDataUIList.size != 1 ) {
+//                                        PositionItem(
+//                                            POSITION_15_TITLE,
+//                                            HomeProductsTabs(
+//                                                id = POSITION_15_TITLE,
+//                                                tabsNames = emptyList(),//пока так, вроде бы не плнируется добавлять табы
+//                                            )
+//                                        )
+//                                    } else {
+//                                        PositionItem(
+//                                            POSITION_15_TITLE,
+//                                            HomeTitle(
+//                                                id = POSITION_15_TITLE,
+//                                                type = HomeTitle.SLIDER_TITLE,
+//                                                name = "",
+//                                                showAll = false,
+//                                                showAllName = "СМ.ВСЕ",
+//                                                categoryProductsName = data.parentSectionDataUIList.first().title,
+//                                            )
+//                                        )
+////                                    }
+//                                )
+                            } else {
+                                emptyList()
+                            }
+                        )
+                        retList
                     } else {
                         emptyList()
                     }
@@ -194,13 +302,13 @@ class HomeFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         listOf(
                             PositionItem(
-                                POSITION_3,
-                                HomeHistories(POSITION_3, response.data.mapToUI())
+                                POSITION_30,
+                                HomeHistories(POSITION_30, response.data.mapToUI())
                             ),
                             PositionItem(
-                                POSITION_2_TITLE,
+                                POSITION_20_TITLE,
                                 HomeTitle(
-                                    id = POSITION_2_TITLE,
+                                    id = POSITION_20_TITLE,
                                     type = HomeTitle.HISTORIES_TITLE,
                                     name = "Истории"
                                 )
@@ -221,13 +329,13 @@ class HomeFlowViewModel @Inject constructor(
                         val mappedData = response.data.mapToUI()
                         listOf(
                             PositionItem(
-                                POSITION_5,
-                                HomePopulars(POSITION_5, mappedData.categoryList)
+                                POSITION_50,
+                                HomePopulars(POSITION_50, mappedData.categoryList)
                             ),
                             PositionItem(
-                                POSITION_4_TITLE,
+                                POSITION_40_TITLE,
                                 HomeTitle(
-                                    id = POSITION_4_TITLE,
+                                    id = POSITION_40_TITLE,
                                     type = HomeTitle.POPULARS_TITLE,
                                     name = "Популярные разделы",
                                     categoryProductsName = mappedData.name,
@@ -249,17 +357,17 @@ class HomeFlowViewModel @Inject constructor(
                         val data = response.data.mapToUI()
                         listOf(
                             PositionItem(
-                                POSITION_7,
+                                POSITION_70,
                                 HomeProducts.fetchHomeProductsByType(
                                     data,
                                     HomeProducts.DISCOUNT,
-                                    POSITION_7
+                                    POSITION_70
                                 )
                             ),
                             PositionItem(
-                                POSITION_6_TITLE,
+                                POSITION_60_TITLE,
                                 HomeTitle(
-                                    id = POSITION_6_TITLE,
+                                    id = POSITION_60_TITLE,
                                     type = HomeTitle.DISCOUNT_TITLE,
                                     name = "Самое выгодное",
                                     showAll = true,
@@ -286,8 +394,8 @@ class HomeFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         listOf(
                             PositionItem(
-                                POSITION_8,
-                                HomeBanners(POSITION_8, response.data.mapToUI(), bannerRatio = 0.5)
+                                POSITION_80,
+                                HomeBanners(POSITION_80, response.data.mapToUI(), bannerRatio = 0.5)
                             )
                         )
                     } else {
@@ -317,62 +425,6 @@ class HomeFlowViewModel @Inject constructor(
     private fun CoroutineScope.secondLoadTasks(userId: Long?) = arrayOf(
         homeRequestAsync {
             coroutineScope {
-                val response = repository.fetchTopSlider()
-                withContext(Dispatchers.Default) {
-//                    val response = responseBody.parseTopSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        listOf(
-                            PositionItem(
-                                POSITION_10,
-                                HomeProducts.fetchHomeProductsByType(
-                                    data,
-                                    HomeProducts.TOP_PROD,
-                                    POSITION_10
-                                )
-                            ),
-                            if (data.size != 1) {
-                                PositionItem(
-                                    POSITION_9_TAB,
-                                    HomeProductsTabs(
-                                        id = POSITION_9_TAB,
-                                        data.mapIndexed { index, cat ->
-                                            if (index == 0) {
-                                                cat.copy(
-                                                    isSelected = true,
-                                                    position = POSITION_9_TAB
-                                                )
-                                            } else {
-                                                cat.copy(
-                                                    isSelected = false,
-                                                    position = POSITION_9_TAB
-                                                )
-                                            }
-                                        })
-                                )
-                            } else {
-                                PositionItem(
-                                    POSITION_9_TAB,
-                                    HomeTitle(
-                                        id = POSITION_9_TAB,
-                                        type = HomeTitle.SLIDER_TITLE,
-                                        name = "",
-                                        showAll = true,
-                                        showAllName = "СМ.ВСЕ",
-                                        categoryProductsName = data.first().name,
-                                        titleId = data.first().id
-                                    )
-                                )
-                            }
-                        )
-                    } else {
-                        emptyList()
-                    }
-                }
-            }
-        },
-        homeRequestAsync {
-            coroutineScope {
                 if (userId == null) {
                     return@coroutineScope emptyList()
                 }
@@ -381,13 +433,13 @@ class HomeFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         listOf(
                             PositionItem(
-                                POSITION_12,
-                                HomeOrders(POSITION_12, response.data.mapToUI())
+                                POSITION_120,
+                                HomeOrders(POSITION_120, response.data.mapToUI())
                             ),
                             PositionItem(
-                                POSITION_11_TITLE,
+                                POSITION_110_TITLE,
                                 HomeTitle(
-                                    id = POSITION_11_TITLE,
+                                    id = POSITION_110_TITLE,
                                     type = HomeTitle.ORDERS_TITLE,
                                     name = "Мои заказы",
                                     showAll = true,
@@ -410,17 +462,17 @@ class HomeFlowViewModel @Inject constructor(
                         val data = response.data.mapToUI()
                         listOf(
                             PositionItem(
-                                POSITION_15,
+                                POSITION_150,
                                 HomeProducts.fetchHomeProductsByType(
                                     data,
                                     HomeProducts.NOVELTIES,
-                                    POSITION_15
+                                    POSITION_150
                                 )
                             ),
                             PositionItem(
-                                POSITION_14_TITLE,
+                                POSITION_140_TITLE,
                                 HomeTitle(
-                                    id = POSITION_14_TITLE,
+                                    id = POSITION_140_TITLE,
                                     type = HomeTitle.NOVELTIES_TITLE,
                                     name = "Новинки",
                                     showAll = true,
@@ -447,8 +499,8 @@ class HomeFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         listOf(
                             PositionItem(
-                                POSITION_17, HomePromotions(
-                                    POSITION_17, PromotionsSliderBundleUI(
+                                POSITION_170, HomePromotions(
+                                    POSITION_170, PromotionsSliderBundleUI(
                                         title = "Акции",
                                         containShowAllButton = true,
                                         promotionUIList = response.data.mapToUI()
@@ -456,9 +508,9 @@ class HomeFlowViewModel @Inject constructor(
                                 )
                             ),
                             PositionItem(
-                                POSITION_16_TITLE,
+                                POSITION_160_TITLE,
                                 HomeTitle(
-                                    id = POSITION_16_TITLE,
+                                    id = POSITION_160_TITLE,
                                     type = HomeTitle.PROMOTIONS_TITLE,
                                     name = "Акции",
                                     showAll = true,
@@ -482,37 +534,37 @@ class HomeFlowViewModel @Inject constructor(
                         val data = response.data.mapToUI()
                         listOf(
                             PositionItem(
-                                POSITION_19,
+                                POSITION_190,
                                 HomeProducts.fetchHomeProductsByType(
                                     data,
                                     HomeProducts.BOTTOM_PROD,
-                                    POSITION_19
+                                    POSITION_190
                                 )
                             ),
                             if (data.size != 1) {
                                 PositionItem(
-                                    POSITION_18_TAB,
+                                    POSITION_180_TAB,
                                     HomeProductsTabs(
-                                        id = POSITION_18_TAB,
+                                        id = POSITION_180_TAB,
                                         data.mapIndexed { index, cat ->
                                             if (index == 0) {
                                                 cat.copy(
                                                     isSelected = true,
-                                                    position = POSITION_18_TAB
+                                                    position = POSITION_180_TAB
                                                 )
                                             } else {
                                                 cat.copy(
                                                     isSelected = false,
-                                                    position = POSITION_18_TAB
+                                                    position = POSITION_180_TAB
                                                 )
                                             }
                                         })
                                 )
                             } else {
                                 PositionItem(
-                                    POSITION_18_TAB,
+                                    POSITION_180_TAB,
                                     HomeTitle(
-                                        id = POSITION_18_TAB,
+                                        id = POSITION_180_TAB,
                                         type = HomeTitle.SLIDER_TITLE,
                                         name = "",
                                         showAll = true,
@@ -538,13 +590,13 @@ class HomeFlowViewModel @Inject constructor(
                         val mappedData = response.data.mapToUI()
                         listOf(
                             PositionItem(
-                                POSITION_21,
-                                HomeBrands(POSITION_21, mappedData.brandsList)
+                                POSITION_210,
+                                HomeBrands(POSITION_210, mappedData.brandsList)
                             ),
                             PositionItem(
-                                POSITION_20_TITLE,
+                                POSITION_200_TITLE,
                                 HomeTitle(
-                                    id = POSITION_20_TITLE,
+                                    id = POSITION_200_TITLE,
                                     type = HomeTitle.BRANDS_TITLE,
                                     name = "Бренды",
                                     showAll = true,
@@ -567,8 +619,8 @@ class HomeFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         listOf(
                             PositionItem(
-                                POSITION_22,
-                                HomeCountries(POSITION_22, response.data.mapToUI())
+                                POSITION_220,
+                                HomeCountries(POSITION_220, response.data.mapToUI())
                             )
                         )
                     } else {
@@ -590,17 +642,17 @@ class HomeFlowViewModel @Inject constructor(
                         val data = listOf(response.data.mapToUI())
                         listOf(
                             PositionItem(
-                                POSITION_24,
+                                POSITION_240,
                                 HomeProducts.fetchHomeProductsByType(
                                     data,
                                     HomeProducts.VIEWED,
-                                    POSITION_24
+                                    POSITION_240
                                 )
                             ),
                             PositionItem(
-                                POSITION_23_TITLE,
+                                POSITION_230_TITLE,
                                 HomeTitle(
-                                    id = POSITION_23_TITLE,
+                                    id = POSITION_230_TITLE,
                                     type = HomeTitle.VIEWED_TITLE,
                                     name = "Вы смотрели",
                                     showAll = false,
@@ -627,13 +679,13 @@ class HomeFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         listOf(
                             PositionItem(
-                                POSITION_26,
-                                HomeComments(POSITION_26, response.data.mapToUI())
+                                POSITION_260,
+                                HomeComments(POSITION_260, response.data.mapToUI())
                             ),
                             PositionItem(
-                                POSITION_25_TITLE,
+                                POSITION_250_TITLE,
                                 HomeTitle(
-                                    id = POSITION_25_TITLE,
+                                    id = POSITION_250_TITLE,
                                     type = HomeTitle.COMMENTS_TITLE,
                                     name = "Отзывы",
                                     showAll = true,
@@ -725,15 +777,15 @@ class HomeFlowViewModel @Inject constructor(
 
     fun updateProductsSliderByCategory(position: Int, categoryId: Long) {
         when (position) {
-            POSITION_9_TAB -> updateStateByTabAndProductPositions(
-                POSITION_9_TAB,
-                POSITION_10,
+            POSITION_90_TAB -> updateStateByTabAndProductPositions(
+                POSITION_90_TAB,
+                POSITION_100,
                 categoryId
             )
 
-            POSITION_18_TAB -> updateStateByTabAndProductPositions(
-                POSITION_18_TAB,
-                POSITION_19,
+            POSITION_180_TAB -> updateStateByTabAndProductPositions(
+                POSITION_180_TAB,
+                POSITION_190,
                 categoryId
             )
         }
@@ -858,12 +910,12 @@ class HomeFlowViewModel @Inject constructor(
             fun fetchStaticItems(): List<PositionItem> {
                 return listOf(
                     PositionItem(
-                        POSITION_13,
-                        HomeTripleNav(POSITION_13)
+                        POSITION_130,
+                        HomeTripleNav(POSITION_130)
                     ),
                     PositionItem(
-                        POSITION_27,
-                        HomeBottomInfo(POSITION_27)
+                        POSITION_270,
+                        HomeBottomInfo(POSITION_270)
                     )
                 )
             }
@@ -871,32 +923,34 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     companion object {
-        const val POSITION_1 = 1
-        const val POSITION_2_TITLE = 2
-        const val POSITION_3 = 3
-        const val POSITION_4_TITLE = 4
-        const val POSITION_5 = 5
-        const val POSITION_6_TITLE = 6
-        const val POSITION_7 = 7
-        const val POSITION_8 = 8
-        const val POSITION_9_TAB = 9
         const val POSITION_10 = 10
-        const val POSITION_11_TITLE = 11
-        const val POSITION_12 = 12
-        const val POSITION_13 = 13
-        const val POSITION_14_TITLE = 14
-        const val POSITION_15 = 15
-        const val POSITION_16_TITLE = 16
-        const val POSITION_17 = 17
-        const val POSITION_18_TAB = 18
-        const val POSITION_19 = 19
+        const val POSITION_15_TITLE = 15
+        const val POSITION_16 = 16
         const val POSITION_20_TITLE = 20
-        const val POSITION_21 = 21
-        const val POSITION_22 = 22
-        const val POSITION_23_TITLE = 23
-        const val POSITION_24 = 24
-        const val POSITION_25_TITLE = 25
-        const val POSITION_26 = 26
-        const val POSITION_27 = 27
+        const val POSITION_30 = 30
+        const val POSITION_40_TITLE = 40
+        const val POSITION_50 = 50
+        const val POSITION_60_TITLE = 60
+        const val POSITION_70 = 70
+        const val POSITION_80 = 80
+        const val POSITION_90_TAB = 90
+        const val POSITION_100 = 100
+        const val POSITION_110_TITLE = 110
+        const val POSITION_120 = 120
+        const val POSITION_130 = 130
+        const val POSITION_140_TITLE = 140
+        const val POSITION_150 = 150
+        const val POSITION_160_TITLE = 160
+        const val POSITION_170 = 170
+        const val POSITION_180_TAB = 180
+        const val POSITION_190 = 190
+        const val POSITION_200_TITLE = 200
+        const val POSITION_210 = 210
+        const val POSITION_220 = 220
+        const val POSITION_230_TITLE = 230
+        const val POSITION_240 = 240
+        const val POSITION_250_TITLE = 250
+        const val POSITION_260 = 260
+        const val POSITION_270 = 270
     }
 }

@@ -970,6 +970,16 @@ class HomeFragment : BaseFragment() {
                     )
                 }
             }
+
+            override fun onSectionClick(id: Int?) {
+                id?.let {
+                    findNavController().navigate(
+                        HomeFragmentDirections.actionToPaginatedProductsCatalogFragment(
+                            id.toLong()
+                        )
+                    )
+                }
+            }
         }
     }
 

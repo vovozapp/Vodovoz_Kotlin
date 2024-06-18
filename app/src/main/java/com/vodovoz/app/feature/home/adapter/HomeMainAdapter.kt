@@ -26,6 +26,7 @@ import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeProductsTab
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeTabsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotionsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
+import com.vodovoz.app.feature.home.viewholders.homesections.HomeSectionsSliderViewHolder
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleClickListener
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitleViewHolder
 import com.vodovoz.app.feature.home.viewholders.hometriplenav.HomeTripleNavViewHolder
@@ -97,6 +98,16 @@ class HomeMainAdapter(
                     onScrollInnerRecycler = this@HomeMainAdapter.onScrollInnerRecycler
                 }
             }
+
+            R.layout.fragment_slider_sections -> {
+                HomeSectionsSliderViewHolder(
+                    getViewFromInflater(viewType, parent),
+                    clickListener
+                ).apply {
+                    onScrollInnerRecycler = this@HomeMainAdapter.onScrollInnerRecycler
+                }
+            }
+
 
             R.layout.fragment_slider_history -> {
                 HomeHistoriesSliderViewHolder(

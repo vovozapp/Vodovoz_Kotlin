@@ -45,4 +45,6 @@ interface HomeMainClickListener {
     //POSITION_3
     fun onCategoryClick(id: Long?)
 
+    fun onSectionClick(id: Int?)
+
 }

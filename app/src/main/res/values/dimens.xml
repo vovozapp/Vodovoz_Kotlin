@@ -5,12 +5,12 @@
 
     //Margin
     <dimen name="space_2">@dimen/_2sdp</dimen>
-    <dimen name="space_4">@dimen/_4sdp</dimen>
+    <dimen name="space_4">4dp</dimen>
     <dimen name="space_6">@dimen/_6sdp</dimen>
-    <dimen name="space_8">@dimen/_7sdp</dimen>
+    <dimen name="space_8">8dp</dimen>
     <dimen name="space_10">@dimen/_10sdp</dimen>
     <dimen name="space_12">@dimen/_12sdp</dimen>
-    <dimen name="space_16">@dimen/_14sdp</dimen>
+    <dimen name="space_16">16dp</dimen>
     <dimen name="space_24">@dimen/_24sdp</dimen>
     <dimen name="space_32">@dimen/_32sdp</dimen>
     <dimen name="last_item_bottom_normal_space">@dimen/_72sdp</dimen>
@@ -53,5 +53,7 @@
     <dimen name="line_spacing_extra">0.8dp</dimen>
 
     <dimen name="title_text_size_cat">17sp</dimen>
+
+
 
 </resources>
