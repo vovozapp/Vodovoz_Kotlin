@@ -190,7 +190,7 @@ class CatalogFragment : BaseFragment() {
 
             is ActionEntity.WaterApp -> {
                 val eventParameters = "\"source\":\"catalog\""
-                accountManager.reportYandexMetrica("trekervodi_zapysk", eventParameters)
+                accountManager.reportEvent("trekervodi_zapysk", eventParameters)
                 CatalogFragmentDirections.actionToWaterAppFragment()
             }
 

@@ -1,5 +1,6 @@
 package com.vodovoz.app.common.account.data
 
+import com.vodovoz.app.BuildConfig
 import com.vodovoz.app.common.datastore.DataStoreRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -8,7 +9,6 @@ import javax.inject.Singleton
 
 @Singleton
 class AccountManager @Inject constructor(
-//    private val sharedPrefs: SharedPreferences,
     private val dataStoreRepository: DataStoreRepository,
 ) {
 
@@ -67,10 +67,18 @@ class AccountManager @Inject constructor(
 
     fun isAlreadyLogin() = fetchUserId() != null
 
-    fun reportYandexMetrica(text: String, eventParam: String? = null) {
-        val eventParameters = "{\"UserID\":\"${accountIdListener.value ?: "0"}\"" +
-                if (eventParam != null) ",$eventParam}" else "}"
+    fun reportEvent(text: String, eventParam: String? = null) {
+        if (!BuildConfig.DEBUG) {
+            val eventParameters = "{\"UserID\":\"${accountIdListener.value ?: "0"}\"" +
+                    if (eventParam != null) ",$eventParam}" else "}"
 //        YandexMetrica.reportEvent(text, eventParameters) //todo release
+        }
+    }
+
+    fun reportError(text: String, throwable: Throwable? = null) {
+        if (!BuildConfig.DEBUG) {
+//        YandexMetrica.reportError(text, throwable) //todo release
+        }
     }
 
     data class UserSettings(

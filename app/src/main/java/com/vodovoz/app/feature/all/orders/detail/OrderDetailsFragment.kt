@@ -110,7 +110,7 @@ class OrderDetailsFragment : BaseFragment() {
                                 R.drawable.ic_order_canceled
                             )
                         )
-                        binding.tvStatus.text = "Отменен"
+                        binding.tvStatus.text = getString(R.string.canceled)
                         binding.tvCancelOrder.visibility = View.INVISIBLE
                         binding.llPayOrder.visibility = View.GONE
                         MaterialAlertDialogBuilder(requireContext())
@@ -187,7 +187,7 @@ class OrderDetailsFragment : BaseFragment() {
 
             when (orderDetailsUI.isPayed) {
                 true -> {
-                    binding.tvPayStatus.text = "Оплачен"
+                    binding.tvPayStatus.text = getString(R.string.payed)
                     binding.payedStatus.isVisible = true
                     statusSpacer.isVisible = true
                     binding.llPayOrder.visibility = View.GONE
@@ -198,7 +198,7 @@ class OrderDetailsFragment : BaseFragment() {
                         true -> binding.llPayOrder.visibility = View.GONE
                         false -> binding.llPayOrder.visibility = View.VISIBLE
                     }
-                    binding.tvPayStatus.text = "Не оплачен"
+                    binding.tvPayStatus.text = getString(R.string.not_payed)
                     binding.payedStatus.isVisible = false
                     statusSpacer.isVisible = false
                 }
@@ -213,7 +213,7 @@ class OrderDetailsFragment : BaseFragment() {
                         binding.btnTraceOrder.setOnClickListener {
                             if (orderDetailsUI.driverId == null || orderDetailsUI.id == null) return@setOnClickListener
                             val eventParameters = "\"ZakazNumber\":\"${orderDetailsUI.id}\""
-                            accountManager.reportYandexMetrica("Где мой заказ", eventParameters)
+                            accountManager.reportEvent("Где мой заказ", eventParameters)
 
                             viewModel.postUrl(orderDetailsUI.driverUrl)
 

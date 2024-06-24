@@ -172,7 +172,7 @@ class OrdersHistoryFragment : BaseFragment() {
             override fun onMoreDetailClick(orderId: Long, sendReport: Boolean) {
                 if (sendReport) {
                     val eventParameters = "\"ZakazID\":\"$orderId\""
-                    accountManager.reportYandexMetrica(
+                    accountManager.reportEvent(
                         "Зашел в заказ, статус в пути",
                         eventParameters
                     )

@@ -154,6 +154,11 @@
     <string name="menu_promotions" translatable="false">Акции</string>
     <string name="email_" translatable="false">Почта*</string>
     <string name="jivo_chat">Чат с поддержкой</string>
+    <string name="call_me_for_confirm">Позвоните мне для подтверждения заказа</string>
+    <string name="empty_string" />
+    <string name="canceled">Отменен</string>
+    <string name="payed">Оплачен</string>
+    <string name="not_payed">Не оплачен</string>
 
 
 </resources>

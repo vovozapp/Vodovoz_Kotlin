@@ -80,7 +80,7 @@ class OrderingFragment : BaseFragment() {
         binding.etPhone.setPhoneValidator {}
         binding.etPhoneForDriver.setPhoneValidator {}
         bindTextWatchers()
-        accountManager.reportYandexMetrica("Зашел на экран оформления заказа")
+        accountManager.reportEvent("Зашел на экран оформления заказа")
     }
 
     private fun observeUiState() {
@@ -136,7 +136,7 @@ class OrderingFragment : BaseFragment() {
                     val isNewUser = state.data.shippingInfoBundleUI?.isNewUser
                     if (isNewUser != null && isNewUser) {
                         viewModel.setCheckDelivery(5)
-                        binding.tvCheckDelivery.text = "Позвоните мне для подтверждения заказа"
+                        binding.tvCheckDelivery.text = getString(R.string.call_me_for_confirm)
                         binding.tvNameCheckDelivery.setTextColor(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -570,7 +570,7 @@ class OrderingFragment : BaseFragment() {
             binding.tvDate.text = dateFormatter.format(date)
 
             viewModel.setSelectedDate(date)
-            binding.tvShippingInterval.text = ""
+            binding.tvShippingInterval.text = getString(R.string.empty_string)
             if (currentYear == year && currentMonth == month && currentDay == day) {
                 viewModel.fetchShippingInfo(today = true)
             }
@@ -646,13 +646,13 @@ class OrderingFragment : BaseFragment() {
         binding.etCompanyName.text = null
         binding.etName.text = null
         binding.etEmail.text = null
-        binding.tvAddress.text = ""
-        binding.tvDate.text = ""
-        binding.etPhone.setText("")
-        binding.tvShippingInterval.text = ""
+        binding.tvAddress.text = getString(R.string.empty_string)
+        binding.tvDate.text = getString(R.string.empty_string)
+        binding.etPhone.setText(getString(R.string.empty_string))
+        binding.tvShippingInterval.text = getString(R.string.empty_string)
         binding.tvShippingPrice.setPriceText(0)
         binding.tvParkingPrice.setPriceText(0)
-        binding.tvPayMethod.text = ""
+        binding.tvPayMethod.text = getString(R.string.empty_string)
         binding.etInputCash.text = null
         binding.mtBetweenPayMethodAndInputCash.visibility = View.GONE
         binding.etInputCash.visibility = View.GONE

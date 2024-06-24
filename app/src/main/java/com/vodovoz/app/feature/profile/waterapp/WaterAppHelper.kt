@@ -151,12 +151,12 @@ class WaterAppHelper @Inject constructor(
 
     fun startCalculate() {
 
-        accountManager.reportYandexMetrica("trekervodi_vhod")
+        accountManager.reportEvent("trekervodi_vhod")
     }
 
     fun tryToChangeWaterLevel(step: Int) {
 
-        accountManager.reportYandexMetrica("trekervodi_chasha")
+        accountManager.reportEvent("trekervodi_chasha")
 
         val rateState = waterAppRateDataListener.value ?: return
 

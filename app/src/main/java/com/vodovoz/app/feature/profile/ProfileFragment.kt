@@ -311,7 +311,7 @@ class ProfileFragment : BaseFragment() {
 
             override fun onNewWaterApp() {
                 val eventParameters = "\"source\":\"profile\""
-                accountManager.reportYandexMetrica("trekervodi_zapysk", eventParameters)
+                accountManager.reportEvent("trekervodi_zapysk", eventParameters)
                 findNavController().navigate(R.id.waterAppFragment)
             }
 

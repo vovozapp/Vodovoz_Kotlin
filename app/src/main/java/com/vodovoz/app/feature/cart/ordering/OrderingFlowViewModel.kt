@@ -65,7 +65,6 @@ class OrderingFlowViewModel @Inject constructor(
 
     private val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
-    private val lastActualCart = savedStateHandle.get<String>("lastActualCart")
     private val coupon = savedStateHandle.get<String>("coupon") ?: ""
 
     init {
@@ -178,7 +177,7 @@ class OrderingFlowViewModel @Inject constructor(
                                 loadingPage = false,
                                 error = null
                             )
-                            accountManager.reportYandexMetrica("Заказ оформлен")
+                            accountManager.reportEvent("Заказ оформлен")
                             eventListener.emit(OrderingEvents.OrderSuccess(data))
                         }
 
@@ -431,12 +430,6 @@ class OrderingFlowViewModel @Inject constructor(
                 }
                 .collect()
         }
-    }
-
-    fun clearData() {
-        uiStateListener.value = state.copy(
-            data = OrderingState()
-        )
     }
 
     fun onAddressBtnClick() {

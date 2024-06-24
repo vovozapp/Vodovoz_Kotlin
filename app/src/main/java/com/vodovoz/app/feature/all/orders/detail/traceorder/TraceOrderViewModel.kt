@@ -2,22 +2,20 @@ package com.vodovoz.app.feature.all.orders.detail.traceorder
 
 import android.app.Application
 import android.graphics.Bitmap
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.Event
 import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
-import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.feature.all.orders.detail.model.DriverPointsEntity
 import com.vodovoz.app.util.extensions.debugLog
 import com.yandex.mapkit.geometry.Point
-import com.yandex.metrica.YandexMetrica
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,9 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TraceOrderViewModel @Inject constructor(
-    private val savedState: SavedStateHandle,
-    private val repository: MainRepository,
     private val application: Application,
+    private val accountManager: AccountManager,
 ) : PagingContractViewModel<TraceOrderViewModel.TraceOrderState, TraceOrderViewModel.TraceOrderEvents>(
     TraceOrderState()
 ) {
@@ -160,9 +157,9 @@ class TraceOrderViewModel @Inject constructor(
 
                     }
                 })
-            }.onFailure { 
+            }.onFailure {
                 debugLog { "fetchDriverData error $it" }
-                YandexMetrica.reportError("fetchDriverData error", it)
+                accountManager.reportError("fetchDriverData error", it)
             }
         }
     }
@@ -174,7 +171,7 @@ class TraceOrderViewModel @Inject constructor(
         val driverPoint: Point? = null,
         val autoBitmap: Bitmap? = null,
         val homeBitmap: Bitmap? = null,
-        val driverPointsEntity: DriverPointsEntity? = null
+        val driverPointsEntity: DriverPointsEntity? = null,
     ) : State
 
     sealed class TraceOrderEvents : Event

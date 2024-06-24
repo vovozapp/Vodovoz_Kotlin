@@ -19,13 +19,13 @@ import androidx.navigation.Navigation
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.vodovoz.app.R
+import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.common.update.AppUpdateController
 import com.vodovoz.app.core.navigation.setupWithNavController
 import com.vodovoz.app.databinding.FragmentMainBinding
-import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.disableFullScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -41,6 +41,9 @@ class MainFragment : BaseFragment() {
     @Inject
     lateinit var permissionsControllerFactory: PermissionsController.Factory
     private val permissionsController by lazy { permissionsControllerFactory.create(requireActivity()) }
+
+    @Inject
+    lateinit var accountManager: AccountManager
 
     @Inject
     lateinit var appUpdateFactory: AppUpdateController.Factory
@@ -98,9 +101,9 @@ class MainFragment : BaseFragment() {
                 override fun onActivityResult(result: ActivityResult?) {
                     if (result == null) return
                     if (result.resultCode != Activity.RESULT_OK) {
-                        debugLog { "Update flow failed! Result code: " + result.resultCode }
+                        accountManager.reportError("Update flow failed! Result code: " + result.resultCode)
                     } else {
-                        debugLog { "Success update!" }
+                        accountManager.reportEvent("Success update!")
                     }
                 }
             }

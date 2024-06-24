@@ -17,8 +17,8 @@ android {
         applicationId "com.vodovoz.app"
         minSdk 21
         targetSdk 34
-        versionCode 155
-        versionName "1.5.46"
+        versionCode 158
+        versionName "1.5.49"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -66,15 +66,15 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     //Lifecycle
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.2'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.2'
 
     //Navigation
     implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
 
     //Firebase
-    implementation platform('com.google.firebase:firebase-bom:33.1.0')
+    implementation platform('com.google.firebase:firebase-bom:33.1.1')
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-database-ktx'
@@ -169,12 +169,12 @@ dependencies {
 
     //compose
     implementation 'androidx.activity:activity-compose:1.9.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2'
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     implementation 'androidx.compose.material3:material3:1.2.1'
-    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.8.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.8.2'
 
     implementation "io.coil-kt:coil:2.6.0"
     implementation "io.coil-kt:coil-svg:2.6.0"

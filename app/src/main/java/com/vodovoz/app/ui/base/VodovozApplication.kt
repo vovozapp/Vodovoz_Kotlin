@@ -32,15 +32,17 @@ class VodovozApplication : Application() {
     }
 
     private fun initYandexMetrica() {
-        val config: YandexMetricaConfig =
-            YandexMetricaConfig.newConfigBuilder(YANDEX_METRICA_KEY)
-                .withNativeCrashReporting(false)
-                .withLocationTracking(false)
-                .withAppVersion(BuildConfig.VERSION_NAME)
-                .withUserProfileID(ApiConfig.VODOVOZ_URL)
-                .withLogs()
-                .build()
-        YandexMetrica.activate(this, config)
-        YandexMetrica.enableActivityAutoTracking(this)
+        if(!BuildConfig.DEBUG) {
+            val config: YandexMetricaConfig =
+                YandexMetricaConfig.newConfigBuilder(YANDEX_METRICA_KEY)
+                    .withNativeCrashReporting(false)
+                    .withLocationTracking(false)
+                    .withAppVersion(BuildConfig.VERSION_NAME)
+                    .withUserProfileID(ApiConfig.VODOVOZ_URL)
+                    .withLogs()
+                    .build()
+            YandexMetrica.activate(this, config)
+            YandexMetrica.enableActivityAutoTracking(this)
+        }
     }
 }

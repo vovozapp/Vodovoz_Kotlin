@@ -312,7 +312,7 @@ class HomeFragment : BaseFragment() {
                                 val promotionId = it.id
                                 if (!promotionId.isNullOrEmpty()) {
                                     val eventParameters = "\"ID_AKCII\": \"$promotionId\""
-                                    accountManager.reportYandexMetrica(
+                                    accountManager.reportEvent(
                                         "Зашел в акцию (push)",
                                         eventParameters
                                     )
@@ -329,7 +329,7 @@ class HomeFragment : BaseFragment() {
                                 val productId = it.id
                                 if (!productId.isNullOrEmpty()) {
                                     val eventParameters = "\"ID_Product\": \"$productId\""
-                                    accountManager.reportYandexMetrica(
+                                    accountManager.reportEvent(
                                         "Зашел в товар (push)",
                                         eventParameters
                                     )
@@ -346,7 +346,7 @@ class HomeFragment : BaseFragment() {
                                 val sectionId = it.id
                                 if (!sectionId.isNullOrEmpty()) {
                                     val eventParameters = "\"Secition_ID\": \"$sectionId\""
-                                    accountManager.reportYandexMetrica(
+                                    accountManager.reportEvent(
                                         "Зашел в раздел (push)",
                                         eventParameters
                                     )
@@ -363,7 +363,7 @@ class HomeFragment : BaseFragment() {
                                 val orderId = it.orderId
                                 if (!orderId.isNullOrEmpty()) {
                                     val eventParameters = "\"ID_Zakaz\": \"$orderId\""
-                                    accountManager.reportYandexMetrica(
+                                    accountManager.reportEvent(
                                         "Зашел в заказ, статус в пути (push)",
                                         eventParameters
                                     )
@@ -476,7 +476,7 @@ class HomeFragment : BaseFragment() {
 
                             "trekervodi" -> {
                                 val eventName = "trekervodi_push"
-                                accountManager.reportYandexMetrica(eventName)
+                                accountManager.reportEvent(eventName)
                                 findNavController().navigate(HomeFragmentDirections.actionToWaterAppFragment())
                             }
 
@@ -494,7 +494,7 @@ class HomeFragment : BaseFragment() {
                         it?.action?.let { action ->
                             if (action.contains("SOBNEW")) {
                                 val eventParameters = "\"SOBNEW_NAME\": \"${it.id}\""
-                                accountManager.reportYandexMetrica(
+                                accountManager.reportEvent(
                                     "Зашел в приложение (push)",
                                     eventParameters
                                 )
@@ -573,7 +573,7 @@ class HomeFragment : BaseFragment() {
 
                             "kalkulyator_vody/" -> {
                                 val eventName = "trekervodi_ssilka"
-                                accountManager.reportYandexMetrica(eventName)
+                                accountManager.reportEvent(eventName)
                                 findNavController().navigate(HomeFragmentDirections.actionToWaterAppFragment())
                             }
                         }
@@ -841,7 +841,7 @@ class HomeFragment : BaseFragment() {
                 actionEntity?.let {
                     if (it is ActionEntity.WaterApp) {
                         val eventParameters = "\"source\":\"slayder\""
-                        accountManager.reportYandexMetrica("trekervodi_zapysk", eventParameters)
+                        accountManager.reportEvent("trekervodi_zapysk", eventParameters)
                     }
                 }
                 actionEntity?.invoke(findNavController(), requireActivity())
@@ -1083,7 +1083,7 @@ class HomeFragment : BaseFragment() {
             override fun onClick(actionEntity: ActionEntity) {
                 if (actionEntity is ActionEntity.WaterApp) {
                     val eventParameters = "\"source\":\"bottom_alert\""
-                    accountManager.reportYandexMetrica("trekervodi_zapysk", eventParameters)
+                    accountManager.reportEvent("trekervodi_zapysk", eventParameters)
                 }
                 actionEntity.invoke()
             }

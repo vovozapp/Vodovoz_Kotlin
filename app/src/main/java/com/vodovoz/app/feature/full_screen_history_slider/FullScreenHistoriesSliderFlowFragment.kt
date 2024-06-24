@@ -176,7 +176,7 @@ class FullScreenHistoriesSliderFlowFragment : BaseFragment(),
             )
             is ActionEntity.WaterApp -> {
                 val eventParameters = "\"source\":\"stories\""
-                accountManager.reportYandexMetrica("trekervodi_zapysk", eventParameters)
+                accountManager.reportEvent("trekervodi_zapysk", eventParameters)
                 FullScreenHistoriesSliderFlowFragmentDirections.actionToWaterAppFragment()
             }
             is ActionEntity.Delivery -> FullScreenHistoriesSliderFlowFragmentDirections.actionToWebViewFragment(

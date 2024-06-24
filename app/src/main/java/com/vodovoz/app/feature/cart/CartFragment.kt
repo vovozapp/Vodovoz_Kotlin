@@ -163,7 +163,7 @@ class CartFragment : BaseFragment() {
         bindErrorRefresh { viewModel.refresh() }
         bindSwipeRefresh()
         observeResultLiveData()
-        accountManager.reportYandexMetrica("Зашел в корзину")
+        accountManager.reportEvent("Зашел в корзину")
     }
 
     override fun onStart() {

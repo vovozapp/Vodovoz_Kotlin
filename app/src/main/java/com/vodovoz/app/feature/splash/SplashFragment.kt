@@ -111,7 +111,7 @@ class SplashFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        accountManager.reportYandexMetrica("Зашел в приложение")
+        accountManager.reportEvent("Зашел в приложение")
 
         if (requireContext().isTablet()) {
             binding.lottieSplashView.cancelAnimation()
