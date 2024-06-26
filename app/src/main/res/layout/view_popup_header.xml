@@ -1,20 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- new-->
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!-- new-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
-    android:paddingHorizontal="@dimen/space_16">
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="@dimen/space_8">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvTitle"
-        style="@style/ToolbarTitle"
-        android:textSize="20sp"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:fontFamily="@font/rotonda_bold"
+        android:gravity="center_vertical|start"
+        android:textColor="@color/text_black"
+        android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imgClose"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,11 +27,10 @@
         android:id="@+id/imgClose"
         android:layout_width="@dimen/_22sdp"
         android:layout_height="@dimen/_22sdp"
-        android:layout_gravity="end"
         android:src="@drawable/ic_close"
-        app:tint="@color/text_black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/text_black" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
