@@ -102,7 +102,8 @@ class HomeMainAdapter(
             R.layout.fragment_slider_sections -> {
                 HomeSectionsSliderViewHolder(
                     getViewFromInflater(viewType, parent),
-                    clickListener
+                    clickListener,
+
                 ).apply {
                     onScrollInnerRecycler = this@HomeMainAdapter.onScrollInnerRecycler
                 }

@@ -994,6 +994,10 @@ class HomeFragment : BaseFragment() {
                     )
                 }
             }
+
+            override fun onSectionsTabClick(title: String) {
+                flowViewModel.onSectionsTabClick(title)
+            }
         }
     }
 

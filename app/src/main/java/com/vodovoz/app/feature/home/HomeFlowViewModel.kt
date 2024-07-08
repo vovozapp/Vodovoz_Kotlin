@@ -251,37 +251,16 @@ class HomeFlowViewModel @Inject constructor(
                         retList.addAll(
                             if (response.data.sectionsEntity != null) {
                                 val data = response.data.sectionsEntity.mapToUI()
+
                                 listOf(
                                     PositionItem(
-                                        POSITION_16,
+                                        POSITION_15,
                                         HomeSections(
-                                            id = POSITION_16,
+                                            id = POSITION_15,
                                             items = data,
                                         )
                                     )
                                 )
-//                                    if(data.parentSectionDataUIList.size != 1 ) {
-//                                        PositionItem(
-//                                            POSITION_15_TITLE,
-//                                            HomeProductsTabs(
-//                                                id = POSITION_15_TITLE,
-//                                                tabsNames = emptyList(),//пока так, вроде бы не плнируется добавлять табы
-//                                            )
-//                                        )
-//                                    } else {
-//                                        PositionItem(
-//                                            POSITION_15_TITLE,
-//                                            HomeTitle(
-//                                                id = POSITION_15_TITLE,
-//                                                type = HomeTitle.SLIDER_TITLE,
-//                                                name = "",
-//                                                showAll = false,
-//                                                showAllName = "СМ.ВСЕ",
-//                                                categoryProductsName = data.parentSectionDataUIList.first().title,
-//                                            )
-//                                        )
-////                                    }
-//                                )
                             } else {
                                 emptyList()
                             }
@@ -877,6 +856,38 @@ class HomeFlowViewModel @Inject constructor(
         }
     }
 
+    fun onSectionsTabClick(title: String) {
+
+        val positionItems = state.data.positionItems.map { positionItem ->
+            when (positionItem.position) {
+                POSITION_15 -> {
+                    positionItem.copy(
+                        item = (positionItem.item as HomeSections).copy(
+                            items = positionItem.item.items.copy(
+                                parentSectionDataUIList = positionItem.item.items.parentSectionDataUIList.map {
+                                    it.copy(
+                                        isSelected = it.title == title
+                                    )
+                                }
+                            )
+                        )
+                    )
+                }
+
+                else -> {
+                    positionItem
+                }
+            }
+        }
+
+        uiStateListener.value = state.copy(
+            data = state.data.copy(
+                items = positionItems.map { it.item },
+                positionItems = positionItems
+            )
+        )
+    }
+
     data class PositionItem(
         val position: Int,
         val item: Item,
@@ -924,8 +935,7 @@ class HomeFlowViewModel @Inject constructor(
 
     companion object {
         const val POSITION_10 = 10
-        const val POSITION_15_TITLE = 15
-        const val POSITION_16 = 16
+        const val POSITION_15 = 15
         const val POSITION_20_TITLE = 20
         const val POSITION_30 = 30
         const val POSITION_40_TITLE = 40

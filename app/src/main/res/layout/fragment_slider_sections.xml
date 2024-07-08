@@ -1,39 +1,53 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--new-->
+<?xml version="1.0" encoding="utf-8"?><!--new-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
-    android:paddingBottom="16dp"
     android:background="@color/bluePrimary"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="16dp">
 
-    <TextView
-        android:id="@+id/tvName"
-        style="@style/TextViewMediumBlackBold"
+    <FrameLayout
+        android:id="@+id/flTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/space_16"
-        android:paddingBottom="@dimen/space_16"
-        android:paddingTop="@dimen/space_8"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textSize="@dimen/title_text_size_cat"
-        tools:text="Название категории" />
+        android:paddingBottom="@dimen/space_16">
+
+        <TextView
+            android:id="@+id/tvName"
+            style="@style/TextViewMediumBlackBold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/space_16"
+            android:paddingTop="@dimen/space_10"
+            android:textSize="@dimen/title_text_size_cat"
+            tools:text="Название категории" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/view_holder_home_sections_tabs" />
+
+    </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSections"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="horizontal"
-        tools:listitem="@layout/view_holder_section_top"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvName" />
+        app:layout_constraintTop_toBottomOf="@+id/flTitle"
+        tools:listitem="@layout/view_holder_section_top" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -46,5 +46,6 @@ interface HomeMainClickListener {
     fun onCategoryClick(id: Long?)
 
     fun onSectionClick(id: Int?)
+    fun onSectionsTabClick(title: String)
 
 }

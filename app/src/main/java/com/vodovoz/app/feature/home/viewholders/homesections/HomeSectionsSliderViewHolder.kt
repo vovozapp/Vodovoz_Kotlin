@@ -10,8 +10,8 @@ import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.FragmentSliderSectionsBinding
 import com.vodovoz.app.feature.home.adapter.HomeMainClickListener
 import com.vodovoz.app.feature.home.viewholders.homesections.inner.HomeSectionsInnerAdapter
+import com.vodovoz.app.feature.home.viewholders.homesections.tabs.HomeSectionsTabsAdapter
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
-import com.vodovoz.app.util.extensions.debugLog
 
 class HomeSectionsSliderViewHolder(
     view: View,
@@ -19,23 +19,46 @@ class HomeSectionsSliderViewHolder(
 ) : ItemViewHolder<HomeSections>(view) {
 
     private val binding: FragmentSliderSectionsBinding = FragmentSliderSectionsBinding.bind(view)
-    private val space = itemView.resources.getDimension(R.dimen.space_4).toInt()
+    private val spaceSections = itemView.resources.getDimension(R.dimen.space_4).toInt()
+
     private var sectionsSliderAdapter: HomeSectionsInnerAdapter = HomeSectionsInnerAdapter(
         clickListener = { clickListener.onSectionClick(it) },
     )
 
+    private var tabsAdapter: HomeSectionsTabsAdapter = HomeSectionsTabsAdapter(
+        clickListener = { clickListener.onSectionsTabClick(it) },
+    )
+
     init {
+
+        val spaceTabs = itemView.resources.getDimension(R.dimen.space_16).toInt()
+
+        binding.rvTabs.addMarginDecoration { rect, viewTab, parent, state ->
+            if (parent.getChildAdapterPosition(viewTab) == 0) rect.left = spaceTabs
+            if (parent.getChildAdapterPosition(viewTab) == state.itemCount - 1) rect.right = spaceTabs
+            else rect.right = spaceTabs / 2
+            rect.top = spaceTabs / 2
+        }
+
+        binding.rvTabs.adapter = tabsAdapter
+
+        binding.rvTabs.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                onScrollInnerRecycler(this@HomeSectionsSliderViewHolder)
+            }
+        })
 
         binding.rvSections.addMarginDecoration { rect, viewDecor, parent, _ ->
             if (parent.getChildAdapterPosition(viewDecor) == 0) {
-                rect.left = space * 4
+                rect.left = spaceSections * 4
             } else {
-                rect.left = space
+                rect.left = spaceSections
             }
             if (parent.getChildAdapterPosition(viewDecor) == sectionsSliderAdapter.itemCount - 1) {
-                rect.right = space * 4
+                rect.right = spaceSections * 4
             } else {
-                rect.right = space
+                rect.right = spaceSections
             }
         }
 
@@ -55,29 +78,23 @@ class HomeSectionsSliderViewHolder(
     }
 
     override fun setState(state: Parcelable) {
-        debugLog { "setState" }
         binding.rvSections.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: HomeSections) {
         super.bind(item)
-        binding.tvName.text = item.items.parentSectionDataUIList.first().title
+        if (item.items.parentSectionDataUIList.size == 1) {
+            binding.tvName.text = item.items.parentSectionDataUIList.first().title
+            binding.rvTabs.visibility = View.GONE
+        } else {
+            tabsAdapter.submitList(item.items.parentSectionDataUIList)
+            binding.rvTabs.visibility = View.VISIBLE
+            binding.tvName.visibility = View.GONE
+        }
 
         binding.root.backgroundTintList = ColorStateList.valueOf(Color.parseColor(item.items.color))
-//        Glide.with(itemView.context)
-//            .load(item.items.backgroundPicture)
-//            .into(object : CustomTarget<Drawable?>() {
-//                override fun onResourceReady(
-//                    resource: Drawable,
-//                    transition: Transition<in Drawable?>?,
-//                ) {
-//                    binding.root.background = resource
-//                }
-//
-//                override fun onLoadCleared(placeholder: Drawable?) {}
-//            })
 
-        sectionsSliderAdapter.submitList(item.items.parentSectionDataUIList.first().sectionDataEntityUIList)
+        sectionsSliderAdapter.submitList(item.items.parentSectionDataUIList.first { it.isSelected }.sectionDataEntityUIList)
     }
 
 }

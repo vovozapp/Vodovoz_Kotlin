@@ -18,10 +18,11 @@ object TopSectionsMapper {
 }
 
 object ParentSectionsMapper {
-    fun List<ParentSectionDataEntity>.mapToUI() = map {
+    fun List<ParentSectionDataEntity>.mapToUI() = mapIndexed { index, parentSectionDataEntity ->
         ParentSectionDataUI(
-            title = it.title,
-            sectionDataEntityUIList = it.sectionDataEntityList.mapToUI(),
+            title = parentSectionDataEntity.title,
+            sectionDataEntityUIList = parentSectionDataEntity.sectionDataEntityList.mapToUI(),
+            isSelected = index == 0,
         )
     }
 }
