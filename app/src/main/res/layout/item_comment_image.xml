@@ -3,7 +3,7 @@
     android:id="@+id/imageComment"
     android:layout_width="70dp"
     android:scaleType="centerCrop"
-    android:layout_height="70dp"
+    android:layout_height="100dp"
     android:layout_marginVertical="@dimen/_8sdp"
     android:layout_marginStart="@dimen/_8sdp"
     android:src="@drawable/circleimageprofile"

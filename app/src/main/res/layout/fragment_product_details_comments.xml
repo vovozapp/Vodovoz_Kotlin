@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/light_bg"
     android:orientation="vertical">
 
     <com.google.android.material.divider.MaterialDivider
@@ -13,94 +13,138 @@
         android:layout_height="20dp"
         app:dividerColor="@color/divider_gray_color" />
 
-    <LinearLayout
-        android:id="@+id/llCommentsTitleContainer"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/ratingBottomCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:orientation="horizontal"
-        >
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:elevation="0dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="0dp">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvCommentAmountTitle"
-            style="@style/TextViewHeaderBlackBold"
-            android:layout_width="0dp"
-            android:textSize="@dimen/title_text_size_cat"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingHorizontal="@dimen/space_16"
-            android:paddingVertical="@dimen/space_8"
-            tools:text="Отзывы(3)" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvShowAllComment"
-            style="@style/TextViewSmallBlue"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:paddingHorizontal="@dimen/space_16"
-            android:paddingVertical="@dimen/space_8"
-            android:text="@string/show_all" />
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextViewHeaderBlackBold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/comments"
+                android:textSize="@dimen/title_text_size_cat"
+                android:paddingTop="@dimen/space_10"
+                android:paddingHorizontal="@dimen/space_16"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvImages"
-        android:layout_width="match_parent"
-        android:visibility="visible"
-        tools:visibility="visible"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#eeeeee"
-        tools:itemCount="4"
-        tools:listitem="@layout/item_comment_image"
-        app:layout_constraintStart_toEndOf="@+id/cwImageContainer"
-        app:layout_constraintTop_toBottomOf="@+id/cwImageContainer"
-        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        />
+            <LinearLayout
+                android:id="@+id/llRatingContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp">
 
-    <androidx.recyclerview.widget.RecyclerView
+                <RatingBar
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="1"
+                    android:paddingBottom="2dp"
+                    android:rating="1" />
+
+                <TextView
+                    android:id="@+id/ratingTextBottom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="normal"
+                    app:fontFamily="@font/rotonda_bold"
+                    tools:text="4.2" />
+
+                <TextView
+                    android:id="@+id/counterCommentsBottom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_weight="1"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/transparent_half"
+                    android:textSize="12sp"
+                    android:textStyle="normal"
+                    app:fontFamily="@font/rotondac"
+                    tools:text="653 отзыва" />
+
+                <ImageView
+                    android:id="@+id/counterCommentsBottomArrow"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/arrow_right_gray_18"
+                    tools:ignore="ContentDescription"/>
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvImages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                tools:itemCount="4"
+                tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_comment_image" />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <com.vodovoz.app.ui.view.CustomRecycleView
         android:id="@+id/commentRecycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:paddingHorizontal="16dp"
+        android:clipToPadding="false"/>
 
-    <TextView
-        android:id="@+id/noCommentsTitle"
-        style="@style/TextViewMediumBlackBold"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/writeCommentCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_16"
-        android:layout_marginTop="@dimen/space_16"
-        android:layout_marginEnd="@dimen/space_16"
-        android:gravity="bottom"
-        android:text="Нет отзывов"
-        android:textSize="@dimen/title_text_size_cat"
-        android:visibility="gone" />
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="8dp"
+        android:elevation="0dp"
+        app:cardElevation="0dp"
+        app:cardCornerRadius="8dp">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_16"
-        android:layout_marginTop="@dimen/space_8"
-        android:layout_marginBottom="@dimen/space_16"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/writecomments"
-            app:tint="@color/bluePrimary"
-            tools:ignore="ContentDescription" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvSendComment"
-            style="@style/TextViewNormalBlue"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="Написать отзыв"
-            android:textSize="16sp" />
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="16dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/writeCommentTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/transparent_half"
+                android:textSize="13sp"
+                android:layout_weight="1"
+                android:textStyle="normal"
+                app:fontFamily="@font/rotondac"
+                android:text="@string/leave_comment" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/arrow_right_gray_18"
+                tools:ignore="ContentDescription" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
 </LinearLayout>

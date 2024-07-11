@@ -324,7 +324,7 @@
 
     <style name="TextViewHeaderBlack" parent="@style/Theme.AppCompat">
         <item name="android:textSize">@dimen/header_text_size</item>
-        <item name="android:textColor">@color/text_black</item>
+            <item name="android:textColor">@color/text_black</item>
         <item name="fontFamily">@font/rotonda_normal</item>
     </style>
 

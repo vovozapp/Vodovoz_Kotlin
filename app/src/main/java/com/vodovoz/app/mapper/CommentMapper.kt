@@ -17,6 +17,7 @@ object CommentMapper {
         author = author,
         rating = rating,
         authorPhoto = authorPhoto,
+        ratingComment = ratingComment,
         commentImages = images?.map {
             CommentImage(it.ID, it.SRC)
         }

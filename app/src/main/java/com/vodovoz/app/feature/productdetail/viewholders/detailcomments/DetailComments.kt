@@ -8,6 +8,8 @@ import com.vodovoz.app.ui.model.CommentUI
 data class DetailComments(
     val id: Int,
     val commentUIList: List<CommentUI>,
+    val rating: String,
+    val commentsAmountText: String,
     val productId: Long,
     val commentImages: List<CommentImage>? = null
 ) : Item {

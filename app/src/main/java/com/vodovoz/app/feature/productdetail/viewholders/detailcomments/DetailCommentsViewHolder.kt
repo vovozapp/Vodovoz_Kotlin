@@ -1,16 +1,19 @@
 package com.vodovoz.app.feature.productdetail.viewholders.detailcomments
 
+import android.graphics.Rect
+import android.os.Handler
+import android.os.Looper
 import android.os.Parcelable
 import android.view.View
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.FragmentProductDetailsCommentsBinding
 import com.vodovoz.app.feature.all.comments.adapter.CommentImagesAdapter
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
 import com.vodovoz.app.feature.productdetail.viewholders.detailcomments.inner.CommentsWithAvatarFlowAdapter
-import com.vodovoz.app.ui.decoration.CommentMarginDecoration
 
 class DetailCommentsViewHolder(
     view: View,
@@ -31,24 +34,39 @@ class DetailCommentsViewHolder(
         binding.rvImages.adapter = imagesAdapter
 
         binding.commentRecycler.layoutManager =
-            LinearLayoutManager(itemView.context, LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
 
         binding.commentRecycler.adapter = adapter
 
-        binding.commentRecycler.addItemDecoration(
-            DividerItemDecoration(
-                itemView.context,
-                DividerItemDecoration.VERTICAL
-            )
-        )
-        binding.commentRecycler.addItemDecoration(CommentMarginDecoration(space))
+        binding.commentRecycler.addItemDecoration(object : ItemDecoration() {
 
-        binding.tvShowAllComment.setOnClickListener {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State,
+            ) {
+                val space = binding.root.context.resources.getDimension(R.dimen.space_8).toInt()
+                outRect.top = space
+                if (parent.getChildAdapterPosition(view) != 0) {
+                    outRect.left = space / 2
+                }
+                if (parent.getChildAdapterPosition(view) != adapter.itemCount - 1) {
+                    outRect.right = space / 2
+                }
+            }
+        })
+        binding.commentRecycler.setHasFixedSize(true)
+        binding.commentRecycler.visibility = View.INVISIBLE
+
+        binding.llRatingContainer.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            clickListener.onShowAllComments(item.productId)
+            if (item.rating != "0") {
+                clickListener.onShowAllComments(item.productId)
+            }
         }
 
-        binding.tvSendComment.setOnClickListener {
+        binding.writeCommentCardView.setOnClickListener {
             val item = item ?: return@setOnClickListener
             clickListener.onSendComment(item.productId)
         }
@@ -65,23 +83,29 @@ class DetailCommentsViewHolder(
     override fun bind(item: DetailComments) {
         super.bind(item)
 
+        setIsRecyclable(false)
         imagesAdapter.submitList(item.commentImages ?: emptyList())
 
-        binding.tvCommentAmountTitle.text = StringBuilder()
-            .append("Отзывы (")
-            .append(item.commentUIList.size)
-            .append(")")
-            .toString()
+        adapter.submitList(item.commentUIList)
 
-        if (item.commentUIList.isEmpty()) {
-            binding.llCommentsTitleContainer.visibility = View.GONE
-            binding.noCommentsTitle.visibility = View.VISIBLE
+        binding.commentRecycler.smoothScrollToPosition(item.commentUIList.size)
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.commentRecycler.smoothScrollToPosition(0)
+        }, 100)
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.commentRecycler.visibility = View.VISIBLE
+        }, 200)
+
+        binding.ratingTextBottom.text = item.rating
+
+        if (item.rating == "0") {
+            binding.counterCommentsBottom.visibility = View.GONE
+            binding.counterCommentsBottomArrow.visibility = View.GONE
         } else {
-            binding.llCommentsTitleContainer.visibility = View.VISIBLE
-            binding.noCommentsTitle.visibility = View.GONE
+            binding.counterCommentsBottom.visibility = View.VISIBLE
+            binding.counterCommentsBottomArrow.visibility = View.VISIBLE
         }
 
-        adapter.submitList(item.commentUIList)
+        binding.counterCommentsBottom.text = item.commentsAmountText
     }
-
 }

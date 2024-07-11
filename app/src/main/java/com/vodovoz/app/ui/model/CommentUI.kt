@@ -10,7 +10,9 @@ data class CommentUI(
     val authorPhoto: String? = null,
     val date: String? = null,
     val rating: Int? = null,
-    val commentImages: List<CommentImage>? = null
+    val ratingComment: String = "",
+    val commentImages: List<CommentImage>? = null,
+    val forDetailPage: Boolean = false,
 ) : Item {
 
     override fun getItemViewType(): Int {

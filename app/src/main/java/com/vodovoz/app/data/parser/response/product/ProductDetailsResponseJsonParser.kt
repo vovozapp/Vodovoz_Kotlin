@@ -264,7 +264,9 @@ object ProductDetailsResponseJsonParser {
         images = when (has("IMAGES") && !isNull("IMAGES")) {
             false -> null
             true -> getJSONArray("IMAGES").parseCommentImageEntityList()
-        }
+        },
+        rating = getInt("RATING"),
+        ratingComment = safeString("KYPLEN")
     )
 
     private fun JSONArray.parseCommentImageEntityList(): List<AllCommentsByProductResponseJsonParser.CommentImageEntity> =

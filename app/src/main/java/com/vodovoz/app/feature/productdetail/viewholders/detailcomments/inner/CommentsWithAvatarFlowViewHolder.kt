@@ -1,7 +1,9 @@
 package com.vodovoz.app.feature.productdetail.viewholders.detailcomments.inner
 
 import android.os.Parcelable
+import android.text.TextUtils
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -37,16 +39,45 @@ class CommentsWithAvatarFlowViewHolder(
 
     override fun bind(item: CommentUI) {
         super.bind(item)
+        if (item.forDetailPage) {
+            setIsRecyclable(false)
+            binding.tvComment.maxLines = 5
+            binding.tvComment.ellipsize = TextUtils.TruncateAt.END
+        } else {
+            binding.root.layoutParams.apply{
+                height = ViewGroup.LayoutParams.WRAP_CONTENT
+            }
+        }
+        binding.txtDateComments.text = item.date
+        binding.tvAuthor.text = item.author?.trim()
 
-        binding.date.text = item.date
-        binding.tvAuthor.text = item.author
         binding.tvComment.text = item.text?.fromHtml()
 
         imagesAdapter.submitList(item.commentImages ?: emptyList())
 
-        Glide.with(itemView.context)
-            .load(item.authorPhoto)
-            .placeholder(ContextCompat.getDrawable(itemView.context, R.drawable.png_default_avatar))
-            .into(binding.imgAuthorPhoto)
+        binding.tvUserLetter.visibility = View.GONE
+        binding.imgAuthorPhoto.visibility = View.VISIBLE
+        if (item.authorPhoto.isNullOrEmpty()) {
+            if (item.author.isNullOrEmpty()) {
+                binding.imgAuthorPhoto.setImageResource(R.drawable.png_default_avatar)
+            } else {
+                binding.tvUserLetter.visibility = View.VISIBLE
+                binding.imgAuthorPhoto.visibility = View.GONE
+                binding.tvUserLetter.text = item.author.trim().first().uppercase()
+            }
+        } else {
+            Glide.with(itemView.context)
+                .load(item.authorPhoto)
+                .placeholder(
+                    ContextCompat.getDrawable(
+                        itemView.context,
+                        R.drawable.png_default_avatar
+                    )
+                )
+                .into(binding.imgAuthorPhoto)
+        }
+
+        binding.ratingBar.rating = item.rating?.toFloat() ?: 5f
+        binding.ratingComment.text = item.ratingComment.fromHtml()
     }
 }

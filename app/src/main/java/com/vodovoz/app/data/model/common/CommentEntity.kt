@@ -7,6 +7,7 @@ class CommentEntity(
     val text: String? = null,
     val date: String? = null,
     val author: String? = null,
+    val ratingComment: String = "",
     val authorPhoto: String? = null,
     val rating: Int? = null,
     val images: List<AllCommentsByProductResponseJsonParser.CommentImageEntity>? = null
