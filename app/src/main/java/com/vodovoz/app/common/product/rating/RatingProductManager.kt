@@ -40,16 +40,16 @@ class RatingProductManager @Inject constructor(
         }*/
     }
 
-    private suspend fun action(productId: Long, rating: Float) {
-        val response = repository.rateProduct(productId, rating)
-        showRatingSnackbarListener.emit(response.message ?: "Вы успешно проголосовали")
-        updateRates(productId, rating)
-    }
+//    private suspend fun action(productId: Long, rating: Float) {
+//        val response = repository.rateProduct(productId, rating)
+//        showRatingSnackbarListener.emit(response.message ?: "Вы успешно проголосовали")
+//        updateRates(productId, rating)
+//    }
 
-    private suspend fun updateRates(id: Long, rating: Float) {
-        ratings[id] = rating
-        ratingsStateListener.emit(ratings)
-    }
+//    private suspend fun updateRates(id: Long, rating: Float) {
+//        ratings[id] = rating
+//        ratingsStateListener.emit(ratings)
+//    }
 
     fun dontCommentProduct(id: Long, afterCallback: () -> Unit) {
         val userId = accountManager.fetchAccountId() ?: return

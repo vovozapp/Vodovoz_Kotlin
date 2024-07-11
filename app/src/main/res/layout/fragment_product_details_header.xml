@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/clHeader"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clHeader"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="@color/white">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vpPictures"
@@ -38,14 +38,14 @@
 
     </androidx.cardview.widget.CardView>
 
-<!--    <View-->
-<!--        android:id="@+id/viewFill"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="15dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="@+id/dots_indicator"-->
-<!--        app:layout_constraintEnd_toEndOf="@+id/vpPictures"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/vpPictures"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/vpPictures" />-->
+    <!--    <View-->
+    <!--        android:id="@+id/viewFill"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="15dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@+id/dots_indicator"-->
+    <!--        app:layout_constraintEnd_toEndOf="@+id/vpPictures"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/vpPictures"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/vpPictures" />-->
 
 
     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
@@ -61,7 +61,7 @@
         app:dotsSize="6.5dp"
         app:dotsSpacing="4dp"
         app:dotsWidthFactor="1"
-        app:layout_constraintBottom_toTopOf="@+id/tvBrand"
+        app:layout_constraintBottom_toTopOf="@+id/llRatingAndBrandContainer"
         app:layout_constraintEnd_toEndOf="@+id/vpPictures"
         app:layout_constraintStart_toStartOf="@+id/vpPictures"
         app:layout_constraintTop_toBottomOf="@id/vpPictures"
@@ -81,9 +81,9 @@
         android:id="@+id/imgShare"
         android:layout_width="@dimen/_18sdp"
         android:layout_height="@dimen/_18sdp"
-        android:src="@drawable/png_share"
         android:layout_marginTop="@dimen/space_16"
         android:layout_marginEnd="@dimen/space_8"
+        android:src="@drawable/png_share"
         app:layout_constraintEnd_toStartOf="@+id/imgFavorite"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/text_black"
@@ -93,8 +93,8 @@
         android:id="@+id/imgFavorite"
         android:layout_width="@dimen/_18sdp"
         android:layout_height="@dimen/_18sdp"
-        android:src="@drawable/ic_favorite_black"
         android:layout_margin="@dimen/space_16"
+        android:src="@drawable/ic_favorite_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription,RtlSymmetry" />
@@ -149,27 +149,84 @@
 
     </com.google.android.material.chip.ChipGroup>
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvBrand"
-        style="@style/TextViewSmallBlue"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/llRatingAndBrandContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_16"
+        android:layout_marginHorizontal="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dots_indicator"
-        tools:text="Rusoxy" />
+        app:layout_constraintTop_toBottomOf="@id/dots_indicator">
+
+        <LinearLayout
+            android:id="@+id/llRatingContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <RatingBar
+                android:id="@+id/rbRating"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="1"
+                android:paddingBottom="2dp"
+                android:rating="1" />
+
+            <TextView
+                android:id="@+id/tvRatingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="normal"
+                app:fontFamily="@font/rotonda_bold"
+                tools:text="4.2" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvCommentAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="2dp"
+                android:textColor="@color/transparent_half"
+                android:textSize="12sp"
+                android:textStyle="normal"
+                app:fontFamily="@font/rotondac"
+                tools:text="653 отзыва" />
+
+            <ImageView
+                android:id="@+id/counterCommentsArrow"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/arrow_right_gray_18" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvBrand"
+            style="@style/TextViewSmallBlue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Rusoxy" />
+
+    </LinearLayout>
+
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvName"
         style="@style/TextViewMediumBlackBold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
         android:layout_marginStart="@dimen/space_16"
         android:layout_marginEnd="@dimen/space_16"
         android:paddingTop="@dimen/space_2"
         android:paddingBottom="@dimen/space_2"
-        app:layout_constraintTop_toBottomOf="@id/tvBrand"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/llRatingAndBrandContainer"
         tools:text="10 бутылей Аква Ареал 18.9" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -193,38 +250,6 @@
             tools:ignore="RtlSymmetry">
 
             <LinearLayout
-                android:id="@+id/llRatingContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RatingBar
-                    android:id="@+id/rbRating"
-                    style="?android:attr/ratingBarStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:isIndicator="false"
-                    android:numStars="5"
-                    android:stepSize="0.1"
-                    android:progressTint="@color/accentPrimary"
-                    android:theme="@style/RatingBar" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvCommentAmount"
-                    style="@style/TextViewSmallGray"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textSize="16sp"
-                    android:textColor="@color/color_search"
-                    android:paddingStart="@dimen/space_4"
-                    android:singleLine="true"
-                    tools:ignore="RtlSymmetry"
-                    tools:text="3 отзыва" />
-
-            </LinearLayout>
-
-            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_4"
@@ -234,10 +259,10 @@
                     android:id="@+id/tvCurrentPrice"
                     style="@style/TextViewLargeGrayBold"
                     android:layout_width="wrap_content"
-                    android:textSize="20sp"
-                    android:textColor="@color/text_new_black"
                     android:layout_height="wrap_content"
                     android:gravity="start|bottom"
+                    android:textColor="@color/text_new_black"
+                    android:textSize="20sp"
                     tools:text="280 Р" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -254,15 +279,15 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvPricePerUnit"
                     style="@style/TextViewSmallLightGray"
-                    android:textSize="12sp"
-                    android:textStyle="normal"
-                    android:textAllCaps="false"
-                    android:textColor="#50000000"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="start|bottom"
                     android:paddingStart="@dimen/space_4"
                     android:paddingBottom="@dimen/line_spacing_extra"
+                    android:textAllCaps="false"
+                    android:textColor="#50000000"
+                    android:textSize="12sp"
+                    android:textStyle="normal"
                     tools:text="510/кг" />
 
             </LinearLayout>

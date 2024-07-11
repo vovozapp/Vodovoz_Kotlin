@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.CountDownTimer
 import android.view.View
-import android.widget.RatingBar.OnRatingBarChangeListener
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
@@ -14,7 +13,6 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.like.LikeManager
-import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.core.network.ApiConfig.AMOUNT_CONTROLLER_TIMER
 import com.vodovoz.app.databinding.FragmentProductDetailsHeaderBinding
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPictureFlowClickListener
@@ -22,7 +20,6 @@ import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.Det
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPicturePager
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setCommentQuantity
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
@@ -40,7 +37,7 @@ class DetailHeaderViewHolder(
     private val productsClickListener: ProductsClickListener,
     private val likeManager: LikeManager,
     private val cartManager: CartManager,
-    private val ratingProductManager: RatingProductManager,
+//    private val ratingProductManager: RatingProductManager,
 ) : ItemViewHolder<DetailHeader>(view) {
 
     private val binding: FragmentProductDetailsHeaderBinding =
@@ -79,17 +76,17 @@ class DetailHeaderViewHolder(
 
     init {
 
-        launch {
-            val item = item?.productDetailUI ?: return@launch
-            ratingProductManager
-                .observeRatings()
-                .filter { it.containsKey(item.id) }
-                .onEach {
-                    item.rating = it[item.id] ?: item.rating
-                    binding.rbRating.rating = item.rating
-                }
-                .collect()
-        }
+//        launch {
+//            val item = item?.productDetailUI ?: return@launch
+//            ratingProductManager
+//                .observeRatings()
+//                .filter { it.containsKey(item.id) }
+//                .onEach {
+//                    item.rating = it[item.id] ?: item.rating
+//                    binding.rbRating.rating = item.rating
+//                }
+//                .collect()
+//        }
 
         launch {
             val item = item?.productDetailUI ?: return@launch
@@ -174,7 +171,7 @@ class DetailHeaderViewHolder(
             increaseAmount(item)
         }
 
-        binding.tvCommentAmount.setOnClickListener {
+        binding.llRatingContainer.setOnClickListener {
             val item = item ?: return@setOnClickListener
             if (item.productDetailUI.commentsAmount != 0) {
                 clickListener.onTvCommentAmount(item.productDetailUI.id)
@@ -207,22 +204,23 @@ class DetailHeaderViewHolder(
                 .collect()
         }
 
-        binding.dotsIndicator.visibility = if(item.productDetailUI.detailPictureList.size != 1) View.VISIBLE else View.INVISIBLE
+        binding.dotsIndicator.visibility =
+            if (item.productDetailUI.detailPictureList.size != 1) View.VISIBLE else View.INVISIBLE
 
         item.productDetailUI.brandUI?.let { binding.tvBrand.text = it.name }
 
         binding.tvName.text = item.productDetailUI.name
-        binding.rbRating.rating = item.productDetailUI.rating
+        binding.tvRatingText.text = item.productDetailUI.rating
 
-        binding.rbRating.onRatingBarChangeListener =
-            OnRatingBarChangeListener { _, newRating, _ ->
-                productsClickListener.onChangeRating(
-                    item.productDetailUI.id,
-                    newRating,
-                    item.productDetailUI.rating
-                )
-            }
-        binding.rbRating.setIsIndicator(true)
+//        binding.rbRating.onRatingBarChangeListener =
+//            OnRatingBarChangeListener { _, newRating, _ ->
+//                productsClickListener.onChangeRating(
+//                    item.productDetailUI.id,
+//                    newRating,
+//                    item.productDetailUI.rating
+//                )
+//            }
+//        binding.rbRating.setIsIndicator(true)
 
         when (item.productDetailUI.youtubeVideoCode.isEmpty()) {
             true -> binding.cwPlayVideo.visibility = View.GONE
@@ -324,26 +322,13 @@ class DetailHeaderViewHolder(
         }
 
         //Comment
-        when (item.productDetailUI.commentsAmount == 0) {
-            true -> {
-                binding.tvCommentAmount.text = ""
-                binding.tvCommentAmount.setTextColor(
-                    ContextCompat.getColor(
-                        itemView.context,
-                        R.color.text_gray
-                    )
-                )
-            }
-
-            else -> {
-                binding.tvCommentAmount.setCommentQuantity(item.productDetailUI.commentsAmount)
-                binding.tvCommentAmount.setTextColor(
-                    ContextCompat.getColor(
-                        itemView.context,
-                        R.color.bluePrimary
-                    )
-                )
-            }
+        if (item.productDetailUI.commentsAmount == 0) {
+            binding.tvCommentAmount.visibility = View.GONE
+            binding.counterCommentsArrow.visibility = View.GONE
+        } else {
+            binding.tvCommentAmount.visibility = View.VISIBLE
+            binding.counterCommentsArrow.visibility = View.VISIBLE
+            binding.tvCommentAmount.text = item.productDetailUI.commentsAmountText
         }
 
         //Favorite

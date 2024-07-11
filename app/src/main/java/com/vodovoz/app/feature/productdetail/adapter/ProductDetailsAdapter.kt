@@ -47,8 +47,7 @@ class ProductDetailsAdapter(
                     clickListener,
                     productsClickListener,
                     likeManager,
-                    cartManager,
-                    ratingProductManager
+                    cartManager
                 )
             }
 

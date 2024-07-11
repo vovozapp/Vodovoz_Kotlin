@@ -49,6 +49,14 @@ object ProductDetailsResponseJsonParser {
                                         0
                                     }
                                 }
+                            },
+                            commentsAmountText = when (responseJson.isNull("comments")) {
+                                true -> ""
+                                else -> {
+                                    responseJson.getJSONObject("comments")
+                                        .safeString("COMMENT_COUNT_TEXT")
+
+                                }
                             }
                         ),
                     categoryEntity = responseJson.getJSONArray("razdel")
@@ -107,6 +115,7 @@ object ProductDetailsResponseJsonParser {
     private fun JSONObject.parseProductDetailEntity(
         commentsAmount: Int,
         shareUrl: String,
+        commentsAmountText: String,
     ): ProductDetailEntity {
         var status = ""
         var statusColor = ""
@@ -139,11 +148,12 @@ object ProductDetailsResponseJsonParser {
             previewText = getString("PREVIEW_TEXT"),
             detailText = getString("DETAIL_TEXT"),
             isFavorite = getBoolean("FAVORITE"),
-            rating = getDouble("PROPERTY_rating_VALUE"),
+            rating = safeString("PROPERTY_rating_VALUE").ifEmpty { "0" },
             youtubeVideoCode = youtubeVideoCode,
             consumerInfo = getJSONObject("INFORMATIONS").getString("ZNACHENIE"),
             priceEntityList = getJSONArray("EXTENDED_PRICE").parsePriceEntityList(),
             commentsAmount = commentsAmount,
+            commentsAmountText = commentsAmountText,
             statusColor = statusColor,
             status = status,
             propertiesGroupEntityList = getJSONArray("PROP").parsePropertyGroupEntityList(),
