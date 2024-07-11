@@ -159,6 +159,8 @@
     <string name="canceled">Отменен</string>
     <string name="payed">Оплачен</string>
     <string name="not_payed">Не оплачен</string>
+    <string name="comments">Отзывы</string>
+    <string name="leave_comment">Оставить отзыв о товаре</string>
 
 
 </resources>
