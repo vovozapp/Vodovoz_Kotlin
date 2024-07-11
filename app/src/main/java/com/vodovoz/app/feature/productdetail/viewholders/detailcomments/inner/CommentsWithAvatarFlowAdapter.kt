@@ -6,6 +6,7 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressViewHolder
+import com.vodovoz.app.feature.all.comments.CommentsHeaderViewHolder
 import com.vodovoz.app.ui.model.CommentUI.Companion.COMMENT_VIEW_TYPE
 
 class CommentsWithAvatarFlowAdapter : ItemAdapter() {
@@ -15,6 +16,11 @@ class CommentsWithAvatarFlowAdapter : ItemAdapter() {
             COMMENT_VIEW_TYPE -> {
                 CommentsWithAvatarFlowViewHolder(getViewFromInflater(R.layout.view_holder_comment_with_avatar, parent))
             }
+
+            R.layout.view_holder_comments_header -> {
+                CommentsHeaderViewHolder(getViewFromInflater(R.layout.view_holder_comments_header, parent))
+            }
+
             R.layout.item_progress -> {
                 BottomProgressViewHolder(getViewFromInflater(viewType, parent))
             }

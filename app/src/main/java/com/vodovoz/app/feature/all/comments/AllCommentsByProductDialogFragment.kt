@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +16,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentProductCommentsFlowBinding
+import com.vodovoz.app.feature.all.comments.menu.CommentsMenuProvider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -82,6 +82,7 @@ class AllCommentsByProductDialogFragment : BaseFragment() {
                                 tabManager.setAuthRedirect(findNavController().graph.id)
                                 tabManager.selectTab(R.id.graph_profile)
                             }
+
                             is AllCommentsFlowViewModel.AllCommentsEvents.SendComment -> {
                                 if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutProductFragment) {
                                     findNavController().popBackStack()
@@ -108,7 +109,6 @@ class AllCommentsByProductDialogFragment : BaseFragment() {
                             showLoader()
                         } else {
                             hideLoader()
-                            binding.apAppBar.elevation = 4F
                         }
 
                         val data = state.data
@@ -126,14 +126,14 @@ class AllCommentsByProductDialogFragment : BaseFragment() {
     }
 
     private fun initActionBar() {
-        (requireActivity() as AppCompatActivity).let { appCompatActivity ->
-            appCompatActivity.setSupportActionBar(binding.tbToolbar)
-            appCompatActivity.supportActionBar?.setDisplayShowHomeEnabled(true)
-            appCompatActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        }
-        binding.tbToolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
+        initToolbar(
+            requireContext().getString(R.string.comments_about_product),
+            addAction = false,
+            showNavBtn = true,
+            provider = CommentsMenuProvider {
+                viewModel.onSendCommentClick()
+            }
+        )
     }
 
 }

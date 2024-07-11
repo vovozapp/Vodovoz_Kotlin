@@ -3,7 +3,6 @@ package com.vodovoz.app.feature.all.comments
 import android.content.Context
 import android.graphics.Rect
 import android.view.View
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -29,8 +28,6 @@ class AllCommentsController(
         super.initList(recyclerView)
         with(recyclerView) {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             addItemDecoration(
                 object : RecyclerView.ItemDecoration() {
                     override fun getItemOffsets(
@@ -40,10 +37,20 @@ class AllCommentsController(
                         state: RecyclerView.State,
                     ) {
                         with(outRect) {
+                            val space =
+                                context.resources.getDimension(R.dimen.space_8).toInt()
                             left = space
-                            top = space
-                            bottom = space
                             right = space
+                            if (parent.getChildAdapterPosition(view) != 0) {
+                                top = space / 2
+                            } else {
+                                top = space
+                            }
+                            if (parent.getChildAdapterPosition(view) != parent.adapter!!.itemCount - 1) {
+                                bottom = space / 2
+                            } else {
+                                bottom = space
+                            }
                         }
                     }
                 }

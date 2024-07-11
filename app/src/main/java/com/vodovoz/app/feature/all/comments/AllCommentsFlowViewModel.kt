@@ -50,7 +50,7 @@ class AllCommentsFlowViewModel @Inject constructor(
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
-                        uiStateListener.value = if (data.isEmpty() && !state.loadMore) {
+                        uiStateListener.value = if (data.comments.isEmpty() && !state.loadMore) {
                             state.copy(
                                 error = ErrorState.Empty(),
                                 loadingPage = false,
@@ -60,14 +60,19 @@ class AllCommentsFlowViewModel @Inject constructor(
                             )
                         } else {
 
+
+
                             val itemsList = if (state.loadMore) {
-                                state.data.itemsList + data
+                                state.data.itemsList + data.comments
                             } else {
-                                data
+                                mutableListOf<Item>().apply {
+                                    add(data.commentsData)
+                                    addAll(data.comments)
+                                }
                             }
 
                             state.copy(
-                                page = if (data.isEmpty()) null else state.page?.plus(1),
+                                page = if (data.comments.isEmpty()) null else state.page?.plus(1),
                                 loadingPage = false,
                                 data = state.data.copy(itemsList = itemsList),
                                 error = null,
@@ -87,7 +92,7 @@ class AllCommentsFlowViewModel @Inject constructor(
                 }
                 .flowOn(Dispatchers.Default)
                 .catch {
-                    debugLog { "fetch all comments sorted error ${it.localizedMessage}" }
+                    debugLog { "fetch all comments error ${it.localizedMessage}" }
                     uiStateListener.value =
                         state.copy(error = it.toErrorState(), loadingPage = false)
                 }

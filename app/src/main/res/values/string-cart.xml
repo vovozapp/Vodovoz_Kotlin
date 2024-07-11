@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cart_title" translatable="false">Корзина</string>
+    <string name="comments_about_product" translatable="false">Отзывы о товаре</string>
 
     //Gifts
     <string name="gift_selection_title" translatable="false">Забрать подарок</string>

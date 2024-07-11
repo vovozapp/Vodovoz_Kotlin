@@ -6,22 +6,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/apAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:elevation="0dp">
+<!--    <com.google.android.material.appbar.AppBarLayout-->
+<!--        android:id="@+id/apAppBar"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@color/white"-->
+<!--        app:elevation="0dp">-->
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/tbToolbar"
-            android:theme="@style/ToolbarTitle.Back"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:title="@string/product_comments_title"
-            app:titleTextAppearance="@style/ToolbarTitle"/>
+<!--        <androidx.appcompat.widget.Toolbar-->
+<!--            android:id="@+id/tbToolbar"-->
+<!--            android:theme="@style/ToolbarTitle.Back"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:title="@string/product_comments_title"-->
+<!--            app:titleTextAppearance="@style/ToolbarTitle"/>-->
 
-    </com.google.android.material.appbar.AppBarLayout>
+<!--    </com.google.android.material.appbar.AppBarLayout>-->
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refreshContainer"
@@ -31,6 +31,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvComments"
+        android:background="@color/light_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
