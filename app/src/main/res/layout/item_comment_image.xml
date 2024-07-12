@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.imageview.ShapeableImageView
-    android:id="@+id/imageComment"
+<com.google.android.material.imageview.ShapeableImageView android:id="@+id/imageComment"
     android:layout_width="70dp"
     android:scaleType="centerCrop"
     android:layout_height="100dp"
+    app:shapeAppearanceOverlay="@style/RoundedImage"
     android:layout_marginVertical="@dimen/_8sdp"
     android:layout_marginStart="@dimen/_8sdp"
     android:src="@drawable/circleimageprofile"
     xmlns:tools="http://schemas.android.com/tools"
     tools:src="@tools:sample/avatars"
-    xmlns:android="http://schemas.android.com/apk/res/android" />
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" />
