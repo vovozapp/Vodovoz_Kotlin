@@ -1,6 +1,8 @@
 package com.vodovoz.app.feature.productdetail
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -25,10 +27,12 @@ import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllList
 import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
 import com.vodovoz.app.feature.home.viewholders.homepromotions.model.PromotionAdvEntity
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
+import com.vodovoz.app.feature.productdetail.present.model.PresentInfoData
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
 import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.util.extensions.fromHtml
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -132,8 +136,7 @@ class ProductDetailsFragment : BaseFragment() {
                             }
                             findNavController().navigate(
                                 ProductDetailsFragmentDirections.actionToSendCommentAboutProductFragment(
-                                    it.productId,
-                                    it.rate
+                                    it.productId
                                 )
                             )
                         }
@@ -173,6 +176,21 @@ class ProductDetailsFragment : BaseFragment() {
                                 findNavController().navigate(
                                     ProductDetailsFragmentDirections.actionToSendCommentAboutProductFragment(
                                         it.id
+                                    )
+                                )
+                            }
+                            is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToCart -> {
+                                tabManager.setAuthRedirect(findNavController().graph.id)
+                                tabManager.selectTab(R.id.graph_cart)
+                            }
+
+                            is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToPresentInfo -> {
+                                findNavController().navigate(
+                                    ProductDetailsFragmentDirections.actionProductDetailFragmentToPresentInfoBottomSheetFragment(
+                                        presentText = it.presentText,
+                                        progressBackground = it.progressBackground,
+                                        percent = it.progress,
+                                        showProgress = it.showText
                                     )
                                 )
                             }
@@ -269,9 +287,31 @@ class ProductDetailsFragment : BaseFragment() {
                             amountDeployed = binding.floatingAmountController.amountControllerDeployed
                         )
 
+                        bindPresentLine(detailState.presentInfo)
+
                         showError(detailState.error)
                     }
             }
+        }
+    }
+
+    private fun bindPresentLine(presentInfo: PresentInfoData?) {
+        if(presentInfo != null){
+            with(binding){
+                presentLinearLayout.visibility = View.VISIBLE
+                presentInfo.bottomLine?.background?.color?.let{
+                    presentLinearLayout.setBackgroundColor(Color.parseColor(it))
+                }
+                presentInfo.bottomLine?.textColor?.color?.let{
+                    presentTextBottom.setTextColor(Color.parseColor(it))
+                }
+                presentTextBottom.text = presentInfo.text?.fromHtml()
+                binding.presentLinearLayout.setOnClickListener {
+                    viewModel.onPresentInfoClick()
+                }
+            }
+        } else {
+            binding.presentLinearLayout.visibility = View.GONE
         }
     }
 

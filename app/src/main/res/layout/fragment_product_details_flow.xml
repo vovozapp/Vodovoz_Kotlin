@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/floatingAmountControllerContainer"
+        app:layout_constraintBottom_toTopOf="@id/bottomContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -22,100 +22,145 @@
         android:layout_height="40dp"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="8dp"
+        android:contentDescription="@string/jivo_chat"
         app:fabCustomSize="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomContainer"
+        app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="40dp"
         app:srcCompat="@drawable/jivosite_floating"
-        app:tint="@null"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/floatingAmountControllerContainer"
-        android:contentDescription="@string/jivo_chat"/>
+        app:tint="@null" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/floatingAmountControllerContainer"
+        android:id="@+id/bottomContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/dark_white"
-        android:paddingHorizontal="@dimen/space_8"
-        android:paddingVertical="@dimen/space_4"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="visible">
-
-        <ImageView
-            android:id="@+id/miniDetailImage"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.13"
-            tools:ignore="ContentDescription" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
-            android:id="@+id/linear"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/space_16"
+            android:id="@+id/presentLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_bg"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@id/tvFloatingPriceCondition"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="5dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/floatingAmountControllerContainer"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/miniDetailImage"
-            app:layout_constraintTop_toTopOf="parent">
+            tools:visibility="visible">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvFloatingCurrentPrice"
-                style="@style/TextViewMediumBlackBold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_new_black"
-                android:textSize="20sp"
-                tools:text="500 Р" />
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/present_black" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvFloatingOldPrice"
-                style="@style/TextViewNormalGrayBold"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/presentTextBottom"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_8"
-                android:textColor="@color/text_new_black"
-                android:textSize="20sp"
-                tools:text="650 Р" />
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/rotondac"
+                android:textSize="12sp"
+                tools:text="Заберите свой подарок в корзине" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/arrow_right_black_18" />
 
         </LinearLayout>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvFloatingPriceCondition"
-            style="@style/TextViewSmallGray"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/floatingAmountControllerContainer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_16"
-            android:gravity="start"
-            android:visibility="visible"
+            android:background="@color/dark_white"
+            android:paddingHorizontal="@dimen/space_8"
+            android:paddingVertical="@dimen/space_4"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/miniDetailImage"
-            app:layout_constraintTop_toBottomOf="@id/linear"
-            tools:text="При условии покупки от 10 шт" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible">
 
-        <RelativeLayout
-            android:id="@+id/relativeLayout"
-            android:layout_width="@dimen/_100sdp"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+                android:id="@+id/miniDetailImage"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.13"
+                tools:ignore="ContentDescription" />
 
-            <include
-                android:id="@+id/floatingAmountController"
-                layout="@layout/view_product_amount_controller" />
+            <LinearLayout
+                android:id="@+id/linear"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/space_16"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/tvFloatingPriceCondition"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/miniDetailImage"
+                app:layout_constraintTop_toTopOf="parent">
 
-        </RelativeLayout>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvFloatingCurrentPrice"
+                    style="@style/TextViewMediumBlackBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_new_black"
+                    android:textSize="20sp"
+                    tools:text="500 Р" />
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvFloatingOldPrice"
+                    style="@style/TextViewNormalGrayBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_8"
+                    android:textColor="@color/text_new_black"
+                    android:textSize="20sp"
+                    tools:text="650 Р" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvFloatingPriceCondition"
+                style="@style/TextViewSmallGray"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_16"
+                android:gravity="start"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/miniDetailImage"
+                app:layout_constraintTop_toBottomOf="@id/linear"
+                tools:text="При условии покупки от 10 шт" />
+
+            <RelativeLayout
+                android:id="@+id/relativeLayout"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <include
+                    android:id="@+id/floatingAmountController"
+                    layout="@layout/view_product_amount_controller" />
+
+            </RelativeLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

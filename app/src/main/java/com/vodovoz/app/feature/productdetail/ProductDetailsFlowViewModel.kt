@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.productdetail
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,6 +17,7 @@ import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.DISCOUNT
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
+import com.vodovoz.app.feature.productdetail.present.model.PresentInfoData
 import com.vodovoz.app.feature.productdetail.viewholders.detailblocks.DetailBlocks
 import com.vodovoz.app.feature.productdetail.viewholders.detailbrandproductlist.DetailBrandList
 import com.vodovoz.app.feature.productdetail.viewholders.detailcatandbrand.DetailCatAndBrand
@@ -144,6 +146,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
                         }
 
                         fetchViewedProducts()
+                        fetchPresentInfo()
 
                         state.copy(
                             productDetailUI = mappedData.productDetailUI,
@@ -224,7 +227,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
                             ),
                             detailComments = DetailComments(
                                 12,
-                                commentUIList = mappedData.commentUIList.map{it.copy(forDetailPage = true)},
+                                commentUIList = mappedData.commentUIList.map { it.copy(forDetailPage = true) },
                                 productId = mappedData.productDetailUI.id,
                                 commentImages = mappedData.commentImages,
                                 rating = mappedData.productDetailUI.rating,
@@ -244,6 +247,30 @@ class ProductDetailsFlowViewModel @Inject constructor(
                         state.copy(error = it.toErrorState(), loadingPage = false)
                 }
                 .collect()
+        }
+    }
+
+    private fun fetchPresentInfo() {
+        val userId = accountManager.fetchAccountId()
+        if (productId != null && userId != null) {
+            viewModelScope.launch {
+                flow {
+                    emit(
+                        mainRepository.fetchPresentInfo(
+                            userid = userId,
+                            productId = productId,
+                        )
+                    )
+                }.onEach { presentInfo ->
+                    if (presentInfo.status == "Success") {
+                        uiStateListener.value = state.copy(
+                            presentInfo = presentInfo.presentInfoData
+                        )
+                    }
+                }
+                .catch { debugLog { "fetch present error ${it.localizedMessage}" } }
+                .collect()
+            }
         }
     }
 
@@ -379,6 +406,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
         viewModelScope.launch {
             cartManager.add(id = productId, oldCount = oldQuan, newCount = quantity)
+            fetchPresentInfo()
         }
     }
 
@@ -390,6 +418,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
                 newCount = count.toInt(),
                 giftId = giftId
             )
+            fetchPresentInfo()
         }
     }
 
@@ -429,12 +458,35 @@ class ProductDetailsFlowViewModel @Inject constructor(
         }
     }
 
+    fun onPresentInfoClick() {
+        viewModelScope.launch {
+           val goToCart = state.presentInfo?.moveTo == "korzina"
+            if (goToCart) {
+                eventListener.emit(ProductDetailsEvents.GoToCart)
+            } else {
+                eventListener.emit(ProductDetailsEvents.GoToPresentInfo(
+                    presentText = state.presentInfo?.text ?: "",
+                    progress = state.presentInfo?.progress ?: 0,
+                    showText = state.presentInfo?.showProgressText ?: false,
+                    progressBackground = state.presentInfo?.progressBackground ?: "",
+                ))
+            }
+        }
+    }
+
     sealed class ProductDetailsEvents : Event {
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
             ProductDetailsEvents()
 
-        object GoToProfile : ProductDetailsEvents()
+        data object GoToProfile : ProductDetailsEvents()
         data class SendComment(val id: Long) : ProductDetailsEvents()
+        data class GoToPresentInfo(
+            val presentText: String,
+            val progress: Int,
+            val progressBackground: String,
+            val showText: Boolean,
+        ) : ProductDetailsEvents()
+        data object GoToCart : ProductDetailsEvents()
     }
 
 
@@ -458,6 +510,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val detailComments: DetailComments? = null,
         val viewedProductsTitle: DetailsTitle? = null,
         val viewedProducts: CategoryDetailUI? = null,
+        val presentInfo: PresentInfoData? = null,
         val error: ErrorState? = null,
         val loadingPage: Boolean = false,
     ) : State

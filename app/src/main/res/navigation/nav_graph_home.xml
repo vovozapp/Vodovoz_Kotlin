@@ -11,7 +11,7 @@
         android:label="fragment_home">
         <action
             android:id="@+id/action_to_rateBottomFragment"
-            app:destination="@+id/rateBottomFragment"/>
+            app:destination="@+id/rateBottomFragment" />
         <action
             android:id="@+id/action_to_promotionDetailFragment"
             app:destination="@id/promotionDetailFragment" />
@@ -84,11 +84,12 @@
             android:id="@+id/action_to_sendCommentAboutProductFragment"
             app:destination="@id/sendCommentAboutProductFragment" />
 
-        <action android:id="@+id/action_to_waterAppFragment"
-            app:destination="@+id/waterAppFragment"/>
+        <action
+            android:id="@+id/action_to_waterAppFragment"
+            app:destination="@+id/waterAppFragment" />
         <action
             android:id="@+id/action_to_buyCertificateFragment"
-            app:destination="@id/buyCertificateFragment"/>
+            app:destination="@id/buyCertificateFragment" />
     </fragment>
     <fragment
         android:id="@+id/catalogFragment"
@@ -105,8 +106,9 @@
             android:id="@+id/action_to_allPromotionsFragment"
             app:destination="@id/allPromotionsFragment" />
 
-        <action android:id="@+id/action_to_waterAppFragment"
-            app:destination="@+id/waterAppFragment"/>
+        <action
+            android:id="@+id/action_to_waterAppFragment"
+            app:destination="@+id/waterAppFragment" />
 
         <action
             android:id="@+id/action_to_paginatedProductsCatalogWithoutFiltersFragment"
@@ -238,6 +240,12 @@
         <action
             android:id="@+id/action_to_webViewFragment"
             app:destination="@id/webViewFragment" />
+        <action
+            android:id="@+id/action_productDetailFragment_to_presentInfoBottomSheetFragment"
+            app:destination="@id/presentInfoBottomSheetFragment" />
+        <action
+            android:id="@+id/action_to_cartFragment"
+            app:destination="@id/cartFragment" />
     </fragment>
     <fragment
         android:id="@+id/promotionDetailFragment"
@@ -392,9 +400,9 @@
         android:label="GiftsBottomFragment">
         <argument
             android:name="giftBundle"
+            android:defaultValue="@null"
             app:argType="com.vodovoz.app.ui.model.custom.GiftProductUI"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
     </dialog>
     <dialog
         android:id="@+id/singleRootCatalogBottomFragment"
@@ -491,15 +499,16 @@
             android:id="@+id/action_to_allPromotionsFragment"
             app:destination="@id/allPromotionsFragment" />
 
-        <action android:id="@+id/action_to_waterAppFragment"
-            app:destination="@+id/waterAppFragment"/>
+        <action
+            android:id="@+id/action_to_waterAppFragment"
+            app:destination="@+id/waterAppFragment" />
 
         <action
             android:id="@+id/action_to_webViewFragment"
             app:destination="@id/webViewFragment" />
         <action
             android:id="@+id/action_to_buyCertificateFragment"
-            app:destination="@+id/buyCertificateFragment"/>
+            app:destination="@+id/buyCertificateFragment" />
     </fragment>
     <fragment
         android:id="@+id/concreteFilterFragment"
@@ -566,10 +575,10 @@
         <argument
             android:name="rate"
             android:defaultValue="-4"
-            app:argType="integer"/>
-        <action android:id="@+id/action_to_imagePickerFragment"
-            app:destination="@id/imagePickerFragment"
-            />
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_to_imagePickerFragment"
+            app:destination="@id/imagePickerFragment" />
     </dialog>
     <fragment
         android:id="@+id/aboutServicesDialogFragment"
@@ -750,7 +759,7 @@
     <fragment
         android:id="@+id/questionnairesFragment2"
         android:name="com.vodovoz.app.feature.questionnaires.QuestionnairesFlowFragment"
-        android:label="QuestionnairesFragment" >
+        android:label="QuestionnairesFragment">
 
         <action
             android:id="@+id/action_to_webViewFragment"
@@ -958,7 +967,7 @@
     <fragment
         android:id="@+id/serviceDetailNewFragment"
         android:name="com.vodovoz.app.feature.bottom.services.detail.ServiceDetailNewFragment"
-        android:label="ServiceDetailNewFragment" >
+        android:label="ServiceDetailNewFragment">
         <argument
             android:name="serviceId"
             app:argType="string" />
@@ -983,9 +992,10 @@
     <dialog
         android:id="@+id/speechDialogFragment"
         android:name="com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment"
-        android:label="SpeechDialogFragment" >
-        <action android:id="@+id/action_to_searchFragment"
-            app:destination="@+id/searchFragment"/>
+        android:label="SpeechDialogFragment">
+        <action
+            android:id="@+id/action_to_searchFragment"
+            app:destination="@+id/searchFragment" />
     </dialog>
     <fragment
         android:id="@+id/imagePickerFragment"
@@ -1018,8 +1028,9 @@
             android:name="orderId"
             app:argType="string" />
 
-        <action android:id="@+id/action_to_webViewFragment"
-            app:destination="@+id/webViewFragment"/>
+        <action
+            android:id="@+id/action_to_webViewFragment"
+            app:destination="@+id/webViewFragment" />
 
     </fragment>
     <dialog
@@ -1027,8 +1038,9 @@
         android:name="com.vodovoz.app.feature.all.orders.detail.traceorder.bottom.TraceOrderBottomSheetFragment"
         android:label="TraceOrderBottomSheetFragment">
 
-        <action android:id="@+id/action_to_webViewFragment"
-            app:destination="@+id/webViewFragment"/>
+        <action
+            android:id="@+id/action_to_webViewFragment"
+            app:destination="@+id/webViewFragment" />
 
     </dialog>
     <dialog
@@ -1048,11 +1060,11 @@
     <fragment
         android:id="@+id/activeCertificateFragment"
         android:name="com.vodovoz.app.feature.profile.certificate.ActiveCertificateFragment"
-        android:label="ActiveCertificateFragment" >
+        android:label="ActiveCertificateFragment">
 
         <action
             android:id="@+id/action_to_webViewFragment"
-            app:destination="@+id/webViewFragment"/>
+            app:destination="@+id/webViewFragment" />
     </fragment>
     <fragment
         android:id="@+id/buyCertificateFragment"
@@ -1064,5 +1076,19 @@
             app:destination="@id/payMethodSelectionBS" />
 
     </fragment>
-
+    <dialog
+        android:id="@+id/presentInfoBottomSheetFragment"
+        android:name="com.vodovoz.app.feature.productdetail.present.PresentInfoBottomSheetFragment"
+        android:label="PresentInfoBottomSheetFragment" >
+        <argument
+            android:name="presentText"
+            app:argType="string" />
+        <argument
+            android:name="progressBackground"
+            app:argType="string" />
+        <argument android:name="percent"
+            app:argType="integer" />
+        <argument android:name="showProgress"
+            app:argType="boolean" />
+    </dialog>
 </navigation>

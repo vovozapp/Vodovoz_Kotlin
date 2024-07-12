@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/presentLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/presentText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/rotondac"
+        android:textColor="@color/blackTextDark"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="До более ценного подарка осталось 200Р" />
+
+    <ProgressBar
+        android:id="@+id/presentProgress"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:indeterminate="false"
+        android:maxHeight="16dp"
+        android:minHeight="16dp"
+        android:progress="25"
+        android:progressTint="@color/bluePrimary"
+        android:progressBackgroundTint="@color/gray_unselected"
+        android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/presentText" />
+
+    <TextView
+        android:id="@+id/presentProgressText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/rotonda_bold"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/presentProgress"
+        app:layout_constraintStart_toStartOf="@+id/presentProgress"
+        app:layout_constraintTop_toTopOf="@+id/presentProgress"
+        tools:text="25%" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/presentButton"
+        style="@style/BlueButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_normal_height"
+        android:layout_marginHorizontal="@dimen/space_16"
+        android:layout_marginVertical="@dimen/space_16"
+        android:text="Понятно"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/presentProgress"
+        />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

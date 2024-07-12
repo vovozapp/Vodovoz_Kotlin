@@ -234,6 +234,12 @@
         <action
             android:id="@+id/action_to_webViewFragment"
             app:destination="@id/webViewFragment" />
+        <action
+            android:id="@+id/action_productDetailFragment_to_presentInfoBottomSheetFragment"
+            app:destination="@id/presentInfoBottomSheetFragment" />
+        <action
+            android:id="@+id/action_to_cartFragment"
+            app:destination="@id/cartFragment" />
     </fragment>
     <fragment
         android:id="@+id/promotionDetailFragment"
@@ -1064,5 +1070,19 @@
 
     </fragment>
 
-
+    <dialog
+        android:id="@+id/presentInfoBottomSheetFragment"
+        android:name="com.vodovoz.app.feature.productdetail.present.PresentInfoBottomSheetFragment"
+        android:label="PresentInfoBottomSheetFragment" >
+        <argument
+            android:name="presentText"
+            app:argType="string" />
+        <argument
+            android:name="progressBackground"
+            app:argType="string" />
+        <argument android:name="percent"
+            app:argType="integer" />
+        <argument android:name="showProgress"
+            app:argType="boolean" />
+    </dialog>
 </navigation>
