@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.webkit.CookieManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -64,6 +65,9 @@ class ProfileFragment : BaseFragment() {
 
     @Inject
     lateinit var accountManager: AccountManager
+
+    @Inject
+    lateinit var cookieManager: com.vodovoz.app.common.cookie.CookieManager
 
     @Inject
     lateinit var ratingProductManager: RatingProductManager
@@ -331,6 +335,21 @@ class ProfileFragment : BaseFragment() {
                 if (phone != null) {
                     requireActivity().startTelegram(phone)
                 }
+            }
+
+            override fun onSpoofClick(name: String?, url: String?) {
+                val webkitCookieManager = CookieManager.getInstance()
+                webkitCookieManager.acceptCookie()
+                webkitCookieManager.setCookie(
+                    ApiConfig.VODOVOZ_URL,
+                    cookieManager.fetchCookieSessionId()
+                )
+                findNavController().navigate(
+                    ProfileFragmentDirections.actionToWebViewFragment(
+                        url ?: "",
+                        name ?: "",
+                    )
+                )
             }
 
             override fun onWhatsUpClick(phone: String?) {

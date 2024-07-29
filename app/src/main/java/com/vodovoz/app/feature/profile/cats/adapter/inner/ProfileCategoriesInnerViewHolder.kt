@@ -44,6 +44,7 @@ class ProfileCategoriesInnerViewHolder(
                 "polychskidka" -> { clickListener.onFetchDiscount() }
                 "activsertivicat" -> { clickListener.onActiveCertificate() }
                 "pokypkasertificat" -> { clickListener.onBuyCertificate() }
+                "rozikrish" -> { clickListener.onSpoofClick(item.name, item.url) }
             }
         }
     }

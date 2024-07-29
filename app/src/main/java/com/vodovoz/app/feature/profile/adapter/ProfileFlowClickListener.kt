@@ -34,4 +34,5 @@ interface ProfileFlowClickListener {
     fun onViberClick(phone: String?)
     fun onTelegramClick(phone: String?)
 
+    fun onSpoofClick(name: String?, url: String?)
 }
