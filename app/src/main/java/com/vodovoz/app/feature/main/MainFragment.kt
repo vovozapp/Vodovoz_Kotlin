@@ -60,8 +60,9 @@ class MainFragment : BaseFragment() {
             Snackbar.LENGTH_INDEFINITE
         )
         snackbar.setAction("Обновить") { _ ->
-            appUpdateController.completeUpdate()
+//                    appUpdateController.completeUpdate()
         }
+        snackbar.setDuration(5000)
         snackbar.setActionTextColor(
             ContextCompat.getColor(
                 requireContext(),
