@@ -44,21 +44,7 @@ class AllCommentsByProductDialogFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         viewModel.firstLoadSorted()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.all_comments_by_product_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.sendComment -> {
-                viewModel.onSendCommentClick()
-            }
-        }
-        return false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
