@@ -133,7 +133,12 @@ object ProductDetailsResponseJsonParser {
 
         var youtubeVideoCode = ""
         if (has("YOUTUBE_VIDEO")) {
-            youtubeVideoCode = getJSONArray("YOUTUBE_VIDEO").getJSONObject(0).getString("VIDEO")
+            youtubeVideoCode = getJSONArray("YOUTUBE_VIDEO").getJSONObject(0).safeString("VIDEO")
+        }
+
+        var rutubeVideoCode = ""
+        if (has("RUTUBE_VIDEO")) {
+            rutubeVideoCode = getJSONArray("RUTUBE_VIDEO").getJSONObject(0).safeString("VIDEO")
         }
 
         var brandEntity: BrandEntity? = null
@@ -150,6 +155,7 @@ object ProductDetailsResponseJsonParser {
             isFavorite = getBoolean("FAVORITE"),
             rating = safeString("PROPERTY_rating_VALUE").ifEmpty { "0" },
             youtubeVideoCode = youtubeVideoCode,
+            rutubeVideoCode = rutubeVideoCode,
             consumerInfo = getJSONObject("INFORMATIONS").getString("ZNACHENIE"),
             priceEntityList = getJSONArray("EXTENDED_PRICE").parsePriceEntityList(),
             commentsAmount = commentsAmount,

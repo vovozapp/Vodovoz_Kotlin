@@ -11,6 +11,7 @@ interface ProductDetailsClickListener {
     fun navigateToReplacement(detailPicture: String, products: Array<ProductUI>, id: Long, name: String, categoryId: Long? = null)
     fun onTvCommentAmount(productId: Long)
     fun onYouTubeClick(videoCode: String)
+    fun onRuTubeClick(videoCode: String)
     fun onDetailPictureClick(currentItem: Int, detailPictureList: Array<String>)
 
     fun showProductsByCategory(id: Long)

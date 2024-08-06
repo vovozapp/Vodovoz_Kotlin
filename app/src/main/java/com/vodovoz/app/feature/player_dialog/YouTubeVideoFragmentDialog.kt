@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.youtube_player_dialog
+package com.vodovoz.app.feature.player_dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,12 +7,12 @@ import androidx.fragment.app.DialogFragment
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener
 import com.vodovoz.app.R
-import com.vodovoz.app.databinding.DialogFragmentVideoBinding
+import com.vodovoz.app.databinding.DialogFragmentYoutubeVideoBinding
 
 
 class YouTubeVideoFragmentDialog : DialogFragment() {
 
-    private lateinit var binding: DialogFragmentVideoBinding
+    private lateinit var binding: DialogFragmentYoutubeVideoBinding
     private lateinit var videoCode: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +29,7 @@ class YouTubeVideoFragmentDialog : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ) = DialogFragmentVideoBinding.inflate(
+    ) = DialogFragmentYoutubeVideoBinding.inflate(
         inflater,
         container,
         false
@@ -39,6 +39,9 @@ class YouTubeVideoFragmentDialog : DialogFragment() {
     }.root
 
     private fun initView() {
+        binding.close.setOnClickListener{
+            dismiss()
+        }
         lifecycle.addObserver(binding.youtubePlayerView)
         binding.youtubePlayerView.addYouTubePlayerListener(object : YouTubePlayerListener {
             override fun onApiChange(youTubePlayer: com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer) {

@@ -548,8 +548,16 @@
     </dialog>
     <dialog
         android:id="@+id/youTubeVideoFragmentDialog"
-        android:name="com.vodovoz.app.feature.youtube_player_dialog.YouTubeVideoFragmentDialog"
+        android:name="com.vodovoz.app.feature.player_dialog.YouTubeVideoFragmentDialog"
         android:label="YouTubeVideoFragmentDialog">
+        <argument
+            android:name="videoId"
+            app:argType="string" />
+    </dialog>
+    <dialog
+        android:id="@+id/ruTubeVideoFragmentDialog"
+        android:name="com.vodovoz.app.feature.player_dialog.RuTubeVideoFragmentDialog"
+        android:label="RuTubeVideoFragmentDialog">
         <argument
             android:name="videoId"
             app:argType="string" />

@@ -1,7 +1,6 @@
 package com.vodovoz.app.feature.productdetail
 
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -179,6 +178,7 @@ class ProductDetailsFragment : BaseFragment() {
                                     )
                                 )
                             }
+
                             is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToCart -> {
                                 tabManager.setAuthRedirect(findNavController().graph.id)
                                 tabManager.selectTab(R.id.graph_cart)
@@ -296,13 +296,13 @@ class ProductDetailsFragment : BaseFragment() {
     }
 
     private fun bindPresentLine(presentInfo: PresentInfoData?) {
-        if(presentInfo != null){
-            with(binding){
+        if (presentInfo != null) {
+            with(binding) {
                 presentLinearLayout.visibility = View.VISIBLE
-                presentInfo.bottomLine?.background?.color?.let{
+                presentInfo.bottomLine?.background?.color?.let {
                     presentLinearLayout.setBackgroundColor(Color.parseColor(it))
                 }
-                presentInfo.bottomLine?.textColor?.color?.let{
+                presentInfo.bottomLine?.textColor?.color?.let {
                     presentTextBottom.setTextColor(Color.parseColor(it))
                 }
                 presentTextBottom.text = presentInfo.text?.fromHtml()
@@ -352,6 +352,12 @@ class ProductDetailsFragment : BaseFragment() {
                     ProductDetailsFragmentDirections.actionToYouTubeVideoFragmentDialog(
                         videoCode
                     )
+                )
+            }
+
+            override fun onRuTubeClick(videoCode: String) {
+                findNavController().navigate(
+                    ProductDetailsFragmentDirections.actionToRuTubeVideoFragmentDialog(videoCode)
                 )
             }
 

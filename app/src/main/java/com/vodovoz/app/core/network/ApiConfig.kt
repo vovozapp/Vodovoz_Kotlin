@@ -21,4 +21,6 @@ object ApiConfig {
 
     const val AMOUNT_CONTROLLER_TIMER = 1500L
 
+    const val RUTUBE_URL = "https://rutube.ru/video/"
+
 }

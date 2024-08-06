@@ -180,9 +180,14 @@ class DetailHeaderViewHolder(
 
         binding.cwPlayVideo.setOnClickListener {
             val item = item ?: return@setOnClickListener
-            val videoCode = item.productDetailUI.youtubeVideoCode
-            if (videoCode.isNotEmpty()) {
-                clickListener.onYouTubeClick(videoCode)
+            val rutubeVideoCode = item.productDetailUI.rutubeVideoCode
+            if (rutubeVideoCode.isNotEmpty()) {
+                clickListener.onRuTubeClick(rutubeVideoCode)
+            } else {
+                val youTubeVideoCode = item.productDetailUI.youtubeVideoCode
+                if (youTubeVideoCode.isNotEmpty()) {
+                    clickListener.onYouTubeClick(youTubeVideoCode)
+                }
             }
         }
     }
@@ -212,20 +217,8 @@ class DetailHeaderViewHolder(
         binding.tvName.text = item.productDetailUI.name
         binding.tvRatingText.text = item.productDetailUI.rating
 
-//        binding.rbRating.onRatingBarChangeListener =
-//            OnRatingBarChangeListener { _, newRating, _ ->
-//                productsClickListener.onChangeRating(
-//                    item.productDetailUI.id,
-//                    newRating,
-//                    item.productDetailUI.rating
-//                )
-//            }
-//        binding.rbRating.setIsIndicator(true)
-
-        when (item.productDetailUI.youtubeVideoCode.isEmpty()) {
-            true -> binding.cwPlayVideo.visibility = View.GONE
-            false -> binding.cwPlayVideo.visibility = View.VISIBLE
-        }
+        binding.cwPlayVideo.isVisible = item.productDetailUI.youtubeVideoCode.isNotEmpty()
+                || item.productDetailUI.rutubeVideoCode.isNotEmpty()
 
         //If left items = 0
         when (item.productDetailUI.leftItems == 0) {

@@ -211,6 +211,9 @@
             android:id="@+id/action_to_youTubeVideoFragmentDialog"
             app:destination="@id/youTubeVideoFragmentDialog" />
         <action
+            android:id="@+id/action_to_ruTubeVideoFragmentDialog"
+            app:destination="@id/ruTubeVideoFragmentDialog" />
+        <action
             android:id="@+id/action_to_allCommentsByProductDialogFragment"
             app:destination="@id/allCommentsByProductDialogFragment" />
         <action
@@ -540,10 +543,19 @@
             android:name="detailPictureList"
             app:argType="string[]" />
     </dialog>
+
     <dialog
         android:id="@+id/youTubeVideoFragmentDialog"
-        android:name="com.vodovoz.app.feature.youtube_player_dialog.YouTubeVideoFragmentDialog"
+        android:name="com.vodovoz.app.feature.player_dialog.YouTubeVideoFragmentDialog"
         android:label="YouTubeVideoFragmentDialog">
+        <argument
+            android:name="videoId"
+            app:argType="string" />
+    </dialog>
+    <dialog
+        android:id="@+id/ruTubeVideoFragmentDialog"
+        android:name="com.vodovoz.app.feature.player_dialog.RuTubeVideoFragmentDialog"
+        android:label="RuTubeVideoFragmentDialog">
         <argument
             android:name="videoId"
             app:argType="string" />
