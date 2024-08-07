@@ -38,7 +38,6 @@ class AllBrandsFlowViewModel @Inject constructor(
             val list = dataSource?.toList() ?: emptyList()
 
             flow { emit(repository.fetchAllBrands(list)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()

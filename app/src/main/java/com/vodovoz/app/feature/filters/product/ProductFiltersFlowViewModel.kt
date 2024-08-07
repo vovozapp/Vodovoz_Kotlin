@@ -39,7 +39,6 @@ class ProductFiltersFlowViewModel @Inject constructor(
                 error = null
             )
             flow { emit(repository.fetchAllFiltersByCategory(id)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val defaultBundle = response.data.mapToUI()

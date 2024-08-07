@@ -38,7 +38,6 @@ class SendCommentAboutProductFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.sendCommentAboutProduct(productId, rating, comment, userId)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         sendCommentResultListener.emit(true)

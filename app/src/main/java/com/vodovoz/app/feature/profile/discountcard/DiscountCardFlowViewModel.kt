@@ -54,7 +54,6 @@ class DiscountCardFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.fetchActivateDiscountCardInfo(userId)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
@@ -118,7 +117,6 @@ class DiscountCardFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.activateDiscountCard(userId, valueBuilder.toString())) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
 
                     when (response) {

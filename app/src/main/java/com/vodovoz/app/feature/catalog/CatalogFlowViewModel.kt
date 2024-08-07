@@ -47,7 +47,6 @@ class CatalogFlowViewModel @Inject constructor(
     private fun fetchCatalog() {
         viewModelScope.launch {
             flow { emit(mainRepository.fetchCatalogResponse()) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     when (response) {
                         is ResponseEntity.Hide -> {}

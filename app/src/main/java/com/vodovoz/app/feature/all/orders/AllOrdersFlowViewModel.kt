@@ -65,7 +65,6 @@ class AllOrdersFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
@@ -181,7 +180,6 @@ class AllOrdersFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         cartManager.updateCartListState(true)

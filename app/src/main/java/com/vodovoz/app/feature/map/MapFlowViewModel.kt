@@ -75,7 +75,6 @@ class MapFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.fetchAddressByGeocodeResponse(latitude, longitude)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI().copy(id = state.data.addressUI?.id ?: 0)
@@ -385,7 +384,6 @@ class MapFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     uiStateListener.value = state.copy(
                         loadingPage = false,
@@ -450,7 +448,6 @@ class MapFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     uiStateListener.value = state.copy(
                         loadingPage = false,

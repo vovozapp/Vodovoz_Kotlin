@@ -78,7 +78,6 @@ class ProfileFlowViewModel @Inject constructor(
                 return@launch
             }
             flow { emit(repository.fetchUserData(userId)) }
-                .flowOn(Dispatchers.IO)
                 .catch {
                     debugLog { "fetch user data error ${it.localizedMessage}" }
                     uiStateListener.value =
@@ -453,7 +452,6 @@ class ProfileFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         cartManager.updateCartListState(true)

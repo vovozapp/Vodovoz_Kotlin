@@ -40,7 +40,6 @@ class PreOrderFlowViewModel @Inject constructor(
         val userId = accountManager.fetchAccountId() ?: return
         viewModelScope.launch {
             flow { emit(repository.fetchPreOrderFormData(userId)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
@@ -75,7 +74,6 @@ class PreOrderFlowViewModel @Inject constructor(
         val userId = accountManager.fetchAccountId() ?: return
         viewModelScope.launch {
             flow { emit(repository.preOrderProduct(userId, productId, name, email, phone)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(

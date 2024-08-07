@@ -32,7 +32,6 @@ class ContactsFlowViewModel @Inject constructor(
     fun fetchContacts() {
         viewModelScope.launch {
             flow { emit(repository.fetchContacts(BuildConfig.VERSION_NAME)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
@@ -82,7 +81,6 @@ class ContactsFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     uiStateListener.value = state.copy(
                         loadingPage = false,

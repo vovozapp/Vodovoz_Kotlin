@@ -54,7 +54,6 @@ class AboutServicesFlowViewModel @Inject constructor(
     private fun fetchServicesData() {
         viewModelScope.launch {
             flow { emit(repository.fetchAboutServices("glav")) }
-                .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseAboutServicesResponse()
                     if (response is ResponseEntity.Success) {
@@ -103,7 +102,6 @@ class AboutServicesFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.fetchAboutServices(type)) }
-                .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it.parseServiceByIdResponse(type)
                     if (response is ResponseEntity.Success) {

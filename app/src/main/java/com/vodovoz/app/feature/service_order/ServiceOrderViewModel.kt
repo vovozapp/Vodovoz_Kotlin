@@ -55,7 +55,7 @@ class ServiceOrderViewModel @Inject constructor(
                         userId = userId
                     )
                 )
-            }.flowOn(Dispatchers.IO)
+            }
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         response.data.mapToUI().let { data ->
@@ -98,7 +98,7 @@ class ServiceOrderViewModel @Inject constructor(
                         value = value
                     )
                 )
-            }.flowOn(Dispatchers.IO)
+            }
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(

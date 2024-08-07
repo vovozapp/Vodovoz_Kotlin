@@ -63,7 +63,6 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                     is DataSource.Slider -> emit(repository.fetchDoubleSliderHeader(dataSource.categoryId))
                 }
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
@@ -165,7 +164,6 @@ class ProductsListNoFilterFlowViewModel @Inject constructor(
                     }
                 }
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()

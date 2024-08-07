@@ -46,7 +46,6 @@ class RateBottomViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.fetchRateBottomData(userId)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data

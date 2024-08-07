@@ -41,7 +41,6 @@ class RegFlowViewModel @Inject constructor(
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.register(firstName, secondName, email, password, phone)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     when (response) {
                         is ResponseEntity.Success -> {

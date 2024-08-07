@@ -98,7 +98,6 @@ class FavoriteFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { responseEntity ->
                     val response = responseEntity
                     if (response is ResponseEntity.Success) {
@@ -201,7 +200,6 @@ class FavoriteFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach {
                     val response = it
                     if (response is ResponseEntity.Success) {

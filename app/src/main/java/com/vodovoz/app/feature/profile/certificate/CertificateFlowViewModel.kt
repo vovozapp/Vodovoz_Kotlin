@@ -46,7 +46,6 @@ class CertificateFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.fetchActivateCertificateInfo()) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
@@ -81,7 +80,6 @@ class CertificateFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.activateCertificate(userId, code)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
 
                     when (response) {

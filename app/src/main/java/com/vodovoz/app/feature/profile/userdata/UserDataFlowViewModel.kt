@@ -57,7 +57,6 @@ class UserDataFlowViewModel @Inject constructor(
         val userId = accountManager.fetchAccountId() ?: return
         viewModelScope.launch {
             flow { emit(repository.addAvatar(userId, image)) }
-                .flowOn(Dispatchers.IO)
                 .onEach {
                     if (!it.isSuccessful) {
                         clearAvatarState()
@@ -100,7 +99,6 @@ class UserDataFlowViewModel @Inject constructor(
             val userId = accountManager.fetchAccountId() ?: return@launch
 
             flow { emit(repository.fetchUserData(userId)) }
-                .flowOn(Dispatchers.IO)
                 .onEach {
 //                    val response = it.parseUserDataResponse()
                     uiStateListener.value = if (it is ResponseEntity.Success) {
@@ -156,7 +154,6 @@ class UserDataFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(

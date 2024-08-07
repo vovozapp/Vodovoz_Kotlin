@@ -50,7 +50,6 @@ class OnlyProductsViewModel @Inject constructor(
                     )
                 }
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()

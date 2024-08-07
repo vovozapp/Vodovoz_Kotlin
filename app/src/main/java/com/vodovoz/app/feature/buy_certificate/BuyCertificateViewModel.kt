@@ -277,7 +277,6 @@ class BuyCertificateViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     when (response) {
                         is ResponseEntity.Success -> {

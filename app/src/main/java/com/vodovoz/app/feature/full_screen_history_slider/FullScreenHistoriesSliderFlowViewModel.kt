@@ -35,7 +35,7 @@ class FullScreenHistoriesSliderFlowViewModel @Inject constructor(
                 emit(
                     repository.fetchHistoriesSlider()
                 )
-            }.flowOn(Dispatchers.IO)
+            }
                 .onEach {
 //                    val response = it.parseHistoriesSliderResponse()
                     if (it is ResponseEntity.Success) {

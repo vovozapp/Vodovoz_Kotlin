@@ -46,7 +46,6 @@ class ConcreteFilterFlowViewModel @Inject constructor(
                         )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         response.data.mapToUI().let { data ->

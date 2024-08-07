@@ -699,7 +699,6 @@ class HomeFlowViewModel @Inject constructor(
         viewModelScope.launch {
             val userId = accountManager.fetchAccountId()
             flow { emit(repository.fetchPopupNews(userId)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(
@@ -832,7 +831,6 @@ class HomeFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         cartManager.updateCartListState(true)

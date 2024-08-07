@@ -36,7 +36,6 @@ class AllBottlesFlowViewModel @Inject constructor(
 
             uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
             flow { emit(mainRepository.fetchBottles()) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     when (response) {
                         is ResponseEntity.Hide -> {}

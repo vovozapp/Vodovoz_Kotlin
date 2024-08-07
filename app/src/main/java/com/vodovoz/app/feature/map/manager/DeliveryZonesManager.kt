@@ -34,7 +34,6 @@ class DeliveryZonesManager @Inject constructor(
 
     suspend fun fetchDeliveryZonesBundle() {
         flow { emit(repository.fetchDeliveryZonesResponse()) }
-            .flowOn(Dispatchers.IO)
             .onEach { response ->
                 if (response is ResponseEntity.Success) {
                     val data = response.data.mapToUI()

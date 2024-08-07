@@ -126,7 +126,6 @@ class SearchFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.fetchSearchDefaultData()) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
@@ -165,7 +164,6 @@ class SearchFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.fetchProductsByQueryHeader(query = state.data.query)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val searchResponse: SearchQueryHeaderResponse = response.data
@@ -301,7 +299,6 @@ class SearchFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val searchResponse: SearchQueryResponse = response.data
@@ -435,7 +432,6 @@ class SearchFlowViewModel @Inject constructor(
                     uiStateListener.value =
                         state.copy(error = it.toErrorState(), loadingPage = false)
                 }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()

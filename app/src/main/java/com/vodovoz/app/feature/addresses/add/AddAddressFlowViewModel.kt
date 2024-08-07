@@ -121,7 +121,6 @@ class AddAddressFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     uiStateListener.value = state.copy(
                         loadingPage = false,
@@ -190,7 +189,6 @@ class AddAddressFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     uiStateListener.value = state.copy(
                         loadingPage = false,

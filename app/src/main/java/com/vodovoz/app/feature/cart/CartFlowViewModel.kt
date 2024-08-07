@@ -161,7 +161,6 @@ class CartFlowViewModel @Inject constructor(
     fun clearCart() {
         viewModelScope.launch {
             flow { emit(repository.fetchClearCartResponse(action = "delkorzina")) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(data = CartState(), false)

@@ -37,7 +37,6 @@ class QuestionnairesFlowViewModel @Inject constructor(
             flow {
                 emit(repository.fetchQuestionnairesResponse())
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         response.data.mapToUI().let { questionnaire ->

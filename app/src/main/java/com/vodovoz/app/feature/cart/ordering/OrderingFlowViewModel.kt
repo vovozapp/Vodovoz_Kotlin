@@ -163,7 +163,6 @@ class OrderingFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     when (response) {
                         is ResponseEntity.Success -> {
@@ -333,7 +332,6 @@ class OrderingFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
@@ -403,7 +401,6 @@ class OrderingFlowViewModel @Inject constructor(
         viewModelScope.launch {
             uiStateListener.value = state.copy(loadingPage = true)
             flow { emit(repository.fetchFreeShippingDaysInfoResponse(appVersion = BuildConfig.VERSION_NAME)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()

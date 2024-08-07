@@ -51,7 +51,6 @@ class SingleRootCatalogFlowViewModel @Inject constructor(
                 )
             } else {
                 flow { emit(repository.fetchCatalogResponse()) }
-                    .flowOn(Dispatchers.IO)
                     .onEach { response ->
                         when (response) {
                             is ResponseEntity.Hide -> {}

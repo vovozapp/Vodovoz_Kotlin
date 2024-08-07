@@ -96,7 +96,6 @@ class ProductDetailsFlowViewModel @Inject constructor(
             flow {
                 emit(mainRepository.fetchViewedProductsSlider(userId = userId))
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val mappedData: CategoryDetailUI = response.data.mapToUI()
@@ -130,7 +129,6 @@ class ProductDetailsFlowViewModel @Inject constructor(
             val productId = productId ?: return@launch
             uiStateListener.value = state.copy(loadingPage = true)
             flow { emit(mainRepository.fetchProductResponse(productId = productId)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     uiStateListener.value = if (response is ResponseEntity.Success) {
 
@@ -285,7 +283,6 @@ class ProductDetailsFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(
@@ -319,7 +316,6 @@ class ProductDetailsFlowViewModel @Inject constructor(
     private fun fetchMaybeLikeProducts() {
         viewModelScope.launch {
             flow { emit(mainRepository.fetchMaybeLikeProductsResponse(page = state.detailMaybeLikeProducts.pageIndex)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value = state.copy(

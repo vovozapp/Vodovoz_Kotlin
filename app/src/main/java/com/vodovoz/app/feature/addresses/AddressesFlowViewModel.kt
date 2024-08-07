@@ -62,7 +62,6 @@ class AddressesFlowViewModel @Inject constructor(
         }
         viewModelScope.launch {
             flow { emit(repository.fetchAddressesSaved(userId, type)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
@@ -148,7 +147,6 @@ class AddressesFlowViewModel @Inject constructor(
         val userId = accountManager.fetchAccountId() ?: return
         viewModelScope.launch {
             flow { emit(repository.deleteAddress(addressId = addressId, userId = userId)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
 
                     when (response) {

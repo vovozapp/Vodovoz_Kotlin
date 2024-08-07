@@ -76,7 +76,6 @@ class PastPurchasesFlowViewModel @Inject constructor(
 
         viewModelScope.launch {
             flow { emit(repository.fetchPastPurchasesHeader(userId = userId, isAvailable = state.data.isAvailable)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()
@@ -168,7 +167,6 @@ class PastPurchasesFlowViewModel @Inject constructor(
                     )
                 )
             }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()

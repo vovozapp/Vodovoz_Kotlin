@@ -44,7 +44,6 @@ class PromotionDetailFlowViewModel @Inject constructor(
         viewModelScope.launch {
             val promoId = promotionId ?: return@launch
             flow { emit(repository.fetchPromotionDetails(promoId)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         val data = response.data.detail?.mapToUI()

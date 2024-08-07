@@ -58,7 +58,6 @@ class AboutServicesNewViewModel @Inject constructor(
     private fun fetchServicesData() {
         viewModelScope.launch {
             flow { emit(repository.fetchAboutServicesNew("spisok")) }
-                .flowOn(Dispatchers.IO)
                 .onEach {
                     uiStateListener.value = state.copy(
                         data = state.data.copy(
@@ -82,7 +81,6 @@ class AboutServicesNewViewModel @Inject constructor(
         val id = serviceId ?: return
         viewModelScope.launch {
             flow { emit(repository.fetchServicesNewDetails("details", id)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     uiStateListener.value = if (response is ResponseEntity.Success) {
                         val data = response.data.mapToUI()

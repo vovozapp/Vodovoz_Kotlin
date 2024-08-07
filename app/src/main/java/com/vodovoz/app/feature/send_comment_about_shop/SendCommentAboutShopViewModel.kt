@@ -71,7 +71,7 @@ class SendCommentAboutShopFlowViewModel @Inject constructor(
                         rating = rating
                     )
                 )
-            }.flowOn(Dispatchers.IO)
+            }
                 .onEach {
                     val response = it
                     if (response is ResponseEntity.Success) {

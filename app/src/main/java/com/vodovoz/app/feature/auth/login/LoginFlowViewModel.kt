@@ -98,7 +98,6 @@ class LoginFlowViewModel @Inject constructor(
         )
         viewModelScope.launch {
             flow { emit(repository.authByEmail(email, password)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     when (response) {
                         is ResponseEntity.Hide -> {}
@@ -144,7 +143,6 @@ class LoginFlowViewModel @Inject constructor(
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.authByPhone(phone = phone, url = url, code = code)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     when (response) {
                         is ResponseEntity.Hide -> {
@@ -188,7 +186,6 @@ class LoginFlowViewModel @Inject constructor(
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.requestCode(phone = phone, url = url)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     when (response) {
                         is ResponseEntity.Hide -> {
@@ -260,7 +257,6 @@ class LoginFlowViewModel @Inject constructor(
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
             flow { emit(repository.recoverPassword(email)) }
-                .flowOn(Dispatchers.IO)
                 .onEach { response ->
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value =
@@ -321,7 +317,8 @@ class LoginFlowViewModel @Inject constructor(
     }
 
     fun showPassword() {
-        uiStateListener.value = state.copy(data = state.data.copy(showPassword = !state.data.showPassword))
+        uiStateListener.value =
+            state.copy(data = state.data.copy(showPassword = !state.data.showPassword))
     }
 
     sealed class LoginEvents : Event {
@@ -344,6 +341,6 @@ class LoginFlowViewModel @Inject constructor(
         val requestUrl: String? = null,
         val settings: AccountManager.UserSettings? = null,
         val lastAuthPhone: String? = null,
-        val showPassword: Boolean  = false,
+        val showPassword: Boolean = false,
     ) : State
 }
