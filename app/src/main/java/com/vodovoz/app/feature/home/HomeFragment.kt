@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.CookieManager
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
@@ -144,6 +145,9 @@ class HomeFragment : BaseFragment() {
     @Inject
     lateinit var bottomBannerManager: BottomBannerManager
 
+    @Inject
+    lateinit var cookieManager: com.vodovoz.app.common.cookie.CookieManager
+
     private val homeController by lazy {
         HomeController(
             viewModel = flowViewModel,
@@ -206,7 +210,7 @@ class HomeFragment : BaseFragment() {
 
     private fun initJivoChatButton() {
         binding.fabJivoSite.isVisible = JivoChatController.isActive()
-        binding.fabJivoSite.setOnClickListener  {
+        binding.fabJivoSite.setOnClickListener {
             findNavController().navigate(
                 HomeFragmentDirections.actionToWebViewFragment(
                     JivoChatController.getLink(),
@@ -1038,6 +1042,19 @@ class HomeFragment : BaseFragment() {
                 val openLinkIntent = Intent(Intent.ACTION_VIEW, Uri.parse(this.url))
                 activity.startActivity(openLinkIntent)
                 null
+            }
+
+            is ActionEntity.LinkWithCookies -> {
+                val webkitCookieManager = CookieManager.getInstance()
+                webkitCookieManager.acceptCookie()
+                webkitCookieManager.setCookie(
+                    ApiConfig.VODOVOZ_URL,
+                    cookieManager.fetchCookieSessionId()
+                )
+                HomeFragmentDirections.actionToWebViewFragment(
+                    url,
+                    "",
+                )
             }
 
             is ActionEntity.Category ->

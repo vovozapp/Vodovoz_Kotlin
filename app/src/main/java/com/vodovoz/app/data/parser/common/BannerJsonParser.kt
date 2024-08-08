@@ -9,11 +9,12 @@ import org.json.JSONObject
 
 object BannerJsonParser {
 
-    fun JSONArray.parseBannerEntityList(): List<BannerEntity> = mutableListOf<BannerEntity>().apply {
-        for (index in 0 until length()) {
-            add(getJSONObject(index).parseBannerEntity())
+    fun JSONArray.parseBannerEntityList(): List<BannerEntity> =
+        mutableListOf<BannerEntity>().apply {
+            for (index in 0 until length()) {
+                add(getJSONObject(index).parseBannerEntity())
+            }
         }
-    }
 
     fun JSONObject.parseBannerEntity() = BannerEntity(
         id = getLong("ID"),
@@ -28,22 +29,29 @@ object BannerJsonParser {
         else if (has("IMAGE")) getString("IMAGE").parseImagePath()
         else ""
 
-    private fun JSONObject.parseBannerActionEntity() = when(getString("id")) {
-        "TOVAR" -> parseProductBannerActionEntity()
-        "TOVARY" -> parseProductsBannerActionEntity()
-        "ACTION" -> parsePromotionBannerActionEntity()
-        "ACTIONS" -> parsePromotionsBannerActionEntity()
-        "RAZDEL" -> parseCategoryBannerActionEntity()
-        "BRAND" -> parseBrandActionEntity()
-        "BRANDY" -> parseBrandsActionEntity()
-        "SSILKA" -> parseLinkBannerActionEntity()
-        "DANNYEVSE" -> parseCustomBannerActionEntity()
-        else -> null
+    private fun JSONObject.parseBannerActionEntity() = if (getJSONObject("DANNYE").has("SSILKAKYKI")
+        && !getJSONObject("DANNYE").isNull("SSILKAKYKI")
+        && getJSONObject("DANNYE").safeString("SSILKAKYKI").isNotEmpty()
+    ) {
+        parseLinkWithCookieBannerActionEntity()
+    } else {
+        when (getString("id")) {
+            "TOVAR" -> parseProductBannerActionEntity()
+            "TOVARY" -> parseProductsBannerActionEntity()
+            "ACTION" -> parsePromotionBannerActionEntity()
+            "ACTIONS" -> parsePromotionsBannerActionEntity()
+            "RAZDEL" -> parseCategoryBannerActionEntity()
+            "BRAND" -> parseBrandActionEntity()
+            "BRANDY" -> parseBrandsActionEntity()
+            "SSILKA" -> parseLinkBannerActionEntity()
+            "DANNYEVSE" -> parseCustomBannerActionEntity()
+            else -> null
+        }
     }
 
-    private fun JSONObject.parseAdvEntity() = when(has("OREKLAME")) {
+    private fun JSONObject.parseAdvEntity() = when (has("OREKLAME")) {
         true -> {
-            when(isNull("OREKLAME")) {
+            when (isNull("OREKLAME")) {
                 true -> null
                 else -> {
                     BannerAdvEntity(
@@ -55,15 +63,16 @@ object BannerJsonParser {
                 }
             }
         }
+
         false -> null
     }
 
-    private fun JSONObject.parseAction() = when(has("KNOPKA")) {
+    private fun JSONObject.parseAction() = when (has("KNOPKA")) {
         true -> getJSONObject("KNOPKA").getString("NAME")
         false -> null
     }
 
-    private fun JSONObject.parseActionColor() = when(has("KNOPKA")) {
+    private fun JSONObject.parseActionColor() = when (has("KNOPKA")) {
         true -> getJSONObject("KNOPKA").getString("COLOR")
         false -> null
     }
@@ -79,37 +88,45 @@ object BannerJsonParser {
         actionColor = parseActionColor()
     )
 
-    private fun JSONObject.parseCustomBannerActionEntity() = when(getJSONObject("DANNYE").getString("DANNYEVSE")) {
-        "vseskidki" -> ActionEntity.Discount(
-            action = parseAction(),
-            actionColor = parseActionColor()
-        )
-        "vsenovinki" -> ActionEntity.Novelties(
-            action = parseAction(),
-            actionColor = parseActionColor()
-        )
-        "vseakcii" -> ActionEntity.AllPromotions(
-            action = parseAction(),
-            actionColor = parseActionColor()
-        )
-        "trekervodi" -> ActionEntity.WaterApp(
-            action = parseAction(),
-            actionColor = parseActionColor()
-        )
-        "dostavka" -> ActionEntity.Delivery(
-            action = parseAction(),
-            actionColor = parseActionColor()
-        )
-        "profil" -> ActionEntity.Profile(
-            action = parseAction(),
-            actionColor = parseActionColor()
-        )
-        "pokypkasertificat" -> ActionEntity.BuyCertificate(
-            action = parseAction(),
-            actionColor = parseActionColor()
-        )
-        else -> null
-    }
+    private fun JSONObject.parseCustomBannerActionEntity() =
+        when (getJSONObject("DANNYE").getString("DANNYEVSE")) {
+            "vseskidki" -> ActionEntity.Discount(
+                action = parseAction(),
+                actionColor = parseActionColor()
+            )
+
+            "vsenovinki" -> ActionEntity.Novelties(
+                action = parseAction(),
+                actionColor = parseActionColor()
+            )
+
+            "vseakcii" -> ActionEntity.AllPromotions(
+                action = parseAction(),
+                actionColor = parseActionColor()
+            )
+
+            "trekervodi" -> ActionEntity.WaterApp(
+                action = parseAction(),
+                actionColor = parseActionColor()
+            )
+
+            "dostavka" -> ActionEntity.Delivery(
+                action = parseAction(),
+                actionColor = parseActionColor()
+            )
+
+            "profil" -> ActionEntity.Profile(
+                action = parseAction(),
+                actionColor = parseActionColor()
+            )
+
+            "pokypkasertificat" -> ActionEntity.BuyCertificate(
+                action = parseAction(),
+                actionColor = parseActionColor()
+            )
+
+            else -> null
+        }
 
     private fun JSONObject.parseProductsBannerActionEntity() = ActionEntity.Products(
         categoryId = getJSONObject("DANNYE").getLong("TOVARY"),
@@ -143,6 +160,12 @@ object BannerJsonParser {
 
     private fun JSONObject.parseLinkBannerActionEntity() = ActionEntity.Link(
         url = getJSONObject("DANNYE").getString("SSILKA"),
+        action = parseAction(),
+        actionColor = parseActionColor()
+    )
+
+    fun JSONObject.parseLinkWithCookieBannerActionEntity() = ActionEntity.Link(
+        url = getJSONObject("DANNYE").getString("SSILKAKYKI"),
         action = parseAction(),
         actionColor = parseActionColor()
     )

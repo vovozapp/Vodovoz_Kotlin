@@ -3,6 +3,8 @@ package com.vodovoz.app.data.parser.response.popupNews
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.data.model.common.PopupNewsEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.common.BannerJsonParser.parseLinkWithCookieBannerActionEntity
+import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import com.vodovoz.app.util.LogSettings
@@ -32,18 +34,26 @@ object PopupNewsResponseJsonParser {
         androidVersion = getString("versiya_android")
     )
 
-    private fun JSONObject.parseBannerActionEntity(link: String) = when (getString("id")) {
-        "TOVAR" -> parseProductBannerActionEntity()
-        "TOVARY" -> parseProductsBannerActionEntity()
-        "ACTION" -> parsePromotionBannerActionEntity()
-        "ACTIONS" -> parsePromotionsBannerActionEntity()
-        "RAZDEL" -> parseCategoryBannerActionEntity()
-        "BRAND" -> parseBrandActionEntity()
-        "BRANDY" -> parseBrandsActionEntity()
-        "SSILKA" -> parseLinkBannerActionEntity()
-        "DANNYEVSE" -> parseCustomBannerActionEntity()
-        "" -> parseLinkBannerActionEntity(link)
-        else -> null
+    private fun JSONObject.parseBannerActionEntity(link: String) =
+        if (getJSONObject("DANNYE").has("SSILKAKYKI")
+            && !getJSONObject("DANNYE").isNull("SSILKAKYKI")
+            && getJSONObject("DANNYE").safeString("SSILKAKYKI").isNotEmpty()
+        ) {
+            parseLinkWithCookieBannerActionEntity()
+        } else {
+        when (getString("id")) {
+            "TOVAR" -> parseProductBannerActionEntity()
+            "TOVARY" -> parseProductsBannerActionEntity()
+            "ACTION" -> parsePromotionBannerActionEntity()
+            "ACTIONS" -> parsePromotionsBannerActionEntity()
+            "RAZDEL" -> parseCategoryBannerActionEntity()
+            "BRAND" -> parseBrandActionEntity()
+            "BRANDY" -> parseBrandsActionEntity()
+            "SSILKA" -> parseLinkBannerActionEntity()
+            "DANNYEVSE" -> parseCustomBannerActionEntity()
+            "" -> parseLinkBannerActionEntity(link)
+            else -> null
+        }
     }
 
     private fun JSONObject.parseAction() = when (has("KNOPKA")) {

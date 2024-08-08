@@ -190,6 +190,10 @@ class FullScreenHistoriesSliderFlowFragment : BaseFragment(),
             is ActionEntity.BuyCertificate -> {
                 FullScreenHistoriesSliderFlowFragmentDirections.actionToBuyCertificateFragment()
             }
+
+            is ActionEntity.LinkWithCookies -> {
+                null
+            }
         }
         navDirect?.let { navController.navigate(navDirect) }
     }

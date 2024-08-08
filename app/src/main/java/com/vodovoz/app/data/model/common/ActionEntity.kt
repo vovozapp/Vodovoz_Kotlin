@@ -89,6 +89,16 @@ sealed class ActionEntity(
     )
 
     @Parcelize
+    class LinkWithCookies(
+        val url: String,
+        override val action: String? = null,
+        override val actionColor: String? = null,
+    ) : ActionEntity(
+        action = action,
+        actionColor = actionColor
+    )
+
+    @Parcelize
     class Category(
         val categoryId: Long,
         override val action: String? = null,
