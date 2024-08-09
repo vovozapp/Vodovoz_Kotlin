@@ -2,7 +2,6 @@ package com.vodovoz.app.data
 
 import androidx.core.net.toUri
 import com.vodovoz.app.BuildConfig
-import com.vodovoz.app.common.product.rating.RatingResponse
 import com.vodovoz.app.common.tracking.TrackingManager
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ProductDetailsBundleEntity
@@ -174,13 +173,6 @@ class MainRepository @Inject constructor(
 
     //Слайдер ранее просмотренных продуктов
 
-//    suspend fun fetchViewedProductsSlider(userId: Long?): ResponseBody {
-//        return api.fetchViewedProducts(
-//            action = "viewed",
-//            userId = userId
-//        )
-//    }
-
     suspend fun fetchViewedProductsSlider(
         userId: Long,
     ) = api.fetchViewedProducts(action = "viewed", userId = userId)
@@ -219,45 +211,15 @@ class MainRepository @Inject constructor(
         )
     }
 
-   // "newmobile/details/podarki.php?action=podarki&userid=" + User.getInstance().getuser_id() + "&id=" + ID_products
+    // "newmobile/details/podarki.php?action=podarki&userid=" + User.getInstance().getuser_id() + "&id=" + ID_products
     //Информация о подарках на детальном экране
-   suspend fun fetchPresentInfo(userid: Long, productId: Long): PresentInfo {
-       return api.fetchPresentInfo(
-           action = "podarki",
-           userId = userid,
-           productId = productId
-       )
-   }
-
-    //Добавить в избранное для авторизованного пользователя
-//    suspend fun addToFavorite(
-//        productIdList: List<Long>,
-//        userId: Long,
-//    ): ResponseBody {
-//        return api.fetchChangeFavoriteResponse(
-//            blockId = 12,
-//            action = "add",
-//            productIdList = StringBuilder().apply {
-//                productIdList.forEach { productId ->
-//                    append(productId).append(",")
-//                }
-//            }.toString(),
-//            userId = userId
-//        )
-//    }
-
-    //Удалить из избранного для авторизованного пользователя
-//    suspend fun removeFromFavorite(
-//        productId: Long,
-//        userId: Long,
-//    ): ResponseBody {
-//        return api.fetchChangeFavoriteResponse(
-//            blockId = 12,
-//            action = "del",
-//            productIdList = productId.toString(),
-//            userId = userId
-//        )
-//    }
+    suspend fun fetchPresentInfo(userid: Long, productId: Long): PresentInfo {
+        return api.fetchPresentInfo(
+            action = "podarki",
+            userId = userid,
+            productId = productId
+        )
+    }
 
     //Основная информация об избранных продуктах
     suspend fun fetchFavoriteProducts(
@@ -631,19 +593,19 @@ class MainRepository @Inject constructor(
         name = name
     ).parsePreOrderProductResponse()
 
-    /**
-     * rate product
-     */
+//    /**
+//     * rate product
+//     */
 
-    suspend fun rateProduct(
-        productId: Long,
-        ratingValue: Float,
-    ): RatingResponse {
-        return api.rateProduct(
-            productId = productId,
-            ratingValue = ratingValue
-        )
-    }
+//    suspend fun rateProduct(
+//        productId: Long,
+//        ratingValue: Float,
+//    ): RatingResponse {
+//        return api.rateProduct(
+//            productId = productId,
+//            ratingValue = ratingValue
+//        )
+//    }
 
     /**
      * all comments by products

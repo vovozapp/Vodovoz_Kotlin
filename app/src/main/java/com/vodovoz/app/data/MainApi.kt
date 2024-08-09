@@ -1,7 +1,6 @@
 package com.vodovoz.app.data
 
 import com.vodovoz.app.BuildConfig
-import com.vodovoz.app.common.product.rating.RatingResponse
 import com.vodovoz.app.data.model.common.UserReloginEntity
 import com.vodovoz.app.feature.bottom.services.newservs.model.AboutServicesNew
 import com.vodovoz.app.feature.productdetail.present.model.PresentInfo
@@ -123,7 +122,7 @@ interface MainApi {
      * Избранное
      */
 
-    @GET("/newmobile/izbrannoe.php?")
+    @GET("/newmobile/izbrannoe.php")
     suspend fun fetchFavoriteResponse(
         @Query("id", encoded = true) productIdList: String? = null,
         @Query("userid") userId: Long? = null,
@@ -170,16 +169,6 @@ interface MainApi {
         @Query("quantity") amount: Int? = null,
         @Query("versiyaan") appVersion: String? = null,
     ): ResponseBody
-
-    //Добавление в корзину fetchAddProductResponse
-    //Изменение колличества товаров в корзине fetchChangeProductsQuantityResponse
-
-    //Удаление из корзины
-//    @GET("/newmobile/korzina/function/deletto/index.php")
-//    suspend fun fetchDeleteProductResponse(
-//        @Query("action") action: String? = null,
-//        @Query("id") productId: Long? = null,
-//    ): ResponseBody
 
     //Очистить корзину
     @GET("newmobile/korzina/function/delkorzina/index.php")
@@ -270,7 +259,7 @@ interface MainApi {
     suspend fun fetchMainSliderResponse(
         @Query("action") action: String? = null,
         @Query("id") categoryId: Long? = null,
-        @Query("baner") baner: String? = "uzkiy",
+        @Query("baner") baner: String? = null,
     ): ResponseBody
 
     /**
@@ -312,11 +301,11 @@ interface MainApi {
         @Query("tovar") productId: Long? = null,
     ): ResponseBody
 
-    @GET("newmobile/voteRating.php")
-    suspend fun rateProduct(
-        @Query("element_id") productId: Long,
-        @Query("rating_value") ratingValue: Float,
-    ): RatingResponse
+//    @GET("newmobile/voteRating.php")
+//    suspend fun rateProduct(
+//        @Query("element_id") productId: Long,
+//        @Query("rating_value") ratingValue: Float,
+//    ): RatingResponse
 
     /**
      * all comments by products
@@ -547,15 +536,6 @@ interface MainApi {
         @Query("id") id: String? = null,
     ): ResponseBody
 
-//    @GET("https://szorin.vodovoz.ru/local/components/semap/delivery.calc/order.php")
-//    suspend fun sendTestMapRequest(
-//        @Query("SOURCE") sourse: String,
-//        @Query("ADDRESS", encoded = false) address: String,
-//        @Query("COORDS_FROM[0]", encoded = false) latitude: String,
-//        @Query("COORDS_FROM[1]", encoded = false) longitude: String,
-//        @Query("LENGTH") length: String,
-//        @Query("DELIVERY_DATE", encoded = true) date: String,
-//    ): ResponseBody
 
     /**
      * Contacts
@@ -710,7 +690,7 @@ interface MainApi {
     suspend fun fetchPresentInfo(
         @Query("action") action: String = "podarki",
         @Query("userid") userId: Long? = null,
-        @Query("id") productId: Long
+        @Query("id") productId: Long,
     ): PresentInfo
 
 }
