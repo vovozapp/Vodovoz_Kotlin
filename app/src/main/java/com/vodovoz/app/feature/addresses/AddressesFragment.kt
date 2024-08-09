@@ -11,6 +11,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentAddressesFlowBinding
 import com.vodovoz.app.feature.addresses.adapter.AddressesClickListener
@@ -54,6 +55,9 @@ class AddressesFragment : BaseFragment() {
         MapKitFactory.getInstance()
     }
 
+    @Inject
+    lateinit var permissionsControllerFactory: PermissionsController.Factory
+
     private val mapController by lazy {
         MapController(
             mapKit,
@@ -61,7 +65,8 @@ class AddressesFragment : BaseFragment() {
             userLocationLayer,
             mapViewModel,
             requireContext(),
-            requireActivity()
+            requireActivity(),
+            permissionsControllerFactory
         ) {}
     }
 

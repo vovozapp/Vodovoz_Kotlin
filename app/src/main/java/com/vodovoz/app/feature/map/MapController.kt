@@ -78,7 +78,6 @@ import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.Error
 import com.yandex.runtime.image.ImageProvider
-import javax.inject.Inject
 
 class MapController(
     private val mapKit: MapKit,
@@ -87,18 +86,18 @@ class MapController(
     private val viewModel: MapFlowViewModel,
     private val context: Context,
     private val activity: FragmentActivity,
-    private val showContainer: (Boolean) -> Unit
+    private val permissionsControllerFactory: PermissionsController.Factory,
+    private val showContainer: (Boolean) -> Unit,
 ) : InputListener,
     UserLocationObjectListener,
     SuggestSession.SuggestListener,
     DrivingSession.DrivingRouteListener {
 
+
     private val locationManager by lazy {
         context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
     }
 
-    @Inject
-    lateinit var permissionsControllerFactory: PermissionsController.Factory
     private val permissionsController by lazy { permissionsControllerFactory.create(activity) }
 
     private val fusedLocationClient by lazy {
@@ -149,7 +148,7 @@ class MapController(
         plusFrame: ShapeableImageView? = null,
         minusFrame: ShapeableImageView? = null,
         infoFrame: FrameLayout? = null,
-        geoFrame: FrameLayout? = null
+        geoFrame: FrameLayout? = null,
     ) {
         this.mapView = mapView
 
@@ -265,7 +264,7 @@ class MapController(
         clear: ImageView? = null,
         fullAddressTextView: TextView? = null,
         searchErrorTv: TextView? = null,
-        addressesRecycler: RecyclerView? = null
+        addressesRecycler: RecyclerView? = null,
     ) {
 
         addAddress?.setOnClickListener {

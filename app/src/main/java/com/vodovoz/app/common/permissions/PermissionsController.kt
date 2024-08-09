@@ -104,21 +104,6 @@ class PermissionsController @AssistedInject constructor(
         }
     }
 
-//    fun fetchSystemFeatureExists() {
-//        val packageManager = context.packageManager
-//        if (packageManager?.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT) == true) {
-//            Toast.makeText(context, "Fingerprint sensor found!", Toast.LENGTH_SHORT).show()
-//        }
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//            if (packageManager?.hasSystemFeature(PackageManager.FEATURE_FACE) == true) {
-//                Toast.makeText(context, "Face sensor found!", Toast.LENGTH_SHORT).show()
-//            }
-//            if (packageManager?.hasSystemFeature(PackageManager.FEATURE_IRIS) == true) {
-//                Toast.makeText(context, "Iris sensor found!", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//    }
-
     @AssistedFactory
     interface Factory {
         fun create(@Assisted activity: FragmentActivity): PermissionsController

@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
+import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.config.AddressConfig
 import com.vodovoz.app.databinding.BsAddAddressSearchBinding
@@ -56,6 +57,9 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
         MapKitFactory.getInstance()
     }
 
+    @Inject
+    lateinit var permissionsControllerFactory: PermissionsController.Factory
+
     internal val mapController by lazy {
         MapController(
             mapKit,
@@ -63,7 +67,8 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
             userLocationLayer,
             viewModel,
             requireContext(),
-            requireActivity()
+            requireActivity(),
+            permissionsControllerFactory
         ) {
             showContainer(it)
         }
