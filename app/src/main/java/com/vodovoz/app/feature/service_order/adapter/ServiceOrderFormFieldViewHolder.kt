@@ -16,6 +16,7 @@ class ServiceOrderFormFieldViewHolder(
 
     init {
         binding.value.doAfterTextChanged { serviceOrderFormFieldUI.value = it.toString() }
+        binding.bigValue.doAfterTextChanged { serviceOrderFormFieldUI.value = it.toString() }
     }
 
     private lateinit var serviceOrderFormFieldUI: ServiceOrderFormFieldUI
