@@ -20,6 +20,7 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setDiscountPercent
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setOrderQuantity
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.ui.view.LabelChip
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
@@ -303,37 +304,43 @@ class ServiceDetailProdViewHolder(
         bindFav(item)
 
         var isNotHaveStatuses = true
-        when (item.status.isEmpty()) {
-            true -> binding.cwStatusContainer.visibility = View.GONE
-            false -> {
+
+        if(item.labels.isNotEmpty()){
+            binding.cwStatusContainer.visibility = View.GONE
+            binding.cwDiscountContainer.visibility = View.GONE
+            binding.cgStatuses.removeAllViews()
+            for (label in item.labels) {
                 isNotHaveStatuses = false
-                binding.cwStatusContainer.visibility = View.VISIBLE
-                binding.tvStatus.text = item.status
-                binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(item.statusColor))
+                val chip = LabelChip(binding.root.context)
+                chip.text = label.name
+                chip.color = Color.parseColor(label.color)
+                binding.cgStatuses.addView(chip)
             }
-        }
+        } else {
 
-        when (item.depositPrice != 0) {
-            true -> {
-                binding.tvDepositPrice.visibility = View.VISIBLE
-                binding.tvDepositPrice.setDepositPriceText(item.depositPrice)
-            }
-
-            false -> binding.tvDepositPrice.visibility = View.GONE
-        }
-
-        when (item.priceList.size == 1 &&
-                item.priceList.first().currentPrice < item.priceList.first().oldPrice) {
-            true -> {
-                isNotHaveStatuses = false
-                binding.cwDiscountContainer.visibility = View.VISIBLE
-                binding.tvDiscountPercent.setDiscountPercent(
-                    newPrice = item.priceList.first().currentPrice,
-                    oldPrice = item.priceList.first().oldPrice
-                )
+            when (item.status.isEmpty()) {
+                true -> binding.cwStatusContainer.visibility = View.GONE
+                false -> {
+                    isNotHaveStatuses = false
+                    binding.cwStatusContainer.visibility = View.VISIBLE
+                    binding.tvStatus.text = item.status
+                    binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(item.statusColor))
+                }
             }
 
-            false -> binding.cwDiscountContainer.visibility = View.GONE
+            when (item.priceList.size == 1 &&
+                    item.priceList.first().currentPrice < item.priceList.first().oldPrice) {
+                true -> {
+                    isNotHaveStatuses = false
+                    binding.cwDiscountContainer.visibility = View.VISIBLE
+                    binding.tvDiscountPercent.setDiscountPercent(
+                        newPrice = item.priceList.first().currentPrice,
+                        oldPrice = item.priceList.first().oldPrice
+                    )
+                }
+
+                false -> binding.cwDiscountContainer.visibility = View.GONE
+            }
         }
 
         when (isNotHaveStatuses) {

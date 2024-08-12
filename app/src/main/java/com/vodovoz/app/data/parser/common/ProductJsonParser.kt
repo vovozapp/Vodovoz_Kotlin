@@ -1,5 +1,6 @@
 package com.vodovoz.app.data.parser.common
 
+import com.vodovoz.app.data.model.common.LabelEntity
 import com.vodovoz.app.data.model.common.PriceEntity
 import com.vodovoz.app.data.model.common.ProductEntity
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
@@ -27,6 +28,20 @@ object ProductJsonParser {
             }
         }
 
+        val labels = mutableListOf<LabelEntity>()
+        if (has("NALICHIE_MORE") && !isNull("NALICHIE_MORE")) {
+            val labelList = getJSONArray("NALICHIE_MORE")
+            for (index in 0 until labelList.length()) {
+                labels.add(
+                    LabelEntity(
+                        labelList.getJSONObject(index).safeString("NAME").trim(),
+                        labelList.getJSONObject(index).safeString("CVET")
+                    )
+                )
+            }
+        }
+
+
         val detailPicture = getString("DETAIL_PICTURE")
 
         return ProductEntity(
@@ -43,6 +58,7 @@ object ProductJsonParser {
             },
             status = status,
             statusColor = statusColor,
+            labels = labels.toList(),
             commentAmount = when (has("COUTCOMMENTS")) {
                 true -> getString("COUTCOMMENTS")
                 false -> ""

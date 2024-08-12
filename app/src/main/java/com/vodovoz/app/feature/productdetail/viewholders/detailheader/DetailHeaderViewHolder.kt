@@ -25,6 +25,7 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductDetailUI
+import com.vodovoz.app.ui.view.LabelChip
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
@@ -329,29 +330,44 @@ class DetailHeaderViewHolder(
 
         //Status
         var isNotHaveStatuses = true
-        when (item.productDetailUI.status.isEmpty()) {
-            true -> {}
-            false -> {
-                isNotHaveStatuses = false
-                binding.cwStatusContainer.visibility = View.VISIBLE
-                binding.tvStatus.text = item.productDetailUI.status
-                binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(item.productDetailUI.statusColor))
-            }
-        }
 
-        //DiscountPercent
-        when (item.productDetailUI.priceUIList.size == 1 &&
-                item.productDetailUI.priceUIList.first().currentPrice <
-                item.productDetailUI.priceUIList.first().oldPrice) {
-            true -> {
-                binding.cwDiscountContainer.visibility = View.VISIBLE
-                binding.tvDiscountPercent.setDiscountPercent(
-                    newPrice = item.productDetailUI.priceUIList.first().currentPrice,
-                    oldPrice = item.productDetailUI.priceUIList.first().oldPrice
-                )
+        if (item.productDetailUI.labels.isNotEmpty()) {
+            isNotHaveStatuses = false
+            binding.cwStatusContainer.visibility = View.GONE
+            binding.cwDiscountContainer.visibility = View.GONE
+            binding.cgStatuses.removeAllViews()
+            for (label in item.productDetailUI.labels) {
+                val chip = LabelChip(binding.root.context)
+                chip.text = label.name
+                chip.color = Color.parseColor(label.color)
+                binding.cgStatuses.addView(chip)
+            }
+        } else {
+
+            when (item.productDetailUI.status.isEmpty()) {
+                true -> {}
+                false -> {
+                    isNotHaveStatuses = false
+                    binding.cwStatusContainer.visibility = View.VISIBLE
+                    binding.tvStatus.text = item.productDetailUI.status
+                    binding.cwStatusContainer.setCardBackgroundColor(Color.parseColor(item.productDetailUI.statusColor))
+                }
             }
 
-            false -> binding.cwDiscountContainer.visibility = View.GONE
+            //DiscountPercent
+            when (item.productDetailUI.priceUIList.size == 1 &&
+                    item.productDetailUI.priceUIList.first().currentPrice <
+                    item.productDetailUI.priceUIList.first().oldPrice) {
+                true -> {
+                    binding.cwDiscountContainer.visibility = View.VISIBLE
+                    binding.tvDiscountPercent.setDiscountPercent(
+                        newPrice = item.productDetailUI.priceUIList.first().currentPrice,
+                        oldPrice = item.productDetailUI.priceUIList.first().oldPrice
+                    )
+                }
+
+                false -> binding.cwDiscountContainer.visibility = View.GONE
+            }
         }
 
         when (isNotHaveStatuses) {

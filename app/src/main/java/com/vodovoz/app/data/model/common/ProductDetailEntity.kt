@@ -14,6 +14,7 @@ class ProductDetailEntity(
     val isAvailable: Boolean,
     val status: String = "",
     val statusColor: String = "",
+    val labels: List<LabelEntity> = emptyList(),
     val consumerInfo: String,
     val commentsAmount: Int,
     val commentsAmountText: String = "",

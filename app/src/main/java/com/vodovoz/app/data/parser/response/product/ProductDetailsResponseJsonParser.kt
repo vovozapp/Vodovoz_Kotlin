@@ -6,6 +6,7 @@ import com.vodovoz.app.data.model.common.ButtonEntity
 import com.vodovoz.app.data.model.common.CategoryDetailEntity
 import com.vodovoz.app.data.model.common.CategoryEntity
 import com.vodovoz.app.data.model.common.CommentEntity
+import com.vodovoz.app.data.model.common.LabelEntity
 import com.vodovoz.app.data.model.common.PriceEntity
 import com.vodovoz.app.data.model.common.ProductDetailEntity
 import com.vodovoz.app.data.model.common.ProductDetailsBundleEntity
@@ -124,6 +125,20 @@ object ProductDetailsResponseJsonParser {
             status = getJSONObject("NALICHIE").getString("NAME")
         }
 
+        val labels = mutableListOf<LabelEntity>()
+        if (has("NALICHIE_MORE") && !isNull("NALICHIE_MORE")) {
+            val labelList = getJSONArray("NALICHIE_MORE")
+            for (index in 0 until labelList.length()) {
+                labels.add(
+                    LabelEntity(
+                        labelList.getJSONObject(index).safeString("NAME").trim(),
+                        labelList.getJSONObject(index).safeString("CVET")
+                    )
+                )
+            }
+        }
+
+
         val detailPictureList = mutableListOf(getString("DETAIL_PICTURE").parseImagePath())
         if (has("MORE_PHOTO")) {
             detailPictureList.addAll(
@@ -162,6 +177,7 @@ object ProductDetailsResponseJsonParser {
             commentsAmountText = commentsAmountText,
             statusColor = statusColor,
             status = status,
+            labels = labels,
             propertiesGroupEntityList = getJSONArray("PROP").parsePropertyGroupEntityList(),
             detailPictureList = detailPictureList,
             brandEntity = brandEntity,

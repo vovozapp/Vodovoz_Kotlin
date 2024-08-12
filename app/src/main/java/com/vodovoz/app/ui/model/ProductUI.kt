@@ -2,6 +2,7 @@ package com.vodovoz.app.ui.model
 
 import android.os.Parcelable
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.data.model.common.LabelEntity
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPicturePager
 import kotlinx.parcelize.Parcelize
 
@@ -16,6 +17,7 @@ data class ProductUI(
     val priceList: List<PriceUI>,
     val status: String,
     val statusColor: String,
+    val labels: List<LabelEntity> = emptyList(),
     var rating: Float,
     val isBottle: Boolean,
     val isGift: Boolean,

@@ -25,20 +25,33 @@
         android:id="@+id/tlIndicators"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:spi_dotColor="#BDBDBD"
-        app:spi_dotSelectedColor="@color/bluePrimary"
-        app:spi_dotSpacing="5dp"
-        app:spi_dotSize="4.5dp"
-        app:spi_dotSelectedSize="4.5dp"
-        app:spi_dotMinimumSize="3dp"
-        app:spi_visibleDotCount="7"
-        app:layout_constraintStart_toStartOf="@+id/pvPictures"
         app:layout_constraintEnd_toEndOf="@+id/pvPictures"
-        app:layout_constraintTop_toBottomOf="@id/pvPictures" />
+        app:layout_constraintStart_toStartOf="@+id/pvPictures"
+        app:layout_constraintTop_toBottomOf="@id/pvPictures"
+        app:spi_dotColor="#BDBDBD"
+        app:spi_dotMinimumSize="3dp"
+        app:spi_dotSelectedColor="@color/bluePrimary"
+        app:spi_dotSelectedSize="4.5dp"
+        app:spi_dotSize="4.5dp"
+        app:spi_dotSpacing="5dp"
+        app:spi_visibleDotCount="7" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/space_16"
+        android:visibility="gone"
+        app:chipSpacingVertical="0dp"
+        app:layout_constraintEnd_toStartOf="@+id/imgFavoriteStatus"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry"
+        tools:visibility="visible" />
 
     <include
-        layout="@layout/view_holder_slider_product_statuses"
         android:id="@+id/cgStatuses"
+        layout="@layout/view_holder_slider_product_statuses"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingEnd="@dimen/space_16"
@@ -100,10 +113,10 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="bottom"
-            android:textSize="@dimen/_10ssp"
             android:paddingStart="@dimen/space_4"
             android:singleLine="true"
             android:textColor="#889295"
+            android:textSize="@dimen/_10ssp"
             tools:ignore="RtlSymmetry"
             tools:text="3 отзыва" />
 
@@ -124,9 +137,9 @@
         android:layout_marginTop="8dp"
         android:gravity="bottom"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/llRatingContainer"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/verticalGuideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llRatingContainer"
         tools:ignore="RtlSymmetry" />
 
     <include
@@ -135,10 +148,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:translationZ="@dimen/space_16"
-        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintBottom_toBottomOf="@+id/llPricesContainer"
-        app:layout_constraintTop_toTopOf="@id/llPricesContainer"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintTop_toTopOf="@id/llPricesContainer" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

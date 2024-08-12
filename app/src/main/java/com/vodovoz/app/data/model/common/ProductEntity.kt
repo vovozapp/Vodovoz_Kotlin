@@ -17,6 +17,7 @@ class ProductEntity(
     val commentAmount: String = "",
     val status: String = "",
     val statusColor: String = "",
+    val labels: List<LabelEntity> = emptyList(),
     val isBottle: Boolean = false,
     val isGift: Boolean = false,
     var isFavorite: Boolean = false,

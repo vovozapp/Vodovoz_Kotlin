@@ -23,6 +23,7 @@ object ProductDetailMapper  {
         isAvailable = isAvailable,
         rating = rating,
         status = status,
+        labels = labels,
         leftItems = leftItems,
         statusColor = statusColor,
         consumerInfo = consumerInfo,

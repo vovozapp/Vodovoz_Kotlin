@@ -19,6 +19,7 @@ import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.Det
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setLimitedText
 import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.ui.view.LabelChip
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
@@ -248,29 +249,45 @@ class ProductsGridViewHolder(
             true -> binding.tvCommentAmount.text = ""
             else -> binding.tvCommentAmount.text = item.commentAmount
         }
-
-        //Status
         var isNotHaveStatuses = true
-        when (item.status.isEmpty()) {
-            true -> binding.cgStatuses.cwStatusContainer.visibility = View.GONE
-            false -> {
-                isNotHaveStatuses = false
-                binding.cgStatuses.cwStatusContainer.visibility = View.VISIBLE
-                binding.cgStatuses.tvStatus.text = item.status
-                binding.cgStatuses.cwStatusContainer.setCardBackgroundColor(Color.parseColor(item.statusColor))
+        if(item.labels.isNotEmpty()){
+            binding.chipGroup.removeAllViews()
+            binding.chipGroup.visibility = View.VISIBLE
+            for (label in item.labels) {
+                val chip = LabelChip(binding.root.context)
+                chip.text = label.name
+                chip.color = Color.parseColor(label.color)
+                binding.chipGroup.addView(chip)
             }
-        }
+        } else {
 
-        //DiscountPercent
-        when (item.priceList.size == 1 &&
-                item.priceList.first().currentPrice < item.priceList.first().oldPrice) {
-            true -> {
-                isNotHaveStatuses = false
-                binding.cgStatuses.cwDiscountContainer.visibility = View.VISIBLE
-                binding.cgStatuses.tvDiscountPercent.text = item.discountPercentStringBuilder
+            //Status
+            binding.chipGroup.visibility = View.GONE
+            when (item.status.isEmpty()) {
+                true -> binding.cgStatuses.cwStatusContainer.visibility = View.GONE
+                false -> {
+                    isNotHaveStatuses = false
+                    binding.cgStatuses.cwStatusContainer.visibility = View.VISIBLE
+                    binding.cgStatuses.tvStatus.text = item.status
+                    binding.cgStatuses.cwStatusContainer.setCardBackgroundColor(
+                        Color.parseColor(
+                            item.statusColor
+                        )
+                    )
+                }
             }
 
-            false -> binding.cgStatuses.cwDiscountContainer.visibility = View.GONE
+            //DiscountPercent
+            when (item.priceList.size == 1 &&
+                    item.priceList.first().currentPrice < item.priceList.first().oldPrice) {
+                true -> {
+                    isNotHaveStatuses = false
+                    binding.cgStatuses.cwDiscountContainer.visibility = View.VISIBLE
+                    binding.cgStatuses.tvDiscountPercent.text = item.discountPercentStringBuilder
+                }
+
+                false -> binding.cgStatuses.cwDiscountContainer.visibility = View.GONE
+            }
         }
 
         when (isNotHaveStatuses) {

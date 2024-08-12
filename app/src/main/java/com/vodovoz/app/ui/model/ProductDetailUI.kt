@@ -1,5 +1,7 @@
 package com.vodovoz.app.ui.model
 
+import com.vodovoz.app.data.model.common.LabelEntity
+
 class ProductDetailUI(
     val id: Long = 0,
     val name: String = "",
@@ -14,6 +16,7 @@ class ProductDetailUI(
     val isAvailable: Boolean = false,
     val status: String = "",
     val statusColor: String = "",
+    val labels: List<LabelEntity> = emptyList(),
     val consumerInfo: String = "",
     val pricePerUnit: String = "",
     val commentsAmount: Int = 0,
