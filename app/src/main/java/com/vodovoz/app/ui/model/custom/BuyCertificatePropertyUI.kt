@@ -1,8 +1,10 @@
 package com.vodovoz.app.ui.model.custom
 
+import androidx.compose.runtime.Immutable
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
 
+@Immutable
 data class BuyCertificatePropertyUI(
     val code: String,
     val name: String,

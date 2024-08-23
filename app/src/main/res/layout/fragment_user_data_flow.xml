@@ -161,7 +161,7 @@
                     android:layout_height="wrap_content"
                     app:hintTextAppearance="@style/TextLabel"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:layout_editor_absoluteX="21dp">>
+                    tools:layout_editor_absoluteX="21dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etBirthday"

@@ -14,6 +14,7 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.ui.model.enum.AuthType
+import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -248,7 +249,7 @@ class LoginFlowViewModel @Inject constructor(
 
     fun recoverPassword(email: String) {
 
-        if (email.length < 4) {
+        if (!FieldValidationsSettings.EMAIL_REGEX.matches(email)) {
             viewModelScope.launch {
                 eventListener.emit(LoginEvents.PasswordRecoverError("Неправильно указан email"))
             }
@@ -322,16 +323,16 @@ class LoginFlowViewModel @Inject constructor(
     }
 
     sealed class LoginEvents : Event {
-        object AuthSuccess : LoginEvents()
+        data object AuthSuccess : LoginEvents()
         data class AuthError(val message: String) : LoginEvents()
         data class TimerTick(val tick: Int) : LoginEvents()
-        object TimerFinished : LoginEvents()
-        object CodeComplete : LoginEvents()
+        data object TimerFinished : LoginEvents()
+        data object CodeComplete : LoginEvents()
         data class PasswordRecoverSuccess(val message: String) : LoginEvents()
         data class PasswordRecoverError(val message: String) : LoginEvents()
 
-        object AuthByPhone : LoginEvents()
-        object AuthByEmail : LoginEvents()
+        data object AuthByPhone : LoginEvents()
+        data object AuthByEmail : LoginEvents()
 
         data class SetupByPhone(val time: Int, val phone: String) : LoginEvents()
     }
