@@ -153,14 +153,24 @@
     <string name="fill_field" translatable="false">Заполнить</string>
     <string name="menu_promotions" translatable="false">Акции</string>
     <string name="email_" translatable="false">Почта*</string>
-    <string name="jivo_chat">Чат с поддержкой</string>
-    <string name="call_me_for_confirm">Позвоните мне для подтверждения заказа</string>
+    <string name="jivo_chat" translatable="false">Чат с поддержкой</string>
+    <string name="call_me_for_confirm" translatable="false">Позвоните мне для подтверждения заказа</string>
     <string name="empty_string" />
-    <string name="canceled">Отменен</string>
-    <string name="payed">Оплачен</string>
-    <string name="not_payed">Не оплачен</string>
-    <string name="comments">Отзывы</string>
-    <string name="leave_comment">Оставить отзыв о товаре</string>
+    <string name="canceled" translatable="false">Отменен</string>
+    <string name="payed" translatable="false">Оплачен</string>
+    <string name="not_payed" translatable="false">Не оплачен</string>
+    <string name="comments" translatable="false">Отзывы</string>
+    <string name="leave_comment" translatable="false">Оставить отзыв о товаре</string>
+    <string name="wrong_code" translatable="false">Неверный код</string>
+    <string name="wrong_email" translatable="false">Неправильно указан email</string>
+    <string name="error_repeat" translatable="false">Ошибка. Попробуйте снова.</string>
+    <string name="password_recover_success" translatable="false">Пароль упешно изменен и выслан вам на почту: %1$s</string>
+    <string name="resend_code" translatable="false">Отправить код повторно</string>
+    <string name="wrong_phone" translatable="false">Неверный формат телефона</string>
+    <string name="personal_data_nesessary" translatable="false">Необходимо согласие на обработку персональных данных</string>
+    <string name="enter" translatable="false">Войти</string>
+    <string name="ok" translatable="false">Ок</string>
+    <string name="biometric_fault" translatable="false">Вход по биометрии не выполнен</string>
 
 
 </resources>

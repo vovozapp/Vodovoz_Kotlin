@@ -28,6 +28,7 @@ import com.vodovoz.app.common.agreement.AgreementController
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentLoginFlowBinding
+import com.vodovoz.app.feature.auth.login.LoginFlowViewModel.MessageType.Message
 import com.vodovoz.app.feature.cart.CartFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
 import com.vodovoz.app.feature.home.HomeFlowViewModel
@@ -70,7 +71,7 @@ class LoginFragment : BaseFragment() {
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     super.onAuthenticationError(errorCode, errString)
-                    requireActivity().snack("Вход по биометрии не выполнен")
+                    requireActivity().snack(getString(R.string.biometric_fault))
                 }
 
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
@@ -80,7 +81,7 @@ class LoginFragment : BaseFragment() {
 
                 override fun onAuthenticationFailed() {
                     super.onAuthenticationFailed()
-                    requireActivity().snack("Вход по биометрии не выполнен")
+                    requireActivity().snack(getString(R.string.biometric_fault))
                 }
             })
     }
@@ -198,7 +199,7 @@ class LoginFragment : BaseFragment() {
 
                                             false -> {
                                                 debugLog { "Неверный формат телефона" }
-                                                binding.tilPhone.error = "Неверный формат телефона"
+                                                binding.tilPhone.error = getString(R.string.wrong_phone)
                                             }
                                         }
                                     }
@@ -218,7 +219,12 @@ class LoginFragment : BaseFragment() {
 
                             is LoginFlowViewModel.LoginEvents.AuthError -> {
                                 debugLog { "AuthError" }
-                                binding.tilPassword.error = it.message
+                                val message = when (it.message) {
+                                    is Message -> it.message.param
+                                    is LoginFlowViewModel.MessageType.WrongCode -> getString(R.string.wrong_code)
+                                    else -> ""
+                                }
+                                binding.tilPassword.error = message
                             }
 
                             LoginFlowViewModel.LoginEvents.AuthSuccess -> {
@@ -243,14 +249,23 @@ class LoginFragment : BaseFragment() {
 
                             is LoginFlowViewModel.LoginEvents.PasswordRecoverError -> {
                                 debugLog { "PasswordRecoverError" }
-                                Snackbar.make(binding.root, it.message, Snackbar.LENGTH_LONG).show()
+                                val message = when (it.message) {
+                                    is LoginFlowViewModel.MessageType.WrongEmail -> getString(R.string.wrong_email)
+                                    is LoginFlowViewModel.MessageType.RepeatError -> getString(R.string.error_repeat)
+                                    else -> ""
+                                }
+                                Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
                             }
 
                             is LoginFlowViewModel.LoginEvents.PasswordRecoverSuccess -> {
                                 debugLog { "PasswordRecoverSuccess" }
+                                val param = when (it.message) {
+                                    is Message -> it.message.param
+                                    else -> ""
+                                }
                                 MaterialAlertDialogBuilder(requireContext())
-                                    .setMessage(it.message)
-                                    .setPositiveButton("Ок") { dialog, _ ->
+                                    .setMessage(getString(R.string.password_recover_success, param))
+                                    .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                                         dialog.dismiss()
                                     }
                                     .show()
@@ -258,7 +273,7 @@ class LoginFragment : BaseFragment() {
 
                             LoginFlowViewModel.LoginEvents.TimerFinished -> {
                                 debugLog { "TimerFinished" }
-                                binding.tvExpired.text = "Отправить код повторно"
+                                binding.tvExpired.text = getString(R.string.resend_code)
                                 binding.tvExpired.setTextColor(
                                     ContextCompat.getColor(
                                         requireContext(),
@@ -274,7 +289,8 @@ class LoginFragment : BaseFragment() {
                                 binding.tvExpired.setOnClickListener {
                                     when (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString())) {
                                         true -> viewModel.requestCode(binding.etPhone.text.toString())
-                                        false -> binding.tilPhone.error = "Неверный формат телефона"
+                                        false -> binding.tilPhone.error =
+                                            getString(R.string.wrong_phone)
                                     }
                                 }
                             }
@@ -291,7 +307,7 @@ class LoginFragment : BaseFragment() {
                                 binding.tvExpired.typeface =
                                     ResourcesCompat.getFont(requireContext(), R.font.rotonda_normal)
                                 binding.tvExpired.visibility = View.VISIBLE
-                                binding.btnSignIn.text = "Войти"
+                                binding.btnSignIn.text = getString(R.string.enter)
                                 binding.tilCode.visibility = View.VISIBLE
                             }
 
@@ -307,7 +323,7 @@ class LoginFragment : BaseFragment() {
 
     private fun validateEmail(): Boolean {
         if (!FieldValidationsSettings.EMAIL_REGEX.matches(binding.etEmail.text.toString())) {
-            binding.tilEmail.error = "Неправильный формат почты"
+            binding.tilEmail.error = getString(R.string.wrong_email)
             return false
         } else binding.tilEmail.error = null
         return true
@@ -354,9 +370,9 @@ class LoginFragment : BaseFragment() {
     private fun initButtons() {
         binding.btnSignIn.setOnClickListener {
             if (binding.scPersonalInfo.isChecked.not()) {
-                requireActivity().snack("Необходимо согласие на обработку персональных данных")
+                requireActivity().snack(getString(R.string.personal_data_nesessary))
                 binding.scPersonalInfo.error =
-                    "Необходимо согласие на обработку персональных данных"
+                    getString(R.string.personal_data_nesessary)
             } else {
                 viewModel.signIn()
             }
@@ -393,13 +409,13 @@ class LoginFragment : BaseFragment() {
             )
             cwAuthByPhoneContainer.elevation = 0f
             llAutByPhoneContainer.visibility = View.GONE
-            btnSignIn.text = "Войти"
+            btnSignIn.text = getString(R.string.enter)
 
             llPersonalData.visibility = View.GONE
-            showPassword.setOnClickListener{
+            showPassword.setOnClickListener {
                 viewModel.showPassword()
             }
-            if(data.showPassword) {
+            if (data.showPassword) {
                 etPassword.transformationMethod = HideReturnsTransformationMethod()
                 showPassword.setImageResource(R.drawable.showpassword)
             } else {
@@ -428,8 +444,8 @@ class LoginFragment : BaseFragment() {
             cwAuthByEmailContainer.elevation = 0f
             llAutByEmailContainer.visibility = View.GONE
             when (tilCode.visibility == View.VISIBLE) {
-                true -> btnSignIn.text = "Войти"
-                false -> btnSignIn.text = "Выслать код"
+                true -> btnSignIn.text = getString(R.string.enter)
+                false -> btnSignIn.text = getString(R.string.send_code)
             }
 
             llPersonalData.visibility = View.VISIBLE
@@ -441,7 +457,7 @@ class LoginFragment : BaseFragment() {
         binding.etPhone.setPhoneValidator {
             when (FieldValidationsSettings.PHONE_REGEX.matches(it.toString())) {
                 true -> binding.tilPhone.error = null
-                false -> binding.tilPhone.error = "Неверный формат телефона"
+                false -> binding.tilPhone.error = getString(R.string.wrong_phone)
             }
         }
 

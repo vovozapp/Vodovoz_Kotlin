@@ -124,7 +124,7 @@ class LoginFlowViewModel @Inject constructor(
                         is ResponseEntity.Error -> {
                             uiStateListener.value =
                                 state.copy(loadingPage = false)
-                            eventListener.emit(LoginEvents.AuthError(response.errorMessage))
+                            eventListener.emit(LoginEvents.AuthError(MessageType.Message(response.errorMessage)))
                         }
                     }
 
@@ -149,7 +149,7 @@ class LoginFlowViewModel @Inject constructor(
                         is ResponseEntity.Hide -> {
                             uiStateListener.value =
                                 state.copy(loadingPage = false)
-                            eventListener.emit(LoginEvents.AuthError("Неверный код"))
+                            eventListener.emit(LoginEvents.AuthError(MessageType.WrongCode))
                         }
 
                         is ResponseEntity.Success -> {
@@ -168,7 +168,7 @@ class LoginFlowViewModel @Inject constructor(
                         is ResponseEntity.Error -> {
                             uiStateListener.value =
                                 state.copy(loadingPage = false)
-                            eventListener.emit(LoginEvents.AuthError(response.errorMessage))
+                            eventListener.emit(LoginEvents.AuthError(MessageType.Message(response.errorMessage)))
                         }
                     }
                 }
@@ -192,7 +192,7 @@ class LoginFlowViewModel @Inject constructor(
                         is ResponseEntity.Hide -> {
                             uiStateListener.value =
                                 state.copy(loadingPage = false)
-                            eventListener.emit(LoginEvents.AuthError("Неверный код"))
+                            eventListener.emit(LoginEvents.AuthError(MessageType.WrongCode))
                         }
 
                         is ResponseEntity.Success -> {
@@ -211,7 +211,7 @@ class LoginFlowViewModel @Inject constructor(
                         is ResponseEntity.Error -> {
                             uiStateListener.value =
                                 state.copy(loadingPage = false)
-                            eventListener.emit(LoginEvents.AuthError(response.errorMessage))
+                            eventListener.emit(LoginEvents.AuthError(MessageType.Message(response.errorMessage)))
                         }
                     }
                 }
@@ -251,7 +251,7 @@ class LoginFlowViewModel @Inject constructor(
 
         if (!FieldValidationsSettings.EMAIL_REGEX.matches(email)) {
             viewModelScope.launch {
-                eventListener.emit(LoginEvents.PasswordRecoverError("Неправильно указан email"))
+                eventListener.emit(LoginEvents.PasswordRecoverError(MessageType.WrongEmail))
             }
             return
         }
@@ -262,11 +262,11 @@ class LoginFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value =
                             state.copy(error = null, loadingPage = false)
-                        eventListener.emit(LoginEvents.PasswordRecoverSuccess("Пароль упешно изменен и выслан вам на почту: $email"))
+                        eventListener.emit(LoginEvents.PasswordRecoverSuccess(MessageType.Message(email)))
                     } else {
                         uiStateListener.value =
                             state.copy(loadingPage = false)
-                        eventListener.emit(LoginEvents.PasswordRecoverError("Ошибка. Попробуйте снова."))
+                        eventListener.emit(LoginEvents.PasswordRecoverError(MessageType.RepeatError))
                     }
                 }
                 .flowOn(Dispatchers.Default)
@@ -324,17 +324,24 @@ class LoginFlowViewModel @Inject constructor(
 
     sealed class LoginEvents : Event {
         data object AuthSuccess : LoginEvents()
-        data class AuthError(val message: String) : LoginEvents()
+        data class AuthError(val message: MessageType) : LoginEvents()
         data class TimerTick(val tick: Int) : LoginEvents()
         data object TimerFinished : LoginEvents()
         data object CodeComplete : LoginEvents()
-        data class PasswordRecoverSuccess(val message: String) : LoginEvents()
-        data class PasswordRecoverError(val message: String) : LoginEvents()
+        data class PasswordRecoverSuccess(val message: MessageType) : LoginEvents()
+        data class PasswordRecoverError(val message: MessageType) : LoginEvents()
 
         data object AuthByPhone : LoginEvents()
         data object AuthByEmail : LoginEvents()
 
         data class SetupByPhone(val time: Int, val phone: String) : LoginEvents()
+    }
+
+    sealed interface MessageType {
+        data object WrongEmail : MessageType
+        data object RepeatError : MessageType
+        data object WrongCode : MessageType
+        data class Message(val param: String) : MessageType
     }
 
     data class LoginState(
