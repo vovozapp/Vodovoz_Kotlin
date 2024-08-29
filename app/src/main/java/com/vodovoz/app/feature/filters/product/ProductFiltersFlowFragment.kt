@@ -148,7 +148,16 @@ class ProductFiltersFlowFragment : BaseFragment() {
     private fun observeResultLiveData() {
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<FilterUI>(CONCRETE_FILTER)?.observe(viewLifecycleOwner) { filter ->
+                if (filter == null) return@observe
                 changeConcreteFilter(filter)
+                findNavController().currentBackStackEntry?.savedStateHandle?.set(
+                    CONCRETE_FILTER,
+                    null
+                )
+                findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                    CONCRETE_FILTER,
+                    null
+                )
             }
     }
 
