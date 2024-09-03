@@ -17,8 +17,8 @@ android {
         applicationId "com.vodovoz.app"
         minSdk 21
         targetSdk 34
-        versionCode 160
-        versionName "1.5.51"
+        versionCode 161
+        versionName "1.5.52"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -74,7 +74,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
 
     //Firebase
-    implementation platform('com.google.firebase:firebase-bom:33.1.2')
+    implementation platform('com.google.firebase:firebase-bom:33.2.0')
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-database-ktx'
