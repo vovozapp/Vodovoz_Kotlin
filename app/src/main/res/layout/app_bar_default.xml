@@ -6,10 +6,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    app:elevation="3dp">
+    android:background="@color/white">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:orientation="horizontal">
@@ -21,23 +20,32 @@
             android:paddingStart="@dimen/space_16"
             android:paddingEnd="@dimen/space_16"
             android:src="@drawable/ic_arrow_left"
-            app:tint="@color/text_black"/>
+            app:tint="@color/text_black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvTitle"
-                style="@style/ToolbarTitle"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textSize="@dimen/_14ssp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/ToolbarTitle"
+                android:textColor="@color/text_black_composable"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="18sp"
+                android:gravity="center"
                 tools:text="@string/plug"/>
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -50,6 +58,18 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgClear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="16dp"
+            android:src="@drawable/ic_close"
+            app:tint="@color/text_black_composable"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="RtlSymmetry" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.appbar.AppBarLayout>

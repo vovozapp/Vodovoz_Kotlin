@@ -15,7 +15,6 @@ class AddressFlowViewHolder(
         ViewHolderAddressBinding.bind(view)
 
     init {
-
         binding.imgEdit.setOnClickListener {
             val item = item ?: return@setOnClickListener
             clickListener.onEditClick(item)

@@ -27,17 +27,17 @@
     <TextView
         android:translationZ="@dimen/_10sdp"
         android:id="@+id/circleAmount"
-        android:layout_width="@dimen/_16sdp"
-        android:layout_height="@dimen/_16sdp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         android:background="@drawable/bkg_number"
         android:fontFamily="@font/rotonda_normal"
-        android:textStyle="bold"
         android:gravity="center"
         android:visibility="visible"
         android:outlineProvider="none"
         android:textColor="@color/white"
-        android:layout_marginStart="90dp"
-        android:textSize="13sp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="4dp"
+        android:textSize="9sp"
         app:layout_constraintTop_toTopOf="@id/nvNavigation"
         app:layout_constraintEnd_toEndOf="@id/nvNavigation"
         app:layout_constraintStart_toStartOf="@id/nvNavigation"/>
@@ -50,23 +50,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:translationZ="@dimen/_10sdp"
-        android:id="@+id/circleAmountProfile"
-        android:layout_width="@dimen/_16sdp"
-        android:layout_height="@dimen/_16sdp"
-        android:background="@drawable/bkg_number"
-        android:fontFamily="@font/rotonda_normal"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:visibility="visible"
-        android:outlineProvider="none"
-        android:textColor="@color/white"
-        android:layout_marginEnd="@dimen/space_8"
-        android:textSize="13sp"
-        app:layout_constraintTop_toTopOf="@id/nvNavigation"
-        app:layout_constraintEnd_toEndOf="@id/nvNavigation"
-        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

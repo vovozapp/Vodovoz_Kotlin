@@ -43,7 +43,7 @@
 
         android:clipToPadding="false"
         android:clipChildren="false"
-
+        tools:visibility="gone"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         android:visibility="gone">
 

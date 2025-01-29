@@ -35,7 +35,7 @@ class DetailBrandListViewHolder(
         binding.nextPage.setOnClickListener { clickListener.onNextPageBrandProductsClick(bindingAdapterPosition) }
 
         binding.brandProductRecycler.layoutManager = LinearLayoutManager(itemView.context)
-        binding.brandProductRecycler.adapter = productsAdapter
+        //binding.brandProductRecycler.adapter = productsAdapter
         binding.brandProductRecycler.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
@@ -67,10 +67,10 @@ class DetailBrandListViewHolder(
 
         productsAdapter.submitList(item.productUiList, "")
 
-        if (item.pageAmount <= 1) {
-            binding.nextPage.visibility = View.GONE
-        } else {
-            binding.nextPage.visibility = View.VISIBLE
-        }
+        //if (item.pageAmount <= 1) {
+        //    binding.nextPage.visibility = View.GONE
+        //} else {
+        //    binding.nextPage.visibility = View.VISIBLE
+        //}
     }
 }

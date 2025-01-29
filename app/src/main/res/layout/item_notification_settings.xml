@@ -1,28 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginHorizontal="16dp"
-    android:layout_marginVertical="16dp"
-    android:gravity="center"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/settingsTv"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvTitle"
+        style="@style/TextViewMediumBlackBold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textAllCaps="false"
-        android:textColor="#434343"
-        android:textSize="14sp"
-        android:textStyle="normal"
-        app:fontFamily="@font/rotondac" />
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp"
+        android:text="Уведомления по заказам"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/settingsSwitch"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvSubTitle"
+        style="@style/TextViewNormalGray"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0" />
+        android:layout_marginHorizontal="16dp"
+        android:lineSpacingMultiplier="1.2"
+        android:lineSpacingExtra="3dp"
+        android:layout_marginTop="16dp"
+        android:text="Уведомления о стоимости заказа, дате\nдоставки, информации о накопительных\nскидках"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/llContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="16dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/tvSubTitle">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/settingsTv"
+            style="@style/TextViewMediumBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:text="СМС" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/settingsSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="4dp"
+            android:thumb="@drawable/selector_switch_thumb"
+            app:track="@drawable/selector_switch_track"
+            android:checked="false"/>
+    </LinearLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:dividerColor="@color/divider"
+        app:layout_constraintTop_toBottomOf="@+id/llContainer"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

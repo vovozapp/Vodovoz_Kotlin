@@ -75,11 +75,11 @@ class PastPurchasesListController(
         clearDecorators(recyclerView)
         when (manager) {
             PastPurchasesFlowViewModel.LINEAR -> {
-                imageViewMode.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_list))
+                imageViewMode.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icon_orientation))
                 changeToLinearLayoutManager(recyclerView)
             }
             PastPurchasesFlowViewModel.GRID -> {
-                imageViewMode.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_table))
+                imageViewMode.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icon_orientation_horizontal))
                 changeToGridLayoutManager(recyclerView)
             }
         }

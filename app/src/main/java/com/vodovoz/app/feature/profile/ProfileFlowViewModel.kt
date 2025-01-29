@@ -40,6 +40,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
@@ -396,21 +397,18 @@ class ProfileFlowViewModel @Inject constructor(
         }
     }
 
-    fun logout() {
-
-        viewModelScope.launch {
+    fun logout() = viewModelScope.launch {
             val userId = accountManager.fetchAccountId() ?: return@launch
             flow { emit(repository.logout(userId)) }
                 .onEach {
                     cookieManager.removeCookieSessionId()
-                }.collect()
+                }.firstOrNull()
             accountManager.removeUserId()
             accountManager.removeUserToken()
             tabManager.clearBottomNavProfileState()
             cartManager.clearCart()
             eventListener.emit(ProfileEvents.Logout)
             waterAppHelper.clearData()
-        }
     }
 
     fun checkLogin() {

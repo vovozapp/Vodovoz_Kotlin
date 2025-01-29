@@ -78,6 +78,7 @@ class OrderingFlowViewModel @Inject constructor(
         phone: String = "",
         email: String = "",
         companyName: String = "",
+        inn: String = "",
         inputCash: String = "",
         phoneForDriver: String = "",
     ) {
@@ -143,6 +144,7 @@ class OrderingFlowViewModel @Inject constructor(
                         name = name,
                         phone = phone,
                         email = email,
+                        inn = inn,
                         companyName = companyName,
                         deposit = depositPrice,
                         fastShippingPrice = state.data.shippingInfoBundleUI?.todayShippingPrice,
@@ -486,8 +488,6 @@ class OrderingFlowViewModel @Inject constructor(
         val deposit: Int? = null,
         val discount: Int? = null,
         val total: Int? = null,
-
-
         val selectedAddressUI: AddressUI? = null,
         val selectedDate: Date? = null,
         val selectedOrderType: OrderType = OrderType.PERSONAL,
@@ -504,7 +504,6 @@ class OrderingFlowViewModel @Inject constructor(
         val shippingIntervalUiList: List<ShippingIntervalUI>? = null,
         val shippingAlertList: List<ShippingAlertUI> = ShippingAlertConfig.shippingAlertEntityListUI,
         val shippingDaysInfoBundleUi: FreeShippingDaysInfoBundleUI? = null,
-
         val orderingCompletedInfoBundleUI: OrderingCompletedInfoBundleUI? = null,
         val checkDeliveryValue: Int = 0,
     ) : State

@@ -12,7 +12,6 @@ class NotSettingsController(clickListener: NotSettingsClickListener) :
         super.initList(recyclerView)
         with(recyclerView) {
             layoutManager = LinearLayoutManager(context)
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
     }
 }

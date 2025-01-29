@@ -83,7 +83,6 @@ class DiscountCardFlowViewModel @Inject constructor(
     }
 
     fun activateDiscountCard() {
-
         val valueBuilder = StringBuilder()
         var isCorrectly = true
         val bundle = state.data.activateDiscountCardBundleUI ?: return
@@ -118,7 +117,6 @@ class DiscountCardFlowViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(repository.activateDiscountCard(userId, valueBuilder.toString())) }
                 .onEach { response ->
-
                     when (response) {
                         is ResponseEntity.Hide -> {
                             eventListener.emit(DiscountCardEvents.ActivateResult("Неизвестная ошибка"))
@@ -129,6 +127,7 @@ class DiscountCardFlowViewModel @Inject constructor(
                         is ResponseEntity.Success -> {
                             eventListener.emit(DiscountCardEvents.ActivateResult(response.data))
                         }
+                        else -> {}
                     }
 
                     uiStateListener.value = state.copy(loadingPage = false)

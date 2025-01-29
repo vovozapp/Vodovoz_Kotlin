@@ -566,7 +566,7 @@ interface MainApi {
     @GET("/newmobile/address.php")
     suspend fun fetchAddressResponse(
         @Query("city") locality: String? = null,
-        @Query("description") comment: String? = null,
+        @Query("domofon") intercom: String? = null,
         @Query("entrance") entrance: String? = null,
         @Query("flat") office: String? = null,
         @Query("floor") floor: String? = null,
@@ -611,6 +611,7 @@ interface MainApi {
         @Query("fio_f") name: String?,
         @Query("phone_f") phone: String?,
         @Query("email_f") email: String?,
+        @Query("inn") inn: String?,
         @Query("companyname") companyName: String?,
         @Query("userid") userId: Long?,
         @Query("zalogcena") deposit: Int?, //?

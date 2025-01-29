@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nsvContent"
         android:layout_width="match_parent"
@@ -87,6 +86,36 @@
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:hint="@string/address_text"
+                    android:paddingHorizontal="@dimen/space_16" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/INNContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvINN"
+                    style="@style/TextViewNormalBlackBold"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/field_height"
+                    android:background="@color/light_gray"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="@string/vvedite_INN" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/etINN"
+                    style="@style/EditTextViewOrderNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/field_ex_height"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:hint="@string/vvedite_INN"
+                    android:inputType="number"
                     android:paddingHorizontal="@dimen/space_16" />
 
             </LinearLayout>
@@ -292,7 +321,7 @@
                     android:layout_height="@dimen/field_ex_height"
                     android:background="@color/white"
                     android:gravity="center_vertical"
-                    android:hint="@string/vyberite_sposob_oplaty"
+                    android:hint="@string/choose_pay_system_hint"
                     android:paddingHorizontal="@dimen/space_16" />
 
                 <com.google.android.material.divider.MaterialDivider
@@ -324,7 +353,7 @@
                 android:background="@color/light_gray"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="@dimen/space_16"
-                android:text="@string/zvonok_operatore_vopros" />
+                android:text="@string/call_title" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvCheckDelivery"
@@ -385,14 +414,25 @@
                 android:paddingHorizontal="@dimen/space_16"
                 android:visibility="gone" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvOrderComment"
+                style="@style/TextViewNormalBlackBold"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/field_height"
+                android:background="@color/light_gray"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/space_16"
+                android:text="@string/kommentariy_k_zakazu" />
+
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/etComment"
                 style="@style/EditTextViewOrderNormal"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/field_ex_height"
+                android:layout_height="@dimen/field_super_ex_height"
                 android:background="@color/white"
-                android:gravity="center_vertical"
-                android:hint="@string/kommentariy_k_zakazu"
+                android:gravity="top"
+                android:hint="@string/kommentariy_dlya_kuriera"
+                android:paddingTop="@dimen/space_12"
                 android:paddingHorizontal="@dimen/space_16" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -633,5 +673,686 @@
             android:text="@string/oplatit_text" />
 
     </LinearLayout>
+    <!--
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsvContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/TextViewNormalBlackBold"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/field_height"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="Получатель"
+                    tools:ignore="HardcodedText" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clAddressContainer"
+                    android:background="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imgAddress"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="@dimen/space_16"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_16"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="@+id/imgAddress"
+                        app:layout_constraintEnd_toStartOf="@+id/imgShowAddress"
+                        app:layout_constraintStart_toEndOf="@+id/imgAddress"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvAddress"
+                            style="@style/TextViewMediumGray"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:textSize="18sp"
+                            android:gravity="bottom"
+                            tools:text="Адрес" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvChooseAddress"
+                            style="@style/TextViewSmallGray"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top"
+                            android:textColor="@color/color_search"
+                            android:text="Выберите адрес доставки"
+                            tools:ignore="HardcodedText" />
+
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imgShowAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/space_16"
+                        android:src="@drawable/ic_pointer_right"
+                        app:layout_constraintBottom_toBottomOf="@+id/imgAddress"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/imgAddress"
+                        app:tint="@color/text_grey_composable"
+                        tools:ignore="ContentDescription" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:id="@+id/INNContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvINN"
+                        style="@style/TextViewNormalBlackBold"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/field_height"
+                        android:background="@color/light_gray"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="@dimen/space_16"
+                        android:text="@string/vvedite_INN" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/etINN"
+                        style="@style/EditTextViewOrderNormal"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/field_ex_height"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:hint="@string/vvedite_INN"
+                        android:inputType="number"
+                        android:paddingHorizontal="@dimen/space_16" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llCompanyNameContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvNameCompanyName"
+                        style="@style/TextViewNormalBlackBold"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/field_height"
+                        android:background="@color/light_gray"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="@dimen/space_16"
+                        android:text="@string/nazvanie_kompanii" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/etCompanyName"
+                        style="@style/EditTextViewOrderNormal"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/field_ex_height"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:hint="@string/vvedite_nazvanie"
+                        android:paddingHorizontal="@dimen/space_16" />
+
+                </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clRecipientContainer"
+                    android:background="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imgRecipient"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="@dimen/space_16"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_16"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="@+id/imgRecipient"
+                        app:layout_constraintEnd_toStartOf="@+id/imgShowRecipient"
+                        app:layout_constraintStart_toEndOf="@+id/imgRecipient"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvRecipient"
+                            style="@style/TextViewMediumGray"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:textSize="18sp"
+                            android:gravity="bottom"
+                            tools:text="Получатель" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvChooseRecipient"
+                            style="@style/TextViewSmallGray"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top"
+                            android:textColor="@color/color_search"
+                            android:text="Выберите получателя"
+                            tools:ignore="HardcodedText" />
+
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imgShowRecipient"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/space_16"
+                        android:src="@drawable/ic_pointer_right"
+                        app:layout_constraintBottom_toBottomOf="@+id/imgRecipient"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/imgRecipient"
+                        app:tint="@color/text_grey_composable"
+                        tools:ignore="ContentDescription" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clDeliveryDateTimeContainer"
+                    android:background="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imgDeliveryDateTime"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="@dimen/space_16"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_16"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="@+id/imgDeliveryDateTime"
+                        app:layout_constraintEnd_toStartOf="@+id/imgShowDeliveryDateTime"
+                        app:layout_constraintStart_toEndOf="@+id/imgDeliveryDateTime"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvDeliveryDateTime"
+                            style="@style/TextViewMediumGray"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:textSize="18sp"
+                            android:gravity="bottom"
+                            tools:text="Время и дата доставки" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvChooseDeliveryDateTime"
+                            style="@style/TextViewSmallGray"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top"
+                            android:textColor="@color/color_search"
+                            android:text="Выберите время доставки"
+                            tools:ignore="HardcodedText" />
+
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imgShowDeliveryDateTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/space_16"
+                        android:src="@drawable/ic_pointer_right"
+                        app:layout_constraintBottom_toBottomOf="@+id/imgDeliveryDateTime"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/imgDeliveryDateTime"
+                        app:tint="@color/text_grey_composable"
+                        tools:ignore="ContentDescription" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvOrderComment"
+                    style="@style/TextViewNormalBlackBold"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/field_height"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="@string/kommentariy_k_zakazu" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/etComment"
+                    style="@style/EditTextViewOrderNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/field_super_ex_height"
+                    android:background="@drawable/bg_round_corner_border_blue"
+                    android:gravity="top"
+                    android:hint="@string/kommentariy_dlya_kuriera"
+                    android:paddingTop="@dimen/space_12"
+                    android:layout_marginHorizontal="16dp"
+                    android:paddingHorizontal="@dimen/space_16" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/TextViewNormalBlackBold"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/field_height"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="@string/tsena_text" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clPaySystemContainer"
+                    android:background="@drawable/bg_round_corner_border_blue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="16dp"
+                    android:layout_marginHorizontal="16dp">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imgPaySystem"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_16"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="@+id/imgPaySystem"
+                        app:layout_constraintEnd_toStartOf="@+id/imgShowPaySystem"
+                        app:layout_constraintStart_toEndOf="@+id/imgPaySystem"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvPaySystem"
+                            style="@style/TextViewMediumGray"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:textSize="18sp"
+                            android:gravity="bottom"
+                            tools:text="@string/choose_pay_system_title" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvChoosePaySystem"
+                            style="@style/TextViewSmallGray"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top"
+                            android:textColor="@color/color_search"
+                            android:text="@string/choose_pay_system_hint"
+                            tools:ignore="HardcodedText" />
+
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imgShowPaySystem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_pointer_right"
+                        app:layout_constraintBottom_toBottomOf="@+id/imgPaySystem"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/imgPaySystem"
+                        app:tint="@color/text_grey_composable"
+                        tools:ignore="ContentDescription" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clCallContainer"
+                    android:background="@drawable/bg_round_corner_border_blue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginHorizontal="16dp">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imgCall"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_16"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="@+id/imgCall"
+                        app:layout_constraintEnd_toStartOf="@+id/imgShowCall"
+                        app:layout_constraintStart_toEndOf="@+id/imgCall"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvCall"
+                            style="@style/TextViewMediumGray"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:textSize="18sp"
+                            android:gravity="bottom"
+                            tools:text="@string/call_title" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvChooseCall"
+                            style="@style/TextViewSmallGray"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top"
+                            android:textColor="@color/color_search"
+                            android:text="Позвонить"
+                            tools:ignore="HardcodedText" />
+
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imgShowCall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_pointer_right"
+                        app:layout_constraintBottom_toBottomOf="@+id/imgCall"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/imgCall"
+                        app:tint="@color/text_grey_composable"
+                        tools:ignore="ContentDescription" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/TextViewNormalBlackBold"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/field_height"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:text="@string/tsena_text" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/field_ex_height"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewNormalBlackBold"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="@dimen/space_16"
+                        android:text="@string/stoimost_tovarov" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvFullPrice"
+                        style="@style/TextViewMediumBlackBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="@dimen/space_16"
+                        tools:text="200 P" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/field_ex_height"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewNormalBlackBold"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="@dimen/space_16"
+                        android:text="@string/zalog_text" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvDepositPrice"
+                        style="@style/TextViewMediumBlackBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="@dimen/space_16"
+                        tools:text="200 P" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/field_ex_height"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewNormalBlackBold"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="@dimen/space_16"
+                        android:text="@string/skidka_po_akciyam" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvDiscountPrice"
+                        style="@style/TextViewMediumBlackBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="@dimen/space_16"
+                        tools:text="200 P" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llShippingPriceCOntainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/field_ex_height"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewNormalBlackBold"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="@dimen/space_16"
+                        android:text="@string/dostavka_text" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvShippingPrice"
+                        style="@style/TextViewMediumBlackBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="@dimen/space_16"
+                        tools:text="200 P" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llParkingPriceCOntainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/field_ex_height"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewNormalBlackBold"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="@dimen/space_16"
+                        android:text="@string/oplata_parkovki" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvParkingPrice"
+                        style="@style/TextViewMediumBlackBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="@dimen/space_16"
+                        tools:text="200 P" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/field_ex_height"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewNormalBlackBold"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="@dimen/space_16"
+                        android:text="@string/itogo_text" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvTotalPrice"
+                        style="@style/TextViewMediumBlackBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="@dimen/space_16"
+                        tools:text="200 P" />
+
+                </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnOrder"
+                    style="@style/BlueButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_normal_height"
+                    android:layout_marginStart="@dimen/space_16"
+                    android:layout_marginTop="@dimen/space_16"
+                    android:layout_marginEnd="@dimen/space_16"
+                    android:layout_marginBottom="@dimen/space_16"
+                    android:text="@string/order_btn_text" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <LinearLayout
+            android:id="@+id/llOrderingCompleted"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="@dimen/space_16"
+            android:visibility="invisible"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            tools:visibility="gone">
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="@dimen/_150sdp"
+                android:src="@drawable/png_ordering_complete" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextViewNormalBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_8"
+                android:text="@string/spasibo_za_zakaz" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvOrderId"
+                style="@style/TextViewNormalGray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_8"
+                tools:text="Заказ №1168143 успешно оформлен" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="3" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnGoToPayment"
+                style="@style/BlueButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_normal_height"
+                android:text="@string/oplatit_text" />
+
+        </LinearLayout> -->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

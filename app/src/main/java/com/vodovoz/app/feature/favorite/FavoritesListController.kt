@@ -37,7 +37,7 @@ class FavoritesListController(
     private val space: Int by lazy { context.resources.getDimension(R.dimen.space_16).toInt() }
 
     private val gridMarginDecoration: GridMarginDecoration by lazy {
-        GridMarginDecoration(space)
+        GridMarginDecoration((space * 0.8).toInt())
     }
 
     private val linearMarginDecoration: ListMarginDecoration by lazy {
@@ -78,7 +78,7 @@ class FavoritesListController(
                 imageViewMode.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
-                        R.drawable.png_list
+                        R.drawable.icon_orientation_horizontal
                     )
                 )
                 changeToLinearLayoutManager(recyclerView)
@@ -87,7 +87,7 @@ class FavoritesListController(
                 imageViewMode.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
-                        R.drawable.png_table
+                        R.drawable.icon_orientation
                     )
                 )
                 changeToGridLayoutManager(recyclerView)

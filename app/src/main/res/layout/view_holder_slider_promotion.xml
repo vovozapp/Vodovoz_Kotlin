@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:cardCornerRadius="@dimen/corner_5"
+        app:cardCornerRadius="@dimen/corner_12"
         app:cardElevation="@dimen/elevation_3">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -52,6 +52,7 @@
                 style="@style/TextViewNormalBlackBold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_marginTop="6dp"
                 android:textSize="16sp"
                 android:paddingStart="@dimen/space_16"
@@ -67,6 +68,7 @@
                 style="@style/TextViewSmallLightGrayBold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:paddingStart="@dimen/space_16"
                 android:paddingEnd="@dimen/space_16"
                 android:textSize="14sp"
@@ -81,6 +83,7 @@
                 android:id="@+id/mdDivider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_marginTop="@dimen/space_8"
                 android:layout_marginBottom="@dimen/space_16"
                 android:layout_marginHorizontal="@dimen/space_16"
@@ -93,6 +96,7 @@
                 android:id="@+id/rvProducts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/mdDivider" />
 
@@ -104,6 +108,7 @@
         android:id="@+id/cwCustomerCategory"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
+        android:visibility="gone"
         android:layout_marginStart="24dp"
         android:layout_marginTop="@dimen/space_8"
         app:cardBackgroundColor="@color/green"

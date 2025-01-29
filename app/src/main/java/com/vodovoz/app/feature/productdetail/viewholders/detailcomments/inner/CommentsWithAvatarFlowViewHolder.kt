@@ -55,29 +55,29 @@ class CommentsWithAvatarFlowViewHolder(
 
         imagesAdapter.submitList(item.commentImages ?: emptyList())
 
-        binding.tvUserLetter.visibility = View.GONE
-        binding.imgAuthorPhoto.visibility = View.VISIBLE
-        if (item.authorPhoto.isNullOrEmpty()) {
-            if (item.author.isNullOrEmpty()) {
-                binding.imgAuthorPhoto.setImageResource(R.drawable.png_default_avatar)
-            } else {
-                binding.tvUserLetter.visibility = View.VISIBLE
-                binding.imgAuthorPhoto.visibility = View.GONE
-                binding.tvUserLetter.text = item.author.trim().first().uppercase()
-            }
-        } else {
-            Glide.with(itemView.context)
-                .load(item.authorPhoto)
-                .placeholder(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.png_default_avatar
-                    )
-                )
-                .into(binding.imgAuthorPhoto)
-        }
+        //binding.tvUserLetter.visibility = View.GONE
+        //binding.imgAuthorPhoto.visibility = View.VISIBLE
+        //if (item.authorPhoto.isNullOrEmpty()) {
+        //    if (item.author.isNullOrEmpty()) {
+        //        binding.imgAuthorPhoto.setImageResource(R.drawable.png_default_avatar)
+        //    } else {
+        //        binding.tvUserLetter.visibility = View.VISIBLE
+        //        binding.imgAuthorPhoto.visibility = View.GONE
+        //        binding.tvUserLetter.text = item.author.trim().first().uppercase()
+        //    }
+        //} else {
+        //    Glide.with(itemView.context)
+        //        .load(item.authorPhoto)
+        //        .placeholder(
+        //            ContextCompat.getDrawable(
+        //                itemView.context,
+        //                R.drawable.png_default_avatar
+        //            )
+        //        )
+        //        .into(binding.imgAuthorPhoto)
+        //}
 
         binding.ratingBar.rating = item.rating?.toFloat() ?: 5f
-        binding.ratingComment.text = item.ratingComment.fromHtml()
+        //binding.ratingComment.text = item.ratingComment.fromHtml()
     }
 }

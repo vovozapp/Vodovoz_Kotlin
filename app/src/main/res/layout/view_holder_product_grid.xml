@@ -1,157 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?><!--new-->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
     android:clickable="true"
     android:focusable="true"
-    android:orientation="horizontal">
+    android:background="@drawable/bg_round_corner_border_blue">
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/pvPictures"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:padding="1dp"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgFavoriteStatus"
-        tools:ignore="ContentDescription" />
-
-    <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
-        android:id="@+id/tlIndicators"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/pvPictures"
-        app:layout_constraintStart_toStartOf="@+id/pvPictures"
-        app:layout_constraintTop_toBottomOf="@id/pvPictures"
-        app:spi_dotColor="#BDBDBD"
-        app:spi_dotMinimumSize="3dp"
-        app:spi_dotSelectedColor="@color/bluePrimary"
-        app:spi_dotSelectedSize="4.5dp"
-        app:spi_dotSize="4.5dp"
-        app:spi_dotSpacing="5dp"
-        app:spi_visibleDotCount="7" />
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chipGroup"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingEnd="@dimen/space_16"
-        android:visibility="gone"
-        app:chipSpacingVertical="0dp"
-        app:layout_constraintEnd_toStartOf="@+id/imgFavoriteStatus"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="RtlSymmetry"
-        tools:visibility="visible" />
-
-    <include
-        android:id="@+id/cgStatuses"
-        layout="@layout/view_holder_slider_product_statuses"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingEnd="@dimen/space_16"
-        app:chipSpacingVertical="0dp"
-        app:layout_constraintEnd_toStartOf="@+id/imgFavoriteStatus"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="RtlSymmetry" />
-
-    <ImageView
-        android:id="@+id/imgFavoriteStatus"
-        android:layout_width="@dimen/_17sdp"
-        android:layout_height="@dimen/_17sdp"
-        android:src="@drawable/selector_fav"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
-
-    <TextView
-        android:id="@+id/tvName"
-        style="@style/TextViewNormalBlack"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ellipsize="end"
-        android:gravity="center_vertical"
-        android:maxLines="2"
-        android:minLines="2"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tlIndicators"
-        tools:text="Какое-то интересное не короткое название какой-т вкусное воды, еcwecewcewcewcewcewcewcewcwecwecwecwecwecwecwecще что-то и еще" />
+        android:layout_height="match_parent"
+        android:padding="8dp">
 
-    <LinearLayout
-        android:id="@+id/llRatingContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:orientation="horizontal"
-        android:paddingTop="@dimen/space_2"
-        app:layout_constraintStart_toStartOf="@+id/pvPictures"
-        app:layout_constraintTop_toBottomOf="@id/tvName">
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pvPictures"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="1dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
 
-        <RatingBar
-            android:id="@+id/rbRating"
-            style="?android:attr/ratingBarStyleSmall"
+        <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
+            android:id="@+id/tlIndicators"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:isIndicator="true"
-            android:numStars="5"
-            android:progressTint="@color/accentPrimary"
-            android:stepSize="1" />
+            app:layout_constraintEnd_toEndOf="@+id/pvPictures"
+            app:layout_constraintStart_toStartOf="@+id/pvPictures"
+            app:layout_constraintTop_toBottomOf="@id/pvPictures"
+            app:spi_dotColor="#BDBDBD"
+            android:layout_marginTop="@dimen/_4sdp"
+            app:spi_dotMinimumSize="3dp"
+            app:spi_dotSelectedColor="@color/bluePrimary"
+            app:spi_dotSelectedSize="4.5dp"
+            app:spi_dotSize="4.5dp"
+            app:spi_dotSpacing="5dp"
+            app:spi_visibleDotCount="7" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/space_16"
+            android:visibility="gone"
+            app:chipSpacingVertical="0dp"
+            app:layout_constraintStart_toStartOf="@id/pvPictures"
+            app:layout_constraintBottom_toBottomOf="@id/pvPictures"
+            tools:ignore="RtlSymmetry"
+            tools:visibility="visible" />
+
+        <include
+            android:id="@+id/cgStatuses"
+            layout="@layout/view_holder_slider_product_statuses"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/space_16"
+            app:chipSpacingVertical="0dp"
+            app:layout_constraintEnd_toStartOf="@+id/imgFavoriteStatus"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/imgFavoriteStatus"
+            tools:ignore="RtlSymmetry" />
+
+        <ImageView
+            android:id="@+id/imgFavoriteStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/selector_fav"
+            app:layout_constraintEnd_toEndOf="@id/pvPictures"
+            app:layout_constraintTop_toTopOf="@id/pvPictures"
+            tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/tvCommentAmount"
-            style="@style/TextViewSmallGray"
+            android:id="@+id/tvName"
+            style="@style/TextViewNormalBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="3"
+            android:minLines="3"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llPricesContainer"
+            tools:text="Какое-то интересное не короткое название какой-т вкусное воды, еcwecewcewcewcewcewcewcewcwecwecwecwecwecwecwecще что-то и еще" />
+
+        <LinearLayout
+            android:id="@+id/llRatingContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/llPricesContainer"
+            app:layout_constraintBottom_toBottomOf="@id/llPricesContainer">
+
+            <RatingBar
+                android:id="@+id/rbRating"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:isIndicator="true"
+                android:numStars="1"
+                android:progressTint="@color/accentPrimary"
+                android:stepSize="1" />
+
+            <TextView
+                android:id="@+id/tvRating"
+                style="@style/TextViewSmallBlackBold"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingTop="2dp"
+                android:paddingStart="@dimen/space_4"
+                android:singleLine="true"
+                tools:ignore="RtlSymmetry"
+                tools:text="5.0" />
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/verticalGuideline"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.89312977" />
+
+        <include
+            android:id="@+id/llPricesContainer"
+            layout="@layout/view_holder_slider_product_prices"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:gravity="bottom"
-            android:paddingStart="@dimen/space_4"
-            android:singleLine="true"
-            android:textColor="#889295"
-            android:textSize="@dimen/_10ssp"
-            tools:ignore="RtlSymmetry"
-            tools:text="3 отзыва" />
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tlIndicators"
+            tools:ignore="RtlSymmetry" />
 
-    </LinearLayout>
+        <include
+            android:id="@+id/amountController"
+            layout="@layout/view_product_amount_controller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:translationZ="@dimen/space_16"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvName"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/verticalGuideline"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.89312977" />
-
-    <include
-        android:id="@+id/llPricesContainer"
-        layout="@layout/view_holder_slider_product_prices"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="bottom"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@id/verticalGuideline"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/llRatingContainer"
-        tools:ignore="RtlSymmetry" />
-
-    <include
-        android:id="@+id/amountController"
-        layout="@layout/view_product_amount_controller"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:translationZ="@dimen/space_16"
-        app:layout_constraintBottom_toBottomOf="@+id/llPricesContainer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintTop_toTopOf="@id/llPricesContainer" />
-
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

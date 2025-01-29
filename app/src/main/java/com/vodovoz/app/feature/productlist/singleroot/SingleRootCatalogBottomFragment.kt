@@ -1,7 +1,11 @@
 package com.vodovoz.app.feature.productlist.singleroot
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -11,15 +15,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseBottomSheetFragment
+import com.vodovoz.app.common.content.BaseFragment
+import com.vodovoz.app.common.permissions.PermissionsController
+import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.databinding.BsCatalogSingleFlowBinding
 import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragment
+import com.vodovoz.app.feature.productlist.PaginatedProductsCatalogFragmentDirections
 import com.vodovoz.app.feature.productlist.singleroot.adapter.SingleRootCatalogAdapter
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class SingleRootCatalogBottomFragment : BaseBottomSheetFragment() {
+class SingleRootCatalogBottomFragment : BaseFragment() {
 
     override fun layout(): Int = R.layout.bs_catalog_single_flow
 
@@ -35,6 +44,10 @@ class SingleRootCatalogBottomFragment : BaseBottomSheetFragment() {
         viewModel.changeSelectedCategory(it)
     }
 
+    @Inject
+    lateinit var permissionsControllerFactory: PermissionsController.Factory
+    private val permissionsController by lazy { permissionsControllerFactory.create(requireActivity()) }
+
     private val space: Int by lazy {
         resources.getDimension(R.dimen.last_item_bottom_normal_space).toInt()
     }
@@ -47,11 +60,51 @@ class SingleRootCatalogBottomFragment : BaseBottomSheetFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initSearch()
         initCategoryRecycler()
-        initCloseButton()
-        initApplyButton()
         observeUiState()
         observeEvents()
+    }
+
+    private fun initSearch() {
+        initSearchToolbar(
+            "Поиск",
+            { findNavController().navigate(SingleRootCatalogBottomFragmentDirections.actionToSearchFragment())},
+            { findNavController().navigate(SingleRootCatalogBottomFragmentDirections.actionToSearchFragment()) },
+            { navigateToQrCodeFragment() },
+            { startSpeechRecognizer() },
+            true
+        )
+    }
+
+    private fun navigateToQrCodeFragment() {
+        permissionsController.methodRequiresCameraPermission {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresCameraPermission
+            }
+
+            findNavController().navigate(R.id.qrCodeFragment)
+
+        }
+    }
+
+    private fun startSpeechRecognizer() {
+        permissionsController.methodRequiresRecordAudioPermission {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.RECORD_AUDIO
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresRecordAudioPermission
+            }
+
+            SpeechDialogFragment().show(childFragmentManager, "TAG")
+
+        }
     }
 
     private fun observeEvents() {
@@ -67,7 +120,6 @@ class SingleRootCatalogBottomFragment : BaseBottomSheetFragment() {
                                         PaginatedProductsCatalogFragment.CATEGORY_ID,
                                         it.id
                                     )
-                                dialog?.dismiss()
                             }
                         }
                     }
@@ -89,8 +141,8 @@ class SingleRootCatalogBottomFragment : BaseBottomSheetFragment() {
 
                         if (state.data.bundle != null) {
                             singleRootCatalogAdapter.categoryUIList =
-                                state.data.bundle.categoryUIList
-                            singleRootCatalogAdapter.way = state.data.bundle.way
+                                state.data.bundle.categoryUIList[0].categoryUIList
+                            binding.tvCategoryName.text = state.data.bundle.categoryUIList[0].name
                             singleRootCatalogAdapter.notifyDataSetChanged()
                         }
 
@@ -107,18 +159,6 @@ class SingleRootCatalogBottomFragment : BaseBottomSheetFragment() {
         binding.rvCategories.addMarginDecoration { rect, view, parent, state ->
             if (parent.getChildAdapterPosition(view) == state.itemCount - 1) rect.bottom =
                 lastItemSpace
-        }
-    }
-
-    private fun initCloseButton() {
-        binding.imgClose.setOnClickListener {
-            dialog?.cancel()
-        }
-    }
-
-    private fun initApplyButton() {
-        binding.btnChoose.setOnClickListener {
-            viewModel.navigateToCatalog()
         }
     }
 }

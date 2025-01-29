@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?><!--new -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/llAutDataContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextViewNormalBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:text="@string/nazvanie_kompanii"
+            android:textColor="@color/text_grey_composable"
+            android:textSize="14sp"/>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etINN"
+            style="@style/TextField"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/selector_edit_text"
+            android:hint="@string/enter_data_hint"
+            android:inputType="textPassword"
+            android:paddingHorizontal="16dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvWrongINN"
+            style="@style/TextViewNormalBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:text="@string/empty_field"
+            android:textColor="@color/promo_red"
+            android:textSize="12sp"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextViewNormalBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:text="@string/nazvanie_kompanii"
+            android:textColor="@color/text_grey_composable"
+            android:textSize="14sp"/>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etOrgName"
+            style="@style/TextField"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/selector_edit_text"
+            android:hint="@string/enter_data_hint"
+            android:inputType="textPassword"
+            android:paddingHorizontal="16dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvWrongOrgName"
+            style="@style/TextViewNormalBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:text="@string/empty_field"
+            android:textColor="@color/promo_red"
+            android:textSize="12sp"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextViewNormalBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:text="@string/fio"
+            android:textColor="@color/text_grey_composable"
+            android:textSize="14sp"/>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etFIO"
+            style="@style/TextField"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/selector_edit_text"
+            android:hint="@string/enter_data_hint"
+            android:inputType="textPassword"
+            android:paddingHorizontal="16dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvWrongFIO"
+            style="@style/TextViewNormalBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:text="@string/empty_field"
+            android:textColor="@color/promo_red"
+            android:textSize="12sp"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextViewNormalBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:text="@string/email_hint_text"
+            android:textColor="@color/text_grey_composable"
+            android:textSize="14sp"/>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEmail"
+            style="@style/TextField"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/selector_edit_text"
+            android:hint="@string/enter_data_hint"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="16dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvWrongEmail"
+            style="@style/TextViewNormalBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:text="@string/empty_field"
+            android:textColor="@color/promo_red"
+            android:textSize="12sp"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextViewNormalBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:text="@string/password_title"
+            android:textColor="@color/text_grey_composable"
+            android:textSize="14sp"/>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPassword"
+            style="@style/TextField"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/selector_edit_text"
+            android:hint="@string/enter_data_hint"
+            android:inputType="textPassword"
+            android:paddingHorizontal="16dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvWrongPassword"
+            style="@style/TextViewNormalBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:text="@string/empty_field"
+            android:textColor="@color/promo_red"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnAuth"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        style="@style/BlueButton"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp"
+        android:text="@string/choose"
+        app:layout_constraintTop_toBottomOf="@+id/llAutDataContainer"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

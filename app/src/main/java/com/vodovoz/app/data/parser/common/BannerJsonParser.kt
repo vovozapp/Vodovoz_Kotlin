@@ -16,7 +16,7 @@ object BannerJsonParser {
             }
         }
 
-    fun JSONObject.parseBannerEntity() = BannerEntity(
+    private fun JSONObject.parseBannerEntity() = BannerEntity(
         id = getLong("ID"),
         name = getString("NAME"),
         detailPicture = parseDetailImage(),

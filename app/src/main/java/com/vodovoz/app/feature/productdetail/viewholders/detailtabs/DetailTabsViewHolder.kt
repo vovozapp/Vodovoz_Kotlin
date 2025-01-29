@@ -32,6 +32,7 @@ class DetailTabsViewHolder(
         if (productPropertyGroupsAdapter.viewMode == ProductPropertyGroupsAdapter.ViewMode.ALL) {
             binding.allProperties.visibility = View.GONE
         }
+
         binding.allProperties.setOnClickListener {
             productPropertyGroupsAdapter.updateViewMode(ProductPropertyGroupsAdapter.ViewMode.ALL)
             binding.allProperties.visibility = View.GONE

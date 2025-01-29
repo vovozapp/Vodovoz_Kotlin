@@ -87,7 +87,7 @@ class ProductDetailsAdapter(
                 )
             }
 
-            //Products - recommendProductSliderFragment, byWithProductsSliderFragment
+            //Products - recommendProductSliderFragment, buyWithProductsSliderFragment
             R.layout.fragment_slider_product -> {
                 HomeProductsSliderViewHolder(
                     getViewFromInflater(viewType, parent),

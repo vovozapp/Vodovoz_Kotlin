@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateInterpolator
+import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.IntentSenderRequest
@@ -162,7 +163,7 @@ class MainFragment : BaseFragment() {
                     .collect { state ->
                         if (state == null || state.count == 0) {
                             binding.circleAmount.isVisible = false
-                            binding.nvNavigation.menu.getItem(3).title = "Корзина"
+                            binding.nvNavigation.menu.getItem(2).title = "Корзина"
                         } else {
                             binding.circleAmount.text = state.count.toString()
                             binding.circleAmount.isVisible = true
@@ -178,7 +179,7 @@ class MainFragment : BaseFragment() {
                                         .scaleY(1f)
                                 }
                                 .start()
-                            binding.nvNavigation.menu.getItem(3).title =
+                            binding.nvNavigation.menu.getItem(2).title =
                                 state.total.toString() + " ₽"
                         }
                     }
@@ -192,12 +193,6 @@ class MainFragment : BaseFragment() {
                 tabManager
                     .observeBottomNavProfileState()
                     .collect { state ->
-                        if (state == null) {
-                            binding.circleAmountProfile.isVisible = false
-                        } else {
-                            binding.circleAmountProfile.text = state.toString()
-                            binding.circleAmountProfile.isVisible = true
-                        }
                     }
             }
         }

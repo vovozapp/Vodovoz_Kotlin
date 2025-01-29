@@ -90,8 +90,6 @@ class PastPurchasesFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        categoryTabsController.bind(binding.categoriesRecycler)
         favoritesController.bind(binding.productRecycler, binding.refreshEmptyFavoriteContainer)
 
         viewModel.clearScrollToTop()
@@ -219,17 +217,11 @@ class PastPurchasesFragment : BaseFragment() {
 
         val categoryUiList = state.favoriteCategory?.categoryUIList ?: emptyList()
 
-        bindTabsVisibility(categoryUiList.isNotEmpty())
-
 
         categoryTabsController.submitList(categoryUiList, "")
 
         binding.tvCategoryName.text = state.favoriteCategory?.name
-        binding.tvProductAmount.text = state.favoriteCategory?.productAmount.toString()
-        binding.availableTitle.text = state.availableTitle
-        binding.notAvailableTitle.text = state.notAvailableTitle
-        binding.availableContainer.isVisible =
-            state.availableTitle != null || state.notAvailableTitle != null
+
 
         binding.tvSort.visibility = View.INVISIBLE
         state.favoriteCategory?.sortTypeList?.let { sortTypeList ->
@@ -244,61 +236,10 @@ class PastPurchasesFragment : BaseFragment() {
                 binding.tvSort.visibility = View.VISIBLE
             }
         }
-        binding.imgCategories.setOnClickListener {
+        binding.llSort.setOnClickListener {
             val category = state.favoriteCategory ?: return@setOnClickListener
             val id = state.selectedCategoryId //?: return@setOnClickListener
             showMiniCatalog(category, id)
-        }
-
-        binding.availableButton.setOnClickListener {
-            binding.availableButton.setCardBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.white
-                )
-            )
-            binding.availableButton.elevation = resources.getDimension(R.dimen.elevation_1)
-            binding.notAvailableButton.setCardBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.light_gray
-                )
-            )
-            binding.notAvailableButton.elevation = 0f
-            viewModel.updateByIsAvailable(true)
-        }
-
-        binding.notAvailableButton.setOnClickListener {
-            binding.notAvailableButton.setCardBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.white
-                )
-            )
-            binding.notAvailableButton.elevation = resources.getDimension(R.dimen.elevation_1)
-            binding.availableButton.setCardBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.light_gray
-                )
-            )
-            binding.availableButton.elevation = 0f
-            viewModel.updateByIsAvailable(false)
-        }
-
-    }
-
-    private fun bindTabsVisibility(vis: Boolean) {
-        when (vis) {
-            true -> {
-                binding.categoriesRecycler.visibility = View.VISIBLE
-                binding.imgCategories.visibility = View.VISIBLE
-            }
-
-            else -> {
-                binding.imgCategories.visibility = View.GONE
-                binding.categoriesRecycler.visibility = View.GONE
-            }
         }
     }
 
@@ -386,13 +327,7 @@ class PastPurchasesFragment : BaseFragment() {
     }
 
     private fun initSearch() {
-        initSearchToolbar(
-            { findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment()) },
-            { findNavController().navigate(FavoriteFragmentDirections.actionToSearchFragment()) },
-            { navigateToQrCodeFragment() },
-            { startSpeechRecognizer() },
-            showBackBtn = true
-        )
+
     }
 
     @Inject

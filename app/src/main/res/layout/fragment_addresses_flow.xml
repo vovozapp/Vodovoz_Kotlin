@@ -41,6 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_normal_height"
             android:layout_margin="@dimen/space_16"
+            android:textSize="17sp"
             android:text="@string/add_address_btn_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

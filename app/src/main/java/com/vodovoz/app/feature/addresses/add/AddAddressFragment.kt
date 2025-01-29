@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.addresses.add
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
@@ -13,11 +14,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vodovoz.app.R
-import com.vodovoz.app.common.content.BaseBottomSheetFragment
+import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.config.AddressConfig
-import com.vodovoz.app.databinding.BsAddAddressSearchBinding
+import com.vodovoz.app.databinding.FragmentAddAddressSearchBinding
 import com.vodovoz.app.feature.map.MapController
 import com.vodovoz.app.feature.map.MapFlowViewModel
 import com.vodovoz.app.feature.map.adapter.AddressResult
@@ -35,12 +36,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AddAddressBottomFragment : BaseBottomSheetFragment() {
+class AddAddressFragment : BaseFragment() {
 
-    override fun layout(): Int = R.layout.bs_add_address_search
+    override fun layout(): Int = R.layout.fragment_add_address_search
 
-    internal val binding: BsAddAddressSearchBinding by viewBinding {
-        BsAddAddressSearchBinding.bind(
+    internal val binding: FragmentAddAddressSearchBinding by viewBinding {
+        FragmentAddAddressSearchBinding.bind(
             contentView
         )
     }
@@ -53,6 +54,7 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
     private val userLocationLayer: UserLocationLayer by lazy {
         mapKit.createUserLocationLayer(binding.mapView.mapWindow)
     }
+
     private val mapKit: MapKit by lazy {
         MapKitFactory.getInstance()
     }
@@ -81,22 +83,20 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
             binding.mapView
         )
 
-        mapController.initSearch(
-            null,
-            binding.searchEdit,
-            binding.searchContainer,
-            binding.searchImage,
-            binding.clear,
-            binding.tvFullAddress,
-            binding.searchErrorTv,
-            binding.addressesRecycler
-        )
+        //mapController.initSearch(
+        //    null,
+        //    binding.searchEdit,
+        //    binding.searchContainer,
+        //    binding.searchImage,
+        //    binding.clear,
+        //    binding.tvFullAddress,
+        //    binding.addressesRecycler
+        //)
+//
+        //mapController.initAddressesRecycler(
+        //    binding.addressesRecycler
+        //)
 
-        mapController.initAddressesRecycler(
-            binding.addressesRecycler
-        )
-
-        initSwitchGroup()
         observeUiState()
         observeEvents()
         initButtons()
@@ -116,62 +116,62 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
     }
 
     private fun buildAddressFields(address: AddressUI?) {
-        if (address == null) return
-        binding.searchEdit.updateText(address.fullAddress.substringAfter("Россия, "))
-        if (address.fullAddress.isNotBlank()) {
-            binding.tvFullAddress.visibility = View.VISIBLE
-        } else {
-            binding.tvFullAddress.visibility = View.INVISIBLE
+        //if (address == null) return
+        //binding.searchEdit.updateText(address.fullAddress.substringAfter("Россия, "))
+        //if (address.fullAddress.isNotBlank()) {
+        //    binding.tvFullAddress.visibility = View.VISIBLE
+        //} else {
+        //    binding.tvFullAddress.visibility = View.INVISIBLE
+        //}
+        //binding.tvFullAddress.text = address.fullAddress.substringAfter("Россия, ")
+        if (address != null) {
+            binding.etEntrance.setText(address.entrance)
+            binding.etFloor.setText(address.floor)
+            binding.etFlat.setText(address.flat)
+            binding.etIntercom.setText(address.intercom)
+            Log.d("rserbgdrtbgh", address.entrance)
         }
-        binding.tvFullAddress.text = address.fullAddress.substringAfter("Россия, ")
     }
 
     private fun initButtons() {
         binding.btnAdd.setOnClickListener {
-            val type = when (binding.scPersonalHouseDelivery.isChecked) {
+            val type = when (binding.cbHouse.isChecked) {
                 true -> AddressConfig.PERSONAL_ADDRESS_TYPE
                 false -> AddressConfig.OFFICE_ADDRESS_TYPE
             }
 
             val entrance = binding.etEntrance.text.toString()
-            val floor = binding.tilFloor.textOrError(FieldValidationsSettings.FLOOR_LENGTH)
-                ?: return@setOnClickListener
-            val office = binding.tilFlat.textOrError(FieldValidationsSettings.OFFICE_LENGTH)
-                ?: return@setOnClickListener
-            val comment = binding.etComment.text.toString()
+            val floor = binding.etFloor.text.toString()
+            val office = binding.etFlat.text.toString()
+            val intercom = binding.etIntercom.text.toString()
 
             viewModel.action(
                 entrance = entrance,
                 floor = floor,
                 office = office,
-                comment = comment,
+                intercom = intercom,
                 type = type
             )
 
         }
-
-        binding.cancel.setOnClickListener {
-            dismiss()
-        }
     }
 
     private fun bindTextWatchers() {
-        binding.searchEdit.doOnTextChanged { _, _, _, count ->
-            if (count > 0) {
-                binding.clear.isVisible = true
-                binding.tvFullAddress.isVisible = true
-                binding.searchErrorTv.isVisible = false
-            }
-        }
+        //binding.searchEdit.doOnTextChanged { _, _, _, count ->
+        //    if (count > 0) {
+        //        binding.clear.isVisible = true
+        //        binding.tvFullAddress.isVisible = true
+        //    }
+        //}
 
         binding.etEntrance.doOnTextChanged { _, _, _, count ->
-            if (count > 0) binding.tilEntrance.isErrorEnabled = false
+
         }
         binding.etFloor.doOnTextChanged { _, _, _, count ->
-            if (count > 0) binding.tilFloor.isErrorEnabled = false
+
         }
         binding.etFlat.doOnTextChanged { _, _, _, count ->
-            if (count > 0) binding.tilFlat.isErrorEnabled = false
+
         }
     }
 
@@ -188,7 +188,6 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
                         }
 
                         buildAddressFields(state.data.addressUI)
-
                         showError(state.error)
                     }
             }
@@ -210,10 +209,8 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
                                     R.id.savedAddressesDialogFragment,
                                     false
                                 )
-                                dismiss()
                             }
                             is MapFlowViewModel.MapFlowEvents.ShowSearchError -> {
-                                binding.searchErrorTv.isVisible = true
                             }
                             is MapFlowViewModel.MapFlowEvents.Submit -> {
                                 it.list.forEach { point ->
@@ -227,37 +224,20 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
         }
     }
 
-    private fun initSwitchGroup() {
-        binding.scOfficeDelivery.setOnCheckedChangeListener { _, isCheck ->
-            when (isCheck) {
-                true -> binding.scPersonalHouseDelivery.isChecked = false
-                false -> binding.scPersonalHouseDelivery.isChecked = true
-            }
-        }
-
-        binding.scPersonalHouseDelivery.setOnCheckedChangeListener { _, isCheck ->
-            when (isCheck) {
-                true -> binding.scOfficeDelivery.isChecked = false
-                false -> binding.scOfficeDelivery.isChecked = true
-            }
-        }
-        binding.scPersonalHouseDelivery.isChecked = true
-    }
-
     private fun showContainer(bool: Boolean) {
 
         if (bool) {
-            binding.addressesRecycler.visibility = View.VISIBLE
-
-            binding.clear.isVisible = true
-            binding.searchEdit.focusSearch(View.FOCUS_UP)
-            binding.searchContainer.elevation = 0f
+            //binding.addressesRecycler.visibility = View.VISIBLE
+//
+            //binding.clear.isVisible = true
+            //binding.searchEdit.focusSearch(View.FOCUS_UP)
+            //binding.searchContainer.elevation = 0f
         } else {
-            binding.addressesRecycler.visibility = View.GONE
-
-            binding.clear.isVisible = false
-            binding.searchEdit.clearFocus()
-            binding.searchContainer.elevation = resources.getDimension(R.dimen.elevation_3)
+            //binding.addressesRecycler.visibility = View.GONE
+//
+            //binding.clear.isVisible = false
+            //binding.searchEdit.clearFocus()
+            //binding.searchContainer.elevation = resources.getDimension(R.dimen.elevation_3)
 
             val view = requireActivity().currentFocus
             if (view != null) {
@@ -271,7 +251,7 @@ class AddAddressBottomFragment : BaseBottomSheetFragment() {
     private fun fetchAddressResultClickListener(): AddressResultClickListener {
         return object : AddressResultClickListener {
             override fun onAddressClick(address: AddressResult) {
-                binding.searchEdit.setText(address.text)
+                //binding.searchEdit.setText(address.text)
                 mapController.search(address.text)
             }
         }

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?><!--new -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvPhoneNumber"
+        style="@style/TextAppearance.Vodovoz.Body2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_16"
+        android:layout_marginTop="8dp"
+        android:text="@string/enter_code"
+        android:textColor="@color/text_black_composable"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/llAutByPhoneContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:layout_marginTop="58dp"
+        app:layout_constraintTop_toBottomOf="@id/tvPhoneNumber"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCode1"
+                style="@style/TextField"
+                android:layout_width="42dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/selector_edit_text"
+                android:inputType="number"
+                android:maxLines="1"
+                android:gravity="center"
+                />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCode2"
+                style="@style/TextField"
+                android:layout_width="42dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/selector_edit_text"
+                android:inputType="number"
+                android:maxLines="1"
+                android:gravity="center" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCode3"
+                style="@style/TextField"
+                android:layout_width="42dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/selector_edit_text"
+                android:inputType="number"
+                android:maxLines="1"
+                android:gravity="center"
+                />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCode4"
+                style="@style/TextField"
+                android:layout_width="42dp"
+                android:layout_height="48dp"
+                android:background="@drawable/selector_edit_text"
+                android:inputType="number"
+                android:maxLines="1"
+                android:gravity="center"
+                />
+        </LinearLayout>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvExpiredText"
+            style="@style/TextAppearance.Vodovoz.Body2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:layout_marginTop="105dp"
+            android:visibility="visible"
+            tools:visibility="visible"
+            android:text="Повторно получить SMS с кодом можно через:"
+            tools:ignore="HardcodedText"
+            android:textColor="@color/text_grey_composable"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvExpired"
+            style="@style/TextAppearance.Vodovoz.Body2"
+            android:textColor="@color/new_product_blue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:layout_marginTop="8dp"
+            android:visibility="visible"
+            tools:visibility="visible"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

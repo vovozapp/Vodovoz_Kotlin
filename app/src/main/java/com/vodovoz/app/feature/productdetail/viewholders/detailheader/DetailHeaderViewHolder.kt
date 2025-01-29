@@ -25,6 +25,7 @@ import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setMinimalPriceText
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceCondition
 import com.vodovoz.app.ui.extensions.TextBuilderExtensions.setPriceText
 import com.vodovoz.app.ui.model.ProductDetailUI
+import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.view.LabelChip
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
@@ -60,20 +61,6 @@ class DetailHeaderViewHolder(
             }
         }
     )
-
-    private val amountControllerTimer =
-        object : CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
-            override fun onTick(millisUntilFinished: Long) {}
-            override fun onFinish() {
-                val item = item?.productDetailUI ?: return
-                productsClickListener.onChangeProductQuantity(
-                    id = item.id,
-                    cartQuantity = item.cartQuantity,
-                    oldQuantity = item.oldQuantity
-                )
-                hideAmountController(item)
-            }
-        }
 
     init {
 
@@ -159,15 +146,16 @@ class DetailHeaderViewHolder(
             productsClickListener.onFavoriteClick(item.id, item.isFavorite)
         }
 
-        binding.amountController.add.setOnClickListener {
-            val item = item ?: return@setOnClickListener
-            add(item)
-        }
         binding.amountController.reduceAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
             reduceAmount(item)
         }
         binding.amountController.increaseAmount.setOnClickListener {
+            val item = item ?: return@setOnClickListener
+            increaseAmount(item)
+        }
+
+        binding.amountController.intoCartButton.setOnClickListener {
             val item = item ?: return@setOnClickListener
             increaseAmount(item)
         }
@@ -222,31 +210,6 @@ class DetailHeaderViewHolder(
                 || item.productDetailUI.rutubeVideoCode.isNotEmpty()
 
         //If left items = 0
-        when (item.productDetailUI.leftItems == 0) {
-            true -> {
-                when (item.replacementProductsCategoryDetail?.productUIList?.isEmpty()) {
-                    true -> {
-                        binding.amountController.add.isSelected = true
-                    }
-
-                    false -> {
-                        binding.amountController.add.setBackgroundResource(R.drawable.bkg_button_orange_circle_normal)
-                        binding.amountController.add.setImageDrawable(
-                            ContextCompat.getDrawable(
-                                itemView.context,
-                                R.drawable.ic_swap
-                            )
-                        )
-                    }
-
-                    else -> {}
-                }
-            }
-
-            false -> {
-                binding.amountController.add.isSelected = false
-            }
-        }
 
         //Price per unit / or order quantity
         when (item.productDetailUI.pricePerUnit.isNotEmpty()) {
@@ -254,7 +217,6 @@ class DetailHeaderViewHolder(
                 binding.tvPricePerUnit.visibility = View.VISIBLE
                 binding.tvPricePerUnit.text = item.productDetailUI.pricePerUnit
             }
-
             false -> binding.tvPricePerUnit.visibility = View.GONE
         }
 
@@ -281,47 +243,22 @@ class DetailHeaderViewHolder(
         }
         when (haveDiscount) {
             true -> {
-                binding.tvCurrentPrice.setTextColor(
-                    ContextCompat.getColor(
-                        itemView.context,
-                        R.color.red
-                    )
-                )
                 binding.tvOldPrice.visibility = View.VISIBLE
             }
 
             false -> {
-                binding.tvCurrentPrice.setTextColor(
-                    ContextCompat.getColor(
-                        itemView.context,
-                        R.color.text_black
-                    )
-                )
                 binding.tvOldPrice.visibility = View.GONE
             }
         }
 
         //Cart amount
-        binding.amountController.circleAmount.text = item.productDetailUI.cartQuantity.toString()
         binding.amountController.amount.text = item.productDetailUI.cartQuantity.toString()
-
-        when (item.productDetailUI.cartQuantity > 0) {
-            true -> {
-                binding.amountController.circleAmount.visibility = View.VISIBLE
-            }
-
-            false -> {
-                binding.amountController.circleAmount.visibility = View.GONE
-            }
-        }
 
         //Comment
         if (item.productDetailUI.commentsAmount == 0) {
             binding.tvCommentAmount.visibility = View.GONE
-            binding.counterCommentsArrow.visibility = View.GONE
         } else {
             binding.tvCommentAmount.visibility = View.VISIBLE
-            binding.counterCommentsArrow.visibility = View.VISIBLE
             binding.tvCommentAmount.text = item.productDetailUI.commentsAmountText
         }
 
@@ -365,7 +302,6 @@ class DetailHeaderViewHolder(
                         oldPrice = item.productDetailUI.priceUIList.first().oldPrice
                     )
                 }
-
                 false -> binding.cwDiscountContainer.visibility = View.GONE
             }
         }
@@ -401,103 +337,37 @@ class DetailHeaderViewHolder(
         }
     }
 
-    private fun showAmountController() {
-        binding.amountController.circleAmount.visibility = View.GONE
-        binding.amountController.add.visibility = View.GONE
-        binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
-        amountControllerTimer.start()
-    }
-
-    internal fun hideAmountController(item: ProductDetailUI) {
-        if (item.cartQuantity > 0) {
-            binding.amountController.circleAmount.visibility = View.VISIBLE
+    private fun showAmountController(item: ProductDetailUI?) {
+        if (item != null) {
+            if (item.cartQuantity > 0) {
+                binding.amountController.intoCartButton.visibility = View.INVISIBLE
+                binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
+            }
+            else{
+                binding.amountController.intoCartButton.visibility = View.VISIBLE
+                binding.amountController.amountControllerDeployed.visibility = View.INVISIBLE
+            }
         }
-        binding.amountController.add.visibility = View.VISIBLE
-        binding.amountController.amountControllerDeployed.visibility = View.GONE
     }
 
     private fun reduceAmount(item: DetailHeader) {
         with(item.productDetailUI) {
             cartQuantity--
             if (cartQuantity < 0) cartQuantity = 0
-            amountControllerTimer.cancel()
-            amountControllerTimer.start()
             updateCartQuantity(item.productDetailUI)
         }
     }
 
     private fun increaseAmount(item: DetailHeader) {
         item.productDetailUI.cartQuantity++
-        amountControllerTimer.cancel()
-        amountControllerTimer.start()
         updateCartQuantity(item.productDetailUI)
     }
 
-    private fun add(item: DetailHeader) {
-        if (item.productDetailUI.leftItems == 0) {
-            when (item.replacementProductsCategoryDetail?.productUIList?.isEmpty()) {
-                true -> {
-                    productsClickListener.onNotifyWhenBeAvailable(
-                        item.productDetailUI.id,
-                        item.productDetailUI.name,
-                        item.productDetailUI.detailPictureList.first()
-                    )
-                }
-
-                false -> {
-                    clickListener.navigateToReplacement(
-                        item.productDetailUI.detailPictureList.first(),
-                        item.replacementProductsCategoryDetail.productUIList.toTypedArray(),
-                        item.productDetailUI.id,
-                        item.productDetailUI.name,
-                        item.categoryId
-                    )
-                }
-
-                else -> {
-
-                }
-            }
-
-        } else {
-            if (item.productDetailUI.cartQuantity == 0) {
-                item.productDetailUI.cartQuantity++
-                updateCartQuantity(item.productDetailUI)
-            }
-            showAmountController()
-        }
-    }
-
-
     private fun updateCartQuantity(item: ProductDetailUI) {
-        with(item) {
-            if (cartQuantity < 0) {
-                cartQuantity = 0
-            }
-            binding.amountController.amount.text = cartQuantity.toString()
-            binding.amountController.circleAmount.text = cartQuantity.toString()
-            if (!binding.amountController.amountControllerDeployed.isVisible) {
-                when (cartQuantity > 0) {
-                    true -> {
-                        binding.amountController.circleAmount.visibility = View.VISIBLE
-                    }
-
-                    false -> {
-                        binding.amountController.circleAmount.visibility = View.GONE
-                    }
-                }
-            }
+        if (item.cartQuantity < 0) {
+            item.cartQuantity = 0
         }
+        binding.amountController.amount.text = item.cartQuantity.toString()
+        showAmountController(item)
     }
-
-    override fun attach() {
-        super.attach()
-
-    }
-
-    override fun detach() {
-        super.detach()
-        amountControllerTimer.cancel()
-    }
-
 }

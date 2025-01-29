@@ -4,6 +4,7 @@
     <string name="personal_addresses_title" translatable="false">Частное лицо</string>
     <string name="company_addresses_title" translatable="false">Компания</string>
     <string name="add_address_btn_text" translatable="false">Добавить адрес</string>
+    <string name="bring_here_btn_text" translatable="false">Доставить сюда</string>
 
     <string name="new_address_title" translatable="false">Новый адрес</string>
     <string name="locality_hint_text" translatable="false">Город</string>
@@ -13,9 +14,10 @@
     <string name="floor_hint_text" translatable="false">Этаж</string>
     <string name="flat_hint_text" translatable="false">Квартира</string>
     <string name="office_hint_text" translatable="false">Офис</string>
+    <string name="intercom_hint_text" translatable="false">Домофон</string>
     <string name="personal_house_delivery_text" translatable="false">Доставка в частный дом</string>
     <string name="company_office_delivery_text" translatable="false">Доставка в офис</string>
-    <string name="courier_comment_hint_text" translatable="false">Примечание для курьера</string>
+    <string name="courier_comment_hint_text" translatable="false">Комментарий для курьера</string>
     <string name="submit_address_btn_text" translatable="false">Подтвердить</string>
 
 </resources>

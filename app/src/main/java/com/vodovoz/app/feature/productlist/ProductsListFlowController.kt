@@ -27,15 +27,16 @@ class ProductsListFlowController(
     ratingProductManager: RatingProductManager
 ) : ItemController(SortedAdapter(productsClickListener, cartManager, likeManager, ratingProductManager)) {
 
-    private val space: Int by lazy { context.resources.getDimension(R.dimen.space_16).toInt() }
+    private val space: Int = 16
 
     private val gridMarginDecoration: GridMarginDecoration by lazy {
         GridMarginDecoration(space)
     }
 
     private val linearMarginDecoration: ListMarginDecoration by lazy {
-        ListMarginDecoration((space*0.8).toInt())
+        ListMarginDecoration(space)
     }
+
     private val linearDividerItemDecoration: DividerItemDecoration by lazy {
         DividerItemDecoration(context, VERTICAL)
     }
@@ -44,7 +45,6 @@ class ProductsListFlowController(
         super.initList(recyclerView)
         with(recyclerView) {
             layoutManager = GridLayoutManager(context, 1)
-
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
@@ -52,7 +52,7 @@ class ProductsListFlowController(
                     val visibleItemCount = layoutManager.childCount
                     val totalItemCount = layoutManager.itemCount
                     val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
-                    if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                    if ((visibleItemCount + pastVisibleItems) >= totalItemCount-10) {
                         viewModel.loadMoreSorted()
                     }
                 }
@@ -64,11 +64,11 @@ class ProductsListFlowController(
         clearDecorators(recyclerView)
         when (manager) {
             ProductsListFlowViewModel.LINEAR -> {
-                imageViewMode.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_list))
+                imageViewMode.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icon_orientation_horizontal))
                 changeToLinearLayoutManager(recyclerView)
             }
             ProductsListFlowViewModel.GRID -> {
-                imageViewMode.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.png_table))
+                imageViewMode.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icon_orientation))
                 changeToGridLayoutManager(recyclerView)
             }
         }
@@ -88,13 +88,11 @@ class ProductsListFlowController(
             when (manager) {
                 ProductsListFlowViewModel.GRID -> {
                     removeItemDecoration(linearMarginDecoration)
-                    removeItemDecoration(linearDividerItemDecoration)
                     addItemDecoration(gridMarginDecoration)
                 }
                 ProductsListFlowViewModel.LINEAR -> {
                     removeItemDecoration(gridMarginDecoration)
                     addItemDecoration(linearMarginDecoration)
-                    addItemDecoration(linearDividerItemDecoration)
                 }
             }
         }

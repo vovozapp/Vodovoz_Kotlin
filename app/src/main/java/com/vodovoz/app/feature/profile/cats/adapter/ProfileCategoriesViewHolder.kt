@@ -33,18 +33,11 @@ class ProfileCategoriesViewHolder(
     override fun setState(state: Parcelable) {
         binding.insideCategoriesRv.layoutManager?.onRestoreInstanceState(state)
     }
+
     override fun bind(item: ProfileCategoryUI) {
         super.bind(item)
-
-
         if (item.insideCategories != null) {
             val list = item.insideCategories
-            if (item.title.isNullOrEmpty().not()) {
-                binding.categoryTitleTv.text = item.title
-                binding.categoryTitleTv.isVisible = true
-            } else {
-                binding.categoryTitleTv.isVisible = false
-            }
             innerAdapter.submitList(list)
             binding.root.isVisible = true
         } else {

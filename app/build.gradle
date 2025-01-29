@@ -17,8 +17,8 @@ android {
         applicationId "com.vodovoz.app"
         minSdk 21
         targetSdk 34
-        versionCode 161
-        versionName "1.5.52"
+        versionCode 165
+        versionName "1.5.55"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -91,8 +91,10 @@ dependencies {
     ksp "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
 
     //Glide
-    implementation 'com.github.bumptech.glide:glide:4.13.1'
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
     ksp "com.github.bumptech.glide:compiler:4.13.0"
+    implementation("com.google.accompanist:accompanist-glide:0.15.0")
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
 
     //MapKit
     implementation 'com.yandex.android:maps.mobile:4.0.0-full'
@@ -152,7 +154,7 @@ dependencies {
 
     //Yandex Metrica
     implementation 'com.yandex.android:mobmetricalib-ndk-crashes:1.1.0'
-    implementation'com.yandex.android:mobmetricalib:5.3.0'
+    implementation 'com.yandex.android:mobmetricalib:5.3.0'
 
     // Biometric
     implementation "androidx.biometric:biometric-ktx:1.2.0-alpha05"
@@ -176,9 +178,12 @@ dependencies {
     implementation 'androidx.compose.material3:material3:1.2.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.8.4'
 
-    implementation "io.coil-kt:coil:2.6.0"
-    implementation "io.coil-kt:coil-svg:2.6.0"
-    implementation "io.coil-kt:coil-compose:2.6.0"
+    implementation("io.coil-kt:coil:2.6.0")
+    implementation("io.coil-kt:coil-svg:2.6.0")
+    implementation("io.coil-kt.coil3:coil-compose:3.0.4")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
+
+    implementation("mx.platacard:compose-pager-indicator:0.0.8")
 
     implementation "ru.tinkoff.scrollingpagerindicator:scrollingpagerindicator:1.2.5"
 

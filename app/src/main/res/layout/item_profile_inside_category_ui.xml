@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="56dp"
     android:background="@color/white"
-    android:paddingVertical="@dimen/space_8"
     android:paddingHorizontal="@dimen/space_16"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -13,55 +12,21 @@
         style="@style/TextViewNormalGray"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:gravity="center_vertical"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/insideCategoryIv"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="История заказов"
         />
 
     <ImageView
-        android:id="@+id/insideCategoryIv"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/ic_pointer_right"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/insideCategoryTv"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription"
-        />
-
-    <TextView
-        android:translationZ="@dimen/_10sdp"
-        android:id="@+id/amountTv"
+        android:id="@+id/image"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/_16sdp"
-        android:paddingHorizontal="4dp"
-        android:fontFamily="@font/rotonda_normal"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:visibility="gone"
-        android:outlineProvider="none"
-        android:textColor="@color/text_new_black"
-        android:textSize="16sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/insideCategoryIv"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chatIconsRecycler"
-        android:layout_width="112dp"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:background="@color/white"
+        android:src="@drawable/icon_history"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/view_holder_contact_chat_icon"
-        tools:visibility="visible"/>
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

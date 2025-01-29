@@ -37,7 +37,6 @@ class ProfileFlowController(
         onRecyclerReady,
     )
 ) {
-
     override fun initList(recyclerView: RecyclerView) {
         super.initList(recyclerView)
         with(recyclerView) {

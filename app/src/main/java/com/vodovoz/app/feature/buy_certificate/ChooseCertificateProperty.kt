@@ -29,7 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.vodovoz.app.R
 import com.vodovoz.app.data.util.ImagePathParser.parseImagePath
 import com.vodovoz.app.ui.model.custom.BuyCertificatePropertyUI

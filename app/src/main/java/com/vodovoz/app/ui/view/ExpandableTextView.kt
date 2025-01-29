@@ -36,7 +36,7 @@ class ExpandableTextView @JvmOverloads constructor(
             field = value
             updateCollapsedDisplayedText(ctaChanged = false)
         }
-    var expandAction: String = ""
+    private var expandAction: String = ""
         set(value) {
             field = value
             val ellipsis = Typography.ellipsis
@@ -50,7 +50,7 @@ class ExpandableTextView @JvmOverloads constructor(
             )
             updateCollapsedDisplayedText(ctaChanged = true)
         }
-    var limitedMaxLines: Int = 3
+    private var limitedMaxLines: Int = 3
         set(value) {
             check(maxLines == -1 || value <= maxLines) {
                 """

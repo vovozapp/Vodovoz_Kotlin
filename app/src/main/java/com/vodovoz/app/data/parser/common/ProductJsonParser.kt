@@ -16,7 +16,7 @@ object ProductJsonParser {
             }
         }
 
-    fun JSONObject.parseProductEntity(forCart: Boolean = false): ProductEntity {
+    private fun JSONObject.parseProductEntity(forCart: Boolean = false): ProductEntity {
         var status = ""
         var statusColor = ""
 

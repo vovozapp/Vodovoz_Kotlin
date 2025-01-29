@@ -60,27 +60,24 @@ class ActiveCertificateFragment : BaseFragment() {
                         if (bundle != null) {
                             initToolbar(bundle.title)
                             with(binding) {
-                                info.text = bundle.details.fromHtml()
-                                name.text = bundle.certificatePropertyUIList[0].title
-                                value.hint = bundle.certificatePropertyUIList[0].textToField
-                                submit.text = bundle.certificatePropertyUIList[0].buttonText
-                                submit.backgroundTintList = ColorStateList.valueOf(
-                                    Color.parseColor(bundle.certificatePropertyUIList[0].buttonColor)
-                                )
+                                //info.text = bundle.details.fromHtml()
+                                //name.text = bundle.certificatePropertyUIList[0].title
+                                //value.hint = bundle.certificatePropertyUIList[0].textToField
+                                //submit.text = bundle.certificatePropertyUIList[0].buttonText
 
-                                SpanWithUrlHandler.setTextWithUrl(
-                                    bundle.certificatePropertyUIList[0].underButtonText,
-                                    binding.underButtonText
-                                ) { url, _ ->
-                                    if (url != null) {
-                                        findNavController().navigate(
-                                            ActiveCertificateFragmentDirections.actionToWebViewFragment(
-                                                url,
-                                                ""
-                                            )
-                                        )
-                                    }
-                                }
+                               // SpanWithUrlHandler.setTextWithUrl(
+                               //     bundle.certificatePropertyUIList[0].underButtonText,
+                               //     binding.underButtonText
+                               // ) { url, _ ->
+                               //     if (url != null) {
+                               //         findNavController().navigate(
+                               //             ActiveCertificateFragmentDirections.actionToWebViewFragment(
+                               //                 url,
+                               //                 ""
+                               //             )
+                               //         )
+                               //     }
+                               // }
                             }
                         }
 
@@ -99,7 +96,7 @@ class ActiveCertificateFragment : BaseFragment() {
                         when (it) {
                             is CertificateFlowViewModel.CertificateEvents.ActivateResult -> {
                                 if (it.title != "Ошибка") {
-                                    binding.value.setText("")
+                                    //binding.value.setText("")
                                 }
                                 AlertDialog.Builder(requireContext())
                                     .setTitle(it.title)
@@ -116,14 +113,14 @@ class ActiveCertificateFragment : BaseFragment() {
     }
 
     private fun initButtons() {
-        binding.submit.setOnClickListener {
-            if (binding.value.text.isNotEmpty()) {
-                val imm =
-                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(binding.value.windowToken, 0)
-                binding.value.clearFocus()
-                viewModel.activateCertificate(binding.value.text.toString())
-            }
-        }
+        //binding.submit.setOnClickListener {
+        //    if (binding.value.text.isNotEmpty()) {
+        //        val imm =
+        //            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        //        imm.hideSoftInputFromWindow(binding.value.windowToken, 0)
+        //        binding.value.clearFocus()
+        //        viewModel.activateCertificate(binding.value.text.toString())
+        //    }
+        //}
     }
 }

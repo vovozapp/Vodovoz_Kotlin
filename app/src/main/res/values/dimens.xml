@@ -1,15 +1,17 @@
 <resources>
     //Corners
     <dimen name="corner_5">5dp</dimen>
+    <dimen name="corner_6">6dp</dimen>
     <dimen name="corner_10">@dimen/_10sdp</dimen>
+    <dimen name="corner_12">@dimen/_12sdp</dimen>
 
     //Margin
     <dimen name="space_2">@dimen/_2sdp</dimen>
     <dimen name="space_4">4dp</dimen>
     <dimen name="space_6">@dimen/_6sdp</dimen>
     <dimen name="space_8">8dp</dimen>
-    <dimen name="space_10">@dimen/_10sdp</dimen>
-    <dimen name="space_12">@dimen/_12sdp</dimen>
+    <dimen name="space_10">10dp</dimen>
+    <dimen name="space_12">12dp</dimen>
     <dimen name="space_16">16dp</dimen>
     <dimen name="space_24">@dimen/_24sdp</dimen>
     <dimen name="space_32">@dimen/_32sdp</dimen>
@@ -30,10 +32,11 @@
     <dimen name="small_text_size">@dimen/_11ssp</dimen>
 
     //Buttons
-    <dimen name="button_normal_height">@dimen/_35sdp</dimen>
     <dimen name="button_small_height">@dimen/_30sdp</dimen>
+    <dimen name="button_normal_height">48dp</dimen>
     <dimen name="field_height">30dp</dimen>
     <dimen name="field_ex_height">35dp</dimen>
+    <dimen name="field_super_ex_height">68dp</dimen>
 
     //Action image
     <dimen name="action_image_size">@dimen/_20sdp</dimen>

@@ -33,16 +33,6 @@ class SingleRootViewHolder(
             clickListener.onCatClick(item)
             binding.imgDropDown.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_check_round))
         }
-        binding.rvSubcategories.layoutManager = LinearLayoutManager(itemView.context)
-        binding.rvSubcategories.adapter = singleRootCatalogAdapter
-    }
-
-    override fun getState(): Parcelable? {
-        return binding.rvSubcategories.layoutManager?.onSaveInstanceState()
-    }
-
-    override fun setState(state: Parcelable) {
-        binding.rvSubcategories.layoutManager?.onRestoreInstanceState(state)
     }
 
 

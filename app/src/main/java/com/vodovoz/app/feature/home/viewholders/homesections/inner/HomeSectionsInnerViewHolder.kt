@@ -10,7 +10,7 @@ import com.vodovoz.app.util.extensions.debugLog
 
 class HomeSectionsInnerViewHolder(
     view: View,
-    private val clickListener: (Int?) -> Unit,
+    private val clickListener: (SectionDataUI) -> Unit,
 ) : ItemViewHolder<SectionDataUI>(view) {
 
     private val binding: ViewHolderSectionTopBinding = ViewHolderSectionTopBinding.bind(view)
@@ -18,7 +18,7 @@ class HomeSectionsInnerViewHolder(
     init {
         binding.root.setOnClickListener {
             val item = getItemByPosition() ?: return@setOnClickListener
-            clickListener(item.id)
+            clickListener(item)
         }
     }
 

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--new(nr)-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:visibility="visible"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/amountControllerDeployed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/reduceAmount"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
+            android:background="@drawable/bkg_number_controller_part_decrease_cart"
+            android:src="@drawable/ic_minus"
+            app:tint="@color/new_product_blue"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/amount"
+            style="@style/TextViewNormalBlackBold"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bkg_number_controller_part_number_cart"
+            android:gravity="center"
+            android:textColor="@color/new_product_blue"
+            tools:ignore="SelectableText"
+            tools:text="1" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/increaseAmount"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
+            android:background="@drawable/bkg_number_controller_part_increase_cart"
+            android:src="@drawable/ic_plus"
+            app:tint="@color/new_product_blue"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="50dp"
+        android:layout_height="38dp"
+        android:layout_weight="1"
+        android:background="@drawable/bkg_number_controller_part_delete_cart"
+        android:src="@drawable/ic_minus"
+        app:tint="@color/new_product_blue"
+        tools:ignore="ContentDescription,HardcodedText"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -111,6 +111,7 @@ class PaginatedProductsCatalogWithoutFiltersFragment : BaseFragment() {
 
     private fun initSearch() {
         initSearchToolbar(
+            "Поиск товара",
             { findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToSearchFragment()) },
             { findNavController().navigate(PaginatedProductsCatalogWithoutFiltersFragmentDirections.actionToSearchFragment()) },
             { navigateToQrCodeFragment() },

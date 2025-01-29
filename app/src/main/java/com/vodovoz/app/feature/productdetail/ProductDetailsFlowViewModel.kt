@@ -1,6 +1,5 @@
 package com.vodovoz.app.feature.productdetail
 
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,8 +34,13 @@ import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
 import com.vodovoz.app.mapper.PaginatedProductListMapper.mapToUI
 import com.vodovoz.app.mapper.ProductDetailBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryDetailUI
+import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.ui.model.CommentUI
 import com.vodovoz.app.ui.model.ProductDetailUI
+import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
+import com.vodovoz.app.ui.model.getArticleNumber
+import com.vodovoz.app.ui.model.getDeposit
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -50,7 +54,10 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 
 @HiltViewModel
@@ -84,6 +91,11 @@ class ProductDetailsFlowViewModel @Inject constructor(
                 .filter { it.containsKey(productId) }
                 .collect {
                     val cartQuantity = it[productId] ?: return@collect
+                    uiStateListener.update { productDetailsState ->
+                        productDetailsState.copy(
+                            cartQuantity = cartQuantity
+                        )
+                    }
                     updateFabListener.emit(cartQuantity)
                 }
         }
@@ -147,7 +159,17 @@ class ProductDetailsFlowViewModel @Inject constructor(
                         fetchPresentInfo()
 
                         state.copy(
+                            buyWithProductUIList = mappedData.buyWithProductUIList,
+                            commentsUI = mappedData.commentUIList.map { commentUI ->
+                                commentUI.copy(
+                                    forDetailPage = true
+                                )
+                            },
+                            searchWords = mappedData.searchWordList,
+                            categoryUI = mappedData.categoryUI,
                             productDetailUI = mappedData.productDetailUI,
+                            articleNumber = mappedData.productDetailUI.getArticleNumber(),
+                            deposit = mappedData.productDetailUI.getDeposit(),
                             detailHeader = DetailHeader(
                                 1,
                                 mappedData.productDetailUI,
@@ -265,9 +287,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
                             presentInfo = presentInfo.presentInfoData
                         )
                     }
-                }
-                .catch { debugLog { "fetch present error ${it.localizedMessage}" } }
-                .collect()
+                }.catch { debugLog { "fetch present error ${it.localizedMessage}" } }.collect()
             }
         }
     }
@@ -401,13 +421,22 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
         viewModelScope.launch {
+            uiStateListener.update { s ->
+                s.copy(buttonIsLoading = true)
+            }
             cartManager.add(id = productId, oldCount = oldQuan, newCount = quantity)
             fetchPresentInfo()
+            uiStateListener.update { s ->
+                s.copy(buttonIsLoading = false)
+            }
         }
     }
 
     fun changeCart(productId: String, giftId: String) {
         viewModelScope.launch {
+            uiStateListener.update { s ->
+                s.copy(buttonIsLoading = true)
+            }
             val (id, count) = productId.trim().split("-")
             cartManager.addWithGift(
                 id = id.toLong(),
@@ -415,13 +444,20 @@ class ProductDetailsFlowViewModel @Inject constructor(
                 giftId = giftId
             )
             fetchPresentInfo()
+            uiStateListener.update { s ->
+                s.copy(buttonIsLoading = false)
+            }
         }
     }
 
 
+    private val mutex = Mutex()
+
     fun changeFavoriteStatus(productId: Long, isFavorite: Boolean) {
         viewModelScope.launch {
-            likeManager.like(productId, !isFavorite)
+            mutex.withLock {
+                likeManager.like(productId, !isFavorite)
+            }
         }
     }
 
@@ -456,17 +492,43 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
     fun onPresentInfoClick() {
         viewModelScope.launch {
-           val goToCart = state.presentInfo?.moveTo == "korzina"
+            val goToCart = state.presentInfo?.moveTo == "korzina"
             if (goToCart) {
                 eventListener.emit(ProductDetailsEvents.GoToCart)
             } else {
-                eventListener.emit(ProductDetailsEvents.GoToPresentInfo(
-                    presentText = state.presentInfo?.text ?: "",
-                    progress = state.presentInfo?.progress ?: 0,
-                    showText = state.presentInfo?.showProgressText ?: false,
-                    progressBackground = state.presentInfo?.progressBackground ?: "",
-                ))
+                eventListener.emit(
+                    ProductDetailsEvents.GoToPresentInfo(
+                        presentText = state.presentInfo?.text ?: "",
+                        progress = state.presentInfo?.progress ?: 0,
+                        showText = state.presentInfo?.showProgressText ?: false,
+                        progressBackground = state.presentInfo?.progressBackground ?: "",
+                    )
+                )
             }
+        }
+    }
+
+    fun showOrHideDetailText() = viewModelScope.launch {
+        uiStateListener.update { s ->
+            s.copy(
+                showDetailPreviewText = !s.showDetailPreviewText
+            )
+        }
+    }
+
+    fun showAllProperties() = viewModelScope.launch {
+        uiStateListener.update { s ->
+            s.copy(
+                showAllProperties = true
+            )
+        }
+    }
+
+    fun changeFloatingButton(show: Boolean) = viewModelScope.launch {
+        uiStateListener.update { s ->
+            s.copy(
+                hideFloatingButton = show
+            )
         }
     }
 
@@ -482,6 +544,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
             val progressBackground: String,
             val showText: Boolean,
         ) : ProductDetailsEvents()
+
         data object GoToCart : ProductDetailsEvents()
     }
 
@@ -509,5 +572,16 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val presentInfo: PresentInfoData? = null,
         val error: ErrorState? = null,
         val loadingPage: Boolean = false,
+        val categoryUI: CategoryUI = CategoryUI(name = ""),
+        val commentsUI: List<CommentUI> = emptyList(),
+        val buyWithProductUIList: List<ProductUI> = emptyList(),
+        val showDetailPreviewText: Boolean = false,
+        val showAllProperties: Boolean = false,
+        val articleNumber: String = "",
+        val deposit: Int = 0,
+        val searchWords: List<String> = emptyList(),
+        val cartQuantity: Int = 0,
+        val buttonIsLoading: Boolean = false,
+        val hideFloatingButton: Boolean = true,
     ) : State
 }

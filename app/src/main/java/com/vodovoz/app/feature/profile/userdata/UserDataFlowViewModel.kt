@@ -231,8 +231,9 @@ class UserDataFlowViewModel @Inject constructor(
     sealed class UserDataEvents : Event {
         data class UpdateUserDataEvent(val message: String) : UserDataEvents()
         data class NavigateToGenderChoose(val gender: String) : UserDataEvents()
-        object ShowDatePicker : UserDataEvents()
-        object UpdateProfile : UserDataEvents()
+        data object ShowDatePicker : UserDataEvents()
+        data object UpdateProfile : UserDataEvents()
+        data object Logout: UserDataEvents()
     }
 
     data class UserDataState(

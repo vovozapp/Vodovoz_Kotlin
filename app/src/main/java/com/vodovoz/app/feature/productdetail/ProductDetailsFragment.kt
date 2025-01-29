@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ProductDetailsFragment : BaseFragment() {
+class ProductDetailsFragment1 : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_product_details_flow
 
@@ -210,7 +210,6 @@ class ProductDetailsFragment : BaseFragment() {
                             cartQuantity = it,
                             amountTv = binding.floatingAmountController.amount,
                             amountDeployed = binding.floatingAmountController.amountControllerDeployed,
-                            circleAmountTv = binding.floatingAmountController.circleAmount,
                         )
                     }
             }
@@ -280,8 +279,6 @@ class ProductDetailsFragment : BaseFragment() {
                             currentPriceTv = binding.tvFloatingCurrentPrice,
                             conditionTv = binding.tvFloatingPriceCondition,
                             amountTv = binding.floatingAmountController.amount,
-                            circleAmountTv = binding.floatingAmountController.circleAmount,
-                            addIv = binding.floatingAmountController.add,
                             reduceIv = binding.floatingAmountController.reduceAmount,
                             increaseIv = binding.floatingAmountController.increaseAmount,
                             amountDeployed = binding.floatingAmountController.amountControllerDeployed
@@ -499,10 +496,5 @@ class ProductDetailsFragment : BaseFragment() {
                     )
                 }
             }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        productDetailFabController.stopTimer()
     }
 }

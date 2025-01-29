@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?><!--new -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvPhoneNumber"
+        style="@style/TextAppearance.Vodovoz.Body2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_16"
+        android:layout_marginTop="8dp"
+        android:text="@string/registered_only"
+        android:textColor="@color/text_black_composable"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/llAutByPhoneContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPhoneNumber">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextAppearance.Vodovoz.Body2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="4dp"
+            android:text="@string/email_hint_text"
+            android:textColor="@color/text_grey_composable" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEmail"
+            style="@style/TextField"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/selector_edit_text"
+            android:hint="@string/enter_email"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="16dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvWrongEmail"
+            style="@style/TextAppearance.Vodovoz.Label2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:layout_marginTop="4dp"
+            android:text="@string/wrong_email"
+            android:textColor="@color/promo_red"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextAppearance.Vodovoz.Body2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="4dp"
+            android:text="@string/password_title"
+            android:textColor="@color/text_grey_composable"
+            android:textSize="14sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="16dp"
+            app:boxCollapsedPaddingTop="0dp"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:hintEnabled="false"
+            app:passwordToggleDrawable="@drawable/selector_eye_toggle"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/new_product_blue">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/etPassword"
+                style="@style/TextField"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/selector_edit_text"
+                android:hint="@string/enter_password_hint"
+                android:inputType="textPassword"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="0dp" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvWrongPassword"
+            style="@style/TextAppearance.Vodovoz.Label2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:text="@string/wrong_password"
+            android:textColor="@color/promo_red"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvRecoverPassword"
+        style="@style/TextAppearance.Vodovoz.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_16"
+        android:layout_marginTop="8dp"
+        android:text="@string/forgot_password"
+        android:textColor="@color/new_product_blue"
+        app:layout_constraintEnd_toEndOf="@+id/llAutByPhoneContainer"
+        app:layout_constraintTop_toBottomOf="@+id/llAutByPhoneContainer"
+        tools:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/llPersonalDataContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/tvRecoverPassword">
+
+        <CheckBox
+            android:id="@+id/cbPersonalInfo"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginVertical="3dp"
+            android:layout_marginStart="3dp"
+            android:buttonTint="@color/switch_selector"
+            android:checked="true" />
+
+        <TextView
+            android:id="@+id/tvPersonalData"
+            style="@style/TextAppearance.Vodovoz.Label2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="19dp"
+            android:layout_weight="1"
+            android:text="@string/i_confirm_personal_data"
+            android:textColorLink="@color/bluePrimary" />
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnAuth"
+        style="@style/BlueButtonRoot"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/enter"
+        android:visibility="visible"
+        android:textAppearance="@style/TextAppearance.Vodovoz.Button1"
+        app:layout_constraintTop_toBottomOf="@+id/llPersonalDataContainer" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnAuthDisabled"
+        style="@style/BlueButtonRoot"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/new_product_light_blue"
+        android:text="@string/enter"
+        android:textAppearance="@style/TextAppearance.Vodovoz.Button1"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/llPersonalDataContainer" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

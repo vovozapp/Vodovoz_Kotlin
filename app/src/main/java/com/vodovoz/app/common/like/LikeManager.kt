@@ -4,9 +4,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.datastore.DataStoreRepository
 import com.vodovoz.app.ui.model.ProductUI
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.filter
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
@@ -24,7 +26,7 @@ class LikeManager @Inject constructor(
     }
 
     private val likes = ConcurrentHashMap<Long, Boolean>()
-    private val likesStateListener = MutableSharedFlow<Map<Long, Boolean>>(replay = 1)
+    private val likesStateListener = MutableSharedFlow<Map<Long, Boolean>>(replay = 2, onBufferOverflow = BufferOverflow.DROP_LATEST)
 
     private val viewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool().apply {
         setMaxRecycledViews(ProductUI.PRODUCT_VIEW_TYPE, 5)
@@ -35,6 +37,7 @@ class LikeManager @Inject constructor(
     fun observeLikes() = likesStateListener.asSharedFlow().filter { it.isNotEmpty() }
 
     suspend fun like(id: Long, isFavorite: Boolean) {
+
         updateLikes(id, !isFavorite)
 
         val userId = accountManager.fetchAccountId()

@@ -33,34 +33,6 @@ class ProductDetailFabController(
     private val cartManager: CartManager,
 ) {
 
-    private var timer: CountDownTimer? = null
-
-    private fun startTimer(
-        header: DetailHeader,
-        oldQuantity: Int,
-        circleAmountTv: TextView,
-        addIv: ImageView,
-        amountDeployed: LinearLayout,
-    ) {
-        timer?.cancel()
-        timer = object : CountDownTimer(2000, 2000) {
-            override fun onTick(millisUntilFinished: Long) {}
-            override fun onFinish() {
-                viewModel.changeCart(
-                    productId = header.productDetailUI.id,
-                    quantity = header.productDetailUI.cartQuantity,
-                    oldQuan = oldQuantity
-                )
-                hideAmountController(header, circleAmountTv, addIv, amountDeployed)
-            }
-        }
-        timer?.start()
-    }
-
-    fun stopTimer() {
-        timer?.cancel()
-    }
-
     fun bindFab(
         header: DetailHeader?,
         oldPriceTv: AppCompatTextView,
@@ -68,8 +40,6 @@ class ProductDetailFabController(
         currentPriceTv: AppCompatTextView,
         conditionTv: AppCompatTextView,
         amountTv: TextView,
-        circleAmountTv: TextView,
-        addIv: ImageView,
         reduceIv: ImageView,
         increaseIv: ImageView,
         amountDeployed: LinearLayout,
@@ -84,26 +54,14 @@ class ProductDetailFabController(
                     header.productDetailUI.cartQuantity =
                         it[header.productDetailUI.id] ?: header.productDetailUI.cartQuantity
                     header.productDetailUI.oldQuantity = header.productDetailUI.cartQuantity
-                    updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, amountDeployed, circleAmountTv)
                 }
                 .collect()
         }
 
-        addIv.setOnClickListener {
-            add(
-                header,
-                amountTv,
-                circleAmountTv,
-                addIv,
-                amountDeployed
-            )
-        }
         reduceIv.setOnClickListener {
             reduce(
                 header,
                 amountTv,
-                circleAmountTv,
-                addIv,
                 amountDeployed
             )
         }
@@ -111,38 +69,11 @@ class ProductDetailFabController(
             increase(
                 header,
                 amountTv,
-                circleAmountTv,
-                addIv,
                 amountDeployed
             )
         }
 
         //If left items = 0
-        when (header.productDetailUI.leftItems == 0) {
-            true -> {
-                when (header.replacementProductsCategoryDetail?.productUIList?.isEmpty()) {
-                    true -> {
-                        addIv.isSelected = true
-                    }
-
-                    false -> {
-                        addIv.setBackgroundResource(R.drawable.bkg_button_orange_circle_normal)
-                        addIv.setImageDrawable(
-                            ContextCompat.getDrawable(
-                                context,
-                                R.drawable.ic_swap
-                            )
-                        )
-                    }
-
-                    else -> {}
-                }
-            }
-
-            false -> {
-                addIv.isSelected = false
-            }
-        }
 
         oldPriceTv.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 
@@ -181,31 +112,25 @@ class ProductDetailFabController(
             }
         }
 
-        updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, amountDeployed,circleAmountTv)
+        updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, amountDeployed)
     }
 
     fun updateFabQuantity(
         cartQuantity: Int?,
         amountTv: TextView,
         amountDeployed: LinearLayout,
-        circleAmountTv: TextView,
     ) {
         if (cartQuantity == null) return
 
         amountTv.text = cartQuantity.toString()
-        circleAmountTv.text = cartQuantity.toString()
-        circleAmountTv.visibility =
-            if (cartQuantity > 0 && !amountDeployed.isVisible) View.VISIBLE else View.GONE
     }
 
     private fun add(
         header: DetailHeader,
         amountTv: TextView,
-        circleAmountTv: TextView,
         addIv: ImageView,
         amountDeployed: LinearLayout,
     ) {
-        val oldQ = header.productDetailUI.oldQuantity
         if (header.productDetailUI.leftItems == 0) {
             header.replacementProductsCategoryDetail?.let {
                 if (it.productUIList.isNotEmpty()) {
@@ -222,12 +147,9 @@ class ProductDetailFabController(
         } else {
             if (header.productDetailUI.cartQuantity == 0) {
                 header.productDetailUI.cartQuantity++
-                updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, amountDeployed,circleAmountTv)
+                updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, amountDeployed)
             }
             showAmountController(
-                header,
-                oldQ,
-                circleAmountTv,
                 addIv,
                 amountDeployed
             )
@@ -237,55 +159,30 @@ class ProductDetailFabController(
     private fun increase(
         header: DetailHeader,
         amountTv: TextView,
-        circleAmountTv: TextView,
-        addIv: ImageView,
         amountDeployed: LinearLayout,
     ) {
-        val oldQ = header.productDetailUI.oldQuantity
         header.productDetailUI.cartQuantity++
-        startTimer(header, oldQ, circleAmountTv, addIv, amountDeployed)
-        updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, amountDeployed,circleAmountTv)
+        updateFabQuantity(header.productDetailUI.cartQuantity, amountTv, amountDeployed)
     }
 
     private fun reduce(
         header: DetailHeader,
         amountTv: TextView,
-        circleAmountTv: TextView,
-        addIv: ImageView,
         amountDeployed: LinearLayout,
     ) {
         with(header) {
             val oldQ = productDetailUI.oldQuantity
             productDetailUI.cartQuantity--
             if (productDetailUI.cartQuantity < 0) productDetailUI.cartQuantity = 0
-            startTimer(header, oldQ, circleAmountTv, addIv, amountDeployed)
-            updateFabQuantity(productDetailUI.cartQuantity, amountTv, amountDeployed,circleAmountTv)
+            updateFabQuantity(productDetailUI.cartQuantity, amountTv, amountDeployed)
         }
     }
 
     private fun showAmountController(
-        header: DetailHeader,
-        oldQ: Int,
-        circleAmountTv: TextView,
         addIv: ImageView,
         amountDeployed: LinearLayout,
     ) {
-        circleAmountTv.visibility = View.GONE
         addIv.visibility = View.GONE
         amountDeployed.visibility = View.VISIBLE
-        startTimer(header, oldQ, circleAmountTv, addIv, amountDeployed)
-    }
-
-    internal fun hideAmountController(
-        header: DetailHeader,
-        circleAmountTv: TextView,
-        addIv: ImageView,
-        amountDeployed: LinearLayout,
-    ) {
-        if (header.productDetailUI.cartQuantity > 0) {
-            circleAmountTv.visibility = View.VISIBLE
-        }
-        addIv.visibility = View.VISIBLE
-        amountDeployed.visibility = View.GONE
     }
 }

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:theme="@style/Theme.Vodovoz">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,172 +14,45 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_marginHorizontal="@dimen/space_16"
-            android:layout_marginTop="@dimen/space_8"
-            android:background="@drawable/bkg_rectangle_light_gray"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cwAuthByPhoneContainer"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/space_2"
-                android:layout_weight="1"
-                app:cardCornerRadius="@dimen/corner_5">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvAuthByPhone"
-                    style="@style/TextViewMediumBlack"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="@string/telephone" />
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cwAuthByEmailContainer"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/space_2"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="@dimen/corner_5"
-                app:cardElevation="0dp">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvAuthByEmail"
-                    style="@style/TextViewMediumBlack"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="@string/email" />
-
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/llAutByEmailContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_8"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilEmail"
-                style="@style/TextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:layout_marginHorizontal="16dp"
-                app:hintTextAppearance="@style/TextLabel">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etEmail"
-                    style="@style/TextField"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:hint="@string/email_hint_text"
-                    android:inputType="textEmailAddress" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                app:dividerColor="@color/light_bg" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilPassword"
-                    style="@style/TextInputLayout"
-                    android:layout_width="0dp"
-                    android:layout_height="65dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_weight="1"
-                    app:endIconDrawable="@drawable/hidepassword"
-                    app:hintTextAppearance="@style/TextLabel">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etPassword"
-                        style="@style/TextField"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:hint="@string/password_hint_text"
-                        android:inputType="textPassword" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/showPassword"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/hidepassword" />
-
-            </LinearLayout>
-
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                app:dividerColor="@color/light_bg" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvRecoverPassword"
-                style="@style/TextViewNormalBlueBold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/recover_password_btn_text"
-                android:textColor="@color/bluePrimary" />
-
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/llAutByPhoneContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_16"
             android:background="@color/white"
             android:orientation="vertical"
             android:visibility="visible">
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/TextViewNormalBlack"
+                style="@style/TextAppearance.Vodovoz.Body2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/space_16"
-                android:text="@string/enter_your_phone_number" />
+                android:layout_marginTop="8dp"
+                android:textColor="@color/text_black_composable"
+                android:text="@string/enter_your_phone_number"
+                android:gravity="bottom"/>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilPhone"
-                style="@style/TextInputLayout"
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextAppearance.Vodovoz.Body2"
                 android:layout_width="match_parent"
-                android:layout_height="65dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginHorizontal="@dimen/space_16"
+                android:text="@string/phone"
+                android:textColor="@color/text_grey_composable"
+                />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPhone"
+                style="@style/TextAppearance.Vodovoz.Body1"
+                android:textColor="@color/text_black_composable"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
-                app:errorEnabled="true"
-                app:hintTextAppearance="@style/TextLabel">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPhone"
-                    style="@style/TextField"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:hint="@string/phone"
-                    android:inputType="text"
-                    android:paddingHorizontal="16dp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                android:background="@drawable/selector_edit_text"
+                android:hint="@string/enter_phone"
+                android:inputType="text"
+                android:paddingHorizontal="16dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilCode"
@@ -206,15 +80,10 @@
                 style="@style/TextViewNormalGray"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_marginHorizontal="@dimen/space_16"
                 android:layout_marginTop="@dimen/space_8"
-                android:visibility="gone"
                 tools:text="Повторно код можно будет запросить через 00:22" />
-
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                app:dividerColor="@color/light_bg" />
 
         </LinearLayout>
 
@@ -222,60 +91,61 @@
             android:id="@+id/llPersonalData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="16dp"
-                android:gravity="center_vertical">
+                android:paddingBottom="3dp"
+                android:layout_marginHorizontal="@dimen/space_16">
+
+                <CheckBox
+                    android:id="@+id/cbPersonalInfo"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginVertical="3dp"
+                    android:buttonTint="@color/switch_selector"
+                    android:checked="true"/>
 
                 <TextView
                     android:id="@+id/tvPersonalData"
-                    style="@style/TextViewNormalBlack"
+                    style="@style/TextAppearance.Vodovoz.Label2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="19dp"
                     android:layout_weight="1"
-                    android:lineSpacingMultiplier="1.5"
                     android:text="@string/i_confirm_personal_data"
                     android:textColorLink="@color/bluePrimary" />
 
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/scPersonalInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/space_16"
-                    android:checked="true" />
-
             </LinearLayout>
-
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                app:dividerColor="@color/light_bg" />
-
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="@dimen/space_16">
+
+                <CheckBox
+                    android:layout_marginStart="3dp"
+                    android:id="@+id/scDistribution"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginVertical="3dp"
+                    android:buttonTint="@color/switch_selector"
+                    android:checked="false" />
 
                 <TextView
-                    style="@style/TextViewNormalBlack"
+                    style="@style/TextAppearance.Vodovoz.Label2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="19dp"
                     android:layout_weight="1"
-                    android:text="@string/subscribe_on_mailing_list" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/scDistribution"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/space_16"
-                    android:checked="true" />
+                    android:text="@string/subscribe_on_mailing_list"
+                    android:textColor="@color/text_black_composable"
+                    />
 
             </LinearLayout>
         </LinearLayout>
@@ -287,14 +157,31 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnSignIn"
-                style="@style/BlueButton"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/button_normal_height"
-                android:layout_marginHorizontal="16dp"
-                android:layout_weight="10"
-                android:text="@string/send_code" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnSignIn"
+                    style="@style/BlueButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:visibility="gone"
+                    android:layout_marginHorizontal="@dimen/space_16"
+                    android:text="@string/send_code"
+                    android:textAppearance="@style/TextAppearance.Vodovoz.Button1"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnSignInDisabled"
+                    style="@style/BlueButton"
+                    android:backgroundTint="@color/new_product_light_blue"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="@dimen/space_16"
+                    android:text="@string/send_code"
+                    android:textAppearance="@style/TextAppearance.Vodovoz.Button1"/>
+            </FrameLayout>
 
             <ImageView
                 android:id="@+id/btnFingerPrint"
@@ -309,6 +196,20 @@
 
         </LinearLayout>
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/tvAuthByEmail"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            style="@style/BlueButton"
+            android:backgroundTint="@color/solid_blue"
+            android:textColor="@color/new_product_blue"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="16dp"
+            android:text="@string/email"
+            android:textAppearance="@style/TextAppearance.Vodovoz.Button1"
+            android:elevation="0dp"
+            android:stateListAnimator="@null"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"

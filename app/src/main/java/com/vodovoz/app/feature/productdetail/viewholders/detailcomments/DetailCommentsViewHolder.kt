@@ -96,7 +96,7 @@ class DetailCommentsViewHolder(
             binding.commentRecycler.visibility = View.VISIBLE
         }, 200)
 
-        binding.ratingTextBottom.text = item.rating
+        //binding.ratingTextBottom.text = item.rating
 
         if (item.rating == "0") {
             binding.counterCommentsBottom.visibility = View.GONE
@@ -106,6 +106,6 @@ class DetailCommentsViewHolder(
             binding.counterCommentsBottomArrow.visibility = View.VISIBLE
         }
 
-        binding.counterCommentsBottom.text = item.commentsAmountText
+        //binding.counterCommentsBottom.text = item.commentsAmountText
     }
 }

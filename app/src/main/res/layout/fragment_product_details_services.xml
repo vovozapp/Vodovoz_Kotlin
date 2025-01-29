@@ -7,12 +7,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/mdBetweenCategoryAndBrand2"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        app:dividerColor="@color/divider_gray_color" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvServices"
         android:layout_width="match_parent"

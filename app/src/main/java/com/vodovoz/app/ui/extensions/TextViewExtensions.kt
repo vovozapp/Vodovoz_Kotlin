@@ -29,20 +29,20 @@ object TextViewExtensions {
         fArray[0] = LengthFilter(16)
         filters = fArray
         var oldLength = 0
-        this.setOnFocusChangeListener { _, isFocused ->
+        setOnFocusChangeListener { _, isFocused ->
             when (isFocused) {
                 true -> {
-                    if (text.isEmpty()) setText("+7-")
+                    if (text.isEmpty()) setText("+7(")
                     setSelection(text.length)
                 }
                 false -> {
-                    if (text.toString() == "+7-") {
+                    if (text.toString() == "+7(") {
                         setText("")
                     }
                 }
             }
         }
-        this.doAfterTextChanged {
+        doAfterTextChanged {
             if (this.isFocused) {
                 setTextColor(getColor(this.context, R.color.text_black))
                 it?.let { input ->
@@ -62,12 +62,12 @@ object TextViewExtensions {
                             }
                         } else {
                             if (input.length < 3
-                                || input.toString() == "+7-7"
-                                || input.toString() == "+7-8"
-                                || input.toString() == "+7-+"
+                                || input.toString() == "+7(7"
+                                || input.toString() == "+7(8"
+                                || input.toString() == "+7(+"
                             ) {
                                 kotlin.runCatching {
-                                    setText("+7-")
+                                    setText("+7(")
                                     setSelection(3)
                                 }
                             } else {
@@ -75,7 +75,15 @@ object TextViewExtensions {
                                     when (oldLength < input.length) {
                                         true -> {
                                             when (input.indices.last) {
-                                                5, 9, 12 -> {
+                                                5 -> {
+                                                    setText(
+                                                        StringBuilder().append(input).append(")")
+                                                            .toString()
+                                                    )
+                                                    oldLength = input.length + 1
+                                                    setSelection(input.length + 1)
+                                                }
+                                                9, 12 -> {
                                                     setText(
                                                         StringBuilder().append(input).append("-")
                                                             .toString()

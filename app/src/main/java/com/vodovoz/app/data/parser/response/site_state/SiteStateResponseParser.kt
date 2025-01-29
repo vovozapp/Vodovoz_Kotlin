@@ -36,7 +36,8 @@ object SiteStateResponseParser {
                 responseJson.getJSONObject("CHATJIVO").parseJivoChat()
             } else {
                 null
-            }
+            },
+            testSiteLink = responseJson.safeString("TESTSAITSSILKA")
         )
     }
 

@@ -5,20 +5,27 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.transition.Visibility
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -28,6 +35,7 @@ import com.vodovoz.app.common.agreement.AgreementController
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentLoginFlowBinding
+import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.feature.auth.login.LoginFlowViewModel.MessageType.Message
 import com.vodovoz.app.feature.cart.CartFlowViewModel
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
@@ -181,40 +189,11 @@ class LoginFragment : BaseFragment() {
                     .collect {
                         when (it) {
                             LoginFlowViewModel.LoginEvents.AuthByPhone -> {
-                                when (binding.tilCode.visibility == View.VISIBLE) {
-                                    true -> {
-                                        debugLog { "authByPhone" }
-                                        viewModel.authByPhone(
-                                            binding.etPhone.text.toString(),
-                                            binding.etCode.text.toString()
-                                        )
-                                    }
 
-                                    false -> {
-                                        when (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString())) {
-                                            true -> {
-                                                debugLog { "requestCode" }
-                                                viewModel.requestCode(binding.etPhone.text.toString())
-                                            }
-
-                                            false -> {
-                                                debugLog { "Неверный формат телефона" }
-                                                binding.tilPhone.error = getString(R.string.wrong_phone)
-                                            }
-                                        }
-                                    }
-                                }
                             }
 
                             LoginFlowViewModel.LoginEvents.AuthByEmail -> {
-                                val email = validateEmail()
-                                if (!email) return@collect
-                                val password = binding.tilPassword.textOrError(3) ?: return@collect
-                                debugLog { "AuthByEmail ${binding.etEmail.text.toString()}" }
-                                viewModel.authByEmail(
-                                    binding.etEmail.text.toString(),
-                                    password
-                                )
+
                             }
 
                             is LoginFlowViewModel.LoginEvents.AuthError -> {
@@ -224,7 +203,6 @@ class LoginFragment : BaseFragment() {
                                     is LoginFlowViewModel.MessageType.WrongCode -> getString(R.string.wrong_code)
                                     else -> ""
                                 }
-                                binding.tilPassword.error = message
                             }
 
                             LoginFlowViewModel.LoginEvents.AuthSuccess -> {
@@ -287,11 +265,11 @@ class LoginFragment : BaseFragment() {
                                     ), Typeface.BOLD
                                 )
                                 binding.tvExpired.setOnClickListener {
-                                    when (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString())) {
-                                        true -> viewModel.requestCode(binding.etPhone.text.toString())
-                                        false -> binding.tilPhone.error =
-                                            getString(R.string.wrong_phone)
-                                    }
+                                    //when (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString())) {
+                                    //    true -> viewModel.requestCode(binding.etPhone.text.toString())
+                                    //    false -> binding.tilPhone.error =
+                                    //        getString(R.string.wrong_phone)
+                                    //}
                                 }
                             }
 
@@ -321,14 +299,6 @@ class LoginFragment : BaseFragment() {
         }
     }
 
-    private fun validateEmail(): Boolean {
-        if (!FieldValidationsSettings.EMAIL_REGEX.matches(binding.etEmail.text.toString())) {
-            binding.tilEmail.error = getString(R.string.wrong_email)
-            return false
-        } else binding.tilEmail.error = null
-        return true
-    }
-
     private fun observeUiState() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -341,23 +311,8 @@ class LoginFragment : BaseFragment() {
                             hideLoader()
                         }
 
-                        if (it.data.settings != null) {
-                            binding.etEmail.setText(it.data.settings.email)
-                            binding.etPassword.setText(it.data.settings.password)
-                        }
-
                         if (!it.data.lastAuthPhone.isNullOrEmpty()) {
                             binding.etPhone.setText(it.data.lastAuthPhone)
-                        }
-
-                        when (it.data.authType) {
-                            AuthType.EMAIL -> {
-                                bindEmailBtn(it.data)
-                            }
-
-                            AuthType.PHONE -> {
-                                bindPhoneBtn()
-                            }
                         }
 
                         showError(it.error)
@@ -368,97 +323,45 @@ class LoginFragment : BaseFragment() {
     }
 
     private fun initButtons() {
-        binding.btnSignIn.setOnClickListener {
-            if (binding.scPersonalInfo.isChecked.not()) {
-                requireActivity().snack(getString(R.string.personal_data_nesessary))
-                binding.scPersonalInfo.error =
-                    getString(R.string.personal_data_nesessary)
-            } else {
-                viewModel.signIn()
+        with(binding){
+            cbPersonalInfo.setOnClickListener {
+                if(!FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString())){
+                    binding.btnSignIn.visibility = View.GONE
+                    binding.btnSignInDisabled.visibility = View.VISIBLE
+                    return@setOnClickListener
+                }
+                binding.btnSignIn.visibility = if(cbPersonalInfo.isChecked ) View.VISIBLE else View.GONE
+                binding.btnSignInDisabled.visibility = if(cbPersonalInfo.isChecked) View.GONE else View.VISIBLE
             }
-        }
-        binding.tvRecoverPassword.setOnClickListener {
-            viewModel.recoverPassword(binding.etEmail.text.toString())
-        }
-//        binding.tvRegister.setOnClickListener {
-//            findNavController().navigate(LoginFragmentDirections.actionToRegisterFragment())
-//        }
-        binding.cwAuthByPhoneContainer.setOnClickListener {
-            viewModel.changeAuthType()
-        }
-        binding.cwAuthByEmailContainer.setOnClickListener {
-            viewModel.changeAuthType()
-        }
-    }
+            btnSignIn.setOnClickListener {
+                when (FieldValidationsSettings.PHONE_REGEX.matches(binding.etPhone.text.toString())) {
+                    true -> {
+                        findNavController().navigate(LoginFragmentDirections.actionToLoginByPhoneCodeFragment(binding.etPhone.text.toString()))
+                    }
 
-    private fun bindEmailBtn(data: LoginFlowViewModel.LoginState) {
-        with(binding) {
-            cwAuthByEmailContainer.setCardBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.white
-                )
-            )
-            cwAuthByEmailContainer.elevation = resources.getDimension(R.dimen.elevation_3)
-            llAutByEmailContainer.visibility = View.VISIBLE
-            cwAuthByPhoneContainer.setCardBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    android.R.color.transparent
-                )
-            )
-            cwAuthByPhoneContainer.elevation = 0f
-            llAutByPhoneContainer.visibility = View.GONE
-            btnSignIn.text = getString(R.string.enter)
-
-            llPersonalData.visibility = View.GONE
-            showPassword.setOnClickListener {
-                viewModel.showPassword()
+                    false -> {
+                        debugLog { "Неверный формат телефона" }
+                        //binding.tilPhone.error = getString(R.string.wrong_phone)
+                    }
+                }
             }
-            if (data.showPassword) {
-                etPassword.transformationMethod = HideReturnsTransformationMethod()
-                showPassword.setImageResource(R.drawable.showpassword)
-            } else {
-                etPassword.transformationMethod = PasswordTransformationMethod()
-                showPassword.setImageResource(R.drawable.hidepassword)
-            }
-        }
-    }
+            //tvRegister.setOnClickListener {
+            //    findNavController().navigate(LoginFragmentDirections.actionToRegisterFragment())
+            //}
 
-    private fun bindPhoneBtn() {
-        with(binding) {
-            cwAuthByPhoneContainer.setCardBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.white
-                )
-            )
-            cwAuthByPhoneContainer.elevation = resources.getDimension(R.dimen.elevation_3)
-            llAutByPhoneContainer.visibility = View.VISIBLE
-            cwAuthByEmailContainer.setCardBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    android.R.color.transparent
-                )
-            )
-            cwAuthByEmailContainer.elevation = 0f
-            llAutByEmailContainer.visibility = View.GONE
-            when (tilCode.visibility == View.VISIBLE) {
-                true -> btnSignIn.text = getString(R.string.enter)
-                false -> btnSignIn.text = getString(R.string.send_code)
+            tvAuthByEmail.setOnClickListener {
+                findNavController().navigate(LoginFragmentDirections.actionToLoginByEmailFragment())
             }
-
-            llPersonalData.visibility = View.VISIBLE
         }
     }
 
     private fun setupAuthByPhone(expiredTime: Int, phone: String) {
 
         binding.etPhone.setPhoneValidator {
-            when (FieldValidationsSettings.PHONE_REGEX.matches(it.toString())) {
-                true -> binding.tilPhone.error = null
-                false -> binding.tilPhone.error = getString(R.string.wrong_phone)
-            }
+           // when (FieldValidationsSettings.PHONE_REGEX.matches(it.toString())) {
+           //     true -> binding.tilPhone.error = null
+           //     false -> binding.tilPhone.error = getString(R.string.wrong_phone)
+           // }
         }
 
         when (expiredTime >= 0) {
@@ -478,25 +381,26 @@ class LoginFragment : BaseFragment() {
     }
 
     private fun bindTextListeners() {
-        binding.etEmail.doOnTextChanged { _, _, _, count ->
-            if (count > 0) binding.tilEmail.isErrorEnabled = false
-        }
-
-        binding.etPassword.doOnTextChanged { _, _, _, count ->
-            if (count > 0) binding.tilPassword.isErrorEnabled = false
-        }
-
         binding.etCode.doOnTextChanged { _, _, _, count ->
             if (count > 0) binding.tilCode.isErrorEnabled = false
         }
 
-        binding.etPhone.doOnTextChanged { _, _, _, count ->
-            if (count > 0) binding.tilPhone.isErrorEnabled = false
+        binding.etPhone.doOnTextChanged { phone, _, _, _ ->
+            if (phone != null){
+                if (FieldValidationsSettings.PHONE_REGEX.matches(phone.toString()) && binding.cbPersonalInfo.isChecked) {
+                    binding.btnSignIn.visibility = View.VISIBLE
+                    binding.btnSignInDisabled.visibility = View.GONE
+                }
+                else {
+                    binding.btnSignIn.visibility = View.GONE
+                    binding.btnSignInDisabled.visibility = View.VISIBLE
+                }
+            }
         }
 
-        binding.scPersonalInfo.setOnCheckedChangeListener { _, b ->
+        binding.cbPersonalInfo.setOnCheckedChangeListener { _, b ->
             if (b) {
-                binding.scPersonalInfo.error = null
+                binding.cbPersonalInfo.error = null
             }
         }
     }
@@ -533,4 +437,103 @@ class LoginFragment : BaseFragment() {
             }
         }
     }
+}
+
+//todo если необходимо
+@AndroidEntryPoint
+class LoginFragmentCompose : Fragment(R.layout.fragment_login_flow) {
+
+    @Inject
+    lateinit var tabManager: TabManager
+
+    @Inject
+    lateinit var accountManager: AccountManager
+
+    private val biometricManager by lazy { BiometricManager.from(requireContext()) }
+
+    private val executor: Executor by lazy { ContextCompat.getMainExecutor(requireContext()) }
+    private val biometricPrompt: BiometricPrompt by lazy {
+        BiometricPrompt(this, executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    requireActivity().snack(getString(R.string.biometric_fault))
+                }
+
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    authByUserSettings()
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    requireActivity().snack(getString(R.string.biometric_fault))
+                }
+            })
+    }
+
+    private val promptInfo: BiometricPrompt.PromptInfo by lazy {
+        BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Biometric login for my app")
+            .setSubtitle("Log in using your biometric credential")
+            .setNegativeButtonText("Use account password")
+            .build()
+    }
+
+
+    private val viewModel: LoginFlowViewModel by viewModels()
+    private val profileViewModel: ProfileFlowViewModel by activityViewModels()
+    private val flowViewModel: HomeFlowViewModel by activityViewModels()
+    private val cartFlowViewModel: CartFlowViewModel by activityViewModels()
+    private val favoriteViewModel: FavoriteFlowViewModel by activityViewModels()
+
+    private val biometricResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val resultCode = result.resultCode
+            if (resultCode == Activity.RESULT_OK) {
+                biometricPrompt.authenticate(promptInfo)
+                accountManager.saveUseBio(true)
+            } else {
+                accountManager.saveUseBio(false)
+            }
+        }
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.Default)
+            setContent {
+                VodovozTheme {
+
+                }
+            }
+        }
+    }
+
+    internal fun authByUserSettings() {
+        val userSettings = accountManager.fetchUserSettings()
+        if (userSettings.email.isNotEmpty() && userSettings.password.isNotEmpty()) {
+            viewModel.authByEmail(userSettings.email, userSettings.password)
+        }
+    }
+
+    private fun initPersonalData() {
+        // Инициализация кнопки
+//        SpanWithUrlHandler.setTextWithUrl(
+//            text = AgreementController.getText(),
+//            textView = binding.tvPersonalData
+//        ) { url, index ->
+//            findNavController().navigate(
+//                LoginFragmentDirections.actionToWebViewFragment(
+//                    url = url ?: "",
+//                    title = AgreementController.getTitle(index) ?: "",
+//                )
+//            )
+//        }
+    }
+
 }

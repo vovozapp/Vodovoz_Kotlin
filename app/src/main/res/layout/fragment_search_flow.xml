@@ -9,7 +9,6 @@
         android:id="@+id/incAppBar"
         layout="@layout/app_bar_search_open" />
 
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/productsContainer"
         android:layout_width="match_parent"
@@ -31,7 +30,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_scrollFlags="enterAlways|scroll">
-
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"

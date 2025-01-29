@@ -23,7 +23,7 @@ class AvailableProductsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {
         return when (viewType) {
             PRODUCT_VIEW_TYPE -> {
-                AvailableProductsViewHolder(getViewFromInflater(R.layout.view_holder_product_list, parent), productsClickListener, likeManager, cartManager, ratingProductManager)
+                AvailableProductsViewHolder(getViewFromInflater(R.layout.view_holder_product_cart, parent), productsClickListener, likeManager, cartManager, ratingProductManager)
             }
             PRODUCT_VIEW_TYPE_GRID -> {
                 ProductsGridViewHolder(getViewFromInflater(R.layout.view_holder_product_grid, parent), productsClickListener, likeManager, cartManager, ratingProductManager)

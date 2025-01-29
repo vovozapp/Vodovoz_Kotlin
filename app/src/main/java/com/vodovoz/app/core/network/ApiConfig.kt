@@ -4,7 +4,7 @@ object ApiConfig {
     private const val VODOVOZ_PROTOCOL = "https://"
 
     private const val VODOVOZ_IP = "m.vodovoz.ru/"
-//    private const val VODOVOZ_IP = "szorin.vodovoz.ru/"
+    //private const val VODOVOZ_IP = "vodovoz.net/"
 
     var VODOVOZ_URL = "$VODOVOZ_PROTOCOL$VODOVOZ_IP"
 

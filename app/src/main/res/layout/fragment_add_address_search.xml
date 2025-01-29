@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--new -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.yandex.mapkit.mapview.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/TextViewNormalBlack"
+        android:id="@+id/searchHint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="@dimen/space_16"
+        android:text="Адрес"
+        android:textColor="@color/text_grey_composable"
+        android:textSize="14sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/etSearch"
+        style="@style/TextField"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/selector_edit_text"
+        android:inputType="textEmailAddress"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchHint"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/etConstraintContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etSearch">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextViewNormalBlack"
+            android:id="@+id/flatHint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:text="Квартира"
+            android:textColor="@color/text_grey_composable"
+            android:textSize="14sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etFlat"
+            style="@style/TextField"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/selector_edit_text"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/etEntrance"
+            app:layout_constraintTop_toBottomOf="@+id/flatHint"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextViewNormalBlack"
+            android:id="@+id/entranceHint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="Подъезд"
+            android:textColor="@color/text_grey_composable"
+            android:textSize="14sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/etEntrance"/>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEntrance"
+            style="@style/TextField"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/selector_edit_text"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="16dp"
+            app:layout_constraintStart_toEndOf="@+id/etFlat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/entranceHint"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/etConstraintContainer2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_8"
+        app:layout_constraintEnd_toEndOf="@id/etConstraintContainer"
+        app:layout_constraintStart_toStartOf="@+id/etConstraintContainer"
+        app:layout_constraintTop_toBottomOf="@+id/etConstraintContainer">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextViewNormalBlack"
+            android:id="@+id/floorHint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:text="Этаж"
+            android:textColor="@color/text_grey_composable"
+            android:textSize="14sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etFloor"
+            style="@style/TextField"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/selector_edit_text"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/etIntercom"
+            app:layout_constraintTop_toBottomOf="@+id/floorHint"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextViewNormalBlack"
+            android:id="@+id/intercomHint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="Домофон"
+            android:textColor="@color/text_grey_composable"
+            android:textSize="14sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/etIntercom"/>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etIntercom"
+            style="@style/TextField"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/selector_edit_text"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="16dp"
+            app:layout_constraintStart_toEndOf="@+id/etFloor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/intercomHint"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/llHouseCheckBoxContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:paddingVertical="16dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/etConstraintContainer2">
+
+        <TextView
+            style="@style/TextViewNormalBlack"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:lineSpacingMultiplier="1.2"
+            android:text="@string/personal_house_delivery_text"
+            android:textColorLink="@color/bluePrimary" />
+
+        <CheckBox
+            android:id="@+id/cbHouse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:buttonTint="@color/switch_selector"
+            android:checked="true" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llOfficeCheckBoxContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="16dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/llHouseCheckBoxContainer">
+
+        <TextView
+            style="@style/TextViewNormalBlack"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:lineSpacingMultiplier="1.2"
+            android:text="@string/company_office_delivery_text"
+            android:textColorLink="@color/bluePrimary" />
+
+        <CheckBox
+            android:id="@+id/cbOffice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:buttonTint="@color/switch_selector"
+            android:checked="true" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnAdd"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            style="@style/BlueButton"
+            android:textSize="17sp"
+            android:visibility="gone"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:text="Добавить" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnAddDisabled"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            style="@style/BlueButton"
+            android:backgroundTint="@color/new_product_light_blue"
+            android:enabled="false"
+            android:textSize="17sp"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:text="Добавить" />
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

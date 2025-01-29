@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class PropertyUI(
+data class PropertyUI(
     val name: String,
     val value: String,
 ) : Parcelable

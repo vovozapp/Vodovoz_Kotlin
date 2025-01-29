@@ -1,8 +1,44 @@
 package com.vodovoz.app.util
 
+import com.vodovoz.app.ui.model.PriceUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
+import java.text.DecimalFormat
+import java.text.ParseException
 import kotlin.math.roundToInt
+
+
+val PRICE_FORMATTER = DecimalFormat("#,###")
+
+
+fun calculateProductPrice(quantity: Int, priceList: List<PriceUI>): Double {
+    var totalPrice = 0.0
+
+    for (priceUI in priceList) {
+        if (quantity >= priceUI.requiredAmount && quantity <= priceUI.requiredAmountTo) {
+            totalPrice = quantity * priceUI.currentPrice
+            break
+        }
+        if (priceList.last() == priceUI) {
+            totalPrice = quantity * priceUI.currentPrice
+        }
+    }
+
+    return totalPrice
+}
+
+fun Number.formatPrice(): String {
+    return PRICE_FORMATTER.format(this)
+}
+
+fun parseNumberOrNull(numberString: String): Long? {
+    return try {
+        val number = PRICE_FORMATTER.parse(numberString) as Number
+        number.toLong()
+    } catch (e: ParseException) {
+        null
+    }
+}
 
 fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
     var fullPrice = 0.0
@@ -41,9 +77,9 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
                 } else {
                     price.oldPrice * productUI.cartQuantity
                 }
-                if(productUI.totalDisc > 0) {
+                if (productUI.totalDisc > 0) {
                     discountPrice += (productUI.totalDisc * productUI.cartQuantity)
-                } else if(price.oldPrice  > 0) {
+                } else if (price.oldPrice > 0) {
                     discountPrice += (price.oldPrice - price.currentPrice) * productUI.cartQuantity
                 }
             }
@@ -60,7 +96,7 @@ fun calculatePrice(productUIList: List<ProductUI>): CalculatedPrices {
     deposit -= bottlesPrice
     if (deposit < 0) deposit = 0
     val total = fullPrice + deposit - discountPrice
-    if(discountPrice - discountPrice.toInt() > 0) discountPrice ++
+    if (discountPrice - discountPrice.toInt() > 0) discountPrice++
     return CalculatedPrices(fullPrice.toInt(), discountPrice.toInt(), deposit, total.toInt())
 }
 

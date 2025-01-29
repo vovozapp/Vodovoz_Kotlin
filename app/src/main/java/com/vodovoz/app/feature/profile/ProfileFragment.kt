@@ -128,31 +128,33 @@ class ProfileFragment : BaseFragment() {
 
     private fun observeEvents() {
         lifecycleScope.launch {
-            viewModel.observeEvent()
-                .collect {
-                    when (it) {
-                        is ProfileFlowViewModel.ProfileEvents.Logout -> {
-                            binding.profileFlowRv.isVisible = false
-                            binding.noLoginContainer.isVisible = true
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.observeEvent()
+                    .collect {
+                        when (it) {
+                            is ProfileFlowViewModel.ProfileEvents.Logout -> {
+                                binding.profileFlowRv.isVisible = false
+                                binding.noLoginContainer.isVisible = true
 
-                            flowViewModel.refresh()
-                            cartFlowViewModel.refreshIdle()
-                            favoriteViewModel.refreshIdle()
-                        }
+                                flowViewModel.refresh()
+                                cartFlowViewModel.refreshIdle()
+                                favoriteViewModel.refreshIdle()
+                            }
 
-                        is ProfileFlowViewModel.ProfileEvents.GoToCart -> {
-                            MaterialAlertDialogBuilder(requireContext())
-                                .setTitle("Товары добавлены в корзину")
-                                .setMessage("Перейти в корзину?")
-                                .setPositiveButton("Да") { dialog, _ ->
-                                    dialog.dismiss()
-                                    tabManager.selectTab(R.id.graph_cart)
-                                }
-                                .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
-                                .show()
+                            is ProfileFlowViewModel.ProfileEvents.GoToCart -> {
+                                MaterialAlertDialogBuilder(requireContext())
+                                    .setTitle("Товары добавлены в корзину")
+                                    .setMessage("Перейти в корзину?")
+                                    .setPositiveButton("Да") { dialog, _ ->
+                                        dialog.dismiss()
+                                        tabManager.selectTab(R.id.graph_cart)
+                                    }
+                                    .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
+                                    .show()
+                            }
                         }
                     }
-                }
+            }
         }
     }
 

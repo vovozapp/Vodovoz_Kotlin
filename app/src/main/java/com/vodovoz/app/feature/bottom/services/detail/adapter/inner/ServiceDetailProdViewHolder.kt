@@ -128,26 +128,6 @@ class ServiceDetailProdViewHolder(
             productsClickListener.onProductClick(item.id)
         }
 
-        binding.amountController.add.setOnClickListener {
-            val item = item ?: return@setOnClickListener
-            val coef = item.serviceDetailCoef ?: return@setOnClickListener
-            if (item.isGift) return@setOnClickListener
-            if (item.leftItems == 0) {
-                productsClickListener.onNotifyWhenBeAvailable(
-                    item.id,
-                    item.name,
-                    item.detailPicture
-                )
-                return@setOnClickListener
-            }
-
-            if (item.cartQuantity == 0) {
-                item.cartQuantity += coef
-                updateCartQuantity(item)
-            }
-            showAmountController()
-        }
-
         binding.amountController.reduceAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
             val coef = item.serviceDetailCoef ?: return@setOnClickListener
@@ -205,7 +185,6 @@ class ServiceDetailProdViewHolder(
 
 
         //If left items = 0
-        binding.amountController.add.isSelected = item.leftItems == 0
 
         if (item.pricePerUnit.isNotEmpty()) {
             binding.tvPricePerUnit.visibility = View.VISIBLE
@@ -285,13 +264,7 @@ class ServiceDetailProdViewHolder(
              }
          }*/
 
-        binding.amountController.circleAmount.text = item.cartQuantity.toString()
         binding.amountController.amount.text = item.cartQuantity.toString()
-
-        when (item.cartQuantity > 0) {
-            true -> binding.amountController.circleAmount.visibility = View.VISIBLE
-            false -> binding.amountController.circleAmount.visibility = View.GONE
-        }
 
         when (item.commentAmount.isEmpty()) {
             true -> binding.tvCommentAmount.visibility = View.GONE
@@ -384,17 +357,11 @@ class ServiceDetailProdViewHolder(
     }
 
     private fun showAmountController() {
-        binding.amountController.circleAmount.visibility = View.INVISIBLE
-        binding.amountController.add.visibility = View.INVISIBLE
         binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
         amountControllerTimer.start()
     }
 
     internal fun hideAmountController(item: ProductUI) {
-        if (item.cartQuantity > 0) {
-            binding.amountController.circleAmount.visibility = View.VISIBLE
-        }
-        binding.amountController.add.visibility = View.VISIBLE
         binding.amountController.amountControllerDeployed.visibility = View.INVISIBLE
     }
 
@@ -403,6 +370,5 @@ class ServiceDetailProdViewHolder(
             item.cartQuantity = 0
         }
         binding.amountController.amount.text = item.cartQuantity.toString()
-        binding.amountController.circleAmount.text = item.cartQuantity.toString()
     }
 }

@@ -5,77 +5,63 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="130dp"
-    android:background="@color/white">
+    android:background="@drawable/bg_round_corner_border_blue"
+    android:padding="8dp">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vpPictures"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="144dp"
+        android:layout_height="132dp"
         android:padding="@dimen/space_4"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/llRatingContainer"
         app:layout_constraintWidth_percent="0.30"
         tools:ignore="ContentDescription" />
 
-    <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
-        android:id="@+id/tlIndicators"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:spi_dotColor="#BDBDBD"
-        app:spi_dotSelectedColor="@color/bluePrimary"
-        app:spi_dotSpacing="5dp"
-        app:spi_dotSize="4.5dp"
-        app:spi_dotSelectedSize="4.5dp"
-        app:spi_dotMinimumSize="3dp"
-        app:spi_visibleDotCount="7"
-        app:layout_constraintStart_toStartOf="@+id/vpPictures"
-        app:layout_constraintEnd_toEndOf="@+id/vpPictures"
-        app:layout_constraintTop_toBottomOf="@id/vpPictures" />
-
     <LinearLayout
         android:id="@+id/llRatingContainer"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="@+id/vpPictures"
-        app:layout_constraintStart_toStartOf="@+id/vpPictures"
-        app:layout_constraintTop_toBottomOf="@+id/tlIndicators">
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="@+id/llStatusesAndNameContainer"
+        app:layout_constraintTop_toTopOf="@+id/llPricesContainer"
+        app:layout_constraintBottom_toBottomOf="@+id/llPricesContainer">
 
-        <androidx.appcompat.widget.AppCompatRatingBar
+        <RatingBar
             android:id="@+id/rbRating"
             style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:isIndicator="true"
-            android:numStars="5"
+            android:numStars="1"
             android:progressTint="@color/accentPrimary"
-            android:stepSize="1"
-            android:theme="@style/RatingBar" />
+            android:stepSize="1" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvCommentAmount"
-            style="@style/TextViewSmallGray"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <TextView
+            android:id="@+id/tvRating"
+            style="@style/TextViewSmallBlackBold"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingTop="2dp"
             android:gravity="center"
-            android:paddingTop="@dimen/space_2"
-            android:textColor="#889295"
-            tools:text="3 отзыва" />
+            android:paddingStart="@dimen/space_4"
+            android:singleLine="true"
+            tools:ignore="RtlSymmetry"
+            tools:text="5.0" />
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/llStatusesAndNameContainer"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_8"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/amountController"
-        app:layout_constraintEnd_toStartOf="@+id/imgFavoriteStatus"
+        app:layout_constraintBottom_toTopOf="@+id/llPricesContainer"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/vpPictures"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -140,47 +126,36 @@
             tools:ignore="RtlSymmetry"
             tools:text="Какое-то интересное не короткое название какой-т вкусное воды, еще что-то и еще" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvDepositPrice"
-            style="@style/TextViewSmallGray"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:paddingEnd="@dimen/space_8"
-            android:textSize="11sp"
-            tools:ignore="RtlSymmetry"
-            tools:text="Стоимость залога 400 Р"/>
-
     </LinearLayout>
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/imgFavoriteStatus"
-        android:layout_width="@dimen/_16sdp"
-        android:layout_height="@dimen/_16sdp"
-        android:src="@drawable/selector_fav"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
 
     <include
         android:id="@+id/llPricesContainer"
         layout="@layout/view_holder_slider_product_prices"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_8"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/vpPictures"
+        app:layout_constraintTop_toBottomOf="@+id/llStatusesAndNameContainer"
+        app:layout_constraintBottom_toTopOf="@+id/amountController"
+        app:layout_constraintStart_toStartOf="@+id/llStatusesAndNameContainer"
         tools:ignore="RtlSymmetry" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imgFavoriteStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/selector_fav"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
     <include
         android:id="@+id/amountController"
         layout="@layout/view_product_amount_controller"
-        android:layout_width="@dimen/_100sdp"
-        android:layout_height="wrap_content"
-        android:translationZ="@dimen/space_16"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_width="0dp"
+        android:layout_height="38dp"
+        app:layout_constraintTop_toBottomOf="@+id/llPricesContainer"
+        app:layout_constraintStart_toStartOf="@+id/llPricesContainer"
+        app:layout_constraintEnd_toEndOf="@+id/llRatingContainer"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

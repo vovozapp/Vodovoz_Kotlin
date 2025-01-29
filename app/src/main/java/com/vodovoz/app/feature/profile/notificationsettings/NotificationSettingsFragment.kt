@@ -54,21 +54,14 @@ class NotificationSettingsFragment : BaseFragment() {
         observeEvents()
         initToolbar("Настройка уведомлений")
         notSettingsController.bind(binding.notificationSettingsRv)
-        binding.etPhone.setPhoneValidator {}
 
-        binding.etPhone.doOnTextChanged { _, _,_, count ->
-            if (count >0) {
-                binding.phoneNubmerHeaderTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_black))
-            }
-        }
+        //binding.saveBtn.setOnClickListener {
+        //    if (!validatePhone(binding.phoneNubmerHeaderTv, binding.etPhone.text.toString())) {
+        //        return@setOnClickListener
+        //    }
 
-        binding.saveBtn.setOnClickListener {
-            if (!validatePhone(binding.phoneNubmerHeaderTv, binding.etPhone.text.toString())) {
-                return@setOnClickListener
-            }
-
-            viewModel.saveChanges(binding.etPhone.text.toString())
-        }
+        //    viewModel.saveChanges(binding.etPhone.text.toString())
+        //}
     }
 
     private fun observeEvents() {
@@ -103,16 +96,10 @@ class NotificationSettingsFragment : BaseFragment() {
                             hideLoader()
                         }
 
-                        binding.phoneNubmerHeaderTv.text =
-                            it.data.item?.notSettingsData?.myPhone?.name
-                                ?: "Ваш номер мобильного телефона"
-                        binding.infoTv.text = it.data.item?.notSettingsData?.title
-                            ?: "Для отказа от СМС-оповещений активируйте чекбокс и сохраните настройки."
-                        binding.etPhone.setPhoneValidator { }
-                        binding.etPhone.setText(
-                            it.data.item?.notSettingsData?.myPhone?.active?.convertPhoneToBaseFormat()
-                                ?.convertPhoneToFullFormat() ?: ""
-                        )
+                        //binding.etPhone.setText(
+                        //    it.data.item?.notSettingsData?.myPhone?.active?.convertPhoneToBaseFormat()
+                        //        ?.convertPhoneToFullFormat() ?: ""
+                        //)
 
                         notSettingsController.submitList(
                             it.data.item?.notSettingsData?.settingsList ?: emptyList()

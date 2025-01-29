@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
@@ -73,6 +74,7 @@ import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWitho
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.ui.model.CommentUI
 import com.vodovoz.app.ui.model.PopupNewsUI
+import com.vodovoz.app.ui.model.SectionDataUI
 import com.vodovoz.app.util.extensions.addOnBackPressedCallback
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.snack
@@ -186,7 +188,6 @@ class HomeFragment : BaseFragment() {
         observeMediaManager()
         observePushFromSiteState()
         observeRateBottom()
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -199,6 +200,7 @@ class HomeFragment : BaseFragment() {
         initJivoChatButton()
 
         initSearchToolbar(
+            "Поиск товара",
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
             { navigateToQrCodeFragment() },
@@ -275,7 +277,6 @@ class HomeFragment : BaseFragment() {
                 rateBottomViewModel
                     .observeUiState()
                     .collect { state ->
-
                         if (state.data.item != null) {
                             binding.expandedHeaderTv.text =
                                 state.data.item.rateBottomData?.titleProduct
@@ -989,13 +990,25 @@ class HomeFragment : BaseFragment() {
                 }
             }
 
-            override fun onSectionClick(id: Int?) {
-                id?.let {
+            override fun onSectionClick(item: SectionDataUI) {
+                if (item.id != 0)
                     findNavController().navigate(
                         HomeFragmentDirections.actionToPaginatedProductsCatalogFragment(
-                            id.toLong()
-                        )
-                    )
+                            item.id.toLong()
+                        ))
+
+                if (item.promotionId != 0)
+                    findNavController().navigate(
+                        HomeFragmentDirections.actionToPromotionDetailFragment(
+                            item.promotionId.toLong()
+                        ))
+
+                if (item.cookieLink.isNotEmpty()){
+                    setCookie()
+                    findNavController().navigate(HomeFragmentDirections.actionToWebViewFragment(
+                        item.cookieLink,
+                        "",
+                    ))
                 }
             }
 
@@ -1045,16 +1058,12 @@ class HomeFragment : BaseFragment() {
             }
 
             is ActionEntity.LinkWithCookies -> {
-                val webkitCookieManager = CookieManager.getInstance()
-                webkitCookieManager.acceptCookie()
-                webkitCookieManager.setCookie(
-                    ApiConfig.VODOVOZ_URL,
-                    cookieManager.fetchCookieSessionId()
-                )
+                setCookie()
                 HomeFragmentDirections.actionToWebViewFragment(
                     url,
                     "",
                 )
+                null
             }
 
             is ActionEntity.Category ->
@@ -1194,5 +1203,14 @@ class HomeFragment : BaseFragment() {
                     }
             }
         }
+    }
+
+    private fun setCookie(){
+        val webkitCookieManager = CookieManager.getInstance()
+        webkitCookieManager.acceptCookie()
+        webkitCookieManager.setCookie(
+            ApiConfig.VODOVOZ_URL,
+            cookieManager.fetchCookieSessionId()
+        )
     }
 }

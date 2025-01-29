@@ -54,11 +54,11 @@ class HomeBannersSliderViewHolder(
         binding.dotsIndicator.attachTo(binding.vpBanners)
 
 // increase this offset to show more of left/right
-        val offsetPx = itemView.context.dip(16)
-        binding.vpBanners.setPadding(offsetPx, 0, offsetPx, 0)
+        val offsetPx = itemView.context.dip(32)
+        binding.vpBanners.setPadding(0, 0, offsetPx, 0)
 
 // increase this offset to increase distance between 2 items
-        val pageMarginPx = itemView.context.dip(6)
+        val pageMarginPx = itemView.context.dip(8)
         val marginTransformer = MarginPageTransformer(pageMarginPx)
         binding.vpBanners.setPageTransformer(marginTransformer)
 

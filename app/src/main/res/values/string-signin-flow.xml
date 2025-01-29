@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     //Auth
-    <string name="auth_title" translatable="false">Авторизация</string>
+    <string name="auth_title" translatable="false">Вход и регистрация</string>
+    <string name="enter_code_title" translatable="false">Ввести код</string>
+    <string name="enter_email_title" translatable="false">Вход</string>
     <string name="sign_in_btn_text" translatable="false">Войти</string>
     <string name="forgot_password_text" translatable="false">Забыли пароль?</string>
     <string name="recover_password_btn_text" translatable="false">Получить пароль</string>
 
+    <string name="fio" translatable="false">ФИО</string>
     <string name="email_hint_text" translatable="false">Email</string>
-    <string name="password_hint_text" translatable="false">Пароль</string>
+    <string name="password_title" translatable="false">Пароль</string>
+    <string name="enter_password_hint" translatable="false">Введите пароль</string>
+    <string name="enter_data_hint" translatable="false">Введите данные</string>
+    <string name="wrong_password" translatable="false">Пароль неверный</string>
+    <string name="forgot_password" translatable="false">Забыли пароль?</string>
+    <string name="empty_field" translatable="false">Поле обязательного заполнения</string>
 
     <string name="phone_hint_text" translatable="false">Телефон</string>
     <string name="sms_code_hint_text" translatable="false">Код</string>
+    <string name="your_id" translatable="false">Ваш ID:</string>
+    <string name="id_desc" translatable="false">Необходим при обращении в службу поддержки</string>
 
     <string name="have_not_account_text" translatable="false">Нет аккаунта?</string>
     <string name="create_account_btn_text" translatable="false">Создайте</string>

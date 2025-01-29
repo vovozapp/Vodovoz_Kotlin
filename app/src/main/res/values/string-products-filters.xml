@@ -5,8 +5,8 @@
     //All Filters
     <string name="products_filters_title" translatable="false">Фильтры</string>
     <string name="price_filter_text" translatable="false">Цена</string>
-    <string name="price_filter_value_from_text" translatable="false">От</string>
-    <string name="price_filter_value_to_text" translatable="false">До</string>
+    <string name="price_filter_value_from_text" translatable="false">от</string>
+    <string name="price_filter_value_to_text" translatable="false">до</string>
     <string name="apply_products_filters" translatable="false">Применить</string>
     <string name="clear_products_filters" translatable="false">Сбросить</string>
 </resources>

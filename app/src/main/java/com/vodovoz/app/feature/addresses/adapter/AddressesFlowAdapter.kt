@@ -17,13 +17,12 @@ class AddressesFlowAdapter(
             R.layout.view_holder_address -> {
                 AddressFlowViewHolder(getViewFromInflater(viewType, parent), clickListener)
             }
-            R.layout.view_holder_addresses_type_title -> {
-                AddressTitleFlowViewHolder(getViewFromInflater(viewType, parent))
-            }
+            //R.layout.view_holder_addresses_type_title -> {
+            //    AddressTitleFlowViewHolder(getViewFromInflater(viewType, parent))
+            //}
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")
             }
         }
     }
-
 }

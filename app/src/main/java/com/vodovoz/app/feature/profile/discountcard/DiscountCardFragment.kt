@@ -26,13 +26,6 @@ class DiscountCardFragment : BaseFragment() {
     }
     internal val viewModel: DiscountCardFlowViewModel by viewModels()
 
-    private val adapter: DiscountCardAdapter = DiscountCardAdapter(
-        object : DiscountCardClickListener {
-            override fun onCardValueChange(value: String) {
-                viewModel.changeCardValue(value)
-            }
-        })
-
 
     override fun layout(): Int = R.layout.fragment_discount_card
 
@@ -43,16 +36,9 @@ class DiscountCardFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        initDiscountCardPropertiesRecycler()
         initButtons()
         observeUiState()
         observeEvents()
-    }
-
-    private fun initDiscountCardPropertiesRecycler() {
-        binding.discountCardPropertiesRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.discountCardPropertiesRecycler.adapter = adapter
     }
 
     private fun observeUiState() {
@@ -70,8 +56,7 @@ class DiscountCardFragment : BaseFragment() {
                         val bundle = state.data.activateDiscountCardBundleUI
                         if (bundle != null) {
                             initToolbar(bundle.title)
-                            binding.info.text = bundle.details.fromHtml()
-                            adapter.submitList(bundle.discountCardPropertyUIList)
+                            bundle.discountCardPropertyUIList
                         }
 
                         showError(state.error)
@@ -97,7 +82,7 @@ class DiscountCardFragment : BaseFragment() {
     }
 
     private fun initButtons() {
-        binding.submit.setOnClickListener {
+        binding.btnActivate.setOnClickListener {
             viewModel.activateDiscountCard()
         }
     }

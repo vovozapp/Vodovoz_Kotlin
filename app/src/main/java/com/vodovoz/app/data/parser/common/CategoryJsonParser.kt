@@ -17,7 +17,7 @@ object CategoryJsonParser {
             }
         }
 
-    fun JSONObject.parseCategoryEntity() = CategoryEntity(
+    private fun JSONObject.parseCategoryEntity() = CategoryEntity(
         id = getLong("ID"),
         name = getString("NAME"),
         detailPicture = this.parseDetailImage(),
@@ -28,7 +28,7 @@ object CategoryJsonParser {
         }
     )
 
-    private fun JSONObject.parseDetailImage() = when (has("PICTURE")) {
+    fun JSONObject.parseDetailImage() = when (has("PICTURE")) {
         true -> when (isNull("PICTURE")) {
             true -> null
             else -> getString("PICTURE").parseImagePath()

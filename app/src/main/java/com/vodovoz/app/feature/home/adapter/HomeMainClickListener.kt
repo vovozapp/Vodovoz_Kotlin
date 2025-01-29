@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.home.adapter
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.feature.home.viewholders.homebanners.model.BannerAdvEntity
 import com.vodovoz.app.ui.model.CommentUI
+import com.vodovoz.app.ui.model.SectionDataUI
 
 interface HomeMainClickListener {
 
@@ -45,7 +46,7 @@ interface HomeMainClickListener {
     //POSITION_3
     fun onCategoryClick(id: Long?)
 
-    fun onSectionClick(id: Int?)
+    fun onSectionClick(item: SectionDataUI)
     fun onSectionsTabClick(title: String)
 
 }

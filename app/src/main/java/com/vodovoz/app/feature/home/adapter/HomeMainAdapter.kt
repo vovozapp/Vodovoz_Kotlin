@@ -109,7 +109,6 @@ class HomeMainAdapter(
                 }
             }
 
-
             R.layout.fragment_slider_history -> {
                 HomeHistoriesSliderViewHolder(
                     getViewFromInflater(viewType, parent),

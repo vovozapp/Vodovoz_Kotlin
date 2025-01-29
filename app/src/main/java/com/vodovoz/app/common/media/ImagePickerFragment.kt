@@ -81,7 +81,7 @@ class ImagePickerFragment : BaseFragment() {
 
                     viewModel.savePublicationImage(filesList)
                 } else {
-                    val uri = result?.data?.data
+                    val uri = result.data?.data
                     if (uri != null) {
                         val file = saveFileFromGallery(uri)
                         viewModel.savePublicationImage(listOf(file))
@@ -127,7 +127,6 @@ class ImagePickerFragment : BaseFragment() {
 
     private fun onPermissionResult(isGranted: Boolean) {
         if (isGranted) {
-
             when (receiver) {
                 CREATE -> {
                     val intent = Intent().apply {

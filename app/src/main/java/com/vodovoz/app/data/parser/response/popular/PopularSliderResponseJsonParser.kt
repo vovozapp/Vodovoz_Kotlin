@@ -3,6 +3,7 @@ package com.vodovoz.app.data.parser.response.popular
 import com.vodovoz.app.data.model.common.CategoryEntity
 import com.vodovoz.app.data.model.common.CategoryMainEntity
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.data.parser.common.CategoryJsonParser.parseDetailImage
 import com.vodovoz.app.data.parser.common.safeString
 import com.vodovoz.app.data.remote.ResponseStatus
 import okhttp3.ResponseBody
@@ -11,12 +12,13 @@ import org.json.JSONObject
 
 object PopularSliderResponseJsonParser {
 
-    fun ResponseBody.parsePopularSliderResponse(): ResponseEntity<CategoryMainEntity> {
+    fun ResponseBody. parsePopularSliderResponse(): ResponseEntity<CategoryMainEntity> {
         val responseJson = JSONObject(string())
         return when (responseJson.getString("status")) {
             ResponseStatus.SUCCESS -> ResponseEntity.Success(
                 CategoryMainEntity(
                     name = responseJson.safeString("TITLERAZDEL"),
+                    detailPicture = responseJson.parseDetailImage() ?: "",
                     categoryList = responseJson.getJSONObject("data").getJSONArray("LISTRAZDEL")
                         .parseCategoryEntityList()
                 )
@@ -34,7 +36,8 @@ object PopularSliderResponseJsonParser {
 
     private fun JSONObject.parseCategoryEntity() = CategoryEntity(
         id = getLong("IDRAZDEL"),
-        name = getString("NAMERAZDEL")
+        name = getString("NAMERAZDEL"),
+        detailPicture = parseDetailImage(),
     )
 
 }

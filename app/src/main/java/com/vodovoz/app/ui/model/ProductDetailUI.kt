@@ -1,8 +1,10 @@
 package com.vodovoz.app.ui.model
 
+import androidx.compose.runtime.Immutable
 import com.vodovoz.app.data.model.common.LabelEntity
 
-class ProductDetailUI(
+@Immutable
+data class ProductDetailUI(
     val id: Long = 0,
     val name: String = "",
     val previewText: String = "",
@@ -27,5 +29,32 @@ class ProductDetailUI(
     val priceUIList: List<PriceUI> = listOf(),
     val detailPictureList: List<String> = listOf(),
     var oldQuantity: Int = 0,
-    val blockList: List<BlockUI> = listOf()
+    val blockList: List<BlockUI> = listOf(),
 )
+
+fun ProductDetailUI.getDeposit(): Int {
+    return propertiesGroupUIList.firstOrNull { groupUI ->
+        groupUI.propertyUIList.firstOrNull {
+            it.name.contains(
+                "стоимость",
+                true
+            )
+        } != null
+    }?.propertyUIList?.firstOrNull { propertyUI ->
+        propertyUI.name.contains(
+            "стоимость",
+            true
+        )
+    }?.value?.takeWhile { s -> s.digitToIntOrNull() != null }?.toIntOrNull() ?: 0
+}
+
+
+fun ProductDetailUI.getArticleNumber(): String {
+    return propertiesGroupUIList.firstOrNull()?.propertyUIList?.firstOrNull { propertyUI ->
+        propertyUI.name.contains(
+            "артикул",
+            true
+        )
+    }?.value ?: ""
+}
+

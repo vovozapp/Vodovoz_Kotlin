@@ -3,42 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    app:layout_constraintEnd_toStartOf="@+id/imgFavoriteStatus"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:chipSpacingVertical="0dp"
     tools:ignore="RtlSymmetry"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cwStatusContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        app:cardBackgroundColor="@color/bluePrimary"
-        app:cardCornerRadius="@dimen/corner_5"
-        app:cardElevation="0dp">
-
-        <TextView
-            android:id="@+id/tvStatus"
-            style="@style/TextViewSmallWhite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/space_8"
-            android:paddingVertical="@dimen/space_2"
-            tools:text="Новинка" />
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
         android:id="@+id/cwDiscountContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/orange"
-        app:cardCornerRadius="@dimen/corner_5"
-        app:cardElevation="0dp">
+        app:cardBackgroundColor="@color/promo_red"
+        app:cardCornerRadius="@dimen/corner_6">
 
         <TextView
             android:id="@+id/tvDiscountPercent"

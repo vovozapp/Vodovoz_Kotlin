@@ -36,7 +36,6 @@ object CartResponseJsonParser {
                 notAvailableProductEntityList = when (responseJson.has("netvnalichii")) {
                     true -> responseJson.getJSONObject("netvnalichii")
                         .parseNotAvailableProductEntityList()
-
                     false -> listOf()
                 },
                 giftProductEntity = when (responseJson.isNull("osnovapodarki")) {
@@ -46,11 +45,9 @@ object CartResponseJsonParser {
                             productsList = responseJson.getJSONObject("osnovapodarki")
                                 .getJSONArray("PODARKI").parseGiftProductEntityList()
                         )
-
                     } catch (t: Throwable) {
                         GiftProductEntity()
                     }
-
                     true -> GiftProductEntity()
                 },
                 bestForYouCategoryDetailEntity = when (responseJson.has("tovary")) {

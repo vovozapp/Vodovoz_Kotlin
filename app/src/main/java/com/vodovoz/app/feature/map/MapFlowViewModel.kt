@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.map
 
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
@@ -231,7 +232,7 @@ class MapFlowViewModel @Inject constructor(
                     entrance = pendingUpdateAddressUi.entrance,
                     floor = pendingUpdateAddressUi.floor,
                     office = pendingUpdateAddressUi.flat,
-                    comment = pendingUpdateAddressUi.comment,
+                    intercom = pendingUpdateAddressUi.intercom,
                     type = pendingUpdateAddressUi.type,
                     userId = userId,
                     addressId = pendingUpdateAddressUi.id,
@@ -290,7 +291,7 @@ class MapFlowViewModel @Inject constructor(
         entrance: String?,
         floor: String?,
         office: String?,
-        comment: String?,
+        intercom: String?,
         type: Int?,
     ) {
         val userId = accountManager.fetchAccountId() ?: return
@@ -319,7 +320,7 @@ class MapFlowViewModel @Inject constructor(
                 entrance,
                 floor,
                 office,
-                comment,
+                intercom,
                 type,
                 userId,
                 lat,
@@ -335,7 +336,7 @@ class MapFlowViewModel @Inject constructor(
                 entrance,
                 floor,
                 office,
-                comment,
+                intercom,
                 type,
                 userId,
                 addressId,
@@ -354,7 +355,7 @@ class MapFlowViewModel @Inject constructor(
         entrance: String?,
         floor: String?,
         office: String?,
-        comment: String?,
+        intercom: String?,
         type: Int?,
         userId: Long,
         lat: String,
@@ -374,7 +375,7 @@ class MapFlowViewModel @Inject constructor(
                         entrance = entrance,
                         floor = floor,
                         office = office,
-                        comment = comment,
+                        intercom = intercom,
                         type = type,
                         userId = userId,
                         lat = lat,
@@ -416,7 +417,7 @@ class MapFlowViewModel @Inject constructor(
         entrance: String?,
         floor: String?,
         office: String?,
-        comment: String?,
+        intercom: String?,
         type: Int?,
         userId: Long,
         addressId: Long,
@@ -437,7 +438,7 @@ class MapFlowViewModel @Inject constructor(
                         entrance = entrance,
                         floor = floor,
                         office = office,
-                        comment = comment,
+                        intercom = intercom,
                         type = type,
                         userId = userId,
                         addressId = addressId,

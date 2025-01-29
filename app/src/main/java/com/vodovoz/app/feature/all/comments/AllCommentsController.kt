@@ -41,15 +41,15 @@ class AllCommentsController(
                                 context.resources.getDimension(R.dimen.space_8).toInt()
                             left = space
                             right = space
-                            if (parent.getChildAdapterPosition(view) != 0) {
-                                top = space / 2
+                            top = if (parent.getChildAdapterPosition(view) != 0) {
+                                space / 2
                             } else {
-                                top = space
+                                space
                             }
-                            if (parent.getChildAdapterPosition(view) != parent.adapter!!.itemCount - 1) {
-                                bottom = space / 2
+                            bottom = if (parent.getChildAdapterPosition(view) != parent.adapter!!.itemCount - 1) {
+                                space / 2
                             } else {
-                                bottom = space
+                                space
                             }
                         }
                     }

@@ -25,11 +25,11 @@ class HomeTitleViewHolder(
     override fun bind(item: HomeTitle) {
         super.bind(item)
 
-        if (item.lightBg) {
-            binding.root.setBackgroundColor(itemView.context.color(R.color.white))
-        } else {
-            binding.root.setBackgroundColor(itemView.context.color(R.color.light_bg))
-        }
+        //if (item.lightBg) {
+        //    binding.root.setBackgroundColor(itemView.context.color(R.color.white))
+        //} else {
+        //    binding.root.setBackgroundColor(itemView.context.color(R.color.light_bg))
+        //}
 
         binding.dividerTop.isVisible = item.showTopDivider
 

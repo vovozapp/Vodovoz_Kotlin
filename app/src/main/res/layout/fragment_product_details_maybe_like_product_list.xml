@@ -7,12 +7,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/mdBetweenCategoryAndBrand2"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        app:dividerColor="@color/divider_gray_color" />
-
     <androidx.appcompat.widget.AppCompatTextView
         style="@style/TextViewHeaderBlackBold"
         android:layout_width="match_parent"

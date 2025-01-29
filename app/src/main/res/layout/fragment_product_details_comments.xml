@@ -4,15 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/light_bg"
     android:orientation="vertical"
     android:paddingBottom="8dp">
-
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/mdBetweenCategoryAndBrand2"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        app:dividerColor="@color/divider_gray_color" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/ratingBottomCardView"
@@ -29,16 +22,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/TextViewHeaderBlackBold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/comments"
-                android:textSize="@dimen/title_text_size_cat"
-                android:paddingTop="@dimen/space_10"
-                android:paddingHorizontal="@dimen/space_16"/>
-
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/llRatingContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -47,47 +31,43 @@
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="8dp">
 
-                <RatingBar
-                    style="@style/Widget.AppCompat.RatingBar.Small"
-                    android:layout_width="wrap_content"
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/TextViewHeaderBlackBold"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:numStars="1"
-                    android:paddingBottom="2dp"
-                    android:rating="1" />
-
-                <TextView
-                    android:id="@+id/ratingTextBottom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:textStyle="normal"
-                    app:fontFamily="@font/rotonda_bold"
-                    tools:text="4.2" />
+                    android:text="@string/comments"
+                    android:textSize="@dimen/title_text_size_cat"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
 
                 <TextView
                     android:id="@+id/counterCommentsBottom"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="2dp"
                     android:layout_weight="1"
                     android:textAlignment="textEnd"
-                    android:textColor="@color/transparent_half"
-                    android:textSize="12sp"
+                    android:textColor="@color/new_product_blue"
+                    android:textSize="16sp"
                     android:textStyle="normal"
                     app:fontFamily="@font/rotondac"
-                    tools:text="653 отзыва" />
+                    android:text="Все"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/counterCommentsBottomArrow"
+                    tools:ignore="HardcodedText" />
 
                 <ImageView
                     android:id="@+id/counterCommentsBottomArrow"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:src="@drawable/arrow_right_gray_18"
-                    tools:ignore="ContentDescription"/>
+                    app:tint="@color/new_product_blue"
+                    tools:ignore="ContentDescription"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvImages"
@@ -105,8 +85,7 @@
         android:id="@+id/commentRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingHorizontal="16dp"
-        android:clipToPadding="false"/>
+        android:layout_marginHorizontal="16dp" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/writeCommentCardView"

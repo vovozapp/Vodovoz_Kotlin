@@ -1,11 +1,13 @@
 package com.vodovoz.app.ui.model
 
 import android.os.Parcelable
+import androidx.compose.runtime.Immutable
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.data.model.common.ActionEntity
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
+@Immutable
 data class CategoryUI(
     val id: Long? = null,
     val name: String,

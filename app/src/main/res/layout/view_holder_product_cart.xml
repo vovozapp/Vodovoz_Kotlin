@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?><!--new-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/ivPicture"
+        android:layout_width="76dp"
+        android:layout_height="76dp"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintEnd_toStartOf="@+id/llStatusesAndNameContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <LinearLayout
+        android:id="@+id/llStatusesAndNameContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintBottom_toBottomOf="@+id/ivPicture"
+        app:layout_constraintEnd_toStartOf="@+id/imgFavoriteStatus"
+        app:layout_constraintStart_toEndOf="@+id/ivPicture"
+        app:layout_constraintTop_toTopOf="@+id/ivPicture">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvName"
+            style="@style/TextViewNormalBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingMultiplier="1.3"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:paddingEnd="@dimen/space_8"
+            android:textSize="15sp"
+            tools:ignore="RtlSymmetry"
+            tools:text="Какое-то интересное не короткое название какой-то вкусное воды, еще что-то и еще" />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clArticleContainer"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="9dp"
+        app:layout_constraintEnd_toStartOf="@+id/deleteButton"
+        app:layout_constraintStart_toStartOf="@+id/llStatusesAndNameContainer"
+        app:layout_constraintTop_toBottomOf="@+id/llStatusesAndNameContainer">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvArticle"
+            style="@style/TextViewSmallGray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            tools:ignore="RtlSymmetry"
+            tools:text="@string/article"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <FrameLayout
+            android:id="@+id/flDepositContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvArticle">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvDepositPriceTitle"
+                    style="@style/TextViewSmallGray"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="11sp"
+                    tools:ignore="RtlSymmetry"
+                    tools:text="@string/depose_price"/>
+
+                <TextView
+                    android:id="@+id/tvDepositPrice"
+                    style="@style/TextViewMediumBlackBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="11sp"
+                    tools:ignore="SelectableText"
+                    tools:text=" 280 Р" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvProductAbsent"
+                style="@style/TextViewNormalBlack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:text="@string/product_absent"
+                android:textColor="@color/promo_red"
+                android:textSize="11sp"/>
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="50dp"
+        android:layout_height="38dp"
+        android:layout_weight="1"
+        android:background="@drawable/bkg_number_controller_part_delete_cart"
+        android:src="@drawable/ic_minus"
+        app:tint="@color/new_product_blue"
+        tools:ignore="ContentDescription,HardcodedText"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/clArticleContainer" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cwDiscountContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/promo_red"
+        app:cardCornerRadius="@dimen/corner_6"
+        app:layout_constraintStart_toStartOf="@+id/ivPicture"
+        app:layout_constraintTop_toTopOf="@+id/clAmountContainer"
+        app:layout_constraintBottom_toBottomOf="@+id/clAmountContainer">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvGiftMessage"
+            style="@style/TextViewSmallWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/space_8"
+            android:paddingVertical="@dimen/space_2"
+            android:textSize="13sp"
+            tools:text="Подарок" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imgFavoriteStatus"
+        android:layout_width="@dimen/_16sdp"
+        android:layout_height="@dimen/_16sdp"
+        android:src="@drawable/selector_fav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clAmountContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/clArticleContainer"
+        app:layout_constraintTop_toBottomOf="@+id/clArticleContainer">
+
+        <TextView
+            android:id="@+id/tvCurrentPrice"
+            style="@style/TextViewMediumBlackBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SelectableText"
+            tools:text="280 Р" />
+
+        <include
+            android:id="@+id/amountController"
+            layout="@layout/view_product_amount_controller_cart"
+            android:layout_width="119dp"
+            android:layout_height="38dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

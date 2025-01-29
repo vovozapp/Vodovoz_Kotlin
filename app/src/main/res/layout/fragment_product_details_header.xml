@@ -7,16 +7,58 @@
     android:layout_height="wrap_content"
     android:background="@color/white">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBarLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgBack"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:padding="@dimen/space_16"
+            android:src="@drawable/ic_arrow_left"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/text_black" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgFavorite"
+            android:layout_width="@dimen/_18sdp"
+            android:layout_height="@dimen/_18sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
+            android:src="@drawable/ic_favorite_black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imgShare"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/text_black"
+            tools:ignore="ContentDescription,RtlSymmetry" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgShare"
+            android:layout_width="@dimen/_18sdp"
+            android:layout_height="@dimen/_18sdp"
+            android:layout_margin="@dimen/space_16"
+            android:src="@drawable/png_share"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription,RtlSymmetry" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vpPictures"
         android:layout_width="0dp"
         android:layout_height="262dp"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="20dp"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBarLayout"
         tools:ignore="ContentDescription" />
 
     <androidx.cardview.widget.CardView
@@ -61,50 +103,19 @@
         app:dotsSize="6.5dp"
         app:dotsSpacing="4dp"
         app:dotsWidthFactor="1"
-        app:layout_constraintBottom_toTopOf="@+id/llRatingAndBrandContainer"
+        app:layout_constraintBottom_toTopOf="@+id/cgStatuses"
         app:layout_constraintEnd_toEndOf="@+id/vpPictures"
         app:layout_constraintStart_toStartOf="@+id/vpPictures"
         app:layout_constraintTop_toBottomOf="@id/vpPictures"
         app:selectedDotColor="@color/bluePrimary" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/imgBack"
-        android:layout_width="@dimen/_50sdp"
-        android:layout_height="@dimen/_50sdp"
-        android:padding="@dimen/space_16"
-        android:src="@drawable/ic_arrow_left"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/text_black" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/imgShare"
-        android:layout_width="@dimen/_18sdp"
-        android:layout_height="@dimen/_18sdp"
-        android:layout_marginTop="@dimen/space_16"
-        android:layout_marginEnd="@dimen/space_8"
-        android:src="@drawable/png_share"
-        app:layout_constraintEnd_toStartOf="@+id/imgFavorite"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/text_black"
-        tools:ignore="ContentDescription,RtlSymmetry" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/imgFavorite"
-        android:layout_width="@dimen/_18sdp"
-        android:layout_height="@dimen/_18sdp"
-        android:layout_margin="@dimen/space_16"
-        android:src="@drawable/ic_favorite_black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription,RtlSymmetry" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/cgStatuses"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_16"
-        app:layout_constraintBottom_toBottomOf="@id/vpPictures"
+        android:layout_marginTop="@dimen/space_16"
+        app:layout_constraintTop_toBottomOf="@id/dots_indicator"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="RtlSymmetry">
 
@@ -146,8 +157,20 @@
                 tools:text="12%" />
 
         </androidx.cardview.widget.CardView>
-
     </com.google.android.material.chip.ChipGroup>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvName"
+        style="@style/TextViewMediumBlackBold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_16"
+        android:layout_marginEnd="@dimen/space_16"
+        android:paddingTop="@dimen/space_2"
+        android:paddingBottom="@dimen/space_2"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/cgStatuses"
+        tools:text="10 бутылей Аква Ареал 18.9" />
 
     <LinearLayout
         android:id="@+id/llRatingAndBrandContainer"
@@ -157,7 +180,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dots_indicator">
+        app:layout_constraintTop_toBottomOf="@id/tvName">
 
         <LinearLayout
             android:id="@+id/llRatingContainer"
@@ -181,8 +204,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
-                android:textColor="@color/black"
-                android:textSize="12sp"
+                android:textColor="@color/text_black_composable"
+                android:textSize="14sp"
                 android:textStyle="normal"
                 app:fontFamily="@font/rotonda_bold"
                 tools:text="4.2" />
@@ -193,17 +216,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="2dp"
-                android:textColor="@color/transparent_half"
-                android:textSize="12sp"
+                android:textColor="@color/new_product_blue"
+                android:textSize="14sp"
                 android:textStyle="normal"
                 app:fontFamily="@font/rotondac"
                 tools:text="653 отзыва" />
-
-            <ImageView
-                android:id="@+id/counterCommentsArrow"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/arrow_right_gray_18" />
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -215,107 +232,85 @@
 
     </LinearLayout>
 
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvName"
-        style="@style/TextViewMediumBlackBold"
+    <LinearLayout
+        android:id="@+id/llPricesContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_16"
-        android:layout_marginEnd="@dimen/space_16"
-        android:paddingTop="@dimen/space_2"
-        android:paddingBottom="@dimen/space_2"
-        android:textSize="16sp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="bottom"
+        android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/llRatingAndBrandContainer"
-        tools:text="10 бутылей Аква Ареал 18.9" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingHorizontal="@dimen/space_16"
-        android:paddingBottom="@dimen/space_8"
-        app:layout_constraintTop_toBottomOf="@+id/tvName">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="RtlSymmetry">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_36sdp"
-            android:gravity="bottom"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="RtlSymmetry">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_4"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvCurrentPrice"
-                    style="@style/TextViewLargeGrayBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start|bottom"
-                    android:textColor="@color/text_new_black"
-                    android:textSize="20sp"
-                    tools:text="280 Р" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvOldPrice"
-                    style="@style/TextViewNormalLightGrayBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="start|bottom"
-                    android:paddingStart="@dimen/space_4"
-                    android:paddingBottom="@dimen/line_spacing_extra"
-                    tools:ignore="RtlSymmetry"
-                    tools:text="300 Р" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvPricePerUnit"
-                    style="@style/TextViewSmallLightGray"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="start|bottom"
-                    android:paddingStart="@dimen/space_4"
-                    android:paddingBottom="@dimen/line_spacing_extra"
-                    android:textAllCaps="false"
-                    android:textColor="#50000000"
-                    android:textSize="12sp"
-                    android:textStyle="normal"
-                    tools:text="510/кг" />
-
-            </LinearLayout>
+            android:layout_marginTop="@dimen/space_4"
+            android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvPriceCondition"
-                style="@style/TextViewSmallLightGray"
-                android:layout_width="match_parent"
+                android:id="@+id/tvCurrentPrice"
+                style="@style/TextViewLargeGrayBold"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="start|bottom"
-                android:visibility="visible"
-                tools:text="При условии покупки от 10 шт" />
+                android:textColor="@color/text_black_composable"
+                android:textSize="24sp"
+                tools:text="280 Р" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvOldPrice"
+                style="@style/TextViewNormalLightGrayBold"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="start|bottom"
+                android:textColor="@color/text_grey_composable"
+                android:textSize="15sp"
+                android:paddingStart="@dimen/space_4"
+                android:paddingBottom="@dimen/line_spacing_extra"
+                tools:ignore="RtlSymmetry"
+                tools:text="300 Р" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvPricePerUnit"
+                style="@style/TextViewSmallLightGray"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="start|bottom"
+                android:paddingStart="@dimen/space_4"
+                android:paddingBottom="@dimen/line_spacing_extra"
+                android:textAllCaps="false"
+                android:textColor="#50000000"
+                android:textSize="12sp"
+                android:textStyle="normal"
+                tools:text="510/кг" />
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/rlAmountControllerContainer"
-            android:layout_width="@dimen/_100sdp"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvPriceCondition"
+            style="@style/TextViewSmallLightGray"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            android:gravity="start|bottom"
+            android:visibility="visible"
+            tools:text="При условии покупки от 10 шт" />
 
-            <include
-                android:id="@+id/amountController"
-                layout="@layout/view_product_amount_controller" />
+    </LinearLayout>
 
-        </RelativeLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_16"
+        app:layout_constraintTop_toBottomOf="@id/llPricesContainer"
+        app:layout_constraintStart_toStartOf="@+id/llPricesContainer"
+        app:layout_constraintEnd_toEndOf="@+id/llPricesContainer">
+        <include
+            android:id="@+id/amountController"
+            layout="@layout/view_product_amount_controller" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -67,44 +67,44 @@ class AddressesFlowViewModel @Inject constructor(
                         val data = response.data.mapToUI()
 
                         if (data.isNotEmpty()) {
-                            if(type == null) {
-                                val personal = data.filter { it.type == OrderType.PERSONAL.value }
-                                val company = data.filter { it.type == OrderType.COMPANY.value }
-                                val fullList = mutableListOf<Item>()
-                                if (personal.isNotEmpty()) {
-                                    fullList.addAll(
-                                        listOf(
-                                            AddressFlowTitle(
-                                                application.resources.getString(
-                                                    R.string.personal_addresses_title
-                                                )
-                                            )
-                                        ) + personal
-                                    )
-                                }
-                                if (company.isNotEmpty()) {
-                                    fullList.addAll(
-                                        listOf(
-                                            AddressFlowTitle(
-                                                application.resources.getString(
-                                                    R.string.company_addresses_title
-                                                )
-                                            )
-                                        ) + company
-                                    )
-                                }
-
-                                uiStateListener.value = state.copy(
-                                    data = state.data.copy(
-                                        items = data,
-                                        companyItems = company,
-                                        personalItems = personal,
-                                        fullList = fullList
-                                    ),
-                                    loadingPage = false,
-                                    error = null
-                                )
-                            } else {
+                            //if(type == null) {
+                            //    val personal = data.filter { it.type == OrderType.PERSONAL.value }
+                            //    val company = data.filter { it.type == OrderType.COMPANY.value }
+                            //    val fullList = mutableListOf<Item>()
+                            //    if (personal.isNotEmpty()) {
+                            //        fullList.addAll(
+                            //            listOf(
+                            //                AddressFlowTitle(
+                            //                    application.resources.getString(
+                            //                        R.string.personal_addresses_title
+                            //                    )
+                            //                )
+                            //            ) + personal
+                            //        )
+                            //    }
+                            //    if (company.isNotEmpty()) {
+                            //        fullList.addAll(
+                            //            listOf(
+                            //                AddressFlowTitle(
+                            //                    application.resources.getString(
+                            //                        R.string.company_addresses_title
+                            //                    )
+                            //                )
+                            //            ) + company
+                            //        )
+                            //    }
+//
+                            //    uiStateListener.value = state.copy(
+                            //        data = state.data.copy(
+                            //            items = data,
+                            //            companyItems = company,
+                            //            personalItems = personal,
+                            //            fullList = fullList
+                            //        ),
+                            //        loadingPage = false,
+                            //        error = null
+                            //    )
+                            //} else {
                                 val addresses = if(type == OrderType.PERSONAL.value){
                                     data.filter { it.type == OrderType.PERSONAL.value }
                                 } else {
@@ -118,7 +118,7 @@ class AddressesFlowViewModel @Inject constructor(
                                     loadingPage = false,
                                     error = null
                                 )
-                            }
+                            //}
                         } else {
                             uiStateListener.value = state.copy(
                                 error = ErrorState.Empty(),

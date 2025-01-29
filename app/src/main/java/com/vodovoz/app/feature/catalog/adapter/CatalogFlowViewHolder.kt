@@ -14,52 +14,22 @@ import com.vodovoz.app.ui.model.CategoryUI
 class CatalogFlowViewHolder(
     view: View,
     clickListener: CatalogFlowClickListener,
-    val nestingPosition: Int
+    private val nestingPosition: Int
 ) : ItemViewHolder<CategoryUI>(view) {
 
     private val binding: ViewHolderCatalogCategoryBinding = ViewHolderCatalogCategoryBinding.bind(view)
 
-    private val adapter = CatalogFlowAdapter(nestingPosition + 1, clickListener)
-
     init {
-
-        binding.subcategoryRecycler.layoutManager = LinearLayoutManager(itemView.context)
-        binding.subcategoryRecycler.adapter = adapter
-
         binding.root.setOnClickListener {
             val item = item ?: return@setOnClickListener
             clickListener.onCategoryClick(item)
         }
-
-        binding.detailController.setOnClickListener {
-            val item = getItemByPosition() ?: return@setOnClickListener
-            item.isOpen = !item.isOpen
-            updateCategoryRecycler(item)
-        }
-    }
-
-    override fun getState(): Parcelable? {
-        return binding.subcategoryRecycler.layoutManager?.onSaveInstanceState()
-    }
-
-    override fun setState(state: Parcelable) {
-        binding.subcategoryRecycler.layoutManager?.onRestoreInstanceState(state)
     }
 
     override fun bind(item: CategoryUI) {
         super.bind(item)
 
-        val nesting = when(nestingPosition) {
-            1 -> 0
-            else -> nestingPosition
-        }
-        binding.name.setNameWithIndent(item.name, nesting)
-
-        if (nestingPosition == 0) {
-            binding.name.textSize = 16f
-        } else {
-            binding.name.textSize = 14f
-        }
+        binding.name.text = item.name
 
         item.detailPicture?.let {
             Glide
@@ -68,34 +38,5 @@ class CatalogFlowViewHolder(
                 .into(binding.image)
         }
 
-        adapter.submitList(item.categoryUIList)
-
-        updateCategoryRecycler(item)
-    }
-
-    private fun updateCategoryRecycler(categoryUI: CategoryUI) {
-        when(categoryUI.categoryUIList.isEmpty()) {
-            true -> binding.detailController.visibility = View.INVISIBLE
-            false -> binding.detailController.visibility = View.VISIBLE
-        }
-
-        when(categoryUI.isOpen) {
-            true -> showDetailCategoryRecycler()
-            false -> hideDetailCategoryRecycler()
-        }
-    }
-
-    private fun hideDetailCategoryRecycler() {
-        binding.detailController.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_plus))
-        binding.subcategoryRecycler.visibility = View.GONE
-    }
-
-    private fun showDetailCategoryRecycler() {
-        binding.detailController.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_minus))
-        binding.subcategoryRecycler.visibility = View.VISIBLE
-    }
-
-    private fun getItemByPosition(): CategoryUI? {
-        return (bindingAdapter as? CatalogFlowAdapter)?.getItem(bindingAdapterPosition) as? CategoryUI
     }
 }

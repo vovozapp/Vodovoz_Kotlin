@@ -34,6 +34,8 @@ object SectionDataMapper {
             id = it.id,
             name = it.name,
             imageUrl = it.imageUrl,
+            promotionId = it.promotionId,
+            cookieLink = it.cookieLink,
         )
     }
 }

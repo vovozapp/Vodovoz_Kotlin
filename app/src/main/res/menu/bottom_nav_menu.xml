@@ -3,32 +3,27 @@
 
     <item
         android:id="@+id/graph_home"
-        android:icon="@drawable/png_ic_home"
+        android:icon="@drawable/icon_home"
         android:title="@string/home" />
 
     <item
         android:id="@+id/graph_catalog"
-        android:icon="@drawable/png_ic_catalog"
+        android:icon="@drawable/icon_catalog"
         android:title="@string/catalog" />
 
     <item
-        android:id="@+id/graph_promotions"
-        android:icon="@drawable/png_ic_promotions"
-        android:title="@string/menu_promotions" />
-
-    <item
         android:id="@+id/graph_cart"
-        android:icon="@drawable/png_cart_new"
+        android:icon="@drawable/icon_basket"
         android:title="@string/cart" />
 
     <item
         android:id="@+id/graph_favorite"
-        android:icon="@drawable/png_ic_favorite"
+        android:icon="@drawable/icon_like"
         android:title="@string/favorite" />
 
     <item
         android:id="@+id/graph_profile"
-        android:icon="@drawable/png_ic_account"
+        android:icon="@drawable/icon_profile"
         android:title="@string/account" />
 
 </menu>

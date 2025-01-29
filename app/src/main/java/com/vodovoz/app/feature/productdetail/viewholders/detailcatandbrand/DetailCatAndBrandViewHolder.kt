@@ -36,11 +36,9 @@ class DetailCatAndBrandViewHolder(
         when(item.brandUI) {
             null -> {
                 binding.clBrandContainer.visibility = View.GONE
-                binding.mdBetweenCategoryAndBrand.visibility = View.GONE
             }
             else -> {
                 binding.clBrandContainer.visibility = View.VISIBLE
-                binding.mdBetweenCategoryAndBrand.visibility = View.VISIBLE
                 binding.tvBrandName.text = item.brandUI.name
                 Glide.with(itemView.context)
                     .load(item.brandUI.detailPicture)

@@ -5,9 +5,10 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
+import com.vodovoz.app.ui.model.SectionDataUI
 
 class HomeSectionsInnerAdapter(
-    private val clickListener: (Int?) -> Unit,
+    private val clickListener: (SectionDataUI) -> Unit,
 ) : ItemAdapter() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<out Item> {

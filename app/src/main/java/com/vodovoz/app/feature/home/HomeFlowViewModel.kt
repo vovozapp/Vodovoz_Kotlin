@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.home
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
@@ -95,7 +96,7 @@ class HomeFlowViewModel @Inject constructor(
         }
     }
 
-    fun secondLoad() {
+    private fun secondLoad() {
         viewModelScope.launch(Dispatchers.IO) {
             val userId = accountManager.fetchAccountId()
             val tasks = secondLoadTasks(userId)
@@ -191,114 +192,114 @@ class HomeFlowViewModel @Inject constructor(
                 }
             }
         },
-        homeRequestAsync {
-            coroutineScope {
-                val response = repository.fetchTopSlider()
-                withContext(Dispatchers.Default) {
-//                    val response = responseBody.parseTopSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        val retList = mutableListOf<PositionItem>()
-                        retList.addAll(
-                            if (response.data.categoryDetailsList != null) {
-                                val data = response.data.categoryDetailsList.mapToUI()
-                                listOf(
-                                    PositionItem(
-                                        POSITION_100,
-                                        HomeProducts.fetchHomeProductsByType(
-                                            data,
-                                            HomeProducts.TOP_PROD,
-                                            POSITION_100
-                                        )
-                                    ),
-                                    if (data.size != 1) {
-                                        PositionItem(
-                                            POSITION_90_TAB,
-                                            HomeProductsTabs(
-                                                id = POSITION_90_TAB,
-                                                data.mapIndexed { index, cat ->
-                                                    if (index == 0) {
-                                                        cat.copy(
-                                                            isSelected = true,
-                                                            position = POSITION_90_TAB
-                                                        )
-                                                    } else {
-                                                        cat.copy(
-                                                            isSelected = false,
-                                                            position = POSITION_90_TAB
-                                                        )
-                                                    }
-                                                })
-                                        )
-                                    } else {
-                                        PositionItem(
-                                            POSITION_90_TAB,
-                                            HomeTitle(
-                                                id = POSITION_90_TAB,
-                                                type = HomeTitle.SLIDER_TITLE,
-                                                name = "",
-                                                showAll = true,
-                                                showAllName = "СМ.ВСЕ",
-                                                categoryProductsName = data.first().name,
-                                                titleId = data.first().id
-                                            )
-                                        )
-                                    }
-                                )
-                            } else {
-                                emptyList()
-                            }
-                        )
-                        retList.addAll(
-                            if (response.data.sectionsEntity != null) {
-                                val data = response.data.sectionsEntity.mapToUI()
-
-                                listOf(
-                                    PositionItem(
-                                        POSITION_15,
-                                        HomeSections(
-                                            id = POSITION_15,
-                                            items = data,
-                                        )
-                                    )
-                                )
-                            } else {
-                                emptyList()
-                            }
-                        )
-                        retList
-                    } else {
-                        emptyList()
-                    }
-                }
-            }
-        },
-        homeRequestAsync {
-            coroutineScope {
-                val response =
-                    repository.fetchHistoriesSlider()
-                withContext(Dispatchers.Default) {
-//                    val response = responseBody.parseHistoriesSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        listOf(
-                            PositionItem(
-                                POSITION_30,
-                                HomeHistories(POSITION_30, response.data.mapToUI())
-                            ),
-                            PositionItem(
-                                POSITION_20_TITLE,
-                                HomeTitle(
-                                    id = POSITION_20_TITLE,
-                                    type = HomeTitle.HISTORIES_TITLE,
-                                    name = "Истории"
-                                )
-                            )
-                        )
-                    } else {
-                        emptyList()
-                    }
-                }
-            }
-        },
+        //homeRequestAsync {
+        //    coroutineScope {
+        //        val response = repository.fetchTopSlider()
+        //        withContext(Dispatchers.Default) {
+//      //              val response = responseBody.parseTopSliderResponse()
+        //            if (response is ResponseEntity.Success) {
+        //                val retList = mutableListOf<PositionItem>()
+        //                retList.addAll(
+        //                    if (response.data.categoryDetailsList != null) {
+        //                        val data = response.data.categoryDetailsList.mapToUI()
+        //                        listOf(
+        //                            PositionItem(
+        //                                POSITION_100,
+        //                                HomeProducts.fetchHomeProductsByType(
+        //                                    data,
+        //                                    HomeProducts.TOP_PROD,
+        //                                    POSITION_100
+        //                                )
+        //                            ),
+        //                            if (data.size != 1) {
+        //                                PositionItem(
+        //                                    POSITION_90_TAB,
+        //                                    HomeProductsTabs(
+        //                                        id = POSITION_90_TAB,
+        //                                        data.mapIndexed { index, cat ->
+        //                                            if (index == 0) {
+        //                                                cat.copy(
+        //                                                    isSelected = true,
+        //                                                    position = POSITION_90_TAB
+        //                                                )
+        //                                            } else {
+        //                                                cat.copy(
+        //                                                    isSelected = false,
+        //                                                    position = POSITION_90_TAB
+        //                                                )
+        //                                            }
+        //                                        })
+        //                                )
+        //                            } else {
+        //                                PositionItem(
+        //                                    POSITION_90_TAB,
+        //                                    HomeTitle(
+        //                                        id = POSITION_90_TAB,
+        //                                        type = HomeTitle.SLIDER_TITLE,
+        //                                        name = "",
+        //                                        showAll = true,
+        //                                        showAllName = "СМ.ВСЕ",
+        //                                        categoryProductsName = data.first().name,
+        //                                        titleId = data.first().id
+        //                                    )
+        //                                )
+        //                            }
+        //                        )
+        //                    } else {
+        //                        emptyList()
+        //                    }
+        //                )
+        //                retList.addAll(
+        //                    if (response.data.sectionsEntity != null) {
+        //                        val data = response.data.sectionsEntity.mapToUI()
+//
+        //                        listOf(
+        //                            PositionItem(
+        //                                POSITION_15,
+        //                                HomeSections(
+        //                                    id = POSITION_15,
+        //                                    items = data,
+        //                                )
+        //                            )
+        //                        )
+        //                    } else {
+        //                        emptyList()
+        //                    }
+        //                )
+        //                retList
+        //            } else {
+        //                emptyList()
+        //            }
+        //        }
+        //    }
+        //},
+        //homeRequestAsync {
+        //    coroutineScope {
+        //        val response =
+        //            repository.fetchHistoriesSlider()
+        //        withContext(Dispatchers.Default) {
+//      //              val response = responseBody.parseHistoriesSliderResponse()
+        //            if (response is ResponseEntity.Success) {
+        //                listOf(
+        //                    PositionItem(
+        //                        POSITION_30,
+        //                        HomeHistories(POSITION_30, response.data.mapToUI())
+        //                    ),
+        //                    PositionItem(
+        //                        POSITION_20_TITLE,
+        //                        HomeTitle(
+        //                            id = POSITION_20_TITLE,
+        //                            type = HomeTitle.HISTORIES_TITLE,
+        //                            name = "Истории"
+        //                        )
+        //                    )
+        //                )
+        //            } else {
+        //                emptyList()
+        //            }
+        //        }
+        //    }
+        //},
         homeRequestAsync {
             coroutineScope {
                 val response = repository.fetchPopularSlider()
@@ -327,62 +328,62 @@ class HomeFlowViewModel @Inject constructor(
                 }
             }
         },
-        homeRequestAsync {
-            coroutineScope {
-                val response = repository.fetchDiscountsSlider()
-                withContext(Dispatchers.Default) {
-//                    val response = responseBody.parseDiscountSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        listOf(
-                            PositionItem(
-                                POSITION_70,
-                                HomeProducts.fetchHomeProductsByType(
-                                    data,
-                                    HomeProducts.DISCOUNT,
-                                    POSITION_70
-                                )
-                            ),
-                            PositionItem(
-                                POSITION_60_TITLE,
-                                HomeTitle(
-                                    id = POSITION_60_TITLE,
-                                    type = HomeTitle.DISCOUNT_TITLE,
-                                    name = "Самое выгодное",
-                                    showAll = true,
-                                    showAllName = "СМ.ВСЕ",
-                                    categoryProductsName = if (data.size == 1) {
-                                        data.first().name
-                                    } else {
-                                        ""
-                                    }
-                                )
-                            )
-                        )
-                    } else {
-                        emptyList()
-                    }
-                }
-            }
-        },
-        homeRequestAsync {
-            coroutineScope {
-                val response = repository.fetchCategoryBannersSlider()
-                withContext(Dispatchers.Default) {
-//                    val response = responseBody.parseCategoryBannersSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        listOf(
-                            PositionItem(
-                                POSITION_80,
-                                HomeBanners(POSITION_80, response.data.mapToUI(), bannerRatio = 0.5)
-                            )
-                        )
-                    } else {
-                        emptyList()
-                    }
-                }
-            }
-        }
+        //homeRequestAsync {
+        //    coroutineScope {
+        //        val response = repository.fetchDiscountsSlider()
+        //        withContext(Dispatchers.Default) {
+//      //              val response = responseBody.parseDiscountSliderResponse()
+        //            if (response is ResponseEntity.Success) {
+        //                val data = response.data.mapToUI()
+        //                listOf(
+        //                    PositionItem(
+        //                        POSITION_70,
+        //                        HomeProducts.fetchHomeProductsByType(
+        //                            data,
+        //                            HomeProducts.DISCOUNT,
+        //                            POSITION_70
+        //                        )
+        //                    ),
+        //                    PositionItem(
+        //                        POSITION_60_TITLE,
+        //                        HomeTitle(
+        //                            id = POSITION_60_TITLE,
+        //                            type = HomeTitle.DISCOUNT_TITLE,
+        //                            name = "Самое выгодное",
+        //                            showAll = true,
+        //                            showAllName = "СМ.ВСЕ",
+        //                            categoryProductsName = if (data.size == 1) {
+        //                                data.first().name
+        //                            } else {
+        //                                ""
+        //                            }
+        //                        )
+        //                    )
+        //                )
+        //            } else {
+        //                emptyList()
+        //            }
+        //        }
+        //    }
+        //},
+        //homeRequestAsync {
+        //    coroutineScope {
+        //        val response = repository.fetchCategoryBannersSlider()
+        //        withContext(Dispatchers.Default) {
+//      //              val response = responseBody.parseCategoryBannersSliderResponse()
+        //            if (response is ResponseEntity.Success) {
+        //                listOf(
+        //                    PositionItem(
+        //                        POSITION_80,
+        //                        HomeBanners(POSITION_80, response.data.mapToUI(), bannerRatio = 0.5)
+        //                    )
+        //                )
+        //            } else {
+        //                emptyList()
+        //            }
+        //        }
+        //    }
+        //}
     )
 
 //    fun fetchHomeProductsByType(
@@ -402,36 +403,36 @@ class HomeFlowViewModel @Inject constructor(
 //    }
 
     private fun CoroutineScope.secondLoadTasks(userId: Long?) = arrayOf(
-        homeRequestAsync {
-            coroutineScope {
-                if (userId == null) {
-                    return@coroutineScope emptyList()
-                }
-                val response = repository.fetchOrdersSliderProfile(userId)
-                withContext(Dispatchers.Default) {
-                    if (response is ResponseEntity.Success) {
-                        listOf(
-                            PositionItem(
-                                POSITION_120,
-                                HomeOrders(POSITION_120, response.data.mapToUI())
-                            ),
-                            PositionItem(
-                                POSITION_110_TITLE,
-                                HomeTitle(
-                                    id = POSITION_110_TITLE,
-                                    type = HomeTitle.ORDERS_TITLE,
-                                    name = "Мои заказы",
-                                    showAll = true,
-                                    showAllName = "СМ.ВСЕ"
-                                )
-                            )
-                        )
-                    } else {
-                        emptyList()
-                    }
-                }
-            }
-        },
+        //homeRequestAsync {
+        //    coroutineScope {
+        //        if (userId == null) {
+        //            return@coroutineScope emptyList()
+        //        }
+        //        val response = repository.fetchOrdersSliderProfile(userId)
+        //        withContext(Dispatchers.Default) {
+        //            if (response is ResponseEntity.Success) {
+        //                listOf(
+        //                    PositionItem(
+        //                        POSITION_120,
+        //                        HomeOrders(POSITION_120, response.data.mapToUI())
+        //                    ),
+        //                    PositionItem(
+        //                        POSITION_110_TITLE,
+        //                        HomeTitle(
+        //                            id = POSITION_110_TITLE,
+        //                            type = HomeTitle.ORDERS_TITLE,
+        //                            name = "Мои заказы",
+        //                            showAll = true,
+        //                            showAllName = "СМ.ВСЕ"
+        //                        )
+        //                    )
+        //                )
+        //            } else {
+        //                emptyList()
+        //            }
+        //        }
+        //    }
+        //},
         homeRequestAsync {
             coroutineScope {
                 val response = repository.fetchNoveltiesSlider()
@@ -470,150 +471,149 @@ class HomeFlowViewModel @Inject constructor(
                 }
             }
         },
-        homeRequestAsync {
-            coroutineScope {
-                val response = repository.fetchPromotionsSlider()
-                withContext(Dispatchers.Default) {
-//                    val response = responseBody.parsePromotionSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        listOf(
-                            PositionItem(
-                                POSITION_170, HomePromotions(
-                                    POSITION_170, PromotionsSliderBundleUI(
-                                        title = "Акции",
-                                        containShowAllButton = true,
-                                        promotionUIList = response.data.mapToUI()
-                                    )
-                                )
-                            ),
-                            PositionItem(
-                                POSITION_160_TITLE,
-                                HomeTitle(
-                                    id = POSITION_160_TITLE,
-                                    type = HomeTitle.PROMOTIONS_TITLE,
-                                    name = "Акции",
-                                    showAll = true,
-                                    showAllName = "СМ.ВСЕ",
-                                    lightBg = false
-                                )
-                            )
-                        )
-                    } else {
-                        emptyList()
-                    }
-                }
-            }
-        },
-        homeRequestAsync {
-            coroutineScope {
-                val response = repository.fetchBottomSlider()
-                withContext(Dispatchers.Default) {
-//                    val response = responseBody.parseBottomSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        listOf(
-                            PositionItem(
-                                POSITION_190,
-                                HomeProducts.fetchHomeProductsByType(
-                                    data,
-                                    HomeProducts.BOTTOM_PROD,
-                                    POSITION_190
-                                )
-                            ),
-                            if (data.size != 1) {
-                                PositionItem(
-                                    POSITION_180_TAB,
-                                    HomeProductsTabs(
-                                        id = POSITION_180_TAB,
-                                        data.mapIndexed { index, cat ->
-                                            if (index == 0) {
-                                                cat.copy(
-                                                    isSelected = true,
-                                                    position = POSITION_180_TAB
-                                                )
-                                            } else {
-                                                cat.copy(
-                                                    isSelected = false,
-                                                    position = POSITION_180_TAB
-                                                )
-                                            }
-                                        })
-                                )
-                            } else {
-                                PositionItem(
-                                    POSITION_180_TAB,
-                                    HomeTitle(
-                                        id = POSITION_180_TAB,
-                                        type = HomeTitle.SLIDER_TITLE,
-                                        name = "",
-                                        showAll = true,
-                                        showAllName = "СМ.ВСЕ",
-                                        categoryProductsName = data.first().name,
-                                        titleId = data.first().id
-                                    )
-                                )
-                            }
-                        )
-                    } else {
-                        emptyList()
-                    }
-                }
-            }
-        },
-        homeRequestAsync {
-            coroutineScope {
-                val response = repository.fetchBrandsSlider()
-                withContext(Dispatchers.Default) {
-//                    val response = responseBody.parseBrandsSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        val mappedData = response.data.mapToUI()
-                        listOf(
-                            PositionItem(
-                                POSITION_210,
-                                HomeBrands(POSITION_210, mappedData.brandsList)
-                            ),
-                            PositionItem(
-                                POSITION_200_TITLE,
-                                HomeTitle(
-                                    id = POSITION_200_TITLE,
-                                    type = HomeTitle.BRANDS_TITLE,
-                                    name = "Бренды",
-                                    showAll = true,
-                                    showAllName = "СМ.ВСЕ",
-                                    categoryProductsName = mappedData.name
-                                )
-                            )
-                        )
-                    } else {
-                        emptyList()
-                    }
-                }
-            }
-        },
-        homeRequestAsync {
-            coroutineScope {
-                val response = repository.fetchCountriesSlider()
-                withContext(Dispatchers.Default) {
-//                    val response = responseBody.parseCountriesSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        listOf(
-                            PositionItem(
-                                POSITION_220,
-                                HomeCountries(POSITION_220, response.data.mapToUI())
-                            )
-                        )
-                    } else {
-                        emptyList()
-                    }
-                }
-            }
-        },
+        //homeRequestAsync {
+        //    coroutineScope {
+        //        val response = repository.fetchPromotionsSlider()
+        //        withContext(Dispatchers.Default) {
+//      //              val response = responseBody.parsePromotionSliderResponse()
+        //            if (response is ResponseEntity.Success) {
+        //                listOf(
+        //                    PositionItem(
+        //                        POSITION_170, HomePromotions(
+        //                            POSITION_170, PromotionsSliderBundleUI(
+        //                                title = "Акции",
+        //                                containShowAllButton = true,
+        //                                promotionUIList = response.data.mapToUI()
+        //                            )
+        //                        )
+        //                    ),
+        //                    PositionItem(
+        //                        POSITION_160_TITLE,
+        //                        HomeTitle(
+        //                            id = POSITION_160_TITLE,
+        //                            type = HomeTitle.PROMOTIONS_TITLE,
+        //                            name = "Акции",
+        //                            showAll = true,
+        //                            showAllName = "СМ.ВСЕ",
+        //                            lightBg = false
+        //                        )
+        //                    )
+        //                )
+        //            } else {
+        //                emptyList()
+        //            }
+        //        }
+        //    }
+        //},
+        //homeRequestAsync {
+        //    coroutineScope {
+        //        val response = repository.fetchBottomSlider()
+        //        withContext(Dispatchers.Default) {
+//      //              val response = responseBody.parseBottomSliderResponse()
+        //            if (response is ResponseEntity.Success) {
+        //                val data = response.data.mapToUI()
+        //                listOf(
+        //                    PositionItem(
+        //                        POSITION_190,
+        //                        HomeProducts.fetchHomeProductsByType(
+        //                            data,
+        //                            HomeProducts.BOTTOM_PROD,
+        //                            POSITION_190
+        //                        )
+        //                    ),
+        //                    if (data.size != 1) {
+        //                        PositionItem(
+        //                            POSITION_180_TAB,
+        //                            HomeProductsTabs(
+        //                                id = POSITION_180_TAB,
+        //                                data.mapIndexed { index, cat ->
+        //                                    if (index == 0) {
+        //                                        cat.copy(
+        //                                            isSelected = true,
+        //                                            position = POSITION_180_TAB
+        //                                        )
+        //                                    } else {
+        //                                        cat.copy(
+        //                                            isSelected = false,
+        //                                            position = POSITION_180_TAB
+        //                                        )
+        //                                    }
+        //                                })
+        //                        )
+        //                    } else {
+        //                        PositionItem(
+        //                            POSITION_180_TAB,
+        //                            HomeTitle(
+        //                                id = POSITION_180_TAB,
+        //                                type = HomeTitle.SLIDER_TITLE,
+        //                                name = "",
+        //                                showAll = true,
+        //                                showAllName = "СМ.ВСЕ",
+        //                                categoryProductsName = data.first().name,
+        //                                titleId = data.first().id
+        //                            )
+        //                        )
+        //                    }
+        //                )
+        //            } else {
+        //                emptyList()
+        //            }
+        //        }
+        //    }
+        //},
+        //homeRequestAsync {
+        //    coroutineScope {
+        //        val response = repository.fetchBrandsSlider()
+        //        withContext(Dispatchers.Default) {
+//      //              val response = responseBody.parseBrandsSliderResponse()
+        //            if (response is ResponseEntity.Success) {
+        //                val mappedData = response.data.mapToUI()
+        //                listOf(
+        //                    PositionItem(
+        //                        POSITION_210,
+        //                        HomeBrands(POSITION_210, mappedData.brandsList)
+        //                    ),
+        //                    PositionItem(
+        //                        POSITION_200_TITLE,
+        //                        HomeTitle(
+        //                            id = POSITION_200_TITLE,
+        //                            type = HomeTitle.BRANDS_TITLE,
+        //                            name = "Бренды",
+        //                            showAll = true,
+        //                            showAllName = "СМ.ВСЕ",
+        //                            categoryProductsName = mappedData.name
+        //                        )
+        //                    )
+        //                )
+        //            } else {
+        //                emptyList()
+        //            }
+        //        }
+        //    }
+        //},
+        //homeRequestAsync {
+        //    coroutineScope {
+        //        val response = repository.fetchCountriesSlider()
+        //        withContext(Dispatchers.Default) {
+//      //              val response = responseBody.parseCountriesSliderResponse()
+        //            if (response is ResponseEntity.Success) {
+        //                listOf(
+        //                    PositionItem(
+        //                        POSITION_220,
+        //                        HomeCountries(POSITION_220, response.data.mapToUI())
+        //                    )
+        //                )
+        //            } else {
+        //                emptyList()
+        //            }
+        //        }
+        //    }
+        //},
         homeRequestAsync {
             coroutineScope {
                 if (userId == null) {
                     return@coroutineScope emptyList()
                 }
-
                 val response = repository.fetchViewedProductsSlider(userId)
                 withContext(Dispatchers.Default) {
 //                    val response = responseBody.parseViewedProductsSliderResponse()
@@ -650,34 +650,34 @@ class HomeFlowViewModel @Inject constructor(
                 }
             }
         },
-        homeRequestAsync {
-            coroutineScope {
-                val response = repository.fetchCommentsSlider()
-                withContext(Dispatchers.Default) {
-//                    val response = responseBody.parseCommentsSliderResponse()
-                    if (response is ResponseEntity.Success) {
-                        listOf(
-                            PositionItem(
-                                POSITION_260,
-                                HomeComments(POSITION_260, response.data.mapToUI())
-                            ),
-                            PositionItem(
-                                POSITION_250_TITLE,
-                                HomeTitle(
-                                    id = POSITION_250_TITLE,
-                                    type = HomeTitle.COMMENTS_TITLE,
-                                    name = "Отзывы",
-                                    showAll = true,
-                                    showAllName = "Написать отзыв"
-                                )
-                            )
-                        )
-                    } else {
-                        emptyList()
-                    }
-                }
-            }
-        }
+        //homeRequestAsync {
+        //    coroutineScope {
+        //        val response = repository.fetchCommentsSlider()
+        //        withContext(Dispatchers.Default) {
+//      //              val response = responseBody.parseCommentsSliderResponse()
+        //            if (response is ResponseEntity.Success) {
+        //                listOf(
+        //                    PositionItem(
+        //                        POSITION_260,
+        //                        HomeComments(POSITION_260, response.data.mapToUI())
+        //                    ),
+        //                    PositionItem(
+        //                        POSITION_250_TITLE,
+        //                        HomeTitle(
+        //                            id = POSITION_250_TITLE,
+        //                            type = HomeTitle.COMMENTS_TITLE,
+        //                            name = "Отзывы",
+        //                            showAll = true,
+        //                            showAllName = "Написать отзыв"
+        //                        )
+        //                    )
+        //                )
+        //            } else {
+        //                emptyList()
+        //            }
+        //        }
+        //    }
+        //}
     )
 
     private inline fun CoroutineScope.homeRequestAsync(crossinline request: suspend () -> List<PositionItem>): Deferred<List<PositionItem>> {
@@ -855,7 +855,6 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     fun onSectionsTabClick(title: String) {
-
         val positionItems = state.data.positionItems.map { positionItem ->
             when (positionItem.position) {
                 POSITION_15 -> {
@@ -907,7 +906,6 @@ class HomeFlowViewModel @Inject constructor(
         val hasShow: Boolean = false,
         val isSecondLoad: Boolean = false,
     ) : State {
-
         companion object {
             fun idle(): HomeState {
                 return HomeState(

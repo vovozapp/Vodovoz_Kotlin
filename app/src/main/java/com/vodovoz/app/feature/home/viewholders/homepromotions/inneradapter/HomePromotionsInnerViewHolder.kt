@@ -81,8 +81,8 @@ class HomePromotionsInnerViewHolder(
         binding.tvCustomerCategory.text = item.customerCategory
         binding.cwCustomerCategory.setCardBackgroundColor(Color.parseColor(item.statusColor))
 
-        binding.advIncludeCard.root.isVisible = item.promotionAdvEntity != null
-        binding.advIncludeCard.advTv.text = item.promotionAdvEntity?.titleHeader
+        //binding.advIncludeCard.root.isVisible = item.promotionAdvEntity != null
+        //binding.advIncludeCard.advTv.text = item.promotionAdvEntity?.titleHeader
 
         Glide
             .with(itemView.context)

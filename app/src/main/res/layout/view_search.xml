@@ -4,22 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/clSearchContainer"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/_30sdp"
+    android:layout_height="46dp"
     android:background="@drawable/bkg_rectangle_light_gray"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgSearch"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:padding="@dimen/space_6"
-        android:src="@drawable/png_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/icon_search"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/color_search"
+        app:tint="@color/text_grey_composable"
         tools:ignore="ContentDescription" />
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -28,13 +27,13 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:textSize="@dimen/_12ssp"
+        android:textSize="16sp"
         android:fontFamily="@font/rotondac"
         android:background="@null"
         android:hint="@string/search_hint"
         android:imeOptions="actionSearch"
         android:inputType="text"
-        android:padding="5dp"
+        android:layout_marginStart="8dp"
         android:textColorHint="#889295"
         app:layout_constraintEnd_toStartOf="@+id/imgClear"
         app:layout_constraintStart_toEndOf="@+id/imgSearch" />
@@ -43,8 +42,8 @@
         android:id="@+id/imgClear"
         android:layout_width="0dp"
         android:layout_height="0dp"
-            android:padding="@dimen/space_6"
-            android:src="@drawable/ic_close_circle"
+        android:padding="@dimen/space_6"
+        android:src="@drawable/ic_close_circle"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
@@ -55,30 +54,24 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgMicro"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:padding="@dimen/space_6"
-        android:src="@drawable/png_micro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/icon_mic"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toStartOf="@+id/imgQr"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="#889295"
         tools:ignore="ContentDescription" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgQr"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:paddingVertical="@dimen/space_6"
-        android:src="@drawable/png_qr"
-        android:paddingEnd="@dimen/space_8"
-        android:paddingStart="@dimen/space_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/icon_scan_barcode"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="#889295"
         tools:ignore="ContentDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

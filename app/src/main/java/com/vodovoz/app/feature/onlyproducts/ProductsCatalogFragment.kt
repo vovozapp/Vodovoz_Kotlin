@@ -79,6 +79,7 @@ class ProductsCatalogFragment : BaseFragment() {
 
     private fun initSearch() {
         initSearchToolbar(
+            "Поиск товара",
             { findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment()) },
             { findNavController().navigate(ProductsCatalogFragmentDirections.actionToSearchFragment()) },
             { navigateToQrCodeFragment() },

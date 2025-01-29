@@ -115,12 +115,12 @@ class FullScreenHistoriesSliderFlowFragment : BaseFragment(),
         if (binding.vpHistories.currentItem == lastIndex) {
             findNavController().popBackStack()
         } else {
-            binding.vpHistories.currentItem = binding.vpHistories.currentItem + 1
+            binding.vpHistories.currentItem += 1
         }
     }
 
     override fun previousHistory() {
-        binding.vpHistories.currentItem = binding.vpHistories.currentItem - 1
+        binding.vpHistories.currentItem -= 1
     }
 
     override fun close() {

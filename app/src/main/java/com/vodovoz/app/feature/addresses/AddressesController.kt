@@ -42,7 +42,6 @@ class AddressesController(
     }
 
     private fun bindRefresh(refresh: SwipeRefreshLayout) {
-
         refresh.setOnRefreshListener {
             viewModel.refresh()
             refresh.isRefreshing = false

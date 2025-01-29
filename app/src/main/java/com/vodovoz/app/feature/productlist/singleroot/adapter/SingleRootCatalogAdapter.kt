@@ -13,9 +13,7 @@ class SingleRootCatalogAdapter(
     private val categoryClickListener: (CategoryUI) -> Unit,
 ) : RecyclerView.Adapter<CheckableCategoryWithChildrenViewHolder>() {
 
-    var way = listOf<CategoryUI>()
     var categoryUIList = listOf<CategoryUI>()
-
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -26,8 +24,6 @@ class SingleRootCatalogAdapter(
             parent,
             false
         ),
-        context = parent.context,
-        nestingPosition = nestingPosition,
         categoryClickListener = categoryClickListener
     )
 
@@ -35,16 +31,9 @@ class SingleRootCatalogAdapter(
         holder: CheckableCategoryWithChildrenViewHolder,
         position: Int,
     ) {
-        if (nestingPosition <= way.indices.last) {
-            holder.onBind(way[nestingPosition], way)
-        } else {
-            holder.onBind(categoryUIList[position], way)
-        }
+        holder.onBind(categoryUIList, position)
     }
 
     override fun getItemCount() =
-        if (nestingPosition <= way.indices.last) 1
-        else if (nestingPosition == way.indices.last + 1) categoryUIList.size
-        else 0
-
+       categoryUIList.size
 }

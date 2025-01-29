@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.productlist
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
@@ -131,7 +132,6 @@ class ProductsListFlowViewModel @Inject constructor(
                                 page = 1
                             )
                         } else {
-
                             val itemsList = if (state.loadMore) {
                                 state.data.itemsList + mappedFeed
                             } else {

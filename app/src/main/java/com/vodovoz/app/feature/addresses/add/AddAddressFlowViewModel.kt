@@ -37,12 +37,11 @@ class AddAddressFlowViewModel @Inject constructor(
         entrance: String?,
         floor: String?,
         office: String?,
-        comment: String?,
+        intercom: String?,
         type: Int?,
     ) {
         val userId = accountManager.fetchAccountId() ?: return
         val addressId = state.data.item?.id
-
         val lat = state.data.item?.latitude ?: ""
         val longitude = state.data.item?.longitude ?: ""
         val length = state.data.item?.length ?: ""
@@ -56,7 +55,7 @@ class AddAddressFlowViewModel @Inject constructor(
                 entrance,
                 floor,
                 office,
-                comment,
+                intercom,
                 type,
                 userId,
                 lat,
@@ -72,7 +71,7 @@ class AddAddressFlowViewModel @Inject constructor(
                 entrance,
                 floor,
                 office,
-                comment,
+                intercom,
                 type,
                 userId,
                 addressId,
@@ -91,7 +90,7 @@ class AddAddressFlowViewModel @Inject constructor(
         entrance: String?,
         floor: String?,
         office: String?,
-        comment: String?,
+        intercom: String?,
         type: Int?,
         userId: Long,
         lat: String,
@@ -111,7 +110,7 @@ class AddAddressFlowViewModel @Inject constructor(
                         entrance = entrance,
                         floor = floor,
                         office = office,
-                        comment = comment,
+                        intercom = intercom,
                         type = type,
                         userId = userId,
                         lat = lat,
@@ -157,7 +156,7 @@ class AddAddressFlowViewModel @Inject constructor(
         entrance: String?,
         floor: String?,
         office: String?,
-        comment: String?,
+        intercom: String?,
         type: Int?,
         userId: Long,
         addressId: Long,
@@ -178,7 +177,7 @@ class AddAddressFlowViewModel @Inject constructor(
                         entrance = entrance,
                         floor = floor,
                         office = office,
-                        comment = comment,
+                        intercom = intercom,
                         type = type,
                         userId = userId,
                         addressId = addressId,

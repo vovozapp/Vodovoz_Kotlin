@@ -365,6 +365,9 @@
         <action
             android:id="@+id/action_to_webViewFragment"
             app:destination="@id/webViewFragment" />
+        <action
+            android:id="@+id/action_to_loginByEmailFragment"
+            app:destination="@id/loginByPhoneCodeFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -403,14 +406,17 @@
             app:argType="com.vodovoz.app.ui.model.custom.GiftProductUI"
             app:nullable="true" />
     </dialog>
-    <dialog
+    <fragment
         android:id="@+id/singleRootCatalogBottomFragment"
         android:name="com.vodovoz.app.feature.productlist.singleroot.SingleRootCatalogBottomFragment"
         android:label="SingleRootCatalogBottomFragment">
+        <action
+            android:id="@+id/action_to_searchFragment"
+            app:destination="@id/searchFragment" />
         <argument
             android:name="categoryId"
             app:argType="long" />
-    </dialog>
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.vodovoz.app.feature.profile.ProfileFragment"
@@ -602,24 +608,24 @@
         android:name="com.vodovoz.app.feature.map.MapDialogFragment"
         android:label="MapDialogFragment">
         <action
-            android:id="@+id/action_to_addAddressBottomFragment"
-            app:destination="@id/addAddressBottomFragment" />
+            android:id="@+id/action_to_addAddressFragment"
+            app:destination="@id/addAddressFragment" />
         <argument
             android:name="address"
             android:defaultValue="@null"
             app:argType="com.vodovoz.app.ui.model.AddressUI"
             app:nullable="true" />
     </fragment>
-    <dialog
-        android:id="@+id/addAddressBottomFragment"
-        android:name="com.vodovoz.app.feature.addresses.add.AddAddressBottomFragment"
-        android:label="AddAddressBottomFragment">
+    <fragment
+        android:id="@+id/addAddressFragment"
+        android:name="com.vodovoz.app.feature.addresses.add.AddAddressFragment"
+        android:label="AddAddressFragment">
         <argument
             android:name="address"
             android:defaultValue="@null"
             app:argType="com.vodovoz.app.ui.model.AddressUI"
             app:nullable="true" />
-    </dialog>
+    </fragment>
     <fragment
         android:id="@+id/savedAddressesDialogFragment"
         android:name="com.vodovoz.app.feature.addresses.AddressesFragment"
@@ -1096,4 +1102,16 @@
             android:name="showProgress"
             app:argType="boolean" />
     </dialog>
+    <fragment
+        android:id="@+id/loginByPhoneCodeFragment"
+        android:name="com.vodovoz.app.feature.auth.login.LoginByPhoneCodeFragment"
+        android:label="LoginByEmailFragment" >
+        <argument
+            android:name="phoneNumber"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginByEmailFragment"
+        android:name="com.vodovoz.app.feature.auth.login.LoginByEmailFragment"
+        android:label="LoginByEmailFragment" />
 </navigation>

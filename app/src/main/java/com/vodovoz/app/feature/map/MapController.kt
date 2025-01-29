@@ -16,6 +16,9 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
@@ -93,7 +96,6 @@ class MapController(
     SuggestSession.SuggestListener,
     DrivingSession.DrivingRouteListener {
 
-
     private val locationManager by lazy {
         context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
     }
@@ -107,6 +109,7 @@ class MapController(
     private val searchManager: SearchManager by lazy {
         SearchFactory.getInstance().createSearchManager(SearchManagerType.COMBINED)
     }
+
     private val suggestSession: SuggestSession by lazy {
         searchManager.createSuggestSession()
     }
@@ -145,10 +148,10 @@ class MapController(
 
     fun initMap(
         mapView: MapView,
-        plusFrame: ShapeableImageView? = null,
-        minusFrame: ShapeableImageView? = null,
-        infoFrame: FrameLayout? = null,
-        geoFrame: FrameLayout? = null,
+        plusFrame: AppCompatImageButton? = null,
+        minusFrame: AppCompatImageButton? = null,
+        infoFrame: ConstraintLayout? = null,
+        geoFrame: AppCompatImageButton? = null,
     ) {
         this.mapView = mapView
 
@@ -257,13 +260,12 @@ class MapController(
      */
 
     fun initSearch(
-        addAddress: TextView? = null,
+        addAddress: AppCompatButton? = null,
         searchEditText: EditText? = null,
         searchContainer: LinearLayout? = null,
         searchImage: ImageView? = null,
         clear: ImageView? = null,
         fullAddressTextView: TextView? = null,
-        searchErrorTv: TextView? = null,
         addressesRecycler: RecyclerView? = null,
     ) {
 
@@ -308,7 +310,6 @@ class MapController(
         clear?.setOnClickListener {
             searchEditText?.text = null
             clear.isVisible = false
-            searchErrorTv?.isVisible = false
             addressesResultAdapter.submitList(emptyList())
             addressesRecycler?.isVisible = false
             fullAddressTextView?.text = null

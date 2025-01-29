@@ -8,6 +8,7 @@ data class SiteStateResponse(
     val generation: Generation?,
     val agreement: Agreement?,
     val jivoChat: JivoChat?,
+    val testSiteLink: String?
 )
 
 data class JivoChat (

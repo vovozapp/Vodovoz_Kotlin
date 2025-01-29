@@ -29,6 +29,7 @@ object CategoryMapper {
 
     fun CategoryMainEntity.mapToUI() = CategoryMainUI(
         name = name,
+        detailPicture = detailPicture,
         categoryList = categoryList.mapToUI()
     )
 

@@ -98,12 +98,12 @@ class CatalogFragment : BaseFragment() {
     }
 
     private fun initCategoryRecycler() {
-        binding.categoryRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.categoryRecycler.adapter = adapter
     }
 
     private fun initSearch() {
         initSearchToolbar(
+            "Поиск товара",
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
             { findNavController().navigate(CatalogFragmentDirections.actionToSearchFragment()) },
             { navigateToQrCodeFragment() },
@@ -122,38 +122,6 @@ class CatalogFragment : BaseFragment() {
                         }
 
                         adapter.submitList(catalogState.data.itemsList)
-
-                        val topCatalogBanner = catalogState.data.topCatalogBanner
-                        with(binding) {
-                            if (topCatalogBanner != null) {
-
-                                val backGroundColor =
-                                    Color.parseColor(topCatalogBanner.backgroundColor)
-                                cvCatalogBanner.backgroundTintList = ColorStateList.valueOf(
-                                    backGroundColor
-                                )
-
-                                val textColor = Color.parseColor(topCatalogBanner.textColor)
-                                tvCatalogBanner.setTextColor(textColor)
-                                tvCatalogBanner.text = topCatalogBanner.text
-
-                                if (topCatalogBanner.iconUrl != null && topCatalogBanner.iconUrl.isNotEmpty()) {
-                                    Glide.with(requireContext())
-                                        .load(topCatalogBanner.iconUrl)
-                                        .into(iconCatalogBanner)
-                                } else {
-                                    iconCatalogBanner.visibility = View.GONE
-                                }
-
-                                cvCatalogBanner.setOnClickListener() {
-                                    topCatalogBanner.actionEntity?.invoke()
-                                }
-
-                                cvCatalogBanner.visibility = View.VISIBLE
-                            } else {
-                                cvCatalogBanner.visibility = View.GONE
-                            }
-                        }
 
                         if (!catalogState.loadingPage) {
                             hideLoader()

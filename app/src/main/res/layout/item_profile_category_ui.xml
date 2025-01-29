@@ -5,29 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/categoryTitleTv"
-        style="@style/TextViewNormalBlackBold"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
-        android:background="@color/light_bg"
-        android:gravity="center_vertical"
-        android:paddingStart="@dimen/space_16"
-        android:paddingEnd="@dimen/space_16"
-        android:textColor="#6A7480"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="UseCompatTextViewDrawableXml"
-        tools:text="Покупки" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/insideCategoriesRv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/categoryTitleTv" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

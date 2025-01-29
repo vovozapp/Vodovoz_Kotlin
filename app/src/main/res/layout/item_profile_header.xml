@@ -5,14 +5,14 @@
     android:id="@+id/header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bluePrimary"
     android:padding="@dimen/space_16">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:id="@+id/cwAvatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:cardCornerRadius="100dp"
+        app:cardElevation="0dp"
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -20,49 +20,59 @@
 
         <ImageView
             android:id="@+id/avatar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:scaleType="centerCrop"
-            tools:ignore="ContentDescription" />
-
+            android:src="@drawable/avatar"
+            tools:ignore="ContentDescription"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
     </androidx.cardview.widget.CardView>
-
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_8"
+        android:layout_marginStart="@dimen/space_16"
         android:fontFamily="@font/rotonda_normal"
-        android:textColor="@color/white"
-        android:textSize="17sp"
+        android:textColor="@color/text_black_composable"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/myData"
-        app:layout_constraintStart_toEndOf="@+id/cardView"
-        app:layout_constraintTop_toTopOf="@+id/cardView"
+        app:layout_constraintStart_toEndOf="@+id/cwAvatar"
+        app:layout_constraintTop_toTopOf="@+id/cwAvatar"
         app:layout_constraintVertical_chainStyle="spread"
-        tools:text="Вадим Радько" />
+        tools:text="Глад Валакас" />
 
     <TextView
         android:id="@+id/myData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_8"
+        android:layout_marginStart="@dimen/space_16"
         android:fontFamily="@font/rotonda_normal"
         android:text="Мои данные"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/cardView"
-        app:layout_constraintStart_toEndOf="@+id/cardView"
+        android:textColor="@color/text_grey_composable"
+        app:layout_constraintBottom_toBottomOf="@+id/cwAvatar"
+        app:layout_constraintStart_toEndOf="@+id/cwAvatar"
         app:layout_constraintTop_toBottomOf="@+id/name" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:src="@drawable/ic_pointer_right"
-        app:layout_constraintBottom_toBottomOf="@+id/cardView"
+        app:layout_constraintBottom_toBottomOf="@+id/myData"
+        app:layout_constraintStart_toEndOf="@+id/myData"
+        app:layout_constraintTop_toTopOf="@+id/myData"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/notification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_notification"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cardView"
-        app:tint="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

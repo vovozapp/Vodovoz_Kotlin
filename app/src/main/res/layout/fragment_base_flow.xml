@@ -17,7 +17,7 @@
         android:id="@+id/composeView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
     <com.google.android.material.appbar.AppBarLayout
@@ -25,7 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="visible"
+        app:elevation="0dp">
 
         <LinearLayout
             android:id="@+id/searchAppBar"
@@ -41,14 +42,11 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imgBack"
-                android:layout_width="@dimen/_35sdp"
-                android:layout_height="@dimen/_33sdp"
-                android:layout_marginStart="-8dp"
-                android:paddingStart="@dimen/space_8"
-                android:paddingEnd="@dimen/space_8"
-                android:src="@drawable/ic_arrow_left"
-                android:visibility="gone"
-                app:tint="@color/text_black" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/icon_back"
+                android:visibility="visible" />
 
             <include
                 android:id="@+id/searchContainer"
@@ -73,6 +71,13 @@
             layout="@layout/app_bar_default_history"
             android:visibility="gone"
             tools:visibility="visible" />
+
+
+        <include
+            android:id="@+id/appBarUserData"
+            layout="@layout/app_bar_user_data"
+            android:visibility="gone"
+            />
 
     </com.google.android.material.appbar.AppBarLayout>
 

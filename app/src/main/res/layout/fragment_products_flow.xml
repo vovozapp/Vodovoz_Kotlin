@@ -5,103 +5,98 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBar"
+        <LinearLayout
+            android:id="@+id/hiddenHeaderContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:elevation="0dp">
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
-                android:id="@+id/hiddenHeaderContainer"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_scrollFlags="enterAlways|scroll">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="@dimen/space_16"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical"
-                        android:paddingTop="8dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/imgShare"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tvCategoryName"
-                            style="@style/TextViewLargeBlackBold"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:gravity="bottom"
-                            android:maxLines="1"
-                            tools:text="Прошлые покупки" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tvProductAmount"
-                            style="@style/TextViewNormalGray"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:maxLines="1"
-                            android:textColor="#889295"
-                            android:textSize="14sp"
-                            tools:layout_editor_absoluteX="16dp"
-                            tools:text="452 товара" />
-
-                    </LinearLayout>
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/imgShare"
-                        android:layout_width="@dimen/_18sdp"
-                        android:layout_height="@dimen/_18sdp"
-                        android:layout_marginEnd="@dimen/space_16"
-                        android:src="@drawable/png_share"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:tint="@color/text_black"
-                        tools:ignore="ContentDescription" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="visible">
 
                 <LinearLayout
-                    android:id="@+id/brandTabsContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="@dimen/space_16"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
-                    android:paddingTop="@dimen/space_8"
-                    android:visibility="visible">
+                    android:paddingTop="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/imgShare"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
-                        android:id="@+id/additionalName"
-                        style="@style/TextViewMediumBlackBold"
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvCategoryName"
+                        style="@style/TextViewLargeBlackBold"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
+                        android:textSize="18sp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:gravity="bottom"
                         android:maxLines="1"
-                        android:paddingStart="@dimen/space_16"
-                        android:paddingEnd="@dimen/space_16"
-                        android:textSize="16sp"
-                        tools:text="Популярные бренды" />
+                        tools:text="Прошлые покупки" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvProductAmount"
+                        style="@style/TextViewNormalGray"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_weight="1"
+                        android:maxLines="1"
+                        android:textColor="#889295"
+                        android:textSize="12sp"
+                        tools:layout_editor_absoluteX="16dp"
+                        tools:text="452 товара" />
+
+                </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgShare"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_16"
+                    android:src="@drawable/icon_share"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/changeCategoryContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imgCategories"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:visibility="gone"
+                        android:src="@drawable/icon_category"
+                        tools:ignore="ContentDescription" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/brandRecycler"
@@ -112,83 +107,37 @@
 
                 </LinearLayout>
 
-                <RelativeLayout
-                    android:id="@+id/changeCategoryContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone">
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/categoryContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="@dimen/space_16"
-                        android:layout_marginTop="@dimen/space_8"
-                        android:layout_marginEnd="@dimen/space_16"
-                        android:layout_marginBottom="@dimen/space_8"
-                        app:cardCornerRadius="5dp"
-                        app:cardElevation="3dp">
+        </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/sortContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/hiddenHeaderContainer">
 
-                            <ImageView
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                android:layout_marginStart="16dp"
-                                android:src="@drawable/png_ic_categories"
-                                app:tint="#889295"
-                                tools:ignore="ContentDescription" />
-
-                            <TextView
-                                style="@style/TextViewNormalBlack"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/space_8"
-                                android:layout_weight="1"
-                                android:maxLines="1"
-                                android:text="@string/categories"
-                                android:textSize="16sp" />
-
-                            <ImageView
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                android:layout_marginStart="16dp"
-                                android:src="@drawable/ic_pointer_right"
-                                app:tint="#889295"
-                                tools:ignore="ContentDescription" />
-
-                        </LinearLayout>
-
-                    </androidx.cardview.widget.CardView>
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/sortContainer"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/llSort"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:layout_marginStart="16dp"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/bg_sort"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imgViewMode"
-                    android:layout_width="@dimen/action_image_size_with_padding_8"
-                    android:layout_height="@dimen/action_image_size_with_padding_8"
-                    android:layout_marginStart="@dimen/space_8"
-                    android:paddingHorizontal="@dimen/space_8"
-                    android:paddingVertical="@dimen/space_10"
-                    android:src="@drawable/png_table"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/text_black"
+                    android:id="@+id/imgSort"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/icon_sort"
+                    app:tint="@color/new_product_blue"
                     tools:ignore="ContentDescription" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -196,70 +145,45 @@
                     style="@style/TextViewNormalBlackBold"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:drawableEnd="@drawable/ic_drop_down"
-                    android:drawableTint="@color/text_black"
+                    android:textColor="@color/new_product_blue"
                     android:gravity="center"
-                    android:text="@string/choose_sort_type"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/imgFilters"
-                    app:layout_constraintStart_toEndOf="@+id/imgViewMode"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="UseCompatTextViewDrawableXml" />
+                    android:text="Сначала новые"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imgFilters"
-                    android:layout_width="@dimen/action_image_size_with_padding_8"
-                    android:layout_height="@dimen/action_image_size_with_padding_8"
-                    android:layout_marginEnd="@dimen/space_8"
-                    android:paddingHorizontal="@dimen/space_8"
-                    android:paddingVertical="@dimen/space_10"
-                    android:src="@drawable/filtericon"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/text_black"
-                    tools:ignore="ContentDescription" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvFiltersAmount"
-                    style="@style/TextViewSmallWhite"
-                    android:layout_width="@dimen/_15sdp"
-                    android:layout_height="@dimen/_15sdp"
-                    android:layout_marginTop="@dimen/space_2"
-                    android:layout_marginEnd="@dimen/space_2"
-                    android:background="@drawable/bkg_button_green_circle_normal"
-                    android:gravity="center"
-                    android:visibility="invisible"
-                    app:layout_constraintEnd_toEndOf="@+id/imgFilters"
-                    app:layout_constraintTop_toTopOf="@+id/imgFilters"
-                    tools:text="3" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imgViewMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:src="@drawable/icon_orientation"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/imgFilters"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.appbar.AppBarLayout>
-
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imgFilters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:src="@drawable/icon_settings"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/productRecycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/sortContainer"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabJivoSite"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="end|bottom"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="12dp"
-            android:contentDescription="@string/jivo_chat"
-            android:visibility="gone"
-            app:fabCustomSize="40dp"
-            app:maxImageSize="40dp"
-            app:srcCompat="@drawable/jivosite_floating"
-            app:tint="@null" />
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/llEmptyContainer"

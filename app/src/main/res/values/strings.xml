@@ -11,7 +11,7 @@
     <string name="title_notifications" translatable="false">Notifications</string>
 
     //BottomNavMenu
-    <string name="home" translatable="false">Домой</string>
+    <string name="home" translatable="false">Главный</string>
     <string name="catalog" translatable="false">Каталог</string>
     <string name="cart" translatable="false">Корзина</string>
     <string name="favorite" translatable="false">Избранное</string>
@@ -50,17 +50,23 @@
     //New Strings
 
     //Base
+    <string name="article" translatable="false">Артикул:</string>
+    <string name="depose_price" translatable="false">Залоговая стоимость за бутыль</string>
+    <string name="product_absent" translatable="false">Товар закончился</string>
     <string name="default_text" translatable="false">Заглушка для превью</string>
     <string name="price_text" translatable="false">%d ₽</string>
     <string name="telephone" translatable="false">Телефон</string>
-    <string name="email" translatable="false">Эл.почта</string>
-    <string name="enter_your_phone_number" translatable="false">Введите номер телефона, чтобы войти или зарегистрироваться, если у вас нет аккаунта</string>
-    <string name="i_confirm_personal_data" translatable="false">Я подтверждаю согласие на <a href="#">обработку персональных данных </a></string>
+    <string name="email" translatable="false">Войти через почту</string>
+    <string name="enter_your_phone_number" translatable="false">Укажите номер телефона, чтобы войти или зарегистрироваться, если у вас нет аккаунта.</string>
+    <string name="enter_code" translatable="false">Введите код из SMS, отправленный на номер</string>
+    <string name="registered_only" translatable="false">Только для зарегистрированных \nпользователей</string>
+    <string name="i_confirm_personal_data" translatable="false">Продолжая, вы соглашаетесь с <a href="#">политикой конфиденциальности</a> и с <a href="#">публичной афертой</a></string>
     <string name="subscribe_on_mailing_list" translatable="false">Подписаться на рассылку</string>
     <string name="send_code" translatable="false">Выслать код</string>
+    <string name="vvedite_INN" translatable="false">ИНН</string>
     <string name="vvedite_nazvanie" translatable="false">Введите название</string>
     <string name="address_text" translatable="false">Адрес</string>
-    <string name="nazvanie_kompanii" translatable="false">Название компании</string>
+    <string name="nazvanie_kompanii" translatable="false">Название организации</string>
     <string name="kuda_vopros" translatable="false">Куда?</string>
     <string name="fio_text" translatable="false">ФИО</string>
     <string name="email_text" translatable="false">Email</string>
@@ -69,15 +75,17 @@
     <string name="data_text" translatable="false">Дата</string>
     <string name="vremya_text" translatable="false">Время</string>
     <string name="oplata_text" translatable="false">Оплата</string>
-    <string name="vyberite_sposob_oplaty" translatable="false">Выберите способ оплаты</string>
+    <string name="choose_pay_system_title" translatable="false">Способ оплаты</string>
+    <string name="choose_pay_system_hint" translatable="false">Выберите способ оплаты</string>
     <string name="sdacha_text" translatable="false">С какой суммы нужна сдача?</string>
-    <string name="zvonok_operatore_vopros" translatable="false">Требуется ли звонок оператора?</string>
+    <string name="call_title" translatable="false">Вам позвонить?</string>
     <string name="neobhodimoe_deystvie" translatable="false">Выберите необходимое действие</string>
     <string name="zvonok_operatore_text" translatable="false">Требуется звонок оператора</string>
     <string name="predupredit_o_priezde" translatable="false">Предупредить о приезде водителя</string>
     <string name="telephone_dlya_voditelya" translatable="false">Телефон по доставке</string>
     <string name="kommentariy_k_zakazu" translatable="false">Комментарий к заказу</string>
-    <string name="tsena_text" translatable="false">Цена</string>
+    <string name="kommentariy_dlya_kuriera" translatable="false">Комментарий для курьера</string>
+    <string name="tsena_text" translatable="false">Оплата</string>
     <string name="stoimost_tovarov" translatable="false">Стоимость товаров</string>
     <string name="zalog_text" translatable="false">Залог</string>
     <string name="skidka_po_akciyam" translatable="false">Скидка по акциям</string>
@@ -120,8 +128,10 @@
     <string name="recipient" translatable="false">Получатель</string>
     <string name="load_photo" translatable="false">Загрузить фото</string>
     <string name="personal_data" translatable="false">Личные данные</string>
-    <string name="name_hint" translatable="false">Имя</string>
-    <string name="family_hint" translatable="false">Фамилия</string>
+    <string name="name" translatable="false">Имя</string>
+    <string name="last_name" translatable="false">Фамилия</string>
+    <string name="name_hint" translatable="false">Введите имя</string>
+    <string name="family_hint" translatable="false">Введите фамилию</string>
     <string name="sex_hint" translatable="false">Пол</string>
     <string name="sex_male" translatable="false">Мужской</string>
     <string name="bithday_hint" translatable="false">Дата рождения</string>
@@ -137,7 +147,7 @@
     <string name="repeat" translatable="false">Повторить</string>
     <string name="details" translatable="false">Подробнее</string>
     <string name="choose_sort" translatable="false">Выбрать сортировку</string>
-    <string name="confirm_personal_data" translatable="false">Я подтверждаю свое согласие на <a href = "#">обработку персональных данных </a></string>
+    <string name="confirm_personal_data" translatable="false">Я подтверждаю свое согласие на <a href="#">обработку персональных данных </a></string>
     <string name="order_history" translatable="false">История заказов</string>
     <string name="categories" translatable="false">Категории</string>
     <string name="choose_sort_type" translatable="false">Выбрать сортировку</string>
@@ -145,8 +155,11 @@
     <string name="goods_of_promotion" translatable="false">Товары участвующие в акции:</string>
     <string name="search_" translatable="false">Поиск...</string>
     <string name="clear_search" translatable="false">Clear search</string>
+    <string name="enter_phone" translatable="false">Введите телефон</string>
     <string name="phone" translatable="false">Телефон</string>
     <string name="phone_" translatable="false">Телефон*</string>
+    <string name="enter_email" translatable="false">Введите E-mail</string>
+    <string name="email_title" translatable="false">E-mail</string>
     <string name="address_title" translatable="false">Адрес</string>
     <string name="fio_" translatable="false">ФИО*</string>
     <string name="email_title_" translatable="false">Почта*</string>
@@ -165,12 +178,53 @@
     <string name="wrong_email" translatable="false">Неправильно указан email</string>
     <string name="error_repeat" translatable="false">Ошибка. Попробуйте снова.</string>
     <string name="password_recover_success" translatable="false">Пароль упешно изменен и выслан вам на почту: %1$s</string>
-    <string name="resend_code" translatable="false">Отправить код повторно</string>
+    <string name="resend_code" translatable="false">Запросить код повторно</string>
     <string name="wrong_phone" translatable="false">Неверный формат телефона</string>
     <string name="personal_data_nesessary" translatable="false">Необходимо согласие на обработку персональных данных</string>
     <string name="enter" translatable="false">Войти</string>
+    <string name="choose" translatable="false">Выбрать</string>
     <string name="ok" translatable="false">Ок</string>
     <string name="biometric_fault" translatable="false">Вход по биометрии не выполнен</string>
+    <string name="my_data">Мои данные</string>
 
+    <string name="delete_account">Удалить аккаунт</string>
+    <string name="delete_account_confirmation">Вы действительно хотите удалить аккаунт?</string>
+    <string name="delete">Удалить</string>
+
+    <string name="exit">Выйти</string>
+    <string name="exit_confirmation">Вы уверены что хотите выйте из аккаунта?</string>
+    <string name="article_number">Артикул: %1$s</string>
+    <string name="zero">0</string>
+    <string name="leave_feedback">Оставить отзыв</string>
+    <string name="price">%1$s ₽</string>
+
+    <plurals name="reviews_count">
+        <item quantity="one">1 отзыв</item>
+        <item quantity="few">%d отзыва</item>
+        <item quantity="many">%d отзывов</item>
+    </plurals>
+
+
+    <string name="deposit_start_text">Залог&#160;</string>
+    <string name="deposit_end_text">&#160;за оборотную тару</string>
+    <string name="to_cart">В корзину</string>
+    <string name="about_product">О товаре</string>
+    <string name="Characteristic">Характеристики</string>
+
+    <string name="category">Категория</string>
+    <string name="brand">Бренд</string>
+
+    <string name="all">Все</string>
+
+    <string name="anonymous">Аноним</string>
+    <string name="no_comments">По данному товару нет отзывов. Будьте первым.</string>
+    <string name="leave_rate">Оставить отзыв</string>
+    <string name="you_viewed">Вы смотрели</string>
+    <string name="buy_with_this_product">С этим товаром покупают</string>
+    <string name="search_by_queries">Ищут по запросам</string>
+    <string name="count_with_x">%1$s ×&#160;</string>
+
+    <string name="space">&#160;</string>
+    <string name="left_to_gift">До получения подарка %1$s ₽</string>
 
 </resources>

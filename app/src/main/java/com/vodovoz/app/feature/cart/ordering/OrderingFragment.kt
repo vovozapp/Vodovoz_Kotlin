@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.cart.ordering
 import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -180,8 +181,14 @@ class OrderingFragment : BaseFragment() {
                             )
                         )
                         binding.tvAddress.text = addressUI.fullAddress
-                        binding.etName.setText(addressUI.name)
-                        binding.etEmail.setText(addressUI.email)
+                        if (addressUI.inn.isNotEmpty())
+                            binding.etINN.setText(addressUI.inn)
+                        if (addressUI.companyName.isNotEmpty())
+                            binding.etCompanyName.setText(addressUI.companyName)
+                        if (addressUI.name.isNotEmpty())
+                            binding.etName.setText(addressUI.name)
+                        if (addressUI.email.isNotEmpty())
+                            binding.etEmail.setText(addressUI.email)
                         binding.etPhone.setPhoneValidator { }
                         binding.etPhone.setText(
                             addressUI.phone.convertPhoneToBaseFormat().convertPhoneToFullFormat()
@@ -384,6 +391,28 @@ class OrderingFragment : BaseFragment() {
 
             viewModel.checkAddress()
 
+            if (binding.INNContainer.isVisible) {
+                if (!validateSimpleField(
+                        binding.tvINN,
+                        binding.etINN.text.toString()
+                    )
+                ) {
+                    binding.nsvContent.scrollViewToTop()
+                    return@setOnClickListener
+                }
+            }
+
+            if (binding.llCompanyNameContainer.isVisible) {
+                if (!validateSimpleField(
+                        binding.tvNameCompanyName,
+                        binding.etCompanyName.text.toString()
+                    )
+                ) {
+                    binding.nsvContent.scrollViewToTop()
+                    return@setOnClickListener
+                }
+            }
+
             if (!validateSimpleField(binding.tvNameName, binding.etName.text.toString())) {
                 binding.nsvContent.scrollViewToTop()
                 return@setOnClickListener
@@ -408,21 +437,12 @@ class OrderingFragment : BaseFragment() {
                 binding.nsvContent.scrollViewToTop()
                 return@setOnClickListener
             }
-            if (binding.llCompanyNameContainer.isVisible) {
-                if (!validateSimpleField(
-                        binding.tvNameCompanyName,
-                        binding.etCompanyName.text.toString()
-                    )
-                ) {
-                    binding.nsvContent.scrollViewToTop()
-                    return@setOnClickListener
-                }
-            }
 
             val comment = binding.etComment.text.toString()
             val name = binding.etName.text.toString()
             val phone = binding.etPhone.text.toString()
             val email = binding.etEmail.text.toString()
+            val inn = binding.etINN.text.toString()
             val company = binding.etCompanyName.text.toString()
             val inputCash = binding.etInputCash.text.toString()
             val phoneForDriver = binding.etPhoneForDriver.text.toString()
@@ -433,6 +453,7 @@ class OrderingFragment : BaseFragment() {
                 phone = phone,
                 inputCash = inputCash,
                 email = email,
+                inn = inn,
                 companyName = company,
                 phoneForDriver = phoneForDriver
             )
@@ -547,6 +568,19 @@ class OrderingFragment : BaseFragment() {
             checkTitlesColor()
         }
 
+        binding.etINN.doOnTextChanged { _, _, _, count ->
+            if (count > 0) {
+                binding.tvINN.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.text_black
+                    )
+                )
+            }
+            checkTitlesColor()
+        }
+
+
         binding.etPhoneForDriver.doOnTextChanged { _, _, _, _ ->
             checkTitlesColor()
         }
@@ -589,19 +623,27 @@ class OrderingFragment : BaseFragment() {
 
     private fun showPersonalBtn() {
         binding.btnCompany.setBackgroundResource(R.drawable.selector_bkg_button_gray_rect)
-        binding.btnPersonal.setBackgroundResource(R.drawable.bkg_button_blue_rect_disabled)
+        binding.btnPersonal.setBackgroundResource(R.drawable.bkg_into_cart_button)
         binding.llCompanyNameContainer.visibility = View.GONE
+        binding.INNContainer.visibility = View.GONE
     }
 
     private fun showCompanyBtn() {
         binding.btnPersonal.setBackgroundResource(R.drawable.selector_bkg_button_gray_rect)
         binding.btnCompany.setBackgroundResource(R.drawable.bkg_button_blue_rect_disabled)
         binding.llCompanyNameContainer.visibility = View.VISIBLE
+        binding.INNContainer.visibility = View.VISIBLE
     }
 
     private fun clearFields() {
         binding.root.clearFocus()
         binding.tvNameAddress.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.text_black
+            )
+        )
+        binding.tvINN.setTextColor(
             ContextCompat.getColor(
                 requireContext(),
                 R.color.text_black
@@ -643,6 +685,7 @@ class OrderingFragment : BaseFragment() {
                 R.color.text_black
             )
         )
+        binding.etINN.text = null
         binding.etCompanyName.text = null
         binding.etName.text = null
         binding.etEmail.text = null
@@ -798,6 +841,11 @@ class OrderingFragment : BaseFragment() {
     private fun checkTitlesColor() {
         with(binding) {
             setTextViewStyle(tvAddress.text.isNotEmpty(), tvNameAddress, tvAddress)
+            setTextViewStyle(
+                etINN.text.toString().isNotEmpty(),
+                tvINN,
+                etINN
+            )
             setTextViewStyle(
                 etCompanyName.text.toString().isNotEmpty(),
                 tvNameCompanyName,

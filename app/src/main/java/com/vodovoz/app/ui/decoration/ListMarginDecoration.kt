@@ -17,6 +17,7 @@ class ListMarginDecoration(
         with(outRect) {
             top = spaceSize
             bottom = spaceSize
+            left = spaceSize
             right = spaceSize
         }
     }

@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.productdetail.sendcomment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.RatingBar
 import androidx.core.os.bundleOf
@@ -41,7 +42,6 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
             arguments = bundleOf("productId" to productId, "rate" to rate)
         }
     }
-
 
     override fun layout(): Int = R.layout.bs_send_comment
 
@@ -173,6 +173,7 @@ class SendCommentAboutProductBottomDialog : BaseBottomSheetFragment() {
                     .observeSiteState()
                     .collect {
                         val showComment = it?.showComments ?: false
+                        Log.d("fgerg", showComment.toString())
                         binding.images.root.isVisible = showComment
                     }
             }

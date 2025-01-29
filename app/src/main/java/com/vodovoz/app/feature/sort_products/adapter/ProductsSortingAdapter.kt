@@ -63,10 +63,7 @@ class ProductsSortingVH(
     fun onBind(sortType: SortTypeUI, isSelected: Boolean) {
         this.sortType = sortType
         binding.tvName.text = sortType.sortName
-        when (isSelected) {
-            true -> TextViewCompat.setTextAppearance(binding.tvName, R.style.TextViewNormalBlue)
-            false -> TextViewCompat.setTextAppearance(binding.tvName, R.style.TextViewNormalGray)
-        }
+        binding.radioButton.isChecked = isSelected
     }
 
 }

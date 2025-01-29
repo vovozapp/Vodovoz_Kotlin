@@ -46,5 +46,4 @@ class DiscountCardViewHolder(
             clickListener.onCardValueChange(value.toString())
         }
     }
-
 }

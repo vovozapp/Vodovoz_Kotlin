@@ -18,7 +18,7 @@ fun JSONObject.safeDouble(name: String) = when(has(name)) {
     false -> 0.0
 }
 
-fun JSONObject.safeString(name: String) =  when(has(name)) {
+fun JSONObject.safeString(name: String): String =  when(has(name)) {
     true -> when(isNull(name)) {
         true -> ""
         false -> getString(name)

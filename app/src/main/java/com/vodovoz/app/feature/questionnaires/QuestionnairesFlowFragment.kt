@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.questionnaires
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -25,10 +26,12 @@ import com.vodovoz.app.feature.home.HomeFlowViewModel
 import com.vodovoz.app.feature.profile.ProfileFlowViewModel
 import com.vodovoz.app.feature.questionnaires.adapters.QuestionnaireTypesFlowAdapter
 import com.vodovoz.app.feature.questionnaires.adapters.QuestionsAdapter
+import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.ui.extensions.RecyclerViewExtensions.addMarginDecoration
 import com.vodovoz.app.ui.extensions.ScrollViewExtensions.setScrollElevation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import javax.inject.Inject
@@ -72,6 +75,9 @@ class QuestionnairesFlowFragment : BaseFragment() {
     @Inject
     lateinit var changeUrlInterceptor: ChangeUrlInterceptor
 
+    @Inject
+    lateinit var siteStateManager: SiteStateManager
+
     private var threeFingerTouchCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,7 +119,16 @@ class QuestionnairesFlowFragment : BaseFragment() {
                             }
                             .setPositiveButton("Тестовый") { dialog, _ ->
                                 dialog.dismiss()
-                                loadHomeFragmentWithNewServerURL("https://szorin.vodovoz.ru/")
+                                lifecycleScope.launch {
+                                    siteStateManager.requestSiteState()
+                                    siteStateManager.observeSiteState().collect{ state ->
+                                        if (state != null) {
+                                            val newLink = "${state.testSiteLink}/"
+                                            loadHomeFragmentWithNewServerURL(newLink)
+                                            Log.d("sgsderg", newLink)
+                                        }
+                                    }
+                                }
                             }
                             .show()
                     }

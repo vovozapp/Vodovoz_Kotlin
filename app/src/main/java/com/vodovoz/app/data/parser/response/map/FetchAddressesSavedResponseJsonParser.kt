@@ -30,9 +30,11 @@ object FetchAddressesSavedResponseJsonParser {
         return AddressEntity(
             id = getString("ID").toLong(),
             fullAddress = getString("NAME"),
+            inn = propsList.find { it.first == "INN" }?.second ?: "",
+            companyName = propsList.find { it.first == "COMPANY" }?.second ?: "",
             type = getString("PERSON_TYPE_ID").toInt(),
             phone = propsList.find { it.first == "PHONE" }?.second ?: "",
-            name = propsList.find { it.first == "FIO" }?.second ?: "",
+            name = propsList.find { it.first == "FIO" || it.first == "CONTACT_PERSON"}?.second ?: "",
             email = propsList.find { it.first == "EMAIL" }?.second ?: "",
             locality = propsList.find { it.first == "CITY" }?.second ?: "",
             street = propsList.find { it.first == "ADDRESS" }?.second ?: "",
@@ -40,7 +42,7 @@ object FetchAddressesSavedResponseJsonParser {
             entrance = propsList.find { it.first == "POD" || it.first == "F_POD"  }?.second ?: "",
             floor = propsList.find { it.first == "ETAJ" || it.first == "F_ETAJ"  }?.second ?: "",
             flat = propsList.find { it.first == "KV" || it.first == "F_OFIS" }?.second ?: "",
-            comment = propsList.find { it.first == "KOMENT" || it.first == "F_KOMENT" }?.second ?: "",
+            intercom = propsList.find { it.first == "domofon"}?.second ?: "",
             length = propsList.find {it.first == "UF_SEMAP_LEN_KM"}?.second ?: "",
             coordinates = propsList.find {it.first == "KOORDINAT_TOCHKI"}?.second ?: "",
             newFullAddress = propsList.find { it.first == "ADDRESS_DELIVERY" }?.second ?: ""

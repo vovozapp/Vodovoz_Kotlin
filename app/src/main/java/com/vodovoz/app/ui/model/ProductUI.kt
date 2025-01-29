@@ -1,11 +1,13 @@
 package com.vodovoz.app.ui.model
 
 import android.os.Parcelable
+import androidx.compose.runtime.Immutable
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.data.model.common.LabelEntity
 import com.vodovoz.app.feature.cart.viewholders.cartavailableproducts.detail.DetailPicturePager
 import kotlinx.parcelize.Parcelize
 
+@Immutable
 @Parcelize
 data class ProductUI(
     val id: Long,

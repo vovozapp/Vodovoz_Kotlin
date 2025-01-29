@@ -35,20 +35,6 @@ class ProductsGridViewHolder(
 
     private val binding: ViewHolderProductGridBinding = ViewHolderProductGridBinding.bind(view)
 
-    private val amountControllerTimer =
-        object : CountDownTimer(AMOUNT_CONTROLLER_TIMER, AMOUNT_CONTROLLER_TIMER) {
-            override fun onTick(millisUntilFinished: Long) {}
-            override fun onFinish() {
-                val item = item ?: return
-                productsClickListener.onChangeProductQuantity(
-                    item.id,
-                    item.cartQuantity,
-                    item.oldQuantity
-                )
-                hideAmountController(item)
-            }
-        }
-
     override fun attach() {
         super.attach()
 
@@ -95,9 +81,10 @@ class ProductsGridViewHolder(
             val item = item ?: return@setOnClickListener
             productsClickListener.onProductClick(item.id)
         }
-        binding.pvPictures.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
+        binding.pvPictures.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.llPricesContainer.tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        binding.amountController.intoCartButton.isAllCaps = false
 
         binding.root.setOnClickListener {
             val item = item ?: return@setOnClickListener
@@ -109,40 +96,26 @@ class ProductsGridViewHolder(
             productsClickListener.onProductClick(item.id)
         }
 
-        binding.amountController.add.setOnClickListener {
-            val item = item ?: return@setOnClickListener
-            if (item.isGift) return@setOnClickListener
-            if (item.leftItems == 0) {
-                productsClickListener.onNotifyWhenBeAvailable(
-                    item.id,
-                    item.name,
-                    item.detailPicture
-                )
-                return@setOnClickListener
-            }
-
-            if (item.cartQuantity == 0) {
-                item.cartQuantity++
-            }
-            updateCartQuantity(item)
-            showAmountController()
-        }
-
         binding.amountController.reduceAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
             item.cartQuantity--
             if (item.cartQuantity < 0) item.cartQuantity = 0
-            amountControllerTimer.cancel()
-            amountControllerTimer.start()
             updateCartQuantity(item)
+            onChangeProductQuantity(item)
         }
 
         binding.amountController.increaseAmount.setOnClickListener {
             val item = item ?: return@setOnClickListener
             item.cartQuantity++
-            amountControllerTimer.cancel()
-            amountControllerTimer.start()
             updateCartQuantity(item)
+            onChangeProductQuantity(item)
+        }
+
+        binding.amountController.intoCartButton.setOnClickListener {
+            val item = item ?: return@setOnClickListener
+            item.cartQuantity++
+            updateCartQuantity(item)
+            onChangeProductQuantity(item)
         }
 
         binding.imgFavoriteStatus.setOnClickListener {
@@ -174,10 +147,10 @@ class ProductsGridViewHolder(
 
         bindFav(item)
 
+        showAmountController(item)
+
         binding.tvName.setLimitedText(item.name)
         binding.rbRating.rating = item.rating
-
-        binding.amountController.add.isSelected = item.leftItems == 0
 
         //Price per unit / or order quantity
         when (item.pricePerUnit.isNotEmpty()) {
@@ -218,36 +191,21 @@ class ProductsGridViewHolder(
         }
 
         if (item.haveDiscount) {
-            binding.llPricesContainer.tvCurrentPrice.setTextColor(
-                ContextCompat.getColor(
-                    itemView.context,
-                    R.color.red
-                )
-            )
             binding.llPricesContainer.tvOldPrice.visibility = View.VISIBLE
         } else {
-            binding.llPricesContainer.tvCurrentPrice.setTextColor(
-                ContextCompat.getColor(
-                    itemView.context,
-                    R.color.text_black
-                )
-            )
             binding.llPricesContainer.tvOldPrice.visibility = View.GONE
         }
 
         //Cart amount
-        binding.amountController.circleAmount.text = item.cartQuantity.toString()
         binding.amountController.amount.text = item.cartQuantity.toString()
 
-        when (item.cartQuantity > 0) {
-            true -> binding.amountController.circleAmount.visibility = View.VISIBLE
-            false -> binding.amountController.circleAmount.visibility = View.GONE
-        }
-
         //Comment
-        when (item.commentAmount.isEmpty()) {
-            true -> binding.tvCommentAmount.text = ""
-            else -> binding.tvCommentAmount.text = item.commentAmount
+        when (item.rating.toString().isEmpty() || item.rating <= 0.0) {
+            true -> binding.tvRating.visibility = View.GONE
+            else -> {
+                binding.tvRating.visibility = View.VISIBLE
+                binding.tvRating.text = item.rating.toString()
+            }
         }
         var isNotHaveStatuses = true
         if(item.labels.isNotEmpty()){
@@ -263,19 +221,19 @@ class ProductsGridViewHolder(
 
             //Status
             binding.chipGroup.visibility = View.GONE
-            when (item.status.isEmpty()) {
-                true -> binding.cgStatuses.cwStatusContainer.visibility = View.GONE
-                false -> {
-                    isNotHaveStatuses = false
-                    binding.cgStatuses.cwStatusContainer.visibility = View.VISIBLE
-                    binding.cgStatuses.tvStatus.text = item.status
-                    binding.cgStatuses.cwStatusContainer.setCardBackgroundColor(
-                        Color.parseColor(
-                            item.statusColor
-                        )
-                    )
-                }
-            }
+           // when (item.status.isEmpty()) {
+           //     true -> binding.cgStatuses.cwStatusContainer.visibility = View.GONE
+           //     false -> {
+           //         isNotHaveStatuses = false
+           //         binding.cgStatuses.cwStatusContainer.visibility = View.VISIBLE
+           //         binding.cgStatuses.tvStatus.text = item.status
+           //         binding.cgStatuses.cwStatusContainer.setCardBackgroundColor(
+           //             Color.parseColor(
+           //                 item.statusColor
+           //             )
+           //         )
+           //     }
+           // }
 
             //DiscountPercent
             when (item.priceList.size == 1 &&
@@ -323,19 +281,17 @@ class ProductsGridViewHolder(
         binding.imgFavoriteStatus.isSelected = item.isFavorite
     }
 
-    private fun showAmountController() {
-        binding.amountController.circleAmount.visibility = View.INVISIBLE
-        binding.amountController.add.visibility = View.INVISIBLE
-        binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
-        amountControllerTimer.start()
-    }
-
-    internal fun hideAmountController(item: ProductUI) {
-        if (item.cartQuantity > 0) {
-            binding.amountController.circleAmount.visibility = View.VISIBLE
+    private fun showAmountController(item: ProductUI?) {
+        if (item != null) {
+            if (item.cartQuantity > 0) {
+                binding.amountController.intoCartButton.visibility = View.INVISIBLE
+                binding.amountController.amountControllerDeployed.visibility = View.VISIBLE
+            }
+            else{
+                binding.amountController.intoCartButton.visibility = View.VISIBLE
+                binding.amountController.amountControllerDeployed.visibility = View.INVISIBLE
+            }
         }
-        binding.amountController.add.visibility = View.VISIBLE
-        binding.amountController.amountControllerDeployed.visibility = View.INVISIBLE
     }
 
     private fun updateCartQuantity(item: ProductUI) {
@@ -343,6 +299,14 @@ class ProductsGridViewHolder(
             item.cartQuantity = 0
         }
         binding.amountController.amount.text = item.cartQuantity.toString()
-        binding.amountController.circleAmount.text = item.cartQuantity.toString()
+        showAmountController(item)
+    }
+
+    private fun onChangeProductQuantity(item: ProductUI){
+        productsClickListener.onChangeProductQuantity(
+            item.id,
+            item.cartQuantity,
+            item.oldQuantity
+        )
     }
 }

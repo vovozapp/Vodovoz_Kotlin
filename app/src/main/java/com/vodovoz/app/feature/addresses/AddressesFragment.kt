@@ -86,8 +86,8 @@ class AddressesFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mapController.initMap(binding.mapView)
-        mapController.initSearch()
+        //mapController.initMap(binding.mapView)
+        //mapController.initSearch()
 
         addressesController.bind(binding.rvAddresses, binding.refreshContainer)
         initToolbar(resources.getString(R.string.addresses_title))
@@ -100,13 +100,13 @@ class AddressesFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        mapKit.onStart()
-        binding.mapView.onStart()
+        //mapKit.onStart()
+        //binding.mapView.onStart()
     }
 
     override fun onStop() {
-        binding.mapView.onStop()
-        mapKit.onStop()
+        //binding.mapView.onStop()
+        //mapKit.onStop()
         super.onStop()
     }
 
@@ -162,34 +162,34 @@ class AddressesFragment : BaseFragment() {
                                 findNavController().popBackStack(R.id.orderingFragment, false)
                             }
                             is AddressesFlowViewModel.AddressesEvents.UpdateAddress -> {
-                                mapController.searchForUpdate(it.address)
+                                //mapController.searchForUpdate(it.address)
                             }
                         }
                     }
             }
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                mapViewModel.observeEvent()
-                    .collect {
-                        when (it) {
-                            is MapFlowViewModel.MapFlowEvents.Submit -> {
-                                it.list.forEach { point ->
-                                    mapController.submitRequest(point, it.startPoint)
-                                }
-                            }
-                            is MapFlowViewModel.MapFlowEvents.UpdatePendingAddressUISuccess -> {
-                                findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                                    SELECTED_ADDRESS, it.address
-                                )
-                                findNavController().popBackStack(R.id.orderingFragment, false)
-                            }
-                            else -> {}
-                        }
-                    }
-            }
-        }
+       // lifecycleScope.launch {
+       //     repeatOnLifecycle(Lifecycle.State.STARTED) {
+       //         mapViewModel.observeEvent()
+       //             .collect {
+       //                 when (it) {
+       //                     is MapFlowViewModel.MapFlowEvents.Submit -> {
+       //                         it.list.forEach { point ->
+       //                             mapController.submitRequest(point, it.startPoint)
+       //                         }
+       //                     }
+       //                     is MapFlowViewModel.MapFlowEvents.UpdatePendingAddressUISuccess -> {
+       //                         findNavController().previousBackStackEntry?.savedStateHandle?.set(
+       //                             SELECTED_ADDRESS, it.address
+       //                         )
+       //                         findNavController().popBackStack(R.id.orderingFragment, false)
+       //                     }
+       //                     else -> {}
+       //                 }
+       //             }
+       //     }
+       // }
     }
 
     private fun getAddressesClickListener(): AddressesClickListener {

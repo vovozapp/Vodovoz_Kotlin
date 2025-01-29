@@ -24,6 +24,7 @@ import com.vodovoz.app.feature.map.adapter.AddressResultClickListener
 import com.vodovoz.app.util.extensions.snack
 import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.user_location.UserLocationLayer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -46,6 +47,7 @@ class MapDialogFragment : BaseFragment() {
     private val userLocationLayer: UserLocationLayer by lazy {
         mapKit.createUserLocationLayer(binding.mapView.mapWindow)
     }
+
     private val mapKit: MapKit by lazy {
         MapKitFactory.getInstance()
     }
@@ -72,14 +74,14 @@ class MapDialogFragment : BaseFragment() {
 
         mapController.initMap(
             binding.mapView,
-            binding.plusFrame,
-            binding.minusFrame,
+            binding.plusIB,
+            binding.minusIB,
             binding.infoFrame,
-            binding.geoFrame
+            binding.geoIB
         )
 
         mapController.initSearch(
-            binding.addAddress,
+            binding.btnAddAddress,
             binding.searchEdit,
             binding.searchContainer,
             binding.searchImage,
@@ -148,7 +150,7 @@ class MapDialogFragment : BaseFragment() {
                     when (it) {
                         is MapFlowViewModel.MapFlowEvents.ShowAddAddressBottomDialog -> {
                             findNavController().navigate(
-                                MapDialogFragmentDirections.actionToAddAddressBottomFragment(it.address)
+                                MapDialogFragmentDirections.actionToAddAddressFragment(it.address)
                             )
                         }
                         is MapFlowViewModel.MapFlowEvents.Submit -> {
@@ -186,7 +188,6 @@ class MapDialogFragment : BaseFragment() {
     }
 
     private fun showContainer(bool: Boolean) {
-
         binding.appBarLayout.setBackgroundColor(
             ContextCompat.getColor(
                 requireContext(),
@@ -195,26 +196,14 @@ class MapDialogFragment : BaseFragment() {
         )
 
         if (bool) {
-            binding.addAddress.visibility = View.INVISIBLE
+            binding.btnAddAddress.visibility = View.INVISIBLE
             binding.addressesRecycler.visibility = View.VISIBLE
-            binding.searchImage.setImageDrawable(
-                ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_arrow_left
-                )
-            )
             binding.clear.isVisible = true
             binding.searchEdit.focusSearch(View.FOCUS_UP)
             binding.searchContainer.elevation = 0f
         } else {
-            binding.addAddress.visibility = View.VISIBLE
+            binding.btnAddAddress.visibility = View.VISIBLE
             binding.addressesRecycler.visibility = View.INVISIBLE
-            binding.searchImage.setImageDrawable(
-                ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_search
-                )
-            )
             binding.clear.isVisible = false
             binding.searchEdit.clearFocus()
             binding.searchContainer.elevation =

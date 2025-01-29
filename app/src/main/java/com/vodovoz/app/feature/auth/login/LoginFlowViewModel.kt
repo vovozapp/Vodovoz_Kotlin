@@ -18,11 +18,14 @@ import com.vodovoz.app.util.FieldValidationsSettings
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
@@ -139,11 +142,11 @@ class LoginFlowViewModel @Inject constructor(
         }
     }
 
-    fun authByPhone(phone: String, code: String) {
-        val url = state.data.requestUrl ?: return
+    fun authByPhone(phone: String, code: String): Job {
+        val url = state.data.requestUrl ?: return viewModelScope.launch { }
         uiStateListener.value = state.copy(loadingPage = true)
-        viewModelScope.launch {
-            flow { emit(repository.authByPhone(phone = phone, url = url, code = code)) }
+        return viewModelScope.launch {
+            flow { emit(repository.authByPhone(phone = phone, url = url, code = code)) }.take(1)
                 .onEach { response ->
                     when (response) {
                         is ResponseEntity.Hide -> {
@@ -177,16 +180,18 @@ class LoginFlowViewModel @Inject constructor(
                     debugLog { "auth by phone error ${it.localizedMessage}" }
                     uiStateListener.value =
                         state.copy(error = it.toErrorState(), loadingPage = false)
-                }
-                .collect()
+                }.firstOrNull()
         }
     }
 
     fun requestCode(phone: String) {
+        clearData()
         val url = state.data.requestUrl ?: return
         uiStateListener.value = state.copy(loadingPage = true)
         viewModelScope.launch {
-            flow { emit(repository.requestCode(phone = phone, url = url)) }
+            flow {
+                emit(repository.requestCode(phone = phone, url = url))
+            }
                 .onEach { response ->
                     when (response) {
                         is ResponseEntity.Hide -> {
@@ -195,8 +200,9 @@ class LoginFlowViewModel @Inject constructor(
                             eventListener.emit(LoginEvents.AuthError(MessageType.WrongCode))
                         }
 
-                        is ResponseEntity.Success -> {
+                        //995 898 76 82
 
+                        is ResponseEntity.Success -> {
                             loginManager.updateLastRequestCodeDate(Date().time)
                             loginManager.updateLastAuthPhone(phone)
                             loginManager.updateLastRequestCodeTimeOut(response.data)
@@ -248,7 +254,6 @@ class LoginFlowViewModel @Inject constructor(
     }
 
     fun recoverPassword(email: String) {
-
         if (!FieldValidationsSettings.EMAIL_REGEX.matches(email)) {
             viewModelScope.launch {
                 eventListener.emit(LoginEvents.PasswordRecoverError(MessageType.WrongEmail))
@@ -262,7 +267,13 @@ class LoginFlowViewModel @Inject constructor(
                     if (response is ResponseEntity.Success) {
                         uiStateListener.value =
                             state.copy(error = null, loadingPage = false)
-                        eventListener.emit(LoginEvents.PasswordRecoverSuccess(MessageType.Message(email)))
+                        eventListener.emit(
+                            LoginEvents.PasswordRecoverSuccess(
+                                MessageType.Message(
+                                    email
+                                )
+                            )
+                        )
                     } else {
                         uiStateListener.value =
                             state.copy(loadingPage = false)

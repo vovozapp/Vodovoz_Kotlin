@@ -4,84 +4,69 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:visibility="visible"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
-    <ImageView
-        android:id="@+id/add"
-        android:layout_width="@dimen/_24sdp"
-        android:layout_height="@dimen/_24sdp"
-        android:layout_marginEnd="@dimen/space_6"
-        android:background="@drawable/amount_selector"
-        android:visibility="visible"
-        android:padding="@dimen/space_8"
-        android:layout_marginVertical="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:tint="@color/white"
-        tools:ignore="ContentDescription" />
 
     <LinearLayout
         android:id="@+id/amountControllerDeployed"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:src="@drawable/png_cart"
-        android:layout_marginVertical="4dp"
         android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/circleAmount">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/reduceAmount"
             android:layout_width="0dp"
-            android:layout_height="@dimen/_24sdp"
+            android:layout_height="38dp"
             android:layout_weight="1"
             android:background="@drawable/bkg_number_controller_part_reduce"
-            android:padding="@dimen/space_6"
             android:src="@drawable/ic_minus"
-            app:tint="@color/green"
+            app:tint="@color/white"
             tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/amount"
             style="@style/TextViewNormalBlackBold"
             android:layout_width="0dp"
-            android:layout_height="@dimen/_24sdp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/bkg_number_controller_part_number"
             android:gravity="center"
-            tools:text="1"
-            tools:ignore="SelectableText" />
+            android:textColor="@color/white"
+            tools:ignore="SelectableText"
+            tools:text="1" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/increaseAmount"
             android:layout_width="0dp"
-            android:layout_height="@dimen/_24sdp"
+            android:layout_height="38dp"
             android:layout_weight="1"
             android:background="@drawable/bkg_number_controller_part_increase"
-            android:padding="@dimen/space_6"
             android:src="@drawable/ic_plus"
             app:tint="@color/white"
             tools:ignore="ContentDescription" />
-
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/circleAmount"
-        android:layout_width="@dimen/_16sdp"
-        android:layout_height="@dimen/_16sdp"
-        android:background="@drawable/bkg_number"
-        android:fontFamily="@font/rotonda_normal"
+    <Button
+        android:id="@+id/intoCartButton"
+        style="@style/BlueButton"
+        android:layout_width="0dp"
+        android:layout_height="38dp"
+        android:layout_weight="1"
+        android:background="@drawable/bkg_into_cart_button"
+        android:text="В корзину"
         android:textColor="@color/white"
-        android:gravity="center"
-        android:textSize="13sp"
-        android:textStyle="bold"
-        android:visibility="gone"
+        tools:ignore="ContentDescription,HardcodedText"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

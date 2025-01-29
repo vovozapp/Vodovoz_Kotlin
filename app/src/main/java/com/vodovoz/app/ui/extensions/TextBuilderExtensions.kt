@@ -20,8 +20,8 @@ object TextBuilderExtensions {
         seconds: Int,
     ) {
         this.text = StringBuilder()
-            .append("Повторно код можно будет запросить через ")
-            .append(seconds)
+            .append("00:")
+            .append(if(seconds >= 10) seconds else "0${seconds}")
             .toString()
     }
 

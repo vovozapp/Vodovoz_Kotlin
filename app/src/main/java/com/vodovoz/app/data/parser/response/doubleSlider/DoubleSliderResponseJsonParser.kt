@@ -116,6 +116,8 @@ object DoubleSliderResponseJsonParser {
         id = safeInt("IDRAZDEL"),
         name = safeString("NAME"),
         imageUrl = safeString("DETAIL_PICTURE"),
+        promotionId = safeInt("IDAKCII"),
+        cookieLink = safeString("SSILKAKYKI"),
     )
 
 }

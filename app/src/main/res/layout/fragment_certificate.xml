@@ -1,107 +1,186 @@
-<?xml version="1.0" encoding="utf-8"?><!--deferred-->
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<!--deferred-->
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/emailContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/light_bg">
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvPhoneNumber"
+        style="@style/TextViewNormalBlack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingMultiplier="1.2"
+        android:lineSpacingExtra="4dp"
+        android:layout_marginHorizontal="@dimen/space_16"
+        android:layout_marginTop="16dp"
+        android:textSize="14sp"
+        android:text="Введите ваш код в специальное поле и\nнажмите кнопку «Активировать»."
+        android:textColor="@color/text_black_composable"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/llAutByPhoneContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvPhoneNumber"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEmail"
+            style="@style/TextField"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/selector_edit_text"
+            android:hint="Введите код"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="16dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvWrongNumber"
+            style="@style/TextViewNormalBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:text="Введён неверный код"
+            android:textColor="@color/promo_red"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/btnContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/llAutByPhoneContainer">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnActivate"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:textSize="17sp"
+            style="@style/BlueButton"
+            android:visibility="gone"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:text="Активировать" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnActivateDisabled"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:textSize="17sp"
+            style="@style/BlueButton"
+            android:backgroundTint="@color/new_product_light_blue"
+            android:enabled="false"
+            android:layout_marginHorizontal="@dimen/space_16"
+            android:text="Активировать" />
+    </FrameLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvControlLine"
+        style="@style/TextViewNormalBlack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="@dimen/space_16"
+        android:lineSpacingMultiplier="1.2"
+        android:lineSpacingExtra="4dp"
+        android:text="Активируя код подарочного сертификата Vodovoz, вы\nсоглашаетесь на зачисление номинала сертификата на\nсвой баланс средств и его исполльзование для оплаты\nпокупок на Vodovoz."
+        android:textColor="@color/text_grey_composable"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/btnContainer"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <RelativeLayout
-            android:id="@+id/rlValue"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/closeImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_close"
+            android:layout_margin="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/doneImage"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:src="@drawable/pic_done"
+            app:layout_constraintVertical_bias="0.3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvTitle"
+            style="@style/TextViewMediumBlackBold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/space_8"
-            app:layout_constraintBottom_toTopOf="@+id/buttonContainer"
-            app:layout_constraintTop_toTopOf="parent">
+            android:gravity="center"
+            android:textSize="18sp"
+            android:layout_marginTop="32dp"
+            android:text="Скидочная карта\nактивирована!"
+            android:lineSpacingMultiplier="1.2"
+            android:lineSpacingExtra="3dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/doneImage" />
 
-            <TextView
-                android:id="@+id/info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/rotonda_normal"
-                android:lineSpacingMultiplier="1.5"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:textColor="@color/blackTextPrimary"
-                android:textSize="16sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/info"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@color/light_gray"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:textColor="@color/blackTextDark"
-                    android:textSize="16sp"
-                    tools:text="Название" />
-
-                <EditText
-                    android:id="@+id/value"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@color/white"
-                    android:fontFamily="@font/rotonda_normal"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:textColor="@color/blackTextPrimary"
-                    android:textSize="16sp"
-                    tools:text="Значение" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/buttonContainer"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvSubTitle"
+            style="@style/TextViewNormalGray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/rlValue">
+            android:lineSpacingMultiplier="1.2"
+            android:lineSpacingExtra="3dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="В течении 10-15 минут номинал\nсертификата начислится на баланс\nсредств. Чтобы воспользоваться\nсредствами при оформлении заказа,\nвыберите способ оплаты\n«С моего баланса средств»"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
-            <TextView
-                android:id="@+id/submit"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginHorizontal="@dimen/space_16"
-                android:layout_marginTop="@dimen/space_12"
-                android:layout_marginBottom="@dimen/space_12"
-                android:background="@drawable/bkg_button_blue_rect_disabled"
-                android:fontFamily="@font/rotonda_normal"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:text="Отправить" />
-
-            <TextView
-                android:id="@+id/underButtonText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/submit"
-                android:layout_marginHorizontal="@dimen/space_16"
-                android:layout_marginBottom="@dimen/space_8"
-                android:fontFamily="@font/rotonda_normal"
-                android:lineSpacingExtra="1dp"
-                android:lineSpacingMultiplier="1.5"
-                android:textAllCaps="false"
-                android:textSize="12sp"
-                android:visibility="gone"
-                tools:text="В течении 10-15 минут после применения кода номинал сертификата начислится на баланс средств. Чтобы воспользоваться этими средствами, при оформлении заказа выберите способ оплаты «С моего баланса средств».\n\nАктивируя код подарочного сертификата Vodovoz, вы соглашаетесь на зачисление номинала сертификата на свой баланс средств и его использование для оплаты покупок на Vodovoz." />
-
-        </RelativeLayout>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnDone"
+            style="@style/BlueButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_normal_height"
+            android:textSize="17sp"
+            android:layout_marginBottom="32dp"
+            android:layout_marginHorizontal="16dp"
+            android:text="Понятно"
+            android:textColor="@color/new_product_blue"
+            android:backgroundTint="@color/solid_blue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

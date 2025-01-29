@@ -1,15 +1,44 @@
+
 package com.vodovoz.app.feature.productlist
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -23,18 +52,23 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
+import com.vodovoz.app.composable.common_views.ProductGridView
 import com.vodovoz.app.databinding.FragmentProductsFlowBinding
 import com.vodovoz.app.feature.favorite.FavoriteFlowViewModel
+//import com.vodovoz.app.database.view_models.ProductsListDBViewModel
+
 import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
 import com.vodovoz.app.feature.productlist.brand.BrandFlowClickListener
 import com.vodovoz.app.feature.productlist.brand.BrandFlowController
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.FilterValueUI
+import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.ui.model.SortTypeListUI
 import com.vodovoz.app.ui.model.SortTypeUI
 import com.vodovoz.app.ui.model.custom.FiltersBundleUI
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -86,7 +120,6 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         brandController.bind(binding.brandRecycler)
         productsListFlowController.bind(binding.productRecycler)
         viewModel.clearScrollState()
@@ -103,19 +136,20 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
     }
 
     private fun initJivoChatButton() {
-        binding.fabJivoSite.isVisible = JivoChatController.isActive()
-        binding.fabJivoSite.setOnClickListener {
-            findNavController().navigate(
-                PaginatedProductsCatalogFragmentDirections.actionToWebViewFragment(
-                    JivoChatController.getLink(),
-                    ""
-                )
-            )
-        }
+        //binding.fabJivoSite.isVisible = JivoChatController.isActive()
+        //binding.fabJivoSite.setOnClickListener {
+        //    findNavController().navigate(
+        //        PaginatedProductsCatalogFragmentDirections.actionToWebViewFragment(
+        //            JivoChatController.getLink(),
+        //            ""
+        //        )
+        //    )
+        //}
     }
 
     private fun initSearch() {
         initSearchToolbar(
+            "Поиск товара",
             { findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment()) },
             { findNavController().navigate(PaginatedProductsCatalogFragmentDirections.actionToSearchFragment()) },
             { navigateToQrCodeFragment() },
@@ -156,7 +190,6 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.observeUiState()
                     .collect { state ->
-
                         bindHeader(state.data)
 
                         if (state.loadingPage) {
@@ -164,7 +197,7 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
                         } else {
                             hideLoader()
                             binding.sortContainer.isVisible = true
-                            binding.appBar.elevation = 4F
+                            //binding.appBar.elevation = 4F
                         }
 
                         bindShare(state.data.categoryHeader)
@@ -217,9 +250,8 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
         if (state.categoryHeader == null) return
 
         binding.imgViewMode.setOnClickListener { viewModel.changeLayoutManager() }
-        binding.tvSort.visibility = View.INVISIBLE
         state.categoryHeader.sortTypeList?.let { sortTypeList ->
-            binding.tvSort.setOnClickListener {
+            binding.llSort.setOnClickListener {
                 showBottomSortSettings(
                     state.sortType,
                     sortTypeList
@@ -235,36 +267,27 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
             showAllFiltersFragment(filterBundle, id)
         }
 
-        binding.changeCategoryContainer.isVisible = state.showCategoryContainer
+        binding.imgCategories.isVisible = state.showCategoryContainer
 
-        binding.categoryContainer.setOnClickListener {
+        binding.imgCategories.setOnClickListener {
             val id = state.categoryId
             if (id == 0L) return@setOnClickListener
             showSingleRootCatalogCatalog(id)
         }
 
-        when (state.filtersAmount) {
-            0 -> binding.tvFiltersAmount.visibility = View.INVISIBLE
-            else -> {
-                binding.tvFiltersAmount.text = state.filtersAmount.toString()
-                binding.tvFiltersAmount.visibility = View.VISIBLE
-            }
-        }
-
 
         binding.tvCategoryName.text = state.categoryHeader.name
         binding.tvProductAmount.text = state.categoryHeader.productAmount.toString()
-        binding.additionalName.text = state.categoryHeader.primaryFilterName
 
         val brandList = state.categoryHeader.primaryFilterValueList
 
         when (brandList.isNotEmpty()) {
             true -> {
-                binding.brandTabsContainer.visibility = View.VISIBLE
+                binding.brandRecycler.visibility = View.VISIBLE
             }
 
             else -> {
-                binding.brandTabsContainer.visibility = View.GONE
+                binding.brandRecycler.visibility = View.GONE
             }
         }
         brandController.submitList(brandList)
@@ -391,4 +414,60 @@ class PaginatedProductsCatalogFragment : BaseFragment() {
         }
     }
 
+}
+
+
+@SuppressLint("FrequentlyChangedStateReadInComposition")
+@Suppress("NonSkippableComposable")
+@Composable
+fun PaginatedProductsCatalogScreen(viewModel: ProductsListFlowViewModel){
+    val state = viewModel.observeUiState().collectAsStateWithLifecycle()
+    val gridState = rememberLazyGridState()
+    if (state.value.data.itemsList.isNotEmpty()) {
+        val itemsList = state.value.data.itemsList
+        //itemsList.forEachIndexed { index, item ->
+        //    val d = item as ProductUI
+        //    if (d.replacementProductUIList.isNotEmpty())
+        //        Log.d(index.toString(), d.replacementProductUIList[0].name)
+        //}
+        if (gridState.firstVisibleItemIndex == itemsList.size - 10)
+            viewModel.loadMoreSorted()
+        // var height by remember {
+        //     mutableStateOf(0.dp)
+        // }
+        // if (height == 0.dp){
+        //     height = ProductGridView(itemsList[0])
+        // }
+        LazyVerticalGrid(
+            horizontalArrangement = Arrangement.Center,
+            state = gridState,
+            columns = GridCells.Fixed(2),
+            content = {
+                items(itemsList) { item ->
+                    //Box(
+                    //    modifier = Modifier
+                    //        .padding(4.dp)
+                    //    //.aspectRatio(1f)
+                    //) {
+                    //Column{
+                    ProductGridView(item)
+                    // Box(
+                    //     modifier = Modifier
+                    //         .background(color = Color.Red)
+                    //         .size(
+                    //             height = height,
+                    //             width = 50.dp
+                    //         )
+                    //         .padding(top = 8.dp)
+                    // ) {
+
+                    // }
+                    //}
+                    //val appBarMaxHeightPx = with(LocalDensity.current) {  ProductGridView(item). }
+                    //}
+                }
+            }
+        )
+    }
+    else Timber.d("sdfgsdfg", "null")
 }

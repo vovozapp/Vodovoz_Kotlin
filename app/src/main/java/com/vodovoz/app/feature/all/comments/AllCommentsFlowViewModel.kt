@@ -59,8 +59,6 @@ class AllCommentsFlowViewModel @Inject constructor(
                             )
                         } else {
 
-
-
                             val itemsList = if (state.loadMore) {
                                 state.data.itemsList + data.comments
                             } else {

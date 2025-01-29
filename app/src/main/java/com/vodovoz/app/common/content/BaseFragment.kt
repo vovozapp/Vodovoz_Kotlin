@@ -116,12 +116,14 @@ abstract class BaseFragment : Fragment() {
     }
 
     protected fun initSearchToolbar(
+        title: String? = null,
         onContainerClick: () -> Unit,
         bindEt: () -> Unit,
         onQrCodeClick: () -> Unit = {},
         onMicClick: () -> Unit = {},
         showBackBtn: Boolean = false,
     ) {
+        viewBinding.searchContainer.etSearch.setHint(title)
         viewBinding.appbarLayout.isVisible = true
         viewBinding.searchAppBar.isVisible = true
         viewBinding.imgBack.setOnClickListener { findNavController().popBackStack() }
@@ -197,6 +199,24 @@ abstract class BaseFragment : Fragment() {
         }
     }
 
+    protected fun initToolbarMyData(
+        onLogout: () -> Unit,
+        onNavigateBack: () -> Unit = { findNavController().navigateUp() }
+    ){
+        viewBinding.appbarLayout.isVisible = true
+        val appBarUserDataBinding = viewBinding.appBarUserData
+        appBarUserDataBinding.root.visibility = View.VISIBLE
+        appBarUserDataBinding.root.isVisible = true
+
+        appBarUserDataBinding.imgBack.setOnClickListener {
+            onNavigateBack()
+        }
+
+        appBarUserDataBinding.imgLogout.setOnClickListener {
+            onLogout()
+        }
+    }
+
     protected fun initToolbar(
         titleText: String,
         showSearch: Boolean = false,
@@ -214,7 +234,7 @@ abstract class BaseFragment : Fragment() {
                 tbToolbar.addMenuProvider(provider)
             }
             viewBinding.appbarLayout.isVisible = true
-            imgSearch.isVisible = showSearch
+            imgSearch.visibility = if(showSearch) View.VISIBLE else View.INVISIBLE
             if (showNavBtn) {
                 imgBack.isVisible = true
                 tvTitle.setPadding(0, 0, 0, 0)
@@ -245,6 +265,10 @@ abstract class BaseFragment : Fragment() {
                 doAfterTextChanged.invoke(query.toString())
             }
         }
+    }
+
+    fun hideToolbar(){
+        viewBinding.appBarDef.root.visibility = View.GONE
     }
 
     fun showHideDefToolbarItem(itemId: Int, show: Boolean) {

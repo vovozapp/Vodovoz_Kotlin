@@ -10,6 +10,8 @@ data class SectionDataUI(
     val id: Int,
     val name: String,
     val imageUrl: String,
+    val promotionId: Int,
+    val cookieLink: String,
 ) : Item, Parcelable {
 
     override fun getItemViewType(): Int {

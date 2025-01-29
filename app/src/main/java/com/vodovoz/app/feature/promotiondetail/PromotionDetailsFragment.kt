@@ -203,6 +203,7 @@ class PromotionDetailsFragment : BaseFragment() {
         if (promotionDetailErrorUI == null) return
 
         initSearchToolbar(
+            "Поиск товара",
             { findNavController().navigate(PromotionDetailsFragmentDirections.actionToSearchFragment()) },
             { findNavController().navigate(PromotionDetailsFragmentDirections.actionToSearchFragment()) },
             { navigateToQrCodeFragment() },
