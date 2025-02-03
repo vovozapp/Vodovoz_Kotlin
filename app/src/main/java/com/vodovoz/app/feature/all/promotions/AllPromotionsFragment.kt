@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 @AndroidEntryPoint
-class AllPromotionsFragment : BaseFragment() {
+class AllPromotionsFragment1 : BaseFragment() {
 
     companion object {
         const val PROMOTION_FILTER = "PROMOTION_FILTER"
