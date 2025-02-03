@@ -4,11 +4,13 @@ import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.core.network.messageWithCode
 import com.vodovoz.app.data.model.common.BannerEntity
 import com.vodovoz.app.data.vodovoz_service.VodovozService
+import com.vodovoz.app.data.vodovoz_service.mappers.executeRequest
 import com.vodovoz.app.data.vodovoz_service.mappers.mapToDomain
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.PromotionModel
+import com.vodovoz.app.domain.general.model.PromotionsWithSectionsModel
 import com.vodovoz.app.domain.general.model.RequestException
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
@@ -32,81 +34,70 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         }
     }.catchResult()
 
-    override fun getPromotions(): Flow<Result<List<PromotionModel>>> = flow {
-        val response = vodovozService.getPromotions()
-
-        val body = response.body()
-        if (response.isSuccessful) {
-            val promotionModelList =
-                body?.data?.DATA?.mapToDomain()
-                    ?: throw RequestException(response.messageWithCode())
-            emit(Result.success(promotionModelList))
-        } else {
-            throw RequestException(response.messageWithCode())
+    override fun getPromotions(): Flow<Result<List<PromotionModel>>> = executeRequest(
+        request = {
+            vodovozService.getPromotions()
+        },
+        mapToResult = { promotionsDTOVodovozResponseDTO ->
+            promotionsDTOVodovozResponseDTO.data?.DATA?.mapToDomain()!!
         }
-    }.catchResult()
+    )
 
-    override fun getOrderMenu(userId: Long?): Flow<Result<OrderWithMenuModel>> = flow {
-        val response = vodovozService.getOrderMenu(userId ?: accountManager.fetchAccountId() ?: -1)
+    override fun getPromotionsWithSections(
+        page: Int,
+        limit: Int,
+    ): Flow<Result<PromotionsWithSectionsModel>> = executeRequest(
+        request = { vodovozService.getPromotionsWithSections(page, limit) },
+        mapToResult = { response ->
+            response.data!!.mapToDomain()
+        },
+    )
 
-        if (response.isSuccessful) {
-            val orderWithMenu = response.body()?.data?.mapToDomain() ?: throw RequestException(
-                response.messageWithCode()
-            )
-            emit(Result.success(orderWithMenu))
-        } else {
-            throw RequestException(response.messageWithCode())
+
+    override fun getOrderMenu(userId: Long?): Flow<Result<OrderWithMenuModel>> = executeRequest(
+        request = {
+            vodovozService.getOrderMenu(userId ?: accountManager.fetchAccountId() ?: -1)
+        },
+        mapToResult = {
+            it.data?.mapToDomain()!!
         }
-    }.catchResult()
+    )
 
-    override fun getPopularSections(): Flow<Result<List<PopularCategoryModel>>> = flow {
-        val response = vodovozService.getPopularSections()
 
-        if (response.isSuccessful) {
-            val popularSections = response.body()?.data?.mapToDomain() ?: throw RequestException(
-                response.messageWithCode()
-            )
-            emit(Result.success(popularSections))
-        } else throw RequestException(response.messageWithCode())
-    }.catchResult()
-
-    override fun getNewProducts(): Flow<Result<List<ProductModel>>> = flow {
-        val response = vodovozService.getNewProducts()
-
-        if (response.isSuccessful) {
-            val newProducts = response.body()?.data?.DATA?.mapToDomain() ?: throw RequestException(
-                response.messageWithCode()
-            )
-            emit(Result.success(newProducts))
-        } else throw RequestException(response.messageWithCode())
-    }.catchResult()
-
-    override fun getHurryUpBuyProducts(): Flow<Result<List<ProductModel>>> = flow {
-        val response = vodovozService.getHurryUpBuyProducts()
-
-        if (response.isSuccessful) {
-            val hurryUpBuyProducts =
-                response.body()?.data?.DATA?.mapToDomain() ?: throw RequestException(
-                    response.messageWithCode()
-                )
-            emit(Result.success(hurryUpBuyProducts))
-        } else {
-            throw RequestException(response.messageWithCode())
+    override fun getPopularSections(): Flow<Result<List<PopularCategoryModel>>> = executeRequest(
+        request = {
+            vodovozService.getPopularSections()
+        },
+        mapToResult = { popularCategoriesDTOVodovozResponseDTO ->
+            popularCategoriesDTOVodovozResponseDTO.data?.mapToDomain()!!
         }
-    }.catchResult()
+    )
 
-    override fun getSuperTop(): Flow<Result<TopAndBottomSectionsModel>> = flow {
-        val response = vodovozService.getSuperTop()
-
-        if (response.isSuccessful) {
-            val sections = response.body()?.data?.mapToDomain() ?: throw RequestException(
-                response.messageWithCode()
-            )
-            emit(Result.success(sections))
-
-        } else {
-            throw RequestException(response.messageWithCode())
+    override fun getNewProducts(): Flow<Result<List<ProductModel>>> = executeRequest(
+        request = {
+            vodovozService.getNewProducts()
+        },
+        mapToResult = { titleAndProductsDTOVodovozResponseDTO ->
+            titleAndProductsDTOVodovozResponseDTO.data?.DATA?.mapToDomain()!!
         }
-    }.catchResult()
+    )
 
+
+    override fun getHurryUpBuyProducts(): Flow<Result<List<ProductModel>>> = executeRequest(
+        request = {
+            vodovozService.getHurryUpBuyProducts()
+        },
+        mapToResult = { titleAndProductsDTOVodovozResponseDTO ->
+            titleAndProductsDTOVodovozResponseDTO.data?.DATA?.mapToDomain()!!
+        }
+    )
+
+    override fun getSuperTop(): Flow<Result<TopAndBottomSectionsModel>> = executeRequest(
+        request = {
+            vodovozService.getSuperTop()
+        },
+        mapToResult = { topAndBottomDTO ->
+            topAndBottomDTO.data!!.mapToDomain()!!
+        }
+    )
 }

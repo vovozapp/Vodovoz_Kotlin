@@ -5,6 +5,7 @@ import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.PromotionModel
+import com.vodovoz.app.domain.general.model.PromotionsWithSectionsModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import kotlinx.coroutines.flow.Flow
 
@@ -14,8 +15,13 @@ interface VodovozServiceRepository {
 
     fun getPromotions(): Flow<Result<List<PromotionModel>>>
 
+    fun getPromotionsWithSections(
+        page: Int = 1,
+        limit: Int = 10
+    ): Flow<Result<PromotionsWithSectionsModel>>
+
     fun getOrderMenu(
-        userId: Long? = null
+        userId: Long? = null,
     ): Flow<Result<OrderWithMenuModel>>
 
     fun getPopularSections(): Flow<Result<List<PopularCategoryModel>>>

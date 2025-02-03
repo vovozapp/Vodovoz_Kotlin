@@ -1,5 +1,19 @@
 package com.vodovoz.app.domain.general.model
 
+
+data class PromotionsWithSectionsModel(
+    val title: String,
+    val sections: List<PromotionSectionModel>,
+    val promotions: List<PromotionModel>,
+)
+
+
+data class PromotionSectionModel(
+    val id: Int,
+    val name: String,
+    val code: String,
+)
+
 data class PromotionModel(
     val id: Int,
     val name: String,

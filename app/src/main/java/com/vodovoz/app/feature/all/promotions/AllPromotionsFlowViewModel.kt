@@ -9,6 +9,7 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.mapper.AllPromotionBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.PromotionFilterUI
 import com.vodovoz.app.ui.model.custom.AllPromotionBundleUI
@@ -28,10 +29,18 @@ class AllPromotionsFlowViewModel @Inject constructor(
     savedState: SavedStateHandle,
     private val repository: MainRepository,
     private val accountManager: AccountManager,
+    private val vodovozServiceRepository: VodovozServiceRepository,
 ) : PagingStateViewModel<AllPromotionsFlowViewModel.AllPromotionsState>(AllPromotionsState()) {
 
-    private var dataSource = savedState.get<AllPromotionsFragment.DataSource>("dataSource") ?: AllPromotionsFragment.DataSource.All
+    private var dataSource = savedState.get<AllPromotionsFragment.DataSource>("dataSource")
+        ?: AllPromotionsFragment.DataSource.All
 
+
+    private fun loadAllPromotions(){
+
+    }
+
+    //old method
     private fun fetchAllPromotions(filterChanged: Boolean = false) {
         viewModelScope.launch {
             val dataSource = dataSource
@@ -94,7 +103,7 @@ class AllPromotionsFlowViewModel @Inject constructor(
 
     fun updateBySelectedFilter(filterId: Long) {
         val filter = state.data.promotionFilterUIList.find { it.id == filterId } ?: return
-        if(state.data.selectedFilterUi.id == filterId) return
+        if (state.data.selectedFilterUi.id == filterId) return
         uiStateListener.value = state.copy(data = state.data.copy(selectedFilterUi = filter))
         fetchAllPromotions(true)
     }
@@ -115,7 +124,7 @@ class AllPromotionsFlowViewModel @Inject constructor(
 
     fun isLoginAlready() = accountManager.isAlreadyLogin()
     fun updateScrollToTop() {
-        if(state.data.scrollToTop) {
+        if (state.data.scrollToTop) {
             uiStateListener.value = state.copy(data = state.data.copy(scrollToTop = false))
         }
     }
