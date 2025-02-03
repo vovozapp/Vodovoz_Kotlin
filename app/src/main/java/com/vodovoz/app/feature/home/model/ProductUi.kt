@@ -97,9 +97,9 @@ fun List<LabelModel>.mapToUi(): List<LabelWithColorUi> {
     }
 }
 
-fun LabelModel.mapToUi(): LabelWithColorUi {
+fun LabelModel.mapToUi(): LabelWithColorUi?{
     return LabelWithColorUi(
         name,
-        Color.fromHexOrTransparent(colorHex)
+        Color.fromHexOrNull(colorHex) ?: return null
     )
 }

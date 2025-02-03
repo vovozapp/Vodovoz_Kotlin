@@ -1,17 +1,24 @@
 package com.vodovoz.app.design_system.model
 
 import androidx.compose.runtime.Immutable
+import com.vodovoz.app.R
 import com.vodovoz.app.domain.general.model.AboutAdvertisingModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionSectionModel
 import com.vodovoz.app.feature.home.model.LabelWithColorUi
 import com.vodovoz.app.feature.home.model.mapToUi
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.ZonedDateTime
+import java.time.temporal.ChronoUnit
+import java.time.temporal.TemporalUnit
+import java.util.Locale
 
 @Immutable
 data class PromotionUi(
     val id: Int,
     val picture: String,
-    val label: LabelWithColorUi,
+    val label: LabelWithColorUi?,
     val sectionId: Int,
     val blockId: Int,
     val timeLeft: String,
@@ -73,10 +80,21 @@ fun PromotionModel.mapToUi(): PromotionUi {
         label = label.mapToUi(),
         sectionId = sectionId,
         blockId = blockId,
-        timeLeft = endDate, //todo - do format
+        timeLeft = timeRemainingToEnd(endDate),
         name = name,
         aboutAdvertisingUi = advertising?.mapToUi()
     )
+}
+
+fun timeRemainingToEnd(endDateTime: ZonedDateTime): String {
+    val now = ZonedDateTime.now()
+    val duration = Duration.between(now, endDateTime)
+
+    val days = duration.toDays()
+    val hours = duration.toHours() % 24
+    val minutes = duration.toMinutes() % 60
+
+    return String.format(Locale.getDefault(), "%02dд : %dч : %02dм", days, hours, minutes)
 }
 
 fun List<PromotionModel>.mapToUi(): List<PromotionUi> {

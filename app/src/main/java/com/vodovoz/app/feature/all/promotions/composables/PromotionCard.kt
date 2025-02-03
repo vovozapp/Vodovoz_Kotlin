@@ -21,6 +21,7 @@ import coil3.compose.AsyncImage
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.ExtendedTheme
 import com.vodovoz.app.design_system.composables.chip.ColorVodovozChip
+import com.vodovoz.app.design_system.composables.chip.TimeLeftChip
 import com.vodovoz.app.design_system.model.PromotionUi
 
 @Composable
@@ -76,7 +77,12 @@ fun PromotionCard(
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             val label = promotion.label
-            ColorVodovozChip(color = label.color, text = label.name)
+
+            label?.let {
+                ColorVodovozChip(color = label.color, text = label.name)
+            }
+
+            TimeLeftChip(text = promotion.timeLeft)
         }
     }
 }

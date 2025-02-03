@@ -236,5 +236,6 @@
     <string name="bottled_water">Бутылированная вода</string>
     <string name="viewed_products">Просмотренные товары</string>
     <string name="advertising">Реклама</string>
+    <string name="promotion_is_over">Акция завершена</string>
 
 </resources>

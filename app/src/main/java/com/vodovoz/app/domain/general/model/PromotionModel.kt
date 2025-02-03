@@ -1,5 +1,8 @@
 package com.vodovoz.app.domain.general.model
 
+import java.time.LocalDateTime
+import java.time.ZonedDateTime
+
 
 data class PromotionsWithSectionsModel(
     val title: String,
@@ -20,7 +23,7 @@ data class PromotionModel(
     val blockId: Int,
     val sectionId: Int,
     val detailPicture: String,
-    val endDate: String,
+    val endDate: ZonedDateTime,
     val label: LabelModel,
     val advertising: AboutAdvertisingModel?,
 )

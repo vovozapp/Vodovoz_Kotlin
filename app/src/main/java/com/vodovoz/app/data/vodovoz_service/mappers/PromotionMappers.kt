@@ -12,6 +12,11 @@ import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionSectionModel
 import com.vodovoz.app.domain.general.model.PromotionsWithSectionsModel
 import com.vodovoz.app.domain.general.model.emptyLabelModel
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 
 fun PromotionsDTO.mapToDomain(): PromotionsWithSectionsModel {
@@ -45,6 +50,15 @@ fun List<PROMOTION_DATA_DTO?>.mapToDomain(): List<PromotionModel> {
 }
 
 
+fun parsePromotionDate(dateTime: String): ZonedDateTime? {
+    val promotionDateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss")
+    return try {
+        LocalDateTime.parse(dateTime, promotionDateFormatter).atZone(ZoneId.of("Europe/Moscow"))
+    } catch (e: DateTimeParseException) {
+        null
+    }
+}
+
 fun PROMOTION_DATA_DTO.mapToDomain(): PromotionModel? {
     return PromotionModel(
         id = ID ?: return null,
@@ -52,16 +66,16 @@ fun PROMOTION_DATA_DTO.mapToDomain(): PromotionModel? {
         blockId = IBLOCK_ID ?: -1,
         sectionId = IBLOCK_SECTION_ID ?: -1,
         detailPicture = DETAIL_PICTURE?.toVodovozImage() ?: return null,
-        endDate = DATA_OUT ?: "",
+        endDate = parsePromotionDate(DATA_OUT ?: return null) ?: return null,
         label = HIT?.mapToDomain() ?: emptyLabelModel(),
         advertising = OREKLAME?.mapToDomain()
     )
 }
 
-fun HIT_DTO.mapToDomain(): LabelModel {
+fun HIT_DTO.mapToDomain(): LabelModel? {
     return LabelModel(
-        name = TITLE ?: "",
-        colorHex = BACKGROUND ?: ""
+        name = TITLE ?: return null,
+        colorHex = BACKGROUND ?: return null
     )
 }
 

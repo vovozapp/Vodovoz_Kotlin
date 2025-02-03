@@ -24,7 +24,7 @@ allprojects {
     tasks.withType(KotlinCompile).all {
         kotlinOptions {
             freeCompilerArgs = ['-Xjvm-default=all-compatibility'] //enable or compatibility
-            jvmTarget = "1.8"
+            jvmTarget = "11"
         }
     }
 }
