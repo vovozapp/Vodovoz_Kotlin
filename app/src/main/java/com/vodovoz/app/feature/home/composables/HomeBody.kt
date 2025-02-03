@@ -39,6 +39,7 @@ fun HomeBody(
     onPopularSectionClick: (PopularCategoryUi) -> Unit,
     onOrderClick: (OrderUi) -> Unit,
     onMenuItemClick: (MenuItemUi) -> Unit,
+    onShowAllPromotionClick: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -141,9 +142,7 @@ fun HomeBody(
         //todo = put actual data
         HomePromotions(
             modifier = Modifier.padding(top = 32.dp),
-            onShowAllClick = {
-
-            },
+            onShowAllClick = onShowAllPromotionClick,
             onPromotionClick = {
 
             },

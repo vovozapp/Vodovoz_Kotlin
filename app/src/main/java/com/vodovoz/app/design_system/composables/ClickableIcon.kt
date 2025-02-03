@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -29,7 +30,7 @@ fun ClickableIcon(painter: Painter, tint: Color, modifier: Modifier = Modifier, 
             .clickable(
                 onClick = { onClick() },
                 interactionSource = remember { MutableInteractionSource() },
-                indication = null,
+                indication = ripple(),
             ),
         tint = tint
     )

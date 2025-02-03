@@ -104,7 +104,8 @@ class HomeFragment : Fragment() {
 
                     HomeScreen(
                         viewState = viewState.data,
-                        viewModel = flowViewModel
+                        viewModel = flowViewModel,
+                        navController = findNavController()
                     )
                 }
             }

@@ -5,12 +5,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import com.vodovoz.app.design_system.composables.top_bar.SearchTopBar
+import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.home.composables.HomeBody
 
 @Suppress("NonSkippableComposable")
 @Composable
-fun HomeScreen(viewState: HomeFlowViewModel.HomeState, viewModel: HomeFlowViewModel) {
+fun HomeScreen(
+    viewState: HomeFlowViewModel.HomeState,
+    viewModel: HomeFlowViewModel,
+    navController: NavController,
+) {
+
     Scaffold(
         topBar = {
             SearchTopBar(
@@ -40,7 +47,14 @@ fun HomeScreen(viewState: HomeFlowViewModel.HomeState, viewModel: HomeFlowViewMo
             },
             onMenuItemClick = { },
             onOrderClick = { },
-            onPopularSectionClick = { }
+            onPopularSectionClick = { },
+            onShowAllPromotionClick = {
+                navController.navigate(
+                    HomeFragmentDirections.actionToAllPromotionsFragment(
+                        AllPromotionsFragment.DataSource.All
+                    )
+                )
+            }
         )
     }
 }
