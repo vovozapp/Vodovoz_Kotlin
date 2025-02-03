@@ -60,7 +60,7 @@ class AllPromotionsFlowViewModel @Inject constructor(
                     s.copy(
                         sections = sections,
                         currentSection = sections.firstOrNull() ?: PromotionSectionUi.Empty,
-                        promotions = vodovozServiceRepository.getPaginatedPromotions()
+                        promotions = vodovozServiceRepository.getPromotionsPaged()
                             .distinctUntilChanged()
                             .map { pagingData ->
                                 pagingData.map {

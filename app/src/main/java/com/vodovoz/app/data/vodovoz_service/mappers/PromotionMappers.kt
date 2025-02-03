@@ -2,6 +2,7 @@ package com.vodovoz.app.data.vodovoz_service.mappers
 
 import android.text.Html
 import com.vodovoz.app.data.vodovoz_service.di.toVodovozImage
+import com.vodovoz.app.data.vodovoz_service.model.AKCIYA_DTO
 import com.vodovoz.app.data.vodovoz_service.model.HIT_DTO
 import com.vodovoz.app.data.vodovoz_service.model.OREKLAME_DTO
 import com.vodovoz.app.data.vodovoz_service.model.PROMOTION_DATA_DTO
@@ -9,6 +10,7 @@ import com.vodovoz.app.data.vodovoz_service.model.PROMOTION_RAZDEL_DTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionsDTO
 import com.vodovoz.app.domain.general.model.AboutAdvertisingModel
 import com.vodovoz.app.domain.general.model.LabelModel
+import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionSectionModel
 import com.vodovoz.app.domain.general.model.PromotionsWithSectionsModel
@@ -19,6 +21,16 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
+fun AKCIYA_DTO.mapToDomain(): PromotionDetailsModel? {
+    return PromotionDetailsModel(
+        id = ID ?: return null,
+        picture = DETAIL_PICTURE?.toVodovozImage() ?: return null,
+        name = NAME ?: return null,
+        description = DETAIL_TEXT ?: return null,
+        timeLeft = DATAOUT?.TEXT ?: return null,
+        advertising = OREKLAME?.mapToDomain()
+    )
+}
 
 fun PromotionsDTO.mapToDomain(): PromotionsWithSectionsModel {
     return PromotionsWithSectionsModel(

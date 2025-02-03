@@ -5,6 +5,7 @@ import com.vodovoz.app.data.model.common.BannerEntity
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.ProductModel
+import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionsWithSectionsModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
@@ -16,14 +17,24 @@ interface VodovozServiceRepository {
 
     fun getPromotions(): Flow<Result<List<PromotionModel>>>
 
+    fun getPromotionDetails(
+        promotionId: Int,
+    ): Flow<Result<PromotionDetailsModel>>
+
+    fun getPromotionDetailsProductsPaged(
+        promotionId: Int,
+        page: Int = 1,
+        limit: Int = 5,
+    ): Flow<PagingData<ProductModel>>
+
     fun getPromotionsWithSections(
         page: Int = 1,
-        limit: Int = 10
+        limit: Int = 10,
     ): Flow<Result<PromotionsWithSectionsModel>>
 
-    fun getPaginatedPromotions(
+    fun getPromotionsPaged(
         page: Int = 1,
-        limit: Int = 10
+        limit: Int = 10,
     ): Flow<PagingData<PromotionModel>>
 
     fun getOrderMenu(

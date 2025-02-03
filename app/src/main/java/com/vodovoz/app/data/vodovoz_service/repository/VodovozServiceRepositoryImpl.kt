@@ -13,6 +13,7 @@ import com.vodovoz.app.domain.general.VodovozPagingSource
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.ProductModel
+import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionsWithSectionsModel
 import com.vodovoz.app.domain.general.model.RequestException
@@ -48,6 +49,45 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         }
     )
 
+    override fun getPromotionDetails(promotionId: Int): Flow<Result<PromotionDetailsModel>> =
+        executeRequest(
+            request = { vodovozService.getPromotionDetails(promotionId) },
+            mapToResult = { promotionDetailsDTOVodovozResponseDTO ->
+                promotionDetailsDTOVodovozResponseDTO.data?.AKCIYA?.mapToDomain()!!
+            }
+        )
+
+
+    override fun getPromotionDetailsProductsPaged(
+        promotionId: Int,
+        page: Int,
+        limit: Int,
+    ): Flow<PagingData<ProductModel>> {
+        return Pager(
+            config = PagingConfig(limit),
+            pagingSourceFactory = {
+                VodovozPagingSource(
+                    request = { page, limit ->
+                        executeRequest(
+                            request = {
+                                vodovozService.getPromotionDetails(
+                                    promotionId,
+                                    page,
+                                    limit
+                                )
+                            },
+                            mapToResult = { promotionDetailsDTOVodovozResponseDTO ->
+                                promotionDetailsDTOVodovozResponseDTO.data?.TOVAR?.DATA?.mapToDomain()
+                                    ?: emptyList()
+                            }
+                        ).firstOrNull() ?: Result.failure(Throwable())
+                    }
+                )
+            }
+        ).flow
+    }
+
+
     override fun getPromotionsWithSections(
         page: Int,
         limit: Int,
@@ -58,7 +98,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         },
     )
 
-    override fun getPaginatedPromotions(page: Int, limit: Int): Flow<PagingData<PromotionModel>> {
+    override fun getPromotionsPaged(page: Int, limit: Int): Flow<PagingData<PromotionModel>> {
         return Pager(
             config = PagingConfig(limit),
             pagingSourceFactory = {
@@ -68,8 +108,9 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                             request = {
                                 vodovozService.getPromotionsWithSections(page, limit)
                             },
-                            mapToResult = {
-                                it.data?.mapToDomain()?.promotions ?: emptyList()
+                            mapToResult = { promotionsDTOVodovozResponseDTO ->
+                                promotionsDTOVodovozResponseDTO.data?.mapToDomain()?.promotions
+                                    ?: emptyList()
                             }
                         ).firstOrNull() ?: Result.failure(Throwable())
                     }

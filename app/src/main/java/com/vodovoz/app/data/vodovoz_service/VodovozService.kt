@@ -20,13 +20,15 @@ interface VodovozService {
     @GET("glavnaya/akcii.php?action=akcii")
     suspend fun getPromotionsWithSections(
         @Query("nav") page: Int = 1,
-        @Query("limit") limit: Int = 10
+        @Query("limit") limit: Int = 10,
     ): Response<VodovozResponseDTO<PromotionsDTO>>
 
-    @GET("glavnaya/akcii.php?action=detail&limit=5&nav=2")
-    suspend fun getPromotionDetail(
+    @GET("glavnaya/akcii.php?action=detail")
+    suspend fun getPromotionDetails(
         @Query("id") promotionId: Int,
-    ): VodovozResponseDTO<PromotionDetailsDTO>
+        @Query("nav") page: Int = 1,
+        @Query("limit") limit: Int = 5,
+    ): Response<VodovozResponseDTO<PromotionDetailsDTO>>
 
 
     @GET("glavnaya/slayders/index.php?action=slayder")

@@ -28,6 +28,15 @@ data class PromotionModel(
     val advertising: AboutAdvertisingModel?,
 )
 
+data class PromotionDetailsModel(
+    val id: Int,
+    val picture: String,
+    val name: String,
+    val description: String,
+    val timeLeft: String,
+    val advertising: AboutAdvertisingModel?,
+)
+
 data class LabelModel(
     val name: String,
     val colorHex: String,
