@@ -13,6 +13,7 @@ import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.content.updateData
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.design_system.model.AboutAdvertisingUi
 import com.vodovoz.app.design_system.model.PromotionSectionUi
 import com.vodovoz.app.design_system.model.PromotionUi
 import com.vodovoz.app.design_system.model.mapToUi
@@ -172,6 +173,25 @@ class AllPromotionsFlowViewModel @Inject constructor(
         }
     }
 
+    fun closeAdvertisingBottomSheet() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(
+                showAdvertisingBottomSheet = false
+            )
+        }
+    }
+
+    fun showAdvertisingBottomSheet(promotionUi: PromotionUi) = viewModelScope.launch {
+        promotionUi.aboutAdvertisingUi?.let {
+            uiStateListener.updateData { s ->
+                s.copy(
+                    currentAdvertising = promotionUi.aboutAdvertisingUi,
+                    showAdvertisingBottomSheet = true
+                )
+            }
+        }
+    }
+
     data class AllPromotionsState(
         val promotionFilterUIList: List<PromotionFilterUI> = emptyList(),
         val allPromotionBundleUI: AllPromotionBundleUI? = null,
@@ -184,6 +204,8 @@ class AllPromotionsFlowViewModel @Inject constructor(
         val sections: List<PromotionSectionUi> = emptyList(),
         val currentSection: PromotionSectionUi = PromotionSectionUi.Empty,
         val promotions: Flow<PagingData<PromotionUi>> = emptyFlow(),
+        val showAdvertisingBottomSheet: Boolean = false,
+        val currentAdvertising: AboutAdvertisingUi = AboutAdvertisingUi.Empty
     ) : State
 
     sealed class AllPromotionsEvent() : Event {

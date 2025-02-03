@@ -28,6 +28,7 @@ fun AllPromotionsBody(
     lazyPagingPromotions: LazyPagingItems<PromotionUi>,
     lazyListState: LazyListState,
     onSectionSelect: (PromotionSectionUi) -> Unit,
+    onAdvertisingClick: (PromotionUi) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -66,7 +67,7 @@ fun AllPromotionsBody(
             state = lazyListState
         ) {
             items(items = promotionUiList, key = { it.id }) { promotion ->
-                PromotionCard(promotion = promotion, onClick = { }, onAdvertisingClick = { })
+                PromotionCard(promotion = promotion, onClick = { }, onAdvertisingClick = onAdvertisingClick)
             }
         }
     }

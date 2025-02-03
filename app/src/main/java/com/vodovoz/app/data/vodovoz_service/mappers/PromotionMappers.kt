@@ -1,5 +1,6 @@
 package com.vodovoz.app.data.vodovoz_service.mappers
 
+import android.text.Html
 import com.vodovoz.app.data.vodovoz_service.di.toVodovozImage
 import com.vodovoz.app.data.vodovoz_service.model.HIT_DTO
 import com.vodovoz.app.data.vodovoz_service.model.OREKLAME_DTO
@@ -80,10 +81,11 @@ fun HIT_DTO.mapToDomain(): LabelModel? {
 }
 
 fun OREKLAME_DTO.mapToDomain(): AboutAdvertisingModel? {
+    val dannye = DANNYE ?: return null
     return AboutAdvertisingModel(
         name = this.NAME ?: "",
         title = this.ZAGOLOVOK ?: return null,
         aboutCompanyTitle = this.NAMEVNUTRI ?: return null,
-        aboutCompany = this.DANNYE ?: return null
+        aboutCompany = Html.fromHtml(dannye).toString()
     )
 }

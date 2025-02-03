@@ -47,26 +47,27 @@ fun PromotionCard(
             contentScale = ContentScale.Crop
         )
 
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(8.dp)
-                .height(16.dp)
-                .clip(MaterialTheme.shapes.extraSmall)
-                .background(MaterialTheme.colorScheme.surface.copy(0.7f))
-                .clickable {
-                    onAdvertisingClick(promotion)
-                },
-            contentAlignment = Alignment.Center
-        ) {
-            val labelExtraSmall = ExtendedTheme.typography.labelExtraSmall
-
-            Text(
-                text = stringResource(R.string.advertising),
-                color = MaterialTheme.colorScheme.onBackground,
-                style = labelExtraSmall.copy(lineHeight = labelExtraSmall.fontSize),
-                modifier = Modifier.padding(horizontal = 5.dp)
-            )
+        if (promotion.aboutAdvertisingUi != null) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(8.dp)
+                    .height(16.dp)
+                    .clip(MaterialTheme.shapes.extraSmall)
+                    .background(MaterialTheme.colorScheme.surface.copy(0.7f))
+                    .clickable {
+                        onAdvertisingClick(promotion)
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                val labelExtraSmall = ExtendedTheme.typography.labelExtraSmall
+                Text(
+                    text = stringResource(R.string.advertising),
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = labelExtraSmall.copy(lineHeight = labelExtraSmall.fontSize),
+                    modifier = Modifier.padding(horizontal = 5.dp)
+                )
+            }
         }
 
         Row(
