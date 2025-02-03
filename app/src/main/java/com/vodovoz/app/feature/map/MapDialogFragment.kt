@@ -149,9 +149,10 @@ class MapDialogFragment : BaseFragment() {
                 .collect {
                     when (it) {
                         is MapFlowViewModel.MapFlowEvents.ShowAddAddressBottomDialog -> {
-                            findNavController().navigate(
-                                MapDialogFragmentDirections.actionToAddAddressFragment(it.address)
-                            )
+                            //todo - uncomment and fix graph
+//                            findNavController().navigate(
+//                                MapDialogFragmentDirections.actionToAddAddressFragment(it.address)
+//                            )
                         }
                         is MapFlowViewModel.MapFlowEvents.Submit -> {
                             it.list.forEach { point ->

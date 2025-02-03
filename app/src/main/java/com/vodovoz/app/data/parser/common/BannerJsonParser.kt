@@ -16,6 +16,13 @@ object BannerJsonParser {
             }
         }
 
+    fun JSONArray.parseHomeBannerEntityList(): List<BannerEntity> =
+        mutableListOf<BannerEntity>().apply {
+            for (index in 0 until length()) {
+                add(getJSONObject(index).parseVodovozBannerEntity())
+            }
+        }
+
     private fun JSONObject.parseBannerEntity() = BannerEntity(
         id = getLong("ID"),
         name = getString("NAME"),
@@ -24,10 +31,33 @@ object BannerJsonParser {
         bannerAdvEntity = parseAdvEntity()
     )
 
+    private fun JSONObject.parseVodovozBannerEntity() = BannerEntity(
+        id = getLong("ID"),
+        name = getString("NAME"),
+        detailPicture = parseDetailImage(),
+        actionEntity = getJSONObject("HARAKTERISTIK").parseVodovozBannerActionEntity(),
+        bannerAdvEntity = parseAdvEntity()
+    )
+
     private fun JSONObject.parseDetailImage() =
         if (has("DETAIL_PICTURE")) getString("DETAIL_PICTURE").parseImagePath()
         else if (has("IMAGE")) getString("IMAGE").parseImagePath()
         else ""
+
+    private fun JSONObject.parseVodovozBannerActionEntity(): ActionEntity? {
+        return when (getString("ACTION")) {
+            "TOVAR" -> parseProductBannerActionEntity()
+            "TOVARY" -> parseProductsBannerActionEntity()
+            "ACTION" -> parsePromotionBannerActionEntity()
+            "ACTIONS" -> parsePromotionsBannerActionEntity()
+            "RAZDEL" -> parseCategoryBannerActionEntity()
+            "BRAND" -> parseBrandActionEntity()
+            "BRANDY" -> parseBrandsActionEntity()
+            "SSILKA" -> parseLinkBannerActionEntity()
+            "DANNYEVSE" -> parseCustomBannerActionEntity()
+            else -> null
+        }
+    }
 
     private fun JSONObject.parseBannerActionEntity() = if (getJSONObject("DANNYE").has("SSILKAKYKI")
         && !getJSONObject("DANNYE").isNull("SSILKAKYKI")

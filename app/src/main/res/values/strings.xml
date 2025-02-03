@@ -226,5 +226,14 @@
 
     <string name="space">&#160;</string>
     <string name="left_to_gift">До получения подарка %1$s ₽</string>
+    <string name="search_product">Поиск товара</string>
+    <string name="number_and_text">№ %1$s</string>
+    <string name="popular_sections">Популярные разделы</string>
+    <string name="best_offers">Лучшие предложения</string>
+    <string name="hurry_up_buy">Успей купить</string>
+    <string name="new_products">Новинки</string>
+    <string name="promotions">Акции</string>
+    <string name="bottled_water">Бутылированная вода</string>
+    <string name="viewed_products">Просмотренные товары</string>
 
 </resources>

@@ -345,14 +345,8 @@ fun BasketButton(){
                     color = colorResource(id = R.color.blueLight),
                     shape = RoundedCornerShape(0)
                 ),
-            colors = TextFieldDefaults.textFieldColors(
-                unfocusedTextColor = colorResource(id = R.color.white),
-                focusedTextColor = colorResource(id = R.color.white),
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                cursorColor = colorResource(id = R.color.white),
-                containerColor = colorResource(id = R.color.new_product_blue)
+            colors = TextFieldDefaults.colors(
+
             ),
             maxLines = 1,
             textStyle = TextStyle(

@@ -84,7 +84,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment() {
+class HomeFragment1 : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_main_home_flow
     override fun update() {

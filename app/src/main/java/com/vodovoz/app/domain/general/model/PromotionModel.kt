@@ -1,0 +1,28 @@
+package com.vodovoz.app.domain.general.model
+
+data class PromotionModel(
+    val id: Int,
+    val name: String,
+    val blockId: Int,
+    val sectionId: Int,
+    val detailPicture: String,
+    val endDate: String,
+    val label: LabelModel,
+    val advertising: AboutAdvertising?,
+)
+
+data class LabelModel(
+    val name: String,
+    val colorHex: String,
+)
+
+fun emptyLabelModel() = LabelModel("", "")
+
+data class AboutAdvertising(
+    val name: String,
+    val title: String,
+    val aboutCompanyTitle: String,
+    val aboutCompany: String,
+)
+
+

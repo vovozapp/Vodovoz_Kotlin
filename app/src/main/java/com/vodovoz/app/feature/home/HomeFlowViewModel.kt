@@ -1,6 +1,5 @@
 package com.vodovoz.app.feature.home
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
@@ -10,37 +9,34 @@ import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.common.content.updateData
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
+import com.vodovoz.app.feature.home.model.CategoryWithProductsUi
+import com.vodovoz.app.feature.home.model.OrderWithMenuUi
+import com.vodovoz.app.feature.home.model.PopularCategoryUi
+import com.vodovoz.app.feature.home.model.ProductUi
+import com.vodovoz.app.feature.home.model.PromotionUi
+import com.vodovoz.app.feature.home.model.SectionUi
+import com.vodovoz.app.feature.home.model.mapToUi
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
 import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfo
-import com.vodovoz.app.feature.home.viewholders.homebrands.HomeBrands
-import com.vodovoz.app.feature.home.viewholders.homecomments.HomeComments
-import com.vodovoz.app.feature.home.viewholders.homecountries.HomeCountries
-import com.vodovoz.app.feature.home.viewholders.homehistories.HomeHistories
-import com.vodovoz.app.feature.home.viewholders.homeorders.HomeOrders
 import com.vodovoz.app.feature.home.viewholders.homepopulars.HomePopulars
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproductstabs.HomeProductsTabs
-import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
 import com.vodovoz.app.feature.home.viewholders.homesections.HomeSections
 import com.vodovoz.app.feature.home.viewholders.hometitle.HomeTitle
 import com.vodovoz.app.feature.home.viewholders.hometriplenav.HomeTripleNav
 import com.vodovoz.app.mapper.BannerMapper.mapToUI
-import com.vodovoz.app.mapper.BrandMapper.mapToUI
 import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
-import com.vodovoz.app.mapper.CommentMapper.mapToUI
-import com.vodovoz.app.mapper.CountriesSliderBundleMapper.mapToUI
-import com.vodovoz.app.mapper.HistoryMapper.mapToUI
-import com.vodovoz.app.mapper.OrderMapper.mapToUI
 import com.vodovoz.app.mapper.PopupNewsMapper.mapToUI
-import com.vodovoz.app.mapper.PromotionMapper.mapToUI
-import com.vodovoz.app.mapper.TopSectionsMapper.mapToUI
+import com.vodovoz.app.ui.model.BannerUI
 import com.vodovoz.app.ui.model.PopupNewsUI
-import com.vodovoz.app.ui.model.custom.PromotionsSliderBundleUI
+import com.vodovoz.app.util.extensions.combineIntoTriple
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -51,8 +47,10 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -65,9 +63,78 @@ class HomeFlowViewModel @Inject constructor(
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
     private val accountManager: AccountManager,
+    private val vodovozServiceRepository: VodovozServiceRepository,
 ) : PagingContractViewModel<HomeFlowViewModel.HomeState, HomeFlowViewModel.HomeEvents>(HomeState.idle()) {
 
+
+    private fun loadData() {
+        combine(
+            combineIntoTriple(
+                vodovozServiceRepository.getPromotions(),
+                vodovozServiceRepository.getPopularSections(),
+                vodovozServiceRepository.getOrderMenu(accountManager.fetchAccountId())
+            ),
+            combineIntoTriple(
+                vodovozServiceRepository.getNewProducts(),
+                vodovozServiceRepository.getHurryUpBuyProducts(),
+                vodovozServiceRepository.getSuperTop()
+            )
+        ) { (promotionsResult, popularSectionsResult, orderMenuResult), (newProductsResult, hurryUpBuyProducts, superTopResult) ->
+
+            promotionsResult.onSuccess { promotionModels ->
+                uiStateListener.updateData { s ->
+                    s.copy(
+                        promotions = promotionModels.map { promotionModel -> promotionModel.mapToUi() }
+                    )
+                }
+            }
+            popularSectionsResult.onSuccess { popularSectionModels ->
+                uiStateListener.updateData { s ->
+                    s.copy(
+                        popularSections = popularSectionModels.map { it.mapToUi() }
+                    )
+                }
+            }
+            orderMenuResult.onSuccess { orderWithMenuModel ->
+                uiStateListener.updateData { s ->
+                    s.copy(
+                        orderWithMenu = orderWithMenuModel.mapToUi()
+                    )
+                }
+            }
+
+            newProductsResult.onSuccess { productModels ->
+                uiStateListener.updateData { s ->
+                    s.copy(
+                        newProducts = productModels.map { it.mapToUi() }
+                    )
+                }
+            }
+
+            hurryUpBuyProducts.onSuccess { productModels ->
+                uiStateListener.updateData { s ->
+                    s.copy(
+                        hurryUpBuyProducts = productModels.map { it.mapToUi() }
+                    )
+                }
+            }
+
+            superTopResult.onSuccess { topAndBottomSectionsModel ->
+                uiStateListener.updateData { s ->
+                    val bestOffersSection = topAndBottomSectionsModel.topSection.mapToUi()
+                    s.copy(
+                        bestOffersSection = bestOffersSection,
+                        bottomSection = topAndBottomSectionsModel.bottomSection.mapToUi(),
+                        currentCategoryWithProducts = bestOffersSection.categoryWithProductsList.firstOrNull() ?: CategoryWithProductsUi.Empty
+                    )
+                }
+            }
+
+        }.launchIn(viewModelScope)
+    }
+
     fun firstLoad() {
+        loadData()
         if (!state.isFirstLoad) {
             uiStateListener.value = state.copy(loadingPage = true)
 
@@ -885,6 +952,14 @@ class HomeFlowViewModel @Inject constructor(
         )
     }
 
+    fun selectCategory(categoryWithProductsUi: CategoryWithProductsUi) = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(
+                currentCategoryWithProducts = categoryWithProductsUi
+            )
+        }
+    }
+
     data class PositionItem(
         val position: Int,
         val item: Item,
@@ -894,20 +969,31 @@ class HomeFlowViewModel @Inject constructor(
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
             HomeEvents()
 
-        object GoToProfile : HomeEvents()
-        object SendComment : HomeEvents()
-        object GoToCart : HomeEvents()
+        data object GoToProfile : HomeEvents()
+        data object SendComment : HomeEvents()
+        data object GoToCart : HomeEvents()
     }
 
     data class HomeState(
-        val positionItems: List<PositionItem>,
-        val items: List<Item>,
+        val positionItems: List<PositionItem> = emptyList(),
+        val items: List<Item> = emptyList(),
+        val banners: List<BannerUI> = emptyList(),
+        val promotions: List<PromotionUi> = emptyList(),
+        val orderWithMenu: OrderWithMenuUi = OrderWithMenuUi.Empty,
+        val popularSections: List<PopularCategoryUi> = emptyList(),
+        val newProducts: List<ProductUi> = emptyList(),
+        val hurryUpBuyProducts: List<ProductUi> = emptyList(),
+        val bestOffersSection: SectionUi = SectionUi.Empty,
+        val currentCategoryWithProducts: CategoryWithProductsUi = CategoryWithProductsUi.Empty,
+        val bottomSection: SectionUi = SectionUi.Empty,
         val news: PopupNewsUI? = null,
         val hasShow: Boolean = false,
         val isSecondLoad: Boolean = false,
+        val searchField: String = "",
     ) : State {
         companion object {
             fun idle(): HomeState {
+
                 return HomeState(
                     positionItems = emptyList(),
                     items = emptyList()

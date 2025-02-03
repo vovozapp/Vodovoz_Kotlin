@@ -6,6 +6,7 @@ import androidx.compose.ui.unit.dp
 
 
 val vodovozShapes = Shapes(
+    extraLarge = RoundedCornerShape(16.dp),
     large = RoundedCornerShape(12.dp),
     medium = RoundedCornerShape(10.dp),
     small = RoundedCornerShape(8.dp)

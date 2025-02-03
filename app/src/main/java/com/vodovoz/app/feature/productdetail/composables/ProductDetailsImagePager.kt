@@ -2,6 +2,11 @@ package com.vodovoz.app.feature.productdetail.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.snapping.SnapPosition
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +21,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -32,17 +39,18 @@ fun ProductDetailsImagePager(
 ) {
     val pagerState = rememberPagerState { productImages.count() }
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(modifier = modifier,horizontalAlignment = Alignment.CenterHorizontally) {
 
         HorizontalPager(
-            modifier = modifier,
             state = pagerState,
             contentPadding = PaddingValues(horizontal = 16.dp),
-            beyondViewportPageCount = 2,
+            beyondViewportPageCount = productImages.size,
             pageSpacing = 16.dp,
             key = { page ->
                 productImages[page]
-            }
+            },
+            snapPosition = SnapPosition.Center,
+            userScrollEnabled = true
         ) { page ->
             AsyncImage(
                 model = productImages[page],
@@ -50,11 +58,16 @@ fun ProductDetailsImagePager(
                 modifier = Modifier
                     .height(211.dp)
                     .fillMaxWidth()
-                    .clickable(indication = null, interactionSource = null) {
-                        onImageClick(
-                            productImages[page]
-                        )
-                    },
+                    .pointerInput(Unit){
+                        awaitEachGesture {
+                            awaitFirstDown(pass = PointerEventPass.Final)
+                            waitForUpOrCancellation(PointerEventPass.Final)
+                            onImageClick(
+                                productImages[page]
+                            )
+                        }
+                    }
+                ,
                 contentScale = ContentScale.FillHeight
             )
         }

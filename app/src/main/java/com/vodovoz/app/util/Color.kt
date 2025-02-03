@@ -7,3 +7,9 @@ fun Color.Companion.fromHexOrTransparent(hexString: String) = try {
 } catch (_: Exception) {
     Transparent
 }
+
+fun Color.Companion.fromHexOrNull(hexString: String) = try {
+    Color(android.graphics.Color.parseColor(hexString))
+} catch (_: Exception) {
+    null
+}

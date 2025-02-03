@@ -1,5 +1,6 @@
 package com.vodovoz.app.design_system.composables.card
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,7 +21,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +38,7 @@ import com.vodovoz.app.design_system.ExtendedTheme
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.ClickableIcon
 import com.vodovoz.app.design_system.composables.button.VodovozButtonSmall
+import com.vodovoz.app.feature.home.model.ProductUi
 import com.vodovoz.app.ui.model.PriceUI
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.formatPrice
@@ -64,7 +69,8 @@ fun GridProductCard(
                 contentDescription = null,
                 modifier = Modifier
                     .height(105.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                contentScale = ContentScale.Crop
             )
             Row {
                 percentLabels.forEach { label ->
@@ -191,6 +197,165 @@ fun GridProductCard(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun GridProductCard(
+    modifier: Modifier = Modifier,
+    product: ProductUi,
+    onClick: (ProductUi) -> Unit,
+    onLike: (ProductUi) -> Unit,
+) {
+    val percentLabels =
+        product.labels.filter { labelEntity -> labelEntity.name.any { s -> s == '%' } }
+    val labels = product.labels - percentLabels.toSet()
+
+    VodovozOutlinedCard(
+        modifier = modifier,
+        contentPadding = PaddingValues(8.dp),
+        onClick = { onClick(product) }
+    ) {
+        Box {
+            AsyncImage(
+                model = product.image,
+                contentDescription = null,
+                modifier = Modifier
+                    .height(105.dp)
+                    .fillMaxWidth(),
+                contentScale = ContentScale.Inside
+            )
+            Row {
+                percentLabels.forEach { label ->
+                    Box(
+                        modifier = Modifier
+                            .clip(MaterialTheme.shapes.medium)
+                            .background(label.color)
+                            .defaultMinSize(30.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(horizontal = 5.dp),
+                            text = label.name,
+                            style = ExtendedTheme.typography.labelExtraSmall,
+                            color = MaterialTheme.colorScheme.background
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.weight(1f))
+
+                ClickableIcon(
+                    painter = painterResource(id = if (product.isFavorite) R.drawable.ic_filled_like else R.drawable.ic_like),
+                    modifier = Modifier.size(18.dp),
+                    onClick = { onLike(product) },
+                    tint = if (product.isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceTint
+                )
+            }
+
+            FlowRow(
+                modifier = Modifier.align(Alignment.BottomStart),
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+                horizontalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                labels.forEach { label ->
+                    Box(
+                        modifier = Modifier
+                            .clip(MaterialTheme.shapes.medium)
+                            .background(label.color)
+                            .defaultMinSize(30.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(horizontal = 5.dp),
+                            text = label.name,
+                            style = ExtendedTheme.typography.labelExtraSmall,
+                            color = MaterialTheme.colorScheme.background
+                        )
+                    }
+                }
+            }
+        }
+        Row(
+            modifier = Modifier.padding(top = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(verticalAlignment = Alignment.Bottom) {
+
+                Text(
+                    modifier = Modifier.alignByBaseline(),
+                    text = stringResource(R.string.price, product.price.roundToInt().formatPrice()),
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        fontWeight = FontWeight.SemiBold
+                    ),
+                )
+
+                if (product.oldPrice > product.price) {
+                    Text(
+                        text = stringResource(
+                            R.string.price,
+                            product.oldPrice.roundToInt().formatPrice()
+                        ),
+                        color = MaterialTheme.colorScheme.surfaceTint,
+                        style = ExtendedTheme.typography.labelExtraSmallVariant.copy(
+                            textDecoration = TextDecoration.LineThrough
+                        ),
+                        modifier = Modifier
+                            .alignByBaseline()
+                            .padding(start = 8.dp)
+                    )
+                }
+            }
+
+
+            Spacer(modifier = Modifier.weight(1f))
+
+
+            Icon(
+                painter = painterResource(id = R.drawable.ic_star),
+                contentDescription = null,
+                tint = if (product.rating <= 0.0f) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.tertiary,
+                modifier = Modifier
+                    .padding(start = 2.dp)
+                    .size(18.dp),
+            )
+
+            Text(
+                modifier = Modifier.padding(start = 2.dp),
+                text = if (product.rating > 0) String.format(
+                    Locale.getDefault(),
+                    "%.1f",
+                    product.rating
+                ) else 0.toString(),
+                color = if (product.rating <= 0.0f) MaterialTheme.colorScheme.surfaceTint else MaterialTheme.colorScheme.onBackground,
+                style = ExtendedTheme.typography.labelMediumVariant
+            )
+
+
+        }
+
+        val labelSmall = MaterialTheme.typography.labelSmall
+        Text(
+            text = product.name,
+            color = MaterialTheme.colorScheme.onBackground,
+            style = labelSmall.copy(fontSize = (labelSmall.fontSize.value - 1).sp),
+            modifier = Modifier
+                .padding(top = 12.dp)
+                .height(48.dp),
+            maxLines = 3,
+            overflow = TextOverflow.Ellipsis
+        )
+
+
+        VodovozButtonSmall(
+            modifier = Modifier.padding(top = 8.dp),
+            text = stringResource(id = R.string.to_cart),
+            onClick = { onClick(product) },
+        )
+
+
+    }
+}
+
+
 @Preview
 @Composable
 private fun GridProductCardPreview() {
@@ -198,7 +363,7 @@ private fun GridProductCardPreview() {
         val productUI = ProductUI(
             id = 123456L,
             name = "Кристально чистая артезианская вода из экологически чистого региона с добавлением натуральных минералов для поддержания здоровья и жизненной энергии",
-            detailPicture = "https://http.cat/images/101.jpg",
+            detailPicture = "https://vodovoz.net/upload/iblock/8f9/sazr2hm139ok02s3oj80q0tsqr5f3ibf.jpg",
             isFavorite = true,
             leftItems = 10,
             pricePerUnit = "100.00",

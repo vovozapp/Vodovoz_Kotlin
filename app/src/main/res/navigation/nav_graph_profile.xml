@@ -768,13 +768,11 @@
             android:id="@+id/action_to_genderSelectionBS"
             app:destination="@id/genderSelectionBS" />
 
-
         <action
             android:id="@+id/action_back_to_profile"
+            app:destination="@id/profileFragment"
             app:popUpTo="@id/profileFragment"
-            app:popUpToInclusive="false"
-            />
-
+            app:popUpToInclusive="true" />
 
     </fragment>
 

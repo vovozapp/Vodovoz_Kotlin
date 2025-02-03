@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.buy_certificate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.vodovoz.app.R
 import com.vodovoz.app.ui.model.custom.BuyCertificateTypeUI
 
+@Suppress("NonSkippableComposable")
 @Composable
 fun TypeTabs(
     typeList: List<BuyCertificateTypeUI>,
