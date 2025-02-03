@@ -37,7 +37,7 @@ fun MenuItemModel.mapToUi(): MenuItemUi {
     return MenuItemUi(
         image = this.picture,
         title = title,
-        desription = description,
+        description = description,
         type = type,
         borderColor = Color.fromHexOrNull(borderColorHex)
     )
@@ -58,7 +58,7 @@ data class OrderUi(
 data class MenuItemUi(
     val image: String,
     val title: String,
-    val desription: String,
+    val description: String,
     val type: MenuItemTypeModel,
     val borderColor: Color?,
 )

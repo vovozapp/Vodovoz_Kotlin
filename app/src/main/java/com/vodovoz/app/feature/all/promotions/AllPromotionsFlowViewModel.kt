@@ -7,8 +7,12 @@ import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.content.PagingStateViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.common.content.updateData
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.design_system.model.PromotionSectionUi
+import com.vodovoz.app.design_system.model.PromotionUi
+import com.vodovoz.app.design_system.model.mapToUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.mapper.AllPromotionBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.PromotionFilterUI
@@ -20,6 +24,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,9 +41,19 @@ class AllPromotionsFlowViewModel @Inject constructor(
         ?: AllPromotionsFragment.DataSource.All
 
 
-    private fun loadAllPromotions(){
-
-    }
+    private fun loadAllPromotions() = vodovozServiceRepository.getPromotionsWithSections()
+        .onEach { promotionsWithSectionsModelResult ->
+            promotionsWithSectionsModelResult.onSuccess { promotionsWithSectionsModel ->
+                uiStateListener.updateData { s ->
+                    val sections = promotionsWithSectionsModel.sections.mapToUi()
+                    s.copy(
+                        sections = sections,
+                        promotions = promotionsWithSectionsModel.promotions.mapToUi(),
+                        currentSection = sections.firstOrNull() ?: PromotionSectionUi.Empty
+                    )
+                }
+            }
+        }.launchIn(viewModelScope)
 
     //old method
     private fun fetchAllPromotions(filterChanged: Boolean = false) {
@@ -109,6 +124,7 @@ class AllPromotionsFlowViewModel @Inject constructor(
     }
 
     fun firstLoadSorted() {
+        loadAllPromotions()
         if (!state.isFirstLoad) {
             uiStateListener.value =
                 state.copy(isFirstLoad = true, loadingPage = true)
@@ -138,5 +154,8 @@ class AllPromotionsFlowViewModel @Inject constructor(
             code = ""
         ),
         val scrollToTop: Boolean = false,
+        val sections: List<PromotionSectionUi> = emptyList(),
+        val currentSection: PromotionSectionUi = PromotionSectionUi.Empty,
+        val promotions: List<PromotionUi> = emptyList(),
     ) : State
 }

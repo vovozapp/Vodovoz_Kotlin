@@ -89,7 +89,7 @@ fun MenuOrderItem(
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium)
                 )
                 Text(
-                    text = menuItemUi.desription,
+                    text = menuItemUi.description,
                     maxLines = 1,
                     style = MaterialTheme.typography.labelSmall
                 )

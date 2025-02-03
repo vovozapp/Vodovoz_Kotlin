@@ -18,7 +18,7 @@ import com.vodovoz.app.feature.home.model.OrderUi
 import com.vodovoz.app.feature.home.model.OrderWithMenuUi
 import com.vodovoz.app.feature.home.model.PopularCategoryUi
 import com.vodovoz.app.feature.home.model.ProductUi
-import com.vodovoz.app.feature.home.model.PromotionUi
+import com.vodovoz.app.design_system.model.PromotionUi
 import com.vodovoz.app.feature.home.model.SectionUi
 import com.vodovoz.app.ui.model.BannerUI
 

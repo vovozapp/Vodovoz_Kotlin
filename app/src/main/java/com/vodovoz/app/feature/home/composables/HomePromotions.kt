@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
-import com.vodovoz.app.feature.home.model.PromotionUi
+import com.vodovoz.app.design_system.model.PromotionUi
 
 @Suppress("NonSkippableComposable")
 @Composable

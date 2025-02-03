@@ -22,7 +22,7 @@ data class PromotionModel(
     val detailPicture: String,
     val endDate: String,
     val label: LabelModel,
-    val advertising: AboutAdvertising?,
+    val advertising: AboutAdvertisingModel?,
 )
 
 data class LabelModel(
@@ -32,7 +32,7 @@ data class LabelModel(
 
 fun emptyLabelModel() = LabelModel("", "")
 
-data class AboutAdvertising(
+data class AboutAdvertisingModel(
     val name: String,
     val title: String,
     val aboutCompanyTitle: String,

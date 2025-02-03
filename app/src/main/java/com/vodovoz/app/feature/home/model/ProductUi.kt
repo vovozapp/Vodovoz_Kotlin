@@ -7,6 +7,7 @@ import com.vodovoz.app.domain.general.model.LabelModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.util.fromHexOrNull
+import com.vodovoz.app.util.fromHexOrTransparent
 
 @Immutable
 data class CategoryWithProductsUi(
@@ -88,13 +89,17 @@ fun ProductModel.mapToUi(): ProductUi {
 data class LabelWithColorUi(
     val name: String,
     val color: Color,
-)
+){}
 
 fun List<LabelModel>.mapToUi(): List<LabelWithColorUi> {
     return mapNotNull { labelModel ->
-        LabelWithColorUi(
-            labelModel.name,
-            Color.fromHexOrNull(labelModel.colorHex) ?: return@mapNotNull null
-        )
+        labelModel.mapToUi()
     }
+}
+
+fun LabelModel.mapToUi(): LabelWithColorUi {
+    return LabelWithColorUi(
+        name,
+        Color.fromHexOrTransparent(colorHex)
+    )
 }

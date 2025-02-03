@@ -19,8 +19,9 @@ import com.vodovoz.app.feature.home.model.CategoryWithProductsUi
 import com.vodovoz.app.feature.home.model.OrderWithMenuUi
 import com.vodovoz.app.feature.home.model.PopularCategoryUi
 import com.vodovoz.app.feature.home.model.ProductUi
-import com.vodovoz.app.feature.home.model.PromotionUi
+import com.vodovoz.app.design_system.model.PromotionUi
 import com.vodovoz.app.feature.home.model.SectionUi
+import com.vodovoz.app.design_system.model.mapToUi
 import com.vodovoz.app.feature.home.model.mapToUi
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
 import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfo

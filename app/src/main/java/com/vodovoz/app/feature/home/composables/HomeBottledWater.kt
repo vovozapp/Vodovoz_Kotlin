@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.card.GridProductCard
 import com.vodovoz.app.feature.home.model.ProductUi
-import com.vodovoz.app.feature.home.model.PromotionUi
 
 @Suppress("NonSkippableComposable")
 @Composable

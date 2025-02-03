@@ -6,7 +6,7 @@ import com.vodovoz.app.data.vodovoz_service.model.OREKLAME_DTO
 import com.vodovoz.app.data.vodovoz_service.model.PROMOTION_DATA_DTO
 import com.vodovoz.app.data.vodovoz_service.model.PROMOTION_RAZDEL_DTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionsDTO
-import com.vodovoz.app.domain.general.model.AboutAdvertising
+import com.vodovoz.app.domain.general.model.AboutAdvertisingModel
 import com.vodovoz.app.domain.general.model.LabelModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionSectionModel
@@ -65,8 +65,8 @@ fun HIT_DTO.mapToDomain(): LabelModel {
     )
 }
 
-fun OREKLAME_DTO.mapToDomain(): AboutAdvertising? {
-    return AboutAdvertising(
+fun OREKLAME_DTO.mapToDomain(): AboutAdvertisingModel? {
+    return AboutAdvertisingModel(
         name = this.NAME ?: "",
         title = this.ZAGOLOVOK ?: return null,
         aboutCompanyTitle = this.NAMEVNUTRI ?: return null,
