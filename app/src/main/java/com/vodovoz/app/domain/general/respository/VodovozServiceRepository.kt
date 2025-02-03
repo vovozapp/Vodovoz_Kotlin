@@ -1,5 +1,6 @@
 package com.vodovoz.app.domain.general.respository
 
+import androidx.paging.PagingData
 import com.vodovoz.app.data.model.common.BannerEntity
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
@@ -19,6 +20,11 @@ interface VodovozServiceRepository {
         page: Int = 1,
         limit: Int = 10
     ): Flow<Result<PromotionsWithSectionsModel>>
+
+    fun getPaginatedPromotions(
+        page: Int = 1,
+        limit: Int = 10
+    ): Flow<PagingData<PromotionModel>>
 
     fun getOrderMenu(
         userId: Long? = null,

@@ -1,11 +1,13 @@
 package com.vodovoz.app.design_system.model
 
+import androidx.compose.runtime.Immutable
 import com.vodovoz.app.domain.general.model.AboutAdvertisingModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionSectionModel
 import com.vodovoz.app.feature.home.model.LabelWithColorUi
 import com.vodovoz.app.feature.home.model.mapToUi
 
+@Immutable
 data class PromotionUi(
     val id: Int,
     val picture: String,
@@ -17,6 +19,7 @@ data class PromotionUi(
     val aboutAdvertisingUi: AboutAdvertisingUi?,
 )
 
+@Immutable
 data class AboutAdvertisingUi(
     val name: String,
     val title: String,
@@ -24,6 +27,7 @@ data class AboutAdvertisingUi(
     val aboutCompany: String,
 )
 
+@Immutable
 data class PromotionSectionUi(
     val id: Int,
     val code: String,

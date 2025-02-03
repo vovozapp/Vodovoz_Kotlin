@@ -1,11 +1,15 @@
 package com.vodovoz.app.data.vodovoz_service.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.core.network.messageWithCode
 import com.vodovoz.app.data.model.common.BannerEntity
 import com.vodovoz.app.data.vodovoz_service.VodovozService
 import com.vodovoz.app.data.vodovoz_service.mappers.executeRequest
 import com.vodovoz.app.data.vodovoz_service.mappers.mapToDomain
+import com.vodovoz.app.domain.general.VodovozPagingSource
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.ProductModel
@@ -16,6 +20,7 @@ import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.util.extensions.catchResult
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -52,6 +57,26 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             response.data!!.mapToDomain()
         },
     )
+
+    override fun getPaginatedPromotions(page: Int, limit: Int): Flow<PagingData<PromotionModel>> {
+        return Pager(
+            config = PagingConfig(limit),
+            pagingSourceFactory = {
+                VodovozPagingSource(
+                    request = { page, limit ->
+                        executeRequest(
+                            request = {
+                                vodovozService.getPromotionsWithSections(page, limit)
+                            },
+                            mapToResult = {
+                                it.data?.mapToDomain()?.promotions ?: emptyList()
+                            }
+                        ).firstOrNull() ?: Result.failure(Throwable())
+                    }
+                )
+            }
+        ).flow
+    }
 
 
     override fun getOrderMenu(userId: Long?): Flow<Result<OrderWithMenuModel>> = executeRequest(

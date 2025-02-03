@@ -9,5 +9,6 @@ val vodovozShapes = Shapes(
     extraLarge = RoundedCornerShape(16.dp),
     large = RoundedCornerShape(12.dp),
     medium = RoundedCornerShape(10.dp),
-    small = RoundedCornerShape(8.dp)
+    small = RoundedCornerShape(8.dp),
+    extraSmall = RoundedCornerShape(6.dp)
 )

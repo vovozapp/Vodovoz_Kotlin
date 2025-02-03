@@ -320,7 +320,7 @@ class UserDataFragment : BaseFragment() {
             onPositiveClick = {
                 lifecycleScope.launch {
                     profileViewModel.logout().join()
-                    findNavController().navigate(UserDataFragmentDirections.actionBackToProfile())
+                    //findNavController().navigate(UserDataFragmentDirections.actionBackToProfile())
                 }
             }
         ).show(childFragmentManager, "LogoutDialog")

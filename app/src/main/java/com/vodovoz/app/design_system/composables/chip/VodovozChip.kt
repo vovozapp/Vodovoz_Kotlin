@@ -1,16 +1,19 @@
 package com.vodovoz.app.design_system.composables.chip
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.VodovozTheme
@@ -47,6 +50,24 @@ fun VodovozChip(
             modifier = Modifier.padding(contentPadding),
             style = MaterialTheme.typography.bodySmall,
             color = if (selected) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.onBackground
+        )
+    }
+}
+
+@Composable
+fun ColorVodovozChip(modifier: Modifier = Modifier, color: Color, text: String) {
+    Box(
+        modifier = modifier
+            .clip(MaterialTheme.shapes.medium)
+            .background(color)
+            ,
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier.padding(horizontal = 8.dp),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.background
         )
     }
 }

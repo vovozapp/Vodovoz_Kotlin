@@ -2,9 +2,12 @@ package com.vodovoz.app.feature.all.promotions
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.ErrorState
-import com.vodovoz.app.common.content.PagingStateViewModel
+import com.vodovoz.app.common.content.Event
+import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.toErrorState
 import com.vodovoz.app.common.content.updateData
@@ -20,11 +23,15 @@ import com.vodovoz.app.ui.model.custom.AllPromotionBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,7 +42,9 @@ class AllPromotionsFlowViewModel @Inject constructor(
     private val repository: MainRepository,
     private val accountManager: AccountManager,
     private val vodovozServiceRepository: VodovozServiceRepository,
-) : PagingStateViewModel<AllPromotionsFlowViewModel.AllPromotionsState>(AllPromotionsState()) {
+) : PagingContractViewModel<AllPromotionsFlowViewModel.AllPromotionsState, AllPromotionsFlowViewModel.AllPromotionsEvent>(
+    AllPromotionsState()
+) {
 
     private var dataSource = savedState.get<AllPromotionsFragment.DataSource>("dataSource")
         ?: AllPromotionsFragment.DataSource.All
@@ -43,16 +52,25 @@ class AllPromotionsFlowViewModel @Inject constructor(
 
     private fun loadAllPromotions() = vodovozServiceRepository.getPromotionsWithSections()
         .onEach { promotionsWithSectionsModelResult ->
+
             promotionsWithSectionsModelResult.onSuccess { promotionsWithSectionsModel ->
                 uiStateListener.updateData { s ->
                     val sections = promotionsWithSectionsModel.sections.mapToUi()
                     s.copy(
                         sections = sections,
-                        promotions = promotionsWithSectionsModel.promotions.mapToUi(),
-                        currentSection = sections.firstOrNull() ?: PromotionSectionUi.Empty
+                        currentSection = sections.firstOrNull() ?: PromotionSectionUi.Empty,
+                        promotions = vodovozServiceRepository.getPaginatedPromotions()
+                            .distinctUntilChanged()
+                            .map { pagingData ->
+                                pagingData.map {
+                                    it.mapToUi()
+                                }
+                            }
                     )
                 }
             }
+
+
         }.launchIn(viewModelScope)
 
     //old method
@@ -145,6 +163,15 @@ class AllPromotionsFlowViewModel @Inject constructor(
         }
     }
 
+    fun selectSection(section: PromotionSectionUi) = viewModelScope.launch {
+        eventListener.emit(AllPromotionsEvent.ScrollTop)
+        uiStateListener.updateData { s ->
+            s.copy(
+                currentSection = section
+            )
+        }
+    }
+
     data class AllPromotionsState(
         val promotionFilterUIList: List<PromotionFilterUI> = emptyList(),
         val allPromotionBundleUI: AllPromotionBundleUI? = null,
@@ -156,6 +183,12 @@ class AllPromotionsFlowViewModel @Inject constructor(
         val scrollToTop: Boolean = false,
         val sections: List<PromotionSectionUi> = emptyList(),
         val currentSection: PromotionSectionUi = PromotionSectionUi.Empty,
-        val promotions: List<PromotionUi> = emptyList(),
+        val promotions: Flow<PagingData<PromotionUi>> = emptyFlow(),
     ) : State
+
+    sealed class AllPromotionsEvent() : Event {
+
+        data object ScrollTop : AllPromotionsEvent()
+
+    }
 }

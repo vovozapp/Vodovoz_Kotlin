@@ -1,10 +1,18 @@
 package com.vodovoz.app.feature.all.promotions
 
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleStartEffect
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.top_bar.VodovozTopBar
 import com.vodovoz.app.feature.all.promotions.composables.AllPromotionsBody
@@ -15,8 +23,43 @@ fun AllPromotionsScreen(
     viewModel: AllPromotionsFlowViewModel,
     viewState: AllPromotionsFlowViewModel.AllPromotionsState,
 ) {
+    val lazyPagingPromotions = viewState.promotions.collectAsLazyPagingItems()
+    val lazyListState = rememberLazyListState()
+
     Column(modifier = Modifier.fillMaxSize()) {
         VodovozTopBar(onBack = { /*TODO*/ }, title = stringResource(id = R.string.promotions))
-        AllPromotionsBody()
+
+
+        AllPromotionsBody(
+            sections = viewState.sections,
+            currentSection = viewState.currentSection,
+            lazyPagingPromotions = lazyPagingPromotions,
+            lazyListState = lazyListState,
+            onSectionSelect = { section ->
+                viewModel.selectSection(section)
+            }
+        )
+
+    }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    LifecycleStartEffect(Unit) {
+
+        onStopOrDispose {
+
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.observeEvent().collect { event ->
+                when (event) {
+                    AllPromotionsFlowViewModel.AllPromotionsEvent.ScrollTop -> {
+                        lazyListState.animateScrollToItem(0)
+                    }
+                }
+            }
+        }
     }
 }
