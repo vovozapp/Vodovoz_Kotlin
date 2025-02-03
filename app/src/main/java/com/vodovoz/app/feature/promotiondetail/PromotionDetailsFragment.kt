@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PromotionDetailsFragment : BaseFragment() {
+class PromotionDetailsFragment1 : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_promotion_detail_flow
 

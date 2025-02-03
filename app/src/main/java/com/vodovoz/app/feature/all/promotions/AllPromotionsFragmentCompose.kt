@@ -38,7 +38,7 @@ class AllPromotionsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
             setContent {
@@ -49,7 +49,6 @@ class AllPromotionsFragment : Fragment() {
                 }
             }
         }
-
     }
 
     private fun getAllClickListener(): AllClickListener {
