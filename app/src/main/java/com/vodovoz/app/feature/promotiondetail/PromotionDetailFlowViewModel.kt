@@ -64,7 +64,11 @@ class PromotionDetailFlowViewModel @Inject constructor(
 
                     val products =
                         vodovozServiceRepository.getPromotionDetailsProductsPaged(promotionId)
-                            .map { pagingData -> pagingData.map { productModel -> productModel.mapToUi() } }
+                            .map { pagingData ->
+                                pagingData.map { productModel ->
+                                    productModel.mapToUi()
+                                }
+                            }
 
                     uiStateListener.updateData { s ->
                         s.copy(

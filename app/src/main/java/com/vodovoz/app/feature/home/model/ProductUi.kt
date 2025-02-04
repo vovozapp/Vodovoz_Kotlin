@@ -2,12 +2,12 @@ package com.vodovoz.app.feature.home.model
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
+import com.vodovoz.app.domain.general.model.ButtonModel
 import com.vodovoz.app.domain.general.model.CategoryWithProductsModel
 import com.vodovoz.app.domain.general.model.LabelModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.util.fromHexOrNull
-import com.vodovoz.app.util.fromHexOrTransparent
 
 @Immutable
 data class CategoryWithProductsUi(
@@ -31,24 +31,40 @@ fun CategoryWithProductsModel.mapToUi(): CategoryWithProductsUi {
     )
 }
 
-@Immutable
-data class SectionUi(
+data class ButtonUi(
     val name: String,
-    val categoryWithProductsList: List<CategoryWithProductsUi>,
-    val showAllId: Int?,
+    val id: String,
+)
+
+fun ButtonModel.mapToUi(): ButtonUi {
+    return ButtonUi(
+        name = name,
+        id = id
+    )
+}
+
+@Immutable
+data class SectionUi<E>(
+    val title: String,
+    val items: List<E>,
+    val button: ButtonUi?,
 ) {
 
     companion object {
-        val Empty = SectionUi("", emptyList(), -1)
+
+        fun <T> empty() = SectionUi("", emptyList<T>(), null)
+
     }
 
 }
 
-fun SectionModel.mapToUi(): SectionUi {
+fun <E, E2> SectionModel<E>.mapToUi(
+    mapItems: (List<E>) -> List<E2>,
+): SectionUi<E2> {
     return SectionUi(
-        name = name ?: "",
-        categoryWithProductsList = categoryWithProductsList.map { it.mapToUi() },
-        showAllId = showAllId
+        title = title,
+        items = mapItems(items),
+        button = button?.mapToUi()
     )
 }
 
@@ -89,7 +105,7 @@ fun ProductModel.mapToUi(): ProductUi {
 data class LabelWithColorUi(
     val name: String,
     val color: Color,
-){}
+) {}
 
 fun List<LabelModel>.mapToUi(): List<LabelWithColorUi> {
     return mapNotNull { labelModel ->
@@ -97,7 +113,7 @@ fun List<LabelModel>.mapToUi(): List<LabelWithColorUi> {
     }
 }
 
-fun LabelModel.mapToUi(): LabelWithColorUi?{
+fun LabelModel.mapToUi(): LabelWithColorUi? {
     return LabelWithColorUi(
         name,
         Color.fromHexOrNull(colorHex) ?: return null

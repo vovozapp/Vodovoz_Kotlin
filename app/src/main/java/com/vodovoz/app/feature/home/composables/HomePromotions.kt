@@ -2,7 +2,6 @@ package com.vodovoz.app.feature.home.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -34,7 +33,7 @@ fun HomePromotions(
             modifier = Modifier.padding(top = 16.dp),
             images = promotions.map { promotionUi -> promotionUi.picture },
             onImageClick = { onPromotionClick(promotions[pagerState.currentPage]) },
-            pageSize = PageSize.Fixed(300.dp),
+            pageWidth = 300.dp,
         )
     }
 }

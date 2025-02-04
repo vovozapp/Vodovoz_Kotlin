@@ -1,14 +1,12 @@
 package com.vodovoz.app.design_system.model
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.graphics.Color
 import com.vodovoz.app.domain.general.model.AboutAdvertisingModel
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionSectionModel
 import com.vodovoz.app.feature.home.model.LabelWithColorUi
 import com.vodovoz.app.feature.home.model.mapToUi
-import com.vodovoz.app.util.fromHexOrTransparent
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.Locale
@@ -21,8 +19,8 @@ data class PromotionDetailsUi(
     val name: String,
     val description: String,
     val timeLeft: String,
-    val timeLeftBackground: Color,
     val advertising: AboutAdvertisingUi,
+    val label: LabelWithColorUi?,
 ) {
     companion object {
         val Empty = PromotionDetailsUi(
@@ -31,8 +29,8 @@ data class PromotionDetailsUi(
             name = "",
             description = "",
             timeLeft = "",
-            timeLeftBackground = Color.Transparent,
             advertising = AboutAdvertisingUi.Empty,
+            label = null
         )
     }
 }
@@ -43,9 +41,9 @@ fun PromotionDetailsModel.mapToUi(): PromotionDetailsUi {
         picture = this.picture,
         name = this.name,
         description = this.description,
-        timeLeft = this.timeLeft,
-        timeLeftBackground = Color.fromHexOrTransparent(timeLeftBackground),
-        advertising = this.advertising.mapToUi()
+        timeLeft = timeRemainingToEnd(endDate),
+        advertising = this.advertising.mapToUi(),
+        label = label?.mapToUi()
     )
 }
 

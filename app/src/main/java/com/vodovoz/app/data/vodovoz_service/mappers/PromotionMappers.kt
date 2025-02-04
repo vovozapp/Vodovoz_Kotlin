@@ -15,11 +15,6 @@ import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionSectionModel
 import com.vodovoz.app.domain.general.model.PromotionsWithSectionsModel
 import com.vodovoz.app.domain.general.model.emptyLabelModel
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 
 fun AKCIYA_DTO.mapToDomain(): PromotionDetailsModel? {
     return PromotionDetailsModel(
@@ -27,9 +22,9 @@ fun AKCIYA_DTO.mapToDomain(): PromotionDetailsModel? {
         picture = DETAIL_PICTURE?.toVodovozImage() ?: return null,
         name = NAME ?: return null,
         description = Html.fromHtml(DETAIL_TEXT ?: return null).toString(),
-        timeLeft = DATAOUT?.TEXT ?: return null,
+        endDate = mapToZonedDateTime(DATAOUT ?: return null) ?: return null,
         advertising = OREKLAME?.mapToDomain() ?: return null,
-        timeLeftBackground = DATAOUT.BACKGROUND ?: ""
+        label = HIT?.mapToDomain()
     )
 }
 
@@ -64,15 +59,6 @@ fun List<PROMOTION_DATA_DTO?>.mapToDomain(): List<PromotionModel> {
 }
 
 
-fun parsePromotionDate(dateTime: String): ZonedDateTime? {
-    val promotionDateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss")
-    return try {
-        LocalDateTime.parse(dateTime, promotionDateFormatter).atZone(ZoneId.of("Europe/Moscow"))
-    } catch (e: DateTimeParseException) {
-        null
-    }
-}
-
 fun PROMOTION_DATA_DTO.mapToDomain(): PromotionModel? {
     return PromotionModel(
         id = ID ?: return null,
@@ -80,7 +66,7 @@ fun PROMOTION_DATA_DTO.mapToDomain(): PromotionModel? {
         blockId = IBLOCK_ID ?: -1,
         sectionId = IBLOCK_SECTION_ID ?: -1,
         detailPicture = DETAIL_PICTURE?.toVodovozImage() ?: return null,
-        endDate = parsePromotionDate(DATA_OUT ?: return null) ?: return null,
+        endDate = mapToZonedDateTime(DATA_OUT ?: return null) ?: return null,
         label = HIT?.mapToDomain() ?: emptyLabelModel(),
         advertising = OREKLAME?.mapToDomain()
     )

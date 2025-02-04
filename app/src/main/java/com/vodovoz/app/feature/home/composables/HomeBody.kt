@@ -12,13 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.vodovoz.app.design_system.model.PromotionUi
 import com.vodovoz.app.feature.home.model.CategoryWithProductsUi
 import com.vodovoz.app.feature.home.model.MenuItemUi
 import com.vodovoz.app.feature.home.model.OrderUi
 import com.vodovoz.app.feature.home.model.OrderWithMenuUi
 import com.vodovoz.app.feature.home.model.PopularCategoryUi
 import com.vodovoz.app.feature.home.model.ProductUi
-import com.vodovoz.app.design_system.model.PromotionUi
 import com.vodovoz.app.feature.home.model.SectionUi
 import com.vodovoz.app.ui.model.BannerUI
 
@@ -33,13 +33,13 @@ fun HomeBody(
     hurryUpBuyProducts: List<ProductUi>,
     orderWithMenu: OrderWithMenuUi,
     currentCategoryWithProducts: CategoryWithProductsUi,
-    bestOffersSection: SectionUi,
-    bottomSection: SectionUi,
+    bestOffersSection: SectionUi<CategoryWithProductsUi>,
+    bottomSection: SectionUi<CategoryWithProductsUi>,
     onCategorySelect: (CategoryWithProductsUi) -> Unit,
     onPopularSectionClick: (PopularCategoryUi) -> Unit,
     onOrderClick: (OrderUi) -> Unit,
     onMenuItemClick: (MenuItemUi) -> Unit,
-    onShowAllPromotionClick: () -> Unit
+    onShowAllPromotionClick: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -61,7 +61,8 @@ fun HomeBody(
             onImageClick = {
 
             },
-            pagerState = pagerState
+            pagerState = pagerState,
+            pageWidth = 300.dp
         )
 
         //todo - put stories
@@ -115,7 +116,7 @@ fun HomeBody(
 
             },
             currentCategoryWithProducts = currentCategoryWithProducts,
-            categoryWithProductsList = bestOffersSection.categoryWithProductsList,
+            categoryWithProductsList = bestOffersSection.items,
             onCategorySelect = onCategorySelect,
             onProductClick = {},
             onProductLike = {}
@@ -153,7 +154,8 @@ fun HomeBody(
         //todo = put actual data
         HomeBottledWater(
             modifier = Modifier.padding(top = 32.dp),
-            products = bottomSection.categoryWithProductsList.firstOrNull()?.products ?: emptyList(),
+            products = bottomSection.items.firstOrNull()?.products
+                ?: emptyList(),
             onProductClick = {},
             onProductLike = {},
             onShowAllClick = {}

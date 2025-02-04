@@ -1,6 +1,7 @@
 package com.vodovoz.app.design_system.composables.top_bar
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
@@ -29,7 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.VodovozTheme
-import com.vodovoz.app.design_system.composables.ClickableIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,11 +74,17 @@ fun SearchTopBar(
                         .padding(start = 8.dp, end = 0.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    ClickableIcon(
-                        modifier = Modifier.size(24.dp),
+                    Icon(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clickable(
+                                onClick = onSearchClick,
+                                interactionSource = null,
+                                indication = null
+                            ),
                         painter = painterResource(id = R.drawable.icon_search),
                         tint = MaterialTheme.colorScheme.surfaceTint,
-                        onClick = onSearchClick
+                        contentDescription = null
                     )
                     Box(
                         modifier = Modifier

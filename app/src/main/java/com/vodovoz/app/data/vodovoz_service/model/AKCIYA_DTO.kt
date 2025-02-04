@@ -9,7 +9,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class AKCIYA_DTO(
     @Json(name = "DATAOUT")
-    val DATAOUT: DATAOUT_DTO?,
+    val DATAOUT: String?,
     @Json(name = "DETAIL_PICTURE")
     val DETAIL_PICTURE: String?,
     @Json(name = "DETAIL_TEXT")
@@ -19,5 +19,7 @@ data class AKCIYA_DTO(
     @Json(name = "NAME")
     val NAME: String?,
     @Json(name = "OREKLAME")
-    val OREKLAME: OREKLAME_DTO?
+    val OREKLAME: OREKLAME_DTO?,
+    @Json(name = "HIT")
+    val HIT: HIT_DTO?
 )

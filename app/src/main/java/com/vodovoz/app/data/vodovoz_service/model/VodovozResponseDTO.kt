@@ -10,12 +10,3 @@ data class VodovozResponseDTO<T>(
     @Json(name = "data")
     val data: T?
 )
-
-data class VodovozResponseV2DTO<T>(
-    @Json(name = "status")
-    val status: String?,
-    @Json(name = "message")
-    val message: String?,
-    @Json(name = "DATA")
-    val data: T?
-)

@@ -1,8 +1,11 @@
 package com.vodovoz.app.data.vodovoz_service.mappers
 
 import com.vodovoz.app.data.vodovoz_service.model.CATEGORY_WITH_PRODUCTS_DTO
+import com.vodovoz.app.data.vodovoz_service.model.KNOPKA_DTO
+import com.vodovoz.app.data.vodovoz_service.model.KNOPKA_INT_DTO
 import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_VERH_NIH
 import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
+import com.vodovoz.app.domain.general.model.ButtonModel
 import com.vodovoz.app.domain.general.model.CategoryWithProductsModel
 import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
@@ -22,10 +25,24 @@ fun CATEGORY_WITH_PRODUCTS_DTO.mapToDomain(): CategoryWithProductsModel? {
     )
 }
 
-fun RAZDEL_VERH_NIH.mapToDomain(): SectionModel {
+fun RAZDEL_VERH_NIH.mapToDomain(): SectionModel<CategoryWithProductsModel> {
     return SectionModel(
-        name = NAMERAZDEL,
-        showAllId = KNOPKA?.ID,
-        categoryWithProductsList = DATA?.mapNotNull { it.mapToDomain() } ?: emptyList()
+        title = NAMERAZDEL ?: "",
+        button = KNOPKA?.mapToDomain(),
+        items = DATA?.mapNotNull { it.mapToDomain() } ?: emptyList()
+    )
+}
+
+fun KNOPKA_DTO.mapToDomain(): ButtonModel? {
+    return ButtonModel(
+        name = NAME ?: "",
+        id = ID ?: return null
+    )
+}
+
+fun KNOPKA_INT_DTO.mapToDomain(): ButtonModel? {
+    return ButtonModel(
+        name = NAME ?: "",
+        id = ID?.toString() ?: return null
     )
 }

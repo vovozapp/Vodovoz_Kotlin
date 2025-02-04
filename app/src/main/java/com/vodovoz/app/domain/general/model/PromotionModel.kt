@@ -37,9 +37,9 @@ data class PromotionDetailsModel(
     val picture: String,
     val name: String,
     val description: String,
-    val timeLeft: String,
-    val timeLeftBackground: String,
+    val endDate: ZonedDateTime,
     val advertising: AboutAdvertisingModel,
+    val label: LabelModel?,
 )
 
 data class LabelModel(

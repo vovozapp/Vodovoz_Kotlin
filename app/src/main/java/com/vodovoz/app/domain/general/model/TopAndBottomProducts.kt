@@ -1,16 +1,20 @@
 package com.vodovoz.app.domain.general.model
 
-import com.vodovoz.app.feature.home.model.CategoryWithProductsUi
-
 data class TopAndBottomSectionsModel(
-    val topSection: SectionModel,
-    val bottomSection: SectionModel,
+    val topSection: SectionModel<CategoryWithProductsModel>,
+    val bottomSection: SectionModel<CategoryWithProductsModel>,
 )
 
-data class SectionModel(
-    val name: String?,
-    val showAllId: Int?,
-    val categoryWithProductsList: List<CategoryWithProductsModel>
+
+data class SectionModel<E>(
+    val title: String,
+    val items: List<E>,
+    val button: ButtonModel?,
+)
+
+data class ButtonModel(
+    val name: String,
+    val id: String,
 )
 
 

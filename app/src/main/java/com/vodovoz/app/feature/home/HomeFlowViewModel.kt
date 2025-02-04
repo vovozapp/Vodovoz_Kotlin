@@ -14,14 +14,14 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.design_system.model.PromotionUi
+import com.vodovoz.app.design_system.model.mapToUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.home.model.CategoryWithProductsUi
 import com.vodovoz.app.feature.home.model.OrderWithMenuUi
 import com.vodovoz.app.feature.home.model.PopularCategoryUi
 import com.vodovoz.app.feature.home.model.ProductUi
-import com.vodovoz.app.design_system.model.PromotionUi
 import com.vodovoz.app.feature.home.model.SectionUi
-import com.vodovoz.app.design_system.model.mapToUi
 import com.vodovoz.app.feature.home.model.mapToUi
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
 import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfo
@@ -122,11 +122,14 @@ class HomeFlowViewModel @Inject constructor(
 
             superTopResult.onSuccess { topAndBottomSectionsModel ->
                 uiStateListener.updateData { s ->
-                    val bestOffersSection = topAndBottomSectionsModel.topSection.mapToUi()
+                    val bestOffersSection = topAndBottomSectionsModel.topSection.mapToUi(
+                        mapItems = { items -> items.map { it.mapToUi() } }
+                    )
                     s.copy(
                         bestOffersSection = bestOffersSection,
-                        bottomSection = topAndBottomSectionsModel.bottomSection.mapToUi(),
-                        currentCategoryWithProducts = bestOffersSection.categoryWithProductsList.firstOrNull() ?: CategoryWithProductsUi.Empty
+                        bottomSection = topAndBottomSectionsModel.bottomSection.mapToUi({ items -> items.map { it -> it.mapToUi() } }),
+                        currentCategoryWithProducts = bestOffersSection.items.firstOrNull()
+                            ?: CategoryWithProductsUi.Empty
                     )
                 }
             }
@@ -984,9 +987,9 @@ class HomeFlowViewModel @Inject constructor(
         val popularSections: List<PopularCategoryUi> = emptyList(),
         val newProducts: List<ProductUi> = emptyList(),
         val hurryUpBuyProducts: List<ProductUi> = emptyList(),
-        val bestOffersSection: SectionUi = SectionUi.Empty,
+        val bestOffersSection: SectionUi<CategoryWithProductsUi> = SectionUi.empty(),
         val currentCategoryWithProducts: CategoryWithProductsUi = CategoryWithProductsUi.Empty,
-        val bottomSection: SectionUi = SectionUi.Empty,
+        val bottomSection: SectionUi<CategoryWithProductsUi> = SectionUi.empty(),
         val news: PopupNewsUI? = null,
         val hasShow: Boolean = false,
         val isSecondLoad: Boolean = false,

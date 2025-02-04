@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
 import com.vodovoz.app.design_system.composables.card.GridProductCard
+import com.vodovoz.app.design_system.composables.chip.ColorVodovozChip
 import com.vodovoz.app.design_system.composables.chip.TimeLeftChip
 import com.vodovoz.app.design_system.model.PromotionDetailsUi
 import com.vodovoz.app.feature.home.model.ProductUi
@@ -37,7 +39,6 @@ fun PromotionDetailsBody(
 ) {
 
     val lazyGridState = rememberLazyGridState()
-
 
     LazyVerticalGrid(
         modifier = modifier.fillMaxSize(),
@@ -57,10 +58,18 @@ fun PromotionDetailsBody(
                         .clip(MaterialTheme.shapes.large),
                     contentScale = ContentScale.Crop
                 )
-                Row(modifier = Modifier.padding(top = 8.dp)) {
+                Row(
+                    modifier = Modifier.padding(top = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    val label = promotionDetails.label
+                    if (label != null) {
+                        ColorVodovozChip(color = label.color, text = label.name)
+                    }
+
                     TimeLeftChip(
                         text = promotionDetails.timeLeft,
-                        containerColor = promotionDetails.timeLeftBackground
                     )
                 }
                 Text(
