@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.top_bar.VodovozTopBar
@@ -24,12 +25,16 @@ import com.vodovoz.app.feature.all.promotions.composables.AllPromotionsBody
 fun AllPromotionsScreen(
     viewModel: AllPromotionsFlowViewModel,
     viewState: AllPromotionsFlowViewModel.AllPromotionsState,
+    navController: NavController,
 ) {
-    val lazyPagingPromotions = viewState.promotions.collectAsLazyPagingItems()
+    val lazyPagingPromotions = viewState.pagedPromotions.collectAsLazyPagingItems()
     val lazyListState = rememberLazyListState()
 
     Column(modifier = Modifier.fillMaxSize()) {
-        VodovozTopBar(onBack = { /*TODO*/ }, title = stringResource(id = R.string.promotions))
+        VodovozTopBar(
+            onBack = { viewModel.navigateBack() },
+            title = stringResource(id = R.string.promotions)
+        )
 
 
         AllPromotionsBody(
@@ -42,6 +47,9 @@ fun AllPromotionsScreen(
             },
             onAdvertisingClick = { promotionUi ->
                 viewModel.showAdvertisingBottomSheet(promotionUi)
+            },
+            onPromotionClick = { promotion ->
+                viewModel.navigateToPromotionDetails(promotion)
             }
         )
     }
@@ -62,6 +70,18 @@ fun AllPromotionsScreen(
                 when (event) {
                     AllPromotionsFlowViewModel.AllPromotionsEvent.ScrollTop -> {
                         lazyListState.animateScrollToItem(0)
+                    }
+
+                    is AllPromotionsFlowViewModel.AllPromotionsEvent.GoToProductDetails -> {
+                        navController.navigate(
+                            AllPromotionsFragmentDirections.actionToPromotionDetailFragment(
+                                event.promotionId
+                            )
+                        )
+                    }
+
+                    AllPromotionsFlowViewModel.AllPromotionsEvent.GoBack -> {
+                        navController.popBackStack()
                     }
                 }
             }

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -18,6 +17,7 @@ import com.vodovoz.app.design_system.composables.tab_row.VodovozTabRow
 import com.vodovoz.app.design_system.model.PromotionSectionUi
 import com.vodovoz.app.design_system.model.PromotionUi
 import com.vodovoz.app.util.extensions.indexOfOrNull
+import kotlin.random.Random
 
 @Suppress("NonSkippableComposable")
 @Composable
@@ -28,7 +28,8 @@ fun AllPromotionsBody(
     lazyPagingPromotions: LazyPagingItems<PromotionUi>,
     lazyListState: LazyListState,
     onSectionSelect: (PromotionSectionUi) -> Unit,
-    onAdvertisingClick: (PromotionUi) -> Unit
+    onAdvertisingClick: (PromotionUi) -> Unit,
+    onPromotionClick: (PromotionUi) -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -53,11 +54,7 @@ fun AllPromotionsBody(
             }
         }
 
-        val promotionUiList = lazyPagingPromotions.itemSnapshotList.mapNotNull { promotionUi ->
-            if (promotionUi?.sectionId != currentSection.id && currentSection.id != 0) {
-                return@mapNotNull null
-            } else promotionUi
-        }
+
 
 
         LazyColumn(
@@ -66,8 +63,22 @@ fun AllPromotionsBody(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             state = lazyListState
         ) {
-            items(items = promotionUiList, key = { it.id }) { promotion ->
-                PromotionCard(promotion = promotion, onClick = { }, onAdvertisingClick = onAdvertisingClick)
+
+            items(
+                count = lazyPagingPromotions.itemCount,
+                key = { i ->
+                    lazyPagingPromotions[i]?.id ?: Random.nextInt()
+                }
+            ) { i ->
+                val promotion = lazyPagingPromotions[i]
+                if (promotion != null) {
+                    PromotionCard(
+                        modifier = Modifier.animateItem(),
+                        promotion = promotion,
+                        onClick = onPromotionClick,
+                        onAdvertisingClick = onAdvertisingClick
+                    )
+                }
             }
         }
     }

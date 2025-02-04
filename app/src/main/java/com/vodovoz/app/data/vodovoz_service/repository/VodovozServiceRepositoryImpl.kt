@@ -13,6 +13,7 @@ import com.vodovoz.app.domain.general.VodovozPagingSource
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.ProductModel
+import com.vodovoz.app.domain.general.model.ProductsTitle
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionsWithSectionsModel
@@ -49,11 +50,15 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         }
     )
 
-    override fun getPromotionDetails(promotionId: Int): Flow<Result<PromotionDetailsModel>> =
+    override fun getPromotionDetails(promotionId: Int): Flow<Result<Pair<ProductsTitle, PromotionDetailsModel>>> =
         executeRequest(
-            request = { vodovozService.getPromotionDetails(promotionId) },
-            mapToResult = { promotionDetailsDTOVodovozResponseDTO ->
-                promotionDetailsDTOVodovozResponseDTO.data?.AKCIYA?.mapToDomain()!!
+            request = {
+                vodovozService.getPromotionDetails(promotionId)
+            },
+            mapToResult = { response ->
+                ProductsTitle(
+                    response.data?.TOVAR?.NAMETOVAR ?: ""
+                ) to response.data?.AKCIYA?.mapToDomain()!!
             }
         )
 
@@ -64,7 +69,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         limit: Int,
     ): Flow<PagingData<ProductModel>> {
         return Pager(
-            config = PagingConfig(limit),
+            config = PagingConfig(limit, initialLoadSize = limit),
             pagingSourceFactory = {
                 VodovozPagingSource(
                     request = { page, limit ->
@@ -100,7 +105,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
 
     override fun getPromotionsPaged(page: Int, limit: Int): Flow<PagingData<PromotionModel>> {
         return Pager(
-            config = PagingConfig(limit),
+            config = PagingConfig(limit, initialLoadSize = limit),
             pagingSourceFactory = {
                 VodovozPagingSource(
                     request = { page, limit ->

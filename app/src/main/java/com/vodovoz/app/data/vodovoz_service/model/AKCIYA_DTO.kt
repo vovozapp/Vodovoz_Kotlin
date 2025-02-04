@@ -3,8 +3,10 @@ package com.vodovoz.app.data.vodovoz_service.model
 
 import com.squareup.moshi.Json
 import androidx.annotation.Keep
+import com.squareup.moshi.JsonClass
 
 @Keep
+@JsonClass(generateAdapter = true)
 data class AKCIYA_DTO(
     @Json(name = "DATAOUT")
     val DATAOUT: DATAOUT_DTO?,

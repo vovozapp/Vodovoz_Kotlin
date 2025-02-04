@@ -8,6 +8,7 @@ import com.vodovoz.app.data.vodovoz_service.model.SliderDTO
 import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.TitleAndProductsDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
+import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseV2DTO
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -28,7 +29,7 @@ interface VodovozService {
         @Query("id") promotionId: Int,
         @Query("nav") page: Int = 1,
         @Query("limit") limit: Int = 5,
-    ): Response<VodovozResponseDTO<PromotionDetailsDTO>>
+    ): Response<VodovozResponseV2DTO<PromotionDetailsDTO>>
 
 
     @GET("glavnaya/slayders/index.php?action=slayder")

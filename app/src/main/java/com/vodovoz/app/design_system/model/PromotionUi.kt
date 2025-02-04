@@ -1,14 +1,54 @@
 package com.vodovoz.app.design_system.model
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.Color
 import com.vodovoz.app.domain.general.model.AboutAdvertisingModel
+import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionSectionModel
 import com.vodovoz.app.feature.home.model.LabelWithColorUi
 import com.vodovoz.app.feature.home.model.mapToUi
+import com.vodovoz.app.util.fromHexOrTransparent
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.Locale
+
+
+@Immutable
+data class PromotionDetailsUi(
+    val id: Int,
+    val picture: String,
+    val name: String,
+    val description: String,
+    val timeLeft: String,
+    val timeLeftBackground: Color,
+    val advertising: AboutAdvertisingUi,
+) {
+    companion object {
+        val Empty = PromotionDetailsUi(
+            id = -1,
+            picture = "",
+            name = "",
+            description = "",
+            timeLeft = "",
+            timeLeftBackground = Color.Transparent,
+            advertising = AboutAdvertisingUi.Empty,
+        )
+    }
+}
+
+fun PromotionDetailsModel.mapToUi(): PromotionDetailsUi {
+    return PromotionDetailsUi(
+        id = this.id,
+        picture = this.picture,
+        name = this.name,
+        description = this.description,
+        timeLeft = this.timeLeft,
+        timeLeftBackground = Color.fromHexOrTransparent(timeLeftBackground),
+        advertising = this.advertising.mapToUi()
+    )
+}
+
 
 @Immutable
 data class PromotionUi(
@@ -30,7 +70,12 @@ data class AboutAdvertisingUi(
     val aboutCompany: String,
 ) {
     companion object {
-        val Empty = AboutAdvertisingUi("", "", "", "")
+        val Empty = AboutAdvertisingUi(
+            name = "",
+            title = "",
+            aboutCompanyTitle = "",
+            aboutCompany = ""
+        )
     }
 
 }

@@ -26,9 +26,10 @@ fun AKCIYA_DTO.mapToDomain(): PromotionDetailsModel? {
         id = ID ?: return null,
         picture = DETAIL_PICTURE?.toVodovozImage() ?: return null,
         name = NAME ?: return null,
-        description = DETAIL_TEXT ?: return null,
+        description = Html.fromHtml(DETAIL_TEXT ?: return null).toString(),
         timeLeft = DATAOUT?.TEXT ?: return null,
-        advertising = OREKLAME?.mapToDomain()
+        advertising = OREKLAME?.mapToDomain() ?: return null,
+        timeLeftBackground = DATAOUT.BACKGROUND ?: ""
     )
 }
 

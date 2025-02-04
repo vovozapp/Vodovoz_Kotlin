@@ -5,6 +5,7 @@ import com.vodovoz.app.data.model.common.BannerEntity
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.ProductModel
+import com.vodovoz.app.domain.general.model.ProductsTitle
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionsWithSectionsModel
@@ -19,7 +20,7 @@ interface VodovozServiceRepository {
 
     fun getPromotionDetails(
         promotionId: Int,
-    ): Flow<Result<PromotionDetailsModel>>
+    ): Flow<Result<Pair<ProductsTitle, PromotionDetailsModel>>>
 
     fun getPromotionDetailsProductsPaged(
         promotionId: Int,

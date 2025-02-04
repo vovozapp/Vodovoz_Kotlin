@@ -1,6 +1,5 @@
 package com.vodovoz.app.domain.general.model
 
-import java.time.LocalDateTime
 import java.time.ZonedDateTime
 
 
@@ -28,13 +27,19 @@ data class PromotionModel(
     val advertising: AboutAdvertisingModel?,
 )
 
+@JvmInline
+value class ProductsTitle(
+    val title: String,
+)
+
 data class PromotionDetailsModel(
     val id: Int,
     val picture: String,
     val name: String,
     val description: String,
     val timeLeft: String,
-    val advertising: AboutAdvertisingModel?,
+    val timeLeftBackground: String,
+    val advertising: AboutAdvertisingModel,
 )
 
 data class LabelModel(

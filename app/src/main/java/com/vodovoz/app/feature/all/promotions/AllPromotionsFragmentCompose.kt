@@ -39,13 +39,18 @@ class AllPromotionsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        val navController = findNavController()
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
             setContent {
                 VodovozTheme {
                     val viewState by viewModel.observeUiState().collectAsStateWithLifecycle()
 
-                    AllPromotionsScreen(viewModel = viewModel, viewState = viewState.data)
+                    AllPromotionsScreen(
+                        viewModel = viewModel,
+                        viewState = viewState.data,
+                        navController = navController
+                    )
                 }
             }
         }

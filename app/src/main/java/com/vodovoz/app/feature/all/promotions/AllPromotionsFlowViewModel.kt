@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.all.promotions
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.filter
 import androidx.paging.map
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.ErrorState
@@ -27,7 +28,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -57,16 +57,16 @@ class AllPromotionsFlowViewModel @Inject constructor(
             promotionsWithSectionsModelResult.onSuccess { promotionsWithSectionsModel ->
                 uiStateListener.updateData { s ->
                     val sections = promotionsWithSectionsModel.sections.mapToUi()
+                    val promotions = vodovozServiceRepository.getPromotionsPaged()
+                        .map { pagingData ->
+                            pagingData.map { promotionModel -> promotionModel.mapToUi() }
+                        }
+
                     s.copy(
                         sections = sections,
                         currentSection = sections.firstOrNull() ?: PromotionSectionUi.Empty,
-                        promotions = vodovozServiceRepository.getPromotionsPaged()
-                            .distinctUntilChanged()
-                            .map { pagingData ->
-                                pagingData.map {
-                                    it.mapToUi()
-                                }
-                            }
+                        pagedPromotions = promotions,
+                        initialPagedPromotions = promotions
                     )
                 }
             }
@@ -165,10 +165,18 @@ class AllPromotionsFlowViewModel @Inject constructor(
     }
 
     fun selectSection(section: PromotionSectionUi) = viewModelScope.launch {
+
+        if (section == uiStateListener.value.data.currentSection) return@launch
+
         eventListener.emit(AllPromotionsEvent.ScrollTop)
         uiStateListener.updateData { s ->
             s.copy(
-                currentSection = section
+                currentSection = section,
+                pagedPromotions = s.initialPagedPromotions.map { pagingData ->
+                    pagingData.filter {
+                        it.sectionId == section.id || section.id == 0
+                    }
+                }
             )
         }
     }
@@ -192,6 +200,14 @@ class AllPromotionsFlowViewModel @Inject constructor(
         }
     }
 
+    fun navigateToPromotionDetails(promotion: PromotionUi) = viewModelScope.launch {
+        eventListener.emit(AllPromotionsEvent.GoToProductDetails(promotionId = promotion.id.toLong()))
+    }
+
+    fun navigateBack() = viewModelScope.launch {
+        eventListener.emit(AllPromotionsEvent.GoBack)
+    }
+
     data class AllPromotionsState(
         val promotionFilterUIList: List<PromotionFilterUI> = emptyList(),
         val allPromotionBundleUI: AllPromotionBundleUI? = null,
@@ -203,14 +219,21 @@ class AllPromotionsFlowViewModel @Inject constructor(
         val scrollToTop: Boolean = false,
         val sections: List<PromotionSectionUi> = emptyList(),
         val currentSection: PromotionSectionUi = PromotionSectionUi.Empty,
-        val promotions: Flow<PagingData<PromotionUi>> = emptyFlow(),
+        val pagedPromotions: Flow<PagingData<PromotionUi>> = emptyFlow(),
+        val initialPagedPromotions: Flow<PagingData<PromotionUi>> = emptyFlow(),
         val showAdvertisingBottomSheet: Boolean = false,
-        val currentAdvertising: AboutAdvertisingUi = AboutAdvertisingUi.Empty
+        val currentAdvertising: AboutAdvertisingUi = AboutAdvertisingUi.Empty,
     ) : State
 
     sealed class AllPromotionsEvent() : Event {
 
         data object ScrollTop : AllPromotionsEvent()
+
+        data class GoToProductDetails(
+            val promotionId: Long,
+        ) : AllPromotionsEvent()
+
+        data object GoBack : AllPromotionsEvent()
 
     }
 }
