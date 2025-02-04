@@ -21,10 +21,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.domain.general.model.ButtonInfo
+import com.vodovoz.app.feature.home.model.ButtonUi
 
 @Composable
-fun HomeTitleAndAll(modifier: Modifier = Modifier, title: String, onShowAllClick: () -> Unit) {
-    Row(modifier = modifier.padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically) {
+fun TitleAndButton(
+    modifier: Modifier = Modifier,
+    title: String,
+    buttonModel: ButtonUi? = null,
+    onShowAllClick: (ButtonInfo) -> Unit = {},
+) {
+    Row(
+        modifier = modifier.padding(horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Text(
             modifier = Modifier.weight(1f),
             text = title,
@@ -32,27 +42,29 @@ fun HomeTitleAndAll(modifier: Modifier = Modifier, title: String, onShowAllClick
             style = MaterialTheme.typography.headlineSmall
         )
 
-        Row(
-            modifier = Modifier
-                .clip(MaterialTheme.shapes.small)
-                .clickable { onShowAllClick() }
-                .padding(start = 10.dp)
-        ) {
-
-            Text(
-                text = stringResource(id = R.string.all),
-                color = MaterialTheme.colorScheme.primary,
-                style = MaterialTheme.typography.bodyMedium
-            )
-
-            Icon(
-                painter = painterResource(id = R.drawable.ic_arrow_right),
-                contentDescription = null,
+        buttonModel?.let {
+            Row(
                 modifier = Modifier
-                    .padding(start = 4.dp)
-                    .size(24.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
+                    .clip(MaterialTheme.shapes.small)
+                    .clickable { onShowAllClick(buttonModel.action) }
+                    .padding(start = 10.dp)
+            ) {
+
+                Text(
+                    text = stringResource(id = R.string.all),
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_arrow_right),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(start = 4.dp)
+                        .size(24.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     }
 }
@@ -68,7 +80,7 @@ private fun HomeTitleAndAllPreview() {
                 .background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
         ) {
-            HomeTitleAndAll(title = "Популярные разделы") {
+            TitleAndButton(title = "Популярные разделы") {
 
             }
         }

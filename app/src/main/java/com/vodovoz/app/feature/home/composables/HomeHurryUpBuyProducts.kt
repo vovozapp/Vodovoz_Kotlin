@@ -21,9 +21,9 @@ fun HomeHurryUpBuyProducts(
     onProductLike: (ProductUi) -> Unit,
 ) {
     Column(modifier = modifier) {
-        HomeTitleAndAll(
+        TitleAndButton(
             title = stringResource(R.string.hurry_up_buy),
-            onShowAllClick = onShowAllClick
+            onShowAllClick = { onShowAllClick() }
         )
         HomeRow(
             modifier = Modifier.padding(top = 16.dp)

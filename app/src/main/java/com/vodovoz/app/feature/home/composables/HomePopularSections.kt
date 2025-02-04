@@ -19,26 +19,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.vodovoz.app.R
 import com.vodovoz.app.feature.home.model.PopularCategoryUi
+import com.vodovoz.app.feature.home.model.SectionUi
 
-@Suppress("NonSkippableComposable")
 @Composable
 fun HomePopularSections(
     modifier: Modifier = Modifier,
-    onShowAllClick: () -> Unit,
-    popularSections: List<PopularCategoryUi>,
-    onPopularSectionClick: (PopularCategoryUi) -> Unit,
+    sectionPopularCategories: SectionUi<PopularCategoryUi>,
+    onPopularCategoryClick: (PopularCategoryUi) -> Unit,
 ) {
     Column(modifier = modifier) {
-        HomeTitleAndAll(
-            title = stringResource(R.string.popular_sections),
-            onShowAllClick = onShowAllClick
+        Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = sectionPopularCategories.title,
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.headlineSmall
         )
         Row(
             modifier = Modifier
@@ -47,8 +46,8 @@ fun HomePopularSections(
                 .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            popularSections.forEach { section ->
-                HomeSectionItem(section = section, onClick = onPopularSectionClick)
+            sectionPopularCategories.items.forEach { section ->
+                HomeSectionItem(section = section, onClick = onPopularCategoryClick)
             }
         }
     }
@@ -64,7 +63,7 @@ fun HomeSectionItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .width(75.dp)
-            .clip(MaterialTheme.shapes.large)
+            .clip(MaterialTheme.shapes.small)
             .clickable { onClick(section) }
     ) {
         Box(
@@ -89,7 +88,9 @@ fun HomeSectionItem(
         val fontSize = (labelSmall.fontSize.value - 1).sp
 
         Text(
-            modifier = Modifier.padding(top = 8.dp).padding(horizontal = 1.dp),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .padding(horizontal = 1.dp),
             text = section.name,
             color = MaterialTheme.colorScheme.onBackground,
             maxLines = 1,

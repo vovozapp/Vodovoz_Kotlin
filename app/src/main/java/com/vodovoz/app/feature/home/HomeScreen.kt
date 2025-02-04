@@ -36,7 +36,7 @@ fun HomeScreen(
             banners = viewState.banners,
             promotions = viewState.promotions,
             orderWithMenu = viewState.orderWithMenu,
-            popularSections = viewState.popularSections,
+            sectionPopularCategories = viewState.popularSections,
             newProducts = viewState.newProducts,
             hurryUpBuyProducts = viewState.hurryUpBuyProducts,
             bestOffersSection = viewState.bestOffersSection,

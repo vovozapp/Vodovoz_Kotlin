@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.VodovozTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchTopBar(
     modifier: Modifier = Modifier,

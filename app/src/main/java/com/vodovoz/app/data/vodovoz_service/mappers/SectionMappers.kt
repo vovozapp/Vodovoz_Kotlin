@@ -5,6 +5,7 @@ import com.vodovoz.app.data.vodovoz_service.model.KNOPKA_DTO
 import com.vodovoz.app.data.vodovoz_service.model.KNOPKA_INT_DTO
 import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_VERH_NIH
 import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
+import com.vodovoz.app.domain.general.model.ButtonInfo
 import com.vodovoz.app.domain.general.model.ButtonModel
 import com.vodovoz.app.domain.general.model.CategoryWithProductsModel
 import com.vodovoz.app.domain.general.model.SectionModel
@@ -36,13 +37,22 @@ fun RAZDEL_VERH_NIH.mapToDomain(): SectionModel<CategoryWithProductsModel> {
 fun KNOPKA_DTO.mapToDomain(): ButtonModel? {
     return ButtonModel(
         name = NAME ?: "",
-        id = ID ?: return null
+        action = ID?.mapToButtonAction() ?: return null
     )
 }
 
 fun KNOPKA_INT_DTO.mapToDomain(): ButtonModel? {
     return ButtonModel(
         name = NAME ?: "",
-        id = ID?.toString() ?: return null
+        action = ButtonInfo.Id(ID ?: return null)
     )
+}
+
+private fun String.mapToButtonAction(): ButtonInfo {
+    val id = toIntOrNull()
+    return if (id != null) {
+        ButtonInfo.Id(id)
+    } else {
+        ButtonInfo.Action(mapToDataAll())
+    }
 }

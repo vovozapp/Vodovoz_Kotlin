@@ -18,6 +18,7 @@ import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionsWithSectionsModel
 import com.vodovoz.app.domain.general.model.RequestException
+import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.util.extensions.catchResult
@@ -135,7 +136,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     )
 
 
-    override fun getPopularSections(): Flow<Result<List<PopularCategoryModel>>> = executeRequest(
+    override fun getPopularCategories(): Flow<Result<SectionModel<PopularCategoryModel>>> = executeRequest(
         request = {
             vodovozService.getPopularSections()
         },

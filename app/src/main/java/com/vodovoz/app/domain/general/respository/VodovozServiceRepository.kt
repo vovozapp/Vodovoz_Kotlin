@@ -9,6 +9,7 @@ import com.vodovoz.app.domain.general.model.ProductsTitle
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionsWithSectionsModel
+import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import kotlinx.coroutines.flow.Flow
 
@@ -42,7 +43,7 @@ interface VodovozServiceRepository {
         userId: Long? = null,
     ): Flow<Result<OrderWithMenuModel>>
 
-    fun getPopularSections(): Flow<Result<List<PopularCategoryModel>>>
+    fun getPopularCategories(): Flow<Result<SectionModel<PopularCategoryModel>>>
 
     fun getNewProducts(): Flow<Result<List<ProductModel>>>
 

@@ -10,43 +10,44 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.card.GridProductCard
 import com.vodovoz.app.design_system.composables.chip.VodovozChip
 import com.vodovoz.app.design_system.composables.tab_row.VodovozTabRow
-import com.vodovoz.app.feature.home.model.ProductUi
 import com.vodovoz.app.feature.home.model.CategoryWithProductsUi
+import com.vodovoz.app.feature.home.model.ProductUi
+import com.vodovoz.app.feature.home.model.SectionUi
 import com.vodovoz.app.util.extensions.indexOfOrNull
 
-@Suppress("NonSkippableComposable")
 @Composable
 fun HomeBestOffers(
     modifier: Modifier = Modifier,
     onShowAllClick: () -> Unit,
     currentCategoryWithProducts: CategoryWithProductsUi,
-    categoryWithProductsList: List<CategoryWithProductsUi>,
+    sectionCategoriesWithProducts: SectionUi<CategoryWithProductsUi>,
     onCategorySelect: (CategoryWithProductsUi) -> Unit,
     onProductClick: (ProductUi) -> Unit,
     onProductLike: (ProductUi) -> Unit,
 ) {
-    Column(modifier = modifier) {
-        HomeTitleAndAll(
-            title = stringResource(R.string.best_offers),
-            onShowAllClick = onShowAllClick
-        )
 
+    Column(modifier = modifier) {
+        TitleAndButton(
+            title = sectionCategoriesWithProducts.title,
+            buttonModel = sectionCategoriesWithProducts.button,
+            onShowAllClick = { onShowAllClick() }
+        )
 
         VodovozTabRow(
             modifier = Modifier
                 .padding(top = 16.dp)
                 .fillMaxWidth(),
-            selectedTabIndex = categoryWithProductsList.indexOfOrNull(currentCategoryWithProducts) ?: 0,
+            selectedTabIndex = sectionCategoriesWithProducts.items.indexOfOrNull(
+                currentCategoryWithProducts
+            ) ?: 0,
             edgePadding = 16.dp,
             spacing = 8.dp
         ) {
-            categoryWithProductsList.forEach { sectionWithProducts ->
+            sectionCategoriesWithProducts.items.forEach { sectionWithProducts ->
                 VodovozChip(
                     text = sectionWithProducts.name,
                     selected = currentCategoryWithProducts == sectionWithProducts,

@@ -14,7 +14,7 @@ data class SectionModel<E>(
 
 data class ButtonModel(
     val name: String,
-    val id: String,
+    val action: ButtonInfo,
 )
 
 

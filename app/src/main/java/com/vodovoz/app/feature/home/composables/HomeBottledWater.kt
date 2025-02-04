@@ -21,7 +21,7 @@ fun HomeBottledWater(
     onShowAllClick: () -> Unit,
 ) {
     Column(modifier = modifier) {
-        HomeTitleAndAll(title = stringResource(R.string.bottled_water), onShowAllClick = onShowAllClick)
+        TitleAndButton(title = stringResource(R.string.bottled_water), onShowAllClick = { onShowAllClick() })
 
         HomeRow(modifier = Modifier.padding(top = 16.dp)) { itemWidth ->
             products.forEach { product ->

@@ -21,9 +21,9 @@ fun HomeViewedProducts(
     onShowAllClick: () -> Unit,
 ) {
     Column(modifier = modifier) {
-        HomeTitleAndAll(
+        TitleAndButton(
             title = stringResource(R.string.viewed_products),
-            onShowAllClick = onShowAllClick
+            onShowAllClick = { onShowAllClick() }
         )
 
         HomeRow(modifier = Modifier.padding(top = 16.dp)) { itemWidth ->

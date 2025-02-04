@@ -23,9 +23,9 @@ fun HomePromotions(
     }
 
     Column(modifier = modifier) {
-        HomeTitleAndAll(
+        TitleAndButton(
             title = stringResource(R.string.promotions),
-            onShowAllClick = onShowAllClick
+            onShowAllClick = { onShowAllClick() }
         )
 
         AuthScrollImagePager(

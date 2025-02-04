@@ -28,7 +28,7 @@ fun HomeBody(
     modifier: Modifier = Modifier,
     banners: List<BannerUI>,
     promotions: List<PromotionUi>,
-    popularSections: List<PopularCategoryUi>,
+    sectionPopularCategories: SectionUi<PopularCategoryUi>,
     newProducts: List<ProductUi>,
     hurryUpBuyProducts: List<ProductUi>,
     orderWithMenu: OrderWithMenuUi,
@@ -97,17 +97,11 @@ fun HomeBody(
             modifier = Modifier.padding(top = 4.dp)
         )
 
-
-        //todo - put actual data
         HomePopularSections(
             modifier = Modifier.padding(top = 4.dp),
-            onShowAllClick = {
-
-            },
-            onPopularSectionClick = onPopularSectionClick,
-            popularSections = popularSections
+            onPopularCategoryClick = onPopularSectionClick,
+            sectionPopularCategories = sectionPopularCategories
         )
-
 
         //todo - put actual data
         HomeBestOffers(
@@ -116,7 +110,7 @@ fun HomeBody(
 
             },
             currentCategoryWithProducts = currentCategoryWithProducts,
-            categoryWithProductsList = bestOffersSection.items,
+            sectionCategoriesWithProducts = bestOffersSection,
             onCategorySelect = onCategorySelect,
             onProductClick = {},
             onProductLike = {}
