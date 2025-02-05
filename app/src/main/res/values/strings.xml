@@ -237,5 +237,8 @@
     <string name="viewed_products">Просмотренные товары</string>
     <string name="advertising">Реклама</string>
     <string name="promotion_is_over">Акция завершена</string>
+    <string name="connection_error">Ошибка соединения</string>
+    <string name="check_intenet_connection">Проверьте соединение с интернетом</string>
+    <string name="try_again">Попробовать снова</string>
 
 </resources>

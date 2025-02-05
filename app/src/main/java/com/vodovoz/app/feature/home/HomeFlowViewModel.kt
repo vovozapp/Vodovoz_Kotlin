@@ -73,6 +73,11 @@ class HomeFlowViewModel @Inject constructor(
 
 
     private fun loadData() {
+        uiStateListener.updateData { s ->
+            s.copy(
+                uiState = HomeUiState.Loading
+            )
+        }
         combine(
             combineIntoTriple(
                 vodovozServiceRepository.getPromotions(),
@@ -129,22 +134,28 @@ class HomeFlowViewModel @Inject constructor(
                         ),
                         orderWithMenu = orderMenu.toUi(),
                         banners = banners.mapToUi(),
-                        stories = stories.mapToUi()
+                        stories = stories.mapToUi(),
+                        uiState = HomeUiState.Success
                     )
 
+                }
+            } else {
+                uiStateListener.updateData { s ->
+                    s.copy(
+                        uiState = HomeUiState.NetworkError
+                    )
                 }
             }
 
             if (popupWindowInfo?.specialPromotion != null) {
-
                 uiStateListener.updateData { s ->
                     s.copy(
                         showBottomSheet = true,
                         specialPromotionUi = popupWindowInfo.specialPromotion.toDomain()
                     )
                 }
-
             }
+
 
             //todo - handle AppUpdate
 
@@ -213,6 +224,10 @@ class HomeFlowViewModel @Inject constructor(
     }
 
     fun refresh() {
+        if (state.data.uiState !is HomeUiState.Loading) {
+            loadData()
+        }
+
         if (!state.loadingPage) {
             uiStateListener.value =
                 state.copy(
@@ -1001,6 +1016,12 @@ class HomeFlowViewModel @Inject constructor(
         data object GoToCart : HomeEvents()
     }
 
+    sealed class HomeUiState {
+        data object Success : HomeUiState()
+        data object Loading : HomeUiState()
+        data object NetworkError : HomeUiState()
+    }
+
     data class HomeState(
         val positionItems: List<PositionItem> = emptyList(),
         val items: List<Item> = emptyList(),
@@ -1019,6 +1040,7 @@ class HomeFlowViewModel @Inject constructor(
         val currentCategoryWithProducts: CategoryWithProductsUi = CategoryWithProductsUi.Empty,
         val sectionBottom: SectionUi<CategoryWithProductsUi> = SectionUi.empty(),
         val specialPromotionUi: SpecialPromotionUi = SpecialPromotionUi.Empty,
+        val uiState: HomeUiState = HomeUiState.Loading,
         val showBottomSheet: Boolean = false,
         val searchField: String = "",
     ) : State {

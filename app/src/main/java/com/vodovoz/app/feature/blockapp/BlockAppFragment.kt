@@ -67,7 +67,7 @@ class BlockAppFragment : BaseFragment() {
                             }
 
                             val time = state.data?.time
-                            if (time == null || time.isEmpty()) {
+                            if (time.isNullOrEmpty()) {
                                 binding.linearTimeData.isVisible = false
                             } else {
                                 binding.linearTimeData.isVisible = true

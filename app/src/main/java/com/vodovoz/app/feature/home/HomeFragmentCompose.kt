@@ -7,7 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
@@ -30,6 +34,7 @@ import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.home.popup.NewsClickListener
 import com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment
@@ -102,11 +107,28 @@ class HomeFragment : Fragment() {
                 VodovozTheme {
                     val viewState by flowViewModel.observeUiState().collectAsStateWithLifecycle()
 
-                    HomeScreen(
-                        viewState = viewState.data,
-                        viewModel = flowViewModel,
-                        navController = findNavController()
-                    )
+                    when (viewState.data.uiState) {
+                        HomeFlowViewModel.HomeUiState.Loading -> {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .wrapContentSize()
+                            )
+                        }
+
+                        HomeFlowViewModel.HomeUiState.NetworkError -> {
+                            NetworkErrorPlaceholder(onTryAgainClick = { flowViewModel.refresh() })
+                        }
+
+                        HomeFlowViewModel.HomeUiState.Success -> {
+                            HomeScreen(
+                                viewState = viewState.data,
+                                viewModel = flowViewModel,
+                                navController = findNavController()
+                            )
+                        }
+                    }
+
                 }
             }
         }

@@ -59,7 +59,7 @@ class SplashFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             firstLoad()
         }
     }
@@ -81,7 +81,8 @@ class SplashFragment : BaseFragment() {
                     }
 
                     is ReloginManager.ReloginState.ReloginError -> {
-                        showError(ErrorState.NetworkError())
+                        //todo - handle relogin
+                        //showError(ErrorState.NetworkError())
                     }
 
                     else -> {}
@@ -206,13 +207,10 @@ class SplashFragment : BaseFragment() {
                 homeViewModel.observeUiState()
                     .collect { state ->
                         if (state.isFirstLoad) {
-                            if (state.error is ErrorState.NetworkError) {
-                                showError(state.error)
-                            } else {
+                            if (!state.loadingPage) {
                                 checkSiteStateWithNavigate(state.data.isSecondLoad)
                             }
                         }
-
                     }
             }
         }
@@ -223,12 +221,18 @@ class SplashFragment : BaseFragment() {
             findNavController().navigate(R.id.mainFragment)
             return
         }
-        val active = siteStateManager.fetchSiteStateActive()
-        debugLog { "site state active $active" }
-        if (active) {
-            findNavController().navigate(R.id.mainFragment)
-        } else {
-            findNavController().navigate(R.id.blockAppFragment)
-        }
+
+
+        findNavController().navigate(R.id.mainFragment)
+
+
+//        //todo - get actual site state
+//        val active = siteStateManager.fetchSiteStateActive()
+//        debugLog { "site state active $active" }
+//        if (active) {
+//            findNavController().navigate(R.id.mainFragment)
+//        } else {
+//            findNavController().navigate(R.id.blockAppFragment)
+//        }
     }
 }
