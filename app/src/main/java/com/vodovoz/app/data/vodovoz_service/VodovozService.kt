@@ -1,12 +1,13 @@
 package com.vodovoz.app.data.vodovoz_service
 
+import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
 import com.vodovoz.app.data.vodovoz_service.model.OrderMenuDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopularCategoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionsDTO
-import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
-import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_DTO
+import com.vodovoz.app.data.vodovoz_service.model.StoriesDTO
+import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import retrofit2.Response
 import retrofit2.http.GET
@@ -14,7 +15,8 @@ import retrofit2.http.Query
 
 interface VodovozService {
 
-    //suspend fun getStories():
+    @GET("glavnaya/stories/index.php?iblock_id=12&action=stories&platforma=android")
+    suspend fun getStories(): Response<VodovozResponseDTO<StoriesDTO>>
 
     @GET("glavnaya/akcii.php?action=akcii&limit=10")
     suspend fun getPromotions(): Response<VodovozResponseDTO<PromotionsDTO>>

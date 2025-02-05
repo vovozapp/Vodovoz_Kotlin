@@ -9,7 +9,7 @@ data class STORY_VNYTRENNOST_DTO(
     @Json(name = "ACTION")
     val ACTION: String?,
     @Json(name = "ID")
-    val ID: Int?,
+    val ID: String?,
     @Json(name = "KNOPKA")
-    val KNOPKA: STORY_KNOPKA_DTO?
+    val KNOPKA: COLORFUL_KNOPKA_DTO?
 )

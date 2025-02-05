@@ -16,6 +16,7 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.design_system.model.BannerUi
 import com.vodovoz.app.design_system.model.PromotionUi
+import com.vodovoz.app.design_system.model.StoryUi
 import com.vodovoz.app.design_system.model.mapToUi
 import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
@@ -81,8 +82,9 @@ class HomeFlowViewModel @Inject constructor(
                 vodovozServiceRepository.getHurryUpBuyProducts(),
                 vodovozServiceRepository.getSuperTop()
             ),
-            vodovozServiceRepository.getBanners()
-        ) { (promotionsWithSectionsResult, sectionPopularCategoriesResult, orderMenuResult), (sectionNewProductsResult, sectionHurryUpBuyProductsResult, superTopResult), bannersResult ->
+            vodovozServiceRepository.getBanners(),
+            vodovozServiceRepository.getStories()
+        ) { (promotionsWithSectionsResult, sectionPopularCategoriesResult, orderMenuResult), (sectionNewProductsResult, sectionHurryUpBuyProductsResult, superTopResult), bannersResult, storiesResult ->
 
 
             val sectionPopularCategories = sectionPopularCategoriesResult.getOrNull()
@@ -92,9 +94,14 @@ class HomeFlowViewModel @Inject constructor(
             val promotionsWithSections = promotionsWithSectionsResult.getOrNull()
             val orderMenu = orderMenuResult.getOrNull()
             val banners = bannersResult.getOrNull()
+            val stories = storiesResult.getOrNull()
 
 
-            if (sectionPopularCategories != null && topAndBottomSections != null && sectionNewProducts != null && sectionHurryBuyProducts != null && promotionsWithSections != null && orderMenu != null && banners != null) {
+            if (
+                sectionPopularCategories != null && topAndBottomSections != null && sectionNewProducts != null
+                && sectionHurryBuyProducts != null && promotionsWithSections != null && orderMenu != null
+                && banners != null && stories != null
+            ) {
 
                 val bestOffersSection = topAndBottomSections.topSection.toUi(
                     mapItems = { items -> items.map { it.toUi() } }
@@ -115,7 +122,8 @@ class HomeFlowViewModel @Inject constructor(
                             button = promotionsWithSections.button?.toUi()
                         ),
                         orderWithMenu = orderMenu.toUi(),
-                        banners = banners.mapToUi()
+                        banners = banners.mapToUi(),
+                        stories = stories.mapToUi()
                     )
 
                 }
@@ -969,6 +977,7 @@ class HomeFlowViewModel @Inject constructor(
         val positionItems: List<PositionItem> = emptyList(),
         val items: List<Item> = emptyList(),
         val banners: List<BannerUi> = emptyList(),
+        val stories: List<StoryUi> = emptyList(),
         val sectionPromotions: SectionUi<PromotionUi> = SectionUi.empty(),
         val orderWithMenu: OrderWithMenuUi = OrderWithMenuUi.Empty,
         val popularSections: SectionUi<PopularCategoryUi> = SectionUi.empty(),

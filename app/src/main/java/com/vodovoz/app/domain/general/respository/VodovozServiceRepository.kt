@@ -1,7 +1,6 @@
 package com.vodovoz.app.domain.general.respository
 
 import androidx.paging.PagingData
-import com.vodovoz.app.data.model.common.BannerEntity
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
@@ -9,12 +8,15 @@ import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.ProductsTitle
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
-import com.vodovoz.app.domain.general.model.SectionPromotionsWithFiltersModel
 import com.vodovoz.app.domain.general.model.SectionModel
+import com.vodovoz.app.domain.general.model.SectionPromotionsWithFiltersModel
+import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import kotlinx.coroutines.flow.Flow
 
 interface VodovozServiceRepository {
+
+    fun getStories(): Flow<Result<List<StoryModel>>>
 
     fun getBanners(): Flow<Result<List<BannerModel>>>
 

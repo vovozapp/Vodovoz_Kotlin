@@ -17,6 +17,7 @@ import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.domain.general.model.SectionPromotionsWithFiltersModel
+import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import kotlinx.coroutines.flow.Flow
@@ -27,6 +28,15 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val vodovozService: VodovozService,
     private val accountManager: AccountManager,
 ) : VodovozServiceRepository {
+
+    override fun getStories(): Flow<Result<List<StoryModel>>> = executeRequest(
+        request = {
+            vodovozService.getStories()
+        },
+        mapToResult = { responseDTO ->
+            responseDTO.data?.toDomain()!!
+        }
+    )
 
     override fun getBanners(): Flow<Result<List<BannerModel>>> = executeRequest(
         request = {
