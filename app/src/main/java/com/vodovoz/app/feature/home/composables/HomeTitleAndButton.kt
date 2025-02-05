@@ -28,7 +28,7 @@ import com.vodovoz.app.feature.home.model.ButtonUi
 fun TitleAndButton(
     modifier: Modifier = Modifier,
     title: String,
-    buttonModel: ButtonUi? = null,
+    button: ButtonUi? = null,
     onShowAllClick: (ButtonInfo) -> Unit = {},
 ) {
     Row(
@@ -42,11 +42,11 @@ fun TitleAndButton(
             style = MaterialTheme.typography.headlineSmall
         )
 
-        buttonModel?.let {
+        button?.let {
             Row(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.small)
-                    .clickable { onShowAllClick(buttonModel.action) }
+                    .clickable { onShowAllClick(button.action) }
                     .padding(start = 10.dp)
             ) {
 

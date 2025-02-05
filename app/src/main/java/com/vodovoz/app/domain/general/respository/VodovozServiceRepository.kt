@@ -8,7 +8,7 @@ import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.ProductsTitle
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
-import com.vodovoz.app.domain.general.model.PromotionsWithSectionsModel
+import com.vodovoz.app.domain.general.model.SectionPromotionsWithFiltersModel
 import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +17,7 @@ interface VodovozServiceRepository {
 
     fun getSlider(): Flow<Result<List<BannerEntity>>>
 
-    fun getPromotions(): Flow<Result<List<PromotionModel>>>
+    fun getPromotions(): Flow<Result<SectionPromotionsWithFiltersModel>>
 
     fun getPromotionDetails(
         promotionId: Int,
@@ -32,7 +32,7 @@ interface VodovozServiceRepository {
     fun getPromotionsWithSections(
         page: Int = 1,
         limit: Int = 10,
-    ): Flow<Result<PromotionsWithSectionsModel>>
+    ): Flow<Result<SectionPromotionsWithFiltersModel>>
 
     fun getPromotionsPaged(
         page: Int = 1,
@@ -45,9 +45,9 @@ interface VodovozServiceRepository {
 
     fun getPopularCategories(): Flow<Result<SectionModel<PopularCategoryModel>>>
 
-    fun getNewProducts(): Flow<Result<List<ProductModel>>>
+    fun getNewProducts(): Flow<Result<SectionModel<ProductModel>>>
 
-    fun getHurryUpBuyProducts(): Flow<Result<List<ProductModel>>>
+    fun getHurryUpBuyProducts(): Flow<Result<SectionModel<ProductModel>>>
 
     fun getSuperTop(): Flow<Result<TopAndBottomSectionsModel>>
 

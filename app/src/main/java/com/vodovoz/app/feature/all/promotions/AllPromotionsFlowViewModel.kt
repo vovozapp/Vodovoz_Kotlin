@@ -56,7 +56,7 @@ class AllPromotionsFlowViewModel @Inject constructor(
 
             promotionsWithSectionsModelResult.onSuccess { promotionsWithSectionsModel ->
                 uiStateListener.updateData { s ->
-                    val sections = promotionsWithSectionsModel.sections.mapToUi()
+                    val sections = promotionsWithSectionsModel.filters.mapToUi()
                     val promotions = vodovozServiceRepository.getPromotionsPaged()
                         .map { pagingData ->
                             pagingData.map { promotionModel -> promotionModel.mapToUi() }

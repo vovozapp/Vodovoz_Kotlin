@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import com.vodovoz.app.domain.general.model.AboutAdvertisingModel
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
-import com.vodovoz.app.domain.general.model.PromotionSectionModel
+import com.vodovoz.app.domain.general.model.PromotionFilterModel
 import com.vodovoz.app.feature.home.model.LabelWithColorUi
 import com.vodovoz.app.feature.home.model.mapToUi
 import java.time.Duration
@@ -95,11 +95,11 @@ data class PromotionSectionUi(
 
 
 @JvmName("mapPromotionSectionListToUi")
-fun List<PromotionSectionModel>.mapToUi(): List<PromotionSectionUi> {
+fun List<PromotionFilterModel>.mapToUi(): List<PromotionSectionUi> {
     return map { it.mapToUi() }
 }
 
-fun PromotionSectionModel.mapToUi(): PromotionSectionUi {
+fun PromotionFilterModel.mapToUi(): PromotionSectionUi {
     return PromotionSectionUi(
         id = id,
         code = code,

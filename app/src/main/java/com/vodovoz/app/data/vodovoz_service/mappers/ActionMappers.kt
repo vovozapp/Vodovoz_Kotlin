@@ -12,7 +12,8 @@ fun HARAKTERISTIK_DTO.mapToAction(): VodovozAction? {
     return when (action.uppercase()) {
         "TOVARY" -> VodovozAction.Product(id.toIntOrNull() ?: return null)
         "RAZDEL" -> VodovozAction.Category(id.toIntOrNull() ?: return null)
-        "AKCIYA", "AKCII" -> VodovozAction.Promotion(id.toIntOrNull() ?: return null)
+        "AKCIYA" -> VodovozAction.Promotion(id.toIntOrNull() ?: return null)
+        "AKCII" -> VodovozAction.Promotions(id.toIntOrNull() ?: return null)
         "BRAND" -> VodovozAction.Brand(id.toIntOrNull() ?: return null)
         "URL" -> VodovozAction.Url(id)
         "URLKYKI" -> VodovozAction.UrlWithCookie(id)

@@ -11,9 +11,9 @@ import com.vodovoz.app.data.vodovoz_service.model.PromotionsDTO
 import com.vodovoz.app.domain.general.model.AboutAdvertisingModel
 import com.vodovoz.app.domain.general.model.LabelModel
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
+import com.vodovoz.app.domain.general.model.PromotionFilterModel
 import com.vodovoz.app.domain.general.model.PromotionModel
-import com.vodovoz.app.domain.general.model.PromotionSectionModel
-import com.vodovoz.app.domain.general.model.PromotionsWithSectionsModel
+import com.vodovoz.app.domain.general.model.SectionPromotionsWithFiltersModel
 import com.vodovoz.app.domain.general.model.emptyLabelModel
 
 fun AKCIYA_DTO.mapToDomain(): PromotionDetailsModel? {
@@ -28,24 +28,25 @@ fun AKCIYA_DTO.mapToDomain(): PromotionDetailsModel? {
     )
 }
 
-fun PromotionsDTO.mapToDomain(): PromotionsWithSectionsModel {
-    return PromotionsWithSectionsModel(
+fun PromotionsDTO.mapToDomain(): SectionPromotionsWithFiltersModel {
+    return SectionPromotionsWithFiltersModel(
         title = TITLE ?: "",
-        sections = RAZDELI?.filterNotNull()?.mapToDomain() ?: emptyList(),
-        promotions = DATA?.mapToDomain() ?: emptyList()
+        filters = RAZDELI?.filterNotNull()?.mapToDomain() ?: emptyList(),
+        promotions = DATA?.mapToDomain() ?: emptyList(),
+        button = KNOPKA?.mapToDomain()
     )
 
 }
 
 @JvmName("mapPromotionRazdelToDomain")
-fun List<PROMOTION_RAZDEL_DTO>.mapToDomain(): List<PromotionSectionModel> {
+fun List<PROMOTION_RAZDEL_DTO>.mapToDomain(): List<PromotionFilterModel> {
     return mapNotNull { promotionRazdelDto ->
         promotionRazdelDto.mapToDomain()
     }
 }
 
-fun PROMOTION_RAZDEL_DTO.mapToDomain(): PromotionSectionModel? {
-    return PromotionSectionModel(
+fun PROMOTION_RAZDEL_DTO.mapToDomain(): PromotionFilterModel? {
+    return PromotionFilterModel(
         id = ID ?: return null,
         name = NAME ?: return null,
         code = CODE ?: return null

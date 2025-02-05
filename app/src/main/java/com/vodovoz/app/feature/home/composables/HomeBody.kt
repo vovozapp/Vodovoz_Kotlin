@@ -27,14 +27,14 @@ import com.vodovoz.app.ui.model.BannerUI
 fun HomeBody(
     modifier: Modifier = Modifier,
     banners: List<BannerUI>,
-    promotions: List<PromotionUi>,
+    sectionPromotions: SectionUi<PromotionUi>,
     sectionPopularCategories: SectionUi<PopularCategoryUi>,
-    newProducts: List<ProductUi>,
-    hurryUpBuyProducts: List<ProductUi>,
+    sectionNewProducts: SectionUi<ProductUi>,
+    sectionHurryUpBuyProducts: SectionUi<ProductUi>,
     orderWithMenu: OrderWithMenuUi,
     currentCategoryWithProducts: CategoryWithProductsUi,
     bestOffersSection: SectionUi<CategoryWithProductsUi>,
-    bottomSection: SectionUi<CategoryWithProductsUi>,
+    sectionBottomProducts: SectionUi<CategoryWithProductsUi>,
     onCategorySelect: (CategoryWithProductsUi) -> Unit,
     onPopularSectionClick: (PopularCategoryUi) -> Unit,
     onOrderClick: (OrderUi) -> Unit,
@@ -97,7 +97,7 @@ fun HomeBody(
             modifier = Modifier.padding(top = 4.dp)
         )
 
-        HomePopularSections(
+        HomePopularCategories(
             modifier = Modifier.padding(top = 4.dp),
             onPopularCategoryClick = onPopularSectionClick,
             sectionPopularCategories = sectionPopularCategories
@@ -119,7 +119,7 @@ fun HomeBody(
         //todo - put actual data
         HomeHurryUpBuyProducts(
             modifier = Modifier.padding(top = 32.dp),
-            hurryUpBuyProducts = hurryUpBuyProducts,
+            sectionHurryUpBuyProducts = sectionHurryUpBuyProducts,
             onShowAllClick = { },
             onProductClick = { },
             onProductLike = { }
@@ -128,7 +128,7 @@ fun HomeBody(
         //todo = put actual data
         HomeNewProducts(
             modifier = Modifier.padding(top = 32.dp),
-            newProducts = newProducts,
+            sectionNewProducts = sectionNewProducts,
             onProductClick = {},
             onProductLike = {},
             onShowAllClick = {}
@@ -141,15 +141,14 @@ fun HomeBody(
             onPromotionClick = {
 
             },
-            promotions = promotions
+            sectionPromotions = sectionPromotions
         )
 
 
         //todo = put actual data
-        HomeBottledWater(
+        HomeBottom(
             modifier = Modifier.padding(top = 32.dp),
-            products = bottomSection.items.firstOrNull()?.products
-                ?: emptyList(),
+            sectionBottomProducts = sectionBottomProducts,
             onProductClick = {},
             onProductLike = {},
             onShowAllClick = {}
@@ -158,7 +157,7 @@ fun HomeBody(
         //todo = put actual data
         HomeViewedProducts(
             modifier = Modifier.padding(top = 32.dp),
-            products = newProducts,
+            sectionViewedProducts = sectionNewProducts,
             onProductClick = {},
             onProductLike = {},
             onShowAllClick = {}

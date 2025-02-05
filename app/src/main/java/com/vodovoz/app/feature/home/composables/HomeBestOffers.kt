@@ -33,7 +33,7 @@ fun HomeBestOffers(
     Column(modifier = modifier) {
         TitleAndButton(
             title = sectionCategoriesWithProducts.title,
-            buttonModel = sectionCategoriesWithProducts.button,
+            button = sectionCategoriesWithProducts.button,
             onShowAllClick = { onShowAllClick() }
         )
 

@@ -6,7 +6,7 @@ import com.vodovoz.app.data.vodovoz_service.model.PromotionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.SliderDTO
 import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
-import com.vodovoz.app.data.vodovoz_service.model.TitleAndProductsDTO
+import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_DTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
 import retrofit2.Response
 import retrofit2.http.GET
@@ -43,7 +43,7 @@ interface VodovozService {
     suspend fun getPopularSections(): Response<VodovozResponseDTO<PopularCategoriesDTO>>
 
     @GET("glavnaya/novinki.php?new=novinki")
-    suspend fun getNewProducts(): Response<VodovozResponseDTO<TitleAndProductsDTO>>
+    suspend fun getNewProducts(): Response<VodovozResponseDTO<RAZDEL_DTO>>
 
     //todo - change return type
     @GET("glavnaya/viewedproduct/index.php?action=viewed")
@@ -52,7 +52,7 @@ interface VodovozService {
     ): Response<Any>
 
     @GET("glavnaya/novinki.php?new=specpredlosh")
-    suspend fun getHurryUpBuyProducts(): Response<VodovozResponseDTO<TitleAndProductsDTO>>
+    suspend fun getHurryUpBuyProducts(): Response<VodovozResponseDTO<RAZDEL_DTO>>
 
     @GET("glavnaya/super_top.php?action=topglav")
     suspend fun getSuperTop(): Response<VodovozResponseDTO<SuperTopAndBottomSectionsDTO>>

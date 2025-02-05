@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import androidx.annotation.Keep
 
 @Keep
-data class RAZDEL_VERH_NIH(
+data class CATEGORY_RAZDEL(
     @Json(name = "COUNT")
     val COUNT: Int?,
     @Json(name = "DATA")

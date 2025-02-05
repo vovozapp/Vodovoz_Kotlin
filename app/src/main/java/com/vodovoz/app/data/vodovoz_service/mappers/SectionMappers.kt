@@ -1,13 +1,15 @@
 package com.vodovoz.app.data.vodovoz_service.mappers
 
+import com.vodovoz.app.data.vodovoz_service.model.CATEGORY_RAZDEL
 import com.vodovoz.app.data.vodovoz_service.model.CATEGORY_WITH_PRODUCTS_DTO
 import com.vodovoz.app.data.vodovoz_service.model.KNOPKA_DTO
 import com.vodovoz.app.data.vodovoz_service.model.KNOPKA_INT_DTO
-import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_VERH_NIH
+import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_DTO
 import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
 import com.vodovoz.app.domain.general.model.ButtonInfo
 import com.vodovoz.app.domain.general.model.ButtonModel
 import com.vodovoz.app.domain.general.model.CategoryWithProductsModel
+import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 
@@ -26,11 +28,21 @@ fun CATEGORY_WITH_PRODUCTS_DTO.mapToDomain(): CategoryWithProductsModel? {
     )
 }
 
-fun RAZDEL_VERH_NIH.mapToDomain(): SectionModel<CategoryWithProductsModel> {
+fun CATEGORY_RAZDEL.mapToDomain(): SectionModel<CategoryWithProductsModel> {
+    val categoriesWithProducts = DATA?.mapNotNull { it.mapToDomain() } ?: emptyList()
     return SectionModel(
-        title = NAMERAZDEL ?: "",
+        title = NAMERAZDEL ?: categoriesWithProducts.firstOrNull { it.name.isNotEmpty() }?.name
+        ?: "",
         button = KNOPKA?.mapToDomain(),
-        items = DATA?.mapNotNull { it.mapToDomain() } ?: emptyList()
+        items = categoriesWithProducts
+    )
+}
+
+fun RAZDEL_DTO.mapToDomain(): SectionModel<ProductModel> {
+    return SectionModel(
+        title = TITLE ?: "",
+        button = KNOPKA?.mapToDomain(),
+        items = DATA?.mapNotNull { tovarDataDto -> tovarDataDto?.mapToDomain() } ?: emptyList()
     )
 }
 

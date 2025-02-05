@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 @Keep
 data class SuperTopAndBottomSectionsDTO(
     @Json(name = "RAZDEL_NIZ")
-    val RAZDEL_NIZ: RAZDEL_VERH_NIH?,
+    val RAZDEL_NIZ: CATEGORY_RAZDEL?,
     @Json(name = "RAZDEL_VERH")
-    val RAZDEL_VERH: RAZDEL_VERH_NIH?
+    val RAZDEL_VERH: CATEGORY_RAZDEL?
 )

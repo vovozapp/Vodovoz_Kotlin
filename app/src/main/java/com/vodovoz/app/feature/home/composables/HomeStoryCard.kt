@@ -1,6 +1,5 @@
 package com.vodovoz.app.feature.home.composables
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -38,7 +37,7 @@ fun HomeStoriesRow(
         storiesImages.forEach { storyImage ->
             HomeStoryCard(
                 storyImage = storyImage,
-                isSelected = true,
+                viewed = true,
                 onClick = {
                     onStoryClick()
                 }
@@ -51,14 +50,14 @@ fun HomeStoriesRow(
 fun HomeStoryCard(
     modifier: Modifier = Modifier,
     storyImage: String,
-    isSelected: Boolean,
+    viewed: Boolean,
     onClick: () -> Unit,
 ) {
     VodovozOutlinedCard(
         modifier = modifier.size(96.dp),
         contentPadding = PaddingValues(2.dp),
         shape = MaterialTheme.shapes.medium,
-        borderColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+        borderColor = if (viewed) MaterialTheme.colorScheme.primary else Color.Transparent,
         onClick = onClick
     ) {
         AsyncImage(

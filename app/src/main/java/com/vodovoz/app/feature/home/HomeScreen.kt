@@ -34,13 +34,13 @@ fun HomeScreen(
         HomeBody(
             modifier = Modifier.padding(paddingValues),
             banners = viewState.banners,
-            promotions = viewState.promotions,
+            sectionPromotions = viewState.sectionPromotions,
             orderWithMenu = viewState.orderWithMenu,
             sectionPopularCategories = viewState.popularSections,
-            newProducts = viewState.newProducts,
-            hurryUpBuyProducts = viewState.hurryUpBuyProducts,
-            bestOffersSection = viewState.bestOffersSection,
-            bottomSection = viewState.bottomSection,
+            sectionNewProducts = viewState.sectionNewProducts,
+            sectionHurryUpBuyProducts = viewState.sectionHurryUpBuyProducts,
+            bestOffersSection = viewState.sectionBestOffers,
+            sectionBottomProducts = viewState.sectionBottom,
             currentCategoryWithProducts = viewState.currentCategoryWithProducts,
             onCategorySelect = { categoryWithProductsUi ->
                 viewModel.selectCategory(categoryWithProductsUi)

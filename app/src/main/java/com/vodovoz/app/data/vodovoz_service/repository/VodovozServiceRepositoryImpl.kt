@@ -16,7 +16,7 @@ import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.ProductsTitle
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
-import com.vodovoz.app.domain.general.model.PromotionsWithSectionsModel
+import com.vodovoz.app.domain.general.model.SectionPromotionsWithFiltersModel
 import com.vodovoz.app.domain.general.model.RequestException
 import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
@@ -42,12 +42,12 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         }
     }.catchResult()
 
-    override fun getPromotions(): Flow<Result<List<PromotionModel>>> = executeRequest(
+    override fun getPromotions(): Flow<Result<SectionPromotionsWithFiltersModel>> = executeRequest(
         request = {
             vodovozService.getPromotions()
         },
         mapToResult = { promotionsDTOVodovozResponseDTO ->
-            promotionsDTOVodovozResponseDTO.data?.DATA?.mapToDomain()!!
+            promotionsDTOVodovozResponseDTO.data?.mapToDomain()!!
         }
     )
 
@@ -97,7 +97,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     override fun getPromotionsWithSections(
         page: Int,
         limit: Int,
-    ): Flow<Result<PromotionsWithSectionsModel>> = executeRequest(
+    ): Flow<Result<SectionPromotionsWithFiltersModel>> = executeRequest(
         request = { vodovozService.getPromotionsWithSections(page, limit) },
         mapToResult = { response ->
             response.data!!.mapToDomain()
@@ -136,31 +136,32 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     )
 
 
-    override fun getPopularCategories(): Flow<Result<SectionModel<PopularCategoryModel>>> = executeRequest(
-        request = {
-            vodovozService.getPopularSections()
-        },
-        mapToResult = { popularCategoriesDTOVodovozResponseDTO ->
-            popularCategoriesDTOVodovozResponseDTO.data?.mapToDomain()!!
-        }
-    )
+    override fun getPopularCategories(): Flow<Result<SectionModel<PopularCategoryModel>>> =
+        executeRequest(
+            request = {
+                vodovozService.getPopularSections()
+            },
+            mapToResult = { popularCategoriesDTOVodovozResponseDTO ->
+                popularCategoriesDTOVodovozResponseDTO.data?.mapToDomain()!!
+            }
+        )
 
-    override fun getNewProducts(): Flow<Result<List<ProductModel>>> = executeRequest(
+    override fun getNewProducts(): Flow<Result<SectionModel<ProductModel>>> = executeRequest(
         request = {
             vodovozService.getNewProducts()
         },
-        mapToResult = { titleAndProductsDTOVodovozResponseDTO ->
-            titleAndProductsDTOVodovozResponseDTO.data?.DATA?.mapToDomain()!!
+        mapToResult = { razdelDTO ->
+            razdelDTO.data?.mapToDomain()!!
         }
     )
 
 
-    override fun getHurryUpBuyProducts(): Flow<Result<List<ProductModel>>> = executeRequest(
+    override fun getHurryUpBuyProducts(): Flow<Result<SectionModel<ProductModel>>> = executeRequest(
         request = {
             vodovozService.getHurryUpBuyProducts()
         },
-        mapToResult = { titleAndProductsDTOVodovozResponseDTO ->
-            titleAndProductsDTOVodovozResponseDTO.data?.DATA?.mapToDomain()!!
+        mapToResult = { razdelDTO ->
+            razdelDTO.data?.mapToDomain()!!
         }
     )
 

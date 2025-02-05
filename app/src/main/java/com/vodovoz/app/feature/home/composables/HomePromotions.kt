@@ -5,34 +5,33 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.vodovoz.app.R
 import com.vodovoz.app.design_system.model.PromotionUi
+import com.vodovoz.app.feature.home.model.SectionUi
 
-@Suppress("NonSkippableComposable")
 @Composable
 fun HomePromotions(
     modifier: Modifier = Modifier,
     onShowAllClick: () -> Unit,
-    promotions: List<PromotionUi>,
+    sectionPromotions: SectionUi<PromotionUi>,
     onPromotionClick: (PromotionUi) -> Unit,
 ) {
     val pagerState = rememberPagerState {
-        promotions.count()
+        sectionPromotions.items.count()
     }
 
     Column(modifier = modifier) {
         TitleAndButton(
-            title = stringResource(R.string.promotions),
+            title = sectionPromotions.title,
+            button = sectionPromotions.button,
             onShowAllClick = { onShowAllClick() }
         )
 
         AuthScrollImagePager(
             pagerState = pagerState,
             modifier = Modifier.padding(top = 16.dp),
-            images = promotions.map { promotionUi -> promotionUi.picture },
-            onImageClick = { onPromotionClick(promotions[pagerState.currentPage]) },
+            images = sectionPromotions.items.map { promotionUi -> promotionUi.picture },
+            onImageClick = { onPromotionClick(sectionPromotions.items[pagerState.currentPage]) },
             pageWidth = 300.dp,
         )
     }

@@ -80,14 +80,19 @@ class HomeFlowViewModel @Inject constructor(
                 vodovozServiceRepository.getHurryUpBuyProducts(),
                 vodovozServiceRepository.getSuperTop()
             )
-        ) { (promotionsResult, popularSectionsResult, orderMenuResult), (newProductsResult, hurryUpBuyProducts, superTopResult) ->
+        ) { (promotionsWithSectionsResult, sectionPopularCategoriesResult, orderMenuResult), (sectionNewProductsResult, sectionHurryUpBuyProductsResult, superTopResult) ->
 
 
-            val sectionPopularCategories = popularSectionsResult.getOrNull()
+            val sectionPopularCategories = sectionPopularCategoriesResult.getOrNull()
             val topAndBottomSections = superTopResult.getOrNull()
+            val sectionNewProducts = sectionNewProductsResult.getOrNull()
+            val sectionHurryBuyProducts = sectionHurryUpBuyProductsResult.getOrNull()
+            val promotionsWithSections = promotionsWithSectionsResult.getOrNull()
+            val orderMenu = orderMenuResult.getOrNull()
 
 
-            if (sectionPopularCategories != null && topAndBottomSections != null) {
+            if (sectionPopularCategories != null && topAndBottomSections != null && sectionNewProducts != null && sectionHurryBuyProducts != null && promotionsWithSections != null && orderMenu != null) {
+
                 val bestOffersSection = topAndBottomSections.topSection.mapToUi(
                     mapItems = { items -> items.map { it.mapToUi() } }
                 )
@@ -95,43 +100,21 @@ class HomeFlowViewModel @Inject constructor(
                 uiStateListener.updateData { s ->
                     s.copy(
                         popularSections = sectionPopularCategories.mapToUi { items -> items.map { it.mapToUi() } },
-                        bestOffersSection = bestOffersSection,
-                        bottomSection = topAndBottomSections.bottomSection.mapToUi { items -> items.map { it -> it.mapToUi() } },
+                        sectionBestOffers = bestOffersSection,
+                        sectionBottom = topAndBottomSections.bottomSection.mapToUi { items -> items.map { it -> it.mapToUi() } },
                         currentCategoryWithProducts = bestOffersSection.items.firstOrNull()
-                            ?: CategoryWithProductsUi.Empty
-                    )
-                }
-            }
+                            ?: CategoryWithProductsUi.Empty,
+                        sectionNewProducts = sectionNewProducts.mapToUi { productModels -> productModels.map { item -> item.mapToUi() } },
+                        sectionHurryUpBuyProducts = sectionHurryBuyProducts.mapToUi { productModels -> productModels.map { item -> item.mapToUi() } },
+                        sectionPromotions = SectionUi(
+                            title = promotionsWithSections.title,
+                            items = promotionsWithSections.promotions.map { promotionModel -> promotionModel.mapToUi() },
+                            button = promotionsWithSections.button?.mapToUi()
+                        ),
+                        orderWithMenu = orderMenu.mapToUi()
 
-            promotionsResult.onSuccess { promotionModels ->
-                uiStateListener.updateData { s ->
-                    s.copy(
-                        promotions = promotionModels.map { promotionModel -> promotionModel.mapToUi() }
                     )
-                }
-            }
 
-            orderMenuResult.onSuccess { orderWithMenuModel ->
-                uiStateListener.updateData { s ->
-                    s.copy(
-                        orderWithMenu = orderWithMenuModel.mapToUi()
-                    )
-                }
-            }
-
-            newProductsResult.onSuccess { productModels ->
-                uiStateListener.updateData { s ->
-                    s.copy(
-                        newProducts = productModels.map { it.mapToUi() }
-                    )
-                }
-            }
-
-            hurryUpBuyProducts.onSuccess { productModels ->
-                uiStateListener.updateData { s ->
-                    s.copy(
-                        hurryUpBuyProducts = productModels.map { it.mapToUi() }
-                    )
                 }
             }
 
@@ -983,14 +966,14 @@ class HomeFlowViewModel @Inject constructor(
         val positionItems: List<PositionItem> = emptyList(),
         val items: List<Item> = emptyList(),
         val banners: List<BannerUI> = emptyList(),
-        val promotions: List<PromotionUi> = emptyList(),
+        val sectionPromotions: SectionUi<PromotionUi> = SectionUi.empty(),
         val orderWithMenu: OrderWithMenuUi = OrderWithMenuUi.Empty,
         val popularSections: SectionUi<PopularCategoryUi> = SectionUi.empty(),
-        val newProducts: List<ProductUi> = emptyList(),
-        val hurryUpBuyProducts: List<ProductUi> = emptyList(),
-        val bestOffersSection: SectionUi<CategoryWithProductsUi> = SectionUi.empty(),
+        val sectionNewProducts: SectionUi<ProductUi> = SectionUi.empty(),
+        val sectionHurryUpBuyProducts: SectionUi<ProductUi> = SectionUi.empty(),
+        val sectionBestOffers: SectionUi<CategoryWithProductsUi> = SectionUi.empty(),
         val currentCategoryWithProducts: CategoryWithProductsUi = CategoryWithProductsUi.Empty,
-        val bottomSection: SectionUi<CategoryWithProductsUi> = SectionUi.empty(),
+        val sectionBottom: SectionUi<CategoryWithProductsUi> = SectionUi.empty(),
         val news: PopupNewsUI? = null,
         val hasShow: Boolean = false,
         val isSecondLoad: Boolean = false,

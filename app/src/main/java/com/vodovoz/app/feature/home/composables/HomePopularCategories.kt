@@ -27,7 +27,7 @@ import com.vodovoz.app.feature.home.model.PopularCategoryUi
 import com.vodovoz.app.feature.home.model.SectionUi
 
 @Composable
-fun HomePopularSections(
+fun HomePopularCategories(
     modifier: Modifier = Modifier,
     sectionPopularCategories: SectionUi<PopularCategoryUi>,
     onPopularCategoryClick: (PopularCategoryUi) -> Unit,
