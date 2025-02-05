@@ -34,6 +34,7 @@ fun HomeScreen(
         HomeBody(
             modifier = Modifier.padding(paddingValues),
             banners = viewState.banners,
+            stories = viewState.stories,
             sectionPromotions = viewState.sectionPromotions,
             orderWithMenu = viewState.orderWithMenu,
             sectionPopularCategories = viewState.popularSections,

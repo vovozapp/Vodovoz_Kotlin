@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -18,28 +19,30 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.vodovoz.app.design_system.composables.card.VodovozOutlinedCard
+import com.vodovoz.app.design_system.model.StoryUi
 
 
 @Suppress("NonSkippableComposable")
 @Composable
 fun HomeStories(
     modifier: Modifier = Modifier,
-    storiesImages: List<String>,
-    onStoryClick: () -> Unit,
+    stories: List<StoryUi>,
+    onStoryClick: (StoryUi) -> Unit,
 ) {
     Row(
         modifier = modifier
+            .fillMaxWidth()
             .horizontalScroll(rememberScrollState())
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
+        horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start)
     ) {
-        storiesImages.forEach { storyImage ->
+        stories.forEach { story ->
             HomeStoryCard(
-                storyImage = storyImage,
+                storyImage = story.image,
                 viewed = true,
                 onClick = {
-                    onStoryClick()
+                    onStoryClick(story)
                 }
             )
         }

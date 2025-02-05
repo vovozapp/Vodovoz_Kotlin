@@ -1,6 +1,7 @@
 package com.vodovoz.app.design_system.composables.card
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -88,11 +89,18 @@ fun GridProductCard(
                 }
                 Spacer(modifier = Modifier.weight(1f))
 
-                ClickableIcon(
+
+                Icon(
                     painter = painterResource(id = if (product.isFavorite) R.drawable.ic_filled_like else R.drawable.ic_like),
-                    modifier = Modifier.size(18.dp),
-                    onClick = { onLike(product) },
-                    tint = if (product.isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceTint
+                    contentDescription = null,
+                    tint = if (product.isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceTint,
+                    modifier = Modifier
+                        .size(18.dp)
+                        .clickable(
+                            onClick = { onLike(product) },
+                            indication = null,
+                            interactionSource = null
+                        )
                 )
             }
 

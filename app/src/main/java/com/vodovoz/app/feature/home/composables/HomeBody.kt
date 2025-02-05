@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.design_system.model.BannerUi
 import com.vodovoz.app.design_system.model.PromotionUi
+import com.vodovoz.app.design_system.model.StoryUi
 import com.vodovoz.app.feature.home.model.CategoryWithProductsUi
 import com.vodovoz.app.feature.home.model.MenuItemUi
 import com.vodovoz.app.feature.home.model.OrderUi
@@ -26,6 +27,7 @@ import com.vodovoz.app.feature.home.model.SectionUi
 fun HomeBody(
     modifier: Modifier = Modifier,
     banners: List<BannerUi>,
+    stories: List<StoryUi>,
     sectionPromotions: SectionUi<PromotionUi>,
     sectionPopularCategories: SectionUi<PopularCategoryUi>,
     sectionNewProducts: SectionUi<ProductUi>,
@@ -48,7 +50,6 @@ fun HomeBody(
     ) {
 
 
-        //todo - put actual data
         if (banners.isNotEmpty()) {
             HomeBanners(
                 banners = banners,
@@ -58,20 +59,15 @@ fun HomeBody(
             )
         }
 
-        HomeStories(
-            modifier = Modifier.padding(top = 16.dp),
-            storiesImages = listOf(
-                "https://vodovoz.net/upload/iblock/d9c/3yue4g53w2d79bukaaz7u0u8ym7b95tr.jpg",
-                "https://vodovoz.net/upload/iblock/8f9/sazr2hm139ok02s3oj80q0tsqr5f3ibf.jpg",
-                "https://vodovoz.net/upload/iblock/1eb/xgy856ctgho2l3bn8fzjcmqeug0tvbiw.jpg",
-                "https://vodovoz.net/upload/iblock/1eb/xgy856ctgho2l3bn8fzjcmqeug0tvbiw.jpg",
-                "https://vodovoz.net/upload/iblock/1eb/xgy856ctgho2l3bn8fzjcmqeug0tvbiw.jpg",
-                "https://vodovoz.net/upload/iblock/1eb/xgy856ctgho2l3bn8fzjcmqeug0tvbiw.jpg"
-            ),
-            onStoryClick = {
+        if (stories.isNotEmpty()) {
+            HomeStories(
+                modifier = Modifier.padding(top = 16.dp),
+                stories = stories,
+                onStoryClick = {
 
-            }
-        )
+                }
+            )
+        }
 
 
         if (orderWithMenu.order != null || orderWithMenu.menuItems.isNotEmpty()) {
