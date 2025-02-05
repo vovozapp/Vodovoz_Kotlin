@@ -9,7 +9,7 @@ import retrofit2.Response
 
 fun <T, R> executeRequest(
     request: suspend () -> Response<T>,
-    mapToResult: (T) -> R,
+    mapper: (T) -> R,
     onFail: ((Response<T>) -> Result<R>)? = null,
 ): Flow<Result<R>> {
     return flow {
@@ -17,7 +17,7 @@ fun <T, R> executeRequest(
 
 
         if (response.isSuccessful) {
-            val result = mapToResult(response.body()!!)
+            val result = mapper(response.body()!!)
             emit(Result.success(result))
         } else if (onFail != null) {
             emit(onFail(response))

@@ -3,6 +3,7 @@ package com.vodovoz.app.data.vodovoz_service
 import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
 import com.vodovoz.app.data.vodovoz_service.model.OrderMenuDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopularCategoriesDTO
+import com.vodovoz.app.data.vodovoz_service.model.PopupWindowDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_DTO
@@ -19,7 +20,7 @@ interface VodovozService {
     @GET("glavnaya/okno.php?action=okno")
     suspend fun getPopupWindowInfo(
         @Query("userid") userId: Long,
-    )
+    ): Response<VodovozResponseDTO<PopupWindowDTO>>
 
     @GET("glavnaya/stories/index.php?iblock_id=12&action=stories&platforma=android")
     suspend fun getStories(): Response<VodovozResponseDTO<StoriesDTO>>

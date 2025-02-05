@@ -11,6 +11,7 @@ import com.vodovoz.app.domain.general.VodovozPagingSource
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
+import com.vodovoz.app.domain.general.model.PopupWindowInfoModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.ProductsTitle
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
@@ -29,11 +30,22 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val accountManager: AccountManager,
 ) : VodovozServiceRepository {
 
+    override fun getPopupWindowInfo(): Flow<Result<PopupWindowInfoModel>> = executeRequest(
+        request = {
+            val userId = accountManager.fetchAccountId()
+                ?: throw IllegalStateException("User is not authenticated")
+            vodovozService.getPopupWindowInfo(userId)
+        },
+        mapper = { responseDTO ->
+            responseDTO.data?.toDomain()!!
+        }
+    )
+
     override fun getStories(): Flow<Result<List<StoryModel>>> = executeRequest(
         request = {
             vodovozService.getStories()
         },
-        mapToResult = { responseDTO ->
+        mapper = { responseDTO ->
             responseDTO.data?.toDomain()!!
         }
     )
@@ -42,7 +54,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         request = {
             vodovozService.getBanners()
         },
-        mapToResult = { promotionsDTOVodovozResponseDTO ->
+        mapper = { promotionsDTOVodovozResponseDTO ->
             promotionsDTOVodovozResponseDTO.data?.toDomain()!!
         }
     )
@@ -51,7 +63,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         request = {
             vodovozService.getPromotions()
         },
-        mapToResult = { promotionsDTOVodovozResponseDTO ->
+        mapper = { promotionsDTOVodovozResponseDTO ->
             promotionsDTOVodovozResponseDTO.data?.toDomain()!!
         }
     )
@@ -61,7 +73,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             request = {
                 vodovozService.getPromotionDetails(promotionId)
             },
-            mapToResult = { response ->
+            mapper = { response ->
                 ProductsTitle(
                     response.data?.TOVAR?.NAMETOVAR ?: ""
                 ) to response.data?.AKCIYA?.toDomain()!!
@@ -87,7 +99,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                                     limit
                                 )
                             },
-                            mapToResult = { promotionDetailsDTOVodovozResponseDTO ->
+                            mapper = { promotionDetailsDTOVodovozResponseDTO ->
                                 promotionDetailsDTOVodovozResponseDTO.data?.TOVAR?.DATA?.toDomain()
                                     ?: emptyList()
                             }
@@ -104,7 +116,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         limit: Int,
     ): Flow<Result<SectionPromotionsWithFiltersModel>> = executeRequest(
         request = { vodovozService.getPromotionsWithSections(page, limit) },
-        mapToResult = { response ->
+        mapper = { response ->
             response.data!!.toDomain()
         },
     )
@@ -119,7 +131,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                             request = {
                                 vodovozService.getPromotionsWithSections(page, limit)
                             },
-                            mapToResult = { promotionsDTOVodovozResponseDTO ->
+                            mapper = { promotionsDTOVodovozResponseDTO ->
                                 promotionsDTOVodovozResponseDTO.data?.toDomain()?.promotions
                                     ?: emptyList()
                             }
@@ -135,7 +147,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         request = {
             vodovozService.getOrderMenu(userId ?: accountManager.fetchAccountId() ?: -1)
         },
-        mapToResult = {
+        mapper = {
             it.data?.toDomain()!!
         }
     )
@@ -146,7 +158,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             request = {
                 vodovozService.getPopularSections()
             },
-            mapToResult = { popularCategoriesDTOVodovozResponseDTO ->
+            mapper = { popularCategoriesDTOVodovozResponseDTO ->
                 popularCategoriesDTOVodovozResponseDTO.data?.toDomain()!!
             }
         )
@@ -155,7 +167,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         request = {
             vodovozService.getNewProducts()
         },
-        mapToResult = { razdelDTO ->
+        mapper = { razdelDTO ->
             razdelDTO.data?.toDomain()!!
         }
     )
@@ -165,7 +177,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         request = {
             vodovozService.getHurryUpBuyProducts()
         },
-        mapToResult = { razdelDTO ->
+        mapper = { razdelDTO ->
             razdelDTO.data?.toDomain()!!
         }
     )
@@ -174,7 +186,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
         request = {
             vodovozService.getSuperTop()
         },
-        mapToResult = { topAndBottomDTO ->
+        mapper = { topAndBottomDTO ->
             topAndBottomDTO.data!!.toDomain()!!
         }
     )

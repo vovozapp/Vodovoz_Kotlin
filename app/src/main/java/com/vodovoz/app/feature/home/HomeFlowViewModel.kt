@@ -16,8 +16,10 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.design_system.model.BannerUi
 import com.vodovoz.app.design_system.model.PromotionUi
+import com.vodovoz.app.design_system.model.SpecialPromotionUi
 import com.vodovoz.app.design_system.model.StoryUi
 import com.vodovoz.app.design_system.model.mapToUi
+import com.vodovoz.app.design_system.model.toDomain
 import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.home.model.CategoryWithProductsUi
@@ -82,9 +84,12 @@ class HomeFlowViewModel @Inject constructor(
                 vodovozServiceRepository.getHurryUpBuyProducts(),
                 vodovozServiceRepository.getSuperTop()
             ),
-            vodovozServiceRepository.getBanners(),
-            vodovozServiceRepository.getStories()
-        ) { (promotionsWithSectionsResult, sectionPopularCategoriesResult, orderMenuResult), (sectionNewProductsResult, sectionHurryUpBuyProductsResult, superTopResult), bannersResult, storiesResult ->
+            combineIntoTriple(
+                vodovozServiceRepository.getBanners(),
+                vodovozServiceRepository.getStories(),
+                vodovozServiceRepository.getPopupWindowInfo()
+            ),
+        ) { (promotionsWithSectionsResult, sectionPopularCategoriesResult, orderMenuResult), (sectionNewProductsResult, sectionHurryUpBuyProductsResult, superTopResult), (bannersResult, storiesResult, popupWindowInfoResult) ->
 
 
             val sectionPopularCategories = sectionPopularCategoriesResult.getOrNull()
@@ -95,6 +100,7 @@ class HomeFlowViewModel @Inject constructor(
             val orderMenu = orderMenuResult.getOrNull()
             val banners = bannersResult.getOrNull()
             val stories = storiesResult.getOrNull()
+            val popupWindowInfo = popupWindowInfoResult.getOrNull()
 
 
             if (
@@ -128,6 +134,20 @@ class HomeFlowViewModel @Inject constructor(
 
                 }
             }
+
+            if (popupWindowInfo?.specialPromotion != null) {
+
+                uiStateListener.updateData { s ->
+                    s.copy(
+                        showBottomSheet = true,
+                        specialPromotionUi = popupWindowInfo.specialPromotion.toDomain()
+                    )
+                }
+
+            }
+
+            //todo - handle AppUpdate
+
 
         }.launchIn(viewModelScope)
     }
@@ -959,6 +979,14 @@ class HomeFlowViewModel @Inject constructor(
         }
     }
 
+    fun closeBottomSheet() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(
+                showBottomSheet = false
+            )
+        }
+    }
+
     data class PositionItem(
         val position: Int,
         val item: Item,
@@ -976,6 +1004,10 @@ class HomeFlowViewModel @Inject constructor(
     data class HomeState(
         val positionItems: List<PositionItem> = emptyList(),
         val items: List<Item> = emptyList(),
+        val news: PopupNewsUI? = null,
+        val hasShow: Boolean = false,
+        val isSecondLoad: Boolean = false,
+
         val banners: List<BannerUi> = emptyList(),
         val stories: List<StoryUi> = emptyList(),
         val sectionPromotions: SectionUi<PromotionUi> = SectionUi.empty(),
@@ -986,9 +1018,8 @@ class HomeFlowViewModel @Inject constructor(
         val sectionBestOffers: SectionUi<CategoryWithProductsUi> = SectionUi.empty(),
         val currentCategoryWithProducts: CategoryWithProductsUi = CategoryWithProductsUi.Empty,
         val sectionBottom: SectionUi<CategoryWithProductsUi> = SectionUi.empty(),
-        val news: PopupNewsUI? = null,
-        val hasShow: Boolean = false,
-        val isSecondLoad: Boolean = false,
+        val specialPromotionUi: SpecialPromotionUi = SpecialPromotionUi.Empty,
+        val showBottomSheet: Boolean = false,
         val searchField: String = "",
     ) : State {
         companion object {

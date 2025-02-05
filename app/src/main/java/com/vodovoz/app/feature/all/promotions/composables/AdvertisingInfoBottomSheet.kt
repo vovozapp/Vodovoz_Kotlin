@@ -1,13 +1,9 @@
 package com.vodovoz.app.feature.all.promotions.composables
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -17,10 +13,10 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
+import com.vodovoz.app.design_system.composables.bottom_sheet.VodovozDragHandle
 import com.vodovoz.app.design_system.model.AboutAdvertisingUi
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,14 +30,7 @@ fun AdvertisingInfoBottomSheet(
         sheetState = state,
         onDismissRequest = onDismissRequest,
         dragHandle = {
-            Box(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .height(4.dp)
-                    .width(36.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(MaterialTheme.colorScheme.surface)
-            )
+            VodovozDragHandle()
         },
         containerColor = MaterialTheme.colorScheme.background,
         shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)

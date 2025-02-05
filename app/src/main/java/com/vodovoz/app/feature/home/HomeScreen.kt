@@ -2,6 +2,7 @@ package com.vodovoz.app.feature.home
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,7 +10,9 @@ import androidx.navigation.NavController
 import com.vodovoz.app.design_system.composables.top_bar.SearchTopBar
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.home.composables.HomeBody
+import com.vodovoz.app.feature.home.composables.SpecialPromotionBottomSheet
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Suppress("NonSkippableComposable")
 @Composable
 fun HomeScreen(
@@ -56,6 +59,14 @@ fun HomeScreen(
                     )
                 )
             }
+        )
+    }
+
+    if (viewState.showBottomSheet) {
+        SpecialPromotionBottomSheet(
+            specialPromotionUi = viewState.specialPromotionUi,
+            onDismissRequest = { viewModel.closeBottomSheet() },
+            onButtonClick = {  }
         )
     }
 }

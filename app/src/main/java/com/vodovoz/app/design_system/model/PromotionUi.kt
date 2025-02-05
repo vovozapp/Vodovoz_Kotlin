@@ -3,14 +3,40 @@ package com.vodovoz.app.design_system.model
 import androidx.compose.runtime.Immutable
 import com.vodovoz.app.domain.general.model.AboutAdvertisingModel
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
-import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionFilterModel
+import com.vodovoz.app.domain.general.model.PromotionModel
+import com.vodovoz.app.domain.general.model.SpecialPromotionModel
 import com.vodovoz.app.feature.home.model.LabelWithColorUi
 import com.vodovoz.app.feature.home.model.toUi
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.Locale
 
+
+data class SpecialPromotionUi(
+    val id: Int,
+    val name: String,
+    val text: String,
+    val picture: String,
+    val actionWithButton: ActionWithButtonUi,
+) {
+
+    companion object {
+        val Empty = SpecialPromotionUi(-1, "", "", "", ActionWithButtonUi.Empty)
+    }
+
+}
+
+
+fun SpecialPromotionModel.toDomain(): SpecialPromotionUi {
+    return SpecialPromotionUi(
+        id = id,
+        name = name,
+        text = text,
+        picture = picture,
+        actionWithButton = actionWithButton.toUi()
+    )
+}
 
 @Immutable
 data class PromotionDetailsUi(

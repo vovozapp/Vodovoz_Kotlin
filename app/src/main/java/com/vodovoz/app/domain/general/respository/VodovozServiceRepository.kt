@@ -1,9 +1,11 @@
 package com.vodovoz.app.domain.general.respository
 
 import androidx.paging.PagingData
+import com.vodovoz.app.data.vodovoz_service.model.PopupWindowDTO
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
+import com.vodovoz.app.domain.general.model.PopupWindowInfoModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.ProductsTitle
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
@@ -17,7 +19,7 @@ import kotlinx.coroutines.flow.Flow
 interface VodovozServiceRepository {
 
 
-    fun getPopupWindowInfo(): Flow<Result<Any>>
+    fun getPopupWindowInfo(): Flow<Result<PopupWindowInfoModel>>
 
     fun getStories(): Flow<Result<List<StoryModel>>>
 

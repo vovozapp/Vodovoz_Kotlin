@@ -15,5 +15,5 @@ data class SPECTIAL_PROMOTION_DTO(
     @Json(name = "NAME")
     val NAME: String?,
     @Json(name = "TEXT")
-    val TEXT: Any?
+    val TEXT: String?
 )

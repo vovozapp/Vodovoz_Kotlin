@@ -6,7 +6,7 @@ import com.vodovoz.app.domain.general.model.ActionWithButtonModel
 import com.vodovoz.app.domain.general.model.ColorfulButtonModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.VodovozAction
-import com.vodovoz.app.util.fromHexOrNull
+import com.vodovoz.app.util.fromHexOrTransparent
 
 @Immutable
 data class StoryUi(
@@ -20,14 +20,22 @@ data class StoryUi(
 data class ActionWithButtonUi(
     val action: VodovozAction,
     val colorfulButton: ColorfulButtonUi,
-)
+) {
+    companion object {
+        val Empty = ActionWithButtonUi(VodovozAction.Unknown("", ""), ColorfulButtonUi.Empty)
+    }
+}
 
 @Immutable
 data class ColorfulButtonUi(
     val name: String,
     val backgroundColor: Color,
     val textColor: Color,
-)
+) {
+    companion object {
+        val Empty = ColorfulButtonUi("", Color.Transparent, Color.Transparent)
+    }
+}
 
 fun List<StoryModel>.mapToUi(): List<StoryUi> {
     return mapNotNull { storyModel -> storyModel.toUi() }
@@ -37,21 +45,21 @@ fun StoryModel.toUi(): StoryUi {
     return StoryUi(
         id = id,
         image = image,
-        actionWithButtonList = actionWithButtonList.mapNotNull { it.toUi() }
+        actionWithButtonList = actionWithButtonList.map { it.toUi() }
     )
 }
 
-fun ActionWithButtonModel.toUi(): ActionWithButtonUi? {
+fun ActionWithButtonModel.toUi(): ActionWithButtonUi {
     return ActionWithButtonUi(
         action = action,
-        colorfulButton = colorfulButton.toUi() ?: return null
+        colorfulButton = colorfulButton.toUi()
     )
 }
 
-fun ColorfulButtonModel.toUi(): ColorfulButtonUi? {
+fun ColorfulButtonModel.toUi(): ColorfulButtonUi {
     return ColorfulButtonUi(
         name = name,
-        backgroundColor = Color.fromHexOrNull(backgroundColor) ?: return null,
-        textColor = Color.fromHexOrNull(textColor) ?: return null
+        backgroundColor = Color.fromHexOrTransparent(backgroundColor),
+        textColor = Color.fromHexOrTransparent(textColor)
     )
 }
