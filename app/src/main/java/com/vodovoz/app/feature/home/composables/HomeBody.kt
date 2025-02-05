@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -50,42 +49,33 @@ fun HomeBody(
 
 
         //todo - put actual data
-
-        val pagerState = rememberPagerState {
-            banners.count()
-        }
-
-        AuthScrollImagePager(
-            modifier = Modifier.padding(top = 8.dp),
-            images = banners.map { it.detailPicture },
-            onImageClick = {
-
-            },
-            pagerState = pagerState,
-            pageWidth = 300.dp
-        )
-
-        //todo - put stories
-        if (false) {
-            HomeStoriesRow(
-                modifier = Modifier.padding(top = 16.dp),
-                storiesImages = listOf(
-                    "https://vodovoz.net/upload/iblock/d9c/3yue4g53w2d79bukaaz7u0u8ym7b95tr.jpg",
-                    "https://vodovoz.net/upload/iblock/8f9/sazr2hm139ok02s3oj80q0tsqr5f3ibf.jpg",
-                    "https://vodovoz.net/upload/iblock/1eb/xgy856ctgho2l3bn8fzjcmqeug0tvbiw.jpg",
-                    "https://vodovoz.net/upload/iblock/1eb/xgy856ctgho2l3bn8fzjcmqeug0tvbiw.jpg",
-                    "https://vodovoz.net/upload/iblock/1eb/xgy856ctgho2l3bn8fzjcmqeug0tvbiw.jpg",
-                    "https://vodovoz.net/upload/iblock/1eb/xgy856ctgho2l3bn8fzjcmqeug0tvbiw.jpg"
-                ),
-                onStoryClick = {
+        if (banners.isNotEmpty()) {
+            HomeBanners(
+                banners = banners,
+                onBannerClick = {
 
                 }
             )
         }
 
+        HomeStories(
+            modifier = Modifier.padding(top = 16.dp),
+            storiesImages = listOf(
+                "https://vodovoz.net/upload/iblock/d9c/3yue4g53w2d79bukaaz7u0u8ym7b95tr.jpg",
+                "https://vodovoz.net/upload/iblock/8f9/sazr2hm139ok02s3oj80q0tsqr5f3ibf.jpg",
+                "https://vodovoz.net/upload/iblock/1eb/xgy856ctgho2l3bn8fzjcmqeug0tvbiw.jpg",
+                "https://vodovoz.net/upload/iblock/1eb/xgy856ctgho2l3bn8fzjcmqeug0tvbiw.jpg",
+                "https://vodovoz.net/upload/iblock/1eb/xgy856ctgho2l3bn8fzjcmqeug0tvbiw.jpg",
+                "https://vodovoz.net/upload/iblock/1eb/xgy856ctgho2l3bn8fzjcmqeug0tvbiw.jpg"
+            ),
+            onStoryClick = {
+
+            }
+        )
+
 
         if (orderWithMenu.order != null || orderWithMenu.menuItems.isNotEmpty()) {
-            HomeMenuRow(
+            HomeOrderMenu(
                 modifier = Modifier.padding(top = 24.dp),
                 orderWithMenu = orderWithMenu,
                 onOrderClick = onOrderClick,

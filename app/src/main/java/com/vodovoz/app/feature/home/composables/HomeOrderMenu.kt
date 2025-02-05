@@ -30,7 +30,7 @@ import com.vodovoz.app.feature.home.model.OrderUi
 import com.vodovoz.app.feature.home.model.OrderWithMenuUi
 
 @Composable
-fun HomeMenuRow(
+fun HomeOrderMenu(
     modifier: Modifier = Modifier,
     orderWithMenu: OrderWithMenuUi,
     onOrderClick: (OrderUi) -> Unit,

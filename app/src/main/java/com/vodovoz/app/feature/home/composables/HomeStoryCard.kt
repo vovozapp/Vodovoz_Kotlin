@@ -22,7 +22,7 @@ import com.vodovoz.app.design_system.composables.card.VodovozOutlinedCard
 
 @Suppress("NonSkippableComposable")
 @Composable
-fun HomeStoriesRow(
+fun HomeStories(
     modifier: Modifier = Modifier,
     storiesImages: List<String>,
     onStoryClick: () -> Unit,
@@ -57,13 +57,13 @@ fun HomeStoryCard(
         modifier = modifier.size(96.dp),
         contentPadding = PaddingValues(2.dp),
         shape = MaterialTheme.shapes.medium,
-        borderColor = if (viewed) MaterialTheme.colorScheme.primary else Color.Transparent,
+        borderColor = if (!viewed) MaterialTheme.colorScheme.primary else Color.Transparent,
         onClick = onClick
     ) {
         AsyncImage(
             model = storyImage,
             contentDescription = null,
-            contentScale = ContentScale.FillBounds,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()
                 .clip(MaterialTheme.shapes.medium)

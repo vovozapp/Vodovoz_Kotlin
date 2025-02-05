@@ -36,7 +36,7 @@ fun AuthScrollImagePager(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
     images: List<String>,
-    onImageClick: (String) -> Unit,
+    onImageClick: (page: Int) -> Unit,
     pageWidth: Dp,
 ) {
 
@@ -48,13 +48,10 @@ fun AuthScrollImagePager(
         state = pagerState,
         contentPadding = PaddingValues(horizontal = 16.dp),
         pageSpacing = 8.dp,
-        key = { page ->
-            images[page]
-        },
         pageSize = PageSize.Fixed(pageWidth),
         verticalAlignment = Alignment.CenterVertically,
-        beyondViewportPageCount = 1,
-        snapPosition = SnapPosition.Center,
+        beyondViewportPageCount = images.size,
+        snapPosition = SnapPosition.Start,
 
         ) { page ->
 
@@ -65,10 +62,10 @@ fun AuthScrollImagePager(
             contentDescription = null,
             modifier = Modifier
                 .height(150.dp)
-                .width(300.dp)
+                .width(pageWidth)
                 .clip(MaterialTheme.shapes.large)
                 .clickable {
-                    onImageClick(currentImage)
+                    onImageClick(page)
                 },
             contentScale = ContentScale.FillBounds
         )
@@ -92,19 +89,3 @@ fun AuthScrollImagePager(
     }
 }
 
-//@Preview
-//@Composable
-//private fun PromotionHorizontalPager() {
-//    VodovozTheme {
-//        PromotionHorizontalPager(
-//            promotion = listOf(
-//                "https://vodovoz.net/upload/iblock/d9c/3yue4g53w2d79bukaaz7u0u8ym7b95tr.jpg",
-//                "https://vodovoz.net/upload/iblock/8f9/sazr2hm139ok02s3oj80q0tsqr5f3ibf.jpg",
-//                "https://vodovoz.net/upload/iblock/1eb/xgy856ctgho2l3bn8fzjcmqeug0tvbiw.jpg"
-//            ),
-//            onImageClick = {
-//
-//            }
-//        )
-//    }
-//}
