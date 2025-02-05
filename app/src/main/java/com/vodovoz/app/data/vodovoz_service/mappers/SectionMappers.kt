@@ -13,58 +13,58 @@ import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 
-fun SuperTopAndBottomSectionsDTO.mapToDomain(): TopAndBottomSectionsModel? {
+fun SuperTopAndBottomSectionsDTO.toDomain(): TopAndBottomSectionsModel? {
     return TopAndBottomSectionsModel(
-        topSection = RAZDEL_VERH?.mapToDomain() ?: return null,
-        bottomSection = RAZDEL_NIZ?.mapToDomain() ?: return null
+        topSection = RAZDEL_VERH?.toDomain() ?: return null,
+        bottomSection = RAZDEL_NIZ?.toDomain() ?: return null
     )
 }
 
-fun CATEGORY_WITH_PRODUCTS_DTO.mapToDomain(): CategoryWithProductsModel? {
+fun CATEGORY_WITH_PRODUCTS_DTO.toDomain(): CategoryWithProductsModel? {
     return CategoryWithProductsModel(
         id = ID ?: return null,
-        products = data?.mapToDomain() ?: return null,
+        products = data?.toDomain() ?: return null,
         name = NAME ?: return null
     )
 }
 
-fun CATEGORY_RAZDEL.mapToDomain(): SectionModel<CategoryWithProductsModel> {
-    val categoriesWithProducts = DATA?.mapNotNull { it.mapToDomain() } ?: emptyList()
+fun CATEGORY_RAZDEL.toDomain(): SectionModel<CategoryWithProductsModel> {
+    val categoriesWithProducts = DATA?.mapNotNull { it.toDomain() } ?: emptyList()
     return SectionModel(
         title = NAMERAZDEL ?: categoriesWithProducts.firstOrNull { it.name.isNotEmpty() }?.name
         ?: "",
-        button = KNOPKA?.mapToDomain(),
+        button = KNOPKA?.toDomain(),
         items = categoriesWithProducts
     )
 }
 
-fun RAZDEL_DTO.mapToDomain(): SectionModel<ProductModel> {
+fun RAZDEL_DTO.toDomain(): SectionModel<ProductModel> {
     return SectionModel(
         title = TITLE ?: "",
-        button = KNOPKA?.mapToDomain(),
-        items = DATA?.mapNotNull { tovarDataDto -> tovarDataDto?.mapToDomain() } ?: emptyList()
+        button = KNOPKA?.toDomain(),
+        items = DATA?.mapNotNull { tovarDataDto -> tovarDataDto?.toDomain() } ?: emptyList()
     )
 }
 
-fun KNOPKA_DTO.mapToDomain(): ButtonModel? {
+fun KNOPKA_DTO.toDomain(): ButtonModel? {
     return ButtonModel(
         name = NAME ?: "",
-        action = ID?.mapToButtonAction() ?: return null
+        action = ID?.toButtonAction() ?: return null
     )
 }
 
-fun KNOPKA_INT_DTO.mapToDomain(): ButtonModel? {
+fun KNOPKA_INT_DTO.toDomain(): ButtonModel? {
     return ButtonModel(
         name = NAME ?: "",
         action = ButtonInfo.Id(ID ?: return null)
     )
 }
 
-private fun String.mapToButtonAction(): ButtonInfo {
+private fun String.toButtonAction(): ButtonInfo {
     val id = toIntOrNull()
     return if (id != null) {
         ButtonInfo.Id(id)
     } else {
-        ButtonInfo.Action(mapToDataAll())
+        ButtonInfo.Action(toDataAll())
     }
 }

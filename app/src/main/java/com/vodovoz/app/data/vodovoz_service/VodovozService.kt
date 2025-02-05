@@ -4,7 +4,7 @@ import com.vodovoz.app.data.vodovoz_service.model.OrderMenuDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopularCategoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionsDTO
-import com.vodovoz.app.data.vodovoz_service.model.SliderDTO
+import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
 import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_DTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
@@ -32,7 +32,7 @@ interface VodovozService {
 
 
     @GET("glavnaya/slayders/index.php?action=slayder")
-    suspend fun getSlider(): Response<VodovozResponseDTO<List<SliderDTO>>>
+    suspend fun getBanners(): Response<VodovozResponseDTO<List<BannerDTO>>>
 
     @GET("glavnaya/menushka.php?action=glavnaya")
     suspend fun getOrderMenu(

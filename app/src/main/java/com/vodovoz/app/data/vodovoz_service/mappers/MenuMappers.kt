@@ -9,15 +9,15 @@ import com.vodovoz.app.domain.general.model.MenuItemTypeModel
 import com.vodovoz.app.domain.general.model.OrderModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 
-fun OrderMenuDTO.mapToDomain(): OrderWithMenuModel {
+fun OrderMenuDTO.toDomain(): OrderWithMenuModel {
     return OrderWithMenuModel(
-        order = ZAKAZ?.mapToDomain(),
-        menuItems = MENU?.mapNotNull { menuDto -> menuDto?.mapToDomain() } ?: emptyList()
+        order = ZAKAZ?.toDomain(),
+        menuItems = MENU?.mapNotNull { menuDto -> menuDto?.toDomain() } ?: emptyList()
 
     )
 }
 
-fun ZAKAZ_DTO.mapToDomain(): OrderModel? {
+fun ZAKAZ_DTO.toDomain(): OrderModel? {
     return OrderModel(
         orderId = this.IDZAKAZ ?: return null,
         title = this.ZAGALOVOK ?: return null,
@@ -27,7 +27,7 @@ fun ZAKAZ_DTO.mapToDomain(): OrderModel? {
     )
 }
 
-fun MENU_DTO.mapToDomain(): MenuItemModel? {
+fun MENU_DTO.toDomain(): MenuItemModel? {
     return MenuItemModel(
         type = this.IDKLYCH?.mapToMenuItemTypeModel() ?: MenuItemTypeModel.None,
         picture = this.KARTINKA?.toVodovozImage() ?: return null,

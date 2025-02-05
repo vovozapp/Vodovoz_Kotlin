@@ -18,10 +18,10 @@ import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.data.parser.response.promotion.PromotionDetailResponseJsonParser
 import com.vodovoz.app.design_system.model.PromotionDetailsUi
-import com.vodovoz.app.design_system.model.mapToUi
+import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.home.model.ProductUi
-import com.vodovoz.app.feature.home.model.mapToUi
+import com.vodovoz.app.feature.home.model.toUi
 import com.vodovoz.app.mapper.PromotionDetailMapper.mapToUI
 import com.vodovoz.app.ui.model.PromotionDetailUI
 import com.vodovoz.app.util.extensions.debugLog
@@ -66,13 +66,13 @@ class PromotionDetailFlowViewModel @Inject constructor(
                         vodovozServiceRepository.getPromotionDetailsProductsPaged(promotionId)
                             .map { pagingData ->
                                 pagingData.map { productModel ->
-                                    productModel.mapToUi()
+                                    productModel.toUi()
                                 }
                             }
 
                     uiStateListener.updateData { s ->
                         s.copy(
-                            promotionDetails = titleAndPromotionDetails.second.mapToUi(),
+                            promotionDetails = titleAndPromotionDetails.second.toUi(),
                             products = products,
                             productsTitle = titleAndPromotionDetails.first.title
                         )

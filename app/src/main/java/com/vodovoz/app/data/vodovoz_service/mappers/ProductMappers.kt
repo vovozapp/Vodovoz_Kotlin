@@ -8,13 +8,13 @@ import com.vodovoz.app.domain.general.model.LabelModel
 import com.vodovoz.app.domain.general.model.PriceModel
 import com.vodovoz.app.domain.general.model.ProductModel
 
-fun List<TOVAR_DATA_DTO?>.mapToDomain(): List<ProductModel> {
+fun List<TOVAR_DATA_DTO?>.toDomain(): List<ProductModel> {
     return mapNotNull { productDTO ->
-        productDTO?.mapToDomain()
+        productDTO?.toDomain()
     }
 }
 
-fun TOVAR_DATA_DTO.mapToDomain(): ProductModel? {
+fun TOVAR_DATA_DTO.toDomain(): ProductModel? {
     return ProductModel(
         id = ID ?: return null,
         name = NAME ?: return null,
@@ -26,13 +26,13 @@ fun TOVAR_DATA_DTO.mapToDomain(): ProductModel? {
         unitOfMeasurement = EDINICAIZMERENIYA,
         coefficient = KOFFICIENT?.toFloat() ?: 1f,
         quantity = CATALOG_QUANTITY ?: return null,
-        firstPrice = EXTENDED_PRICE?.firstOrNull()?.mapToDomain() ?: return null,
-        prices = EXTENDED_PRICE?.mapNotNull { it?.mapToDomain() } ?: return null,
-        labels = NALICHIE_MORE?.mapToDomain() ?: emptyList()
+        firstPrice = EXTENDED_PRICE?.firstOrNull()?.toDomain() ?: return null,
+        prices = EXTENDED_PRICE?.mapNotNull { it?.toDomain() } ?: return null,
+        labels = NALICHIE_MORE?.toDomain() ?: emptyList()
     )
 }
 
-fun EXTENDED_PRICE_DTO.mapToDomain(): PriceModel? {
+fun EXTENDED_PRICE_DTO.toDomain(): PriceModel? {
     return PriceModel(
         price = PRICE?.toFloat() ?: return null,
         oldPrice = OLD_PRICE?.toFloat() ?: return null,
@@ -42,7 +42,7 @@ fun EXTENDED_PRICE_DTO.mapToDomain(): PriceModel? {
 }
 
 @JvmName("mapLabelToDomain")
-fun List<NALICHIE_MORE_DTO?>.mapToDomain(): List<LabelModel> {
+fun List<NALICHIE_MORE_DTO?>.toDomain(): List<LabelModel> {
     return mapNotNull { labelDTO ->
         labelDTO ?: return@mapNotNull null
         LabelModel(

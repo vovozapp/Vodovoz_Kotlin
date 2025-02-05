@@ -24,11 +24,11 @@ data class CategoryWithProductsUi(
 }
 
 
-fun CategoryWithProductsModel.mapToUi(): CategoryWithProductsUi {
+fun CategoryWithProductsModel.toUi(): CategoryWithProductsUi {
     return CategoryWithProductsUi(
         id = id,
         name = name,
-        products = products.map { it.mapToUi() }
+        products = products.map { it.toUi() }
     )
 }
 
@@ -37,7 +37,7 @@ data class ButtonUi(
     val action: ButtonInfo,
 )
 
-fun ButtonModel.mapToUi(): ButtonUi {
+fun ButtonModel.toUi(): ButtonUi {
     return ButtonUi(
         name = name,
         action = action
@@ -59,13 +59,13 @@ data class SectionUi<E>(
 
 }
 
-fun <E, E2> SectionModel<E>.mapToUi(
+fun <E, E2> SectionModel<E>.toUi(
     mapItems: (List<E>) -> List<E2>,
 ): SectionUi<E2> {
     return SectionUi(
         title = title,
         items = mapItems(items),
-        button = button?.mapToUi()
+        button = button?.toUi()
     )
 }
 
@@ -85,7 +85,7 @@ data class ProductUi(
     val isAvailable: Boolean,
 )
 
-fun ProductModel.mapToUi(): ProductUi {
+fun ProductModel.toUi(): ProductUi {
     return ProductUi(
         id = id,
         isFavorite = isFavorite,
@@ -96,7 +96,7 @@ fun ProductModel.mapToUi(): ProductUi {
         cartQuantity = -1,
         cartLoading = false,
         image = picture,
-        labels = labels.mapToUi(),
+        labels = labels.toUi(),
         isAvailable = quantity > 0,
     )
 }
@@ -108,13 +108,13 @@ data class LabelWithColorUi(
     val color: Color,
 ) {}
 
-fun List<LabelModel>.mapToUi(): List<LabelWithColorUi> {
+fun List<LabelModel>.toUi(): List<LabelWithColorUi> {
     return mapNotNull { labelModel ->
-        labelModel.mapToUi()
+        labelModel.toUi()
     }
 }
 
-fun LabelModel.mapToUi(): LabelWithColorUi? {
+fun LabelModel.toUi(): LabelWithColorUi? {
     return LabelWithColorUi(
         name,
         Color.fromHexOrNull(colorHex) ?: return null

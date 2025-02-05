@@ -19,11 +19,11 @@ data class OrderWithMenuUi(
 }
 
 
-fun OrderWithMenuModel.mapToUi(): OrderWithMenuUi {
-    return OrderWithMenuUi(order?.mapToUi(), menuItems.map { it.mapToUi() })
+fun OrderWithMenuModel.toUi(): OrderWithMenuUi {
+    return OrderWithMenuUi(order?.toUi(), menuItems.map { it.toUi() })
 }
 
-fun OrderModel.mapToUi(): OrderUi {
+fun OrderModel.toUi(): OrderUi {
     return OrderUi(
         orderId = orderId,
         title = title,
@@ -33,7 +33,7 @@ fun OrderModel.mapToUi(): OrderUi {
     )
 }
 
-fun MenuItemModel.mapToUi(): MenuItemUi {
+fun MenuItemModel.toUi(): MenuItemUi {
     return MenuItemUi(
         image = this.picture,
         title = title,

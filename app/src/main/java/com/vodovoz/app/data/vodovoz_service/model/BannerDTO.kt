@@ -6,8 +6,7 @@ import androidx.annotation.Keep
 import com.squareup.moshi.JsonClass
 
 @Keep
-@JsonClass(generateAdapter = true)
-data class SliderDTO(
+data class BannerDTO(
     @Json(name = "DETAIL_PICTURE")
     val DETAIL_PICTURE: String?,
     @Json(name = "HARAKTERISTIK")

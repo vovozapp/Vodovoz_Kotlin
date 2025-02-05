@@ -10,7 +10,7 @@ data class PopularCategoryUi(
     val id: Long,
 )
 
-fun PopularCategoryModel.mapToUi(): PopularCategoryUi {
+fun PopularCategoryModel.toUi(): PopularCategoryUi {
     return PopularCategoryUi(
         image = picture,
         name = name,

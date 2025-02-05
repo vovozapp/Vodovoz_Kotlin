@@ -6,15 +6,15 @@ import com.vodovoz.app.data.vodovoz_service.model.PopularCategoriesDTO
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.SectionModel
 
-fun PopularCategoriesDTO.mapToDomain(): SectionModel<PopularCategoryModel> {
+fun PopularCategoriesDTO.toDomain(): SectionModel<PopularCategoryModel> {
     return SectionModel(
         title = TITLERAZDEL ?: "",
-        items = LISTRAZDEL?.mapNotNull { it?.mapToDomain() } ?: emptyList(),
+        items = LISTRAZDEL?.mapNotNull { it?.toDomain() } ?: emptyList(),
         button = null
     )
 }
 
-fun CATEGORY_DTO.mapToDomain(): PopularCategoryModel? {
+fun CATEGORY_DTO.toDomain(): PopularCategoryModel? {
     return PopularCategoryModel(
         id = this.IDRAZDEL?.toLong() ?: return null,
         name = this.NAMERAZDEL ?: return null,

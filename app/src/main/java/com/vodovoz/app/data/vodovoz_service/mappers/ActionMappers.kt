@@ -5,7 +5,7 @@ import com.vodovoz.app.domain.general.model.DataAll
 import com.vodovoz.app.domain.general.model.VodovozAction
 
 
-fun HARAKTERISTIK_DTO.mapToAction(): VodovozAction? {
+fun HARAKTERISTIK_DTO.toAction(): VodovozAction? {
     val id = ID ?: return null
     val action = ACTION ?: return null
 
@@ -17,12 +17,12 @@ fun HARAKTERISTIK_DTO.mapToAction(): VodovozAction? {
         "BRAND" -> VodovozAction.Brand(id.toIntOrNull() ?: return null)
         "URL" -> VodovozAction.Url(id)
         "URLKYKI" -> VodovozAction.UrlWithCookie(id)
-        "DANNYEVSE" -> id.mapToDataAll()
+        "DANNYEVSE" -> id.toDataAll()
         else -> VodovozAction.Unknown(action, id)
     }
 }
 
-fun String.mapToDataAll(): DataAll {
+fun String.toDataAll(): DataAll {
     return when (this) {
         "vseskidki" -> DataAll.AllDiscount
         "vsenovinki" -> DataAll.AllNewProducts

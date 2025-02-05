@@ -4,27 +4,23 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.vodovoz.app.common.account.data.AccountManager
-import com.vodovoz.app.core.network.messageWithCode
-import com.vodovoz.app.data.model.common.BannerEntity
 import com.vodovoz.app.data.vodovoz_service.VodovozService
 import com.vodovoz.app.data.vodovoz_service.mappers.executeRequest
-import com.vodovoz.app.data.vodovoz_service.mappers.mapToDomain
+import com.vodovoz.app.data.vodovoz_service.mappers.toDomain
 import com.vodovoz.app.domain.general.VodovozPagingSource
+import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.ProductsTitle
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
-import com.vodovoz.app.domain.general.model.SectionPromotionsWithFiltersModel
-import com.vodovoz.app.domain.general.model.RequestException
 import com.vodovoz.app.domain.general.model.SectionModel
+import com.vodovoz.app.domain.general.model.SectionPromotionsWithFiltersModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
-import com.vodovoz.app.util.extensions.catchResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class VodovozServiceRepositoryImpl @Inject constructor(
@@ -32,22 +28,21 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val accountManager: AccountManager,
 ) : VodovozServiceRepository {
 
-    //todo - finish that
-    override fun getSlider(): Flow<Result<List<BannerEntity>>> = flow<Result<List<BannerEntity>>> {
-        val response = vodovozService.getSlider()
-        if (response.isSuccessful) {
-            response.body()?.data
-        } else {
-            throw RequestException(response.messageWithCode())
+    override fun getBanners(): Flow<Result<List<BannerModel>>> = executeRequest(
+        request = {
+            vodovozService.getBanners()
+        },
+        mapToResult = { promotionsDTOVodovozResponseDTO ->
+            promotionsDTOVodovozResponseDTO.data?.toDomain()!!
         }
-    }.catchResult()
+    )
 
     override fun getPromotions(): Flow<Result<SectionPromotionsWithFiltersModel>> = executeRequest(
         request = {
             vodovozService.getPromotions()
         },
         mapToResult = { promotionsDTOVodovozResponseDTO ->
-            promotionsDTOVodovozResponseDTO.data?.mapToDomain()!!
+            promotionsDTOVodovozResponseDTO.data?.toDomain()!!
         }
     )
 
@@ -59,7 +54,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             mapToResult = { response ->
                 ProductsTitle(
                     response.data?.TOVAR?.NAMETOVAR ?: ""
-                ) to response.data?.AKCIYA?.mapToDomain()!!
+                ) to response.data?.AKCIYA?.toDomain()!!
             }
         )
 
@@ -83,7 +78,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                                 )
                             },
                             mapToResult = { promotionDetailsDTOVodovozResponseDTO ->
-                                promotionDetailsDTOVodovozResponseDTO.data?.TOVAR?.DATA?.mapToDomain()
+                                promotionDetailsDTOVodovozResponseDTO.data?.TOVAR?.DATA?.toDomain()
                                     ?: emptyList()
                             }
                         ).firstOrNull() ?: Result.failure(Throwable())
@@ -100,7 +95,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     ): Flow<Result<SectionPromotionsWithFiltersModel>> = executeRequest(
         request = { vodovozService.getPromotionsWithSections(page, limit) },
         mapToResult = { response ->
-            response.data!!.mapToDomain()
+            response.data!!.toDomain()
         },
     )
 
@@ -115,7 +110,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                                 vodovozService.getPromotionsWithSections(page, limit)
                             },
                             mapToResult = { promotionsDTOVodovozResponseDTO ->
-                                promotionsDTOVodovozResponseDTO.data?.mapToDomain()?.promotions
+                                promotionsDTOVodovozResponseDTO.data?.toDomain()?.promotions
                                     ?: emptyList()
                             }
                         ).firstOrNull() ?: Result.failure(Throwable())
@@ -131,7 +126,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             vodovozService.getOrderMenu(userId ?: accountManager.fetchAccountId() ?: -1)
         },
         mapToResult = {
-            it.data?.mapToDomain()!!
+            it.data?.toDomain()!!
         }
     )
 
@@ -142,7 +137,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
                 vodovozService.getPopularSections()
             },
             mapToResult = { popularCategoriesDTOVodovozResponseDTO ->
-                popularCategoriesDTOVodovozResponseDTO.data?.mapToDomain()!!
+                popularCategoriesDTOVodovozResponseDTO.data?.toDomain()!!
             }
         )
 
@@ -151,7 +146,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             vodovozService.getNewProducts()
         },
         mapToResult = { razdelDTO ->
-            razdelDTO.data?.mapToDomain()!!
+            razdelDTO.data?.toDomain()!!
         }
     )
 
@@ -161,7 +156,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             vodovozService.getHurryUpBuyProducts()
         },
         mapToResult = { razdelDTO ->
-            razdelDTO.data?.mapToDomain()!!
+            razdelDTO.data?.toDomain()!!
         }
     )
 
@@ -170,7 +165,7 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             vodovozService.getSuperTop()
         },
         mapToResult = { topAndBottomDTO ->
-            topAndBottomDTO.data!!.mapToDomain()!!
+            topAndBottomDTO.data!!.toDomain()!!
         }
     )
 }

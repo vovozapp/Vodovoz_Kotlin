@@ -14,15 +14,17 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.design_system.model.BannerUi
 import com.vodovoz.app.design_system.model.PromotionUi
 import com.vodovoz.app.design_system.model.mapToUi
+import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.home.model.CategoryWithProductsUi
 import com.vodovoz.app.feature.home.model.OrderWithMenuUi
 import com.vodovoz.app.feature.home.model.PopularCategoryUi
 import com.vodovoz.app.feature.home.model.ProductUi
 import com.vodovoz.app.feature.home.model.SectionUi
-import com.vodovoz.app.feature.home.model.mapToUi
+import com.vodovoz.app.feature.home.model.toUi
 import com.vodovoz.app.feature.home.viewholders.homebanners.HomeBanners
 import com.vodovoz.app.feature.home.viewholders.homebottominfo.HomeBottomInfo
 import com.vodovoz.app.feature.home.viewholders.homepopulars.HomePopulars
@@ -35,7 +37,6 @@ import com.vodovoz.app.mapper.BannerMapper.mapToUI
 import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.PopupNewsMapper.mapToUI
-import com.vodovoz.app.ui.model.BannerUI
 import com.vodovoz.app.ui.model.PopupNewsUI
 import com.vodovoz.app.util.extensions.combineIntoTriple
 import com.vodovoz.app.util.extensions.debugLog
@@ -79,8 +80,9 @@ class HomeFlowViewModel @Inject constructor(
                 vodovozServiceRepository.getNewProducts(),
                 vodovozServiceRepository.getHurryUpBuyProducts(),
                 vodovozServiceRepository.getSuperTop()
-            )
-        ) { (promotionsWithSectionsResult, sectionPopularCategoriesResult, orderMenuResult), (sectionNewProductsResult, sectionHurryUpBuyProductsResult, superTopResult) ->
+            ),
+            vodovozServiceRepository.getBanners()
+        ) { (promotionsWithSectionsResult, sectionPopularCategoriesResult, orderMenuResult), (sectionNewProductsResult, sectionHurryUpBuyProductsResult, superTopResult), bannersResult ->
 
 
             val sectionPopularCategories = sectionPopularCategoriesResult.getOrNull()
@@ -89,30 +91,31 @@ class HomeFlowViewModel @Inject constructor(
             val sectionHurryBuyProducts = sectionHurryUpBuyProductsResult.getOrNull()
             val promotionsWithSections = promotionsWithSectionsResult.getOrNull()
             val orderMenu = orderMenuResult.getOrNull()
+            val banners = bannersResult.getOrNull()
 
 
-            if (sectionPopularCategories != null && topAndBottomSections != null && sectionNewProducts != null && sectionHurryBuyProducts != null && promotionsWithSections != null && orderMenu != null) {
+            if (sectionPopularCategories != null && topAndBottomSections != null && sectionNewProducts != null && sectionHurryBuyProducts != null && promotionsWithSections != null && orderMenu != null && banners != null) {
 
-                val bestOffersSection = topAndBottomSections.topSection.mapToUi(
-                    mapItems = { items -> items.map { it.mapToUi() } }
+                val bestOffersSection = topAndBottomSections.topSection.toUi(
+                    mapItems = { items -> items.map { it.toUi() } }
                 )
 
                 uiStateListener.updateData { s ->
                     s.copy(
-                        popularSections = sectionPopularCategories.mapToUi { items -> items.map { it.mapToUi() } },
+                        popularSections = sectionPopularCategories.toUi { items -> items.map { it.toUi() } },
                         sectionBestOffers = bestOffersSection,
-                        sectionBottom = topAndBottomSections.bottomSection.mapToUi { items -> items.map { it -> it.mapToUi() } },
+                        sectionBottom = topAndBottomSections.bottomSection.toUi { items -> items.map { it -> it.toUi() } },
                         currentCategoryWithProducts = bestOffersSection.items.firstOrNull()
                             ?: CategoryWithProductsUi.Empty,
-                        sectionNewProducts = sectionNewProducts.mapToUi { productModels -> productModels.map { item -> item.mapToUi() } },
-                        sectionHurryUpBuyProducts = sectionHurryBuyProducts.mapToUi { productModels -> productModels.map { item -> item.mapToUi() } },
+                        sectionNewProducts = sectionNewProducts.toUi { productModels -> productModels.map { item -> item.toUi() } },
+                        sectionHurryUpBuyProducts = sectionHurryBuyProducts.toUi { productModels -> productModels.map { item -> item.toUi() } },
                         sectionPromotions = SectionUi(
                             title = promotionsWithSections.title,
-                            items = promotionsWithSections.promotions.map { promotionModel -> promotionModel.mapToUi() },
-                            button = promotionsWithSections.button?.mapToUi()
+                            items = promotionsWithSections.promotions.map { promotionModel -> promotionModel.toUi() },
+                            button = promotionsWithSections.button?.toUi()
                         ),
-                        orderWithMenu = orderMenu.mapToUi()
-
+                        orderWithMenu = orderMenu.toUi(),
+                        banners = banners.mapToUi()
                     )
 
                 }
@@ -965,7 +968,7 @@ class HomeFlowViewModel @Inject constructor(
     data class HomeState(
         val positionItems: List<PositionItem> = emptyList(),
         val items: List<Item> = emptyList(),
-        val banners: List<BannerUI> = emptyList(),
+        val banners: List<BannerUi> = emptyList(),
         val sectionPromotions: SectionUi<PromotionUi> = SectionUi.empty(),
         val orderWithMenu: OrderWithMenuUi = OrderWithMenuUi.Empty,
         val popularSections: SectionUi<PopularCategoryUi> = SectionUi.empty(),

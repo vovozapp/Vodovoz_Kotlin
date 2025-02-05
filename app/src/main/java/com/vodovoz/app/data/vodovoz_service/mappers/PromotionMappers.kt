@@ -16,36 +16,36 @@ import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.SectionPromotionsWithFiltersModel
 import com.vodovoz.app.domain.general.model.emptyLabelModel
 
-fun AKCIYA_DTO.mapToDomain(): PromotionDetailsModel? {
+fun AKCIYA_DTO.toDomain(): PromotionDetailsModel? {
     return PromotionDetailsModel(
         id = ID ?: return null,
         picture = DETAIL_PICTURE?.toVodovozImage() ?: return null,
         name = NAME ?: return null,
         description = Html.fromHtml(DETAIL_TEXT ?: return null).toString(),
         endDate = mapToZonedDateTime(DATAOUT ?: return null) ?: return null,
-        advertising = OREKLAME?.mapToDomain() ?: return null,
-        label = HIT?.mapToDomain()
+        advertising = OREKLAME?.toDomain() ?: return null,
+        label = HIT?.toDomain()
     )
 }
 
-fun PromotionsDTO.mapToDomain(): SectionPromotionsWithFiltersModel {
+fun PromotionsDTO.toDomain(): SectionPromotionsWithFiltersModel {
     return SectionPromotionsWithFiltersModel(
         title = TITLE ?: "",
-        filters = RAZDELI?.filterNotNull()?.mapToDomain() ?: emptyList(),
-        promotions = DATA?.mapToDomain() ?: emptyList(),
-        button = KNOPKA?.mapToDomain()
+        filters = RAZDELI?.filterNotNull()?.toDomain() ?: emptyList(),
+        promotions = DATA?.toDomain() ?: emptyList(),
+        button = KNOPKA?.toDomain()
     )
 
 }
 
 @JvmName("mapPromotionRazdelToDomain")
-fun List<PROMOTION_RAZDEL_DTO>.mapToDomain(): List<PromotionFilterModel> {
+fun List<PROMOTION_RAZDEL_DTO>.toDomain(): List<PromotionFilterModel> {
     return mapNotNull { promotionRazdelDto ->
-        promotionRazdelDto.mapToDomain()
+        promotionRazdelDto.toDomain()
     }
 }
 
-fun PROMOTION_RAZDEL_DTO.mapToDomain(): PromotionFilterModel? {
+fun PROMOTION_RAZDEL_DTO.toDomain(): PromotionFilterModel? {
     return PromotionFilterModel(
         id = ID ?: return null,
         name = NAME ?: return null,
@@ -53,14 +53,14 @@ fun PROMOTION_RAZDEL_DTO.mapToDomain(): PromotionFilterModel? {
     )
 }
 
-fun List<PROMOTION_DATA_DTO?>.mapToDomain(): List<PromotionModel> {
+fun List<PROMOTION_DATA_DTO?>.toDomain(): List<PromotionModel> {
     return mapNotNull { promotionDataDto ->
-        promotionDataDto?.mapToDomain()
+        promotionDataDto?.toDomain()
     }
 }
 
 
-fun PROMOTION_DATA_DTO.mapToDomain(): PromotionModel? {
+fun PROMOTION_DATA_DTO.toDomain(): PromotionModel? {
     return PromotionModel(
         id = ID ?: return null,
         name = NAME ?: return null,
@@ -68,19 +68,19 @@ fun PROMOTION_DATA_DTO.mapToDomain(): PromotionModel? {
         sectionId = IBLOCK_SECTION_ID ?: -1,
         detailPicture = DETAIL_PICTURE?.toVodovozImage() ?: return null,
         endDate = mapToZonedDateTime(DATA_OUT ?: return null) ?: return null,
-        label = HIT?.mapToDomain() ?: emptyLabelModel(),
-        advertising = OREKLAME?.mapToDomain()
+        label = HIT?.toDomain() ?: emptyLabelModel(),
+        advertising = OREKLAME?.toDomain()
     )
 }
 
-fun HIT_DTO.mapToDomain(): LabelModel? {
+fun HIT_DTO.toDomain(): LabelModel? {
     return LabelModel(
         name = TITLE ?: return null,
         colorHex = BACKGROUND ?: return null
     )
 }
 
-fun OREKLAME_DTO.mapToDomain(): AboutAdvertisingModel? {
+fun OREKLAME_DTO.toDomain(): AboutAdvertisingModel? {
     val dannye = DANNYE ?: return null
     return AboutAdvertisingModel(
         name = this.NAME ?: "",

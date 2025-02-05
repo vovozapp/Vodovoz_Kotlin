@@ -6,7 +6,7 @@ import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.PromotionFilterModel
 import com.vodovoz.app.feature.home.model.LabelWithColorUi
-import com.vodovoz.app.feature.home.model.mapToUi
+import com.vodovoz.app.feature.home.model.toUi
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.Locale
@@ -35,15 +35,15 @@ data class PromotionDetailsUi(
     }
 }
 
-fun PromotionDetailsModel.mapToUi(): PromotionDetailsUi {
+fun PromotionDetailsModel.toUi(): PromotionDetailsUi {
     return PromotionDetailsUi(
         id = this.id,
         picture = this.picture,
         name = this.name,
         description = this.description,
         timeLeft = timeRemainingToEnd(endDate),
-        advertising = this.advertising.mapToUi(),
-        label = label?.mapToUi()
+        advertising = this.advertising.toUi(),
+        label = label?.toUi()
     )
 }
 
@@ -95,11 +95,11 @@ data class PromotionSectionUi(
 
 
 @JvmName("mapPromotionSectionListToUi")
-fun List<PromotionFilterModel>.mapToUi(): List<PromotionSectionUi> {
-    return map { it.mapToUi() }
+fun List<PromotionFilterModel>.toUi(): List<PromotionSectionUi> {
+    return map { it.toUi() }
 }
 
-fun PromotionFilterModel.mapToUi(): PromotionSectionUi {
+fun PromotionFilterModel.toUi(): PromotionSectionUi {
     return PromotionSectionUi(
         id = id,
         code = code,
@@ -108,7 +108,7 @@ fun PromotionFilterModel.mapToUi(): PromotionSectionUi {
 }
 
 
-fun AboutAdvertisingModel.mapToUi(): AboutAdvertisingUi {
+fun AboutAdvertisingModel.toUi(): AboutAdvertisingUi {
     return AboutAdvertisingUi(
         name = name,
         title = title,
@@ -117,16 +117,16 @@ fun AboutAdvertisingModel.mapToUi(): AboutAdvertisingUi {
     )
 }
 
-fun PromotionModel.mapToUi(): PromotionUi {
+fun PromotionModel.toUi(): PromotionUi {
     return PromotionUi(
         id = id,
         picture = detailPicture,
-        label = label.mapToUi(),
+        label = label.toUi(),
         sectionId = sectionId,
         blockId = blockId,
         timeLeft = timeRemainingToEnd(endDate),
         name = name,
-        aboutAdvertisingUi = advertising?.mapToUi()
+        aboutAdvertisingUi = advertising?.toUi()
     )
 }
 
@@ -141,6 +141,6 @@ fun timeRemainingToEnd(endDateTime: ZonedDateTime): String {
     return String.format(Locale.getDefault(), "%02dд : %dч : %02dм", days, hours, minutes)
 }
 
-fun List<PromotionModel>.mapToUi(): List<PromotionUi> {
-    return map { it.mapToUi() }
+fun List<PromotionModel>.toUi(): List<PromotionUi> {
+    return map { it.toUi() }
 }

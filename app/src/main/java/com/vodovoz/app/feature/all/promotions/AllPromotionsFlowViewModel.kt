@@ -17,7 +17,7 @@ import com.vodovoz.app.data.model.common.ResponseEntity
 import com.vodovoz.app.design_system.model.AboutAdvertisingUi
 import com.vodovoz.app.design_system.model.PromotionSectionUi
 import com.vodovoz.app.design_system.model.PromotionUi
-import com.vodovoz.app.design_system.model.mapToUi
+import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.mapper.AllPromotionBundleMapper.mapToUI
 import com.vodovoz.app.ui.model.PromotionFilterUI
@@ -56,10 +56,10 @@ class AllPromotionsFlowViewModel @Inject constructor(
 
             promotionsWithSectionsModelResult.onSuccess { promotionsWithSectionsModel ->
                 uiStateListener.updateData { s ->
-                    val sections = promotionsWithSectionsModel.filters.mapToUi()
+                    val sections = promotionsWithSectionsModel.filters.toUi()
                     val promotions = vodovozServiceRepository.getPromotionsPaged()
                         .map { pagingData ->
-                            pagingData.map { promotionModel -> promotionModel.mapToUi() }
+                            pagingData.map { promotionModel -> promotionModel.toUi() }
                         }
 
                     s.copy(

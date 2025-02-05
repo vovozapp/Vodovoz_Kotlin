@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.vodovoz.app.design_system.model.BannerUi
 import com.vodovoz.app.design_system.model.PromotionUi
 import com.vodovoz.app.feature.home.model.CategoryWithProductsUi
 import com.vodovoz.app.feature.home.model.MenuItemUi
@@ -20,13 +21,12 @@ import com.vodovoz.app.feature.home.model.OrderWithMenuUi
 import com.vodovoz.app.feature.home.model.PopularCategoryUi
 import com.vodovoz.app.feature.home.model.ProductUi
 import com.vodovoz.app.feature.home.model.SectionUi
-import com.vodovoz.app.ui.model.BannerUI
 
 @Suppress("NonSkippableComposable")
 @Composable
 fun HomeBody(
     modifier: Modifier = Modifier,
-    banners: List<BannerUI>,
+    banners: List<BannerUi>,
     sectionPromotions: SectionUi<PromotionUi>,
     sectionPopularCategories: SectionUi<PopularCategoryUi>,
     sectionNewProducts: SectionUi<ProductUi>,
