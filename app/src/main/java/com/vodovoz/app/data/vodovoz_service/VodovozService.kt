@@ -15,6 +15,12 @@ import retrofit2.http.Query
 
 interface VodovozService {
 
+
+    @GET("glavnaya/okno.php?action=okno")
+    suspend fun getPopupWindowInfo(
+        @Query("userid") userId: Long,
+    )
+
     @GET("glavnaya/stories/index.php?iblock_id=12&action=stories&platforma=android")
     suspend fun getStories(): Response<VodovozResponseDTO<StoriesDTO>>
 

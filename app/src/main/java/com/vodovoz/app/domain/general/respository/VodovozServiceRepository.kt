@@ -16,6 +16,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface VodovozServiceRepository {
 
+
+    fun getPopupWindowInfo(): Flow<Result<Any>>
+
     fun getStories(): Flow<Result<List<StoryModel>>>
 
     fun getBanners(): Flow<Result<List<BannerModel>>>
