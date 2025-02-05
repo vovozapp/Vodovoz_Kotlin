@@ -2,6 +2,7 @@ package com.vodovoz.app.domain.general.model
 
 sealed interface VodovozAction {
     data class Product(val id: Int) : VodovozAction
+    data class Products(val id: Int) : VodovozAction
     data class Category(val id: Int) : VodovozAction
     data class Promotion(val id: Int) : VodovozAction
     data class Promotions(val categoryId: Int) : VodovozAction

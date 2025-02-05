@@ -14,6 +14,8 @@ import retrofit2.http.Query
 
 interface VodovozService {
 
+    //suspend fun getStories():
+
     @GET("glavnaya/akcii.php?action=akcii&limit=10")
     suspend fun getPromotions(): Response<VodovozResponseDTO<PromotionsDTO>>
 

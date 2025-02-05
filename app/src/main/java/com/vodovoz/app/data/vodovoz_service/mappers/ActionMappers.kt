@@ -10,7 +10,8 @@ fun HARAKTERISTIK_DTO.toAction(): VodovozAction? {
     val action = ACTION ?: return null
 
     return when (action.uppercase()) {
-        "TOVARY" -> VodovozAction.Product(id.toIntOrNull() ?: return null)
+        "TOVAR" -> VodovozAction.Product(id.toIntOrNull() ?: return null)
+        "TOVARY" -> VodovozAction.Products(id.toIntOrNull() ?: return null)
         "RAZDEL" -> VodovozAction.Category(id.toIntOrNull() ?: return null)
         "AKCIYA" -> VodovozAction.Promotion(id.toIntOrNull() ?: return null)
         "AKCII" -> VodovozAction.Promotions(id.toIntOrNull() ?: return null)
