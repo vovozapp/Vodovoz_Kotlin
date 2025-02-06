@@ -1043,6 +1043,7 @@ class HomeFlowViewModel @Inject constructor(
         val uiState: HomeUiState = HomeUiState.Loading,
         val showBottomSheet: Boolean = false,
         val searchField: String = "",
+
     ) : State {
         companion object {
             fun idle(): HomeState {
@@ -1065,6 +1066,10 @@ class HomeFlowViewModel @Inject constructor(
                     )
                 )
             }
+
+            val Loading = HomeState(
+
+            )
         }
     }
 

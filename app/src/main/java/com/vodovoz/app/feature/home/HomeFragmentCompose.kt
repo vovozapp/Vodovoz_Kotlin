@@ -36,6 +36,7 @@ import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
+import com.vodovoz.app.feature.home.composables.HomeSkeletonPlaceholder
 import com.vodovoz.app.feature.home.popup.NewsClickListener
 import com.vodovoz.app.feature.home.popup.PopupNewsBottomFragment
 import com.vodovoz.app.feature.home.viewholders.homebanners.BottomBannerManager
@@ -109,11 +110,7 @@ class HomeFragment : Fragment() {
 
                     when (viewState.data.uiState) {
                         HomeFlowViewModel.HomeUiState.Loading -> {
-                            CircularProgressIndicator(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .wrapContentSize()
-                            )
+                            HomeSkeletonPlaceholder()
                         }
 
                         HomeFlowViewModel.HomeUiState.NetworkError -> {

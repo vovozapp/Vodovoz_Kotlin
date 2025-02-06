@@ -83,7 +83,6 @@ fun SpecialPromotionBottomSheet(
             VodovozButton(
                 modifier = Modifier
                     .padding(top = 8.dp)
-                    .padding(horizontal = 16.dp)
                     .padding(bottom = 18.dp),
                 text = button.name,
                 onClick = { onButtonClick(specialPromotionUi) },
