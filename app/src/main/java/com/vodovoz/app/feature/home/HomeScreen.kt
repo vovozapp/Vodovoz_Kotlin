@@ -52,6 +52,9 @@ fun HomeScreen(
             onMenuItemClick = { },
             onOrderClick = { },
             onPopularSectionClick = { },
+            onStoryClick = {
+                viewModel.navigateToStories(it)
+            },
             onShowAllPromotionClick = {
                 navController.navigate(
                     HomeFragmentDirections.actionToAllPromotionsFragment(

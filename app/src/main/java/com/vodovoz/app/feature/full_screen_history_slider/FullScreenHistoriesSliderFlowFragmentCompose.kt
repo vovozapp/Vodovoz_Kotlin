@@ -6,27 +6,31 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.design_system.white
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
+import com.vodovoz.app.util.extensions.disableFullScreen
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -41,56 +45,99 @@ class FullScreenHistoriesSliderFlowFragment : Fragment() {
     @Inject
     lateinit var accountManager: AccountManager
 
-
-    private var startHistoryId: Long = 0
-    private var lastIndex: Int = -1
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.updateData()
-        getArgs()
     }
 
-    private fun getArgs() {
-        FullScreenHistoriesSliderFlowFragmentArgs.fromBundle(requireArguments()).let { args ->
-            startHistoryId = args.startHistoryId
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        val navController = findNavController()
         return ComposeView(requireContext()).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.Default)
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 VodovozTheme {
+                    val viewState by viewModel.observeUiState().collectAsStateWithLifecycle()
 
-                }
-            }
-        }
-    }
+                    when (viewState.data.uiState) {
+                        FullScreenHistoriesSliderFlowViewModel.UiState.Error -> {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        observeViewModelEvents()
-    }
+                        }
 
-    private fun observeViewModelEvents() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.observeEvent().collect { events ->
-                    when (events) {
-                        is FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.GoToProfile -> {
-                            tabManager.setAuthRedirect(findNavController().graph.id)
-                            tabManager.selectTab(R.id.graph_profile)
+                        FullScreenHistoriesSliderFlowViewModel.UiState.Loading -> {
+
+                        }
+
+                        FullScreenHistoriesSliderFlowViewModel.UiState.NetworkError -> {
+
+                        }
+
+                        FullScreenHistoriesSliderFlowViewModel.UiState.Success -> {
+                            StoriesScreen(
+                                viewState = viewState.data,
+                                viewModel = viewModel,
+                                navController = navController
+                            )
                         }
                     }
                 }
             }
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        hideBottomBar()
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        showBottomBar()
+    }
+
+
+    private fun hideBottomBar() {
+        requireActivity().enableEdgeToEdge()
+        val bottomNavigationView =
+            parentFragment?.parentFragment?.view?.findViewById<BottomNavigationView>(R.id.nvNavigation)
+        bottomNavigationView?.visibility = View.GONE
+    }
+
+    private fun showBottomBar() {
+        requireActivity().disableFullScreen()
+        val bottomNavigationView =
+            parentFragment?.parentFragment?.view?.findViewById<BottomNavigationView>(R.id.nvNavigation)
+        bottomNavigationView?.visibility = View.VISIBLE
+    }
+
+
+//    private fun observeViewModelEvents() {
+//        lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.observeEvent().collect { events ->
+//                    when (events) {
+//                        is FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.GoToProfile -> {
+//                            tabManager.setAuthRedirect(findNavController().graph.id)
+//                            tabManager.selectTab(R.id.graph_profile)
+//                        }
+//
+//                        FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.GoBack -> {
+//                            findNavController().popBackStack()
+//                        }
+//
+//                        is FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.ChangePagerIndex -> {
+//
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
 
     private fun ActionEntity.invoke(navController: NavController, activity: FragmentActivity) {

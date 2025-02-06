@@ -191,6 +191,8 @@ dependencies {
     implementation("io.coil-kt.coil3:coil-compose:3.0.4")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
 
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
+
     implementation("mx.platacard:compose-pager-indicator:0.0.8")
 
     implementation "ru.tinkoff.scrollingpagerindicator:scrollingpagerindicator:1.2.5"

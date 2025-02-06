@@ -13,7 +13,6 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.account.data.ReloginManager
 import com.vodovoz.app.common.content.BaseFragment
-import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.databinding.FragmentSplashBinding
 import com.vodovoz.app.feature.cart.CartFlowViewModel
 import com.vodovoz.app.feature.catalog.CatalogFlowViewModel
@@ -204,14 +203,11 @@ class SplashFragment : BaseFragment() {
     private fun observeHomeViewModel() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                homeViewModel.observeUiState()
-                    .collect { state ->
-                        if (state.isFirstLoad) {
-                            if (!state.loadingPage) {
-                                checkSiteStateWithNavigate(state.data.isSecondLoad)
-                            }
-                        }
+                homeViewModel.observeUiState().collect { state ->
+                    if (state.isFirstLoad) {
+                        checkSiteStateWithNavigate(state.data.isSecondLoad)
                     }
+                }
             }
         }
     }

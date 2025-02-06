@@ -36,6 +36,7 @@ fun HomeBody(
     currentCategoryWithProducts: CategoryWithProductsUi,
     bestOffersSection: SectionUi<CategoryWithProductsUi>,
     sectionBottomProducts: SectionUi<CategoryWithProductsUi>,
+    onStoryClick: (StoryUi) -> Unit,
     onCategorySelect: (CategoryWithProductsUi) -> Unit,
     onPopularSectionClick: (PopularCategoryUi) -> Unit,
     onOrderClick: (OrderUi) -> Unit,
@@ -63,9 +64,7 @@ fun HomeBody(
             HomeStories(
                 modifier = Modifier.padding(top = 16.dp),
                 stories = stories,
-                onStoryClick = {
-
-                }
+                onStoryClick = onStoryClick
             )
         }
 

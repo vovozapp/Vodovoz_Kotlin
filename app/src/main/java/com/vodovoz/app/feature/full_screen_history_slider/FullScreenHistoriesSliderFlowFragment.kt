@@ -80,6 +80,14 @@ class FullScreenHistoriesSliderFlowFragment1 : BaseFragment(),
                                 tabManager.setAuthRedirect(findNavController().graph.id)
                                 tabManager.selectTab(R.id.graph_profile)
                             }
+
+                            FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.GoBack -> {
+                                findNavController().popBackStack()
+                            }
+
+                            is FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.ChangePagerIndex -> {
+
+                            }
                         }
                     }
             }
@@ -142,51 +150,65 @@ class FullScreenHistoriesSliderFlowFragment1 : BaseFragment(),
                 FullScreenHistoriesSliderFlowFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                     PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Brand(brandId = this.brandId)
                 )
+
             is ActionEntity.Brands -> {
                 FullScreenHistoriesSliderFlowFragmentDirections.actionToAllBrandsFragment(this.brandIdList.toLongArray())
             }
+
             is ActionEntity.Product ->
                 FullScreenHistoriesSliderFlowFragmentDirections.actionToProductDetailFragment(this.productId)
+
             is ActionEntity.Products ->
                 FullScreenHistoriesSliderFlowFragmentDirections.actionToProductsCatalogFragment(
                     ProductsCatalogFragment.DataSource.BannerProducts(categoryId = this.categoryId)
                 )
+
             is ActionEntity.Promotion ->
                 FullScreenHistoriesSliderFlowFragmentDirections.actionToPromotionDetailFragment(this.promotionId)
+
             is ActionEntity.Promotions -> FullScreenHistoriesSliderFlowFragmentDirections.actionToAllPromotionsFragment(
                 AllPromotionsFragment.DataSource.ByBanner(this.categoryId)
             )
+
             is ActionEntity.AllPromotions -> FullScreenHistoriesSliderFlowFragmentDirections.actionToAllPromotionsFragment(
                 AllPromotionsFragment.DataSource.All
             )
+
             is ActionEntity.Link -> {
                 val openLinkIntent = Intent(Intent.ACTION_VIEW, Uri.parse(this.url))
                 activity.startActivity(openLinkIntent)
                 null
             }
+
             is ActionEntity.Category ->
                 FullScreenHistoriesSliderFlowFragmentDirections.actionToPaginatedProductsCatalogFragment(
                     this.categoryId
                 )
+
             is ActionEntity.Discount -> FullScreenHistoriesSliderFlowFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                 PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Discount
             )
+
             is ActionEntity.Novelties -> FullScreenHistoriesSliderFlowFragmentDirections.actionToPaginatedProductsCatalogWithoutFiltersFragment(
                 PaginatedProductsCatalogWithoutFiltersFragment.DataSource.Novelties
             )
+
             is ActionEntity.WaterApp -> {
                 val eventParameters = "\"source\":\"stories\""
                 accountManager.reportEvent("trekervodi_zapysk", eventParameters)
                 FullScreenHistoriesSliderFlowFragmentDirections.actionToWaterAppFragment()
             }
+
             is ActionEntity.Delivery -> FullScreenHistoriesSliderFlowFragmentDirections.actionToWebViewFragment(
                 ApiConfig.ABOUT_DELIVERY_URL,
                 "О доставке"
             )
+
             is ActionEntity.Profile -> {
                 viewModel.goToProfile()
                 null
             }
+
             is ActionEntity.BuyCertificate -> {
                 FullScreenHistoriesSliderFlowFragmentDirections.actionToBuyCertificateFragment()
             }

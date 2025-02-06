@@ -34,6 +34,8 @@ abstract class PagingContractViewModel<S : State, E : Event>(
     protected val state
         get() = uiStateListener.value
 
+    protected val dataState get() = state.data
+
     fun observeUiState() = uiStateListener.asStateFlow()
 
     protected open val eventListener = MutableSharedFlow<E>()

@@ -140,8 +140,6 @@ class HomeFlowViewModel @Inject constructor(
 
                 }
 
-                eventListener.emit(HomeEvents.GoToStories(state.data.stories.first().id.toLong()))
-
             } else {
                 uiStateListener.updateData { s ->
                     s.copy(
@@ -172,24 +170,24 @@ class HomeFlowViewModel @Inject constructor(
             uiStateListener.value = state.copy(loadingPage = true)
 
             viewModelScope.launch(Dispatchers.IO) {
-                updatePopupNews()
-                val tasks = firstLoadTasks()
-                val start = System.currentTimeMillis()
-                val result = awaitAll(*tasks).flatten()
-                debugLog { "first load task ${System.currentTimeMillis() - start} result size ${result.size}" }
-                val positionItemsSorted =
-                    (state.data.positionItems + result).toSet().sortedBy { it.position }
+//                updatePopupNews()
+//                val tasks = firstLoadTasks()
+//                val start = System.currentTimeMillis()
+//                val result = awaitAll(*tasks).flatten()
+//                debugLog { "first load task ${System.currentTimeMillis() - start} result size ${result.size}" }
+//                val positionItemsSorted =
+//                    (state.data.positionItems + result).toSet().sortedBy { it.position }
                 uiStateListener.value = state.copy(
                     loadingPage = false,
-                    data = state.data.copy(
-                        positionItems = positionItemsSorted,
-                        items = positionItemsSorted.map { it.item }),
+//                    data = state.data.copy(
+//                        positionItems = positionItemsSorted,
+//                        items = positionItemsSorted.map { it.item }),
                     isFirstLoad = true,
-                    error = if (result.isNotEmpty()) {
-                        null
-                    } else {
-                        state.error
-                    }
+//                    error = if (result.isNotEmpty()) {
+//                        null
+//                    } else {
+//                        state.error
+//                    }
                 )
                 secondLoad()
             }
@@ -198,30 +196,30 @@ class HomeFlowViewModel @Inject constructor(
 
     private fun secondLoad() {
         viewModelScope.launch(Dispatchers.IO) {
-            val userId = accountManager.fetchAccountId()
-            val tasks = secondLoadTasks(userId)
-            val start = System.currentTimeMillis()
-            val result = awaitAll(*tasks).flatten()
-            val mappedResult = if (result.isNotEmpty()) {
-                result + HomeState.fetchStaticItems()
-            } else {
-                result
-            }
-            debugLog { "second load task ${System.currentTimeMillis() - start} result size ${mappedResult.size}" }
-            val positionItemsSorted =
-                (state.data.positionItems + mappedResult).toSet().sortedBy { it.position }
+//            val userId = accountManager.fetchAccountId()
+//            val tasks = secondLoadTasks(userId)
+//            val start = System.currentTimeMillis()
+//            val result = awaitAll(*tasks).flatten()
+//            val mappedResult = if (result.isNotEmpty()) {
+//                result + HomeState.fetchStaticItems()
+//            } else {
+//                result
+//            }
+//            debugLog { "second load task ${System.currentTimeMillis() - start} result size ${mappedResult.size}" }
+//            val positionItemsSorted =
+//                (state.data.positionItems + mappedResult).toSet().sortedBy { it.position }
             uiStateListener.value = state.copy(
                 loadingPage = false,
                 data = state.data.copy(
-                    positionItems = positionItemsSorted,
-                    items = positionItemsSorted.map { it.item },
+//                    positionItems = positionItemsSorted,
+//                    items = positionItemsSorted.map { it.item },
                     isSecondLoad = true
                 ),
-                error = if (mappedResult.isNotEmpty()) {
-                    null
-                } else {
-                    state.error
-                }
+//                error = if (mappedResult.isNotEmpty()) {
+//                    null
+//                } else {
+//                    state.error
+//                }
             )
         }
     }
@@ -1003,6 +1001,10 @@ class HomeFlowViewModel @Inject constructor(
                 showBottomSheet = false
             )
         }
+    }
+
+    fun navigateToStories(startStory: StoryUi) = viewModelScope.launch {
+        eventListener.emit(HomeEvents.GoToStories(storyId = startStory.id))
     }
 
     data class PositionItem(

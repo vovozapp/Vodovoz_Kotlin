@@ -3,6 +3,7 @@ package com.vodovoz.app.ui.base
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -52,7 +53,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks, E
             }
         }
         super.onCreate(savedInstanceState)
-        enableFullScreen()
+
+        enableEdgeToEdge()
+
+
         MapKitFactory.initialize(this)
         binding = ActivityMainBinding.inflate(layoutInflater).apply { setContentView(root) }
 

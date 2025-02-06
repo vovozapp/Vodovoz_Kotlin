@@ -19,7 +19,8 @@ fun STORY_DTO.toDomain(): StoryModel? {
     return StoryModel(
         id = ID ?: return null,
         image = RAZDEL?.IMAGE?.toVodovozImage() ?: "",
-        actionWithButtonList = VNYTRENNOST?.mapNotNull { it?.toDomain() } ?: return null
+        actionWithButtonList = VNYTRENNOST?.mapNotNull { it?.toDomain() } ?: return null,
+        viewed = false
     )
 }
 

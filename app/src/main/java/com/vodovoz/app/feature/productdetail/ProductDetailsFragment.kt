@@ -353,9 +353,9 @@ class ProductDetailsFragment1 : BaseFragment() {
             }
 
             override fun onRuTubeClick(videoCode: String) {
-                findNavController().navigate(
-                    ProductDetailsFragmentDirections.actionToRuTubeVideoFragmentDialog(videoCode)
-                )
+//                findNavController().navigate(
+//                    ProductDetailsFragmentDirections.actionToRuTubeVideoFragmentDialog(videoCode)
+//                )
             }
 
             override fun onDetailPictureClick(currentItem: Int, detailPictureList: Array<String>) {

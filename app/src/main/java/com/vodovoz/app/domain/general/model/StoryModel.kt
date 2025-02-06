@@ -1,9 +1,10 @@
 package com.vodovoz.app.domain.general.model
 
 data class StoryModel(
-    val id: Int,
+    val id: Long,
     val image: String,
     val actionWithButtonList: List<ActionWithButtonModel>,
+    val viewed: Boolean
 )
 
 data class ActionWithButtonModel(

@@ -2,9 +2,9 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/graph_home"
+    android:id="@+id/dgraph_home"
     app:startDestination="@id/homeFragment">
-
+    <!-- Todo change name -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.vodovoz.app.feature.home.HomeFragment"
@@ -1096,22 +1096,24 @@
     <dialog
         android:id="@+id/presentInfoBottomSheetFragment"
         android:name="com.vodovoz.app.feature.productdetail.present.PresentInfoBottomSheetFragment"
-        android:label="PresentInfoBottomSheetFragment" >
+        android:label="PresentInfoBottomSheetFragment">
         <argument
             android:name="presentText"
             app:argType="string" />
         <argument
             android:name="progressBackground"
             app:argType="string" />
-        <argument android:name="percent"
+        <argument
+            android:name="percent"
             app:argType="integer" />
-        <argument android:name="showProgress"
+        <argument
+            android:name="showProgress"
             app:argType="boolean" />
     </dialog>
     <fragment
         android:id="@+id/loginByPhoneCodeFragment"
         android:name="com.vodovoz.app.feature.auth.login.LoginByPhoneCodeFragment"
-        android:label="LoginByEmailFragment" >
+        android:label="LoginByEmailFragment">
         <argument
             android:name="phoneNumber"
             app:argType="string" />

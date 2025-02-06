@@ -40,7 +40,7 @@ fun HomeStories(
         stories.forEach { story ->
             HomeStoryCard(
                 storyImage = story.image,
-                viewed = true,
+                viewed = story.viewed,
                 onClick = {
                     onStoryClick(story)
                 }

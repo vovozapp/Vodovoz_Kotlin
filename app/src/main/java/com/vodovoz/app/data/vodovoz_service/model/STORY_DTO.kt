@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 @Keep
 data class STORY_DTO(
     @Json(name = "ID")
-    val ID: Int?,
+    val ID: Long?,
     @Json(name = "RAZDEL")
     val RAZDEL: STORY_IMAGE_DTO?,
     @Json(name = "VNYTRENNOST")

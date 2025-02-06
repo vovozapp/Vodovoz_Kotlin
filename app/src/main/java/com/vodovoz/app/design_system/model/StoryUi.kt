@@ -10,11 +10,18 @@ import com.vodovoz.app.util.fromHexOrTransparent
 
 @Immutable
 data class StoryUi(
-    val id: Int,
+    val id: Long,
     val image: String,
-    val actionWithButtonList: List<ActionWithButtonUi>,
+    val pages: List<StoryPage>,
+    val viewed: Boolean,
 )
 
+@Immutable
+data class StoryPage(
+    val image: String,
+    val actionWithButton: ActionWithButtonUi,
+    val durationMillis: Int,
+)
 
 @Immutable
 data class ActionWithButtonUi(
@@ -45,7 +52,10 @@ fun StoryModel.toUi(): StoryUi {
     return StoryUi(
         id = id,
         image = image,
-        actionWithButtonList = actionWithButtonList.map { it.toUi() }
+        pages = actionWithButtonList.map { action ->
+            StoryPage(image, action.toUi(), 6_000)
+        },
+        viewed = viewed
     )
 }
 

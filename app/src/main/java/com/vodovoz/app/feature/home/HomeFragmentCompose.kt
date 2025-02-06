@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
@@ -274,17 +275,17 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 flowViewModel.observeEvent()
-                    .collect {
-                        when (it) {
+                    .collect { event ->
+                        when (event) {
                             is HomeFlowViewModel.HomeEvents.GoToPreOrder -> {
                                 if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
                                     findNavController().popBackStack()
                                 }
                                 findNavController().navigate(
                                     HomeFragmentDirections.actionToPreOrderBS(
-                                        it.id,
-                                        it.name,
-                                        it.detailPicture
+                                        event.id,
+                                        event.name,
+                                        event.detailPicture
                                     )
                                 )
                             }
@@ -306,11 +307,8 @@ class HomeFragment : Fragment() {
                             }
 
                             is HomeFlowViewModel.HomeEvents.GoToStories -> {
-                                findNavController().navigate(
-                                    HomeFragmentDirections.actionToFullScreenHistorySliderFragment(
-                                        it.storyId
-                                    )
-                                )
+                                val bundle = bundleOf("startHistoryId" to event.storyId)
+                                findNavController().navigate(R.id.fullScreenHistorySliderFragment, bundle)
                             }
                         }
                     }
