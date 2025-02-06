@@ -28,6 +28,10 @@ class FullScreenHistoriesSliderFlowViewModel @Inject constructor(
     HistoriesSliderState()
 ) {
 
+    fun loadStories() = viewModelScope.launch {
+
+    }
+
     fun updateData() {
         viewModelScope.launch {
             uiStateListener.value = state.copy(isFirstLoad = true, loadingPage = true)
@@ -72,7 +76,7 @@ class FullScreenHistoriesSliderFlowViewModel @Inject constructor(
     }
 
     sealed class HistoriesSliderEvents : Event {
-        object GoToProfile : HistoriesSliderEvents()
+        data object GoToProfile : HistoriesSliderEvents()
     }
 
     data class HistoriesSliderState(

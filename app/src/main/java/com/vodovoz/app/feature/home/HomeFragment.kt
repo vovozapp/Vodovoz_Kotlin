@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
@@ -631,6 +630,14 @@ class HomeFragment1 : BaseFragment() {
                                     .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
                                     .show()
                             }
+
+                            is HomeFlowViewModel.HomeEvents.GoToStories -> {
+                                findNavController().navigate(
+                                    HomeFragmentDirections.actionToFullScreenHistorySliderFragment(
+                                        it.storyId
+                                    )
+                                )
+                            }
                         }
                     }
             }
@@ -995,20 +1002,24 @@ class HomeFragment1 : BaseFragment() {
                     findNavController().navigate(
                         HomeFragmentDirections.actionToPaginatedProductsCatalogFragment(
                             item.id.toLong()
-                        ))
+                        )
+                    )
 
                 if (item.promotionId != 0)
                     findNavController().navigate(
                         HomeFragmentDirections.actionToPromotionDetailFragment(
                             item.promotionId.toLong()
-                        ))
+                        )
+                    )
 
-                if (item.cookieLink.isNotEmpty()){
+                if (item.cookieLink.isNotEmpty()) {
                     setCookie()
-                    findNavController().navigate(HomeFragmentDirections.actionToWebViewFragment(
-                        item.cookieLink,
-                        "",
-                    ))
+                    findNavController().navigate(
+                        HomeFragmentDirections.actionToWebViewFragment(
+                            item.cookieLink,
+                            "",
+                        )
+                    )
                 }
             }
 
@@ -1205,7 +1216,7 @@ class HomeFragment1 : BaseFragment() {
         }
     }
 
-    private fun setCookie(){
+    private fun setCookie() {
         val webkitCookieManager = CookieManager.getInstance()
         webkitCookieManager.acceptCookie()
         webkitCookieManager.setCookie(

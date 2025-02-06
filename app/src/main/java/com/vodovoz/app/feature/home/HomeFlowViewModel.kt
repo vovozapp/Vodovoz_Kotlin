@@ -139,6 +139,9 @@ class HomeFlowViewModel @Inject constructor(
                     )
 
                 }
+
+                eventListener.emit(HomeEvents.GoToStories(state.data.stories.first().id.toLong()))
+
             } else {
                 uiStateListener.updateData { s ->
                     s.copy(
@@ -1014,6 +1017,8 @@ class HomeFlowViewModel @Inject constructor(
         data object GoToProfile : HomeEvents()
         data object SendComment : HomeEvents()
         data object GoToCart : HomeEvents()
+
+        data class GoToStories(val storyId: Long) : HomeEvents()
     }
 
     sealed class HomeUiState {
@@ -1044,7 +1049,7 @@ class HomeFlowViewModel @Inject constructor(
         val showBottomSheet: Boolean = false,
         val searchField: String = "",
 
-    ) : State {
+        ) : State {
         companion object {
             fun idle(): HomeState {
 
@@ -1067,9 +1072,6 @@ class HomeFlowViewModel @Inject constructor(
                 )
             }
 
-            val Loading = HomeState(
-
-            )
         }
     }
 

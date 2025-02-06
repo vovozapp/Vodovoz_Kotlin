@@ -304,6 +304,14 @@ class HomeFragment : Fragment() {
                             is HomeFlowViewModel.HomeEvents.GoToCart -> {
 
                             }
+
+                            is HomeFlowViewModel.HomeEvents.GoToStories -> {
+                                findNavController().navigate(
+                                    HomeFragmentDirections.actionToFullScreenHistorySliderFragment(
+                                        it.storyId
+                                    )
+                                )
+                            }
                         }
                     }
             }
