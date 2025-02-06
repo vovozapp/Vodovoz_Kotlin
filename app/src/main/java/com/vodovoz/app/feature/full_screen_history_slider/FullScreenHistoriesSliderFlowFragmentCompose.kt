@@ -6,10 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.SystemBarStyle
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
@@ -18,18 +15,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.vodovoz.app.R
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.design_system.VodovozTheme
-import com.vodovoz.app.design_system.white
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
-import com.vodovoz.app.util.extensions.disableFullScreen
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -64,17 +57,11 @@ class FullScreenHistoriesSliderFlowFragment : Fragment() {
                     val viewState by viewModel.observeUiState().collectAsStateWithLifecycle()
 
                     when (viewState.data.uiState) {
-                        FullScreenHistoriesSliderFlowViewModel.UiState.Error -> {
+                        FullScreenHistoriesSliderFlowViewModel.UiState.Error -> {}
 
-                        }
+                        FullScreenHistoriesSliderFlowViewModel.UiState.Loading -> {}
 
-                        FullScreenHistoriesSliderFlowViewModel.UiState.Loading -> {
-
-                        }
-
-                        FullScreenHistoriesSliderFlowViewModel.UiState.NetworkError -> {
-
-                        }
+                        FullScreenHistoriesSliderFlowViewModel.UiState.NetworkError -> {}
 
                         FullScreenHistoriesSliderFlowViewModel.UiState.Success -> {
                             StoriesScreen(
@@ -91,28 +78,13 @@ class FullScreenHistoriesSliderFlowFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        hideBottomBar()
+        tabManager.changeTabVisibility(false)
 
     }
 
     override fun onStop() {
         super.onStop()
-        showBottomBar()
-    }
-
-
-    private fun hideBottomBar() {
-        requireActivity().enableEdgeToEdge()
-        val bottomNavigationView =
-            parentFragment?.parentFragment?.view?.findViewById<BottomNavigationView>(R.id.nvNavigation)
-        bottomNavigationView?.visibility = View.GONE
-    }
-
-    private fun showBottomBar() {
-        requireActivity().disableFullScreen()
-        val bottomNavigationView =
-            parentFragment?.parentFragment?.view?.findViewById<BottomNavigationView>(R.id.nvNavigation)
-        bottomNavigationView?.visibility = View.VISIBLE
+        tabManager.changeTabVisibility(true)
     }
 
 

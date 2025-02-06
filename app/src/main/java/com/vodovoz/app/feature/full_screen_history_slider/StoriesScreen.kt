@@ -2,7 +2,8 @@ package com.vodovoz.app.feature.full_screen_history_slider
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -62,23 +63,18 @@ fun StoriesScreen(
                 .pointerInput(Unit) {
                     awaitPointerEventScope {
                         while (true) {
-                            val event = awaitPointerEvent()
-                            event.changes.forEach { change ->
-                                if (change.pressed) {
-                                    viewModel.stopStory()
+                            val change = awaitFirstDown()
+                            val startTime = System.currentTimeMillis()
+                            viewModel.stopStory()
+                            waitForUpOrCancellation()
+                            if (System.currentTimeMillis() - startTime < 200) {
+                                if (change.position.x < size.width / 2) {
+                                    viewModel.goPreviousStoryPage()
                                 } else {
-                                    viewModel.resumeStory()
+                                    viewModel.goNextStoryPage()
                                 }
                             }
-                        }
-                    }
-                }
-                .pointerInput(Unit) {
-                    detectTapGestures { offset ->
-                        if (offset.x < screenWidth.toPx() / 2) {
-                            viewModel.goPreviousStoryPage()
-                        } else {
-                            viewModel.goNextStoryPage()
+                            viewModel.resumeStory()
                         }
                     }
                 }

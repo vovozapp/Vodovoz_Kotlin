@@ -19,6 +19,7 @@ fun HomeScreen(
     viewState: HomeFlowViewModel.HomeState,
     viewModel: HomeFlowViewModel,
     navController: NavController,
+    onNavigateToQrCodeFragment: () -> Unit
 ) {
 
     Scaffold(
@@ -28,7 +29,7 @@ fun HomeScreen(
                 onValueChange = { },
                 onFocus = { },
                 onMicClick = { },
-                onScanClick = { },
+                onScanClick = { onNavigateToQrCodeFragment() },
                 onSearchClick = { }
             )
         },

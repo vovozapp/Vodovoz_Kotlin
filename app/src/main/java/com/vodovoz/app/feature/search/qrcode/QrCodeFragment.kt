@@ -11,11 +11,13 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.zxing.Result
 import com.vodovoz.app.R
+import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentQrCodeBinding
 import com.vodovoz.app.util.extensions.snack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import me.dm7.barcodescanner.zxing.ZXingScannerView
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class QrCodeFragment : Fragment(R.layout.fragment_qr_code), ZXingScannerView.ResultHandler {
@@ -25,6 +27,19 @@ class QrCodeFragment : Fragment(R.layout.fragment_qr_code), ZXingScannerView.Res
     private val viewModel: QrCodeViewModel by viewModels()
 
     private var scannerView: ZXingScannerView? = null
+
+    @Inject
+    lateinit var tabManager: TabManager
+
+    override fun onStart() {
+        super.onStart()
+        tabManager.changeTabVisibility(false)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        tabManager.changeTabVisibility(true)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,12 +62,14 @@ class QrCodeFragment : Fragment(R.layout.fragment_qr_code), ZXingScannerView.Res
                                     )
                                 )
                             }
+
                             is QrCodeViewModel.QrCodeEvents.Error -> {
                                 requireActivity().snack(it.message)
                             }
                         }
                     }
             }
+
         }
     }
 

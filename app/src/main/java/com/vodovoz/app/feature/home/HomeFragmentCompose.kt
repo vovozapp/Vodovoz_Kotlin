@@ -1,6 +1,8 @@
 package com.vodovoz.app.feature.home
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.app.ActivityCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -30,6 +33,7 @@ import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.cart.CartManager
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.media.MediaManager
+import com.vodovoz.app.common.permissions.PermissionsController
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
@@ -86,6 +90,10 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var cookieManager: com.vodovoz.app.common.cookie.CookieManager
 
+    @Inject
+    lateinit var permissionsControllerFactory: PermissionsController.Factory
+    private val permissionsController by lazy { permissionsControllerFactory.create(requireActivity()) }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,6 +111,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
             setContent {
@@ -122,7 +131,10 @@ class HomeFragment : Fragment() {
                             HomeScreen(
                                 viewState = viewState.data,
                                 viewModel = flowViewModel,
-                                navController = findNavController()
+                                navController = findNavController(),
+                                onNavigateToQrCodeFragment = {
+                                    navigateToQrCodeFragment()
+                                }
                             )
                         }
                     }
@@ -187,6 +199,21 @@ class HomeFragment : Fragment() {
                 }
                 actionEntity.activate()
             }
+        }
+    }
+
+    private fun navigateToQrCodeFragment() {
+        permissionsController.methodRequiresCameraPermission {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@methodRequiresCameraPermission
+            }
+
+            findNavController().navigate(R.id.qrCodeFragment)
+
         }
     }
 
