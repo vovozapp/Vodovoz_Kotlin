@@ -66,14 +66,14 @@ private val homeShimmerTheme
 
 
 @Composable
-fun HomeSkeletonPlaceholder(modifier: Modifier = Modifier) {
+fun HomeSkeletonPlaceholder(modifier: Modifier = Modifier , onScanClick: () -> Unit = {}) {
     Column {
         SearchTopBar(
             value = "",
             onValueChange = {},
             onFocus = { },
             onMicClick = { },
-            onScanClick = { },
+            onScanClick = onScanClick,
             onSearchClick = {}
         )
 

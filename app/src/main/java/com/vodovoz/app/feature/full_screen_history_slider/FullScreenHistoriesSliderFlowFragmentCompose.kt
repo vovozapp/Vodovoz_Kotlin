@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
@@ -25,9 +27,11 @@ import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.core.network.ApiConfig
 import com.vodovoz.app.data.model.common.ActionEntity
 import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.design_system.effects.LifecycleEffect
 import com.vodovoz.app.feature.all.promotions.AllPromotionsFragment
 import com.vodovoz.app.feature.onlyproducts.ProductsCatalogFragment
 import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
+import com.vodovoz.app.util.extensions.disableFullScreen
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -42,6 +46,7 @@ class FullScreenHistoriesSliderFlowFragment : Fragment() {
 
     @Inject
     lateinit var accountManager: AccountManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,25 +91,24 @@ class FullScreenHistoriesSliderFlowFragment : Fragment() {
 
 
 
-                    LaunchedEffect(Unit) {
-                        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                            viewModel.observeEvent().collect { event ->
-                                when (event) {
-                                    is FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.ChangePagerIndex -> {
-                                        pagerState.animateScrollToPage(event.newStoryIndex)
-                                    }
+                    LifecycleEffect {
+                        viewModel.observeEvent().collect { event ->
+                            when (event) {
+                                is FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.ChangePagerIndex -> {
+                                    pagerState.animateScrollToPage(event.newStoryIndex)
+                                }
 
-                                    FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.GoBack -> {
-                                        navController.popBackStack()
-                                    }
+                                FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.GoBack -> {
+                                    navController.popBackStack()
+                                }
 
-                                    FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.GoToProfile -> {
+                                FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.GoToProfile -> {
 
-                                    }
                                 }
                             }
                         }
                     }
+
                 }
             }
         }

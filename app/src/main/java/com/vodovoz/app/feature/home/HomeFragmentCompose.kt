@@ -9,11 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.app.ActivityCompat
@@ -120,7 +116,11 @@ class HomeFragment : Fragment() {
 
                     when (viewState.data.uiState) {
                         HomeFlowViewModel.HomeUiState.Loading -> {
-                            HomeSkeletonPlaceholder()
+                            HomeSkeletonPlaceholder(
+                                onScanClick = {
+                                    navigateToQrCodeFragment()
+                                }
+                            )
                         }
 
                         HomeFlowViewModel.HomeUiState.NetworkError -> {
@@ -335,7 +335,10 @@ class HomeFragment : Fragment() {
 
                             is HomeFlowViewModel.HomeEvents.GoToStories -> {
                                 val bundle = bundleOf("startHistoryId" to event.storyId)
-                                findNavController().navigate(R.id.fullScreenHistorySliderFragment, bundle)
+                                findNavController().navigate(
+                                    R.id.fullScreenHistorySliderFragment,
+                                    bundle
+                                )
                             }
                         }
                     }
