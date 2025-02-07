@@ -1,11 +1,11 @@
 package com.vodovoz.app.data.vodovoz_service.mappers
 
-import com.vodovoz.app.data.vodovoz_service.model.HARAKTERISTIK_DTO
+import com.vodovoz.app.data.vodovoz_service.model.ACTION_DTO
 import com.vodovoz.app.domain.general.model.DataAll
 import com.vodovoz.app.domain.general.model.VodovozAction
 
 
-fun HARAKTERISTIK_DTO.toAction(): VodovozAction? {
+fun ACTION_DTO.toAction(): VodovozAction? {
     val id = ID ?: return null
     val action = ACTION ?: return null
 

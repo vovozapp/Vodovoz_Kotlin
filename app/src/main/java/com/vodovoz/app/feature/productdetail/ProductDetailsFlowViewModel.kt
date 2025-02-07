@@ -572,6 +572,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val presentInfo: PresentInfoData? = null,
         val error: ErrorState? = null,
         val loadingPage: Boolean = false,
+
         val categoryUI: CategoryUI = CategoryUI(name = ""),
         val commentsUI: List<CommentUI> = emptyList(),
         val buyWithProductUIList: List<ProductUI> = emptyList(),

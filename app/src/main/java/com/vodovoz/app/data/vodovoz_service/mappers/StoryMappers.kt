@@ -2,7 +2,7 @@ package com.vodovoz.app.data.vodovoz_service.mappers
 
 import com.vodovoz.app.data.vodovoz_service.di.toVodovozImage
 import com.vodovoz.app.data.vodovoz_service.model.COLORFUL_KNOPKA_DTO
-import com.vodovoz.app.data.vodovoz_service.model.HARAKTERISTIK_DTO
+import com.vodovoz.app.data.vodovoz_service.model.ACTION_DTO
 import com.vodovoz.app.data.vodovoz_service.model.STORY_DTO
 import com.vodovoz.app.data.vodovoz_service.model.VNYTRENNOST_DTO
 import com.vodovoz.app.data.vodovoz_service.model.StoriesDTO
@@ -26,7 +26,7 @@ fun STORY_DTO.toDomain(): StoryModel? {
 
 fun VNYTRENNOST_DTO.toDomain(): ActionWithButtonModel? {
     return ActionWithButtonModel(
-        action = HARAKTERISTIK_DTO(ACTION, ID).toAction() ?: return null,
+        action = ACTION_DTO(ACTION, ID).toAction() ?: return null,
         colorfulButton = KNOPKA?.toDomain() ?: return null
     )
 }

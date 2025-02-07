@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import androidx.annotation.Keep
 
 @Keep
-data class HARAKTERISTIK_DTO(
+data class ACTION_DTO(
     @Json(name = "ACTION")
     val ACTION: String?,
     @Json(name = "ID")
