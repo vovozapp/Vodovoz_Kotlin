@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.full_screen_history_slider
 
+import android.graphics.RenderEffect
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -21,10 +22,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -59,6 +60,7 @@ fun StoriesScreen(
         modifier = Modifier
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.systemBars)
+            .background(MaterialTheme.colorScheme.onBackground)
             .pointerInput(Unit) {
                 awaitPointerEventScope {
                     while (true) {
@@ -82,7 +84,18 @@ fun StoriesScreen(
     ) { i ->
         val story = stories[i]
         val storyPage = story.pages.getOrNull(viewState.currentPageIndex) ?: story.pages.first()
-        Box {
+        Box(
+            modifier = Modifier.padding(vertical = 10.dp).graphicsLayer {
+                val startOffset = pagerState.startOffsetForPage(i)
+                translationX = size.width * (startOffset * .99f)
+
+                alpha = (2f - startOffset) / 2f
+
+                val scale = 1f - (startOffset * .3f)
+                scaleX = scale
+                scaleY = scale
+            }.clip(MaterialTheme.shapes.large)
+        ) {
             AsyncImage(
                 modifier = Modifier.fillMaxSize(),
                 model = storyPage.image,
@@ -130,10 +143,19 @@ fun StoriesScreen(
         }
 
     }
+}
 
-    LaunchedEffect(pagerState.currentPage) {
-        viewModel.changeStoryIndex(pagerState.currentPage)
-    }
+// ACTUAL OFFSET
+fun PagerState.offsetForPage(page: Int) = (currentPage - page) + currentPageOffsetFraction
+
+// OFFSET ONLY FROM THE LEFT
+fun PagerState.startOffsetForPage(page: Int): Float {
+    return offsetForPage(page).coerceAtLeast(0f)
+}
+
+// OFFSET ONLY FROM THE RIGHT
+fun PagerState.endOffsetForPage(page: Int): Float {
+    return offsetForPage(page).coerceAtMost(0f)
 }
 
 @Composable
