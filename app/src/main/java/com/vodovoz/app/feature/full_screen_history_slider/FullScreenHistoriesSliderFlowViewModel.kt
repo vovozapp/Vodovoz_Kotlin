@@ -183,15 +183,6 @@ class FullScreenHistoriesSliderFlowViewModel @Inject constructor(
             }
             isFirstPage -> {
                 val prevStoryIndex = dataState.currentStoryIndex - 1
-                val prevStoryLastPageIndex = dataState.stories[prevStoryIndex].pages.lastIndex
-
-                uiStateListener.updateData { state ->
-                    state.copy(
-                        currentPageIndex = prevStoryLastPageIndex,
-                        timePassed = 0L
-                    )
-                }
-
                 eventListener.emit(HistoriesSliderEvents.ChangePagerIndex(prevStoryIndex))
             }
             else -> {
@@ -219,12 +210,6 @@ class FullScreenHistoriesSliderFlowViewModel @Inject constructor(
                 eventListener.emit(HistoriesSliderEvents.GoBack)
             }
             isLastPage -> {
-                uiStateListener.updateData { state ->
-                    state.copy(
-                        currentPageIndex = 0,
-                        timePassed = 0L
-                    )
-                }
                 eventListener.emit(
                     HistoriesSliderEvents.ChangePagerIndex(dataState.currentStoryIndex + 1)
                 )

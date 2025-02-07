@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -28,13 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.vodovoz.app.R
@@ -46,7 +40,7 @@ import com.vodovoz.app.feature.full_screen_history_slider.composables.StoriesInd
 fun StoriesScreen(
     viewState: FullScreenHistoriesSliderFlowViewModel.HistoriesSliderState,
     viewModel: FullScreenHistoriesSliderFlowViewModel,
-    pagerState: PagerState
+    pagerState: PagerState,
 ) {
     val stories = viewState.stories
     val systemUiController = rememberSystemUiController()
@@ -64,33 +58,31 @@ fun StoriesScreen(
     HorizontalPager(
         modifier = Modifier
             .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.systemBars),
+            .windowInsetsPadding(WindowInsets.systemBars)
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        val change = awaitFirstDown()
+                        val startTime = System.currentTimeMillis()
+                        viewModel.stopStory()
+                        waitForUpOrCancellation()
+                        if (System.currentTimeMillis() - startTime < 200) {
+                            if (change.position.x < size.width / 2) {
+                                viewModel.goPreviousStoryPage()
+                            } else {
+                                viewModel.goNextStoryPage()
+                            }
+                        }
+                        viewModel.resumeStory()
+                    }
+                }
+            },
         state = pagerState,
         beyondViewportPageCount = stories.size
     ) { i ->
         val story = stories[i]
         val storyPage = story.pages.getOrNull(viewState.currentPageIndex) ?: story.pages.first()
-        Box(
-            modifier = Modifier
-                .pointerInput(Unit) {
-                    awaitPointerEventScope {
-                        while (true) {
-                            val change = awaitFirstDown()
-                            val startTime = System.currentTimeMillis()
-                            viewModel.stopStory()
-                            waitForUpOrCancellation()
-                            if (System.currentTimeMillis() - startTime < 200) {
-                                if (change.position.x < size.width / 2) {
-                                    viewModel.goPreviousStoryPage()
-                                } else {
-                                    viewModel.goNextStoryPage()
-                                }
-                            }
-                            viewModel.resumeStory()
-                        }
-                    }
-                }
-        ) {
+        Box {
             AsyncImage(
                 modifier = Modifier.fillMaxSize(),
                 model = storyPage.image,
