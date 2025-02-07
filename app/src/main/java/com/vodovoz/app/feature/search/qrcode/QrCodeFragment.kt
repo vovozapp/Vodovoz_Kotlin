@@ -5,11 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -53,7 +55,13 @@ class QrCodeFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
             setContent {
                 VodovozTheme {
-                    ScannerScreen()
+                    val viewState by viewModel.observeUiState().collectAsStateWithLifecycle()
+                    val dataState = viewState.data
+
+                    ScannerScreen(
+                        viewState = dataState,
+                        viewModel = viewModel
+                    )
                 }
             }
         }
@@ -69,18 +77,22 @@ class QrCodeFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.observeEvent()
-                    .collect {
-                        when (it) {
+                    .collect { qrCodeEvents ->
+                        when (qrCodeEvents) {
                             is QrCodeViewModel.QrCodeEvents.Success -> {
                                 findNavController().navigate(
                                     QrCodeFragmentDirections.actionToProductDetailFragment(
-                                        it.id.toLong()
+                                        qrCodeEvents.id.toLong()
                                     )
                                 )
                             }
 
                             is QrCodeViewModel.QrCodeEvents.Error -> {
-                                requireActivity().snack(it.message)
+                                requireActivity().snack(qrCodeEvents.message)
+                            }
+
+                            QrCodeViewModel.QrCodeEvents.GoBack -> {
+                                findNavController().popBackStack()
                             }
                         }
                     }
@@ -88,6 +100,5 @@ class QrCodeFragment : Fragment() {
 
         }
     }
-
 
 }

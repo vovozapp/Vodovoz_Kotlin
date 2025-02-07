@@ -5,6 +5,7 @@ import com.vodovoz.app.common.content.Event
 import com.vodovoz.app.common.content.PagingContractViewModel
 import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
+import com.vodovoz.app.common.content.updateData
 import com.vodovoz.app.data.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -42,13 +43,27 @@ class QrCodeViewModel @Inject constructor(
         }
     }
 
+    fun switchFlashOn() = viewModelScope.launch {
+        uiStateListener.updateData { s ->
+            s.copy(
+                flashOn = !s.flashOn
+            )
+        }
+    }
+
+    fun navigateBack() = viewModelScope.launch {
+        eventListener.emit(QrCodeEvents.GoBack)
+    }
+
 
     data class QrCodeState(
         val item: Item? = null,
+        val flashOn: Boolean = false,
     ) : State
 
     sealed class QrCodeEvents : Event {
         data class Success(val id: String) : QrCodeEvents()
         data class Error(val message: String) : QrCodeEvents()
+        data object GoBack : QrCodeEvents()
     }
 }

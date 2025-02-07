@@ -10,7 +10,11 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 
-class BarcodeAnalyzer(private val context: Context) : ImageAnalysis.Analyzer {
+class BarcodeAnalyzer(
+    private val context: Context,
+    private val onScanSuccess: () -> Unit,
+) :
+    ImageAnalysis.Analyzer {
 
     private val options = BarcodeScannerOptions.Builder()
         .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS)
@@ -30,6 +34,7 @@ class BarcodeAnalyzer(private val context: Context) : ImageAnalysis.Analyzer {
                     ?.mapNotNull { it.rawValue }
                     ?.joinToString(",")
                     ?.let { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
+                onScanSuccess()
             }.addOnCompleteListener {
                 imageProxy.close()
             }
