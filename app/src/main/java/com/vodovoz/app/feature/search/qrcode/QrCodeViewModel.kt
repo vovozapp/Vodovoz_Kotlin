@@ -29,7 +29,7 @@ class QrCodeViewModel @Inject constructor(
                         eventListener.emit(QrCodeEvents.Error("Ничего не найдено"))
                         return@launch
                     }
-                    val id = list.get(0).id
+                    val id = list[0].id
                     if (id.isNullOrEmpty()) {
                         eventListener.emit(QrCodeEvents.Error("Ничего не найдено"))
                         return@launch

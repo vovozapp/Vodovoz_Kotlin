@@ -86,7 +86,7 @@ class FullScreenHistoriesSliderFlowViewModel @Inject constructor(
 
         while (state.data.storyIsPlay) {
             val startTime = systemMilliseconds()
-            delay(30L)
+            delay(35L)
             uiStateListener.updateData { s ->
                 s.copy(
                     timePassed = s.timePassed + (systemMilliseconds() - startTime)
@@ -168,7 +168,7 @@ class FullScreenHistoriesSliderFlowViewModel @Inject constructor(
             s.copy(
                 currentStoryIndex = currentStoryPage,
                 currentPageIndex = 0,
-                timePassed = 0
+                timePassed = 0L
             )
         }
     }
@@ -187,7 +187,6 @@ class FullScreenHistoriesSliderFlowViewModel @Inject constructor(
 
                 uiStateListener.updateData { state ->
                     state.copy(
-                        currentStoryIndex = prevStoryIndex,
                         currentPageIndex = prevStoryLastPageIndex,
                         timePassed = 0L
                     )

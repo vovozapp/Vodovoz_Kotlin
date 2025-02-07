@@ -14,12 +14,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +36,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.button.VodovozButton
 import com.vodovoz.app.feature.full_screen_history_slider.composables.StoriesIndicator
@@ -43,18 +46,27 @@ import com.vodovoz.app.feature.full_screen_history_slider.composables.StoriesInd
 fun StoriesScreen(
     viewState: FullScreenHistoriesSliderFlowViewModel.HistoriesSliderState,
     viewModel: FullScreenHistoriesSliderFlowViewModel,
-    navController: NavController,
+    pagerState: PagerState
 ) {
     val stories = viewState.stories
-    val pagerState = rememberPagerState(initialPage = viewState.currentStoryIndex) { stories.size }
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val systemUiController = rememberSystemUiController()
+
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+
+    DisposableEffect(Unit) {
+        systemUiController.setSystemBarsColor(onBackgroundColor)
+        onDispose {
+            systemUiController.setSystemBarsColor(backgroundColor)
+        }
+    }
 
     HorizontalPager(
         modifier = Modifier
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.systemBars),
         state = pagerState,
-        beyondViewportPageCount = 0
+        beyondViewportPageCount = stories.size
     ) { i ->
         val story = stories[i]
         val storyPage = story.pages.getOrNull(viewState.currentPageIndex) ?: story.pages.first()
@@ -129,27 +141,6 @@ fun StoriesScreen(
 
     LaunchedEffect(pagerState.currentPage) {
         viewModel.changeStoryIndex(pagerState.currentPage)
-    }
-
-    val lifecycleOwner = LocalLifecycleOwner.current
-    LaunchedEffect(Unit) {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            viewModel.observeEvent().collect { event ->
-                when (event) {
-                    is FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.ChangePagerIndex -> {
-                        pagerState.animateScrollToPage(event.newStoryIndex)
-                    }
-
-                    FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.GoBack -> {
-                        navController.popBackStack()
-                    }
-
-                    FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.GoToProfile -> {
-
-                    }
-                }
-            }
-        }
     }
 }
 

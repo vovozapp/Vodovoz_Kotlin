@@ -1,18 +1,23 @@
 package com.vodovoz.app.feature.full_screen_history_slider
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.common.account.data.AccountManager
@@ -44,6 +49,7 @@ class FullScreenHistoriesSliderFlowFragment : Fragment() {
     }
 
 
+    @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -51,10 +57,16 @@ class FullScreenHistoriesSliderFlowFragment : Fragment() {
     ): View {
         val navController = findNavController()
         return ComposeView(requireContext()).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setViewCompositionStrategy(ViewCompositionStrategy.Default)
             setContent {
                 VodovozTheme {
                     val viewState by viewModel.observeUiState().collectAsStateWithLifecycle()
+                    val data = viewState.data
+
+                    val pagerState =
+                        if (data.uiState !is FullScreenHistoriesSliderFlowViewModel.UiState.Success) rememberPagerState(
+                            data.currentStoryIndex
+                        ) { data.stories.size } else rememberPagerState(data.currentStoryIndex) { data.stories.size }
 
                     when (viewState.data.uiState) {
                         FullScreenHistoriesSliderFlowViewModel.UiState.Error -> {}
@@ -67,8 +79,30 @@ class FullScreenHistoriesSliderFlowFragment : Fragment() {
                             StoriesScreen(
                                 viewState = viewState.data,
                                 viewModel = viewModel,
-                                navController = navController
+                                pagerState = pagerState
                             )
+                        }
+                    }
+
+
+
+                    LaunchedEffect(Unit) {
+                        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                            viewModel.observeEvent().collect { event ->
+                                when (event) {
+                                    is FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.ChangePagerIndex -> {
+                                        pagerState.animateScrollToPage(event.newStoryIndex)
+                                    }
+
+                                    FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.GoBack -> {
+                                        navController.popBackStack()
+                                    }
+
+                                    FullScreenHistoriesSliderFlowViewModel.HistoriesSliderEvents.GoToProfile -> {
+
+                                    }
+                                }
+                            }
                         }
                     }
                 }
