@@ -19,9 +19,9 @@ enum class DataAll : VodovozAction {
 }
 
 
-sealed class ButtonInfo {
+sealed class ButtonAction {
 
-    data class Id(val id: Int) : ButtonInfo()
-    data class Action(val dataAll: DataAll) : ButtonInfo()
+    data class Id(val id: Int) : ButtonAction()
+    data class Action(val dataAll: DataAll) : ButtonAction()
 
 }

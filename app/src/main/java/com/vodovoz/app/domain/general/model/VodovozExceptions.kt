@@ -7,3 +7,10 @@ class RequestException(
 ): IllegalStateException(
     message, cause
 )
+
+class WebsiteErrorException(
+    message: String = "",
+    cause: Throwable? = null
+): IllegalStateException(
+    message, cause
+)

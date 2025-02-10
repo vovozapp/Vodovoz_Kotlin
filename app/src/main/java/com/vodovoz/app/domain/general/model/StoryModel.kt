@@ -16,6 +16,7 @@ data class ColorfulButtonModel(
     val name: String,
     val backgroundColor: String,
     val textColor: String,
+    val id: String = ""
 )
 
 

@@ -55,6 +55,6 @@ abstract class VodovozServiceModule {
 
 }
 
-fun String.toVodovozImage(): String {
+fun String.toFullUrl(): String {
     return VodovozServiceModule.BASE_URL.removePrefix("/") + this
 }

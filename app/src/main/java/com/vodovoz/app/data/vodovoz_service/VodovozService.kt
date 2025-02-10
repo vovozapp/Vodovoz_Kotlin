@@ -10,12 +10,17 @@ import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_DTO
 import com.vodovoz.app.data.vodovoz_service.model.StoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.VodovozResponseDTO
+import com.vodovoz.app.data.vodovoz_service.model.product_details.ProductDetailsDTO
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface VodovozService {
 
+    @GET("details/index.php?iblock_id=12")
+    suspend fun getProductDetails(
+        @Query("id") productId: Long
+    ): Response<VodovozResponseDTO<ProductDetailsDTO>>
 
     @GET("glavnaya/okno.php?action=okno")
     suspend fun getPopupWindowInfo(

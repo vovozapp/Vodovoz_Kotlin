@@ -1,6 +1,6 @@
 package com.vodovoz.app.data.vodovoz_service.mappers
 
-import com.vodovoz.app.data.vodovoz_service.di.toVodovozImage
+import com.vodovoz.app.data.vodovoz_service.di.toFullUrl
 import com.vodovoz.app.data.vodovoz_service.model.EXTENDED_PRICE_DTO
 import com.vodovoz.app.data.vodovoz_service.model.NALICHIE_MORE_DTO
 import com.vodovoz.app.data.vodovoz_service.model.TOVAR_DATA_DTO
@@ -20,15 +20,15 @@ fun TOVAR_DATA_DTO.toDomain(): ProductModel? {
         name = NAME ?: return null,
         isFavorite = FAVORITE ?: false,
         deposit = PROPERTY_ZALOG_VALUE ?: 0,
-        rating = PROPERTY_RATING_VALUE?.toFloat() ?: return null,
-        picture = DETAIL_PICTURE?.toVodovozImage() ?: return null,
+        rating = PROPERTY_RATING_VALUE ?: return null,
+        picture = DETAIL_PICTURE?.toFullUrl() ?: return null,
         pricePerUnit = PROPERTY_TSENA_ZA_EDINITSU_TOVARA_VALUE,
         unitOfMeasurement = EDINICAIZMERENIYA,
         coefficient = KOFFICIENT?.toFloat() ?: 1f,
         quantity = CATALOG_QUANTITY ?: return null,
         firstPrice = EXTENDED_PRICE?.firstOrNull()?.toDomain() ?: return null,
         prices = EXTENDED_PRICE?.mapNotNull { it?.toDomain() } ?: return null,
-        labels = NALICHIE_MORE?.toDomain() ?: emptyList()
+        labels = NALICHIE_MORE?.mapToDomain() ?: emptyList()
     )
 }
 
@@ -42,7 +42,7 @@ fun EXTENDED_PRICE_DTO.toDomain(): PriceModel? {
 }
 
 @JvmName("mapLabelToDomain")
-fun List<NALICHIE_MORE_DTO?>.toDomain(): List<LabelModel> {
+fun List<NALICHIE_MORE_DTO?>.mapToDomain(): List<LabelModel> {
     return mapNotNull { labelDTO ->
         labelDTO ?: return@mapNotNull null
         LabelModel(

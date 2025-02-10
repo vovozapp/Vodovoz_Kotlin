@@ -2,7 +2,7 @@ package com.vodovoz.app.feature.home.model
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
-import com.vodovoz.app.domain.general.model.ButtonInfo
+import com.vodovoz.app.domain.general.model.ButtonAction
 import com.vodovoz.app.domain.general.model.ButtonModel
 import com.vodovoz.app.domain.general.model.CategoryWithProductsModel
 import com.vodovoz.app.domain.general.model.LabelModel
@@ -34,7 +34,7 @@ fun CategoryWithProductsModel.toUi(): CategoryWithProductsUi {
 
 data class ButtonUi(
     val name: String,
-    val action: ButtonInfo,
+    val action: ButtonAction,
 )
 
 fun ButtonModel.toUi(): ButtonUi {

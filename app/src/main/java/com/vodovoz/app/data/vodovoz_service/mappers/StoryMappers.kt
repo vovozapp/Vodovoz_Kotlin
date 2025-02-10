@@ -1,6 +1,6 @@
 package com.vodovoz.app.data.vodovoz_service.mappers
 
-import com.vodovoz.app.data.vodovoz_service.di.toVodovozImage
+import com.vodovoz.app.data.vodovoz_service.di.toFullUrl
 import com.vodovoz.app.data.vodovoz_service.model.COLORFUL_KNOPKA_DTO
 import com.vodovoz.app.data.vodovoz_service.model.ACTION_DTO
 import com.vodovoz.app.data.vodovoz_service.model.STORY_DTO
@@ -18,7 +18,7 @@ fun StoriesDTO.toDomain(): List<StoryModel> {
 fun STORY_DTO.toDomain(): StoryModel? {
     return StoryModel(
         id = ID ?: return null,
-        image = RAZDEL?.IMAGE?.toVodovozImage() ?: "",
+        image = RAZDEL?.IMAGE?.toFullUrl() ?: "",
         actionWithButtonList = VNYTRENNOST?.mapNotNull { it?.toDomain() } ?: return null,
         viewed = false
     )

@@ -1,6 +1,6 @@
 package com.vodovoz.app.data.vodovoz_service.mappers
 
-import com.vodovoz.app.data.vodovoz_service.di.toVodovozImage
+import com.vodovoz.app.data.vodovoz_service.di.toFullUrl
 import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
 import com.vodovoz.app.domain.general.model.BannerModel
 
@@ -13,7 +13,7 @@ fun BannerDTO.toDomain(): BannerModel? {
     return BannerModel(
         id = ID ?: return null,
         name = NAME ?: "",
-        detailPicture = DETAIL_PICTURE?.toVodovozImage() ?: return null,
+        detailPicture = DETAIL_PICTURE?.toFullUrl() ?: return null,
         action = HARAKTERISTIK?.toAction() ?: return null,
         advertising = OREKLAME?.toDomain()
     )

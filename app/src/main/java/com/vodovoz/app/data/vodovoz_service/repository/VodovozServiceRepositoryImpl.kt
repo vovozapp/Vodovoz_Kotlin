@@ -12,6 +12,7 @@ import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.PopupWindowInfoModel
+import com.vodovoz.app.domain.general.model.ProductDetailsScreenModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.ProductsTitle
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
@@ -29,6 +30,16 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val vodovozService: VodovozService,
     private val accountManager: AccountManager,
 ) : VodovozServiceRepository {
+    override fun getProductDetails(productId: Long): Flow<Result<ProductDetailsScreenModel>> = executeRequest(
+        request = {
+            vodovozService.getProductDetails(productId)
+        },
+        mapper = { responseDto ->
+
+            TODO()
+        }
+    )
+
 
     override fun getPopupWindowInfo(): Flow<Result<PopupWindowInfoModel>> = executeRequest(
         request = {

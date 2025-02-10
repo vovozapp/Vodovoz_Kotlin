@@ -5,9 +5,9 @@ import com.squareup.moshi.Json
 import androidx.annotation.Keep
 
 @Keep
-data class PRODUCT_DETAIL_HARAKTERISTIKI(
+data class PRODUCT_DETAIL_HARAKTERISTIKI_DTO(
     @Json(name = "DATA")
-    val DATA: List<HARAKTERISTIK_DTO>?,
+    val DATA: List<HARAKTERISTIKI_DTO>?,
     @Json(name = "ID")
     val ID: String?,
     @Json(name = "TITLE")

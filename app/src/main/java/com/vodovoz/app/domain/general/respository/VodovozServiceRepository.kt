@@ -6,6 +6,7 @@ import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.PopupWindowInfoModel
+import com.vodovoz.app.domain.general.model.ProductDetailsScreenModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.ProductsTitle
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface VodovozServiceRepository {
 
+    fun getProductDetails(productId: Long): Flow<Result<ProductDetailsScreenModel>>
 
     fun getPopupWindowInfo(): Flow<Result<PopupWindowInfoModel>>
 

@@ -10,11 +10,15 @@ data class SectionModel<E>(
     val title: String,
     val items: List<E>,
     val button: ButtonModel?,
-)
+){
+    companion object{
+        fun<T> empty() = SectionModel<T>("", emptyList(), null)
+    }
+}
 
 data class ButtonModel(
     val name: String,
-    val action: ButtonInfo,
+    val action: ButtonAction,
 )
 
 

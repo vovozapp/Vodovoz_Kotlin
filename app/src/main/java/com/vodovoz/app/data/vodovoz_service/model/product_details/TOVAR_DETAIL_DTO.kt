@@ -15,7 +15,7 @@ data class TOVAR_DETAIL_DTO(
     @Json(name = "BLOCKRAZDEL")
     val BLOCKRAZDEL: BLOCK_RAZDEL_DTO?,
     @Json(name = "DETAIL_PAGE_URL")
-    val DETAIL_PAGE_PATH: String?,
+    val DETAIL_PAGE_URL: String?,
     @Json(name = "DETAIL_PICTURE")
     val DETAIL_PICTURE: String?,
     @Json(name = "DETAIL_TEXT")
@@ -33,7 +33,7 @@ data class TOVAR_DETAIL_DTO(
     @Json(name = "FAVORITE")
     val FAVORITE: Boolean?,
     @Json(name = "HARAKTERISTIKI")
-    val HARAKTERISTIKI: PRODUCT_DETAIL_HARAKTERISTIKI?,
+    val HARAKTERISTIKI: PRODUCT_DETAIL_HARAKTERISTIKI_DTO?,
     @Json(name = "ID")
     val ID: Long?,
     @Json(name = "INFORMATIONS")

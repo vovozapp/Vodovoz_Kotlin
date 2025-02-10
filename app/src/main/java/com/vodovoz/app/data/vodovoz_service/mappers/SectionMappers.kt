@@ -6,7 +6,7 @@ import com.vodovoz.app.data.vodovoz_service.model.KNOPKA_DTO
 import com.vodovoz.app.data.vodovoz_service.model.KNOPKA_INT_DTO
 import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_DTO
 import com.vodovoz.app.data.vodovoz_service.model.SuperTopAndBottomSectionsDTO
-import com.vodovoz.app.domain.general.model.ButtonInfo
+import com.vodovoz.app.domain.general.model.ButtonAction
 import com.vodovoz.app.domain.general.model.ButtonModel
 import com.vodovoz.app.domain.general.model.CategoryWithProductsModel
 import com.vodovoz.app.domain.general.model.ProductModel
@@ -56,15 +56,15 @@ fun KNOPKA_DTO.toDomain(): ButtonModel? {
 fun KNOPKA_INT_DTO.toDomain(): ButtonModel? {
     return ButtonModel(
         name = NAME ?: "",
-        action = ButtonInfo.Id(ID ?: return null)
+        action = ButtonAction.Id(ID ?: return null)
     )
 }
 
-private fun String.toButtonAction(): ButtonInfo {
+private fun String.toButtonAction(): ButtonAction {
     val id = toIntOrNull()
     return if (id != null) {
-        ButtonInfo.Id(id)
+        ButtonAction.Id(id)
     } else {
-        ButtonInfo.Action(toDataAll())
+        ButtonAction.Action(toDataAll())
     }
 }

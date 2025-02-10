@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.VodovozTheme
-import com.vodovoz.app.domain.general.model.ButtonInfo
+import com.vodovoz.app.domain.general.model.ButtonAction
 import com.vodovoz.app.feature.home.model.ButtonUi
 
 @Composable
@@ -29,7 +29,7 @@ fun TitleAndButton(
     modifier: Modifier = Modifier,
     title: String,
     button: ButtonUi? = null,
-    onShowAllClick: (ButtonInfo) -> Unit = {},
+    onShowAllClick: (ButtonAction) -> Unit = {},
 ) {
     Row(
         modifier = modifier.padding(horizontal = 16.dp),

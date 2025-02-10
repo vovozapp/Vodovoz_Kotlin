@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import androidx.annotation.Keep
 
 @Keep
-data class HARAKTERISTIK_DTO(
+data class HARAKTERISTIKI_DTO(
     @Json(name = "BINDS")
     val BINDS: List<HARAKTERISTIK_BIND_DTO?>?,
     @Json(name = "CODE")

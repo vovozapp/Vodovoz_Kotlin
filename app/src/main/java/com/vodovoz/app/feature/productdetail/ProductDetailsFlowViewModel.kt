@@ -13,6 +13,7 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.DISCOUNT
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
@@ -68,6 +69,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
     private val accountManager: AccountManager,
+    private val vodovozServiceRepository: VodovozServiceRepository
 ) : ViewModel() {
 
     private val uiStateListener = MutableStateFlow(ProductDetailsState())
@@ -137,6 +139,14 @@ class ProductDetailsFlowViewModel @Inject constructor(
     }
 
     fun fetchProductDetail() {
+        viewModelScope.launch {
+            //todo - update return logic
+            vodovozServiceRepository.getProductDetails(productId ?: return@launch).onEach { result ->
+
+            }.collect()
+        }
+
+        //todo - delete old version
         viewModelScope.launch {
             val productId = productId ?: return@launch
             uiStateListener.value = state.copy(loadingPage = true)
