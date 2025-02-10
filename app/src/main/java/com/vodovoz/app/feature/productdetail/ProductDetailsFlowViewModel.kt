@@ -13,7 +13,16 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.design_system.model.CommentUi
+import com.vodovoz.app.design_system.model.ProductDetailsButtonsUi
+import com.vodovoz.app.design_system.model.ProductDetailsTabUi
+import com.vodovoz.app.design_system.model.ProductDetailsUi
+import com.vodovoz.app.design_system.model.mapToUi
+import com.vodovoz.app.design_system.model.toUi
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
+import com.vodovoz.app.feature.home.model.ProductUi
+import com.vodovoz.app.feature.home.model.SectionUi
+import com.vodovoz.app.feature.home.model.toUi
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts
 import com.vodovoz.app.feature.home.viewholders.homeproducts.HomeProducts.Companion.DISCOUNT
 import com.vodovoz.app.feature.home.viewholders.homepromotions.HomePromotions
@@ -69,7 +78,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
     private val likeManager: LikeManager,
     private val ratingProductManager: RatingProductManager,
     private val accountManager: AccountManager,
-    private val vodovozServiceRepository: VodovozServiceRepository
+    private val vodovozServiceRepository: VodovozServiceRepository,
 ) : ViewModel() {
 
     private val uiStateListener = MutableStateFlow(ProductDetailsState())
@@ -140,10 +149,26 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
     fun fetchProductDetail() {
         viewModelScope.launch {
-            //todo - update return logic
-            vodovozServiceRepository.getProductDetails(productId ?: return@launch).onEach { result ->
 
-            }.collect()
+            vodovozServiceRepository.getProductDetails(productId ?: return@launch)
+                .onEach { productDetailsScreenResult ->
+                    productDetailsScreenResult.onSuccess { productDetailsScreenModel ->
+                        val moreProducts = productDetailsScreenModel.moreProducts
+
+                        uiStateListener.update { s ->
+                            s.copy(
+                                comments = productDetailsScreenModel.comments.mapToUi(),
+                                productDetails = productDetailsScreenModel.productDetails.toUi(),
+                                sectionAccessory = moreProducts.sectionAccessory.toUi { list -> list.map { productModel -> productModel.toUi() } },
+                                sectionSimilarProducts = moreProducts.sectionSimilar.toUi { list -> list.map { productModel -> productModel.toUi() } },
+                                buttons = productDetailsScreenModel.buttons.toUi(),
+                                tabs = productDetailsScreenModel.tabs.map { it.toUi() }
+                            )
+                        }
+
+                    }
+
+                }.collect()
         }
 
         //todo - delete old version
@@ -594,5 +619,20 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val cartQuantity: Int = 0,
         val buttonIsLoading: Boolean = false,
         val hideFloatingButton: Boolean = true,
+
+        val productDetails: ProductDetailsUi = ProductDetailsUi.Empty,
+        val comments: List<CommentUi> = emptyList(),
+        val buttons: ProductDetailsButtonsUi = ProductDetailsButtonsUi.Empty,
+        val tabs: List<ProductDetailsTabUi> = emptyList(),
+        val sectionSimilarProducts: SectionUi<ProductUi> = SectionUi.empty(),
+        val sectionAccessory: SectionUi<ProductUi> = SectionUi.empty(),
+        val uiState: UiState = UiState.Loading,
     ) : State
+
+    sealed class UiState {
+        data object Loading : UiState()
+        data object Success : UiState()
+        data object ProductNotFound : UiState()
+        data object Error : UiState()
+    }
 }

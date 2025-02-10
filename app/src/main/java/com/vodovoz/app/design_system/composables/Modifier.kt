@@ -21,7 +21,8 @@ import androidx.compose.ui.layout.onGloballyPositioned
 fun Modifier.isElementVisible(onVisibilityChanged: (Boolean) -> Unit) = composed {
     val isVisible by remember { derivedStateOf { mutableStateOf(false) } }
     LaunchedEffect(isVisible.value) { onVisibilityChanged.invoke(isVisible.value) }
-    this.onGloballyPositioned { layoutCoordinates ->
+
+    onGloballyPositioned { layoutCoordinates ->
         isVisible.value = layoutCoordinates.parentLayoutCoordinates?.let {
             val parentBounds = it.boundsInWindow()
             val childBounds = layoutCoordinates.boundsInWindow()

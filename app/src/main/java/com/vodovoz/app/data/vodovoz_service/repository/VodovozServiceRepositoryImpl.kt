@@ -30,15 +30,15 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val vodovozService: VodovozService,
     private val accountManager: AccountManager,
 ) : VodovozServiceRepository {
-    override fun getProductDetails(productId: Long): Flow<Result<ProductDetailsScreenModel>> = executeRequest(
-        request = {
-            vodovozService.getProductDetails(productId)
-        },
-        mapper = { responseDto ->
-
-            TODO()
-        }
-    )
+    override fun getProductDetails(productId: Long): Flow<Result<ProductDetailsScreenModel>> =
+        executeRequest(
+            request = {
+                vodovozService.getProductDetails(productId)
+            },
+            mapper = { responseDto ->
+                responseDto.data?.toDomain() ?: throw IllegalArgumentException("ProductDetails cannot be null")
+            }
+        )
 
 
     override fun getPopupWindowInfo(): Flow<Result<PopupWindowInfoModel>> = executeRequest(
