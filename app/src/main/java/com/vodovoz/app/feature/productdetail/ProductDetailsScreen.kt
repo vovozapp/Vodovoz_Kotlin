@@ -3,15 +3,18 @@ package com.vodovoz.app.feature.productdetail
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.vodovoz.app.design_system.composables.button.ProductFloatingButton
+import com.vodovoz.app.feature.productdetail.composables.MultiProductBottomSheet
 import com.vodovoz.app.feature.productdetail.composables.ProductDetailTopBar
 import com.vodovoz.app.feature.productdetail.composables.ProductDetailsBody
 import com.vodovoz.app.util.calculateProductPrice
 import kotlin.math.roundToInt
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Suppress("NonSkippableComposable")
 @Composable
 fun ProductDetailsScreen(
@@ -25,8 +28,6 @@ fun ProductDetailsScreen(
     onDetailPreviewTextShowOrHide: () -> Unit,
     onProductImageClick: () -> Unit,
     onAddToCart: () -> Unit,
-    onProductMinus: () -> Unit,
-    onProductPlus: () -> Unit,
     onNavigateToCart: () -> Unit,
 ) {
     val productDetails = viewState.productDetails
@@ -57,8 +58,12 @@ fun ProductDetailsScreen(
                     leftToGift = 0,
                     isAvailable = productDetails.isAvailable,
                     analogButton = viewState.buttons.analogButton,
-                    onProductPlus = onProductPlus,
-                    onProductMinus = onProductMinus,
+                    onProductPlus = {
+                        viewModel.incrementCart()
+                    },
+                    onProductMinus = {
+                        viewModel.decrementCart()
+                    },
                     onCartClick = onNavigateToCart,
                     onAddToCartClick = onAddToCart,
                     onAnalogClick = {}
@@ -77,8 +82,12 @@ fun ProductDetailsScreen(
             onAllPropertiesShow = onAllPropertiesShow,
             onDetailPreviewTextShowOrHide = onDetailPreviewTextShowOrHide,
             onProductImageClick = { onProductImageClick() },
-            onProductPlus = onProductPlus,
-            onProductMinus = onProductMinus,
+            onProductPlus = {
+                viewModel.incrementCart()
+            },
+            onProductMinus = {
+                viewModel.decrementCart()
+            },
             onAddToCart = onAddToCart,
             onNavigateToCart = onNavigateToCart,
             productDetails = productDetails,
@@ -89,7 +98,40 @@ fun ProductDetailsScreen(
             onAnalogButtonClick = {},
             onPreOrderButtonClick = {},
             onPresentButtonClick = {},
-            onMultiButtonClick = {}
+            onMultiButtonClick = {
+                viewModel.showMultiBottomSheet()
+            }
+        )
+    }
+
+    if (viewState.showMultiBottomSheet) {
+        MultiProductBottomSheet(
+            cartQuantity = viewState.cartQuantity,
+            firstPrice = productDetails.firstPrice,
+            prices = productDetails.prices,
+            buttonIsLoading = viewState.buttonIsLoading,
+            onDismissRequest = { viewModel.hideMultiBottomSheet() },
+            onCartQuantityChange = { newCartQuantity ->
+                viewModel.changeCart(
+                    productDetails.id,
+                    newCartQuantity,
+                    viewState.cartQuantity
+                )
+            },
+            onPlus = {
+                viewModel.changeCart(
+                    productDetails.id,
+                    viewState.cartQuantity + 1,
+                    viewState.cartQuantity
+                )
+            },
+            onMinus = {
+                viewModel.changeCart(
+                    productDetails.id,
+                    viewState.cartQuantity - 1,
+                    viewState.cartQuantity
+                )
+            }
         )
     }
 }

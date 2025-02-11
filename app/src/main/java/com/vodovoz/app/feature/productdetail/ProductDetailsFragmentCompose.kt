@@ -111,20 +111,6 @@ class ProductDetailsFragment : Fragment() {
 //                                        true
 //                                    )
                                 },
-                                onProductMinus = {
-                                    viewModel.changeCart(
-                                        productDetails.id,
-                                        viewState.cartQuantity - 1,
-                                        viewState.cartQuantity
-                                    )
-                                },
-                                onProductPlus = {
-                                    viewModel.changeCart(
-                                        productDetails.id,
-                                        viewState.cartQuantity + 1,
-                                        viewState.cartQuantity
-                                    )
-                                },
                                 onNavigateToCart = {
                                     //todo - navigate to cart
                                 },

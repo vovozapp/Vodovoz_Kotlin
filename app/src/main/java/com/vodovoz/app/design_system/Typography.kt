@@ -97,6 +97,20 @@ val vodovozTypography = Typography(
         ),
         fontWeight = FontWeight.Medium
     ),
+    headlineMedium = TextStyle(
+        fontSize = 20.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.15.sp,
+        fontFamily = robotoFontFamily,
+        lineHeightStyle = LineHeightStyle(
+            LineHeightStyle.Alignment.Center,
+            LineHeightStyle.Trim.None
+        ),
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        ),
+        fontWeight = FontWeight.Medium
+    ),
     headlineSmall = TextStyle(
         fontSize = 18.sp,
         lineHeight = 24.sp,

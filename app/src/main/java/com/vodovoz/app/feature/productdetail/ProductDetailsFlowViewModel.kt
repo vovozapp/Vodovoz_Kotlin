@@ -460,6 +460,17 @@ class ProductDetailsFlowViewModel @Inject constructor(
 
     fun isLoginAlready() = accountManager.isAlreadyLogin()
 
+    fun incrementCart(){
+        val productDetails = state.productDetails
+        changeCart(productDetails.id, state.cartQuantity + 1, state.cartQuantity)
+    }
+
+    fun decrementCart(){
+        val productDetails = state.productDetails
+        changeCart(productDetails.id, state.cartQuantity - 1, state.cartQuantity)
+    }
+
+
     fun changeCart(productId: Long, quantity: Int, oldQuan: Int) {
         viewModelScope.launch {
             uiStateListener.update { s ->
@@ -573,6 +584,22 @@ class ProductDetailsFlowViewModel @Inject constructor(
         }
     }
 
+    fun hideMultiBottomSheet() = viewModelScope.launch {
+        uiStateListener.update { s ->
+            s.copy(
+                showMultiBottomSheet = false
+            )
+        }
+    }
+
+    fun showMultiBottomSheet() = viewModelScope.launch {
+        uiStateListener.update { s ->
+            s.copy(
+                showMultiBottomSheet = true
+            )
+        }
+    }
+
     sealed class ProductDetailsEvents : Event {
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
             ProductDetailsEvents()
@@ -633,6 +660,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val sectionSimilarProducts: SectionUi<ProductUi> = SectionUi.empty(),
         val sectionAccessory: SectionUi<ProductUi> = SectionUi.empty(),
         val uiState: UiState = UiState.Loading,
+        val showMultiBottomSheet: Boolean = true
     ) : State
 
     sealed class UiState {

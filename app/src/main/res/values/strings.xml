@@ -241,5 +241,8 @@
     <string name="check_intenet_connection">Проверьте соединение с интернетом</string>
     <string name="try_again">Попробовать снова</string>
     <string name="scanner_screen">Наведите камеру на штрих-код для сканирования</string>
+    <string name="choose_quantity">Выберите количество</string>
+    <string name="from_quantity">От %1$s шт</string>
+    <string name="saving_price">Экономия %1$s ₽</string>
 
 </resources>

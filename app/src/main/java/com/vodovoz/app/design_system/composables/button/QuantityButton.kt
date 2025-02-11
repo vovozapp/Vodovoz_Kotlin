@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +32,71 @@ import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.util.formatPrice
 
 @Composable
+fun BaseQuantityButton(
+    modifier: Modifier = Modifier,
+    isLoading: Boolean,
+    onPlus: () -> Unit,
+    onMinus: () -> Unit,
+    minusEnabled: Boolean = true,
+    plusEnabled: Boolean = true,
+    colors: ButtonColors = ButtonDefaults.buttonColors(
+        containerColor = MaterialTheme.colorScheme.secondary,
+        contentColor = MaterialTheme.colorScheme.background
+    ),
+    content: @Composable () -> Unit,
+) {
+    Surface(
+        modifier = modifier
+            .height(48.dp)
+            .fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        color = colors.containerColor
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(Modifier.clickable {
+                if (!isLoading && minusEnabled) {
+                    onMinus()
+                }
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_minus),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(vertical = 12.dp, horizontal = 16.dp)
+                        .size(24.dp),
+                    tint = if(minusEnabled) { colors.contentColor } else colors.disabledContentColor
+                )
+            }
+            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                content()
+            }
+
+            Box(Modifier.clickable {
+                if (!isLoading && plusEnabled) {
+                    onPlus()
+                }
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_plus),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(vertical = 12.dp, horizontal = 16.dp)
+                        .size(24.dp),
+                    tint = if(plusEnabled) { colors.contentColor } else colors.disabledContentColor
+
+                )
+            }
+        }
+    }
+
+}
+
+@Composable
 fun ProductQuantityButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean,
@@ -40,60 +107,21 @@ fun ProductQuantityButton(
 ) {
     val priceAnnotatedString = buildPriceAnnotatedString(quantity, totalPrice)
 
-    Surface(
-        modifier = modifier
-            .height(48.dp)
-            .fillMaxWidth(),
-        shape = MaterialTheme.shapes.large,
-        color = MaterialTheme.colorScheme.secondary
+    BaseQuantityButton(
+        modifier = modifier,
+        isLoading = isLoading,
+        onPlus = onPlus,
+        onMinus = onMinus
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(Modifier.clickable {
-                if (!isLoading) {
-                    onMinus()
-                }
-            }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_minus),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(vertical = 12.dp, horizontal = 16.dp)
-                        .size(24.dp),
-                    tint = MaterialTheme.colorScheme.background
-                )
-            }
-            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                if (isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        color = MaterialTheme.colorScheme.background,
-                        trackColor = Color.Transparent,
-                        strokeWidth = 1.dp
-                    )
-                } else {
-                    Text(text = priceAnnotatedString, color = MaterialTheme.colorScheme.background)
-                }
-            }
-
-            Box(Modifier.clickable {
-                if (!isLoading) {
-                    onPlus()
-                }
-            }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_plus),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(vertical = 12.dp, horizontal = 16.dp)
-                        .size(24.dp),
-                    tint = MaterialTheme.colorScheme.background
-                )
-            }
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(24.dp),
+                color = MaterialTheme.colorScheme.background,
+                trackColor = Color.Transparent,
+                strokeWidth = 1.dp
+            )
+        } else {
+            Text(text = priceAnnotatedString, color = MaterialTheme.colorScheme.background)
         }
     }
 }
@@ -115,6 +143,20 @@ private fun buildPriceAnnotatedString(count: Int, currentPrice: Int): AnnotatedS
         withStyle(headlineSmall.toSpanStyle()) {
             append(priceWithCurrency)
         }
+    }
+}
+
+@Preview
+@Composable
+private fun ProductQuantityButtonPreview() {
+    VodovozTheme {
+        ProductQuantityButton(
+            isLoading = false,
+            onPlus = { },
+            onMinus = { },
+            quantity = 0,
+            totalPrice = 500
+        )
     }
 }
 
