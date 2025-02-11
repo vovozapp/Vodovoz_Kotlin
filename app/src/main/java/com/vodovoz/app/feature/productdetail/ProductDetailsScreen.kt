@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.vodovoz.app.design_system.composables.button.ProductFloatingButton
 import com.vodovoz.app.feature.productdetail.composables.MultiProductBottomSheet
+import com.vodovoz.app.feature.productdetail.composables.PresentBottomSheet
 import com.vodovoz.app.feature.productdetail.composables.ProductDetailTopBar
 import com.vodovoz.app.feature.productdetail.composables.ProductDetailsBody
 import com.vodovoz.app.util.calculateProductPrice
@@ -97,7 +98,9 @@ fun ProductDetailsScreen(
             buttons = viewState.buttons,
             onAnalogButtonClick = {},
             onPreOrderButtonClick = {},
-            onPresentButtonClick = {},
+            onPresentButtonClick = {
+                viewModel.showPresentBottomSheet()
+            },
             onMultiButtonClick = {
                 viewModel.showMultiBottomSheet()
             }
@@ -119,19 +122,21 @@ fun ProductDetailsScreen(
                 )
             },
             onPlus = {
-                viewModel.changeCart(
-                    productDetails.id,
-                    viewState.cartQuantity + 1,
-                    viewState.cartQuantity
-                )
+                viewModel.incrementCart()
+
             },
             onMinus = {
-                viewModel.changeCart(
-                    productDetails.id,
-                    viewState.cartQuantity - 1,
-                    viewState.cartQuantity
-                )
+                viewModel.decrementCart()
             }
+        )
+    }
+
+    val presentButton = viewState.buttons.blockButton
+    if (viewState.showPresentBottomSheet && presentButton != null) {
+        PresentBottomSheet(
+            presentButton = presentButton,
+            onDismissRequest = { viewModel.hidePresentBottomSheet() },
+            onBuyButtonClick = { }
         )
     }
 }

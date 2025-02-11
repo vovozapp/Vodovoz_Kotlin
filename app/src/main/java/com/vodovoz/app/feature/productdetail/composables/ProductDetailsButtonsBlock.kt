@@ -134,6 +134,11 @@ fun ProductDetailsButtonsBlock(
                 )
             )
         }
+
+        val presentBlock = buttons.blockDesignButton
+        if(presentBlock != null && isAvailable){
+            //todo - present card
+        }
     }
 }
 

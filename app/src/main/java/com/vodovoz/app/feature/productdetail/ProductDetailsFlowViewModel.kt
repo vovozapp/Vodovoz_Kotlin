@@ -600,6 +600,22 @@ class ProductDetailsFlowViewModel @Inject constructor(
         }
     }
 
+    fun showPresentBottomSheet() = viewModelScope.launch {
+        uiStateListener.update { s ->
+            s.copy(
+                showPresentBottomSheet = true
+            )
+        }
+    }
+
+    fun hidePresentBottomSheet() = viewModelScope.launch {
+        uiStateListener.update { s ->
+            s.copy(
+                showPresentBottomSheet = false
+            )
+        }
+    }
+
     sealed class ProductDetailsEvents : Event {
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
             ProductDetailsEvents()
@@ -660,7 +676,9 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val sectionSimilarProducts: SectionUi<ProductUi> = SectionUi.empty(),
         val sectionAccessory: SectionUi<ProductUi> = SectionUi.empty(),
         val uiState: UiState = UiState.Loading,
-        val showMultiBottomSheet: Boolean = true
+
+        val showMultiBottomSheet: Boolean = false,
+        val showPresentBottomSheet: Boolean = false
     ) : State
 
     sealed class UiState {
