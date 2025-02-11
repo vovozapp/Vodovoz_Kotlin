@@ -1,21 +1,31 @@
 package com.vodovoz.app.feature.productdetail.composables
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.button.ProductQuantityWithCartButton
 import com.vodovoz.app.design_system.composables.button.VodovozButton
+import com.vodovoz.app.design_system.composables.button.VodovozButtonSmall
+import com.vodovoz.app.design_system.composables.card.VodovozOutlinedCard
 import com.vodovoz.app.design_system.composables.isElementVisible
 import com.vodovoz.app.design_system.model.BlockPromoDataUi
 import com.vodovoz.app.design_system.model.ButtonBlockUi
@@ -42,6 +52,7 @@ fun ProductDetailsButtonsBlock(
     onFloatingButtonChange: (Boolean) -> Unit,
     onMultiButtonClick: () -> Unit,
     onPresentButtonClick: () -> Unit,
+    onPresentBlockButtonClick: () -> Unit,
     onPreOrderButtonClick: () -> Unit,
     onAnalogButtonClick: () -> Unit,
 ) {
@@ -136,8 +147,43 @@ fun ProductDetailsButtonsBlock(
         }
 
         val presentBlock = buttons.blockDesignButton
-        if(presentBlock != null && isAvailable){
-            //todo - present card
+        if (presentBlock != null && isAvailable) {
+
+            val blockInfo = presentBlock.block
+            val blockInfoButton = blockInfo.button
+
+            VodovozOutlinedCard(
+                modifier = Modifier.padding(top = 24.dp),
+                contentPadding = PaddingValues(16.dp),
+                borderColor = blockInfo.borderColor,
+                containerColor = blockInfo.background
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    AsyncImage(
+                        model = blockInfo.image,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(top = 10.dp)
+                            .size(50.dp),
+                        contentScale = ContentScale.FillBounds
+                    )
+                    Text(
+                        text = blockInfo.title,
+                        modifier = Modifier.padding(start = 16.dp),
+                        color = blockInfo.textColor,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+                VodovozButtonSmall(
+                    modifier = Modifier.padding(top = 16.dp),
+                    text = blockInfoButton.name,
+                    onClick = onPresentBlockButtonClick,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = blockInfoButton.backgroundColor,
+                        contentColor = blockInfoButton.textColor
+                    )
+                )
+            }
         }
     }
 }
@@ -162,7 +208,8 @@ private fun ProductDetailsButtonsBlockPreview() {
             onPresentButtonClick = {},
             onMultiButtonClick = {},
             onAnalogButtonClick = {},
-            onPreOrderButtonClick = {}
+            onPreOrderButtonClick = {},
+            onPresentBlockButtonClick = {}
         )
     }
 }

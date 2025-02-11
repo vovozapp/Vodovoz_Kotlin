@@ -103,6 +103,9 @@ fun ProductDetailsScreen(
             },
             onMultiButtonClick = {
                 viewModel.showMultiBottomSheet()
+            },
+            onPresentBlockButtonClick = {
+                viewModel.showPresentBlockBottomSheet()
             }
         )
     }
@@ -134,8 +137,19 @@ fun ProductDetailsScreen(
     val presentButton = viewState.buttons.blockButton
     if (viewState.showPresentBottomSheet && presentButton != null) {
         PresentBottomSheet(
-            presentButton = presentButton,
+            data = presentButton.data,
+            button = presentButton.buyButton,
             onDismissRequest = { viewModel.hidePresentBottomSheet() },
+            onBuyButtonClick = { }
+        )
+    }
+
+    val presentBlock = viewState.buttons.blockDesignButton
+    if (viewState.showPresentBlockBottomSheet && presentBlock != null) {
+        PresentBottomSheet(
+            data = presentBlock.data,
+            button = presentBlock.buyButton,
+            onDismissRequest = { viewModel.hidePresentBlockBottomSheet() },
             onBuyButtonClick = { }
         )
     }

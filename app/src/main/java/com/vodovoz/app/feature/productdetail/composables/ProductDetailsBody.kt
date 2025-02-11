@@ -48,6 +48,7 @@ fun ProductDetailsBody(
     onPresentButtonClick: () -> Unit,
     onPreOrderButtonClick: () -> Unit,
     onAnalogButtonClick: () -> Unit,
+    onPresentBlockButtonClick: () -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -115,7 +116,8 @@ fun ProductDetailsBody(
             onPresentButtonClick = onPresentButtonClick,
             onMultiButtonClick = onMultiButtonClick,
             onPreOrderButtonClick = onPreOrderButtonClick,
-            onAnalogButtonClick = onAnalogButtonClick
+            onAnalogButtonClick = onAnalogButtonClick,
+            onPresentBlockButtonClick = onPresentBlockButtonClick
         )
 
         //todo - make onAboutProductClick

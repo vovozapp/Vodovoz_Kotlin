@@ -66,7 +66,7 @@ fun ColorVodovozChip(modifier: Modifier = Modifier, color: Color, text: String) 
         Text(
             text = text,
             modifier = Modifier.padding(horizontal = 8.dp),
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.background
         )
     }

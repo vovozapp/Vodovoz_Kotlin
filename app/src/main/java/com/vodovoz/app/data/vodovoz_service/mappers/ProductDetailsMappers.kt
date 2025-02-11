@@ -326,10 +326,10 @@ fun COMMENT_DTO.toDomain(): CommentModel {
     return CommentModel(
         userName = NAME ?: "",
         userPhoto = USER_PHOTO?.toFullUrl() ?: "",
-        text = HtmlCompat.fromHtml(TEXT ?: "", Html.FROM_HTML_MODE_LEGACY).toString(),
+        text = HtmlCompat.fromHtml(TEXT ?: "", HtmlCompat.FROM_HTML_MODE_LEGACY).toString(),
         dateText = DATA ?: "",
         rating = RATING ?: 0,
-        purchased = HtmlCompat.fromHtml(KYPLEN ?: "", Html.FROM_HTML_MODE_LEGACY).toString()
+        purchased = HtmlCompat.fromHtml(KYPLEN ?: "", HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
     )
 }
 

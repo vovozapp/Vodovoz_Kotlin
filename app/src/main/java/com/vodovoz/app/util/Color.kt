@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 fun Color.Companion.fromHexOrTransparent(hexString: String) = try {
     Color(android.graphics.Color.parseColor(hexString))
 } catch (_: Exception) {
-    Transparent
+    Unspecified
 }
 
 fun Color.Companion.fromHexOrNull(hexString: String) = try {

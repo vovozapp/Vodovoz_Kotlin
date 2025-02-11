@@ -19,6 +19,7 @@ fun VodovozOutlinedCard(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues,
     borderColor: Color = MaterialTheme.colorScheme.outline,
+    containerColor: Color = MaterialTheme.colorScheme.background,
     shape: CornerBasedShape = MaterialTheme.shapes.large,
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit,
@@ -31,7 +32,7 @@ fun VodovozOutlinedCard(
             elevation = CardDefaults.outlinedCardElevation(0.dp),
             shape = shape,
             border = BorderStroke(1.dp, borderColor),
-            colors = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.background),
+            colors = CardDefaults.outlinedCardColors(containerColor = containerColor),
         ) {
             Column(modifier = Modifier.padding(contentPadding)) {
                 content()

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,27 +20,30 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.vodovoz.app.design_system.composables.bottom_sheet.VodovozDragHandle
 import com.vodovoz.app.design_system.composables.button.VodovozButton
-import com.vodovoz.app.design_system.model.ButtonBlockUi
+import com.vodovoz.app.design_system.composables.chip.ColorVodovozChip
+import com.vodovoz.app.design_system.model.BlockPromoDataUi
+import com.vodovoz.app.design_system.model.BuyButtonUi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PresentBottomSheet(
     state: SheetState = rememberModalBottomSheetState(true),
-    presentButton: ButtonBlockUi,
+    data: BlockPromoDataUi,
+    button: BuyButtonUi,
     onDismissRequest: () -> Unit,
     onBuyButtonClick: () -> Unit,
 ) {
 
-    val presentButtonData = presentButton.data
-    val product = presentButtonData.product
-    val purchaseButton = presentButton.buyButton
+    val product = data.product
 
     ModalBottomSheet(
         sheetState = state,
@@ -57,14 +61,14 @@ fun PresentBottomSheet(
         ) {
             Text(
                 modifier = Modifier.padding(top = 20.dp),
-                text = presentButtonData.title,
+                text = data.title,
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.headlineSmall
             )
 
             Text(
                 modifier = Modifier.padding(top = 8.dp),
-                text = presentButtonData.description,
+                text = data.description,
                 color = MaterialTheme.colorScheme.surfaceTint,
                 style = MaterialTheme.typography.bodyMedium
             )
@@ -83,8 +87,15 @@ fun PresentBottomSheet(
                         contentScale = ContentScale.FillBounds,
                         alignment = Alignment.Center
                     )
+                    if (data.productQuantityText.isNotEmpty()) {
+                        ColorVodovozChip(
+                            modifier = Modifier.align(Alignment.BottomEnd),
+                            color = MaterialTheme.colorScheme.secondary,
+                            text = data.productQuantityText
+                        )
+                    }
                 }
-                Column(modifier = Modifier.padding(start = 2.dp)) {
+                Column(modifier = Modifier.padding(start = 16.dp)) {
                     Text(
                         text = product.name,
                         color = MaterialTheme.colorScheme.onBackground,
@@ -92,24 +103,44 @@ fun PresentBottomSheet(
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = product.price.new,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                    Spacer(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .height(4.dp)
                     )
+                    Row(verticalAlignment = Alignment.Bottom) {
+
+                        Text(
+                            text = product.price.new,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        val oldPrice = product.price.old
+                        if (oldPrice.isNotEmpty()) {
+                            Text(
+                                modifier = Modifier.padding(start = 2.dp),
+                                text = product.price.old,
+                                color = MaterialTheme.colorScheme.surfaceTint,
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    textDecoration = TextDecoration.LineThrough
+                                ),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
                 }
             }
 
             VodovozButton(
                 modifier = Modifier.padding(bottom = 16.dp),
-                text = purchaseButton.title,
+                text = button.title,
                 onClick = onBuyButtonClick,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = purchaseButton.backgroundColor,
-                    contentColor = purchaseButton.textColor
+                    containerColor = button.backgroundColor.takeOrElse { MaterialTheme.colorScheme.primary },
+                    contentColor = button.textColor.takeOrElse { MaterialTheme.colorScheme.background }
                 )
             )
         }

@@ -14,7 +14,7 @@ data class BLOCK_U_BLOCK_KNOPKA_DIZAIN_DTO(
     val KARTINKA: String?,
     @Json(name = "KNOPKA")
     val KNOPKA: BLOCK_KNOPKA_VALUE_DTO?,
-    @Json(name = "TEXCOLOR")
+    @Json(name = "TEXT_COLOR")
     val TEXTCOLOR: String?,
     @Json(name = "TITLE")
     val TITLE: String?
