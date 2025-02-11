@@ -17,8 +17,7 @@ fun <T, R> executeRequest(
     return flow {
         val response = request()
 
-
-        if (response.isSuccessful) {
+        if (response.isSuccessful && response.body() != null) {
             val result = mapper(response.body()!!)
             emit(Result.success(result))
         } else if (onFail != null) {

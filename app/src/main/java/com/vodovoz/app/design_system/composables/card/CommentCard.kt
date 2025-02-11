@@ -16,15 +16,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.text.HtmlCompat
 import com.vodovoz.app.R
-import com.vodovoz.app.ui.model.CommentUI
+import com.vodovoz.app.design_system.model.CommentUi
 
 @Composable
-fun CommentCard(modifier: Modifier = Modifier, commentUI: CommentUI) {
+fun CommentCard(modifier: Modifier = Modifier, comment: CommentUi) {
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth(),
@@ -37,7 +36,7 @@ fun CommentCard(modifier: Modifier = Modifier, commentUI: CommentUI) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = commentUI.author ?: stringResource(id = R.string.anonymous),
+                    text = comment.userName,
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.titleSmall,
                     maxLines = 1,
@@ -48,9 +47,7 @@ fun CommentCard(modifier: Modifier = Modifier, commentUI: CommentUI) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_star),
                         contentDescription = null,
-                        tint = if (starNumber <= (commentUI.rating
-                                ?: -1)
-                        ) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.surfaceVariant,
+                        tint = if (starNumber <= comment.rating) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.surfaceVariant,
                         modifier = Modifier.size(18.dp)
                     )
                 }
@@ -61,7 +58,7 @@ fun CommentCard(modifier: Modifier = Modifier, commentUI: CommentUI) {
                 modifier = Modifier
                     .padding(top = 12.dp)
                     .heightIn(min = 40.dp),
-                text = HtmlCompat.fromHtml(commentUI.text ?: "", HtmlCompat.FROM_HTML_MODE_COMPACT).toString(),
+                text = comment.text,
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodySmall,
                 maxLines = 2,
@@ -73,7 +70,7 @@ fun CommentCard(modifier: Modifier = Modifier, commentUI: CommentUI) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = commentUI.date ?: "",
+                    text = comment.dateText,
                     modifier = Modifier.weight(1f),
                     maxLines = 1,
                     color = MaterialTheme.colorScheme.surfaceTint,

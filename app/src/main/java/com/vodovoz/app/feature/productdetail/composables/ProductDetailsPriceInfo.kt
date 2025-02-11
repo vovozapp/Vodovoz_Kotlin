@@ -19,32 +19,32 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
-import com.vodovoz.app.ui.model.PriceUI
+import com.vodovoz.app.design_system.model.DepositUi
+import com.vodovoz.app.design_system.model.PriceUi
 import com.vodovoz.app.util.formatPrice
 import kotlin.math.roundToInt
 
-@Suppress("NonSkippableComposable")
 @Composable
 fun ProductDetailsPriceInfo(
     modifier: Modifier = Modifier,
-    priceUIList: List<PriceUI>,
-    deposit: Int,
+    firstPrice: PriceUi,
+    deposit: DepositUi?,
+    pricePerUnit: String,
 ) {
-    val (currentPrice, oldPrice) = priceUIList.firstOrNull()?.run {
-        currentPrice to oldPrice
-    } ?: (0.0 to 0.0)
+    val price = firstPrice.price
+    val oldPrice = firstPrice.oldPrice
 
     Column(
         modifier = modifier.padding(horizontal = 16.dp)
     ) {
         Row(verticalAlignment = Alignment.Bottom) {
             Text(
-                text = stringResource(R.string.price, currentPrice.roundToInt().formatPrice()),
+                text = stringResource(R.string.price, price.roundToInt().formatPrice()),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.titleLarge,
             )
 
-            if (oldPrice > currentPrice) {
+            if (oldPrice > price) {
                 Text(
                     text = stringResource(R.string.price, oldPrice.roundToInt().formatPrice()),
                     color = MaterialTheme.colorScheme.surfaceTint,
@@ -55,22 +55,33 @@ fun ProductDetailsPriceInfo(
                 )
             }
         }
-        Row(
-            modifier = Modifier.padding(top = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            //todo - put actual deposit
-            Text(text = buildAnnotatedDepositString(deposit = deposit))
-            Icon(
-                painter = painterResource(id = R.drawable.ic_question_circle),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .size(20.dp),
-                tint = MaterialTheme.colorScheme.primary
+
+        if (pricePerUnit.isNotEmpty()) {
+            Text(
+                text = pricePerUnit,
+                color = MaterialTheme.colorScheme.surfaceTint,
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier.padding(top = 4.dp)
             )
         }
 
+        if (deposit?.price != null && deposit.price > 0f) {
+            Row(
+                modifier = Modifier.padding(top = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Text(text = buildAnnotatedDepositString(deposit = deposit.price.roundToInt()))
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_question_circle),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .size(20.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
     }
 
 }

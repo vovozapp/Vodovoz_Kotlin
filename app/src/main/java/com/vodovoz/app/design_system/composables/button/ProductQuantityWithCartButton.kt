@@ -16,7 +16,7 @@ fun ProductQuantityWithCartButton(
     currentPrice: Int,
     isLoading: Boolean
 ) {
-    Row(modifier = modifier.padding(horizontal = 16.dp)) {
+    Row(modifier = modifier) {
         ProductQuantityButton(
             modifier = Modifier.weight(1f),
             isLoading = isLoading,

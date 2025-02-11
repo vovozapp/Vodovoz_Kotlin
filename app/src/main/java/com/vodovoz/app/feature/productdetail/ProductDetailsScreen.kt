@@ -9,29 +9,14 @@ import androidx.compose.ui.Modifier
 import com.vodovoz.app.design_system.composables.button.ProductFloatingButton
 import com.vodovoz.app.feature.productdetail.composables.ProductDetailTopBar
 import com.vodovoz.app.feature.productdetail.composables.ProductDetailsBody
-import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.ui.model.CommentUI
-import com.vodovoz.app.ui.model.ProductDetailUI
-import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.calculateProductPrice
 import kotlin.math.roundToInt
 
 @Suppress("NonSkippableComposable")
 @Composable
 fun ProductDetailsScreen(
-    productDetail: ProductDetailUI,
-    buyWithProductUIList: List<ProductUI>,
-    comments: List<CommentUI>,
-    category: CategoryUI,
-    showDetailPreviewText: Boolean,
-    showAllProperties: Boolean,
-    viewedProductUIList: List<ProductUI>,
-    articleNumber: String,
-    deposit: Int,
-    searchWords: List<String>,
-    productCartQuantity: Int,
-    buttonIsLoading: Boolean,
-    hideFloatingButton: Boolean,
+    viewState: ProductDetailsFlowViewModel.ProductDetailsState,
+    viewModel: ProductDetailsFlowViewModel,
     onFloatingButtonChange: (Boolean) -> Unit,
     onNavigateBack: () -> Unit,
     onLikeClick: () -> Unit,
@@ -44,36 +29,39 @@ fun ProductDetailsScreen(
     onProductPlus: () -> Unit,
     onNavigateToCart: () -> Unit,
 ) {
+    val productDetails = viewState.productDetails
+
     Scaffold(
         topBar = {
             ProductDetailTopBar(
                 onNavigationClick = onNavigateBack,
                 onLikeClick = onLikeClick,
                 onShareClick = onShareClick,
-                isFavoriteProduct = productDetail.isFavorite
+                isFavoriteProduct = productDetails.isFavorite
             )
         },
         bottomBar = {
-            val (price, oldPrice) = productDetail.priceUIList.first().run {
-                currentPrice.roundToInt() to oldPrice.roundToInt()
-            }
+            val (price, oldPrice) = productDetails.firstPrice.run { price.roundToInt() to oldPrice.roundToInt() }
 
-            AnimatedVisibility(!hideFloatingButton) {
+            AnimatedVisibility(!viewState.hideFloatingButton) {
                 ProductFloatingButton(
-                    isLoading = buttonIsLoading,
-                    productCartQuantity = productCartQuantity,
+                    isLoading = viewState.buttonIsLoading,
+                    cartQuantity = viewState.cartQuantity,
                     totalPrice = calculateProductPrice(
-                        productCartQuantity,
-                        productDetail.priceUIList
+                        viewState.cartQuantity,
+                        productDetails.prices
                     ).roundToInt(),
                     oldPrice = oldPrice,
                     price = price,
                     //todo - put left gift
                     leftToGift = 0,
+                    isAvailable = productDetails.isAvailable,
+                    analogButton = viewState.buttons.analogButton,
                     onProductPlus = onProductPlus,
                     onProductMinus = onProductMinus,
                     onCartClick = onNavigateToCart,
-                    onAddToCartClick = onAddToCart
+                    onAddToCartClick = onAddToCart,
+                    onAnalogClick = {}
                 )
             }
         },
@@ -81,19 +69,10 @@ fun ProductDetailsScreen(
     ) { paddingValues ->
         ProductDetailsBody(
             modifier = Modifier.padding(paddingValues),
-            productDetailUi = productDetail,
-            comments = comments,
-            category = category,
-            deposit = deposit,
-            searchWords = searchWords,
-            quantityButtonIsLoading = buttonIsLoading,
-            productCartQuantity = productCartQuantity,
-            viewedProductUIList = viewedProductUIList,
-            buyWithProductUIList = buyWithProductUIList,
-            showDetailPreviewText = showDetailPreviewText,
-            showAllProperties = showAllProperties,
-            articleNumber = articleNumber,
-            hideFloatingButton = hideFloatingButton,
+            comments = viewState.comments,
+            quantityButtonIsLoading = viewState.buttonIsLoading,
+            productCartQuantity = viewState.cartQuantity,
+            showAllProperties = viewState.showAllProperties,
             onFloatingButtonChange = onFloatingButtonChange,
             onAllPropertiesShow = onAllPropertiesShow,
             onDetailPreviewTextShowOrHide = onDetailPreviewTextShowOrHide,
@@ -101,7 +80,16 @@ fun ProductDetailsScreen(
             onProductPlus = onProductPlus,
             onProductMinus = onProductMinus,
             onAddToCart = onAddToCart,
-            onNavigateToCart = onNavigateToCart
+            onNavigateToCart = onNavigateToCart,
+            productDetails = productDetails,
+            sectionSimilarProducts = viewState.sectionSimilarProducts,
+            sectionAccessory = viewState.sectionAccessory,
+            showDetailText = viewState.showDetailText,
+            buttons = viewState.buttons,
+            onAnalogButtonClick = {},
+            onPreOrderButtonClick = {},
+            onPresentButtonClick = {},
+            onMultiButtonClick = {}
         )
     }
 }

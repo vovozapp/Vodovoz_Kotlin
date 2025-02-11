@@ -19,16 +19,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.vodovoz.app.R
-import com.vodovoz.app.ui.model.BrandUI
-import com.vodovoz.app.ui.model.CategoryUI
+import com.vodovoz.app.design_system.model.BrandCategoryItemUi
 
 @Composable
 fun ProductDetailsCategoryAndBrand(
     modifier: Modifier = Modifier,
-    category: CategoryUI?,
-    brand: BrandUI?,
-    onBrandClick: (BrandUI) -> Unit,
-    onCategoryClick: (CategoryUI) -> Unit,
+    category: BrandCategoryItemUi?,
+    brand: BrandCategoryItemUi?,
+    onBrandClick: (BrandCategoryItemUi) -> Unit,
+    onCategoryClick: (BrandCategoryItemUi) -> Unit,
 ) {
     Column(modifier = modifier) {
         HorizontalDivider(
@@ -37,9 +36,7 @@ fun ProductDetailsCategoryAndBrand(
         )
         if (brand != null) {
             CategoryOrBrandItem(
-                imageUrl = brand.detailPicture,
-                name = brand.name,
-                isCategory = false,
+                brandCategoryItemUi = brand,
                 onClick = { onBrandClick(brand) })
 
             HorizontalDivider(
@@ -50,9 +47,7 @@ fun ProductDetailsCategoryAndBrand(
 
         if (category != null) {
             CategoryOrBrandItem(
-                imageUrl = category.detailPicture ?: "",
-                name = category.name,
-                isCategory = true,
+                brandCategoryItemUi = category,
                 onClick = { onCategoryClick(category) }
             )
             HorizontalDivider(
@@ -67,9 +62,7 @@ fun ProductDetailsCategoryAndBrand(
 @Composable
 private fun CategoryOrBrandItem(
     modifier: Modifier = Modifier,
-    imageUrl: String,
-    name: String,
-    isCategory: Boolean,
+    brandCategoryItemUi: BrandCategoryItemUi,
     onClick: () -> Unit,
 ) {
     Row(
@@ -79,7 +72,7 @@ private fun CategoryOrBrandItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
-            model = imageUrl,
+            model = brandCategoryItemUi.data.detailPicture,
             contentDescription = null,
             modifier = Modifier.size(40.dp),
             contentScale = ContentScale.FillBounds
@@ -90,14 +83,14 @@ private fun CategoryOrBrandItem(
                 .weight(1f)
         ) {
             Text(
-                text = name,
+                text = brandCategoryItemUi.data.name,
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = if (isCategory) stringResource(id = R.string.category) else stringResource(id = R.string.brand),
+                text = brandCategoryItemUi.title,
                 color = MaterialTheme.colorScheme.surfaceTint,
                 style = MaterialTheme.typography.labelSmall,
                 maxLines = 1,

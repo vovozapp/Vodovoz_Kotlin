@@ -162,10 +162,16 @@ class ProductDetailsFlowViewModel @Inject constructor(
                                 sectionAccessory = moreProducts.sectionAccessory.toUi { list -> list.map { productModel -> productModel.toUi() } },
                                 sectionSimilarProducts = moreProducts.sectionSimilar.toUi { list -> list.map { productModel -> productModel.toUi() } },
                                 buttons = productDetailsScreenModel.buttons.toUi(),
-                                tabs = productDetailsScreenModel.tabs.map { it.toUi() }
+                                tabs = productDetailsScreenModel.tabs.map { it.toUi() },
+                                uiState = UiState.Success
                             )
                         }
-
+                    }.onFailure {
+                        uiStateListener.update { s ->
+                            s.copy(
+                                uiState = UiState.ProductNotFound
+                            )
+                        }
                     }
 
                 }.collect()
@@ -546,7 +552,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
     fun showOrHideDetailText() = viewModelScope.launch {
         uiStateListener.update { s ->
             s.copy(
-                showDetailPreviewText = !s.showDetailPreviewText
+                showDetailText = !s.showDetailText
             )
         }
     }
@@ -611,7 +617,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         val categoryUI: CategoryUI = CategoryUI(name = ""),
         val commentsUI: List<CommentUI> = emptyList(),
         val buyWithProductUIList: List<ProductUI> = emptyList(),
-        val showDetailPreviewText: Boolean = false,
+        val showDetailText: Boolean = false,
         val showAllProperties: Boolean = false,
         val articleNumber: String = "",
         val deposit: Int = 0,
@@ -633,6 +639,5 @@ class ProductDetailsFlowViewModel @Inject constructor(
         data object Loading : UiState()
         data object Success : UiState()
         data object ProductNotFound : UiState()
-        data object Error : UiState()
     }
 }

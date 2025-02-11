@@ -65,7 +65,7 @@ private fun BLOCK_RAZDEL_INFO_DATA_DTO.toDomain(): BrandCategoryItemDataModel? {
     return BrandCategoryItemDataModel(
         id = ID ?: return null,
         name = NAME ?: return null,
-        detailPicture = DETAIL_PICTURE ?: return null
+        detailPicture = DETAIL_PICTURE?.toFullUrl() ?: return null
     )
 }
 
@@ -76,8 +76,14 @@ private fun BLOCK_RAZDEL_INFO_DTO.toDomain(): BrandCategoryItemModel? {
     )
 }
 
-private fun TOVAR_DETAIL_DTO.toDomain(shareUrlText: String): ProductDetailsModel {
+private fun TOVAR_DETAIL_DTO.toDomain(
+    shareUrlText: String,
+    commentsCount: Int,
+): ProductDetailsModel {
     if (ACTIVE != "Y") throw WebsiteErrorException("Site don't work")
+
+    val detailPicture = DETAIL_PICTURE?.toFullUrl()
+
     return ProductDetailsModel(
         id = ID ?: throw IllegalArgumentException("ID cannot be null"),
         name = NAME ?: throw IllegalArgumentException("Product name cannot be null"),
@@ -89,9 +95,10 @@ private fun TOVAR_DETAIL_DTO.toDomain(shareUrlText: String): ProductDetailsModel
             ?: throw IllegalArgumentException("Characteristics cannot be null"),
         documents = DOCUMENTS?.toDomain()
             ?: throw IllegalArgumentException("Documents cannot be null"),
-        detailPicture = DETAIL_PICTURE
+        detailPicture = detailPicture
             ?: throw IllegalArgumentException("Detail picture cannot be null"),
-        pictures = MORE_PHOTO ?: emptyList(),
+        pictures = ((MORE_PHOTO?.map { img -> img.toFullUrl() }
+            ?: emptyList()) + detailPicture).distinct().reversed(),
         sectionTags = TAGS?.toDomain() ?: SectionModel.empty(),
         isFavorite = FAVORITE ?: false,
         isAvailable = (KOLLTOVAR ?: -1) > 0,
@@ -108,7 +115,8 @@ private fun TOVAR_DETAIL_DTO.toDomain(shareUrlText: String): ProductDetailsModel
         barCode = BAR_CODE ?: "",
         firstPrice = EXTENDEDPRICE?.firstOrNull()?.toDomain()
             ?: throw IllegalArgumentException("First extended price cannot be null"),
-        prices = EXTENDEDPRICE.mapNotNull { extendedPriceDto -> extendedPriceDto.toDomain() }
+        prices = EXTENDEDPRICE.mapNotNull { extendedPriceDto -> extendedPriceDto.toDomain() },
+        commentsCount = commentsCount
     )
 }
 
@@ -160,7 +168,7 @@ fun HARAKTERISTIK_BIND_DTO.toDomain(): CharacteristicModel? {
         code = CODE ?: "",
         name = NAME ?: return null,
         value = VALUE ?: "",
-        hint = HINT
+        hint = HINT?.ifBlank { null }
     )
 }
 
@@ -273,9 +281,13 @@ fun ProductDetailsDTO.toDomain(): ProductDetailsScreenModel {
     val moreProducts = BLOCTOVAR
     val similar = moreProducts?.POHOSHIE
     val accessory = moreProducts?.AKSESSYAR
+    val commentsCount = COMMENTS?.COMMEN_COUNT ?: 0
 
     return ProductDetailsScreenModel(
-        productDetails = TOVAR?.toDomain(shareUrlText = PODILITSYA?.detail_page_url ?: "")
+        productDetails = TOVAR?.toDomain(
+            shareUrlText = PODILITSYA?.detail_page_url ?: "",
+            commentsCount = commentsCount
+        )
             ?: throw NoSuchElementException("Product details not found."),
         buttons = ProductDetailsButtonsModel(
             blockButton = moreButtons?.BLOK_KNOPKA?.toDomain(),

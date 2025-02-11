@@ -11,36 +11,30 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.vodovoz.app.R
-import com.vodovoz.app.design_system.composables.button.ProductQuantityWithCartButton
-import com.vodovoz.app.design_system.composables.button.VodovozButton
-import com.vodovoz.app.design_system.composables.isElementVisible
-import com.vodovoz.app.ui.model.CategoryUI
-import com.vodovoz.app.ui.model.CommentUI
-import com.vodovoz.app.ui.model.ProductDetailUI
-import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.design_system.model.CommentUi
+import com.vodovoz.app.design_system.model.ProductDetailsButtonsUi
+import com.vodovoz.app.design_system.model.ProductDetailsUi
+import com.vodovoz.app.feature.home.model.ProductUi
+import com.vodovoz.app.feature.home.model.SectionUi
 import com.vodovoz.app.util.calculateProductPrice
+import com.vodovoz.app.util.formatPrice
 import kotlin.math.roundToInt
 
 @Suppress("NonSkippableComposable")
 @Composable
 fun ProductDetailsBody(
     modifier: Modifier = Modifier,
-    productDetailUi: ProductDetailUI,
-    category: CategoryUI,
-    comments: List<CommentUI>,
-    viewedProductUIList: List<ProductUI>,
-    deposit: Int,
-    articleNumber: String,
+    productDetails: ProductDetailsUi,
+    comments: List<CommentUi>,
+    sectionAccessory: SectionUi<ProductUi>,
+    sectionSimilarProducts: SectionUi<ProductUi>,
+    buttons: ProductDetailsButtonsUi,
+
     productCartQuantity: Int,
-    buyWithProductUIList: List<ProductUI>,
-    showDetailPreviewText: Boolean,
+    showDetailText: Boolean,
     showAllProperties: Boolean,
-    searchWords: List<String>,
     quantityButtonIsLoading: Boolean,
-    hideFloatingButton: Boolean,
     onFloatingButtonChange: (Boolean) -> Unit,
     onProductImageClick: (String) -> Unit,
     onDetailPreviewTextShowOrHide: () -> Unit,
@@ -49,6 +43,11 @@ fun ProductDetailsBody(
     onProductMinus: () -> Unit,
     onProductPlus: () -> Unit,
     onNavigateToCart: () -> Unit,
+
+    onMultiButtonClick: () -> Unit,
+    onPresentButtonClick: () -> Unit,
+    onPreOrderButtonClick: () -> Unit,
+    onAnalogButtonClick: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
@@ -58,19 +57,19 @@ fun ProductDetailsBody(
             .verticalScroll(scrollState)
     ) {
         ProductDetailsImagePager(
-            productImages = productDetailUi.detailPictureList,
+            productImages = productDetails.pictures,
             onImageClick = { image ->
                 onProductImageClick(image)
             }
         )
 
-        ProductDetailLabelsRow(
+        ProductDetailsLabels(
             modifier = Modifier.padding(top = 24.dp),
-            labelEntities = productDetailUi.labels
+            labels = productDetails.labels
         )
 
         Text(
-            text = productDetailUi.name,
+            text = productDetails.name,
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier
@@ -78,12 +77,11 @@ fun ProductDetailsBody(
                 .padding(top = 8.dp)
         )
 
-        //todo - put data
         ProductDetailsRatingBar(
             modifier = Modifier.padding(top = 16.dp),
-            rating = productDetailUi.rating,
-            numberOfReviews = productDetailUi.commentsAmount,
-            articleNumber = articleNumber,
+            rating = productDetails.rating.formatPrice(),
+            numberOfReviews = productDetails.commentsCount,
+            articleNumber = productDetails.barCode,
             onReviewsClick = {
 
             },
@@ -94,78 +92,72 @@ fun ProductDetailsBody(
 
         ProductDetailsPriceInfo(
             modifier = Modifier.padding(top = 24.dp),
-            priceUIList = productDetailUi.priceUIList,
-            deposit = deposit
+            deposit = productDetails.deposit,
+            firstPrice = productDetails.firstPrice,
+            pricePerUnit = productDetails.pricePerUnit ?: ""
         )
 
 
-        //todo - add to cart & upgrade button
-        if (productCartQuantity > 0 || quantityButtonIsLoading) {
-            ProductQuantityWithCartButton(
-                modifier = Modifier
-                    .padding(top = 24.dp)
-                    .isElementVisible(onFloatingButtonChange),
-                onProductMinus = onProductMinus,
-                onProductPlus = onProductPlus,
-                onCartClick = onNavigateToCart,
-                countProducts = productCartQuantity,
-                currentPrice = calculateProductPrice(
-                    productCartQuantity,
-                    productDetailUi.priceUIList
-                ).roundToInt(),
-                isLoading = quantityButtonIsLoading
-            )
-        } else {
-            VodovozButton(
-                text = stringResource(R.string.to_cart),
-                onClick = onAddToCart,
-                modifier = Modifier
-                    .padding(top = 24.dp)
-                    .padding(horizontal = 16.dp)
-                    .isElementVisible(onFloatingButtonChange)
-            )
-        }
+        ProductDetailsButtonsBlock(
+            isAvailable = productDetails.isAvailable,
+            quantityButtonIsLoading = quantityButtonIsLoading,
+            cartQuantity = productCartQuantity,
+            buttons = buttons,
+            totalPrice = calculateProductPrice(
+                productCartQuantity,
+                productDetails.prices
+            ).roundToInt(),
+            onProductMinus = onProductMinus,
+            onProductPlus = onProductPlus,
+            onNavigateToCart = onNavigateToCart,
+            onAddToCart = onAddToCart,
+            onFloatingButtonChange = onFloatingButtonChange,
+            onPresentButtonClick = onPresentButtonClick,
+            onMultiButtonClick = onMultiButtonClick,
+            onPreOrderButtonClick = onPreOrderButtonClick,
+            onAnalogButtonClick = onAnalogButtonClick
+        )
 
         //todo - make onAboutProductClick
         ProductDetailsInfo(
             modifier = Modifier.padding(top = 32.dp),
-            onAboutProductClick = { /*TODO*/ },
-            previewText = productDetailUi.previewText,
-            detailPreviewText = productDetailUi.detailText,
-            showDetailPreviewText = showDetailPreviewText,
-            onDetailPreviewTextShowOrHide = onDetailPreviewTextShowOrHide,
-            properties = productDetailUi.propertiesGroupUIList.firstOrNull()?.propertyUIList
-                ?: emptyList(),
-            showAllProperties = showAllProperties,
-            onAllPropertiesShow = onAllPropertiesShow
-        )
-
-        //todo - mb need fix
-        ProductDetailsCategoryAndBrand(
-            modifier = Modifier.padding(top = 32.dp),
-            category = category,
-            brand = productDetailUi.brandUI,
-            onBrandClick = { brandUI ->
+            onAboutProductClick = {
 
             },
-            onCategoryClick = { categoryUI ->
+            detailInfo = productDetails.detailInfo,
+            showDetailText = showDetailText,
+            onDetailTextSwitch = onDetailPreviewTextShowOrHide,
+            showAllProperties = showAllProperties,
+            onAllPropertiesShow = onAllPropertiesShow,
+            contentBlockCharacteristics = productDetails.characteristics
+        )
+
+        val blockBrandCategory = productDetails.blockBrandCategory
+
+        ProductDetailsCategoryAndBrand(
+            modifier = Modifier.padding(top = 32.dp),
+            category = blockBrandCategory.category,
+            brand = blockBrandCategory.brand,
+            onBrandClick = { brand ->
+
+            },
+            onCategoryClick = { category ->
 
             }
         )
 
 
-        if (searchWords.isNotEmpty()) {
+        if (productDetails.sectionTags.items.isNotEmpty()) {
             ProductDetailsSearchWords(
                 modifier = Modifier.padding(top = 32.dp),
-                searchWords = searchWords
+                sectionTags = productDetails.sectionTags
             )
         }
 
 
-        //todo - put data
         ProductDetailsComments(
             modifier = Modifier.padding(top = 32.dp),
-            commentsAmount = productDetailUi.commentsAmount,
+            commentsCount = comments.size,
             comments = comments,
             onLeaveRateClick = {
 
@@ -173,21 +165,20 @@ fun ProductDetailsBody(
         )
 
 
-        //todo - clicks
-        if (buyWithProductUIList.isNotEmpty()) {
-            ProductDetailsBuyWithProduct(
+        if (sectionAccessory.items.isNotEmpty()) {
+            ProductDetailsAccessoryProducts(
                 modifier = Modifier.padding(top = 32.dp),
-                buyWithProductUIList = buyWithProductUIList,
+                sectionAccessory = sectionAccessory,
                 onProductLike = {},
                 onProductClick = {}
             )
         }
 
-        //todo - clicks
-        if (viewedProductUIList.isNotEmpty()) {
-            ProductDetailsViewedProducts(
+
+        if (sectionSimilarProducts.items.isNotEmpty()) {
+            ProductDetailsSimilarProducts(
                 modifier = Modifier.padding(top = 32.dp),
-                viewedProductsUIList = viewedProductUIList,
+                sectionSimilarProducts = sectionSimilarProducts,
                 onProductLike = {},
                 onProductClick = {}
             )

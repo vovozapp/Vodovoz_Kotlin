@@ -1,7 +1,6 @@
 package com.vodovoz.app.feature.productdetail
 
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,20 +23,11 @@ import com.vodovoz.app.common.media.MediaManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.design_system.VodovozTheme
-import com.vodovoz.app.feature.home.banneradvinfo.BannerAdvInfoBottomSheetFragment
-import com.vodovoz.app.feature.home.viewholders.homeproducts.ProductsShowAllListener
-import com.vodovoz.app.feature.home.viewholders.homepromotions.PromotionsClickListener
-import com.vodovoz.app.feature.home.viewholders.homepromotions.model.PromotionAdvEntity
-import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
-import com.vodovoz.app.feature.productdetail.present.model.PresentInfoData
-import com.vodovoz.app.feature.productlist.adapter.ProductsClickListener
-import com.vodovoz.app.feature.productlistnofilter.PaginatedProductsCatalogWithoutFiltersFragment
+import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
 import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
-import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.shareText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -71,7 +61,6 @@ class ProductDetailsFragment : Fragment() {
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -82,81 +71,70 @@ class ProductDetailsFragment : Fragment() {
             setContent {
                 VodovozTheme {
                     val viewState by viewModel.observeUiState().collectAsStateWithLifecycle()
-                    val productDetailUI = viewState.productDetailUI
+                    val productDetails = viewState.productDetails
 
-                    val isFavorite by likeManager.observeLikes()
-                        .mapLatest { idAndIsLike ->
-                            idAndIsLike[productDetailUI?.id ?: -1] ?: false
+                    when (viewState.uiState) {
+                        ProductDetailsFlowViewModel.UiState.Loading -> {
+                            LoadingPlaceholder()
                         }
-                        .collectAsStateWithLifecycle(initialValue = false)
 
+                        ProductDetailsFlowViewModel.UiState.ProductNotFound -> {
 
-                    if (productDetailUI != null) {
-                        ProductDetailsScreen(
-                            productDetail = productDetailUI.copy(isFavorite = isFavorite),
-                            category = viewState.categoryUI,
-                            comments = viewState.commentsUI,
-                            buyWithProductUIList = viewState.buyWithProductUIList,
-                            showAllProperties = viewState.showAllProperties,
-                            showDetailPreviewText = viewState.showDetailPreviewText,
-                            viewedProductUIList = viewState.viewedProducts?.productUIList
-                                ?: emptyList(),
-                            articleNumber = viewState.articleNumber,
-                            deposit = viewState.deposit,
-                            searchWords = viewState.searchWords,
-                            productCartQuantity = viewState.cartQuantity,
-                            buttonIsLoading = viewState.buttonIsLoading,
-                            hideFloatingButton = viewState.hideFloatingButton,
-                            onFloatingButtonChange = { value ->
-                                viewModel.changeFloatingButton(value)
-                            },
-                            onDetailPreviewTextShowOrHide = {
-                                viewModel.showOrHideDetailText()
-                            },
-                            onAllPropertiesShow = {
-                                viewModel.showAllProperties()
-                            },
-                            onProductImageClick = {
-                                //todo - navigate to image
-                            },
-                            onNavigateBack = {
-                                findNavController().navigateUp()
-                            },
-                            onShareClick = {
-                                shareText(productDetailUI.shareUrl)
-                            },
-                            onLikeClick = {
-                                viewModel.changeFavoriteStatus(
-                                    productDetailUI.id,
-                                    !isFavorite
-                                )
-                            },
-                            onProductMinus = {
-                                viewModel.changeCart(
-                                    productDetailUI.id,
-                                    viewState.cartQuantity - 1,
-                                    viewState.cartQuantity
-                                )
-                            },
-                            onProductPlus = {
-                                viewModel.changeCart(
-                                    productDetailUI.id,
-                                    viewState.cartQuantity + 1,
-                                    viewState.cartQuantity
-                                )
-                            },
-                            onNavigateToCart = {
-                                //todo - navigate to cart
-                            },
-                            onAddToCart = {
-                                viewModel.changeCart(productDetailUI.id, 1, 0)
-                            }
-                        )
-                    } else if (viewState.loadingPage) {
-                        //todo - loading screen
-                    } else {
-                        //todo - error screen
+                        }
+
+                        ProductDetailsFlowViewModel.UiState.Success -> {
+                            ProductDetailsScreen(
+                                viewState = viewState,
+                                viewModel = viewModel,
+                                onFloatingButtonChange = { value ->
+                                    viewModel.changeFloatingButton(value)
+                                },
+                                onDetailPreviewTextShowOrHide = {
+                                    viewModel.showOrHideDetailText()
+                                },
+                                onAllPropertiesShow = {
+                                    viewModel.showAllProperties()
+                                },
+                                onProductImageClick = {
+                                    //todo - navigate to image
+                                },
+                                onNavigateBack = {
+                                    findNavController().navigateUp()
+                                },
+                                onShareClick = {
+                                    shareText(productDetails.shareUrl)
+                                },
+                                onLikeClick = {
+                                    //todo
+//                                    viewModel.changeFavoriteStatus(
+//                                        productDetails.id,
+//                                        true
+//                                    )
+                                },
+                                onProductMinus = {
+                                    viewModel.changeCart(
+                                        productDetails.id,
+                                        viewState.cartQuantity - 1,
+                                        viewState.cartQuantity
+                                    )
+                                },
+                                onProductPlus = {
+                                    viewModel.changeCart(
+                                        productDetails.id,
+                                        viewState.cartQuantity + 1,
+                                        viewState.cartQuantity
+                                    )
+                                },
+                                onNavigateToCart = {
+                                    //todo - navigate to cart
+                                },
+                                onAddToCart = {
+                                    viewModel.changeCart(productDetails.id, 1, 0)
+                                }
+                            )
+                        }
                     }
+
                 }
             }
         }

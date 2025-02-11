@@ -15,20 +15,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.card.GridProductCard
+import com.vodovoz.app.feature.home.model.ProductUi
+import com.vodovoz.app.feature.home.model.SectionUi
 import com.vodovoz.app.ui.model.ProductUI
 
-@Suppress("NonSkippableComposable")
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ProductDetailsViewedProducts(
+fun ProductDetailsSimilarProducts(
     modifier: Modifier = Modifier,
-    viewedProductsUIList: List<ProductUI>,
-    onProductLike: (ProductUI) -> Unit,
-    onProductClick: (ProductUI) -> Unit,
+    sectionSimilarProducts: SectionUi<ProductUi>,
+    onProductLike: (ProductUi) -> Unit,
+    onProductClick: (ProductUi) -> Unit,
 ) {
     Column(modifier = modifier.padding(horizontal = 16.dp)) {
         Text(
-            text = stringResource(R.string.you_viewed),
+            text = sectionSimilarProducts.title,
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.headlineSmall
         )
@@ -42,7 +43,7 @@ fun ProductDetailsViewedProducts(
             maxItemsInEachRow = 2,
 
             ) {
-            viewedProductsUIList.forEach { product ->
+            sectionSimilarProducts.items.forEach { product ->
                 GridProductCard(
                     modifier = Modifier.weight(1f),
                     product = product,
@@ -50,7 +51,7 @@ fun ProductDetailsViewedProducts(
                     onLike = onProductLike
                 )
             }
-            if (viewedProductsUIList.size % 2 == 1) {
+            if (sectionSimilarProducts.items.size % 2 == 1) {
                 Spacer(modifier = Modifier.weight(1f))
             }
         }

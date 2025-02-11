@@ -50,7 +50,6 @@ data class ProductDetailsModel(
     val rating: Float,
     val deposit: DepositModel?,
 
-
     val shareUrl: String,
     val shareUrlText: String,
 
@@ -63,6 +62,8 @@ data class ProductDetailsModel(
 
     val firstPrice: PriceModel,
     val prices: List<PriceModel>,
+
+    val commentsCount: Int
 )
 
 data class DocumentModel(

@@ -13,17 +13,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.vodovoz.app.R
+import com.vodovoz.app.feature.home.model.SectionUi
 
-@Suppress("NonSkippableComposable")
 @Composable
-fun ProductDetailsSearchWords(modifier: Modifier = Modifier, searchWords: List<String>) {
+fun ProductDetailsSearchWords(modifier: Modifier = Modifier, sectionTags: SectionUi<String>) {
     Column(modifier = modifier) {
         Text(
             modifier = Modifier.padding(horizontal = 16.dp),
-            text = stringResource(R.string.search_by_queries),
+            text = sectionTags.title,
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.headlineSmall
         )
@@ -35,7 +33,7 @@ fun ProductDetailsSearchWords(modifier: Modifier = Modifier, searchWords: List<S
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            searchWords.forEach { searchWord ->
+            sectionTags.items.forEach { searchWord ->
                 Surface(
                     color = MaterialTheme.colorScheme.surface,
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),

@@ -1,5 +1,7 @@
 package com.vodovoz.app.design_system.model
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.Color
 import com.vodovoz.app.domain.general.model.BlockPromoDataModel
 import com.vodovoz.app.domain.general.model.BrandCategoryBlockModel
 import com.vodovoz.app.domain.general.model.BrandCategoryItemDataModel
@@ -23,6 +25,7 @@ import com.vodovoz.app.domain.general.model.PromoProductModel
 import com.vodovoz.app.feature.home.model.LabelWithColorUi
 import com.vodovoz.app.feature.home.model.SectionUi
 import com.vodovoz.app.feature.home.model.toUi
+import com.vodovoz.app.util.fromHexOrTransparent
 
 
 fun ProductDetailsTabModel.toUi(): ProductDetailsTabUi {
@@ -32,6 +35,7 @@ fun ProductDetailsTabModel.toUi(): ProductDetailsTabUi {
     )
 }
 
+@Immutable
 data class ProductDetailsTabUi(
     val title: String,
     val dataId: String,
@@ -62,6 +66,7 @@ data class ProductDetailsButtonsUi(
     }
 }
 
+@Immutable
 data class ProductDetailsUi(
     val id: Long,
     val name: String,
@@ -96,6 +101,7 @@ data class ProductDetailsUi(
 
     val firstPrice: PriceUi,
     val prices: List<PriceUi>,
+    val commentsCount: Int,
 ) {
     companion object {
         val Empty: ProductDetailsUi = ProductDetailsUi(
@@ -133,7 +139,8 @@ data class ProductDetailsUi(
             barCode = "",
 
             firstPrice = PriceUi(0f, 0f, 0, 0),
-            prices = emptyList()
+            prices = emptyList(),
+            commentsCount = 0
         )
 
     }
@@ -172,7 +179,8 @@ fun ProductDetailsModel.toUi(): ProductDetailsUi {
         barCode = barCode,
 
         firstPrice = firstPrice.toUi(),
-        prices = prices.map { price -> price.toUi() }
+        prices = prices.map { price -> price.toUi() },
+        commentsCount = commentsCount
     )
 
 }
@@ -201,7 +209,7 @@ fun DocumentModel.toUi(): DocumentUi {
     return DocumentUi(type, size, sizeText, iconUrl, description, src)
 }
 
-
+@Immutable
 data class DocumentUi(
     val type: String,
     val size: Float,
@@ -222,9 +230,10 @@ fun PriceModel.toUi(): PriceUi {
     return PriceUi(price, oldPrice, quantityFrom, quantityTo)
 }
 
+@Immutable
 data class BuyButtonUi(
-    val textColor: String,
-    val backgroundColor: String,
+    val textColor: Color,
+    val backgroundColor: Color,
     val title: String,
     val productId: String,
     val moreProductId: String,
@@ -232,7 +241,11 @@ data class BuyButtonUi(
 
 fun BuyButtonModel.toUi(): BuyButtonUi {
     return BuyButtonUi(
-        textColor, backgroundColor, title, productId, moreProductId
+        Color.fromHexOrTransparent(textColor),
+        Color.fromHexOrTransparent(backgroundColor),
+        title,
+        productId,
+        moreProductId
     )
 }
 
@@ -292,26 +305,28 @@ fun DesignBlockModel.toUi(): DesignBlockUi {
     return DesignBlockUi(
         title = title,
         image = image,
-        background = background,
-        textColor = textColor,
-        borderColor = borderColor,
+        background = Color.fromHexOrTransparent(background),
+        textColor = Color.fromHexOrTransparent(textColor),
+        borderColor = Color.fromHexOrTransparent(borderColor),
         button = button.toUi()
     )
 }
 
-
+@Immutable
 data class ButtonBlockUi(
     val button: ColorfulButtonUi,
     val data: BlockPromoDataUi,
     val buyButton: BuyButtonUi,
 )
 
+@Immutable
 data class ButtonDesignBlockUi(
     val block: DesignBlockUi,
     val data: BlockPromoDataUi,
     val buyButton: BuyButtonUi,
 )
 
+@Immutable
 data class BlockPromoDataUi(
     val title: String,
     val description: String,
@@ -319,35 +334,44 @@ data class BlockPromoDataUi(
     val product: PromoProductUi,
 )
 
+@Immutable
 data class PromoProductUi(
     val name: String,
     val image: String,
     val price: OldNewPriceUi,
 )
 
+@Immutable
 data class OldNewPriceUi(
     val new: String,
     val old: String,
 )
 
+@Immutable
 data class DesignBlockUi(
     val title: String,
     val image: String,
-    val background: String,
-    val textColor: String,
-    val borderColor: String,
+    val background: Color,
+    val textColor: Color,
+    val borderColor: Color,
     val button: ColorfulButtonUi,
 )
 
 
+@Immutable
 data class CharacteristicsBlockUi(
     val id: Long,
     val code: String,
     val name: String,
     val sort: String,
     val characteristics: List<CharacteristicUi>,
-)
+) {
+    companion object {
+        val Empty = CharacteristicsBlockUi(0, "", "", "", emptyList())
+    }
+}
 
+@Immutable
 data class CharacteristicUi(
     val id: Int,
     val code: String,
@@ -356,6 +380,7 @@ data class CharacteristicUi(
     val hint: String?,
 )
 
+@Immutable
 data class ContentBlockUi<T>(
     val title: String,
     val content: T,
@@ -370,18 +395,19 @@ fun <T, R> ContentBlockModel<T>.toUi(mapper: (T) -> R): ContentBlockUi<R> {
     )
 }
 
-
+@Immutable
 data class BrandCategoryBlockUi(
     val brand: BrandCategoryItemUi?,
     val category: BrandCategoryItemUi?,
 )
 
-
+@Immutable
 data class BrandCategoryItemUi(
     val title: String,
     val data: BrandCategoryItemDataUi,
 )
 
+@Immutable
 data class BrandCategoryItemDataUi(
     val id: Int,
     val name: String,
@@ -410,7 +436,7 @@ fun BrandCategoryItemDataModel.toUi(): BrandCategoryItemDataUi {
     )
 }
 
-
+@Immutable
 data class CommentUi(
     val userName: String,
     val userPhoto: String,

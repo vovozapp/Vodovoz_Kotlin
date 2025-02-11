@@ -11,24 +11,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.card.GridProductCard
-import com.vodovoz.app.ui.model.ProductUI
+import com.vodovoz.app.feature.home.model.ProductUi
+import com.vodovoz.app.feature.home.model.SectionUi
 
-@Suppress("NonSkippableComposable")
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ProductDetailsBuyWithProduct(
+fun ProductDetailsAccessoryProducts(
     modifier: Modifier = Modifier,
-    buyWithProductUIList: List<ProductUI>,
-    onProductLike: (ProductUI) -> Unit,
-    onProductClick: (ProductUI) -> Unit,
+    sectionAccessory: SectionUi<ProductUi>,
+    onProductLike: (ProductUi) -> Unit,
+    onProductClick: (ProductUi) -> Unit,
 ) {
     Column(modifier = modifier.padding(horizontal = 16.dp)) {
         Text(
-            text = stringResource(R.string.you_viewed),
+            text = sectionAccessory.title,
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.headlineSmall
         )
@@ -42,7 +40,7 @@ fun ProductDetailsBuyWithProduct(
             maxItemsInEachRow = 2,
 
             ) {
-            buyWithProductUIList.forEach { product ->
+            sectionAccessory.items.forEach { product ->
                 GridProductCard(
                     modifier = Modifier.weight(1f),
                     product = product,
@@ -50,7 +48,7 @@ fun ProductDetailsBuyWithProduct(
                     onLike = onProductLike
                 )
             }
-            if (buyWithProductUIList.size % 2 == 1) {
+            if (sectionAccessory.items.size % 2 == 1) {
                 Spacer(modifier = Modifier.weight(1f))
             }
         }
