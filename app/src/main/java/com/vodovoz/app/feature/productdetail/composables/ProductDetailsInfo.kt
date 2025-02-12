@@ -8,9 +8,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,7 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.model.CharacteristicUi
 import com.vodovoz.app.design_system.model.CharacteristicsBlockUi
@@ -143,25 +151,42 @@ fun ProductDetailsInfo(
 }
 
 @Composable
-private fun CharacteristicItem(modifier: Modifier = Modifier, characteristic: CharacteristicUi) {
+fun CharacteristicItem(modifier: Modifier = Modifier, characteristic: CharacteristicUi) {
     Row(modifier = modifier, verticalAlignment = Alignment.Top) {
-        Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.Top) {
+        Row(modifier = Modifier.weight(1f)) {
             Text(
-                text = characteristic.name,
+                modifier = Modifier
+                    .weight(1f, false),
+                text = buildAnnotatedString {
+                    append(characteristic.name)
+                    if (!characteristic.hint.isNullOrEmpty()) {
+                        appendInlineContent("icon", "[icon]")
+                    }
+                },
+                inlineContent = mapOf(
+                    "icon" to InlineTextContent(
+                        Placeholder(
+                            width = 24.sp,
+                            height = 20.sp,
+                            placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
+                        )
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_question_circle),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier
+                                .padding(start = 4.dp)
+                                .size(20.dp)
+                        )
+                    }
+                ),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodySmall
             )
-            if (characteristic.hint != null) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_question_circle),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(start = 4.dp)
-                        .size(20.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
         }
+
+        Spacer(modifier = Modifier.width(16.dp))
 
         Box(modifier = Modifier.weight(1f)) {
             SelectionContainer {

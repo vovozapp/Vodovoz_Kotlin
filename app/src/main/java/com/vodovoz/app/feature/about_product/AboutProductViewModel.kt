@@ -35,4 +35,8 @@ class AboutProductViewModel @Inject constructor(
         }
     }
 
+    fun navigateBack() = viewModelScope.launch {
+        _events.emit(AboutProductEvent.GoBack)
+    }
+
 }

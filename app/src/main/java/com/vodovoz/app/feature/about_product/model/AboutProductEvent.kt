@@ -1,4 +1,7 @@
 package com.vodovoz.app.feature.about_product.model
 
-class AboutProductEvent {
+sealed class AboutProductEvent {
+
+    data object GoBack: AboutProductEvent()
+
 }
