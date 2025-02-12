@@ -43,6 +43,7 @@ fun ProductDetailsBody(
     onProductMinus: () -> Unit,
     onProductPlus: () -> Unit,
     onNavigateToCart: () -> Unit,
+    onAboutProductClick: () -> Unit,
 
     onMultiButtonClick: () -> Unit,
     onPresentButtonClick: () -> Unit,
@@ -120,12 +121,9 @@ fun ProductDetailsBody(
             onPresentBlockButtonClick = onPresentBlockButtonClick
         )
 
-        //todo - make onAboutProductClick
         ProductDetailsInfo(
             modifier = Modifier.padding(top = 32.dp),
-            onAboutProductClick = {
-
-            },
+            onAboutProductClick = onAboutProductClick,
             detailInfo = productDetails.detailInfo,
             showDetailText = showDetailText,
             onDetailTextSwitch = onDetailPreviewTextShowOrHide,

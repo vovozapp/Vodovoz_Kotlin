@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.vodovoz.app.design_system.composables.chip.VodovozChip
-import com.vodovoz.app.design_system.composables.tab_row.VodovozTabRow
+import com.vodovoz.app.design_system.composables.tab_row.VodovozScrollableTabRow
 import com.vodovoz.app.design_system.model.PromotionSectionUi
 import com.vodovoz.app.design_system.model.PromotionUi
 import com.vodovoz.app.util.extensions.indexOfOrNull
@@ -35,7 +35,7 @@ fun AllPromotionsBody(
         modifier = modifier
             .fillMaxSize()
     ) {
-        VodovozTabRow(
+        VodovozScrollableTabRow(
             modifier = Modifier
                 .padding(top = 8.dp)
                 .fillMaxWidth(),

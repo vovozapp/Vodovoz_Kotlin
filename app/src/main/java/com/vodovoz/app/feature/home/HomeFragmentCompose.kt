@@ -54,7 +54,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    internal val flowViewModel: HomeFlowViewModel by activityViewModels()
+    private val flowViewModel: HomeFlowViewModel by activityViewModels()
 
     @Inject
     lateinit var ratingProductManager: RatingProductManager

@@ -82,7 +82,9 @@ fun ProductDetailsScreen(
             onFloatingButtonChange = onFloatingButtonChange,
             onAllPropertiesShow = onAllPropertiesShow,
             onDetailPreviewTextShowOrHide = onDetailPreviewTextShowOrHide,
-            onProductImageClick = { onProductImageClick() },
+            onProductImageClick = {
+                onProductImageClick()
+            },
             onProductPlus = {
                 viewModel.incrementCart()
             },
@@ -106,6 +108,9 @@ fun ProductDetailsScreen(
             },
             onPresentBlockButtonClick = {
                 viewModel.showPresentBlockBottomSheet()
+            },
+            onAboutProductClick = {
+                viewModel.navigateToAboutProduct()
             }
         )
     }

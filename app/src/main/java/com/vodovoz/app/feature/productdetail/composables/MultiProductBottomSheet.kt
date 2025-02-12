@@ -1,6 +1,5 @@
 package com.vodovoz.app.feature.productdetail.composables
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,7 +25,7 @@ import com.vodovoz.app.design_system.composables.bottom_sheet.VodovozDragHandle
 import com.vodovoz.app.design_system.composables.button.BaseQuantityButton
 import com.vodovoz.app.design_system.composables.button.VodovozButton
 import com.vodovoz.app.design_system.composables.chip.VodovozChip
-import com.vodovoz.app.design_system.composables.tab_row.VodovozTabRow
+import com.vodovoz.app.design_system.composables.tab_row.VodovozScrollableTabRow
 import com.vodovoz.app.design_system.model.PriceUi
 import com.vodovoz.app.util.calculateProductPrice
 import com.vodovoz.app.util.extensions.indexOfOrNull
@@ -73,7 +72,7 @@ fun MultiProductBottomSheet(
                     .firstOrNull { cartQuantity >= it.quantityFrom }) ?: 0
 
             if (prices.isNotEmpty()) {
-                VodovozTabRow(
+                VodovozScrollableTabRow(
                     modifier = Modifier.padding(top = 16.dp),
                     selectedTabIndex = selectedPriceIndex,
                     spacing = 8.dp

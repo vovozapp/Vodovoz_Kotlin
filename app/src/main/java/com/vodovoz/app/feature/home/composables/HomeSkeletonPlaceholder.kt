@@ -68,6 +68,8 @@ private val homeShimmerTheme
 @Composable
 fun HomeSkeletonPlaceholder(modifier: Modifier = Modifier , onScanClick: () -> Unit = {}) {
     Column {
+        val shimmerState = rememberShimmer(ShimmerBounds.View)
+
         SearchTopBar(
             value = "",
             onValueChange = {},
@@ -81,7 +83,6 @@ fun HomeSkeletonPlaceholder(modifier: Modifier = Modifier , onScanClick: () -> U
             LocalShimmerTheme provides homeShimmerTheme
         ) {
 
-            val shimmerState = rememberShimmer(ShimmerBounds.View)
 
             @Composable
             fun SkeletonBox(modifier: Modifier) {

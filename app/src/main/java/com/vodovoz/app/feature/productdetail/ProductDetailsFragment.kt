@@ -194,6 +194,7 @@ class ProductDetailsFragment1 : BaseFragment() {
                                     )
                                 )
                             }
+                            else -> {}
                         }
                     }
             }

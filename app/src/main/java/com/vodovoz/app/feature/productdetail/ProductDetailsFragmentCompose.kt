@@ -27,7 +27,6 @@ import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
 import com.vodovoz.app.feature.replacement.ReplacementProductsSelectionBS
 import com.vodovoz.app.util.extensions.shareText
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -56,9 +55,7 @@ class ProductDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) {
-            viewModel.fetchProductDetail()
-        }
+        viewModel.loadProductDetails(args.productId)
     }
 
     override fun onCreateView(
@@ -66,6 +63,7 @@ class ProductDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
             setContent {
@@ -221,6 +219,10 @@ class ProductDetailsFragment : Fragment() {
                                         showProgress = it.showText
                                     )
                                 )
+                            }
+
+                            ProductDetailsFlowViewModel.ProductDetailsEvents.GoToAboutProduct -> {
+                                findNavController().navigate(R.id.aboutProductFragment)
                             }
                         }
                     }
