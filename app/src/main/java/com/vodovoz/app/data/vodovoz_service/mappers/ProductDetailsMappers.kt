@@ -1,6 +1,5 @@
 package com.vodovoz.app.data.vodovoz_service.mappers
 
-import android.text.Html
 import androidx.core.text.HtmlCompat
 import com.vodovoz.app.data.vodovoz_service.di.toFullUrl
 import com.vodovoz.app.data.vodovoz_service.model.product_details.BLOCK_KNOPKA_DATA_DTO
@@ -12,7 +11,7 @@ import com.vodovoz.app.data.vodovoz_service.model.product_details.BLOCK_TOVAR_DT
 import com.vodovoz.app.data.vodovoz_service.model.product_details.BLOCK_U_BLOCK_KNOPKA_DIZAIN_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.BLOK_KNOPKA_DIZAIN_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.BLOK_KNOPKA_DTO
-import com.vodovoz.app.data.vodovoz_service.model.product_details.COMMENT_DTO
+import com.vodovoz.app.data.vodovoz_service.model.COMMENT_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.DETAILTEXT_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.DOCUMENTS_DTO
 import com.vodovoz.app.data.vodovoz_service.model.product_details.DOCUMENT_DTO

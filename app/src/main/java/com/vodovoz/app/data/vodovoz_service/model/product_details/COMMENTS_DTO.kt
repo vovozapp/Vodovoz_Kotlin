@@ -3,6 +3,7 @@ package com.vodovoz.app.data.vodovoz_service.model.product_details
 
 import com.squareup.moshi.Json
 import androidx.annotation.Keep
+import com.vodovoz.app.data.vodovoz_service.model.COMMENT_DTO
 
 @Keep
 data class COMMENTS_DTO(

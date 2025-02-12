@@ -4,6 +4,7 @@ import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
 import com.vodovoz.app.data.vodovoz_service.model.OrderMenuDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopularCategoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopupWindowDTO
+import com.vodovoz.app.data.vodovoz_service.model.ProductCommentsDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_DTO
@@ -17,22 +18,28 @@ import retrofit2.http.Query
 
 interface VodovozService {
 
+    /**
+     * ProductComments screen
+     */
+    @GET("comments.php?action=detail")
+    suspend fun getComments(
+        @Query("id") productId: Long,
+        @Query("nav") page: Int,
+    ): Response<VodovozResponseDTO<ProductCommentsDTO>>
+
+
+    /**
+     * ProductDetails screen
+     */
     @GET("details/index.php?iblock_id=12")
     suspend fun getProductDetails(
-        @Query("id") productId: Long
+        @Query("id") productId: Long,
     ): Response<VodovozResponseDTO<ProductDetailsDTO>>
 
-    @GET("glavnaya/okno.php?action=okno")
-    suspend fun getPopupWindowInfo(
-        @Query("userid") userId: Long,
-    ): Response<VodovozResponseDTO<PopupWindowDTO>>
 
-    @GET("glavnaya/stories/index.php?iblock_id=12&action=stories&platforma=android")
-    suspend fun getStories(): Response<VodovozResponseDTO<StoriesDTO>>
-
-    @GET("glavnaya/akcii.php?action=akcii&limit=10")
-    suspend fun getPromotions(): Response<VodovozResponseDTO<PromotionsDTO>>
-
+    /**
+     * Promotions screens
+     */
     @GET("glavnaya/akcii.php?action=akcii")
     suspend fun getPromotionsWithSections(
         @Query("nav") page: Int = 1,
@@ -47,8 +54,14 @@ interface VodovozService {
     ): Response<VodovozResponseDTO<PromotionDetailsDTO>>
 
 
+    /**
+     * Home screen
+     * */
     @GET("glavnaya/slayders/index.php?action=slayder")
     suspend fun getBanners(): Response<VodovozResponseDTO<List<BannerDTO>>>
+
+    @GET("glavnaya/stories/index.php?iblock_id=12&action=stories&platforma=android")
+    suspend fun getStories(): Response<VodovozResponseDTO<StoriesDTO>>
 
     @GET("glavnaya/menushka.php?action=glavnaya")
     suspend fun getOrderMenu(
@@ -57,6 +70,9 @@ interface VodovozService {
 
     @GET("glavnaya/razdel.php?action=popylrazdel")
     suspend fun getPopularSections(): Response<VodovozResponseDTO<PopularCategoriesDTO>>
+
+    @GET("glavnaya/akcii.php?action=akcii&limit=10")
+    suspend fun getPromotions(): Response<VodovozResponseDTO<PromotionsDTO>>
 
     @GET("glavnaya/novinki.php?new=novinki")
     suspend fun getNewProducts(): Response<VodovozResponseDTO<RAZDEL_DTO>>
@@ -72,5 +88,10 @@ interface VodovozService {
 
     @GET("glavnaya/super_top.php?action=topglav")
     suspend fun getSuperTop(): Response<VodovozResponseDTO<SuperTopAndBottomSectionsDTO>>
+
+    @GET("glavnaya/okno.php?action=okno")
+    suspend fun getPopupWindowInfo(
+        @Query("userid") userId: Long,
+    ): Response<VodovozResponseDTO<PopupWindowDTO>>
 
 }
