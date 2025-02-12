@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -58,6 +59,7 @@ fun SpecialPromotionBottomSheet(
             val imageState by painter.state.collectAsStateWithLifecycle()
 
             if (imageState is AsyncImagePainter.State.Success) {
+
                 Image(
                     painter = painter,
                     contentDescription = null,

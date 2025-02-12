@@ -13,12 +13,14 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.effects.LifecycleEffect
+import com.vodovoz.app.design_system.model.DocumentUi
+import com.vodovoz.app.feature.document_viewer.model.DocumentViewerEvent
 import com.vodovoz.app.util.extensions.disableFullScreen
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -45,6 +47,14 @@ class DocumentViewerFragment : Fragment() {
         tabManager.changeTabVisibility(false)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val doc = arguments?.getParcelable<DocumentUi>("documentId")
+        doc?.let {
+            viewModel.setDocument(doc)
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,6 +68,7 @@ class DocumentViewerFragment : Fragment() {
 
                 VodovozTheme {
 
+
                     DocumentViewerScreen(
                         viewModel = viewModel,
                         viewState = viewState
@@ -65,14 +76,18 @@ class DocumentViewerFragment : Fragment() {
                 }
 
                 LifecycleEffect {
-                    viewModel.events.collect{ event ->
-                        when(event){
-                            else -> {}
+                    viewModel.events.collect { event ->
+                        when (event) {
+                            DocumentViewerEvent.GoBack -> {
+                                findNavController().popBackStack()
+                            }
                         }
                     }
                 }
+
             }
+
+
         }
     }
-
 }

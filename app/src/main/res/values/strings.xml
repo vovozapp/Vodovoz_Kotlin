@@ -245,4 +245,6 @@
     <string name="from_quantity">От %1$s шт</string>
     <string name="saving_price">Экономия %1$s ₽</string>
 
+    <string name="pdfView_page_no"> </string>
+
 </resources>
