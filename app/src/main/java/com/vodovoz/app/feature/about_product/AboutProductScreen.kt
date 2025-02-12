@@ -24,6 +24,7 @@ import com.vodovoz.app.design_system.composables.top_bar.VodovozTopBar
 import com.vodovoz.app.design_system.model.ProductDetailsTabUi
 import com.vodovoz.app.feature.about_product.composables.CharacteristicsTabContent
 import com.vodovoz.app.feature.about_product.composables.DescriptionTabContent
+import com.vodovoz.app.feature.about_product.composables.DocumentsTabContent
 import com.vodovoz.app.feature.about_product.model.AboutProductState
 
 @Suppress("NonSkippableComposable")
@@ -39,7 +40,10 @@ fun AboutProductScreen(
             .windowInsetsPadding(WindowInsets.systemBars)
             .consumeWindowInsets(WindowInsets.statusBars)
     ) {
-        VodovozTopBar(onBack = { viewModel.navigateBack() }, title = stringResource(id = R.string.about_product))
+        VodovozTopBar(
+            onBack = { viewModel.navigateBack() },
+            title = stringResource(id = R.string.about_product)
+        )
 
         VodovozTabRow(
             modifier = Modifier
@@ -76,7 +80,7 @@ fun AboutProductScreen(
                 }
 
                 viewState.documents.id -> {
-
+                    DocumentsTabContent(documentsBlock = viewState.documents)
                 }
 
                 else -> {
