@@ -1,5 +1,6 @@
 package com.vodovoz.app.design_system.model
 
+import android.os.Parcelable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import com.vodovoz.app.domain.general.model.BlockPromoDataModel
@@ -26,6 +27,7 @@ import com.vodovoz.app.feature.home.model.LabelWithColorUi
 import com.vodovoz.app.feature.home.model.SectionUi
 import com.vodovoz.app.feature.home.model.toUi
 import com.vodovoz.app.util.fromHexOrTransparent
+import kotlinx.parcelize.Parcelize
 
 
 fun ProductDetailsTabModel.toUi(): ProductDetailsTabUi {
@@ -210,6 +212,7 @@ fun DocumentModel.toUi(): DocumentUi {
 }
 
 @Immutable
+@Parcelize
 data class DocumentUi(
     val type: String,
     val size: Float,
@@ -217,7 +220,7 @@ data class DocumentUi(
     val iconUrl: String,
     val description: String,
     val src: String,
-)
+) : Parcelable
 
 data class PriceUi(
     val price: Float,

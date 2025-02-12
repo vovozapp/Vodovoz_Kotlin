@@ -80,7 +80,9 @@ fun AboutProductScreen(
                 }
 
                 viewState.documents.id -> {
-                    DocumentsTabContent(documentsBlock = viewState.documents)
+                    DocumentsTabContent(
+                        documentsBlock = viewState.documents,
+                        onDocumentClick = { document -> viewModel.navigateToDocumentViewer(document) })
                 }
 
                 else -> {

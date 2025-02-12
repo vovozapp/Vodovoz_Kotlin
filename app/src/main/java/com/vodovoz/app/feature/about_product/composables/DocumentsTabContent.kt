@@ -22,10 +22,11 @@ import com.vodovoz.app.design_system.model.DocumentUi
 fun DocumentsTabContent(
     modifier: Modifier = Modifier,
     documentsBlock: ContentBlockUi<List<DocumentUi>>,
+    onDocumentClick: (DocumentUi) -> Unit
 ) {
     Column(modifier = modifier.padding(top = 8.dp, bottom = 16.dp)) {
         documentsBlock.content.forEach { document ->
-            DocumentItem(document = document, modifier = Modifier.fillMaxWidth(), onClick = {  })
+            DocumentItem(document = document, modifier = Modifier.fillMaxWidth(), onClick = onDocumentClick)
             HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.surfaceVariant)
         }
     }

@@ -6,6 +6,17 @@
     app:startDestination="@id/allPromotionsFragment">
 
     <fragment
+        android:id="@+id/documentViewerFragment"
+        android:name="com.vodovoz.app.feature.document_viewer.DocumentViewerFragment"
+        android:label="fragment_document_viewer">
+
+        <argument
+            android:name="documentUi"
+            app:argType="com.vodovoz.app.design_system.model.DocumentUi" />
+
+    </fragment>
+
+    <fragment
         android:id="@+id/homeFragment"
         android:name="com.vodovoz.app.feature.home.HomeFragment"
         android:label="fragment_home">

@@ -91,6 +91,19 @@
             android:id="@+id/action_to_buyCertificateFragment"
             app:destination="@id/buyCertificateFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/documentViewerFragment"
+        android:name="com.vodovoz.app.feature.document_viewer.DocumentViewerFragment"
+        android:label="fragment_document_viewer">
+
+        <argument
+            android:name="documentUi"
+            app:argType="com.vodovoz.app.design_system.model.DocumentUi" />
+
+    </fragment>
+
+
     <fragment
         android:id="@+id/catalogFragment"
         android:name="com.vodovoz.app.feature.catalog.CatalogFragment"
@@ -196,7 +209,7 @@
     <fragment
         android:id="@+id/aboutProductFragment"
         android:name="com.vodovoz.app.feature.about_product.AboutProductFragment"
-        android:label="AboutProductFragment"/>
+        android:label="AboutProductFragment" />
 
     <fragment
         android:id="@+id/productDetailFragment"
