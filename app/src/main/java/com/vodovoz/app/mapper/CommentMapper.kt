@@ -3,7 +3,7 @@ package com.vodovoz.app.mapper
 import com.vodovoz.app.data.model.common.AllCommentsEntity
 import com.vodovoz.app.data.model.common.CommentEntity
 import com.vodovoz.app.data.model.common.CommentsData
-import com.vodovoz.app.feature.all.comments.model.CommentImage
+import com.vodovoz.app.feature.product_comments.model.CommentImage
 import com.vodovoz.app.ui.model.AllCommentsUI
 import com.vodovoz.app.ui.model.CommentUI
 import com.vodovoz.app.ui.model.CommentsDataUI

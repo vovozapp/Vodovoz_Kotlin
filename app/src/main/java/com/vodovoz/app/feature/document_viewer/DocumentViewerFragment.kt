@@ -67,26 +67,23 @@ class DocumentViewerFragment : Fragment() {
                 val viewState by viewModel.state.collectAsStateWithLifecycle()
 
                 VodovozTheme {
-
-
                     DocumentViewerScreen(
                         viewModel = viewModel,
                         viewState = viewState
                     )
-                }
 
-                LifecycleEffect {
-                    viewModel.events.collect { event ->
-                        when (event) {
-                            DocumentViewerEvent.GoBack -> {
-                                findNavController().popBackStack()
+                    LifecycleEffect {
+                        viewModel.events.collect { event ->
+                            when (event) {
+                                DocumentViewerEvent.GoBack -> {
+                                    findNavController().popBackStack()
+                                }
                             }
                         }
                     }
                 }
 
             }
-
 
         }
     }

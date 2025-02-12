@@ -1,6 +1,6 @@
 package com.vodovoz.app.ui.model.custom
 
-import com.vodovoz.app.feature.all.comments.model.CommentImage
+import com.vodovoz.app.feature.product_comments.model.CommentImage
 import com.vodovoz.app.ui.model.CategoryDetailUI
 import com.vodovoz.app.ui.model.CategoryUI
 import com.vodovoz.app.ui.model.CommentUI

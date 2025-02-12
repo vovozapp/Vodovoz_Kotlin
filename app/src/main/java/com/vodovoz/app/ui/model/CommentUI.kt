@@ -2,7 +2,7 @@ package com.vodovoz.app.ui.model
 
 import androidx.compose.runtime.Immutable
 import com.vodovoz.app.common.content.itemadapter.Item
-import com.vodovoz.app.feature.all.comments.model.CommentImage
+import com.vodovoz.app.feature.product_comments.model.CommentImage
 
 @Immutable
 data class CommentUI(

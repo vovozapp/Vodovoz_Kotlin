@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.all.comments.menu
+package com.vodovoz.app.feature.product_comments.menu
 
 import android.view.Menu
 import android.view.MenuInflater

@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.all.comments
+package com.vodovoz.app.feature.product_comments
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -25,12 +25,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AllCommentsFlowViewModel @Inject constructor(
+class ProductCommentsFlowViewModel @Inject constructor(
     savedState: SavedStateHandle,
     private val repository: MainRepository,
     private val accountManager: AccountManager,
-) : PagingContractViewModel<AllCommentsFlowViewModel.AllCommentsState, AllCommentsFlowViewModel.AllCommentsEvents>(
-    AllCommentsState()
+) : PagingContractViewModel<ProductCommentsFlowViewModel.ProductCommentsState, ProductCommentsFlowViewModel.ProductCommentsEvents>(
+    ProductCommentsState()
 ) {
 
     private val productId = savedState.get<Long>("productId")
@@ -122,21 +122,21 @@ class AllCommentsFlowViewModel @Inject constructor(
         viewModelScope.launch {
             val id = accountManager.fetchAccountId()
             if (id == null) {
-                eventListener.emit(AllCommentsEvents.GoToProfile)
+                eventListener.emit(ProductCommentsEvents.GoToProfile)
             } else {
-                eventListener.emit(AllCommentsEvents.SendComment)
+                eventListener.emit(ProductCommentsEvents.SendComment)
             }
         }
     }
 
     fun isLoginAlready() = accountManager.isAlreadyLogin()
 
-    sealed class AllCommentsEvents : Event {
-        object SendComment : AllCommentsEvents()
-        object GoToProfile : AllCommentsEvents()
+    sealed class ProductCommentsEvents : Event {
+        object SendComment : ProductCommentsEvents()
+        object GoToProfile : ProductCommentsEvents()
     }
 
-    data class AllCommentsState(
+    data class ProductCommentsState(
         val itemsList: List<Item> = emptyList(),
     ) : State
 }

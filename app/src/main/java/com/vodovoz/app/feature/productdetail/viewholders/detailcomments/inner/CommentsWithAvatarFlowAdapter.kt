@@ -6,7 +6,7 @@ import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.ItemAdapter
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressViewHolder
-import com.vodovoz.app.feature.all.comments.CommentsHeaderViewHolder
+import com.vodovoz.app.feature.product_comments.CommentsHeaderViewHolder
 import com.vodovoz.app.ui.model.CommentUI.Companion.COMMENT_VIEW_TYPE
 
 class CommentsWithAvatarFlowAdapter : ItemAdapter() {

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.FragmentProductDetailsCommentsBinding
-import com.vodovoz.app.feature.all.comments.adapter.CommentImagesAdapter
+import com.vodovoz.app.feature.product_comments.adapter.CommentImagesAdapter
 import com.vodovoz.app.feature.productdetail.adapter.ProductDetailsClickListener
 import com.vodovoz.app.feature.productdetail.viewholders.detailcomments.inner.CommentsWithAvatarFlowAdapter
 

@@ -4,13 +4,10 @@ import android.os.Parcelable
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ViewHolderCommentWithAvatarBinding
-import com.vodovoz.app.feature.all.comments.adapter.CommentImagesAdapter
+import com.vodovoz.app.feature.product_comments.adapter.CommentImagesAdapter
 import com.vodovoz.app.ui.model.CommentUI
 import com.vodovoz.app.util.extensions.fromHtml
 

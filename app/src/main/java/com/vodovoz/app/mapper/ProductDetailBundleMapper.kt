@@ -1,7 +1,7 @@
 package com.vodovoz.app.mapper
 
 import com.vodovoz.app.data.model.common.ProductDetailsBundleEntity
-import com.vodovoz.app.feature.all.comments.model.CommentImage
+import com.vodovoz.app.feature.product_comments.model.CommentImage
 import com.vodovoz.app.mapper.CategoryDetailMapper.mapToUI
 import com.vodovoz.app.mapper.CategoryMapper.mapToUI
 import com.vodovoz.app.mapper.CommentMapper.mapToUI

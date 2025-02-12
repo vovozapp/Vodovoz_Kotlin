@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.all.comments.adapter
+package com.vodovoz.app.feature.product_comments.adapter
 
 import android.view.ViewGroup
 import com.vodovoz.app.R

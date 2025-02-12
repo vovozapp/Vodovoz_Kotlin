@@ -1,9 +1,6 @@
-package com.vodovoz.app.feature.all.comments
+package com.vodovoz.app.feature.product_comments
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -16,22 +13,22 @@ import com.vodovoz.app.R
 import com.vodovoz.app.common.content.BaseFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.databinding.FragmentProductCommentsFlowBinding
-import com.vodovoz.app.feature.all.comments.menu.CommentsMenuProvider
+import com.vodovoz.app.feature.product_comments.menu.CommentsMenuProvider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AllCommentsByProductDialogFragment : BaseFragment() {
+class ProductCommentsFragment1 : BaseFragment() {
 
     private val binding: FragmentProductCommentsFlowBinding by viewBinding {
         FragmentProductCommentsFlowBinding.bind(
             contentView
         )
     }
-    private val viewModel: AllCommentsFlowViewModel by viewModels()
+    private val viewModel: ProductCommentsFlowViewModel by viewModels()
 
-    private val args: AllCommentsByProductDialogFragmentArgs by navArgs()
+    private val args: ProductCommentsFragmentArgs by navArgs()
 
     @Inject
     lateinit var tabManager: TabManager
@@ -64,17 +61,17 @@ class AllCommentsByProductDialogFragment : BaseFragment() {
                 viewModel.observeEvent()
                     .collect {
                         when (it) {
-                            is AllCommentsFlowViewModel.AllCommentsEvents.GoToProfile -> {
+                            is ProductCommentsFlowViewModel.ProductCommentsEvents.GoToProfile -> {
                                 tabManager.setAuthRedirect(findNavController().graph.id)
                                 tabManager.selectTab(R.id.graph_profile)
                             }
 
-                            is AllCommentsFlowViewModel.AllCommentsEvents.SendComment -> {
+                            is ProductCommentsFlowViewModel.ProductCommentsEvents.SendComment -> {
                                 if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutProductFragment) {
                                     findNavController().popBackStack()
                                 }
                                 findNavController().navigate(
-                                    AllCommentsByProductDialogFragmentDirections.actionToSendCommentAboutProductFragment(
+                                    ProductCommentsFragmentDirections.actionToSendCommentAboutProductFragment(
                                         args.productId
                                     )
                                 )

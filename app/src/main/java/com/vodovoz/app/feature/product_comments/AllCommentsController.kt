@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.all.comments
+package com.vodovoz.app.feature.product_comments
 
 import android.content.Context
 import android.graphics.Rect
@@ -11,7 +11,7 @@ import com.vodovoz.app.common.content.ItemController
 import com.vodovoz.app.feature.productdetail.viewholders.detailcomments.inner.CommentsWithAvatarFlowAdapter
 
 class AllCommentsController(
-    private val viewModel: AllCommentsFlowViewModel,
+    private val viewModel: ProductCommentsFlowViewModel,
     private val context: Context,
 ) : ItemController(CommentsWithAvatarFlowAdapter()) {
 

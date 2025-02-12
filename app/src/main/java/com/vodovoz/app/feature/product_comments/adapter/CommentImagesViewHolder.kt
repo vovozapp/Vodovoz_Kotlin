@@ -1,10 +1,10 @@
-package com.vodovoz.app.feature.all.comments.adapter
+package com.vodovoz.app.feature.product_comments.adapter
 
 import android.view.View
 import com.bumptech.glide.Glide
 import com.vodovoz.app.common.content.itemadapter.ItemViewHolder
 import com.vodovoz.app.databinding.ItemCommentImageBinding
-import com.vodovoz.app.feature.all.comments.model.CommentImage
+import com.vodovoz.app.feature.product_comments.model.CommentImage
 
 class CommentImagesViewHolder(
     view: View,

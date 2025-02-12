@@ -1,4 +1,4 @@
-package com.vodovoz.app.feature.all.comments.model
+package com.vodovoz.app.feature.product_comments.model
 
 import com.vodovoz.app.R
 import com.vodovoz.app.common.content.itemadapter.Item

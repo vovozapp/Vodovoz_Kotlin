@@ -579,7 +579,7 @@
     </dialog>
     <fragment
         android:id="@+id/allCommentsByProductDialogFragment"
-        android:name="com.vodovoz.app.feature.all.comments.AllCommentsByProductDialogFragment"
+        android:name="com.vodovoz.app.feature.product_comments.ProductCommentsFragment"
         android:label="AllCommentsByProductDialogFragment">
         <argument
             android:name="productId"
