@@ -2,6 +2,8 @@ package com.vodovoz.app.feature.product_comments
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.vodovoz.app.common.account.data.AccountManager
 import com.vodovoz.app.common.content.ErrorState
 import com.vodovoz.app.common.content.Event
@@ -10,16 +12,29 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.common.content.updateData
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.design_system.model.CommentUi
+import com.vodovoz.app.design_system.model.toUi
+import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
+import com.vodovoz.app.feature.product_comments.model.ProductCommentsInfoUi
+import com.vodovoz.app.feature.product_comments.model.SortUi
+import com.vodovoz.app.feature.product_comments.model.toDomain
+import com.vodovoz.app.feature.product_comments.model.toUi
 import com.vodovoz.app.mapper.CommentMapper.mapToUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,92 +44,128 @@ class ProductCommentsFlowViewModel @Inject constructor(
     savedState: SavedStateHandle,
     private val repository: MainRepository,
     private val accountManager: AccountManager,
+    private val vodovozServiceRepository: VodovozServiceRepository,
 ) : PagingContractViewModel<ProductCommentsFlowViewModel.ProductCommentsState, ProductCommentsFlowViewModel.ProductCommentsEvents>(
     ProductCommentsState()
 ) {
 
     private val productId = savedState.get<Long>("productId")
 
-    private fun fetchAllCommentsByProductId() {
-        if (productId == null) return
-        viewModelScope.launch {
-            flow {
-                emit(
-                    repository.fetchAllCommentsByProduct(
-                        productId = productId,
-                        page = state.page
-                    )
+    private fun observeUserLoginStatus() = viewModelScope.launch {
+        accountManager.observeAccountId().collectLatest { id ->
+            if (id == null) uiStateListener.updateData { s -> s.copy(showWriteComment = false) }
+            else uiStateListener.updateData { s -> s.copy(showWriteComment = true) }
+        }
+    }
+
+    private fun loadProductComments() = viewModelScope.launch {
+        if (productId == null) return@launch
+
+        val productCommentsInfoResult =
+            vodovozServiceRepository.getProductCommentsInfo(productId).firstOrNull()
+        val productCommentsInfo = productCommentsInfoResult?.getOrNull()
+
+        if (productCommentsInfo != null) {
+            uiStateListener.updateData { s ->
+                val uiInfo = productCommentsInfo.toUi()
+                val currentSort = uiInfo.sorting.firstOrNull() ?: SortUi.Empty
+                s.copy(
+                    productCommentsInfo = uiInfo,
+                    currentSort = uiInfo.sorting.firstOrNull() ?: SortUi.Empty,
+                    pagedComments = vodovozServiceRepository.getProductCommentsPaged(
+                        productId, currentSort.toDomain()
+                    ).map { pagingData ->
+                        pagingData.map { comment ->
+                            comment.toUi()
+                        }
+                    }
                 )
             }
-                .onEach { response ->
-                    if (response is ResponseEntity.Success) {
-                        val data = response.data.mapToUI()
-                        uiStateListener.value = if (data.comments.isEmpty() && !state.loadMore) {
-                            state.copy(
-                                error = ErrorState.Empty(),
-                                loadingPage = false,
-                                loadMore = false,
-                                bottomItem = null,
-                                page = 1
-                            )
-                        } else {
 
-                            val itemsList = if (state.loadMore) {
-                                state.data.itemsList + data.comments
-                            } else {
-                                mutableListOf<Item>().apply {
-                                    add(data.commentsData)
-                                    addAll(data.comments)
-                                }
-                            }
-
-                            state.copy(
-                                page = if (data.comments.isEmpty()) null else state.page?.plus(1),
-                                loadingPage = false,
-                                data = state.data.copy(itemsList = itemsList),
-                                error = null,
-                                loadMore = false,
-                                bottomItem = null
-                            )
-                        }
-                    } else {
-                        uiStateListener.value =
-                            state.copy(
-                                loadingPage = false,
-                                error = ErrorState.Error(),
-                                page = 1,
-                                loadMore = false
-                            )
-                    }
-                }
-                .flowOn(Dispatchers.Default)
-                .catch {
-                    debugLog { "fetch all comments error ${it.localizedMessage}" }
-                    uiStateListener.value =
-                        state.copy(error = it.toErrorState(), loadingPage = false)
-                }
-                .collect()
+            observeUserLoginStatus()
         }
+
+        productCommentsInfoResult?.onFailure {
+            //todo - handle fail
+        } ?: run {
+            //todo - handle flow fails
+        }
+
+        flow {
+            emit(
+                repository.fetchAllCommentsByProduct(
+                    productId = productId,
+                    page = state.page
+                )
+            )
+        }.onEach { response ->
+            if (response is ResponseEntity.Success) {
+                val data = response.data.mapToUI()
+                uiStateListener.value = if (data.comments.isEmpty() && !state.loadMore) {
+                    state.copy(
+                        error = ErrorState.Empty(),
+                        loadingPage = false,
+                        loadMore = false,
+                        bottomItem = null,
+                        page = 1
+                    )
+                } else {
+
+                    val itemsList = if (state.loadMore) {
+                        state.data.itemsList + data.comments
+                    } else {
+                        mutableListOf<Item>().apply {
+                            add(data.commentsData)
+                            addAll(data.comments)
+                        }
+                    }
+
+                    state.copy(
+                        page = if (data.comments.isEmpty()) null else state.page?.plus(1),
+                        loadingPage = false,
+                        data = state.data.copy(itemsList = itemsList),
+                        error = null,
+                        loadMore = false,
+                        bottomItem = null
+                    )
+                }
+            } else {
+                uiStateListener.value =
+                    state.copy(
+                        loadingPage = false,
+                        error = ErrorState.Error(),
+                        page = 1,
+                        loadMore = false
+                    )
+            }
+        }
+            .flowOn(Dispatchers.Default)
+            .catch {
+                debugLog { "fetch all comments error ${it.localizedMessage}" }
+                uiStateListener.value =
+                    state.copy(error = it.toErrorState(), loadingPage = false)
+            }
+            .collect()
     }
 
     fun firstLoadSorted() {
         if (!state.isFirstLoad) {
             uiStateListener.value =
                 state.copy(isFirstLoad = true, loadingPage = true)
-            fetchAllCommentsByProductId()
+            loadProductComments()
         }
     }
 
     fun refreshSorted() {
         uiStateListener.value =
             state.copy(loadingPage = true, page = 1, loadMore = false, bottomItem = null)
-        fetchAllCommentsByProductId()
+        loadProductComments()
     }
 
     fun loadMoreSorted() {
         if (state.bottomItem == null && state.page != null) {
             uiStateListener.value = state.copy(loadMore = true, bottomItem = BottomProgressItem())
-            fetchAllCommentsByProductId()
+            loadProductComments()
         }
     }
 
@@ -131,12 +182,43 @@ class ProductCommentsFlowViewModel @Inject constructor(
 
     fun isLoginAlready() = accountManager.isAlreadyLogin()
 
+    fun selectSort(sort: SortUi) = viewModelScope.launch {
+        eventListener.emit(ProductCommentsEvents.ScrollToTop)
+        uiStateListener.updateData { d ->
+            d.copy(
+                currentSort = sort,
+                pagedComments = vodovozServiceRepository.getProductCommentsPaged(
+                    productId ?: return@updateData d.copy(currentSort = sort), sort.toDomain()
+                ).map { pagingData ->
+                    pagingData.map { comment ->
+                        comment.toUi()
+                    }
+                }
+            )
+        }
+    }
+
+    fun navigateToWriteComment() = viewModelScope.launch {
+
+    }
+
+    fun navigateBack() = viewModelScope.launch {
+        eventListener.emit(ProductCommentsEvents.GoBack)
+    }
+
     sealed class ProductCommentsEvents : Event {
-        object SendComment : ProductCommentsEvents()
-        object GoToProfile : ProductCommentsEvents()
+        data object SendComment : ProductCommentsEvents()
+        data object GoToProfile : ProductCommentsEvents()
+        data object ScrollToTop : ProductCommentsEvents()
+        data object GoBack: ProductCommentsEvents()
     }
 
     data class ProductCommentsState(
         val itemsList: List<Item> = emptyList(),
-    ) : State
+        val productCommentsInfo: ProductCommentsInfoUi = ProductCommentsInfoUi.Empty,
+        val pagedComments: Flow<PagingData<CommentUi>> = emptyFlow(),
+        val currentSort: SortUi = SortUi.Empty,
+        val showWriteComment: Boolean = false,
+    ) : State {
+    }
 }

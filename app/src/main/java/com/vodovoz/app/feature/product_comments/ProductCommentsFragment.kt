@@ -76,6 +76,9 @@ class ProductCommentsFragment1 : BaseFragment() {
                                     )
                                 )
                             }
+                            else -> {
+
+                            }
                         }
                     }
             }

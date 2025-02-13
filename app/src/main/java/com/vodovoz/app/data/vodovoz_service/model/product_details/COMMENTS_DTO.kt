@@ -9,7 +9,7 @@ import com.vodovoz.app.data.vodovoz_service.model.COMMENT_DTO
 data class COMMENTS_DTO(
     @Json(name = "COMENTS")
     val COMMENTS: List<COMMENT_DTO?>?,
-    @Json(name = "COMMEN_COUNT")
+    @Json(name = "COMMENT_COUNT")
     val COMMEN_COUNT: Int?,
     @Json(name = "COMMENT_COUNT_TEXT")
     val COMMENT_COUNT_TEXT: String?,

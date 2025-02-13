@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 @Keep
 data class SORTIROKA_DTO(
     @Json(name = "DANNIESORT")
-    val DANNIESORT: List<DANNIESORT_DTO?>?,
+    val DANNIESORT: List<SORT_DTO?>?,
     @Json(name = "NAMEGLAV")
     val NAMEGLAV: String?
 )

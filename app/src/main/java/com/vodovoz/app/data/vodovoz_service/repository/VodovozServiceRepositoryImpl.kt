@@ -9,9 +9,11 @@ import com.vodovoz.app.data.vodovoz_service.mappers.executeRequest
 import com.vodovoz.app.data.vodovoz_service.mappers.toDomain
 import com.vodovoz.app.domain.general.VodovozPagingSource
 import com.vodovoz.app.domain.general.model.BannerModel
+import com.vodovoz.app.domain.general.model.CommentModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
 import com.vodovoz.app.domain.general.model.PopularCategoryModel
 import com.vodovoz.app.domain.general.model.PopupWindowInfoModel
+import com.vodovoz.app.domain.general.model.ProductCommentsInfoModel
 import com.vodovoz.app.domain.general.model.ProductDetailsScreenModel
 import com.vodovoz.app.domain.general.model.ProductModel
 import com.vodovoz.app.domain.general.model.ProductsTitle
@@ -19,24 +21,64 @@ import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
 import com.vodovoz.app.domain.general.model.SectionModel
 import com.vodovoz.app.domain.general.model.SectionPromotionsWithFiltersModel
+import com.vodovoz.app.domain.general.model.SortModel
 import com.vodovoz.app.domain.general.model.StoryModel
 import com.vodovoz.app.domain.general.model.TopAndBottomSectionsModel
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
+
 
 class VodovozServiceRepositoryImpl @Inject constructor(
     private val vodovozService: VodovozService,
     private val accountManager: AccountManager,
 ) : VodovozServiceRepository {
+
+    override fun getProductCommentsInfo(productId: Long): Flow<Result<ProductCommentsInfoModel>> {
+        return executeRequest(
+            request = {
+                vodovozService.getComments(productId, 1)
+            },
+            mapper = { response ->
+                response.data?.toDomain()
+                    ?: throw IllegalArgumentException("ProductCommentsDTO can't be null")
+            }
+        )
+    }
+
+
+    override fun getProductCommentsPaged(
+        productId: Long,
+        sort: SortModel,
+    ): Flow<PagingData<CommentModel>> {
+        return Pager(
+            config = PagingConfig(pageSize = 10, initialLoadSize = 10),
+            pagingSourceFactory = {
+                VodovozPagingSource(
+                    request = { page, _ ->
+                        vodovozService.getComments(
+                            productId = productId,
+                            page = page,
+                            sort = sort.value,
+                            order = sort.order
+                        )
+                    },
+                    mapper = { response ->
+                        response.data?.COMMENTS?.mapNotNull { it?.toDomain() } ?: emptyList()
+                    }
+                )
+            }
+        ).flow
+    }
+
     override fun getProductDetails(productId: Long): Flow<Result<ProductDetailsScreenModel>> =
         executeRequest(
             request = {
                 vodovozService.getProductDetails(productId)
             },
             mapper = { responseDto ->
-                responseDto.data?.toDomain() ?: throw IllegalArgumentException("ProductDetails cannot be null")
+                responseDto.data?.toDomain()
+                    ?: throw IllegalArgumentException("ProductDetails cannot be null")
             }
         )
 
@@ -102,19 +144,11 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             pagingSourceFactory = {
                 VodovozPagingSource(
                     request = { page, limit ->
-                        executeRequest(
-                            request = {
-                                vodovozService.getPromotionDetails(
-                                    promotionId,
-                                    page,
-                                    limit
-                                )
-                            },
-                            mapper = { promotionDetailsDTOVodovozResponseDTO ->
-                                promotionDetailsDTOVodovozResponseDTO.data?.TOVAR?.DATA?.toDomain()
-                                    ?: emptyList()
-                            }
-                        ).firstOrNull() ?: Result.failure(Throwable())
+                        vodovozService.getPromotionDetails(promotionId, page, limit)
+                    },
+                    mapper = { promotionDetailsDTOVodovozResponseDTO ->
+                        promotionDetailsDTOVodovozResponseDTO.data?.TOVAR?.DATA?.toDomain()
+                            ?: emptyList()
                     }
                 )
             }
@@ -138,15 +172,10 @@ class VodovozServiceRepositoryImpl @Inject constructor(
             pagingSourceFactory = {
                 VodovozPagingSource(
                     request = { page, limit ->
-                        executeRequest(
-                            request = {
-                                vodovozService.getPromotionsWithSections(page, limit)
-                            },
-                            mapper = { promotionsDTOVodovozResponseDTO ->
-                                promotionsDTOVodovozResponseDTO.data?.toDomain()?.promotions
-                                    ?: emptyList()
-                            }
-                        ).firstOrNull() ?: Result.failure(Throwable())
+                        vodovozService.getPromotionsWithSections(page, limit)
+                    },
+                    mapper = { promotionsDTOVodovozResponseDTO ->
+                        promotionsDTOVodovozResponseDTO.data?.toDomain()?.promotions ?: emptyList()
                     }
                 )
             }

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -174,17 +175,17 @@ class ProductDetailsFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.observeEvent()
-                    .collect {
-                        when (it) {
+                    .collect { event ->
+                        when (event) {
                             is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToPreOrder -> {
                                 if (findNavController().currentBackStackEntry?.destination?.id == R.id.preOrderBS) {
                                     findNavController().popBackStack()
                                 }
                                 findNavController().navigate(
                                     ProductDetailsFragmentDirections.actionToPreOrderBS(
-                                        it.id,
-                                        it.name,
-                                        it.detailPicture
+                                        event.id,
+                                        event.name,
+                                        event.detailPicture
                                     )
                                 )
                             }
@@ -200,7 +201,7 @@ class ProductDetailsFragment : Fragment() {
                                 }
                                 findNavController().navigate(
                                     ProductDetailsFragmentDirections.actionToSendCommentAboutProductFragment(
-                                        it.id
+                                        event.id
                                     )
                                 )
                             }
@@ -213,16 +214,20 @@ class ProductDetailsFragment : Fragment() {
                             is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToPresentInfo -> {
                                 findNavController().navigate(
                                     ProductDetailsFragmentDirections.actionProductDetailFragmentToPresentInfoBottomSheetFragment(
-                                        presentText = it.presentText,
-                                        progressBackground = it.progressBackground,
-                                        percent = it.progress,
-                                        showProgress = it.showText
+                                        presentText = event.presentText,
+                                        progressBackground = event.progressBackground,
+                                        percent = event.progress,
+                                        showProgress = event.showText
                                     )
                                 )
                             }
 
                             ProductDetailsFlowViewModel.ProductDetailsEvents.GoToAboutProduct -> {
                                 findNavController().navigate(R.id.aboutProductFragment)
+                            }
+
+                            is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProductComments -> {
+                                findNavController().navigate(R.id.productCommentsFragment, bundleOf("productId" to event.productId))
                             }
                         }
                     }

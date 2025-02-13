@@ -25,6 +25,8 @@ interface VodovozService {
     suspend fun getComments(
         @Query("id") productId: Long,
         @Query("nav") page: Int,
+        @Query("sort") sort: String = "",
+        @Query("ascdesc") order: String = ""
     ): Response<VodovozResponseDTO<ProductCommentsDTO>>
 
 

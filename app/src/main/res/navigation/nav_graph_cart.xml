@@ -228,7 +228,7 @@
             app:destination="@id/ruTubeVideoFragmentDialog" />
         <action
             android:id="@+id/action_to_allCommentsByProductDialogFragment"
-            app:destination="@id/allCommentsByProductDialogFragment" />
+            app:destination="@id/productCommentsFragment" />
         <action
             android:id="@+id/action_to_sendCommentAboutProductFragment"
             app:destination="@id/sendCommentAboutProductFragment" />
@@ -578,7 +578,7 @@
             app:argType="string" />
     </dialog>
     <fragment
-        android:id="@+id/allCommentsByProductDialogFragment"
+        android:id="@+id/productCommentsFragment"
         android:name="com.vodovoz.app.feature.product_comments.ProductCommentsFragment"
         android:label="AllCommentsByProductDialogFragment">
         <argument

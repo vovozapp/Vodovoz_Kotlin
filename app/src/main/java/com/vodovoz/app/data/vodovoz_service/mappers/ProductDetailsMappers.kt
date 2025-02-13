@@ -280,7 +280,7 @@ fun ProductDetailsDTO.toDomain(): ProductDetailsScreenModel {
     val moreProducts = BLOCTOVAR
     val similar = moreProducts?.POHOSHIE
     val accessory = moreProducts?.AKSESSYAR
-    val commentsCount = COMMENTS?.COMMEN_COUNT ?: 0
+    val commentsCount = COMMENTS?.COMMEN_COUNT ?: COMMENTS?.COMMENTS?.size ?: 0
 
     return ProductDetailsScreenModel(
         productDetails = TOVAR?.toDomain(

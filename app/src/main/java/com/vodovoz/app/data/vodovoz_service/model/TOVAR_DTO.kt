@@ -6,7 +6,6 @@ import androidx.annotation.Keep
 import com.squareup.moshi.JsonClass
 
 @Keep
-@JsonClass(generateAdapter = true)
 data class TOVAR_DTO(
     @Json(name = "DATA")
     val DATA: List<TOVAR_DATA_DTO?>?,

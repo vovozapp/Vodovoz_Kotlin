@@ -7,7 +7,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.vodovoz.app.design_system.composables.button.ProductFloatingButton
+import com.vodovoz.app.design_system.composables.button.ProductBottomFloatingButton
 import com.vodovoz.app.feature.productdetail.composables.MultiProductBottomSheet
 import com.vodovoz.app.feature.productdetail.composables.PresentBottomSheet
 import com.vodovoz.app.feature.productdetail.composables.ProductDetailTopBar
@@ -46,7 +46,7 @@ fun ProductDetailsScreen(
             val (price, oldPrice) = productDetails.firstPrice.run { price.roundToInt() to oldPrice.roundToInt() }
 
             AnimatedVisibility(!viewState.hideFloatingButton) {
-                ProductFloatingButton(
+                ProductBottomFloatingButton(
                     isLoading = viewState.buttonIsLoading,
                     cartQuantity = viewState.cartQuantity,
                     totalPrice = calculateProductPrice(
@@ -56,7 +56,7 @@ fun ProductDetailsScreen(
                     oldPrice = oldPrice,
                     price = price,
                     //todo - put left gift
-                    leftToGift = 0,
+                    giftText = "0",
                     isAvailable = productDetails.isAvailable,
                     analogButton = viewState.buttons.analogButton,
                     onProductPlus = {
@@ -67,7 +67,9 @@ fun ProductDetailsScreen(
                     },
                     onCartClick = onNavigateToCart,
                     onAddToCartClick = onAddToCart,
-                    onAnalogClick = {}
+                    onAnalogClick = {
+
+                    }
                 )
             }
         },
@@ -111,6 +113,9 @@ fun ProductDetailsScreen(
             },
             onAboutProductClick = {
                 viewModel.navigateToAboutProduct()
+            },
+            onShowAllCommentsClick = {
+                viewModel.showAllComments()
             }
         )
     }

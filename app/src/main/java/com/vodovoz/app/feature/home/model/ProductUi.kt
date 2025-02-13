@@ -35,7 +35,11 @@ fun CategoryWithProductsModel.toUi(): CategoryWithProductsUi {
 data class ButtonUi(
     val name: String,
     val action: ButtonAction,
-)
+) {
+    companion object {
+        val Empty = ButtonUi("", ButtonAction.Id(-1))
+    }
+}
 
 fun ButtonModel.toUi(): ButtonUi {
     return ButtonUi(

@@ -6,12 +6,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,7 +26,7 @@ fun ProductDetailTopBar(
     onNavigationClick: () -> Unit,
     onLikeClick: () -> Unit,
     onShareClick: () -> Unit,
-    isFavoriteProduct: Boolean
+    isFavoriteProduct: Boolean,
 ) {
     Surface(
         modifier = modifier
@@ -39,19 +40,18 @@ fun ProductDetailTopBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             ClickableIcon(
+                modifier = Modifier.clip(CircleShape),
                 painter = painterResource(id = R.drawable.ic_arrow_left),
-                modifier = Modifier.size(24.dp),
-                onClick = { onNavigationClick() },
-                tint = MaterialTheme.colorScheme.onBackground
-
+                tint = MaterialTheme.colorScheme.onBackground,
+                onClick = onNavigationClick
             )
             Spacer(modifier = Modifier.weight(1f))
 
             ClickableIcon(
-                painter = painterResource(id = if(isFavoriteProduct) R.drawable.ic_filled_like else R.drawable.ic_like),
+                painter = painterResource(id = if (isFavoriteProduct) R.drawable.ic_filled_like else R.drawable.ic_like),
                 modifier = Modifier.size(24.dp),
                 onClick = onLikeClick,
-                tint = if(isFavoriteProduct) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onBackground
+                tint = if (isFavoriteProduct) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onBackground
 
             )
             ClickableIcon(
@@ -70,6 +70,10 @@ fun ProductDetailTopBar(
 @Composable
 private fun ProductDetailTopBarPreview() {
     VodovozTheme {
-        ProductDetailTopBar(onNavigationClick = { /*TODO*/ }, onLikeClick = { /*TODO*/ }, isFavoriteProduct = true, onShareClick = {})
+        ProductDetailTopBar(
+            onNavigationClick = { /*TODO*/ },
+            onLikeClick = { /*TODO*/ },
+            isFavoriteProduct = true,
+            onShareClick = {})
     }
 }

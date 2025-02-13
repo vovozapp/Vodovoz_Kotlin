@@ -2,13 +2,10 @@ package com.vodovoz.app.design_system.composables.button
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -16,26 +13,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.buildPriceAndOldPriceAnnotatedString
+import com.vodovoz.app.design_system.composables.floating.BottomFloatingContainer
 import com.vodovoz.app.design_system.model.ColorfulButtonUi
 
 @Composable
-fun ProductFloatingButton(
+fun ProductBottomFloatingButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean,
     cartQuantity: Int,
     totalPrice: Int,
     oldPrice: Int,
     price: Int,
-    leftToGift: Int,
+    giftText: String,
     analogButton: ColorfulButtonUi?,
     isAvailable: Boolean,
     onProductPlus: () -> Unit,
@@ -44,26 +40,9 @@ fun ProductFloatingButton(
     onAddToCartClick: () -> Unit,
     onAnalogClick: () -> Unit,
 ) {
-    val buttonShape = RoundedCornerShape(
-        topStart = 12.dp,
-        topEnd = 12.dp,
-        bottomStart = 0.dp,
-        bottomEnd = 0.dp
-    )
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .shadow(10.dp, buttonShape)
-            .background(
-                color = MaterialTheme.colorScheme.background,
-                shape = buttonShape
-            )
-            .padding(top = 10.dp, bottom = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        if(isAvailable) {
+    BottomFloatingContainer {
+        if (isAvailable) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(bottom = 11.dp)
@@ -77,9 +56,7 @@ fun ProductFloatingButton(
 
                 Text(
                     modifier = Modifier.padding(start = 8.dp),
-                    text = stringResource(
-                        R.string.left_to_gift, leftToGift
-                    ),
+                    text = giftText,
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.labelSmall
                 )
@@ -136,13 +113,13 @@ private fun FloatingProductButtonPreview() {
                 .background(Color.White),
             contentAlignment = Alignment.BottomCenter
         ) {
-            ProductFloatingButton(
+            ProductBottomFloatingButton(
                 isLoading = false,
                 cartQuantity = 0,
                 totalPrice = 500,
                 oldPrice = 300,
                 price = 250,
-                leftToGift = 500,
+                giftText = "500",
                 onProductPlus = {},
                 onProductMinus = {},
                 onCartClick = {},

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -18,6 +19,7 @@ import androidx.navigation.fragment.navArgs
 import com.vodovoz.app.R
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.design_system.effects.LifecycleEffect
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,8 +28,6 @@ import javax.inject.Inject
 class ProductCommentsFragment : Fragment() {
 
     private val viewModel: ProductCommentsFlowViewModel by viewModels()
-
-    private val args: ProductCommentsFragmentArgs by navArgs()
 
     @Inject
     lateinit var tabManager: TabManager
@@ -47,46 +47,40 @@ class ProductCommentsFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
             setContent {
                 val viewState by viewModel.observeUiState().collectAsStateWithLifecycle()
+                val lazyListState = rememberLazyListState()
 
                 VodovozTheme {
                     ProductCommentsScreen(
                         viewModel = viewModel,
-                        viewState = viewState.data
+                        viewState = viewState.data,
+                        lazyListState = lazyListState
                     )
-                }
 
-            }
-        }
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        observeEvents()
-    }
+                    LifecycleEffect {
+                        viewModel.observeEvent().collect { event ->
+                            when (event) {
+                                ProductCommentsFlowViewModel.ProductCommentsEvents.GoToProfile -> {
 
-    private fun observeEvents() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.observeEvent()
-                    .collect {
-                        when (it) {
-                            is ProductCommentsFlowViewModel.ProductCommentsEvents.GoToProfile -> {
-                                tabManager.setAuthRedirect(findNavController().graph.id)
-                                tabManager.selectTab(R.id.graph_profile)
-                            }
+                                }
 
-                            is ProductCommentsFlowViewModel.ProductCommentsEvents.SendComment -> {
-                                if (findNavController().currentBackStackEntry?.destination?.id == R.id.sendCommentAboutProductFragment) {
+                                ProductCommentsFlowViewModel.ProductCommentsEvents.ScrollToTop -> {
+                                    lazyListState.animateScrollToItem(0)
+                                }
+
+                                ProductCommentsFlowViewModel.ProductCommentsEvents.SendComment -> {
+
+                                }
+
+                                ProductCommentsFlowViewModel.ProductCommentsEvents.GoBack -> {
                                     findNavController().popBackStack()
                                 }
-                                findNavController().navigate(
-                                    ProductCommentsFragmentDirections.actionToSendCommentAboutProductFragment(
-                                        args.productId
-                                    )
-                                )
                             }
+
                         }
                     }
+                }
+
             }
         }
     }

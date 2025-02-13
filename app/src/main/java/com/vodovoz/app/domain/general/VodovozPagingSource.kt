@@ -2,15 +2,26 @@ package com.vodovoz.app.domain.general
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.vodovoz.app.data.vodovoz_service.mappers.executeRequest
+import kotlinx.coroutines.flow.firstOrNull
+import retrofit2.Response
 
-class VodovozPagingSource<R : Any>(
-    private val request: suspend (page: Int, limit: Int) -> Result<List<R>>,
+class VodovozPagingSource<T : Any, R : Any>(
+    private val request: suspend (page: Int, limit: Int) -> Response<T>,
+    private val mapper: (T) -> List<R>,
 ) : PagingSource<Int, R>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, R> {
         val page = params.key ?: 1
 
-        val result = request(page, params.loadSize)
+        val result = executeRequest(
+            request = {
+                request(page, params.loadSize)
+            },
+            mapper = { body ->
+                mapper(body)
+            }
+        ).firstOrNull() ?: return LoadResult.Error(NoSuchElementException("No elements received from the flow"))
 
         result.onSuccess { list ->
             val nextKey = if (list.size < params.loadSize) null else page + 1
@@ -33,6 +44,4 @@ class VodovozPagingSource<R : Any>(
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
     }
-
-
 }

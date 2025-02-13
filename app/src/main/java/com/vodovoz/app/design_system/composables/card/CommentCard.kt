@@ -3,10 +3,12 @@ package com.vodovoz.app.design_system.composables.card
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.core.text.HtmlCompat
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.model.CommentUi
 
@@ -43,6 +44,8 @@ fun CommentCard(modifier: Modifier = Modifier, comment: CommentUi) {
                     overflow = TextOverflow.Ellipsis
                 )
 
+                Spacer(Modifier.width(4.dp))
+
                 (1..5).forEach { starNumber ->
                     Icon(
                         painter = painterResource(id = R.drawable.ic_star),
@@ -53,7 +56,6 @@ fun CommentCard(modifier: Modifier = Modifier, comment: CommentUi) {
                 }
             }
 
-            //todo parse text
             Text(
                 modifier = Modifier
                     .padding(top = 12.dp)

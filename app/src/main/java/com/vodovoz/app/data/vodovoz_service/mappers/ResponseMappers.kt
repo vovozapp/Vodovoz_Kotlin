@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import retrofit2.Response
 
-fun <T, R> executeRequest(
+ fun <T, R> executeRequest(
     request: suspend () -> Response<T>,
     mapper: (T) -> R,
     onFail: ((Response<T>) -> Result<R>)? = null,

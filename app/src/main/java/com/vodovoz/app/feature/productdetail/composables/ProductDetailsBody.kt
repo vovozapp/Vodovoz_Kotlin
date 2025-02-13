@@ -45,6 +45,8 @@ fun ProductDetailsBody(
     onNavigateToCart: () -> Unit,
     onAboutProductClick: () -> Unit,
 
+    onShowAllCommentsClick: () -> Unit,
+
     onMultiButtonClick: () -> Unit,
     onPresentButtonClick: () -> Unit,
     onPreOrderButtonClick: () -> Unit,
@@ -157,11 +159,12 @@ fun ProductDetailsBody(
 
         ProductDetailsComments(
             modifier = Modifier.padding(top = 32.dp),
-            commentsCount = comments.size,
+            commentsCount = productDetails.commentsCount,
             comments = comments,
             onLeaveRateClick = {
 
-            }
+            },
+            onShowAllCommentsClick = onShowAllCommentsClick
         )
 
 

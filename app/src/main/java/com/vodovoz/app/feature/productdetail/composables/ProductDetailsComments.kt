@@ -1,20 +1,14 @@
 package com.vodovoz.app.feature.productdetail.composables
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -23,6 +17,8 @@ import com.vodovoz.app.design_system.composables.button.VodovozButton
 import com.vodovoz.app.design_system.composables.button.VodovozButtonDefaults
 import com.vodovoz.app.design_system.composables.card.CommentCard
 import com.vodovoz.app.design_system.model.CommentUi
+import com.vodovoz.app.feature.home.composables.TitleAndButton
+import com.vodovoz.app.feature.home.model.ButtonUi
 
 @Suppress("NonSkippableComposable")
 @Composable
@@ -31,44 +27,15 @@ fun ProductDetailsComments(
     commentsCount: Int,
     comments: List<CommentUi>,
     onLeaveRateClick: () -> Unit,
-
-    ) {
+    onShowAllCommentsClick: () -> Unit,
+) {
     Column(modifier = modifier) {
-        Row(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                modifier = Modifier.weight(1f),
-                text = stringResource(id = R.string.comments),
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.headlineSmall
-            )
-            if (commentsCount > 0) {
-                Row(
-                    modifier = Modifier.clickable(
-                        indication = null,
-                        interactionSource = null
-                    ) { onLeaveRateClick() }, verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier.padding(start = 4.dp),
-                        text = stringResource(id = R.string.all),
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
 
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_arrow_right),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier
-                            .padding(start = 4.dp)
-                            .size(24.dp)
-                    )
-                }
-            }
-        }
+        TitleAndButton(
+            title = stringResource(id = R.string.comments),
+            button = if (commentsCount > 0) ButtonUi.Empty else null,
+            onShowAllClick = { onShowAllCommentsClick() })
+
 
         if (commentsCount > 0) {
             CommentsPager(modifier = Modifier.padding(top = 24.dp), comments = comments)
