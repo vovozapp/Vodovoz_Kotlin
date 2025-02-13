@@ -27,8 +27,9 @@ fun TOVAR_DATA_DTO.toDomain(): ProductModel? {
         coefficient = KOFFICIENT?.toFloat() ?: 1f,
         quantity = CATALOG_QUANTITY ?: return null,
         firstPrice = EXTENDED_PRICE?.firstOrNull()?.toDomain() ?: return null,
-        prices = EXTENDED_PRICE?.mapNotNull { it?.toDomain() } ?: return null,
-        labels = NALICHIE_MORE?.mapToDomain() ?: emptyList()
+        prices = EXTENDED_PRICE.mapNotNull { it?.toDomain() } ?: return null,
+        labels = NALICHIE_MORE?.mapToDomain() ?: emptyList(),
+        cartQuantity = 0
     )
 }
 

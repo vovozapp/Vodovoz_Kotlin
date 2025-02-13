@@ -9,6 +9,7 @@ data class ProductModel(
     val picture: String,
     val coefficient: Float,
     val quantity: Int,
+    val cartQuantity: Int,
     val pricePerUnit: Int?,
     val unitOfMeasurement: String?,
     val firstPrice: PriceModel,

@@ -122,6 +122,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
                         }
 
                         val productDetails = state.productDetails
+
                         aboutProductManager.updateInfo(
                             tabs = state.tabs,
                             characteristicBlockList = productDetails.characteristics,

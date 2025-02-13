@@ -4,6 +4,7 @@ import com.vodovoz.app.data.vodovoz_service.model.BannerDTO
 import com.vodovoz.app.data.vodovoz_service.model.OrderMenuDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopularCategoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopupWindowDTO
+import com.vodovoz.app.data.vodovoz_service.model.PresentDTO
 import com.vodovoz.app.data.vodovoz_service.model.ProductCommentsDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionsDTO
@@ -18,6 +19,7 @@ import retrofit2.http.Query
 
 interface VodovozService {
 
+
     /**
      * ProductComments screen
      */
@@ -26,7 +28,7 @@ interface VodovozService {
         @Query("id") productId: Long,
         @Query("nav") page: Int,
         @Query("sort") sort: String = "",
-        @Query("ascdesc") order: String = ""
+        @Query("ascdesc") order: String = "",
     ): Response<VodovozResponseDTO<ProductCommentsDTO>>
 
 
@@ -37,6 +39,11 @@ interface VodovozService {
     suspend fun getProductDetails(
         @Query("id") productId: Long,
     ): Response<VodovozResponseDTO<ProductDetailsDTO>>
+
+    @GET("details/podarki.php?action=podarki")
+    suspend fun getPresentInfo(
+        @Query("userid") userId: Long,
+    ): Response<VodovozResponseDTO<PresentDTO>>
 
 
     /**

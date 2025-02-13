@@ -1,19 +1,23 @@
 package com.vodovoz.app.design_system.composables.card
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -125,11 +129,14 @@ fun GridProductCard(
                 }
             }
         }
+
         Row(
-            modifier = Modifier.padding(top = 4.dp),
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .height(IntrinsicSize.Max),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(verticalAlignment = Alignment.Bottom) {
+            Row(verticalAlignment = Alignment.Bottom, modifier = Modifier) {
 
                 Text(
                     modifier = Modifier.alignByBaseline(),
@@ -138,6 +145,7 @@ fun GridProductCard(
                     style = MaterialTheme.typography.labelLarge.copy(
                         fontWeight = FontWeight.SemiBold
                     ),
+                    maxLines = 1
                 )
 
                 if (product.oldPrice > product.price) {
@@ -153,6 +161,8 @@ fun GridProductCard(
                         modifier = Modifier
                             .alignByBaseline()
                             .padding(start = 8.dp)
+                            .weight(1f, false),
+                        maxLines = 1
                     )
                 }
             }
@@ -178,7 +188,8 @@ fun GridProductCard(
                     product.rating
                 ) else 0.toString(),
                 color = if (product.rating <= 0.0f) MaterialTheme.colorScheme.surfaceTint else MaterialTheme.colorScheme.onBackground,
-                style = ExtendedTheme.typography.labelMediumVariant
+                style = ExtendedTheme.typography.labelMediumVariant,
+                maxLines = 1
             )
 
 
@@ -214,9 +225,9 @@ private fun GridProductCardPreview() {
             id = 101L,
             isFavorite = true,
             rating = 4.5f,
-            price = 299.99f,
-            oldPrice = 349.99f,
-            name = "Смартфон Galaxy S21",
+            price = 2900009.99f,
+            oldPrice = 349000000230.99f,
+            name = "Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21",
             cartQuantity = 1,
             cartLoading = false,
             image = "https://vodovoz.net/upload/iblock/9ed/ec5cfujet9sztz077mtdzofrzjqzn0zj.jpeg",
@@ -227,7 +238,7 @@ private fun GridProductCardPreview() {
             isAvailable = true
         )
 
-        GridProductCard(product = sampleProduct, onClick = {}) {
+        GridProductCard(product = sampleProduct, onClick = {}, modifier = Modifier) {
 
         }
     }
