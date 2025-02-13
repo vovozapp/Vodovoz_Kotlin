@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import androidx.annotation.Keep
 
 @Keep
-data class SORTIROKA_DTO(
+data class SORTIROVKA_DTO(
     @Json(name = "DANNIESORT")
     val DANNIESORT: List<SORT_DTO?>?,
     @Json(name = "NAMEGLAV")

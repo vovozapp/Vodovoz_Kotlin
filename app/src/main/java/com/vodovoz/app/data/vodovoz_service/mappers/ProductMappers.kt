@@ -3,10 +3,21 @@ package com.vodovoz.app.data.vodovoz_service.mappers
 import com.vodovoz.app.data.vodovoz_service.di.toFullUrl
 import com.vodovoz.app.data.vodovoz_service.model.EXTENDED_PRICE_DTO
 import com.vodovoz.app.data.vodovoz_service.model.NALICHIE_MORE_DTO
+import com.vodovoz.app.data.vodovoz_service.model.ProductsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.TOVAR_DATA_DTO
 import com.vodovoz.app.domain.general.model.LabelModel
 import com.vodovoz.app.domain.general.model.PriceModel
 import com.vodovoz.app.domain.general.model.ProductModel
+import com.vodovoz.app.domain.general.model.ProductsSectionModel
+
+
+fun ProductsSectionDTO.toDomain(): ProductsSectionModel {
+    return ProductsSectionModel(
+        title = TITLE ?: "",
+        sorting = SORTIROVKA?.mapNotNull { sortDto -> sortDto.toDomain() } ?: emptyList(),
+        products = TOVAR?.mapNotNull { tovarDto -> tovarDto.toDomain() } ?: emptyList()
+    )
+}
 
 fun List<TOVAR_DATA_DTO?>.toDomain(): List<ProductModel> {
     return mapNotNull { productDTO ->

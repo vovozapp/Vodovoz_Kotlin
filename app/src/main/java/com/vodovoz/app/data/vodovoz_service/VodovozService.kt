@@ -6,6 +6,7 @@ import com.vodovoz.app.data.vodovoz_service.model.PopularCategoriesDTO
 import com.vodovoz.app.data.vodovoz_service.model.PopupWindowDTO
 import com.vodovoz.app.data.vodovoz_service.model.PresentDTO
 import com.vodovoz.app.data.vodovoz_service.model.ProductCommentsDTO
+import com.vodovoz.app.data.vodovoz_service.model.ProductsSectionDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionDetailsDTO
 import com.vodovoz.app.data.vodovoz_service.model.PromotionsDTO
 import com.vodovoz.app.data.vodovoz_service.model.RAZDEL_DTO
@@ -45,6 +46,11 @@ interface VodovozService {
         @Query("userid") userId: Long,
     ): Response<VodovozResponseDTO<PresentDTO>>
 
+    @GET("details/analog.php?id=105622")
+    suspend fun getProductAnalogs(
+        @Query("id") productId: Long
+    ): Response<VodovozResponseDTO<ProductsSectionDTO>>
+
 
     /**
      * Promotions screens
@@ -65,7 +71,8 @@ interface VodovozService {
 
     /**
      * Home screen
-     * */
+     *
+     */
     @GET("glavnaya/slayders/index.php?action=slayder")
     suspend fun getBanners(): Response<VodovozResponseDTO<List<BannerDTO>>>
 

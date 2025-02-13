@@ -10,6 +10,7 @@ import com.vodovoz.app.domain.general.model.PopupWindowInfoModel
 import com.vodovoz.app.domain.general.model.ProductCommentsInfoModel
 import com.vodovoz.app.domain.general.model.ProductDetailsScreenModel
 import com.vodovoz.app.domain.general.model.ProductModel
+import com.vodovoz.app.domain.general.model.ProductsSectionModel
 import com.vodovoz.app.domain.general.model.ProductsTitle
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
@@ -22,6 +23,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface VodovozServiceRepository {
 
+    fun getProductAnalogs(
+        productId: Long
+    ): Flow<Result<ProductsSectionModel>>
 
     fun getProductCommentsInfo(
         productId: Long

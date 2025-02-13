@@ -14,7 +14,7 @@ fun ProductCommentsDTO.toDomain(): ProductCommentsInfoModel {
     )
 }
 
-private fun SORT_DTO.toDomain(): SortModel? {
+fun SORT_DTO.toDomain(): SortModel? {
     return SortModel(
         name = NAME ?: return null,
         value = ZNACHIE ?: return null,

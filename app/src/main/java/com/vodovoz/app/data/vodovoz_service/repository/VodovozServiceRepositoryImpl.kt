@@ -16,6 +16,7 @@ import com.vodovoz.app.domain.general.model.PopupWindowInfoModel
 import com.vodovoz.app.domain.general.model.ProductCommentsInfoModel
 import com.vodovoz.app.domain.general.model.ProductDetailsScreenModel
 import com.vodovoz.app.domain.general.model.ProductModel
+import com.vodovoz.app.domain.general.model.ProductsSectionModel
 import com.vodovoz.app.domain.general.model.ProductsTitle
 import com.vodovoz.app.domain.general.model.PromotionDetailsModel
 import com.vodovoz.app.domain.general.model.PromotionModel
@@ -33,6 +34,15 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val vodovozService: VodovozService,
     private val accountManager: AccountManager,
 ) : VodovozServiceRepository {
+
+    override fun getProductAnalogs(productId: Long): Flow<Result<ProductsSectionModel>> = executeRequest(
+        request = {
+            vodovozService.getProductAnalogs(productId)
+        },
+        mapper = { response ->
+            response.data?.toDomain() ?: throw IllegalArgumentException("ProductSectionDTO can't be null")
+        }
+    )
 
     override fun getProductCommentsInfo(productId: Long): Flow<Result<ProductCommentsInfoModel>> {
         return executeRequest(
