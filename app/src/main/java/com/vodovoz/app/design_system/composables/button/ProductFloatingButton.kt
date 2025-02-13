@@ -41,7 +41,7 @@ fun ProductBottomFloatingButton(
     onAnalogClick: () -> Unit,
 ) {
 
-    BottomFloatingContainer {
+    BottomFloatingContainer(modifier = modifier) {
         if (isAvailable) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,

@@ -11,7 +11,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.vodovoz.app.design_system.model.ColorfulButtonUi
 import com.vodovoz.app.design_system.model.CommentUi
 import com.vodovoz.app.design_system.model.ProductDetailsButtonsUi
 import com.vodovoz.app.design_system.model.ProductDetailsUi
@@ -103,10 +105,10 @@ fun ProductDetailsBody(
 
 
         ProductDetailsButtonsBlock(
-            isAvailable = productDetails.isAvailable,
+            isAvailable = false, //todo - put productDetails.isAvailable
             quantityButtonIsLoading = quantityButtonIsLoading,
             cartQuantity = productCartQuantity,
-            buttons = buttons,
+            buttons = buttons.copy(analogButton = ColorfulButtonUi("Аналог", Color.Black, Color.White)), //todo - put only buttons without copy
             totalPrice = calculateProductPrice(
                 productCartQuantity,
                 productDetails.prices

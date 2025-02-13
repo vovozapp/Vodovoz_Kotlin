@@ -68,7 +68,7 @@ fun ProductDetailsScreen(
                     onCartClick = onNavigateToCart,
                     onAddToCartClick = onAddToCart,
                     onAnalogClick = {
-
+                        viewModel.navigateToProductsCollection()
                     }
                 )
             }
@@ -100,7 +100,9 @@ fun ProductDetailsScreen(
             sectionAccessory = viewState.sectionAccessory,
             showDetailText = viewState.showDetailText,
             buttons = viewState.buttons,
-            onAnalogButtonClick = {},
+            onAnalogButtonClick = {
+                viewModel.navigateToProductsCollection()
+            },
             onPreOrderButtonClick = {},
             onPresentButtonClick = {
                 viewModel.showPresentBottomSheet()

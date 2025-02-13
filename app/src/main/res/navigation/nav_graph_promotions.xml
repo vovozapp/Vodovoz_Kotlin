@@ -5,6 +5,16 @@
     android:id="@+id/graph_promotions"
     app:startDestination="@id/allPromotionsFragment">
 
+    <fragment android:id="@+id/productsCollectionFragment"
+        android:name="com.vodovoz.app.feature.products_collection.ProductsCollectionFragment"
+        android:label="fragment_product_collection">
+
+        <argument
+            android:name="productId"
+            app:argType="long" />
+
+    </fragment>
+
     <fragment
         android:id="@+id/documentViewerFragment"
         android:name="com.vodovoz.app.feature.document_viewer.DocumentViewerFragment"

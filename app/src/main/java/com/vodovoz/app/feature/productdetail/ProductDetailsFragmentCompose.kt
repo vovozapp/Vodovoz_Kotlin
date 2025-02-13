@@ -229,6 +229,10 @@ class ProductDetailsFragment : Fragment() {
                             is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProductComments -> {
                                 findNavController().navigate(R.id.productCommentsFragment, bundleOf("productId" to event.productId))
                             }
+
+                            is ProductDetailsFlowViewModel.ProductDetailsEvents.GoToProductsCollection -> {
+                                findNavController().navigate(R.id.productsCollectionFragment, bundleOf("productId" to event.productId))
+                            }
                         }
                     }
             }

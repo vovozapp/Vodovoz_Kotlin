@@ -463,6 +463,10 @@ class ProductDetailsFlowViewModel @Inject constructor(
         eventListener.emit(ProductDetailsEvents.GoToProductComments(state.productDetails.id))
     }
 
+    fun navigateToProductsCollection() = viewModelScope.launch {
+        eventListener.emit(ProductDetailsEvents.GoToProductsCollection(state.productDetails.id))
+    }
+
 
     sealed class ProductDetailsEvents : Event {
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
@@ -480,6 +484,7 @@ class ProductDetailsFlowViewModel @Inject constructor(
         data object GoToCart : ProductDetailsEvents()
         data object GoToAboutProduct : ProductDetailsEvents()
         data class GoToProductComments(val productId: Long) : ProductDetailsEvents()
+        data class GoToProductsCollection(val productId: Long) : ProductDetailsEvents()
     }
 
 
