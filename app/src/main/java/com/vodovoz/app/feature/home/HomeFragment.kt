@@ -638,6 +638,7 @@ class HomeFragment1 : BaseFragment() {
                                     )
                                 )
                             }
+                            else -> {}
                         }
                     }
             }

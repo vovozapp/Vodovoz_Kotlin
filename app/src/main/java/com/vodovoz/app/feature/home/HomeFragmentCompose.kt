@@ -340,6 +340,20 @@ class HomeFragment : Fragment() {
                                     bundle
                                 )
                             }
+
+                            is HomeFlowViewModel.HomeEvents.GoToProductDetails -> {
+                                findNavController().navigate(
+                                    R.id.productDetailFragment,
+                                    bundleOf("productId" to event.productId)
+                                )
+                            }
+
+                            is HomeFlowViewModel.HomeEvents.GoToPromotionDetails -> {
+                                findNavController().navigate(
+                                    R.id.promotionDetailFragment,
+                                    bundleOf("promotionId" to event.promotionId)
+                                )
+                            }
                         }
                     }
             }

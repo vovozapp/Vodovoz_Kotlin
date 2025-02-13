@@ -42,6 +42,8 @@ fun HomeBody(
     onOrderClick: (OrderUi) -> Unit,
     onMenuItemClick: (MenuItemUi) -> Unit,
     onShowAllPromotionClick: () -> Unit,
+    onProductCardClick: (ProductUi) -> Unit,
+    onPromotionClick: (PromotionUi) -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -97,7 +99,7 @@ fun HomeBody(
             currentCategoryWithProducts = currentCategoryWithProducts,
             sectionCategoriesWithProducts = bestOffersSection,
             onCategorySelect = onCategorySelect,
-            onProductClick = {},
+            onProductClick = onProductCardClick,
             onProductLike = {}
         )
 
@@ -105,8 +107,8 @@ fun HomeBody(
         HomeHurryUpBuyProducts(
             modifier = Modifier.padding(top = 32.dp),
             sectionHurryUpBuyProducts = sectionHurryUpBuyProducts,
+            onProductClick = onProductCardClick,
             onShowAllClick = { },
-            onProductClick = { },
             onProductLike = { }
         )
 
@@ -114,7 +116,7 @@ fun HomeBody(
         HomeNewProducts(
             modifier = Modifier.padding(top = 32.dp),
             sectionNewProducts = sectionNewProducts,
-            onProductClick = {},
+            onProductClick = onProductCardClick,
             onProductLike = {},
             onShowAllClick = {}
         )
@@ -123,32 +125,26 @@ fun HomeBody(
         HomePromotions(
             modifier = Modifier.padding(top = 32.dp),
             onShowAllClick = onShowAllPromotionClick,
-            onPromotionClick = {
-
-            },
+            onPromotionClick = onPromotionClick,
             sectionPromotions = sectionPromotions
         )
 
 
-        //todo = put actual data
         HomeBottom(
             modifier = Modifier.padding(top = 32.dp),
             sectionBottomProducts = sectionBottomProducts,
-            onProductClick = {},
+            onProductClick = onProductCardClick,
             onProductLike = {},
             onShowAllClick = {}
         )
 
-        //todo = put actual data
         HomeViewedProducts(
             modifier = Modifier.padding(top = 32.dp),
             sectionViewedProducts = sectionNewProducts,
-            onProductClick = {},
+            onProductClick = onProductCardClick,
             onProductLike = {},
             onShowAllClick = {}
         )
-
-
 
         Spacer(modifier = Modifier.height(24.dp))
     }

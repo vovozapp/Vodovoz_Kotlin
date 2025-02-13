@@ -17,7 +17,7 @@ data class PROMOTION_DATA_DTO(
     @Json(name = "IBLOCK_SECTION_ID")
     val IBLOCK_SECTION_ID: Int?,
     @Json(name = "ID")
-    val ID: Int?,
+    val ID: Long?,
     @Json(name = "NAME")
     val NAME: String?,
     @Json(name = "OREKLAME")

@@ -53,8 +53,8 @@ fun HomeScreen(
             onMenuItemClick = { },
             onOrderClick = { },
             onPopularSectionClick = { },
-            onStoryClick = {
-                viewModel.navigateToStories(it)
+            onStoryClick = { story ->
+                viewModel.navigateToStories(story)
             },
             onShowAllPromotionClick = {
                 navController.navigate(
@@ -62,6 +62,12 @@ fun HomeScreen(
                         AllPromotionsFragment.DataSource.All
                     )
                 )
+            },
+            onPromotionClick = { promotion ->
+                viewModel.navigateToPromotionDetails(promotion)
+            },
+            onProductCardClick = { product ->
+                viewModel.navigateToProductDetails(product)
             }
         )
     }

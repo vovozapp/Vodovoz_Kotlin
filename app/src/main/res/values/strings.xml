@@ -246,5 +246,6 @@
     <string name="saving_price">Экономия %1$s ₽</string>
 
     <string name="pdfView_page_no"> </string>
+    <string name="rating_value">Оценка %1$s</string>
 
 </resources>

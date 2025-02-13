@@ -76,7 +76,7 @@ fun PromotionDetailsModel.toUi(): PromotionDetailsUi {
 
 @Immutable
 data class PromotionUi(
-    val id: Int,
+    val id: Long,
     val picture: String,
     val label: LabelWithColorUi?,
     val sectionId: Int,

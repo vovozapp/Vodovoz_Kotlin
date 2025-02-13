@@ -1,9 +1,11 @@
 package com.vodovoz.app.feature.product_comments.model
 
+import androidx.compose.runtime.Immutable
 import com.vodovoz.app.domain.general.model.ProductCommentsInfoModel
 import com.vodovoz.app.domain.general.model.SortModel
 
 
+@Immutable
 data class ProductCommentsInfoUi(
     val sorting: List<SortUi>,
     val ratingText: String,

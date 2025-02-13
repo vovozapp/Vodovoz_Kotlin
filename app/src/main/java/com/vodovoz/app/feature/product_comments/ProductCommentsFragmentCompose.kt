@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -79,6 +80,8 @@ class ProductCommentsFragment : Fragment() {
 
                         }
                     }
+
+                    BackHandler { viewModel.navigateBack() }
                 }
 
             }

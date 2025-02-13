@@ -1,12 +1,15 @@
 package com.vodovoz.app.feature.product_comments
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
@@ -14,10 +17,15 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -30,6 +38,7 @@ import com.vodovoz.app.design_system.composables.floating.BottomFloatingContaine
 import com.vodovoz.app.design_system.composables.placeholders.LoadingPlaceholder
 import com.vodovoz.app.design_system.composables.tab_row.VodovozScrollableTabRow
 import com.vodovoz.app.design_system.composables.top_bar.VodovozTopBar
+import com.vodovoz.app.feature.product_comments.model.ProductCommentsInfoUi
 import com.vodovoz.app.util.extensions.indexOfOrNull
 
 @Suppress("NonSkippableComposable")
@@ -84,11 +93,19 @@ fun ProductCommentsScreen(
             state = lazyListState
         ) {
 
+            item {
+                CommentsInfoCard(
+                    aboutComments = aboutComments,
+                    modifier = Modifier
+                )
+            }
+
             if (loadState.refresh is LoadState.Loading) {
-                item() {
+                item {
                     LoadingPlaceholder()
                 }
             } else {
+
                 items(
                     count = lazyPagingComments.itemCount
                 ) { i ->
@@ -119,5 +136,41 @@ fun ProductCommentsScreen(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun CommentsInfoCard(modifier: Modifier = Modifier, aboutComments: ProductCommentsInfoUi) {
+    Column(
+        modifier = modifier
+            .clip(MaterialTheme.shapes.large)
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .padding(16.dp)
+            .fillMaxWidth()
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = stringResource(
+                    R.string.rating_value,
+                    aboutComments.ratingText
+                ),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.ic_star),
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(start = 4.dp)
+                    .size(18.dp),
+                tint = MaterialTheme.colorScheme.tertiary
+            )
+        }
+        Text(
+            modifier = Modifier.padding(top = 4.dp),
+            text = aboutComments.commentsCountText,
+            color = MaterialTheme.colorScheme.surfaceTint,
+            style = MaterialTheme.typography.bodySmall
+        )
     }
 }

@@ -1007,6 +1007,15 @@ class HomeFlowViewModel @Inject constructor(
         eventListener.emit(HomeEvents.GoToStories(storyId = startStory.id))
     }
 
+    fun navigateToPromotionDetails(promotion: PromotionUi) = viewModelScope.launch {
+        eventListener.emit(HomeEvents.GoToPromotionDetails(promotionId = promotion.id))
+
+    }
+
+    fun navigateToProductDetails(product: ProductUi) = viewModelScope.launch {
+        eventListener.emit(HomeEvents.GoToProductDetails(productId = product.id))
+    }
+
     data class PositionItem(
         val position: Int,
         val item: Item,
@@ -1021,6 +1030,8 @@ class HomeFlowViewModel @Inject constructor(
         data object GoToCart : HomeEvents()
 
         data class GoToStories(val storyId: Long) : HomeEvents()
+        data class GoToProductDetails(val productId: Long) : HomeEvents()
+        data class GoToPromotionDetails(val promotionId: Long) : HomeEvents()
     }
 
     sealed class HomeUiState {

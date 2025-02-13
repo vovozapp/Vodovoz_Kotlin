@@ -18,7 +18,7 @@ data class PromotionFilterModel(
 )
 
 data class PromotionModel(
-    val id: Int,
+    val id: Long,
     val name: String,
     val blockId: Int,
     val sectionId: Int,
