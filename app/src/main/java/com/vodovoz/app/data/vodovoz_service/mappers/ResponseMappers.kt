@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.take
 import retrofit2.Response
 
  fun <T, R> executeRequest(
@@ -25,5 +26,5 @@ import retrofit2.Response
         } else {
             throw RequestException(response.messageWithCode())
         }
-    }.catchResult().flowOn(Dispatchers.IO)
+    }.catchResult().take(1).flowOn(Dispatchers.IO)
 }

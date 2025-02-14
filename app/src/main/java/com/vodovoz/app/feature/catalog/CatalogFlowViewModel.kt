@@ -45,7 +45,7 @@ class CatalogFlowViewModel @Inject constructor(
     }
 
     private fun fetchCatalog() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             flow { emit(mainRepository.fetchCatalogResponse()) }
                 .onEach { response ->
                     when (response) {

@@ -11,6 +11,8 @@ open class MviViewModel<STATE, EVENT>(state: STATE): ViewModel() {
     protected val _state = MutableStateFlow(state)
     val state = _state.asStateFlow()
 
+    protected val stateSnapshot get() = _state.value
+
     protected val _events = MutableSharedFlow<EVENT>()
     val events = _events.asSharedFlow()
 

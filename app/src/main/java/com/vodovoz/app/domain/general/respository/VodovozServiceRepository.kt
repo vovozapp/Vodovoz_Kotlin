@@ -1,7 +1,6 @@
 package com.vodovoz.app.domain.general.respository
 
 import androidx.paging.PagingData
-import com.vodovoz.app.design_system.model.CommentUi
 import com.vodovoz.app.domain.general.model.BannerModel
 import com.vodovoz.app.domain.general.model.CommentModel
 import com.vodovoz.app.domain.general.model.OrderWithMenuModel
@@ -24,7 +23,8 @@ import kotlinx.coroutines.flow.Flow
 interface VodovozServiceRepository {
 
     fun getProductAnalogs(
-        productId: Long
+        productId: Long,
+        sort: SortModel
     ): Flow<Result<ProductsSectionModel>>
 
     fun getProductCommentsInfo(

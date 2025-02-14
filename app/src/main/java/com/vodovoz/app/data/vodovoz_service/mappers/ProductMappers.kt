@@ -12,10 +12,15 @@ import com.vodovoz.app.domain.general.model.ProductsSectionModel
 
 
 fun ProductsSectionDTO.toDomain(): ProductsSectionModel {
+    val sorting =
+        SORTIROVKA?.DANNIESORT?.mapNotNull { sortDto -> sortDto?.toDomain() } ?: emptyList()
     return ProductsSectionModel(
         title = TITLE ?: "",
-        sorting = SORTIROVKA?.mapNotNull { sortDto -> sortDto.toDomain() } ?: emptyList(),
-        products = TOVAR?.mapNotNull { tovarDto -> tovarDto.toDomain() } ?: emptyList()
+        sortingTitle = SORTIROVKA?.NAMEGLAV ?: "",
+        sorting = sorting,
+        products = TOVAR?.mapNotNull { tovarDto ->
+            tovarDto.toDomain()
+        } ?: emptyList()
     )
 }
 

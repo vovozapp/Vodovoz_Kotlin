@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
 import com.vodovoz.app.design_system.composables.card.GridProductCard
-import com.vodovoz.app.design_system.composables.chip.ColorVodovozChip
+import com.vodovoz.app.design_system.composables.chip.VodovozColorChip
 import com.vodovoz.app.design_system.composables.chip.TimeLeftChip
 import com.vodovoz.app.design_system.model.PromotionDetailsUi
 import com.vodovoz.app.feature.home.model.ProductUi
@@ -65,7 +65,7 @@ fun PromotionDetailsBody(
                 ) {
                     val label = promotionDetails.label
                     if (label != null) {
-                        ColorVodovozChip(color = label.color, text = label.name)
+                        VodovozColorChip(color = label.color, text = label.name)
                     }
 
                     TimeLeftChip(

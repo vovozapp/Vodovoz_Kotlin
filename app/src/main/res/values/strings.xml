@@ -247,5 +247,6 @@
 
     <string name="pdfView_page_no"> </string>
     <string name="rating_value">Оценка %1$s</string>
+    <string name="unit_of_measurement">%1$s/%2$s</string>
 
 </resources>

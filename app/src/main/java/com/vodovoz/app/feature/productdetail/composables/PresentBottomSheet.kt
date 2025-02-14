@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.vodovoz.app.design_system.composables.bottom_sheet.VodovozDragHandle
 import com.vodovoz.app.design_system.composables.button.VodovozButton
-import com.vodovoz.app.design_system.composables.chip.ColorVodovozChip
+import com.vodovoz.app.design_system.composables.chip.VodovozColorChip
 import com.vodovoz.app.design_system.model.BlockPromoDataUi
 import com.vodovoz.app.design_system.model.BuyButtonUi
 
@@ -88,7 +88,7 @@ fun PresentBottomSheet(
                         alignment = Alignment.Center
                     )
                     if (data.productQuantityText.isNotEmpty()) {
-                        ColorVodovozChip(
+                        VodovozColorChip(
                             modifier = Modifier.align(Alignment.BottomEnd),
                             color = MaterialTheme.colorScheme.secondary,
                             text = data.productQuantityText

@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
@@ -16,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.vodovoz.app.design_system.ExtendedTheme
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.vodovozSurface
 
@@ -55,18 +57,35 @@ fun VodovozChip(
 }
 
 @Composable
-fun ColorVodovozChip(modifier: Modifier = Modifier, color: Color, text: String) {
+fun VodovozColorChip(modifier: Modifier = Modifier, color: Color, text: String) {
     Box(
         modifier = modifier
             .clip(MaterialTheme.shapes.medium)
-            .background(color)
-            ,
+            .background(color),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
             modifier = Modifier.padding(horizontal = 8.dp),
             style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.background
+        )
+    }
+}
+
+@Composable
+fun VodovozColorChipSmall(modifier: Modifier = Modifier, color: Color, text: String) {
+    Box(
+        modifier = modifier
+            .widthIn(30.dp)
+            .clip(MaterialTheme.shapes.small)
+            .background(color),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier.padding(horizontal = 5.dp),
+            style = ExtendedTheme.typography.labelExtraSmall,
             color = MaterialTheme.colorScheme.background
         )
     }

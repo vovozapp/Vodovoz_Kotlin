@@ -35,12 +35,16 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val accountManager: AccountManager,
 ) : VodovozServiceRepository {
 
-    override fun getProductAnalogs(productId: Long): Flow<Result<ProductsSectionModel>> = executeRequest(
+    override fun getProductAnalogs(
+        productId: Long,
+        sort: SortModel,
+    ): Flow<Result<ProductsSectionModel>> = executeRequest(
         request = {
-            vodovozService.getProductAnalogs(productId)
+            vodovozService.getProductAnalogs(productId, sort.value, sort.order)
         },
         mapper = { response ->
-            response.data?.toDomain() ?: throw IllegalArgumentException("ProductSectionDTO can't be null")
+            response.data?.toDomain()
+                ?: throw IllegalArgumentException("ProductSectionDTO can't be null")
         }
     )
 

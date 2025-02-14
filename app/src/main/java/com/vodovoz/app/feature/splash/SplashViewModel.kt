@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.token.FirebaseTokenManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,13 +16,13 @@ class SplashViewModel @Inject constructor(
 ) : ViewModel() {
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             likeManager.updateStateFromLikesLocal()
         }
     }
 
     fun sendFirebaseToken() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             kotlin.runCatching {
                 firebaseTokenManager.sendFirebaseToken()
             }

@@ -87,6 +87,8 @@ data class ProductUi(
     val image: String,
     val labels: List<LabelWithColorUi>,
     val isAvailable: Boolean,
+    val pricePerUnit: Int?,
+    val unitOfMeasurement: String?
 )
 
 fun ProductModel.toUi(): ProductUi {
@@ -102,6 +104,8 @@ fun ProductModel.toUi(): ProductUi {
         image = picture,
         labels = labels.toUi(),
         isAvailable = quantity > 0,
+        pricePerUnit = pricePerUnit,
+        unitOfMeasurement = unitOfMeasurement
     )
 }
 

@@ -1,6 +1,5 @@
 package com.vodovoz.app.design_system.composables.card
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,10 +13,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -40,6 +37,8 @@ import com.vodovoz.app.R
 import com.vodovoz.app.design_system.ExtendedTheme
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.button.VodovozButtonSmall
+import com.vodovoz.app.design_system.composables.chip.VodovozColorChip
+import com.vodovoz.app.design_system.composables.chip.VodovozColorChipSmall
 import com.vodovoz.app.feature.home.model.LabelWithColorUi
 import com.vodovoz.app.feature.home.model.ProductUi
 import com.vodovoz.app.util.formatPrice
@@ -75,20 +74,7 @@ fun GridProductCard(
             )
             Row {
                 percentLabels.forEach { label ->
-                    Box(
-                        modifier = Modifier
-                            .clip(MaterialTheme.shapes.medium)
-                            .background(label.color)
-                            .defaultMinSize(30.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            modifier = Modifier.padding(horizontal = 5.dp),
-                            text = label.name,
-                            style = ExtendedTheme.typography.labelExtraSmall,
-                            color = MaterialTheme.colorScheme.background
-                        )
-                    }
+                    VodovozColorChipSmall(color = label.color, text = label.name)
                 }
                 Spacer(modifier = Modifier.weight(1f))
 
@@ -112,20 +98,7 @@ fun GridProductCard(
                 horizontalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 otherLabels.forEach { label ->
-                    Box(
-                        modifier = Modifier
-                            .clip(MaterialTheme.shapes.medium)
-                            .background(label.color)
-                            .defaultMinSize(30.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            modifier = Modifier.padding(horizontal = 5.dp),
-                            text = label.name,
-                            style = ExtendedTheme.typography.labelExtraSmall,
-                            color = MaterialTheme.colorScheme.background
-                        )
-                    }
+                    VodovozColorChipSmall(color = label.color, text = label.name)
                 }
             }
         }
@@ -162,7 +135,7 @@ fun GridProductCard(
                             .alignByBaseline()
                             .padding(start = 8.dp)
                             .weight(1f, false),
-                        maxLines = 1
+                        maxLines = 1,
                     )
                 }
             }
@@ -176,12 +149,12 @@ fun GridProductCard(
                 contentDescription = null,
                 tint = if (product.rating <= 0.0f) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.tertiary,
                 modifier = Modifier
-                    .padding(start = 2.dp)
+                    .padding(start = 4.dp)
                     .size(18.dp),
             )
 
             Text(
-                modifier = Modifier.padding(start = 2.dp),
+                modifier = Modifier.align(Alignment.CenterVertically).padding(start = 2.dp),
                 text = if (product.rating > 0) String.format(
                     Locale.getDefault(),
                     "%.1f",
@@ -235,7 +208,9 @@ private fun GridProductCardPreview() {
                 LabelWithColorUi("Новинка", Color.Red),
                 LabelWithColorUi("Хит продаж", Color.Green)
             ),
-            isAvailable = true
+            isAvailable = true,
+            pricePerUnit = null,
+            unitOfMeasurement = null
         )
 
         GridProductCard(product = sampleProduct, onClick = {}, modifier = Modifier) {

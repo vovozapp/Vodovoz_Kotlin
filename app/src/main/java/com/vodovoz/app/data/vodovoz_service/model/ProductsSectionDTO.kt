@@ -6,7 +6,7 @@ class ProductsSectionDTO(
     @Json(name = "TITLE")
     val TITLE: String?,
     @Json(name = "SORTIROVKA")
-    val SORTIROVKA: List<SORT_DTO>?,
+    val SORTIROVKA: SORTIROVKA_DTO?,
     @Json(name = "TOVAR")
     val TOVAR: List<TOVAR_DATA_DTO>?,
 )

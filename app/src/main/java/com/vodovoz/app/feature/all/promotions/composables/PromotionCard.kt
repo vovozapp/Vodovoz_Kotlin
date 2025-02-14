@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.ExtendedTheme
-import com.vodovoz.app.design_system.composables.chip.ColorVodovozChip
+import com.vodovoz.app.design_system.composables.chip.VodovozColorChip
 import com.vodovoz.app.design_system.composables.chip.TimeLeftChip
 import com.vodovoz.app.design_system.model.PromotionUi
 
@@ -80,7 +80,7 @@ fun PromotionCard(
             val label = promotion.label
 
             label?.let {
-                ColorVodovozChip(color = label.color, text = label.name)
+                VodovozColorChip(color = label.color, text = label.name)
             }
 
             TimeLeftChip(text = promotion.timeLeft)

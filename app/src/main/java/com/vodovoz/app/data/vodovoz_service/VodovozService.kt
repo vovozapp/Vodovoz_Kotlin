@@ -48,7 +48,9 @@ interface VodovozService {
 
     @GET("details/analog.php?id=105622")
     suspend fun getProductAnalogs(
-        @Query("id") productId: Long
+        @Query("id") productId: Long,
+        @Query("sort") sort: String = "",
+        @Query("ascdesc") order: String = "",
     ): Response<VodovozResponseDTO<ProductsSectionDTO>>
 
 
