@@ -22,6 +22,35 @@ interface VodovozService {
 
 
     /**
+     * Cart requests
+     * */
+    @GET("korzina/function/add/index.php?action=add")
+    suspend fun addProductToCart(
+        @Query("id") productId: Long,
+        @Query("quantity") quantity: Int,
+    ): Response<VodovozResponseDTO<String>>
+
+    @GET("korzina/function/add/index.php?action=addtoqua")
+    suspend fun addMultipleProductsToCart(
+        @Query("idquanit") productIdsWithQuantity: String,
+    ): Response<VodovozResponseDTO<String>>
+
+    @GET("korzina/function/deletto/index.php?action=deletto")
+    suspend fun removeProductFromCart(
+        @Query("id") productId: Long
+    ): Response<VodovozResponseDTO<String>>
+
+    @GET("korzina/function/guaty/index.php?action=guaty")
+    suspend fun updateProductInCart(
+        @Query("id") productId: Long,
+        @Query("quantity") quantity: Int
+    ): Response<VodovozResponseDTO<String>>
+
+    @GET("newmobile_new/korzina/function/delkorzina/index.php?action=delkorzina")
+    suspend fun clearCart(): Response<VodovozResponseDTO<String>>
+
+
+    /**
      * ProductComments screen
      */
     @GET("comments.php?action=detail")
@@ -43,7 +72,7 @@ interface VodovozService {
 
     @GET("details/podarki.php?action=podarki")
     suspend fun getPresentInfo(
-        @Query("userid") userId: Long,
+        @Query("userid") userId: String,
     ): Response<VodovozResponseDTO<PresentDTO>>
 
     @GET("details/analog.php?id=105622")

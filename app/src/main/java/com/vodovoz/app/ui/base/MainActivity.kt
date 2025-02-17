@@ -56,7 +56,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks, E
 
         enableEdgeToEdge()
 
-
         MapKitFactory.initialize(this)
         binding = ActivityMainBinding.inflate(layoutInflater).apply { setContentView(root) }
 

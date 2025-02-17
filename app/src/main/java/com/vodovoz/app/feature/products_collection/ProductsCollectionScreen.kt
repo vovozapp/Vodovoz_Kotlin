@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.layout.LazyLayoutPinnableItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -62,9 +63,9 @@ fun ProductsCollectionScreen(
                 onSwitch = { viewModel.switchLayoutView() })
         }
 
+
         val products = productsSection.products
-
-
+        
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier.fillMaxSize(),
@@ -74,12 +75,12 @@ fun ProductsCollectionScreen(
         ) {
             if (viewState.isGridView) {
                 items(
-                    items = products,
-                    key = { it.id },
+                    products.size,
+                    key = { i -> products[i].id },
                     span = { GridItemSpan(1) }
-                ) {
+                ) { i ->
                     GridProductCard(
-                        product = it,
+                        product = products[i],
                         onClick = { },
                         onLike = { },
                         modifier = Modifier.fillMaxWidth()
@@ -90,9 +91,9 @@ fun ProductsCollectionScreen(
                     items = products,
                     key = { it.id },
                     span = { GridItemSpan(2) }
-                ) {
+                ) { product ->
                     LinearProductCard(
-                        product = it,
+                        product = product,
                         onClick = { },
                         onLike = { },
                         modifier = Modifier.fillMaxWidth()

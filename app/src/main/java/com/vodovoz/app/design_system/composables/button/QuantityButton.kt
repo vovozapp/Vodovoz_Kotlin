@@ -3,11 +3,14 @@ package com.vodovoz.app.design_system.composables.button
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -26,8 +29,10 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
+import com.vodovoz.app.design_system.ExtendedTheme
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.util.formatPrice
 
@@ -35,6 +40,8 @@ import com.vodovoz.app.util.formatPrice
 fun BaseQuantityButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean,
+    iconPadding: PaddingValues,
+    iconSize: Dp,
     onPlus: () -> Unit,
     onMinus: () -> Unit,
     minusEnabled: Boolean = true,
@@ -45,17 +52,20 @@ fun BaseQuantityButton(
     ),
     content: @Composable () -> Unit,
 ) {
+
+    val iconModifier = Modifier
+        .padding(iconPadding)
+        .size(iconSize)
+
     Surface(
         modifier = modifier
-            .height(48.dp)
             .fillMaxWidth(),
         shape = MaterialTheme.shapes.large,
         color = colors.containerColor
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp),
+                .fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(Modifier.clickable {
@@ -66,10 +76,10 @@ fun BaseQuantityButton(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_minus),
                     contentDescription = null,
-                    modifier = Modifier
-                        .padding(vertical = 12.dp, horizontal = 16.dp)
-                        .size(24.dp),
-                    tint = if(minusEnabled) { colors.contentColor } else colors.disabledContentColor
+                    modifier = iconModifier,
+                    tint = if (minusEnabled) {
+                        colors.contentColor
+                    } else colors.disabledContentColor
                 )
             }
             Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
@@ -84,16 +94,46 @@ fun BaseQuantityButton(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_plus),
                     contentDescription = null,
-                    modifier = Modifier
-                        .padding(vertical = 12.dp, horizontal = 16.dp)
-                        .size(24.dp),
-                    tint = if(plusEnabled) { colors.contentColor } else colors.disabledContentColor
+                    modifier = iconModifier,
+                    tint = if (plusEnabled) {
+                        colors.contentColor
+                    } else colors.disabledContentColor
 
                 )
             }
         }
     }
 
+}
+
+@Composable
+fun QuantityButtonSmall(
+    modifier: Modifier = Modifier,
+    isLoading: Boolean,
+    quantity: Int,
+    onPlus: () -> Unit,
+    onMinus: () -> Unit,
+) {
+    BaseQuantityButton(
+        modifier = modifier.height(38.dp),
+        isLoading = isLoading,
+        onPlus = { onPlus() },
+        onMinus = { onMinus() },
+        iconSize = 18.dp,
+        iconPadding = PaddingValues(horizontal = 8.dp)
+    ) {
+        if (isLoading) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.background,
+                trackColor = Color.Transparent,
+                strokeWidth = 1.5.dp
+            )
+        } else Text(
+            text = quantity.toString(),
+            color = MaterialTheme.colorScheme.background,
+            style = ExtendedTheme.typography.buttonSmall
+        )
+    }
 }
 
 @Composable
@@ -108,10 +148,12 @@ fun ProductQuantityButton(
     val priceAnnotatedString = buildPriceAnnotatedString(quantity, totalPrice)
 
     BaseQuantityButton(
-        modifier = modifier,
+        modifier = modifier.height(48.dp),
         isLoading = isLoading,
         onPlus = onPlus,
-        onMinus = onMinus
+        onMinus = onMinus,
+        iconPadding = PaddingValues(horizontal = 16.dp),
+        iconSize = 24.dp
     ) {
         if (isLoading) {
             CircularProgressIndicator(
@@ -142,6 +184,17 @@ private fun buildPriceAnnotatedString(count: Int, currentPrice: Int): AnnotatedS
         }
         withStyle(headlineSmall.toSpanStyle()) {
             append(priceWithCurrency)
+        }
+    }
+}
+
+
+@Preview
+@Composable
+private fun QuantityButtonSmallPreview() {
+    VodovozTheme {
+        QuantityButtonSmall(isLoading = false, quantity = 3, onPlus = { /*TODO*/ }) {
+
         }
     }
 }

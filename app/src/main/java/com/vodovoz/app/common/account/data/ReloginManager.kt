@@ -33,29 +33,28 @@ class ReloginManager @Inject constructor(
                     emit(repository.relogin(userId, userToken))
                 }.catch {
                     _userReloginEnded.value = ReloginState.ReloginError(it.message.toString())
-                }
-                    .collect {
-                        if (it.isSuccessful) {
-                            val userRelogin = it.body() ?: UserReloginEntity(false)
-                            debugLog { userRelogin.toString() }
-                            if (userRelogin.isAuthorized) {
-                                val newCookie = it.headers()["Set-Cookie"] ?: ""
-                                if (newCookie.isNotEmpty()) {
-                                    cookieManager.updateCookieSessionId(newCookie)
-                                }
-                            } else {
-                                accountManager.removeUserId()
-                                accountManager.removeUserToken()
-                                cookieManager.removeCookieSessionId()
+                }.collect { reloginResponse ->
+                    if (reloginResponse.isSuccessful) {
+                        val userRelogin = reloginResponse.body() ?: UserReloginEntity(false)
+                        debugLog { userRelogin.toString() }
+                        if (userRelogin.isAuthorized) {
+                            val newCookie = reloginResponse.headers()["Set-Cookie"] ?: ""
+                            if (newCookie.isNotEmpty()) {
+                                cookieManager.updateCookieSessionId(newCookie)
                             }
-                            _userReloginEnded.value = ReloginState.ReloginSuccess
-
                         } else {
-                            _userReloginEnded.value = ReloginState.ReloginError(
-                                it.errorBody()?.string() ?: "Unknown error"
-                            )
+                            accountManager.removeUserId()
+                            accountManager.removeUserToken()
+                            cookieManager.removeCookieSessionId()
                         }
+                        _userReloginEnded.value = ReloginState.ReloginSuccess
+
+                    } else {
+                        _userReloginEnded.value = ReloginState.ReloginError(
+                            reloginResponse.errorBody()?.string() ?: "Unknown error"
+                        )
                     }
+                }
             }
         } else {
             _userReloginEnded.value = ReloginState.ReloginSuccess

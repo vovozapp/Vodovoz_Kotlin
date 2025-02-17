@@ -1,0 +1,13 @@
+package com.vodovoz.app.domain.general.use_case
+
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class CartUseCases @Inject constructor(
+    val addOrIncrementCartItem: AddOrIncrementCartItemUseCase,
+    val removeOrDecrementCartItem: RemoveOrDecrementCartItemUseCase,
+    val addMultipleCartItems: AddMultipleCartItemsUseCase,
+    val clearCart: ClearCartUseCase,
+    val syncCartDataUseCase: SyncCartDataUseCase
+)

@@ -2,6 +2,8 @@ package com.vodovoz.app.common.cart
 
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.data.MainRepository
+import com.vodovoz.app.domain.general.model.ProductModel
+import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import com.vodovoz.app.ui.model.ProductUI
 import com.vodovoz.app.util.extensions.debugLog
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -38,7 +40,7 @@ class CartManager @Inject constructor(
         newCount: Int,
         withUpdate: Boolean = true,
     ) {
-        val isInCart =  oldCount != 0
+        val isInCart = oldCount != 0
 
         //val plus = newCount >= oldCount
 
@@ -74,7 +76,7 @@ class CartManager @Inject constructor(
         if (!isInCart) {
             //tabManager.loadingAddToCart(true, plus = plus)
             repository.addProductToCart(id, count)
-       } else {
+        } else {
             repository.changeProductsQuantityInCart(id, count)
             //tabManager.loadingAddToCart(true, plus = true)
         }
@@ -103,7 +105,7 @@ class CartManager @Inject constructor(
             updateCartListState(withUpdate)
         }.onFailure {
             debugLog { "add with gift error ${it.localizedMessage}" }
-           // tabManager.loadingAddToCart(false, plus = true)
+            // tabManager.loadingAddToCart(false, plus = true)
             updateCarts(id, newCount)
         }
     }
@@ -114,6 +116,48 @@ class CartManager @Inject constructor(
         //tabManager.loadingAddToCart(true, plus = plus)
         repository.addProductFromServiceDetails(idWithGift)
         updateCarts(id, count)
+    }
+
+}
+
+class CartManagerV2(
+    private val vodovozServiceRepository: VodovozServiceRepository,
+) {
+
+
+    suspend fun addProduct(productId: String, product: ProductModel) {
+
+        // todo - val previousCart = localDB.currentCart()
+        // todo - localDB.addToCart(product)
+        try {
+            //todo - vodovozServiceRepository.addToCart(productId)
+            //todo - val serverCart = vodovozServiceRepository.getCart()
+            //todo - localDB.syncWithServer(serverCart)
+        } catch (e: Exception) {
+            //todo localDB.setCartState(previousCart)
+        }
+    }
+
+    suspend fun addProducts(productIds: String, products: List<ProductModel>) {
+        // todo - val previousCart = localDB.currentCart()
+        // todo - localDB.addToCart(products)
+        // todo - localDB.updateVersion()
+        try {
+            //todo - vodovozServiceRepository.addToCart(productIds)
+            //todo - val serverCart = vodovozServiceRepository.getCart()
+            //todo - localDB.syncWithServer(serverCart)
+        } catch (e: Exception) {
+            //todo localDB.setCartState(previousCart)
+        }
+    }
+
+    suspend fun syncWithServer(previousVersion: Int): Boolean{
+        //todo - if(previousVersion < localDB.cart.version) return false
+        //todo - localDB.updateVersion()
+        //todo - val serverCart = vodovozServiceRepository.getCart()
+        //todo - if(previousVersion < localDB.cart.version) return false
+        //todo - localDB.setCart(serviceCart)
+        return false
     }
 
 }

@@ -1,6 +1,7 @@
 package com.vodovoz.app.feature.productdetail.composables
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -126,7 +127,9 @@ fun MultiProductBottomSheet(
                     contentColor = MaterialTheme.colorScheme.primary,
                     disabledContentColor = ExtendedTheme.colorScheme.primaryVariant
                 ),
-                minusEnabled = cartQuantity > 1
+                minusEnabled = cartQuantity > 1,
+                iconSize = 24.dp,
+                iconPadding = PaddingValues(horizontal = 16.dp)
             ) {
                 if (buttonIsLoading) {
                     CircularProgressIndicator(

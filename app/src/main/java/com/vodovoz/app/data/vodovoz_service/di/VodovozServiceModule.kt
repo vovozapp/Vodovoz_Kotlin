@@ -2,6 +2,7 @@ package com.vodovoz.app.data.vodovoz_service.di
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.vodovoz.app.core.network.interceptor.CookieHandlerInterceptor
 import com.vodovoz.app.data.vodovoz_service.VodovozService
 import com.vodovoz.app.data.vodovoz_service.repository.VodovozServiceRepositoryImpl
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
@@ -10,6 +11,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.multibindings.IntoSet
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -34,7 +37,7 @@ abstract class VodovozServiceModule {
         @Provides
         @Singleton
         @Named("vodovoz")
-        fun providesVodovozRetrofit(okHttpClient: OkHttpClient): Retrofit {
+        fun providesVodovozRetrofit(@Named("vodovoz") okHttpClient: OkHttpClient): Retrofit {
             return Retrofit.Builder()
                 .baseUrl(URL)
                 .addConverterFactory(
@@ -51,6 +54,17 @@ abstract class VodovozServiceModule {
         fun providesVodovozService(@Named("vodovoz") retrofit: Retrofit): VodovozService {
             return retrofit.create(VodovozService::class.java)
         }
+
+        @Provides
+        @Singleton
+        @Named("vodovoz")
+        fun providesOkHttpClient(
+            cookieHandlerInterceptor: CookieHandlerInterceptor,
+        ): OkHttpClient {
+            return OkHttpClient.Builder().addInterceptor(cookieHandlerInterceptor).build()
+        }
+
+
     }
 
 }

@@ -34,6 +34,34 @@ class VodovozServiceRepositoryImpl @Inject constructor(
     private val vodovozService: VodovozService,
     private val accountManager: AccountManager,
 ) : VodovozServiceRepository {
+    override suspend fun addProductToCart(productId: Long, quantity: Int): Flow<Result<String>> =
+        executeRequest(
+            request = { vodovozService.addProductToCart(productId, quantity) },
+            mapper = { response -> response.data ?: "" }
+        )
+
+    override suspend fun addMultipleProductsToCart(productIdsWithQuantity: String): Flow<Result<String>> =
+        executeRequest(
+            request = { vodovozService.addMultipleProductsToCart(productIdsWithQuantity) },
+            mapper = { response -> response.data ?: "" }
+        )
+
+    override suspend fun removeProductFromCart(productId: Long): Flow<Result<String>> =
+        executeRequest(
+            request = { vodovozService.removeProductFromCart(productId) },
+            mapper = { response -> response.data ?: "" }
+        )
+
+    override suspend fun updateProductInCart(productId: Long, quantity: Int): Flow<Result<String>> =
+        executeRequest(
+            request = { vodovozService.updateProductInCart(productId, quantity) },
+            mapper = { response -> response.data ?: "" }
+        )
+
+    override suspend fun clearCart(): Flow<Result<String>> = executeRequest(
+        request = { vodovozService.clearCart() },
+        mapper = { response -> response.data ?: "" }
+    )
 
     override fun getProductAnalogs(
         productId: Long,

@@ -1,6 +1,5 @@
 package com.vodovoz.app.design_system.composables.card
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -36,8 +33,8 @@ import coil3.compose.AsyncImage
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.ExtendedTheme
 import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.design_system.composables.button.QuantityButtonSmall
 import com.vodovoz.app.design_system.composables.button.VodovozButtonSmall
-import com.vodovoz.app.design_system.composables.chip.VodovozColorChip
 import com.vodovoz.app.design_system.composables.chip.VodovozColorChipSmall
 import com.vodovoz.app.feature.home.model.LabelWithColorUi
 import com.vodovoz.app.feature.home.model.ProductUi
@@ -154,7 +151,9 @@ fun GridProductCard(
             )
 
             Text(
-                modifier = Modifier.align(Alignment.CenterVertically).padding(start = 2.dp),
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(start = 2.dp),
                 text = if (product.rating > 0) String.format(
                     Locale.getDefault(),
                     "%.1f",
@@ -181,11 +180,22 @@ fun GridProductCard(
         )
 
 
-        VodovozButtonSmall(
-            modifier = Modifier.padding(top = 8.dp),
-            text = stringResource(id = R.string.to_cart),
-            onClick = { onClick(product) },
-        )
+        val buttonIsLoading = product.cartLoading
+        if (buttonIsLoading || product.cartQuantity > 0) {
+            QuantityButtonSmall(
+                modifier = Modifier.padding(top = 8.dp),
+                isLoading = buttonIsLoading,
+                quantity = product.cartQuantity,
+                onPlus = { },
+                onMinus = { }
+            )
+        } else {
+            VodovozButtonSmall(
+                modifier = Modifier.padding(top = 8.dp),
+                text = stringResource(id = R.string.to_cart),
+                onClick = { onClick(product) },
+            )
+        }
     }
 }
 

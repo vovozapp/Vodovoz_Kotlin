@@ -105,10 +105,10 @@ fun ProductDetailsBody(
 
 
         ProductDetailsButtonsBlock(
-            isAvailable = false, //todo - put productDetails.isAvailable
+            isAvailable = productDetails.isAvailable,
             quantityButtonIsLoading = quantityButtonIsLoading,
             cartQuantity = productCartQuantity,
-            buttons = buttons.copy(analogButton = ColorfulButtonUi("Аналог", Color.Black, Color.White)), //todo - put only buttons without copy
+            buttons = buttons,
             totalPrice = calculateProductPrice(
                 productCartQuantity,
                 productDetails.prices

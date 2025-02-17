@@ -22,18 +22,39 @@ import kotlinx.coroutines.flow.Flow
 
 interface VodovozServiceRepository {
 
+    suspend fun addProductToCart(
+        productId: Long,
+        quantity: Int,
+    ): Flow<Result<String>>
+
+    suspend fun addMultipleProductsToCart(
+        productIdsWithQuantity: String,
+    ): Flow<Result<String>>
+
+    suspend fun removeProductFromCart(
+        productId: Long,
+    ): Flow<Result<String>>
+
+
+    suspend fun updateProductInCart(
+        productId: Long,
+        quantity: Int,
+    ): Flow<Result<String>>
+
+    suspend fun clearCart(): Flow<Result<String>>
+
     fun getProductAnalogs(
         productId: Long,
-        sort: SortModel
+        sort: SortModel,
     ): Flow<Result<ProductsSectionModel>>
 
     fun getProductCommentsInfo(
-        productId: Long
+        productId: Long,
     ): Flow<Result<ProductCommentsInfoModel>>
 
     fun getProductCommentsPaged(
         productId: Long,
-        sort: SortModel = SortModel("", "" ,"")
+        sort: SortModel = SortModel("", "", ""),
     ): Flow<PagingData<CommentModel>>
 
     fun getProductDetails(productId: Long): Flow<Result<ProductDetailsScreenModel>>

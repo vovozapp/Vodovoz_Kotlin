@@ -21,18 +21,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.ExtendedTheme
+import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.design_system.composables.button.QuantityButtonSmall
 import com.vodovoz.app.design_system.composables.button.VodovozButtonSmall
 import com.vodovoz.app.design_system.composables.chip.VodovozColorChipSmall
+import com.vodovoz.app.feature.home.model.LabelWithColorUi
 import com.vodovoz.app.feature.home.model.ProductUi
 import com.vodovoz.app.util.formatPrice
 import java.util.Locale
@@ -55,8 +60,7 @@ fun LinearProductCard(
         contentPadding = PaddingValues(8.dp),
         onClick = { onClick(product) }
     ) {
-        Row {
-
+        Row(modifier = Modifier.height(IntrinsicSize.Max)) {
             Box(
                 modifier = Modifier
                     .height(132.dp)
@@ -109,7 +113,7 @@ fun LinearProductCard(
                 val labelSmall = MaterialTheme.typography.labelSmall
                 Text(
                     text = product.name,
-                    modifier = Modifier.heightIn(48.dp),
+                    modifier = Modifier.height(48.dp),
                     maxLines = 3,
                     color = MaterialTheme.colorScheme.onBackground,
                     style = labelSmall.copy(fontSize = (labelSmall.fontSize.value - 1).sp)
@@ -117,11 +121,10 @@ fun LinearProductCard(
 
                 Row(
                     modifier = Modifier
-                        .padding(top = 2.dp)
-                        .height(IntrinsicSize.Max),
+                        .padding(top = 2.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(verticalAlignment = Alignment.Bottom, modifier = Modifier) {
+                    Row(verticalAlignment = Alignment.Bottom) {
 
                         Text(
                             modifier = Modifier.alignByBaseline(),
@@ -193,6 +196,7 @@ fun LinearProductCard(
                     else ""
 
                 Text(
+                    modifier = Modifier.width(10.dp),
                     maxLines = 1,
                     text = pricePerUnitText,
                     color = MaterialTheme.colorScheme.surfaceTint,
@@ -200,10 +204,52 @@ fun LinearProductCard(
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
-                VodovozButtonSmall(
-                    text = stringResource(id = R.string.to_cart),
-                    onClick = { onClick(product) })
+
+                val buttonIsLoading = product.cartLoading
+                if (buttonIsLoading || product.cartQuantity > 0) {
+                    QuantityButtonSmall(
+                        isLoading = buttonIsLoading,
+                        quantity = product.cartQuantity,
+                        onPlus = { },
+                        onMinus = { }
+                    )
+                } else {
+                    VodovozButtonSmall(
+                        text = stringResource(id = R.string.to_cart),
+                        onClick = { onClick(product) },
+                    )
+                }
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun LinearProductCardPreview() {
+    VodovozTheme {
+        val sampleProduct = ProductUi(
+            id = 101L,
+            isFavorite = true,
+            rating = 4.5f,
+            price = 2900009.99f,
+            oldPrice = 349000000230.99f,
+            name = "Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21Смартфон Galaxy S21",
+            cartQuantity = 1,
+            cartLoading = false,
+            image = "https://vodovoz.net/upload/iblock/9ed/ec5cfujet9sztz077mtdzofrzjqzn0zj.jpeg",
+            labels = listOf(
+                LabelWithColorUi("Новинка", Color.Red),
+                LabelWithColorUi("Хит продаж", Color.Green)
+            ),
+            isAvailable = true,
+            pricePerUnit = null,
+            unitOfMeasurement = null
+        )
+
+
+        LinearProductCard(product = sampleProduct, onClick = {}) {
+
         }
     }
 }
