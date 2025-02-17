@@ -21,5 +21,7 @@ interface CartDatabaseRepository {
 
     suspend fun updateVersion(): Result<Boolean>
 
+    suspend fun getCartVersion(): Result<Long>
+
 
 }

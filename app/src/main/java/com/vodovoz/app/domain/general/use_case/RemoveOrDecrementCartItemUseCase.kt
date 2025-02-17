@@ -18,10 +18,9 @@ class RemoveOrDecrementCartItemUseCase @Inject constructor(
     private val syncCartDataUseCase: SyncCartDataUseCase,
 ) : UseCase {
 
-    suspend operator fun invoke(productModel: ProductModel): Flow<Result<Boolean>> = flow {
-        val productId = productModel.id
+    suspend operator fun invoke(productId: Long): Flow<Result<Boolean>> = flow {
         val newQuantity =
-            cartDatabaseRepository.getCartItemById(productModel.id).getOrThrow().quantity.minus(1)
+            cartDatabaseRepository.getCartItemById(productId).getOrThrow().quantity.minus(1)
         val items = cartDatabaseRepository.getCart().getOrThrow().second
 
         cartDatabaseRepository.addItemToCart(CartItemModel(productId, newQuantity)).getOrThrow()
@@ -35,11 +34,11 @@ class RemoveOrDecrementCartItemUseCase @Inject constructor(
             vodovozServiceRepository.updateProductInCart(productId, newQuantity).first()
         }
 
-        cartOperationResult.onSuccess { // 1 || 2 || 3
+        cartOperationResult.onSuccess {
             syncCartDataUseCase(cart.version)
             emit(Result.success(true))
         }.onFailure {
-            cartDatabaseRepository.replaceCartItems(items) // 3 || 2 || 1
+            cartDatabaseRepository.replaceCartItems(items)
             emit(Result.success(false))
         }
 

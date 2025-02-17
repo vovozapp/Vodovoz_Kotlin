@@ -14,13 +14,20 @@ import com.google.firebase.messaging.RemoteMessage
 import com.vodovoz.app.common.account.data.ReloginManager
 import com.vodovoz.app.common.permissions.PermissionsManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
+import com.vodovoz.app.data.local_cart_database.CartDao
 import com.vodovoz.app.databinding.ActivityMainBinding
+import com.vodovoz.app.domain.general.respository.CartDatabaseRepository
+import com.vodovoz.app.domain.general.use_case.AddOrIncrementCartItemUseCase
 import com.vodovoz.app.feature.sitestate.SiteStateManager
 import com.vodovoz.app.util.extensions.debugLog
 import com.vodovoz.app.util.extensions.enableFullScreen
 import com.vodovoz.app.util.extensions.snack
 import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import pub.devrel.easypermissions.EasyPermissions
@@ -44,7 +51,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks, E
     lateinit var permissionsManager: PermissionsManager
 
     private val viewModel: SplashFileViewModel by viewModels()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply {

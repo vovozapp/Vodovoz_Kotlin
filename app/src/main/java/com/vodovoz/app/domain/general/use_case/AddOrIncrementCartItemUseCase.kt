@@ -19,10 +19,9 @@ class AddOrIncrementCartItemUseCase @Inject constructor(
     private val syncCartDataUseCase: SyncCartDataUseCase,
 ) : UseCase {
 
-    suspend operator fun invoke(productModel: ProductModel): Flow<Result<Boolean>> = flow {
-        val productId = productModel.id
+    suspend operator fun invoke(productId: Long): Flow<Result<Boolean>> = flow {
         val newQuantity =
-            cartDatabaseRepository.getCartItemById(productModel.id).getOrThrow().quantity.plus(1)
+            cartDatabaseRepository.getCartItemById(productId).getOrThrow().quantity.plus(1)
         val items = cartDatabaseRepository.getCart().getOrThrow().second
 
 
@@ -30,7 +29,7 @@ class AddOrIncrementCartItemUseCase @Inject constructor(
             .also { cartDatabaseRepository.updateVersion().getOrThrow() }
 
 
-        val cart = cartDatabaseRepository.getCart().getOrThrow().first
+        val cartVersion = cartDatabaseRepository.getCartVersion().getOrThrow()
 
         val cartOperationResult = if (newQuantity == 1) {
             vodovozServiceRepository.addProductToCart(productId, newQuantity).first()
@@ -40,12 +39,12 @@ class AddOrIncrementCartItemUseCase @Inject constructor(
 
 
         cartOperationResult.onSuccess {
-            syncCartDataUseCase(cart.version)
+            syncCartDataUseCase(cartVersion)
             emit(Result.success(true))
         }.onFailure {
             cartDatabaseRepository.replaceCartItems(items)
-            emit(Result.success(false))
-        }
+        }.getOrThrow()
+
     }.catch { e ->
         Result.failure<Boolean>(e)
     }

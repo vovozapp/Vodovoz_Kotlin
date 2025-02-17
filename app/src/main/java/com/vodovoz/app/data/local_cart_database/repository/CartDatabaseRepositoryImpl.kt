@@ -8,8 +8,11 @@ import com.vodovoz.app.data.local_cart_database.mappers.toDomain
 import com.vodovoz.app.domain.general.model.CartItemModel
 import com.vodovoz.app.domain.general.model.CartModel
 import com.vodovoz.app.domain.general.respository.CartDatabaseRepository
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class CartDatabaseRepositoryImpl(
+@Singleton
+class CartDatabaseRepositoryImpl @Inject constructor(
     private val cartDao: CartDao,
 ) : CartDatabaseRepository {
 
@@ -58,6 +61,10 @@ class CartDatabaseRepositoryImpl(
             cartDao.updateVersion()
             true
         }
+    }
+
+    override suspend fun getCartVersion(): Result<Long> {
+        return runCatching { cartDao.getCart().version }
     }
 
 
