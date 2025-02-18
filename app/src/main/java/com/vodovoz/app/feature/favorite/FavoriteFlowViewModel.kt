@@ -10,6 +10,7 @@ import com.vodovoz.app.common.content.State
 import com.vodovoz.app.common.content.itemadapter.Item
 import com.vodovoz.app.common.content.itemadapter.bottomitem.BottomProgressItem
 import com.vodovoz.app.common.content.toErrorState
+import com.vodovoz.app.common.content.updateData
 import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
@@ -372,7 +373,9 @@ class FavoriteFlowViewModel @Inject constructor(
     }
 
     fun navigateToCategories() = viewModelScope.launch {
-        TODO("Not yet implemented")
+        eventListener.emit(
+            FavoriteEvents.GoToCategories(dataState.categories, dataState.currentCategory)
+        )
     }
 
     fun showSortOptionsBottomSheet() = viewModelScope.launch {
@@ -383,11 +386,19 @@ class FavoriteFlowViewModel @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    fun selectCategory(category: PopularCategoryUi) = viewModelScope.launch {
+        uiStateListener.updateData { s -> s.copy(currentCategory = category) }
+    }
+
     sealed class FavoriteEvents : Event {
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
             FavoriteEvents()
 
         data object GoToProfile : FavoriteEvents()
+        data class GoToCategories(
+            val categories: List<PopularCategoryUi>,
+            val category: PopularCategoryUi,
+        ) : FavoriteEvents()
     }
 
     data class FavoriteState(
@@ -405,13 +416,19 @@ class FavoriteFlowViewModel @Inject constructor(
         val emptyMessage: String? = null,
         val scrollToTop: Boolean = false,
 
-        val categories: List<PopularCategoryUi> = emptyList(),
+        val categories: List<PopularCategoryUi> = listOf(
+            PopularCategoryUi(
+                "dwq",
+                "wdqdwq",
+                id = 23L
+            )
+        ),
         val productsSection: ProductsSectionUi = ProductsSectionUi.Empty,
         val currentSort: SortUi = SortUi.Empty,
         val currentCategory: PopularCategoryUi = PopularCategoryUi.Empty,
         val showSortOptionsBottomSheet: Boolean = false,
         val isGridView: Boolean = true,
-        val uiState: FavoriteUiState = FavoriteUiState.Empty,
+        val uiState: FavoriteUiState = FavoriteUiState.Success,
     ) : State
 
     sealed interface FavoriteUiState {

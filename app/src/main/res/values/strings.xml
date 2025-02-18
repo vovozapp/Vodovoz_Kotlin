@@ -252,5 +252,6 @@
     <string name="empty_favorite_list_message">Список избранных товаров пуст</string>
     <string name="add_to_favorites_message">Добавляйте понравившиеся Вам товары в избранное</string>
     <string name="catalog_button_text">К каталогу</string>
+    <string name="apply">Применить</string>
 
 </resources>

@@ -5,6 +5,18 @@
     android:id="@+id/graph_profile"
     app:startDestination="@id/profileFragment">
 
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.vodovoz.app.feature.categories.CategoriesFragment"
+        android:label="CategoriesFragment">
+        <argument
+            android:name="categoryList"
+            app:argType="com.vodovoz.app.feature.home.model.PopularCategoryUi[]" />
+        <argument
+            android:name="category"
+            app:argType="com.vodovoz.app.feature.home.model.PopularCategoryUi" />
+    </fragment>
+
     <fragment android:id="@+id/productsCollectionFragment"
         android:name="com.vodovoz.app.feature.products_collection.ProductsCollectionFragment"
         android:label="fragment_product_collection">

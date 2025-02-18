@@ -116,8 +116,8 @@ class FavoriteFragment1 : BaseFragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel
                     .observeEvent()
-                    .collect {
-                        when (it) {
+                    .collect { event ->
+                        when (event) {
                             is FavoriteFlowViewModel.FavoriteEvents.GoToProfile -> {
                                 tabManager.setAuthRedirect(findNavController().graph.id)
                                 tabManager.selectTab(R.id.graph_profile)
@@ -129,12 +129,14 @@ class FavoriteFragment1 : BaseFragment() {
                                 }
                                 findNavController().navigate(
                                     FavoriteFragmentDirections.actionToPreOrderBS(
-                                        it.id,
-                                        it.name,
-                                        it.detailPicture
+                                        event.id,
+                                        event.name,
+                                        event.detailPicture
                                     )
                                 )
                             }
+
+                            else -> {}
                         }
                     }
             }

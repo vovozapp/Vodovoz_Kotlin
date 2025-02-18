@@ -364,6 +364,20 @@
             android:name="categoryId"
             app:argType="long" />
     </dialog>
+
+
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.vodovoz.app.feature.categories.CategoriesFragment"
+        android:label="CategoriesFragment">
+        <argument
+            android:name="categoryList"
+            app:argType="com.vodovoz.app.feature.home.model.PopularCategoryUi[]" />
+        <argument
+            android:name="category"
+            app:argType="com.vodovoz.app.feature.home.model.PopularCategoryUi" />
+    </fragment>
+
     <fragment
         android:id="@+id/allBrandsFragment"
         android:name="com.vodovoz.app.feature.all.brands.AllBrandsFragment"

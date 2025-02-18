@@ -16,6 +16,18 @@
     </fragment>
 
     <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.vodovoz.app.feature.categories.CategoriesFragment"
+        android:label="CategoriesFragment">
+        <argument
+            android:name="categoryList"
+            app:argType="com.vodovoz.app.feature.home.model.PopularCategoryUi[]" />
+        <argument
+            android:name="category"
+            app:argType="com.vodovoz.app.feature.home.model.PopularCategoryUi" />
+    </fragment>
+
+    <fragment
         android:id="@+id/documentViewerFragment"
         android:name="com.vodovoz.app.feature.document_viewer.DocumentViewerFragment"
         android:label="fragment_document_viewer">

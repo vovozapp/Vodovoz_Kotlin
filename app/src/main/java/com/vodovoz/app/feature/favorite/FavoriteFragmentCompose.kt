@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.app.ActivityCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -26,6 +27,7 @@ import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.design_system.VodovozTheme
 import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
+import com.vodovoz.app.feature.home.model.PopularCategoryUi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -54,6 +56,10 @@ class FavoriteFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        findNavController().currentBackStackEntry?.savedStateHandle?.get<PopularCategoryUi>("category")?.let { category ->
+            viewModel.selectCategory(category)
+        }
+
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.Default)
             setContent {
@@ -61,10 +67,11 @@ class FavoriteFragment : Fragment() {
                     val viewState by viewModel.observeUiState().collectAsStateWithLifecycle()
                     val data = viewState.data
 
-                    when(data.uiState){
+                    when (data.uiState) {
                         FavoriteFlowViewModel.FavoriteUiState.Error -> {
-                            NetworkErrorPlaceholder(onTryAgainClick = { } )
+                            NetworkErrorPlaceholder(onTryAgainClick = { })
                         }
+
                         else -> {
                             FavoriteScreen(viewModel = viewModel, viewState = data)
                         }
@@ -89,8 +96,8 @@ class FavoriteFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel
                     .observeEvent()
-                    .collect {
-                        when (it) {
+                    .collect { event ->
+                        when (event) {
                             is FavoriteFlowViewModel.FavoriteEvents.GoToProfile -> {
                                 tabManager.setAuthRedirect(findNavController().graph.id)
                                 tabManager.selectTab(R.id.graph_profile)
@@ -102,9 +109,19 @@ class FavoriteFragment : Fragment() {
                                 }
                                 findNavController().navigate(
                                     FavoriteFragmentDirections.actionToPreOrderBS(
-                                        it.id,
-                                        it.name,
-                                        it.detailPicture
+                                        event.id,
+                                        event.name,
+                                        event.detailPicture
+                                    )
+                                )
+                            }
+
+                            is FavoriteFlowViewModel.FavoriteEvents.GoToCategories -> {
+                                findNavController().navigate(
+                                    R.id.categoriesFragment,
+                                    bundleOf(
+                                        "categoryList" to event.categories.toTypedArray(),
+                                        "category" to event.category,
                                     )
                                 )
                             }
