@@ -8,7 +8,11 @@ data class PopularCategoryUi(
     val image: String,
     val name: String,
     val id: Long,
-)
+) {
+    companion object {
+        val Empty = PopularCategoryUi("", "", -1L)
+    }
+}
 
 fun PopularCategoryModel.toUi(): PopularCategoryUi {
     return PopularCategoryUi(

@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class FavoriteFragment : BaseFragment() {
+class FavoriteFragment1 : BaseFragment() {
 
     override fun layout(): Int = R.layout.fragment_main_favorite_flow
 

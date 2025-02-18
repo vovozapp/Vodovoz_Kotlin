@@ -14,7 +14,10 @@ import com.vodovoz.app.common.like.LikeManager
 import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.data.MainRepository
 import com.vodovoz.app.data.model.common.ResponseEntity
+import com.vodovoz.app.domain.general.model.ProductsSectionUi
 import com.vodovoz.app.feature.favorite.mapper.FavoritesMapper
+import com.vodovoz.app.feature.home.model.PopularCategoryUi
+import com.vodovoz.app.feature.product_comments.model.SortUi
 import com.vodovoz.app.mapper.FavoriteProductsHeaderBundleMapper.mapToUI
 import com.vodovoz.app.mapper.ProductMapper.mapToUI
 import com.vodovoz.app.ui.model.CategoryDetailUI
@@ -368,6 +371,18 @@ class FavoriteFlowViewModel @Inject constructor(
         }
     }
 
+    fun navigateToCategories() = viewModelScope.launch {
+        TODO("Not yet implemented")
+    }
+
+    fun showSortOptionsBottomSheet() = viewModelScope.launch {
+        TODO("Not yet implemented")
+    }
+
+    fun switchLayoutView() = viewModelScope.launch {
+        TODO("Not yet implemented")
+    }
+
     sealed class FavoriteEvents : Event {
         data class GoToPreOrder(val id: Long, val name: String, val detailPicture: String) :
             FavoriteEvents()
@@ -389,6 +404,13 @@ class FavoriteFlowViewModel @Inject constructor(
         val emptyTitle: String? = null,
         val emptyMessage: String? = null,
         val scrollToTop: Boolean = false,
+
+        val categories: List<PopularCategoryUi> = emptyList(),
+        val productsSection: ProductsSectionUi = ProductsSectionUi.Empty,
+        val currentSort: SortUi = SortUi.Empty,
+        val currentCategory: PopularCategoryUi = PopularCategoryUi.Empty,
+        val showSortOptionsBottomSheet: Boolean = false,
+        val isGridView: Boolean = true,
     ) : State
 
     companion object {
