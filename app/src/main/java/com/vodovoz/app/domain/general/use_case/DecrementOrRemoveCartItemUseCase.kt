@@ -1,6 +1,5 @@
 package com.vodovoz.app.domain.general.use_case
 
-import com.vodovoz.app.domain.general.model.CartOperation
 import com.vodovoz.app.domain.general.respository.CartManagerRepository
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import kotlinx.coroutines.flow.Flow
@@ -10,31 +9,35 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Singleton
-class AddOrIncrementCartItemUseCase @Inject constructor(
+class DecrementOrRemoveCartItemUseCase @Inject constructor(
     private val vodovozServiceRepository: VodovozServiceRepository,
     private val cartManagerRepository: CartManagerRepository,
     private val syncCartDataUseCase: SyncCartDataUseCase,
 ) : UseCase {
 
-    suspend operator fun invoke(productId: Long): Flow<Result<CartOperation>> = flow {
-        val cartOperation = cartManagerRepository.incrementItemQuantity(productId)
+    suspend operator fun invoke(productId: Long): Flow<Result<Boolean>> = flow {
 
-        val cartOperationResult = if (cartOperation.newQuantity == 1) {
-            vodovozServiceRepository.addProductToCart(productId, cartOperation.newQuantity).first()
+        val cartOperation = cartManagerRepository.decrementItemQuantity(productId)
+
+
+        val cartOperationResult = if (cartOperation.newQuantity <= 0) {
+            vodovozServiceRepository.removeProductFromCart(productId).first()
         } else {
-            vodovozServiceRepository.updateProductInCart(productId, cartOperation.newQuantity).first()
+            vodovozServiceRepository.updateProductInCart(productId, cartOperation.newQuantity)
+                .first()
         }
 
         cartOperationResult.onSuccess {
             syncCartDataUseCase(cartOperation.cartVersion)
-            emit(Result.success(cartOperation))
+            emit(Result.success(true))
         }.onFailure {
-            cartManagerRepository.decrementItemQuantity(productId)
-        }.getOrThrow()
+            cartManagerRepository.incrementItemQuantity(productId, false)
+            emit(Result.success(false))
+        }
+
 
     }.catch { e ->
-        Result.failure<CartOperation>(e)
+        emit(Result.failure(e))
     }
 }

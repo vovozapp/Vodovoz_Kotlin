@@ -47,22 +47,13 @@ interface CartDao {
     suspend fun deleteCartItem(productId: Long)
 
     @Transaction
-    @Query("DELETE FROM cart WHERE id = 0")
+    @Query("DELETE FROM cart_item WHERE cartId = 0")
     suspend fun clearCart()
 
     @Transaction
-    @Query("DELETE FROM cart_item WHERE cartId = 0")
-    suspend fun clearCartItems()
-
-    @Transaction
-    suspend fun replaceCartItems(items: List<CartItemEntity>) {
-        clearCartItems()
-        insertCartItems(items)
-    }
-
-    @Transaction
-    suspend fun updateVersion(){
+    suspend fun updateVersion(): Long {
         val newVersion = System.currentTimeMillis()
         insertCart(CartEntity(id = 0, version = newVersion))
+        return newVersion
     }
 }

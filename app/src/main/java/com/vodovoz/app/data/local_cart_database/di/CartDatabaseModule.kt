@@ -6,8 +6,8 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.vodovoz.app.data.local_cart_database.CartDao
 import com.vodovoz.app.data.local_cart_database.LocalCartDatabase
-import com.vodovoz.app.data.local_cart_database.repository.CartDatabaseRepositoryImpl
-import com.vodovoz.app.domain.general.respository.CartDatabaseRepository
+import com.vodovoz.app.data.local_cart_database.repository.CartManagerRepositoryImpl
+import com.vodovoz.app.domain.general.respository.CartManagerRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -23,8 +23,8 @@ abstract class CartDatabaseModule {
     @Binds
     @Singleton
     abstract fun bindCartDatabaseRepository(
-        cartDatabaseRepository: CartDatabaseRepositoryImpl
-    ): CartDatabaseRepository
+        cartDatabaseRepository: CartManagerRepositoryImpl
+    ): CartManagerRepository
 
     companion object {
 

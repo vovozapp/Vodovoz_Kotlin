@@ -6,7 +6,7 @@ import javax.inject.Singleton
 @Singleton
 class CartUseCases @Inject constructor(
     val addOrIncrementCartItem: AddOrIncrementCartItemUseCase,
-    val removeOrDecrementCartItem: RemoveOrDecrementCartItemUseCase,
+    val removeOrDecrementCartItem: DecrementOrRemoveCartItemUseCase,
     val addMultipleCartItems: AddMultipleCartItemsUseCase,
     val clearCart: ClearCartUseCase,
     val syncCartDataUseCase: SyncCartDataUseCase

@@ -3,6 +3,7 @@ package com.vodovoz.app.feature.productdetail.composables
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -118,7 +119,7 @@ fun MultiProductBottomSheet(
             )
 
             BaseQuantityButton(
-                modifier = Modifier.padding(top = 20.dp),
+                modifier = Modifier.padding(top = 20.dp).height(48.dp),
                 isLoading = buttonIsLoading,
                 onPlus = onPlus,
                 onMinus = onMinus,

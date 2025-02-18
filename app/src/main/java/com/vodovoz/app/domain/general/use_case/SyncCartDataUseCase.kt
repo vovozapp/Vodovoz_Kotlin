@@ -1,6 +1,6 @@
 package com.vodovoz.app.domain.general.use_case
 
-import com.vodovoz.app.domain.general.respository.CartDatabaseRepository
+import com.vodovoz.app.domain.general.respository.CartManagerRepository
 import com.vodovoz.app.domain.general.respository.VodovozServiceRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -10,21 +10,19 @@ import javax.inject.Singleton
 
 @Singleton
 class SyncCartDataUseCase @Inject constructor(
-    private val cartDatabaseRepository: CartDatabaseRepository,
+    private val cartManagerRepository: CartManagerRepository,
     private val vodovozServiceRepository: VodovozServiceRepository,
 ) : UseCase {
 
-    operator fun invoke(version: Long): Flow<Result<Boolean>> = flow {
-        val firstCurrentVersion = cartDatabaseRepository.getCart().getOrThrow().first.version
-
-        if (firstCurrentVersion > version) return@flow
-
+    operator fun invoke(version: Long): Flow<Result<Unit>> = flow {
         //todo - val cart = vodovozServiceRepository.getCart()
-        //todo - val secondCurrentVersion = cartDatabaseRepository.getCart().getOrThrow().first.version
-        //todo - if (secondCurrentVersion > version) return@flow
+
+        val currentVersion = cartManagerRepository.getCartVersion()
+
+        if (currentVersion > version) return@flow
         //todo - cartDatabaseRepository.replaceCartItems(cart.items)
 
-        emit(Result.success(true))
+        emit(Result.success(Unit))
     }.catch { e ->
         emit(Result.failure(e))
     }
