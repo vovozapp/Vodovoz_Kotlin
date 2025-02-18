@@ -411,7 +411,17 @@ class FavoriteFlowViewModel @Inject constructor(
         val currentCategory: PopularCategoryUi = PopularCategoryUi.Empty,
         val showSortOptionsBottomSheet: Boolean = false,
         val isGridView: Boolean = true,
+        val uiState: FavoriteUiState = FavoriteUiState.Empty,
     ) : State
+
+    sealed interface FavoriteUiState {
+
+        data object Loading : FavoriteUiState
+        data object Success : FavoriteUiState
+        data object Empty : FavoriteUiState
+        data object Error : FavoriteUiState
+
+    }
 
     companion object {
         const val LINEAR = "linear"

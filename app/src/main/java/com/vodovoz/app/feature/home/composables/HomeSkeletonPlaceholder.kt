@@ -58,7 +58,7 @@ private val homeShimmerTheme
             animation = tween(
                 700,
                 easing = LinearEasing,
-                delayMillis = 700,
+                delayMillis = 400,
             ),
             repeatMode = RepeatMode.Restart,
         )

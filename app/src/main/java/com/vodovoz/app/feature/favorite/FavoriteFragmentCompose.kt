@@ -25,6 +25,7 @@ import com.vodovoz.app.common.product.rating.RatingProductManager
 import com.vodovoz.app.common.speechrecognizer.SpeechDialogFragment
 import com.vodovoz.app.common.tab.TabManager
 import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -60,7 +61,15 @@ class FavoriteFragment : Fragment() {
                     val viewState by viewModel.observeUiState().collectAsStateWithLifecycle()
                     val data = viewState.data
 
-                    FavoriteScreen(viewModel = viewModel, viewState = data)
+                    when(data.uiState){
+                        FavoriteFlowViewModel.FavoriteUiState.Error -> {
+                            NetworkErrorPlaceholder(onTryAgainClick = { } )
+                        }
+                        else -> {
+                            FavoriteScreen(viewModel = viewModel, viewState = data)
+                        }
+                    }
+
                 }
             }
         }
@@ -73,8 +82,6 @@ class FavoriteFragment : Fragment() {
         observeEvents()
 
         viewModel.refreshIdle()
-
-        startSpeechRecognizer()
     }
 
     private fun observeEvents() {

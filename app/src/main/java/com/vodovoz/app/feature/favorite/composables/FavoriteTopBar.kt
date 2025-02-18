@@ -20,12 +20,13 @@ import androidx.compose.ui.unit.dp
 import com.vodovoz.app.R
 
 @Composable
-fun FavoriteTopBar(modifier: Modifier = Modifier, onSearchClick: () -> Unit) {
+fun FavoriteTopBar(modifier: Modifier = Modifier, onSearchClick: () -> Unit, showSearch: Boolean) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .height(56.dp)
-            .background(MaterialTheme.colorScheme.background),
+            .background(MaterialTheme.colorScheme.background)
+            .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
@@ -37,13 +38,15 @@ fun FavoriteTopBar(modifier: Modifier = Modifier, onSearchClick: () -> Unit) {
             style = MaterialTheme.typography.headlineSmall
         )
 
-        Icon(
-            painter = painterResource(id = R.drawable.icon_search),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier
-                .clip(CircleShape)
-                .clickable { onSearchClick() }
-        )
+        if(showSearch) {
+            Icon(
+                painter = painterResource(id = R.drawable.icon_search),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable { onSearchClick() }
+            )
+        }
     }
 }
