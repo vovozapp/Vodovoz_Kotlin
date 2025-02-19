@@ -1,5 +1,6 @@
 package com.vodovoz.app.feature.full_screen_history_slider
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.splineBasedDecay
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -43,11 +44,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
 import coil3.compose.AsyncImage
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.button.VodovozButton
 import com.vodovoz.app.feature.full_screen_history_slider.composables.StoriesIndicator
+import kotlin.math.absoluteValue
 
 enum class DragAnchor(val value: Float) {
     Top(1f),
@@ -56,6 +59,7 @@ enum class DragAnchor(val value: Float) {
 }
 
 
+@SuppressLint("RestrictedApi")
 @OptIn(ExperimentalFoundationApi::class)
 @Suppress("NonSkippableComposable")
 @Composable
@@ -121,6 +125,7 @@ fun StoriesScreen(
                             }
                         }
                         viewModel.resumeStory()
+
                     }
                 }
             },
@@ -143,14 +148,29 @@ fun StoriesScreen(
 //                    )
 //                }
                 .graphicsLayer {
-                    val startOffset = pagerState.startOffsetForPage(i)
-                    translationX = size.width * (startOffset * .99f)
+                    val pageOffset = (
+                            (pagerState.currentPage - i) + pagerState
+                                .currentPageOffsetFraction
+                            ).absoluteValue
 
-                    alpha = (2f - startOffset) / 2f
 
-                    val scale = 1f - (startOffset * .3f)
+                    val scale = lerp(
+                        start = 0.65f,
+                        stop = 1f,
+                        1f - pageOffset.coerceIn(0f, 1f)
+                    )
+
+                    val alphaValue = lerp(
+                        start = 0.2f,
+                        stop = 1f,
+                        1f - pageOffset.coerceIn(0f, 1f)
+                    )
+
+                    alpha = alphaValue
                     scaleX = scale
                     scaleY = scale
+
+
                 }
                 .clip(MaterialTheme.shapes.large)
                 .anchoredDraggable(anchoredDraggableState, Orientation.Vertical)
