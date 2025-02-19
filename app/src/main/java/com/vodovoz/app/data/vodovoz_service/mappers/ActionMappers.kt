@@ -1,7 +1,7 @@
 package com.vodovoz.app.data.vodovoz_service.mappers
 
 import com.vodovoz.app.data.vodovoz_service.model.ACTION_DTO
-import com.vodovoz.app.domain.general.model.DataAll
+import com.vodovoz.app.domain.general.model.DataAllAction
 import com.vodovoz.app.domain.general.model.VodovozAction
 
 
@@ -23,15 +23,15 @@ fun ACTION_DTO.toAction(): VodovozAction? {
     }
 }
 
-fun String.toDataAll(): DataAll {
+fun String.toDataAll(): DataAllAction {
     return when (this) {
-        "vseskidki" -> DataAll.AllDiscount
-        "vsenovinki" -> DataAll.AllNewProducts
-        "vseakcii" -> DataAll.AllPromotions
-        "dostavka" -> DataAll.Delivery
-        "profil" -> DataAll.Profile
-        "trekervodi" -> DataAll.WaterTracker
-        else -> DataAll.None
+        "vseskidki" -> DataAllAction.AllDiscount
+        "vsenovinki" -> DataAllAction.AllNewProducts
+        "vseakcii" -> DataAllAction.AllPromotions
+        "dostavka" -> DataAllAction.Delivery
+        "profil" -> DataAllAction.Profile
+        "trekervodi" -> DataAllAction.WaterTracker
+        else -> DataAllAction.None
     }
 }
 

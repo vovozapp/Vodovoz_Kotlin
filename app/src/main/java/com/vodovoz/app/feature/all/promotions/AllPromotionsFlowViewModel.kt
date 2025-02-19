@@ -25,6 +25,7 @@ import com.vodovoz.app.ui.model.custom.AllPromotionBundleUI
 import com.vodovoz.app.util.extensions.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -34,6 +35,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -51,28 +53,35 @@ class AllPromotionsFlowViewModel @Inject constructor(
         ?: AllPromotionsFragment.DataSource.All
 
 
-    private fun loadAllPromotions() = vodovozServiceRepository.getPromotionsWithSections()
-        .onEach { promotionsWithSectionsModelResult ->
+    private fun loadAllPromotions() = vodovozServiceRepository.getPromotionsWithSections().onStart {
+        uiStateListener.updateData { s ->
+            s.copy(uiState = UiState.Loading)
+        }
+    }.onEach { promotionsWithSectionsModelResult ->
 
-            promotionsWithSectionsModelResult.onSuccess { promotionsWithSectionsModel ->
-                uiStateListener.updateData { s ->
-                    val sections = promotionsWithSectionsModel.filters.toUi()
-                    val promotions = vodovozServiceRepository.getPromotionsPaged()
-                        .map { pagingData ->
-                            pagingData.map { promotionModel -> promotionModel.toUi() }
-                        }
+        promotionsWithSectionsModelResult.onSuccess { promotionsWithSectionsModel ->
+            delay(5000L)
+            uiStateListener.updateData { s ->
+                val sections = promotionsWithSectionsModel.filters.toUi()
+                val promotions = vodovozServiceRepository.getPromotionsPaged()
+                    .map { pagingData ->
+                        pagingData.map { promotionModel -> promotionModel.toUi() }
+                    }
 
-                    s.copy(
-                        sections = sections,
-                        currentSection = sections.firstOrNull() ?: PromotionSectionUi.Empty,
-                        pagedPromotions = promotions,
-                        initialPagedPromotions = promotions
-                    )
-                }
+                s.copy(
+                    sections = sections,
+                    currentSection = sections.firstOrNull() ?: PromotionSectionUi.Empty,
+                    pagedPromotions = promotions,
+                    initialPagedPromotions = promotions,
+                    uiState = UiState.Success
+                )
             }
 
+        }.onFailure {
+            uiStateListener.updateData { s -> s.copy(uiState = UiState.Error) }
+        }
 
-        }.launchIn(viewModelScope)
+    }.launchIn(viewModelScope)
 
     //old method
     private fun fetchAllPromotions(filterChanged: Boolean = false) {
@@ -173,9 +182,7 @@ class AllPromotionsFlowViewModel @Inject constructor(
             s.copy(
                 currentSection = section,
                 pagedPromotions = s.initialPagedPromotions.map { pagingData ->
-                    pagingData.filter {
-                        it.sectionId == section.id || section.id == 0
-                    }
+                    pagingData.filter { it.sectionId == section.id || section.id == 0 }
                 }
             )
         }
@@ -223,7 +230,14 @@ class AllPromotionsFlowViewModel @Inject constructor(
         val initialPagedPromotions: Flow<PagingData<PromotionUi>> = emptyFlow(),
         val showAdvertisingBottomSheet: Boolean = false,
         val currentAdvertising: AboutAdvertisingUi = AboutAdvertisingUi.Empty,
+        val uiState: UiState = UiState.Loading,
     ) : State
+
+    sealed interface UiState {
+        data object Loading : UiState
+        data object Success : UiState
+        data object Error : UiState
+    }
 
     sealed class AllPromotionsEvent() : Event {
 

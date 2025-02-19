@@ -37,36 +37,12 @@ import com.valentinilk.shimmer.defaultShimmerTheme
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.design_system.composables.decoration.SkeletonBox
 import com.vodovoz.app.design_system.composables.top_bar.SearchTopBar
-
-private val homeShimmerTheme
-    @Composable
-    get() = defaultShimmerTheme.copy(
-        blendMode = BlendMode.DstAtop,
-        shimmerWidth = 180.dp,
-        shaderColors = listOf(
-            Color.Transparent,
-            MaterialTheme.colorScheme.background,
-            Color.Transparent,
-        ),
-        shaderColorStops = listOf(
-            0.0f,
-            0.5f,
-            1.0f,
-        ),
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                1200,
-                easing = LinearEasing,
-                delayMillis = 300,
-            ),
-            repeatMode = RepeatMode.Restart,
-        )
-    )
 
 
 @Composable
-fun HomeSkeletonPlaceholder(modifier: Modifier = Modifier , onScanClick: () -> Unit = {}) {
+fun HomeSkeletonPlaceholder(modifier: Modifier = Modifier, onScanClick: () -> Unit = {}) {
     Column {
         val shimmerState = rememberShimmer(ShimmerBounds.View)
 
@@ -79,80 +55,120 @@ fun HomeSkeletonPlaceholder(modifier: Modifier = Modifier , onScanClick: () -> U
             onSearchClick = {}
         )
 
-        CompositionLocalProvider(
-            LocalShimmerTheme provides homeShimmerTheme
+
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .verticalScroll(rememberScrollState())
         ) {
+            Row(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .padding(start = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                repeat(2) {
+                    SkeletonBox(
+                        modifier = Modifier
+                            .width(315.dp)
+                            .height(150.dp),
+                        shimmerState = shimmerState
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .padding(top = 24.dp)
+                    .padding(start = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                repeat(2) {
+                    SkeletonBox(
+                        modifier = Modifier
+                            .width(230.dp)
+                            .height(72.dp),
+                        shimmerState = shimmerState
 
+                    )
+                }
+            }
+            HomeDivider(
+                modifier = Modifier.padding(top = 4.dp)
+            )
 
-            @Composable
-            fun SkeletonBox(modifier: Modifier) {
-                Box(
-                    modifier = modifier
-                        .clip(MaterialTheme.shapes.large)
-                        .background(MaterialTheme.colorScheme.surface)
-                        .shimmer(shimmerState)
-                        .background(MaterialTheme.colorScheme.background),
-                )
+            SkeletonBox(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 4.dp)
+                    .height(24.dp)
+                    .clip(MaterialTheme.shapes.medium),
+                shimmerState = shimmerState
+
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp, start = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                repeat(8) {
+                    SkeletonBox(
+                        modifier = Modifier
+                            .width(75.dp)
+                            .height(96.dp),
+                        shimmerState = shimmerState
+
+                    )
+                }
             }
 
-            Column(
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-                    .verticalScroll(rememberScrollState())
+            SkeletonBox(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 32.dp)
+                    .height(24.dp)
+                    .clip(MaterialTheme.shapes.medium),
+                shimmerState = shimmerState
+
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp, start = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Row(
-                    modifier = Modifier
-                        .padding(top = 8.dp)
-                        .padding(start = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    repeat(2) {
-                        SkeletonBox(
-                            modifier = Modifier
-                                .width(315.dp)
-                                .height(150.dp)
-                        )
-                    }
-                }
-                Row(
-                    modifier = Modifier
-                        .padding(top = 24.dp)
-                        .padding(start = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    repeat(2) {
-                        SkeletonBox(
-                            modifier = Modifier
-                                .width(230.dp)
-                                .height(72.dp)
-                        )
-                    }
-                }
-                HomeDivider(
-                    modifier = Modifier.padding(top = 4.dp)
-                )
+                repeat(6) {
+                    SkeletonBox(
+                        modifier = Modifier
+                            .width(88.dp)
+                            .height(30.dp),
+                        shimmerState = shimmerState
 
-                SkeletonBox(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .padding(top = 4.dp)
-                        .height(24.dp)
-                        .clip(MaterialTheme.shapes.medium)
-                )
+                    )
+                }
 
+            }
+
+
+            repeat(6) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp, start = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    repeat(8) {
+                    repeat(4) {
                         SkeletonBox(
                             modifier = Modifier
-                                .width(75.dp)
-                                .height(96.dp)
+                                .width(160.dp)
+                                .height(255.dp),
+                            shimmerState = shimmerState
+
                         )
                     }
                 }
@@ -163,53 +179,11 @@ fun HomeSkeletonPlaceholder(modifier: Modifier = Modifier , onScanClick: () -> U
                         .padding(horizontal = 16.dp)
                         .padding(top = 32.dp)
                         .height(24.dp)
-                        .clip(MaterialTheme.shapes.medium)
+                        .clip(MaterialTheme.shapes.medium),
+                    shimmerState = shimmerState
                 )
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp, start = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    repeat(6) {
-                        SkeletonBox(
-                            modifier = Modifier
-                                .width(88.dp)
-                                .height(30.dp)
-                        )
-                    }
-
-                }
-
-
-                repeat(6) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp, start = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        repeat(4) {
-                            SkeletonBox(
-                                modifier = Modifier
-                                    .width(160.dp)
-                                    .height(255.dp)
-                            )
-                        }
-                    }
-
-                    SkeletonBox(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .padding(top = 32.dp)
-                            .height(24.dp)
-                            .clip(MaterialTheme.shapes.medium)
-                    )
-                }
-
             }
+
         }
     }
 }

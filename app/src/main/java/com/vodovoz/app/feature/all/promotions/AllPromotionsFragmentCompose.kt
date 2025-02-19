@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
 import com.vodovoz.app.design_system.VodovozTheme
+import com.vodovoz.app.design_system.composables.placeholders.NetworkErrorPlaceholder
 import com.vodovoz.app.feature.all.AllClickListener
 import com.vodovoz.app.feature.home.banneradvinfo.BannerAdvInfoBottomSheetFragment
 import com.vodovoz.app.feature.home.viewholders.homepromotions.model.PromotionAdvEntity
@@ -46,11 +47,20 @@ class AllPromotionsFragment : Fragment() {
                 VodovozTheme {
                     val viewState by viewModel.observeUiState().collectAsStateWithLifecycle()
 
-                    AllPromotionsScreen(
-                        viewModel = viewModel,
-                        viewState = viewState.data,
-                        navController = navController
-                    )
+                    when (viewState.data.uiState) {
+                        AllPromotionsFlowViewModel.UiState.Error -> {
+                            NetworkErrorPlaceholder {}
+                        }
+
+                        else -> {
+                            AllPromotionsScreen(
+                                viewModel = viewModel,
+                                viewState = viewState.data,
+                                navController = navController
+                            )
+                        }
+                    }
+
                 }
             }
         }

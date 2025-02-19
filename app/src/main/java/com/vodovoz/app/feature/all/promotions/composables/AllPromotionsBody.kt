@@ -5,14 +5,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
 import com.vodovoz.app.design_system.composables.chip.VodovozChip
+import com.vodovoz.app.design_system.composables.decoration.SkeletonBox
 import com.vodovoz.app.design_system.composables.tab_row.VodovozScrollableTabRow
 import com.vodovoz.app.design_system.model.PromotionSectionUi
 import com.vodovoz.app.design_system.model.PromotionUi
@@ -56,6 +61,8 @@ fun AllPromotionsBody(
 
 
 
+        val refreshState = lazyPagingPromotions.loadState.refresh
+        val appendState = lazyPagingPromotions.loadState.append
 
         LazyColumn(
             modifier = Modifier.padding(top = 16.dp),
@@ -64,19 +71,44 @@ fun AllPromotionsBody(
             state = lazyListState
         ) {
 
-            items(
-                count = lazyPagingPromotions.itemCount,
-                key = { i ->
-                    lazyPagingPromotions[i]?.id ?: Random.nextInt()
+            when (refreshState) {
+                is LoadState.NotLoading -> {
+                    items(
+                        count = lazyPagingPromotions.itemCount,
+                        key = { i ->
+                            lazyPagingPromotions[i]?.id ?: Random.nextInt()
+                        }
+                    ) { i ->
+                        val promotion = lazyPagingPromotions[i]
+                        if (promotion != null) {
+                            PromotionCard(
+                                promotion = promotion,
+                                onClick = onPromotionClick,
+                                onAdvertisingClick = onAdvertisingClick
+                            )
+                        }
+                    }
                 }
-            ) { i ->
-                val promotion = lazyPagingPromotions[i]
-                if (promotion != null) {
-                    PromotionCard(
-                        modifier = Modifier.animateItem(),
-                        promotion = promotion,
-                        onClick = onPromotionClick,
-                        onAdvertisingClick = onAdvertisingClick
+
+                else -> {
+                    items(10) {
+                        SkeletonBox(
+                            shimmerState = rememberShimmer(shimmerBounds = ShimmerBounds.View),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(150.dp)
+                        )
+                    }
+                }
+            }
+
+            if(appendState is LoadState.Loading){
+                item {
+                    SkeletonBox(
+                        shimmerState = rememberShimmer(shimmerBounds = ShimmerBounds.View),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(70.dp)
                     )
                 }
             }

@@ -14,7 +14,7 @@ sealed interface VodovozAction {
 
 }
 
-enum class DataAll : VodovozAction {
+enum class DataAllAction : VodovozAction {
     AllDiscount, AllNewProducts, AllPromotions, Delivery, Profile, WaterTracker, None
 }
 
@@ -22,6 +22,6 @@ enum class DataAll : VodovozAction {
 sealed class ButtonAction {
 
     data class Id(val id: Int) : ButtonAction()
-    data class Action(val dataAll: DataAll) : ButtonAction()
+    data class Action(val dataAll: DataAllAction) : ButtonAction()
 
 }

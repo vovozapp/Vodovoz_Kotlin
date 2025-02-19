@@ -1,7 +1,11 @@
 package com.vodovoz.app.feature.all.promotions
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -18,6 +22,7 @@ import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.top_bar.VodovozTopBar
 import com.vodovoz.app.feature.all.promotions.composables.AdvertisingInfoBottomSheet
 import com.vodovoz.app.feature.all.promotions.composables.AllPromotionsBody
+import com.vodovoz.app.feature.all.promotions.composables.PromotionsSkeletonPlaceholder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Suppress("NonSkippableComposable")
@@ -30,28 +35,41 @@ fun AllPromotionsScreen(
     val lazyPagingPromotions = viewState.pagedPromotions.collectAsLazyPagingItems()
     val lazyListState = rememberLazyListState()
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.systemBars)
+            .consumeWindowInsets(WindowInsets.systemBars)
+    ) {
         VodovozTopBar(
             onBack = { viewModel.navigateBack() },
             title = stringResource(id = R.string.promotions)
         )
 
-
-        AllPromotionsBody(
-            sections = viewState.sections,
-            currentSection = viewState.currentSection,
-            lazyPagingPromotions = lazyPagingPromotions,
-            lazyListState = lazyListState,
-            onSectionSelect = { section ->
-                viewModel.selectSection(section)
-            },
-            onAdvertisingClick = { promotionUi ->
-                viewModel.showAdvertisingBottomSheet(promotionUi)
-            },
-            onPromotionClick = { promotion ->
-                viewModel.navigateToPromotionDetails(promotion)
+        when(viewState.uiState){
+            AllPromotionsFlowViewModel.UiState.Error -> {}
+            AllPromotionsFlowViewModel.UiState.Loading -> {
+                PromotionsSkeletonPlaceholder()
             }
-        )
+            AllPromotionsFlowViewModel.UiState.Success -> {
+                AllPromotionsBody(
+                    sections = viewState.sections,
+                    currentSection = viewState.currentSection,
+                    lazyPagingPromotions = lazyPagingPromotions,
+                    lazyListState = lazyListState,
+                    onSectionSelect = { section ->
+                        viewModel.selectSection(section)
+                    },
+                    onAdvertisingClick = { promotionUi ->
+                        viewModel.showAdvertisingBottomSheet(promotionUi)
+                    },
+                    onPromotionClick = { promotion ->
+                        viewModel.navigateToPromotionDetails(promotion)
+                    }
+                )
+            }
+        }
+
     }
 
     val bottomSheetState = rememberModalBottomSheetState()
