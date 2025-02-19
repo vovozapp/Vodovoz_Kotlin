@@ -253,5 +253,7 @@
     <string name="add_to_favorites_message">Добавляйте понравившиеся Вам товары в избранное</string>
     <string name="catalog_button_text">К каталогу</string>
     <string name="apply">Применить</string>
+    <string name="product_not_found">Товар не найден</string>
+    <string name="product_not_found_details">Перейдите в каталог и выберите необходимый товар</string>
 
 </resources>

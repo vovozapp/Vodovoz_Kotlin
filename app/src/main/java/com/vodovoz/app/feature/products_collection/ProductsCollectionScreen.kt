@@ -53,10 +53,10 @@ fun ProductsCollectionScreen(
             sortName = viewState.currentSort.name,
             isGridView = viewState.isGridView,
             onSwitchClick = {
-                viewModel.showSortOptionsBottomSheet()
+                viewModel.switchLayoutView()
             },
             onSortingClick = {
-                viewModel.switchLayoutView()
+                viewModel.showSortOptionsBottomSheet()
             }
         )
 

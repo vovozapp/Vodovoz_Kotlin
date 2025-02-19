@@ -24,7 +24,7 @@ class ProductsCollectionViewModel @Inject constructor(
 ) : MviViewModel<ProductsCollectionState, ProductsCollectionEvent>(
     ProductsCollectionState()
 ) {
-    private val productId = savedStateHandle.get<Long>("productId") ?: -1
+    private val productId = savedStateHandle.get<Long>("productId") ?: 105622
 
     fun fetchProducts() = viewModelScope.launch {
         vodovozServiceRepository.getProductAnalogs(productId, stateSnapshot.currentSort.toDomain())
