@@ -1,8 +1,14 @@
 package com.vodovoz.app.feature.full_screen_history_slider
 
-import android.graphics.RenderEffect
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.splineBasedDecay
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.AnchoredDraggableState
+import androidx.compose.foundation.gestures.DraggableAnchors
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Box
@@ -10,6 +16,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
@@ -22,13 +29,19 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -36,6 +49,14 @@ import com.vodovoz.app.R
 import com.vodovoz.app.design_system.composables.button.VodovozButton
 import com.vodovoz.app.feature.full_screen_history_slider.composables.StoriesIndicator
 
+enum class DragAnchor(val value: Float) {
+    Top(1f),
+    Center(0f),
+    Bottom(-1f),
+}
+
+
+@OptIn(ExperimentalFoundationApi::class)
 @Suppress("NonSkippableComposable")
 @Composable
 fun StoriesScreen(
@@ -56,6 +77,30 @@ fun StoriesScreen(
         }
     }
 
+    val density = LocalDensity.current
+
+    val anchoredDraggableState = remember {
+        AnchoredDraggableState(
+            initialValue = DragAnchor.Center,
+            positionalThreshold = { distance: Float -> distance * 0.5f },
+            velocityThreshold = { with(density) { 200.dp.toPx() } },
+            snapAnimationSpec = tween(300),
+            decayAnimationSpec = splineBasedDecay(density),
+            confirmValueChange = { true },
+        ).apply {
+            updateAnchors(
+                DraggableAnchors {
+                    DragAnchor.entries.forEach { anchor -> anchor at (anchor.value * 1500f) }
+                }
+            )
+        }
+    }
+
+
+
+
+
+
     HorizontalPager(
         modifier = Modifier
             .fillMaxSize()
@@ -68,10 +113,10 @@ fun StoriesScreen(
                         val startTime = System.currentTimeMillis()
                         viewModel.stopStory()
                         waitForUpOrCancellation()
-                        if (System.currentTimeMillis() - startTime < 200) {
-                            if (change.position.x < size.width / 2) {
+                        if (System.currentTimeMillis() - startTime < 160) {
+                            if (change.position.x < size.width / 2.5) {
                                 viewModel.goPreviousStoryPage()
-                            } else {
+                            } else if (change.position.x > size.width - (size.width / 2.5)) {
                                 viewModel.goNextStoryPage()
                             }
                         }
@@ -85,16 +130,30 @@ fun StoriesScreen(
         val story = stories[i]
         val storyPage = story.pages.getOrNull(viewState.currentPageIndex) ?: story.pages.first()
         Box(
-            modifier = Modifier.padding(vertical = 10.dp).graphicsLayer {
-                val startOffset = pagerState.startOffsetForPage(i)
-                translationX = size.width * (startOffset * .99f)
+            modifier = Modifier
+                .padding(vertical = 10.dp)
+//                .offset {
+//                    anchoredDraggableState.offset
+//
+//                    IntOffset(
+//                        0,
+//                        y = anchoredDraggableState
+//                            .requireOffset()
+//                            .toInt()
+//                    )
+//                }
+                .graphicsLayer {
+                    val startOffset = pagerState.startOffsetForPage(i)
+                    translationX = size.width * (startOffset * .99f)
 
-                alpha = (2f - startOffset) / 2f
+                    alpha = (2f - startOffset) / 2f
 
-                val scale = 1f - (startOffset * .3f)
-                scaleX = scale
-                scaleY = scale
-            }.clip(MaterialTheme.shapes.large)
+                    val scale = 1f - (startOffset * .3f)
+                    scaleX = scale
+                    scaleY = scale
+                }
+                .clip(MaterialTheme.shapes.large)
+                .anchoredDraggable(anchoredDraggableState, Orientation.Vertical)
         ) {
             AsyncImage(
                 modifier = Modifier.fillMaxSize(),
@@ -145,15 +204,12 @@ fun StoriesScreen(
     }
 }
 
-// ACTUAL OFFSET
 fun PagerState.offsetForPage(page: Int) = (currentPage - page) + currentPageOffsetFraction
 
-// OFFSET ONLY FROM THE LEFT
 fun PagerState.startOffsetForPage(page: Int): Float {
     return offsetForPage(page).coerceAtLeast(0f)
 }
 
-// OFFSET ONLY FROM THE RIGHT
 fun PagerState.endOffsetForPage(page: Int): Float {
     return offsetForPage(page).coerceAtMost(0f)
 }

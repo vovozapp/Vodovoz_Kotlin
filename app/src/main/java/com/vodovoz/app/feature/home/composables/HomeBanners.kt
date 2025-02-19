@@ -14,18 +14,16 @@ fun HomeBanners(
     banners: List<BannerUi>,
     onBannerClick: (BannerUi) -> Unit,
 ) {
-    val pagerState = rememberPagerState { banners.size }
+    val pagerState = rememberPagerState(0) { banners.size }
     val pictures = banners.map { banner -> banner.detailPicture }
 
-    if (pictures.size > 1) {
-        AuthScrollImagePager(
-            modifier = modifier.padding(top = 8.dp),
-            images = pictures,
-            onImageClick = { page ->
-                onBannerClick(banners[page])
-            },
-            pagerState = pagerState,
-            pageWidth = 315.dp
-        )
-    }
+    AuthScrollImagePager(
+        modifier = modifier.padding(top = 8.dp),
+        images = pictures,
+        onImageClick = { page ->
+            onBannerClick(banners[page])
+        },
+        pagerState = pagerState,
+        pageWidth = 315.dp
+    )
 }

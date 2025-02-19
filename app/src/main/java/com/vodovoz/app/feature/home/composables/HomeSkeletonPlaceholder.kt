@@ -56,9 +56,9 @@ private val homeShimmerTheme
         ),
         animationSpec = infiniteRepeatable(
             animation = tween(
-                700,
+                1200,
                 easing = LinearEasing,
-                delayMillis = 400,
+                delayMillis = 300,
             ),
             repeatMode = RepeatMode.Restart,
         )

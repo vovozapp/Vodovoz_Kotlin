@@ -70,11 +70,17 @@ class FullScreenHistoriesSliderFlowFragment : Fragment() {
                         ) { data.stories.size } else rememberPagerState(data.currentStoryIndex) { data.stories.size }
 
                     when (viewState.data.uiState) {
-                        FullScreenHistoriesSliderFlowViewModel.UiState.Error -> {}
+                        FullScreenHistoriesSliderFlowViewModel.UiState.Error -> {
 
-                        FullScreenHistoriesSliderFlowViewModel.UiState.Loading -> {}
+                        }
 
-                        FullScreenHistoriesSliderFlowViewModel.UiState.NetworkError -> {}
+                        FullScreenHistoriesSliderFlowViewModel.UiState.Loading -> {
+
+                        }
+
+                        FullScreenHistoriesSliderFlowViewModel.UiState.NetworkError -> {
+
+                        }
 
                         FullScreenHistoriesSliderFlowViewModel.UiState.Success -> {
                             StoriesScreen(
